@@ -61,7 +61,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-transparent border border-border px-3 py-1.5 font-mono text-xs text-muted focus:outline-none focus:border-cream/30"
+            className="bg-transparent border border-border px-3 py-1.5 font-mono text-xs text-muted focus:outline-none focus:border-gold/30"
           >
             <option value="name">A-Z</option>
             <option value="price-asc">Price: Low</option>
@@ -98,7 +98,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
             </div>
 
             <div className="mt-3 space-y-1">
-              <h3 className="font-body text-sm text-cream truncate group-hover:text-glow transition-colors duration-300">
+              <h3 className="font-body text-sm text-cream truncate group-hover:text-gold transition-colors duration-300">
                 {product.name}
               </h3>
               <p className="font-mono text-sm text-muted">
@@ -114,7 +114,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
           <p className="font-body text-sm text-muted">No products found</p>
           <button
             onClick={() => setActiveFilter("all")}
-            className="mt-4 font-mono text-xs text-cream hover:text-glow transition-colors"
+            className="mt-4 font-mono text-xs text-cream hover:text-gold transition-colors"
           >
             Clear filter
           </button>
