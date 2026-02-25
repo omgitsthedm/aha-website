@@ -46,7 +46,7 @@ export default async function CollectionPage({ params }: { params: { slug: strin
     <div className="pt-24 pb-16 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12 text-center">
-          <span className="font-mono text-label text-glow uppercase tracking-[0.2em] block mb-3">
+          <span className="font-mono text-label text-gold uppercase tracking-[0.2em] block mb-3">
             Collection
           </span>
           <h1 className="font-display font-bold text-hero mb-4">
