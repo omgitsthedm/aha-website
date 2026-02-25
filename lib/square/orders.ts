@@ -1,5 +1,4 @@
 import { squareRequest } from "./client";
-import { v4 as uuidv4 } from "crypto";
 
 interface LineItem {
   catalogObjectId: string;

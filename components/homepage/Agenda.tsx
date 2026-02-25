@@ -26,7 +26,11 @@ export function Agenda() {
             const index = Number(
               (entry.target as HTMLElement).dataset.line
             );
-            setVisibleLines((prev) => new Set([...prev, index]));
+            setVisibleLines((prev) => {
+              const next = new Set(Array.from(prev));
+              next.add(index);
+              return next;
+            });
             observer.unobserve(entry.target);
           }
         });

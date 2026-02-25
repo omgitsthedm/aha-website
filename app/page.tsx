@@ -6,11 +6,13 @@ import { LatestDrop } from "@/components/homepage/LatestDrop";
 import { ThePromise } from "@/components/homepage/ThePromise";
 import { GetOnTheList } from "@/components/homepage/GetOnTheList";
 import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
+import type { Product, Collection } from "@/lib/utils/types";
 
 export const revalidate = 300; // ISR: 5 minutes
 
 export default async function HomePage() {
-  let products, collections;
+  let products: Product[] = [];
+  let collections: Collection[] = [];
 
   try {
     [products, collections] = await Promise.all([
@@ -20,8 +22,6 @@ export default async function HomePage() {
   } catch (error) {
     // Fallback: render with empty data, site still looks good
     console.error("Failed to fetch catalog:", error);
-    products = [];
-    collections = [];
   }
 
   // Most wanted: first 6 products (we'll refine this later)

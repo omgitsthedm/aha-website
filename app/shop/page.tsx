@@ -1,5 +1,6 @@
 import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
 import { ShopContent } from "@/components/shop/ShopContent";
+import type { Product, Collection } from "@/lib/utils/types";
 
 export const revalidate = 300;
 
@@ -9,7 +10,8 @@ export const metadata = {
 };
 
 export default async function ShopPage() {
-  let products, collections;
+  let products: Product[] = [];
+  let collections: Collection[] = [];
 
   try {
     [products, collections] = await Promise.all([
@@ -18,8 +20,6 @@ export default async function ShopPage() {
     ]);
   } catch (error) {
     console.error("Failed to fetch catalog:", error);
-    products = [];
-    collections = [];
   }
 
   return (
