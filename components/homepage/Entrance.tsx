@@ -1,81 +1,58 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function Entrance() {
-  const [loaded, setLoaded] = useState(false);
-  const [lettersVisible, setLettersVisible] = useState(0);
-
-  const brandName = "AFTER HOURS AGENDA";
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const startDelay = setTimeout(() => setLoaded(true), 300);
-    return () => clearTimeout(startDelay);
+    const timer = setTimeout(() => setVisible(true), 300);
+    return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (!loaded) return;
-    if (lettersVisible >= brandName.length) return;
-
-    const timer = setTimeout(() => {
-      setLettersVisible((prev) => prev + 1);
-    }, 60);
-
-    return () => clearTimeout(timer);
-  }, [loaded, lettersVisible, brandName.length]);
-
   return (
-    <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Minimal background */}
-      <div className="absolute inset-0 bg-void" />
+    <section className="relative bg-charcoal overflow-hidden" style={{ minHeight: "calc(100vh - 4rem)" }}>
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center md:items-stretch min-h-[inherit]">
+        {/* Left: Sheep silhouette */}
+        <div className="relative w-full md:w-[55%] flex items-end justify-center md:justify-start pt-24 md:pt-0">
+          <div className="relative w-64 h-64 md:w-[420px] md:h-[420px] lg:w-[500px] lg:h-[500px] translate-y-8 md:translate-y-16">
+            <Image
+              src="/brand/sheep-full.svg"
+              alt="Black Sheep"
+              fill
+              className="object-contain opacity-90 text-cream"
+              priority
+            />
+          </div>
+        </div>
 
-      {/* Brand name — letter by letter */}
-      <h1 className="relative z-10 font-display font-extrabold text-hero text-center tracking-tight select-none">
-        {brandName.split("").map((letter, i) => (
-          <span
-            key={i}
-            className={`inline-block transition-all duration-300 ${
-              i < lettersVisible
-                ? "opacity-100 translate-y-0 blur-0"
-                : "opacity-0 translate-y-4 blur-sm"
+        {/* Right: Editorial text */}
+        <div className="w-full md:w-[45%] flex flex-col justify-center py-16 md:py-24 md:pl-8 lg:pl-12">
+          <div
+            className={`transition-all duration-700 delay-300 ${
+              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
-            style={{
-              color: i < lettersVisible ? "#E8E4DD" : "transparent",
-            }}
           >
-            {letter === " " ? "\u00A0" : letter}
-          </span>
-        ))}
-      </h1>
+            <h1 className="font-display font-black text-3xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-cream text-center md:text-left">
+              BUILT FOR THE ONES STILL MOVING AFTER HOURS
+            </h1>
 
-      {/* Tagline */}
-      <p
-        className={`relative z-10 mt-6 font-body text-muted text-sm tracking-[0.1em] uppercase transition-all duration-1000 delay-[1500ms] ${
-          lettersVisible >= brandName.length
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-4"
-        }`}
-      >
-        New York &mdash; Est. 2024
-      </p>
+            <p className="font-mono text-sm text-muted tracking-[0.15em] uppercase mt-6 text-center md:text-left">
+              Black Sheep Mentality
+            </p>
 
-      {/* Minimal scroll indicator */}
-      <div
-        className={`absolute bottom-12 left-1/2 -translate-x-1/2 transition-all duration-1000 delay-[2200ms] ${
-          lettersVisible >= brandName.length
-            ? "opacity-40"
-            : "opacity-0"
-        }`}
-      >
-        <svg
-          className="w-4 h-4 text-cream animate-breathe"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          <path d="M4 6l4 4 4-4" />
-        </svg>
+            <div className="mt-8 text-center md:text-left">
+              <Link
+                href="/shop"
+                className="inline-block border border-cream text-cream px-8 py-3 font-mono text-sm tracking-wide hover:bg-cream hover:text-void transition-all"
+              >
+                SHOP THE DROP
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
