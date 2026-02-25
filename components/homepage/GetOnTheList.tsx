@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { WhiteBand } from "@/components/ui/WhiteBand";
 
 export function GetOnTheList() {
   const [email, setEmail] = useState("");
@@ -27,50 +27,42 @@ export function GetOnTheList() {
   };
 
   return (
-    <section className="relative py-24 md:py-32 px-6 bg-charcoal">
-      <div className="max-w-lg mx-auto text-center">
-        <ScrollReveal>
-          <h2 className="font-display font-bold text-2xl md:text-3xl text-cream mb-3">
-            YOUR NAME ON THE LIST?
-          </h2>
-          <p className="font-body text-muted text-sm mb-8">
-            Early access to drops, behind-the-scenes, and stories from the
-            after hours. No spam. Just the agenda.
-          </p>
-        </ScrollReveal>
+    <section className="py-20 md:py-28 px-6 bg-void">
+      <WhiteBand />
 
-        <ScrollReveal delay={200}>
-          {submitted ? (
-            <div className="py-4">
-              <p className="font-display font-bold text-gold text-lg">
-                You&apos;re on the list.
-              </p>
-              <p className="font-mono text-xs text-muted mt-2">
-                Welcome to the agenda.
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="flex-1 px-4 py-3 bg-surface border border-border rounded-sm font-mono text-sm text-cream placeholder:text-muted/50 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all"
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-cream text-void font-display font-bold text-sm tracking-wide hover:bg-cream/80 transition-colors whitespace-nowrap"
-              >
-                I&apos;M IN
-              </button>
-            </form>
-          )}
-          {error && (
-            <p className="font-mono text-xs text-danger mt-2">{error}</p>
-          )}
-        </ScrollReveal>
+      <div className="max-w-md mx-auto text-center py-8">
+        <span className="font-mono text-sm text-muted uppercase tracking-[0.15em] block mb-8">
+          NEXT ARRIVAL: YOUR INBOX
+        </span>
+
+        {submitted ? (
+          <p className="font-mono text-xs text-line-green">
+            You&apos;re on the list.
+          </p>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              className="w-full bg-transparent border-0 border-b border-muted focus:border-cream font-mono text-sm text-cream placeholder:text-muted/50 focus:outline-none transition-colors py-3"
+            />
+            <button
+              type="submit"
+              className="font-mono text-xs text-muted hover:text-white tracking-[0.1em] mt-4 transition-colors"
+            >
+              SUBSCRIBE &rarr;
+            </button>
+          </form>
+        )}
+
+        {error && (
+          <p className="font-mono text-xs text-line-red mt-2">{error}</p>
+        )}
       </div>
+
+      <WhiteBand />
     </section>
   );
 }
