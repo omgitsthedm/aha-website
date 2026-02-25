@@ -33,38 +33,41 @@ export function NavBar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
+          {/* Left: Sheep micro mark */}
+          <Link href="/" className="flex items-center gap-3 group" aria-label="Home">
+            <svg
+              className="w-6 h-6 text-cream group-hover:text-gold transition-colors"
+              viewBox="0 0 100 100"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M50 85 C30 85, 18 70, 18 55 C18 40, 28 28, 50 28 C72 28, 82 40, 82 55 C82 70, 70 85, 50 85 Z"/>
+              <path d="M22 45 C14 38, 6 32, 4 24 C2 16, 8 12, 16 16 C20 18, 20 28, 22 38"/>
+              <path d="M78 45 C86 38, 94 32, 96 24 C98 16, 92 12, 84 16 C80 18, 80 28, 78 38"/>
+            </svg>
+          </Link>
+
+          {/* Center: Brand name */}
           <Link
             href="/"
-            className="font-display font-bold text-lg tracking-tight hover:text-glow transition-colors"
+            className="absolute left-1/2 -translate-x-1/2 font-mono text-sm tracking-[0.3em] uppercase text-cream hover:text-gold transition-colors"
           >
             AFTER HOURS AGENDA
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Right side */}
+          <div className="flex items-center gap-4">
+            {/* Desktop nav links */}
             <Link
               href="/shop"
-              className="text-sm font-body text-muted hover:text-cream transition-colors"
+              className="hidden md:block text-sm font-mono text-muted hover:text-cream transition-colors tracking-wide"
             >
               Shop
             </Link>
-            <Link
-              href="/collections/black-sheep"
-              className="text-sm font-body text-muted hover:text-cream transition-colors"
-            >
-              Collections
-            </Link>
-            <Link
-              href="/about"
-              className="text-sm font-body text-muted hover:text-cream transition-colors"
-            >
-              About
-            </Link>
-          </div>
 
-          {/* Right side */}
-          <div className="flex items-center gap-4">
             {/* Cart */}
             <button
               onClick={toggleCart}
@@ -84,7 +87,7 @@ export function NavBar() {
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-glow text-void text-[10px] font-mono font-bold rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold text-void text-[10px] font-mono font-bold rounded-full flex items-center justify-center">
                   {itemCount}
                 </span>
               )}
@@ -138,12 +141,26 @@ export function NavBar() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="font-display text-4xl font-bold text-cream hover:text-glow transition-colors"
+              className="font-display text-4xl font-bold text-cream hover:text-gold transition-colors"
               style={{ animationDelay: `${i * 80}ms` }}
             >
               {link.label}
             </Link>
           ))}
+        </div>
+
+        {/* Subtle sheep silhouette at bottom */}
+        <div className="absolute bottom-12 opacity-10">
+          <svg
+            className="w-16 h-16 text-cream"
+            viewBox="0 0 200 160"
+            fill="currentColor"
+          >
+            <path d="M60 55 C40 50, 25 60, 25 78 C25 96, 35 108, 55 110 L55 140 L65 140 L65 112 L90 114 L90 140 L100 140 L100 114 L125 112 L125 140 L135 140 L135 110 L150 108 L150 140 L160 140 L160 105 C175 98, 180 85, 178 72 C176 58, 165 48, 150 48 C145 42, 135 40, 125 42 C115 36, 100 35, 88 38 C78 34, 65 38, 60 48 Z"/>
+            <path d="M25 78 C18 75, 10 68, 8 60 C6 52, 10 44, 18 40 C26 36, 35 38, 40 44 C42 48, 40 55, 35 60 C30 65, 25 72, 25 78 Z"/>
+            <ellipse cx="20" cy="54" rx="4" ry="5" fill="#0A0A0A"/>
+            <path d="M18 40 C14 32, 8 28, 4 30 C0 32, 2 38, 8 42 Z"/>
+          </svg>
         </div>
       </div>
     </>
