@@ -15,12 +15,12 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
           <div className="bg-surface border border-border rounded-sm p-8">
             <h2 className="font-display font-bold text-lg mb-3">Email</h2>
-            <p className="font-mono text-sm text-gold">hello@afterhoursagenda.com</p>
+            <p className="font-mono text-sm text-cream">hello@afterhoursagenda.com</p>
             <p className="text-sm text-muted mt-2">We respond within 24 hours.</p>
           </div>
           <div className="bg-surface border border-border rounded-sm p-8">
             <h2 className="font-display font-bold text-lg mb-3">Social</h2>
-            <p className="font-mono text-sm text-gold">@afterhoursagenda</p>
+            <p className="font-mono text-sm text-cream">@afterhoursagenda</p>
             <p className="text-sm text-muted mt-2">DM us on Instagram or TikTok.</p>
           </div>
         </div>

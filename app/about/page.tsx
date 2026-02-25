@@ -10,7 +10,7 @@ export default function AboutPage() {
     <div className="pt-24 pb-16 px-6">
       <div className="max-w-3xl mx-auto">
         <ScrollReveal>
-          <span className="font-mono text-label text-gold uppercase tracking-[0.2em] block mb-3 text-center">
+          <span className="font-mono text-label text-cream uppercase tracking-[0.2em] block mb-3 text-center">
             Our Story
           </span>
           <h1 className="font-display font-bold text-hero text-center mb-8">
@@ -31,7 +31,7 @@ export default function AboutPage() {
               built around an idea, a mindset, a way of moving through the world.
             </p>
 
-            <blockquote className="border-l-2 border-gold pl-6 py-2 font-body italic text-2xl text-cream">
+            <blockquote className="border-l-2 border-muted pl-6 py-2 font-body italic text-2xl text-cream">
               &ldquo;For the ones who stay out late. For the ones who think different.
               For the ones who write their own rules.&rdquo;
             </blockquote>

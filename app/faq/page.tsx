@@ -22,7 +22,7 @@ export default function FAQPage() {
         <div className="space-y-4">
           {faqs.map((faq, i) => (
             <details key={i} className="group bg-surface border border-border rounded-sm">
-              <summary className="flex items-center justify-between p-6 cursor-pointer font-display font-bold text-sm hover:text-gold transition-colors">
+              <summary className="flex items-center justify-between p-6 cursor-pointer font-display font-bold text-sm hover:text-white transition-colors">
                 {faq.q}
                 <span className="text-muted group-open:rotate-45 transition-transform duration-200 text-lg">+</span>
               </summary>

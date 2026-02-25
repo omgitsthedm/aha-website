@@ -18,7 +18,7 @@ export default function PrivacyPage() {
           <h2 className="font-display font-bold text-base text-cream !mt-8">We Never Sell Your Data</h2>
           <p>Your information is never sold or rented to third parties. Period. We share information only with service providers necessary to fulfill your order (Square for payments, Printful for production and shipping).</p>
           <h2 className="font-display font-bold text-base text-cream !mt-8">Contact</h2>
-          <p>Questions about your data? Email us at <span className="text-gold">hello@afterhoursagenda.com</span>.</p>
+          <p>Questions about your data? Email us at <span className="text-cream">hello@afterhoursagenda.com</span>.</p>
         </div>
       </div>
     </div>

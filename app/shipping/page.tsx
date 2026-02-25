@@ -27,7 +27,7 @@ export default function ShippingPage() {
           </div>
           <div className="bg-surface border border-border rounded-sm p-6">
             <h2 className="font-display font-bold text-lg mb-3">Free Shipping</h2>
-            <p>Orders over <strong className="text-gold">$75</strong> ship free within the US. International shipping rates are calculated at checkout.</p>
+            <p>Orders over <strong className="text-cream">$75</strong> ship free within the US. International shipping rates are calculated at checkout.</p>
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ export default function ReturnsPage() {
           <div className="bg-surface border border-border rounded-sm p-6">
             <h2 className="font-display font-bold text-lg mb-3">How to Return</h2>
             <ol className="list-decimal list-inside space-y-2 mt-2">
-              <li>Email us at <span className="text-gold">hello@afterhoursagenda.com</span> with your order number</li>
+              <li>Email us at <span className="text-cream">hello@afterhoursagenda.com</span> with your order number</li>
               <li>We'll send you a return shipping label</li>
               <li>Ship the item back within 7 days</li>
               <li>Refund processed within 5-7 business days of receiving the item</li>
