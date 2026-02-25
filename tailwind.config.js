@@ -7,24 +7,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        void: "#080808",
-        surface: "#111111",
-        elevated: "#1C1C1C",
-        border: "#2A2A2A",
-        glow: {
-          DEFAULT: "#D4A853",
-          dim: "rgba(212, 168, 83, 0.25)",
-          faint: "rgba(212, 168, 83, 0.08)",
+        void: "#0A0A0A",
+        charcoal: "#1C1A18",
+        surface: {
+          DEFAULT: "#151413",
+          warm: "#252320",
         },
-        cream: "#E8E4DD",
-        muted: "#6B6560",
+        elevated: "#2A2826",
+        border: {
+          DEFAULT: "#222020",
+          warm: "#3A3632",
+        },
+        gold: {
+          DEFAULT: "#C8A961",
+          dim: "rgba(200,169,97,0.25)",
+          faint: "rgba(200,169,97,0.08)",
+        },
+        cream: "#EDE9E3",
+        muted: "#7A756E",
         danger: "#EA4A4A",
         success: "#4AEA80",
       },
       fontFamily: {
-        display: ["var(--font-syne)", "sans-serif"],
-        editorial: ["var(--font-instrument)", "serif"],
-        body: ["var(--font-dm-sans)", "sans-serif"],
+        display: ["var(--font-inter)", "sans-serif"],
+        body: ["var(--font-inter)", "sans-serif"],
         mono: ["var(--font-ibm-plex)", "monospace"],
       },
       fontSize: {
@@ -37,7 +43,6 @@ module.exports = {
         "fade-up": "fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "fade-in": "fadeIn 0.6s ease-out forwards",
         "grain": "grain 0.5s steps(1) infinite",
-        "text-reveal": "textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "slide-in-right": "slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "breathe": "breathe 3s ease-in-out infinite",
       },
@@ -61,10 +66,6 @@ module.exports = {
           "70%": { transform: "translate(0%, 15%)" },
           "80%": { transform: "translate(3%, 35%)" },
           "90%": { transform: "translate(-10%, 10%)" },
-        },
-        textReveal: {
-          "0%": { clipPath: "inset(100% 0 0 0)" },
-          "100%": { clipPath: "inset(0 0 0 0)" },
         },
         slideInRight: {
           "0%": { transform: "translateX(100%)", opacity: "0" },
