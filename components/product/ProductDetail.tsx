@@ -5,6 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product, Collection } from "@/lib/utils/types";
 import { useCart } from "@/components/cart/CartProvider";
+import { RouteBadge } from "@/components/ui/RouteBadge";
+import { WhiteBand } from "@/components/ui/WhiteBand";
+import { getLineForCollection } from "@/lib/utils/subway-lines";
 
 interface ProductDetailProps {
   product: Product;
@@ -24,6 +27,10 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
     (v) => v.id === selectedVariation
   );
 
+  const line = collection ? getLineForCollection(collection.slug) : null;
+  const lineColor = line?.color || "#E8E4DE";
+  const lineTextColor = line?.color === "#FCCC0A" ? "#141414" : "#FFFFFF";
+
   const handleAddToCart = () => {
     if (!currentVariation) return;
 
@@ -42,26 +49,32 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
     setTimeout(() => setAddedFeedback(false), 2000);
   };
 
+  // Sanitized HTML rendering for product description from CMS
+  const descriptionMarkup = product.description
+    ? { __html: product.description }
+    : null;
+
   return (
     <div className="pt-20 pb-16">
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <nav className="font-mono text-xs text-muted">
-          <Link href="/shop" className="hover:text-cream transition-colors">
+        <nav className="font-mono text-xs text-muted flex items-center gap-2">
+          <Link href="/shop" className="hover:text-white transition-colors">
             Shop
           </Link>
           {collection && (
             <>
-              <span className="mx-2">/</span>
+              <span>/</span>
               <Link
                 href={`/collections/${collection.slug}`}
-                className="hover:text-cream transition-colors"
+                className="hover:text-white transition-colors inline-flex items-center gap-1.5"
               >
+                <RouteBadge slug={collection.slug} size="sm" />
                 {collection.name}
               </Link>
             </>
           )}
-          <span className="mx-2">/</span>
+          <span>/</span>
           <span className="text-cream">{product.name}</span>
         </nav>
       </div>
@@ -70,7 +83,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
         {/* Images */}
         <div className="space-y-4">
-          <div className="relative aspect-[3/4] overflow-hidden bg-surface rounded-sm">
+          <div className="relative aspect-[3/4] overflow-hidden bg-surface">
             {product.images[activeImage] ? (
               <Image
                 src={product.images[activeImage]}
@@ -94,11 +107,16 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                 <button
                   key={i}
                   onClick={() => setActiveImage(i)}
-                  className={`relative w-16 h-16 overflow-hidden rounded-sm border transition-all ${
+                  className={`relative w-16 h-16 overflow-hidden border-b-2 transition-all ${
                     i === activeImage
-                      ? "border-gold"
-                      : "border-border hover:border-muted"
+                      ? ""
+                      : "border-transparent hover:border-muted"
                   }`}
+                  style={
+                    i === activeImage
+                      ? { borderColor: lineColor }
+                      : undefined
+                  }
                 >
                   <Image
                     src={img}
@@ -116,9 +134,9 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
         {/* Details */}
         <div className="lg:py-8">
           {collection && (
-            <span className="font-mono text-label text-gold uppercase tracking-[0.2em] block mb-3">
-              {collection.name}
-            </span>
+            <div className="mb-3">
+              <RouteBadge slug={collection.slug} size="lg" showName />
+            </div>
           )}
 
           <h1 className="font-display font-bold text-3xl md:text-4xl mb-4">
@@ -142,9 +160,18 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                     onClick={() => setSelectedVariation(v.id)}
                     className={`px-4 py-2 border font-mono text-sm transition-all ${
                       v.id === selectedVariation
-                        ? "border-cream bg-cream text-void"
+                        ? ""
                         : "border-border text-muted hover:border-cream hover:text-cream"
                     }`}
+                    style={
+                      v.id === selectedVariation
+                        ? {
+                            borderColor: lineColor,
+                            backgroundColor: lineColor,
+                            color: lineTextColor,
+                          }
+                        : undefined
+                    }
                   >
                     {v.name}
                   </button>
@@ -156,41 +183,48 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           {/* Add to cart */}
           <button
             onClick={handleAddToCart}
-            className={`w-full py-4 font-display font-bold text-sm tracking-wide transition-all duration-300 ${
-              addedFeedback
-                ? "bg-gold text-void"
-                : "bg-cream text-void hover:bg-cream/80"
-            }`}
+            className="w-full py-4 font-display font-bold text-sm tracking-wide transition-all duration-300"
+            style={{
+              backgroundColor: lineColor,
+              color: lineTextColor,
+              opacity: addedFeedback ? 0.85 : 1,
+            }}
           >
             {addedFeedback ? "ADDED TO BAG" : "ADD TO BAG"}
           </button>
 
           {/* Trust badges */}
-          <div className="flex items-center gap-6 mt-4 py-4 border-t border-border">
-            <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-              Secure Checkout
-            </span>
-            <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-              Free Ship $75+
-            </span>
-            <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-              Made to Order
-            </span>
+          <div className="mt-4 py-4">
+            <WhiteBand />
+            <div className="flex items-center gap-6 pt-4">
+              <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                Secure Checkout
+              </span>
+              <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                Free Ship $75+
+              </span>
+              <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Made to Order
+              </span>
+            </div>
           </div>
 
           {/* Description */}
-          {product.description && (
-            <div className="mt-8 pt-6 border-t border-border">
-              <h2 className="font-display font-bold text-sm mb-4 text-muted uppercase tracking-wide">
-                Details
-              </h2>
-              <div
-                className="font-body text-sm text-cream/80 leading-relaxed prose prose-invert prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: product.description }}
-              />
+          {descriptionMarkup && (
+            <div className="mt-8">
+              <WhiteBand />
+              <div className="pt-6">
+                <h2 className="font-display font-bold text-sm mb-4 text-muted uppercase tracking-wide">
+                  Details
+                </h2>
+                <div
+                  className="font-body text-sm text-cream/80 leading-relaxed prose prose-invert prose-sm max-w-none"
+                  dangerouslySetInnerHTML={descriptionMarkup}
+                />
+              </div>
             </div>
           )}
         </div>
@@ -205,7 +239,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {related.map((p) => (
               <Link key={p.id} href={`/product/${p.slug}`} className="group block">
-                <div className="relative aspect-[3/4] overflow-hidden bg-surface rounded-sm">
+                <div className="relative aspect-[3/4] overflow-hidden bg-surface">
                   {p.images[0] ? (
                     <Image
                       src={p.images[0]}
@@ -219,7 +253,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                   )}
                 </div>
                 <div className="mt-3 space-y-1">
-                  <h3 className="font-body text-sm truncate group-hover:text-gold transition-colors">
+                  <h3 className="font-body text-sm truncate group-hover:text-white transition-colors">
                     {p.name}
                   </h3>
                   <p className="font-mono text-sm text-muted">{p.priceFormatted}</p>
