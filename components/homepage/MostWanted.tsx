@@ -69,7 +69,7 @@ export function MostWanted({ products }: MostWantedProps) {
                   </div>
 
                   <div className="mt-3 space-y-1">
-                    <h3 className="font-body text-sm text-cream truncate group-hover:text-glow transition-colors duration-300">
+                    <h3 className="font-body text-sm text-cream truncate group-hover:text-gold transition-colors duration-300">
                       {product.name}
                     </h3>
                     <p className="font-mono text-sm text-muted">

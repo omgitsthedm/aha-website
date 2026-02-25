@@ -19,11 +19,11 @@ export function LatestDrop({ products }: LatestDropProps) {
     <section className="relative py-24 md:py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <ScrollReveal>
-          <span className="font-mono text-label text-muted uppercase tracking-[0.2em] block mb-3">
-            Latest Drop
+          <span className="font-mono text-[11px] text-muted uppercase tracking-[0.2em] block mb-3">
+            Featured
           </span>
-          <h2 className="font-display font-bold text-3xl md:text-chapter mb-12">
-            Fresh off the press
+          <h2 className="font-display font-bold text-2xl md:text-3xl text-cream mb-12">
+            New This Week
           </h2>
         </ScrollReveal>
 
@@ -47,7 +47,7 @@ export function LatestDrop({ products }: LatestDropProps) {
                 )}
               </div>
               <div className="mt-4">
-                <h3 className="font-display font-bold text-xl group-hover:text-glow transition-colors duration-300">
+                <h3 className="font-display font-bold text-xl group-hover:text-gold transition-colors duration-300">
                   {hero.name}
                 </h3>
                 <p className="font-mono text-sm text-muted mt-1">
@@ -63,7 +63,7 @@ export function LatestDrop({ products }: LatestDropProps) {
               <ScrollReveal key={product.id} delay={i * 100}>
                 <Link
                   href={`/product/${product.slug}`}
-                  className="group flex gap-4 items-center p-4 border border-border hover:border-cream/20 transition-all duration-300"
+                  className="group flex gap-4 items-center p-4 border border-border hover:border-warm transition-all duration-300"
                 >
                   <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden bg-surface">
                     {product.images[0] ? (
@@ -79,7 +79,7 @@ export function LatestDrop({ products }: LatestDropProps) {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-body text-sm text-cream truncate group-hover:text-glow transition-colors duration-300">
+                    <h3 className="font-body text-sm text-cream truncate group-hover:text-gold transition-colors duration-300">
                       {product.name}
                     </h3>
                     <p className="font-mono text-sm text-muted mt-0.5">
