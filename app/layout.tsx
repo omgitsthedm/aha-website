@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { NavBar } from "@/components/ui/NavBar";
+import { AnnouncementBar } from "@/components/ui/AnnouncementBar";
 import { FilmGrain } from "@/components/ui/FilmGrain";
 import { Footer } from "@/components/ui/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
@@ -45,6 +46,7 @@ export default function RootLayout({
       <body className="bg-void text-cream font-body antialiased">
         <CartProvider>
           <FilmGrain />
+          <AnnouncementBar />
           <NavBar />
           <main className="min-h-screen">{children}</main>
           <Footer />
