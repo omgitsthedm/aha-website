@@ -3,93 +3,89 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/utils/types";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 interface LatestDropProps {
   products: Product[];
 }
 
+const colSpanClass: Record<number, string> = {
+  4: "md:col-span-4",
+  8: "md:col-span-8",
+};
+
 export function LatestDrop({ products }: LatestDropProps) {
   if (products.length === 0) return null;
 
-  const hero = products[0];
-  const rest = products.slice(1);
+  // Build asymmetric rows: alternating large/small pattern
+  const rows: { product: Product; span: number }[][] = [];
+  const items = products.slice(0, 4);
+
+  for (let i = 0; i < items.length; i += 2) {
+    const row: { product: Product; span: number }[] = [];
+    const isEvenRow = rows.length % 2 === 0;
+
+    if (items[i]) {
+      row.push({
+        product: items[i],
+        span: isEvenRow ? 8 : 4,
+      });
+    }
+    if (items[i + 1]) {
+      row.push({
+        product: items[i + 1],
+        span: isEvenRow ? 4 : 8,
+      });
+    }
+    rows.push(row);
+  }
 
   return (
-    <section className="relative py-24 md:py-32 px-6">
+    <section className="py-24 md:py-32 px-6 bg-void">
       <div className="max-w-7xl mx-auto">
-        <ScrollReveal>
-          <span className="font-mono text-[11px] text-muted uppercase tracking-[0.2em] block mb-3">
-            Featured
-          </span>
-          <h2 className="font-display font-bold text-2xl md:text-3xl text-cream mb-12">
-            New This Week
-          </h2>
-        </ScrollReveal>
+        <span className="font-mono text-label text-muted uppercase tracking-[0.2em] block mb-12">
+          New This Week
+        </span>
 
-        {/* Editorial layout: hero product + strip */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Hero product — large */}
-          <ScrollReveal>
-            <Link href={`/product/${hero.slug}`} className="group block">
-              <div className="relative aspect-[3/4] overflow-hidden bg-surface">
-                {hero.images[0] ? (
-                  <Image
-                    src={hero.images[0]}
-                    alt={hero.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-elevated" />
-                )}
-              </div>
-              <div className="mt-4">
-                <h3 className="font-display font-bold text-xl group-hover:text-gold transition-colors duration-300">
-                  {hero.name}
-                </h3>
-                <p className="font-mono text-sm text-muted mt-1">
-                  {hero.priceFormatted}
-                </p>
-              </div>
-            </Link>
-          </ScrollReveal>
-
-          {/* Rest — stacked on right */}
-          <div className="flex flex-col gap-4">
-            {rest.map((product, i) => (
-              <ScrollReveal key={product.id} delay={i * 100}>
-                <Link
-                  href={`/product/${product.slug}`}
-                  className="group flex gap-4 items-center p-4 border border-border hover:border-warm transition-all duration-300"
-                >
-                  <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden bg-surface">
-                    {product.images[0] ? (
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        fill
-                        className="object-cover"
-                        sizes="80px"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-elevated" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-body text-sm text-cream truncate group-hover:text-gold transition-colors duration-300">
-                      {product.name}
-                    </h3>
-                    <p className="font-mono text-sm text-muted mt-0.5">
-                      {product.priceFormatted}
-                    </p>
-                  </div>
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
+        <div className="space-y-20">
+          {rows.map((row, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6"
+            >
+              {row.map(({ product, span }) => (
+                <div key={product.id} className={colSpanClass[span]}>
+                  <Link href={`/product/${product.slug}`} className="group block">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-mono text-sm text-muted group-hover:text-white transition-colors">
+                        {product.name}
+                      </span>
+                      <span className="font-mono text-sm text-muted">
+                        {product.priceFormatted}
+                      </span>
+                    </div>
+                    <div className="relative aspect-[3/4] overflow-hidden">
+                      {product.images[0] ? (
+                        <Image
+                          src={product.images[0]}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                          sizes={
+                            span === 8
+                              ? "(max-width: 768px) 100vw, 66vw"
+                              : "(max-width: 768px) 100vw, 33vw"
+                          }
+                          priority={rowIndex === 0}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-void" />
+                      )}
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </section>
