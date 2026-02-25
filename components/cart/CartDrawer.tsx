@@ -46,7 +46,7 @@ export function CartDrawer() {
                 <p className="text-muted mb-4">Your bag is empty</p>
                 <button
                   onClick={toggleCart}
-                  className="font-mono text-sm text-glow hover:text-cream transition-colors"
+                  className="font-mono text-sm text-gold hover:text-cream transition-colors"
                 >
                   CONTINUE SHOPPING &rarr;
                 </button>
@@ -120,16 +120,14 @@ export function CartDrawer() {
               <Link
                 href="/cart"
                 onClick={toggleCart}
-                className="block w-full py-3 bg-cream text-void font-display font-bold text-center text-sm tracking-wide hover:bg-glow transition-colors"
+                className="block w-full py-3 bg-cream text-void font-display font-bold text-center text-sm tracking-wide hover:bg-gold transition-colors"
               >
                 CHECKOUT
               </Link>
               {/* Trust badges */}
-              <div className="flex items-center justify-center gap-4 pt-2">
-                <span className="text-[10px] text-muted font-mono">🔒 SECURE</span>
-                <span className="text-[10px] text-muted font-mono">📦 FREE SHIP $75+</span>
-                <span className="text-[10px] text-muted font-mono">↩️ 30-DAY RETURNS</span>
-              </div>
+              <p className="text-[10px] text-muted font-mono text-center pt-2 tracking-wide">
+                SECURE &middot; FREE SHIP $75+ &middot; 30-DAY RETURNS
+              </p>
             </div>
           )}
         </div>
