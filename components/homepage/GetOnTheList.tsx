@@ -27,11 +27,11 @@ export function GetOnTheList() {
   };
 
   return (
-    <section className="relative py-24 md:py-32 px-6">
+    <section className="relative py-24 md:py-32 px-6 bg-charcoal">
       <div className="max-w-lg mx-auto text-center">
         <ScrollReveal>
-          <h2 className="font-editorial italic text-3xl md:text-4xl text-cream mb-3">
-            Your name on the list?
+          <h2 className="font-display font-bold text-2xl md:text-3xl text-cream mb-3">
+            YOUR NAME ON THE LIST?
           </h2>
           <p className="font-body text-muted text-sm mb-8">
             Early access to drops, behind-the-scenes, and stories from the
@@ -42,7 +42,7 @@ export function GetOnTheList() {
         <ScrollReveal delay={200}>
           {submitted ? (
             <div className="py-4">
-              <p className="font-display font-bold text-glow text-lg">
+              <p className="font-display font-bold text-gold text-lg">
                 You&apos;re on the list.
               </p>
               <p className="font-mono text-xs text-muted mt-2">
@@ -56,7 +56,7 @@ export function GetOnTheList() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="flex-1 px-4 py-3 bg-surface border border-border rounded-sm font-mono text-sm text-cream placeholder:text-muted/50 focus:outline-none focus:border-glow/50 focus:ring-1 focus:ring-glow/20 transition-all"
+                className="flex-1 px-4 py-3 bg-surface border border-border rounded-sm font-mono text-sm text-cream placeholder:text-muted/50 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all"
               />
               <button
                 type="submit"
