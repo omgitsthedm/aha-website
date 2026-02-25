@@ -88,12 +88,12 @@ export async function getAllCollections(): Promise<Collection[]> {
   // Collection IDs and their metadata
   const collectionMeta: Record<string, { accent: string; description: string }> = {
     "57JPU5ZDHXGWVPRQQZMWVR5Q": { accent: "mint", description: "Stand apart. Think different. Be the one they talk about." },
-    "JPSOS6BFOQPITXEJFYJWYIXZ": { accent: "gold", description: "No crowns. No thrones. Just people who lead themselves." },
+    "JPSOS6BFOQPITXEJFYJWYIXZ": { accent: "cream", description: "No crowns. No thrones. Just people who lead themselves." },
     "SZ6M4QZCTTSPNRKY5VS3JDAW": { accent: "blue", description: "For the hours between midnight and dawn." },
-    "OCWUVMJQMVGJZ6FT62K5HVP4": { accent: "gold", description: "The city that made us. Every piece carries its energy." },
+    "OCWUVMJQMVGJZ6FT62K5HVP4": { accent: "cream", description: "The city that made us. Every piece carries its energy." },
     "BRNXSU4IF5U3AWAYYYP3TTHU": { accent: "sunrise", description: "Wear your optimism. Tomorrow is unwritten." },
     "ARX3DXVEX6CJOIBNNYKNX6MU": { accent: "sunrise", description: "The glass is always full. Hope is a strategy." },
-    "QGLIV54AJSOYXZOX5IBWQVPM": { accent: "gold", description: "The building blocks. Clean cuts, premium feel." },
+    "QGLIV54AJSOYXZOX5IBWQVPM": { accent: "cream", description: "The building blocks. Clean cuts, premium feel." },
     "FAIJ7SE5DJP25N26ND3L76SU": { accent: "mint", description: "Fresh off the press. The latest from After Hours." },
   };
 

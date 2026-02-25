@@ -19,7 +19,9 @@ interface CartContextType {
   clearCart: () => void;
   isOpen: boolean;
   toggleCart: () => void;
+  setCartOpen: (open: boolean) => void;
   total: number;
+  totalItems: number;
   totalFormatted: string;
 }
 
@@ -90,8 +92,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = useCallback(() => setItems([]), []);
   const toggleCart = useCallback(() => setIsOpen((prev) => !prev), []);
+  const setCartOpen = useCallback((open: boolean) => setIsOpen(open), []);
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalFormatted = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -107,7 +111,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         isOpen,
         toggleCart,
+        setCartOpen,
         total,
+        totalItems,
         totalFormatted,
       }}
     >

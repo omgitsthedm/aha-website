@@ -7,7 +7,7 @@ import { RouteBadge } from "@/components/ui/RouteBadge";
 import { WhiteBand } from "@/components/ui/WhiteBand";
 import { SUBWAY_LINES } from "@/lib/utils/subway-lines";
 
-const COLLECTIONS = SUBWAY_LINES.map((line) => ({
+const COLLECTIONS = Object.values(SUBWAY_LINES).map((line) => ({
   slug: line.slug,
   name: line.name,
   line,

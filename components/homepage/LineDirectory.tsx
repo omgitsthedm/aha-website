@@ -8,7 +8,7 @@ interface LineDirectoryProps {
   collections: Collection[];
 }
 
-const VALID_SLUGS = new Set(SUBWAY_LINES.map((line) => line.slug));
+const VALID_SLUGS = new Set(Object.values(SUBWAY_LINES).map((line) => line.slug));
 
 export function LineDirectory({ collections }: LineDirectoryProps) {
   const filtered = collections.filter((col) => VALID_SLUGS.has(col.slug));
