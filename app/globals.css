@@ -330,6 +330,68 @@
 }
 
 /* ═══════════════════════════════════════════════
+   NAV LINK UNDERLINE ANIMATION
+   ═══════════════════════════════════════════════ */
+
+.nav-link-hover {
+  position: relative;
+}
+
+.nav-link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 100%;
+  height: 1px;
+  background: #E8E4DE;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-link-hover:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* ═══════════════════════════════════════════════
+   CART DRAWER SCAN-LINE EFFECT
+   ═══════════════════════════════════════════════ */
+
+.scan-lines {
+  position: relative;
+}
+
+.scan-lines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(232, 228, 222, 0.03) 2px,
+    rgba(232, 228, 222, 0.03) 3px
+  );
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   FOOTER LINK HOVER SLIDE
+   ═══════════════════════════════════════════════ */
+
+.footer-link {
+  transition: color 0.25s ease, transform 0.25s ease;
+  display: inline-block;
+}
+
+.footer-link:hover {
+  color: #E8E4DE;
+  transform: translateX(2px);
+}
+
+/* ═══════════════════════════════════════════════
    REDUCED MOTION
    ═══════════════════════════════════════════════ */
 

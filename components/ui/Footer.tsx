@@ -14,11 +14,11 @@ export function Footer() {
     <footer className="bg-void subway-tiles-dark">
       <WhiteBand strong />
 
-      <div className="max-w-7xl mx-auto px-6 py-16 noise-overlay">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="max-w-7xl mx-auto px-6 py-20 noise-overlay">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
           {/* Col 1 — Office */}
           <div>
-            <p className="font-mono text-sm tracking-[0.2em] uppercase mb-6">
+            <p className="font-mono text-sm tracking-[0.2em] uppercase mb-8 pb-3 border-b border-cream/10">
               EVERYTHING IS AFTER HOURS
             </p>
             <p className="text-sm text-muted leading-relaxed">
@@ -29,14 +29,14 @@ export function Footer() {
 
           {/* Col 2 — Contact */}
           <div>
-            <h4 className="font-mono text-sm tracking-[0.2em] uppercase mb-6">
+            <h4 className="font-mono text-sm tracking-[0.2em] uppercase mb-8 pb-3 border-b border-cream/10">
               Contact
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               <li>
                 <a
                   href="mailto:hello@afterhoursagenda.com"
-                  className="font-mono text-sm text-muted hover:text-white hover:underline underline-offset-4 transition-colors"
+                  className="font-mono text-sm text-muted footer-link"
                 >
                   hello@afterhoursagenda.com
                 </a>
@@ -46,7 +46,7 @@ export function Footer() {
                   href="https://instagram.com/afterhoursagenda"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-sm text-muted hover:text-white hover:underline underline-offset-4 transition-colors"
+                  className="font-mono text-sm text-muted footer-link"
                 >
                   Instagram
                 </a>
@@ -56,7 +56,7 @@ export function Footer() {
                   href="https://tiktok.com/@afterhoursagenda"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-sm text-muted hover:text-white hover:underline underline-offset-4 transition-colors"
+                  className="font-mono text-sm text-muted footer-link"
                 >
                   TikTok
                 </a>
@@ -66,15 +66,15 @@ export function Footer() {
 
           {/* Col 3 — Lines */}
           <div>
-            <h4 className="font-mono text-sm tracking-[0.2em] uppercase mb-6">
+            <h4 className="font-mono text-sm tracking-[0.2em] uppercase mb-8 pb-3 border-b border-cream/10">
               Lines
             </h4>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               {Object.values(SUBWAY_LINES).map((line) => (
                 <Link
                   key={line.slug}
                   href={`/collections/${line.slug}`}
-                  className="hover:opacity-80 transition-opacity"
+                  className="hover:opacity-80 transition-opacity inline-block hover:translate-x-0.5 transition-transform duration-200"
                 >
                   <RouteBadge slug={line.slug} size="md" showName />
                 </Link>
@@ -84,7 +84,7 @@ export function Footer() {
         </div>
 
         {/* Sheep SVG */}
-        <div className="flex justify-center mt-12">
+        <div className="flex justify-center mt-16">
           <svg
             className="w-20 h-20 opacity-10 text-cream hover-flicker"
             viewBox="0 0 200 160"
@@ -98,18 +98,18 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-8 pt-8">
+        <div className="mt-10 pt-10">
           <WhiteBand />
-          <div className="flex items-center justify-between mt-8">
+          <div className="flex items-center justify-between mt-10">
             {/* Left — Copyright */}
-            <p className="font-mono text-[11px] text-muted">
+            <p className="font-mono text-[11px] text-muted tracking-[0.15em]">
               &copy; {new Date().getFullYear()} AFTER HOURS AGENDA. ALL RIGHTS RESERVED.
             </p>
 
             {/* Center — Back to top */}
             <button
               onClick={scrollToTop}
-              className="font-mono text-muted hover:text-white transition-colors"
+              className="font-mono text-sm text-muted hover:text-white transition-all duration-200 w-9 h-9 flex items-center justify-center rounded-full hover:ring-1 hover:ring-cream/20"
               aria-label="Back to top"
             >
               &uarr;

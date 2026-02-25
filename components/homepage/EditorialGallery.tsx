@@ -45,14 +45,25 @@ export function EditorialGallery() {
   );
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 px-6 bg-void">
+    <section ref={sectionRef} className="py-20 md:py-28 px-6 bg-void">
       <div className="max-w-7xl mx-auto">
+        {/* Section heading */}
+        <span
+          className="font-mono text-cream/25 uppercase block mb-8"
+          style={{
+            fontSize: "clamp(0.5rem, 0.8vw, 0.6rem)",
+            letterSpacing: "0.3em",
+          }}
+        >
+          From the Platform
+        </span>
+
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4">
           {photos.map((photo, i) => (
             <div
               key={i}
               data-parallax={photo.row}
-              className={`relative overflow-hidden ${photo.colSpan} ${photo.aspect}`}
+              className={`relative overflow-hidden ${photo.colSpan} ${photo.aspect} border border-cream/[0.08]`}
             >
               <Image
                 src={photo.src}
@@ -69,8 +80,14 @@ export function EditorialGallery() {
             </div>
           ))}
         </div>
-        <p className="font-mono text-[11px] text-muted tracking-[0.1em] mt-6 text-center">
-          shot on location &mdash; new york city
+        <p
+          className="font-mono text-muted/60 uppercase mt-8 text-center"
+          style={{
+            fontSize: "clamp(0.5rem, 0.7vw, 0.6rem)",
+            letterSpacing: "0.2em",
+          }}
+        >
+          Shot on Location &mdash; New York City
         </p>
       </div>
     </section>

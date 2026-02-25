@@ -83,32 +83,32 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
     : null;
 
   return (
-    <div className="pt-20 pb-16">
+    <div className="pt-20 pb-20">
       {/* Station signage breadcrumb */}
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <nav className="font-mono text-xs text-muted flex items-center gap-2">
-          <Link href="/shop" className="hover:text-white transition-colors inline-flex items-center gap-1">
-            <span className="opacity-60">&larr;</span> PLATFORM
+        <nav className="font-mono text-[10px] text-muted/60 flex items-center gap-2">
+          <Link href="/shop" className="hover:text-muted transition-colors inline-flex items-center gap-1">
+            <span className="opacity-50">&larr;</span> PLATFORM
           </Link>
           {collection && (
             <>
-              <span className="text-muted/40">&rarr;</span>
+              <span className="text-muted/25">&rarr;</span>
               <Link
                 href={`/collections/${collection.slug}`}
-                className="hover:text-white transition-colors inline-flex items-center gap-1.5"
+                className="hover:text-muted transition-colors inline-flex items-center gap-1.5"
               >
                 <RouteBadge slug={collection.slug} size="sm" />
                 {collection.name}
               </Link>
             </>
           )}
-          <span className="text-muted/40">&rarr;</span>
-          <span className="text-cream">{product.name}</span>
+          <span className="text-muted/25">&rarr;</span>
+          <span className="text-muted/80">{product.name}</span>
         </nav>
       </div>
 
       {/* Product hero */}
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
         {/* Images */}
         <div className="space-y-4">
           <div className="relative aspect-[3/4] overflow-hidden bg-surface">
@@ -117,7 +117,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                 src={product.images[activeImage]}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-cover transition-all duration-500 ease-out"
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
@@ -135,7 +135,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                 <button
                   key={i}
                   onClick={() => setActiveImage(i)}
-                  className={`relative w-16 h-16 overflow-hidden border-b-2 transition-all ${
+                  className={`relative w-16 h-16 overflow-hidden border-b-2 transition-all duration-300 ${
                     i === activeImage
                       ? ""
                       : "border-transparent hover:border-muted"
@@ -162,22 +162,25 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
         {/* Details */}
         <div className="lg:py-8">
           {collection && (
-            <div className="mb-3">
+            <div className="mb-4">
               <RouteBadge slug={collection.slug} size="lg" showName />
             </div>
           )}
 
-          <h1 className="font-display font-bold text-3xl md:text-4xl mb-4">
+          <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-[3.25rem] leading-[1.05] mb-5 tracking-tight">
             {product.name}
           </h1>
 
-          <p className="font-mono text-2xl text-cream mb-6">
+          <p
+            className="font-mono text-3xl md:text-[2rem] text-cream mb-8 tracking-wide"
+            style={{ borderLeft: `3px solid ${lineColor}`, paddingLeft: '0.75rem' }}
+          >
             {currentVariation?.priceFormatted || product.priceFormatted}
           </p>
 
           {/* Service Advisory for limited/exclusive products */}
           {isLimitedOrExclusive && (
-            <div className="mb-6 border-l-4 border-[#FCCC0A] bg-[#FCCC0A]/10 px-4 py-3">
+            <div className="mb-8 border-l-4 border-[#FCCC0A] bg-[#FCCC0A]/10 px-4 py-3">
               <div className="flex items-center gap-2 mb-1">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FCCC0A" strokeWidth="2">
                   <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -196,7 +199,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
 
           {/* Size/Variation selector */}
           {product.variations.length > 1 && (
-            <div className="mb-6">
+            <div className="mb-8">
               <label className="font-mono text-label text-muted uppercase tracking-[0.15em] block mb-3">
                 Size
               </label>
@@ -231,7 +234,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           <button
             ref={btnRef}
             onClick={handleAddToCart}
-            className="turnstile-btn metrocard-gradient w-full py-4 font-display font-bold text-sm tracking-wide transition-all duration-300 cursor-pointer"
+            className="turnstile-btn metrocard-gradient w-full py-5 font-display font-bold text-base tracking-[0.08em] transition-all duration-300 cursor-pointer"
           >
             <span className="relative z-10">
               {addedFeedback ? (
@@ -243,19 +246,21 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           </button>
 
           {/* Trust badges */}
-          <div className="mt-4 py-4">
+          <div className="mt-6 py-6">
             <WhiteBand />
-            <div className="flex items-center gap-6 pt-4">
-              <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <div className="flex items-center gap-3 pt-5 flex-wrap">
+              <span className="font-mono text-[9px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 Secure Checkout
               </span>
-              <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <span className="text-muted/20 text-[8px]">&bull;</span>
+              <span className="font-mono text-[9px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                 Free Ship $75+
               </span>
-              <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              <span className="text-muted/20 text-[8px]">&bull;</span>
+              <span className="font-mono text-[9px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
                 Made to Order
               </span>
             </div>
@@ -263,9 +268,9 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
 
           {/* Description */}
           {descriptionMarkup && (
-            <div className="mt-8">
+            <div className="mt-10">
               <WhiteBand />
-              <div className="pt-6">
+              <div className="pt-8">
                 <h2 className="font-display font-bold text-sm mb-4 text-muted uppercase tracking-wide">
                   Details
                 </h2>
@@ -281,7 +286,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
 
       {/* Related products - "NEXT TRAIN ARRIVING" */}
       {related.length > 0 && (
-        <div className="max-w-7xl mx-auto px-6 mt-24">
+        <div className="max-w-7xl mx-auto px-6 mt-28">
           <h2 className="font-mono font-bold text-sm uppercase tracking-[0.2em] text-muted mb-8">
             Next Train Arriving
           </h2>

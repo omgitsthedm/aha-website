@@ -96,17 +96,21 @@ export function LatestDrop({ products }: LatestDropProps) {
   return (
     <section ref={sectionRef} className="noise-overlay py-24 md:py-32 px-6 bg-void">
       <div className="max-w-7xl mx-auto">
-        <span className="font-mono text-label text-muted uppercase tracking-[0.2em] block mb-12">
-          {headerLetters.map((char, i) => (
-            <span
-              key={i}
-              ref={(el) => { letterRefs.current[i] = el; }}
-              className="inline-block"
-            >
-              {char === " " ? "\u00A0" : char}
-            </span>
-          ))}
-        </span>
+        {/* Section header with rule line */}
+        <div className="mb-14">
+          <span className="font-mono text-label text-muted uppercase tracking-[0.2em] block mb-4">
+            {headerLetters.map((char, i) => (
+              <span
+                key={i}
+                ref={(el) => { letterRefs.current[i] = el; }}
+                className="inline-block"
+              >
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </span>
+          <div className="w-full h-px bg-cream/10" />
+        </div>
 
         <div className="space-y-20">
           {rows.map((row, rowIndex) => (
@@ -119,14 +123,14 @@ export function LatestDrop({ products }: LatestDropProps) {
                 <div key={product.id} data-card className={colSpanClass[span]}>
                   <Link href={`/product/${product.slug}`} className="group block">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="font-mono text-sm text-muted group-hover:text-white transition-colors">
+                      <span className="font-mono text-sm text-muted group-hover:text-white transition-colors duration-300">
                         {product.name}
                       </span>
-                      <span className="font-mono text-sm text-muted">
+                      <span className="font-mono text-base font-medium text-cream/80 tabular-nums">
                         {product.priceFormatted}
                       </span>
                     </div>
-                    <div className="relative aspect-[3/4] overflow-hidden">
+                    <div className="relative aspect-[3/4] overflow-hidden border border-transparent group-hover:border-cream/10 transition-colors duration-500">
                       {product.images[0] ? (
                         <Image
                           src={product.images[0]}
@@ -149,6 +153,16 @@ export function LatestDrop({ products }: LatestDropProps) {
               ))}
             </div>
           ))}
+        </div>
+
+        {/* VIEW ALL link */}
+        <div className="flex justify-end mt-16">
+          <Link
+            href="/shop"
+            className="font-mono text-xs text-muted hover:text-cream transition-colors duration-300 uppercase tracking-[0.15em]"
+          >
+            View All &rarr;
+          </Link>
         </div>
       </div>
     </section>

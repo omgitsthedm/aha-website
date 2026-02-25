@@ -21,13 +21,17 @@ export function CartDrawer() {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-full max-w-md bg-void border-l border-border transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed top-0 right-0 z-50 h-full w-full max-w-md bg-void border-l border-border noise-overlay transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="px-6 py-4">
+            {/* Station label */}
+            <p className="font-mono text-[9px] text-muted/50 uppercase tracking-[0.2em] mb-3">
+              STATION: CHECKOUT
+            </p>
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display font-bold text-lg">YOUR METROCARD</h2>
               <button
@@ -58,11 +62,11 @@ export function CartDrawer() {
                 </button>
               </div>
             ) : (
-              <ul className="space-y-6">
+              <ul className="divide-y divide-cream/5">
                 {items.map((item) => (
                   <li
                     key={item.variationId}
-                    className="flex gap-4"
+                    className="flex gap-4 py-6 first:pt-0"
                   >
                     {item.image && (
                       <div className="relative w-20 h-20 bg-elevated overflow-hidden flex-shrink-0">
@@ -84,7 +88,7 @@ export function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.variationId, item.quantity - 1)
                           }
-                          className="w-6 h-6 flex items-center justify-center border border-muted font-mono text-xs hover:border-cream transition-colors"
+                          className="w-7 h-7 flex items-center justify-center border border-cream/15 font-mono text-xs text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
                         >
                           &minus;
                         </button>
@@ -95,7 +99,7 @@ export function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.variationId, item.quantity + 1)
                           }
-                          className="w-6 h-6 flex items-center justify-center border border-muted font-mono text-xs hover:border-cream transition-colors"
+                          className="w-7 h-7 flex items-center justify-center border border-cream/15 font-mono text-xs text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
                         >
                           +
                         </button>
@@ -118,16 +122,16 @@ export function CartDrawer() {
             <div className="px-6 py-4 space-y-4">
               <WhiteBand />
               {/* MetroCard reader display */}
-              <div className="bg-[#0a0a0a] border border-border/50 px-4 py-3">
-                <div className="flex justify-between items-center font-mono">
-                  <span className="text-xs text-[#E8E4DE]/60 uppercase tracking-[0.1em]">
+              <div className="bg-[#0a0a0a] border border-border/50 px-4 py-3 scan-lines overflow-hidden">
+                <div className="flex justify-between items-center font-mono relative z-10">
+                  <span className="text-[10px] text-[#E8E4DE]/50 uppercase tracking-[0.15em]">
                     Subtotal
                   </span>
                   <span className="text-lg font-bold text-[#E8E4DE] tracking-wider">
                     {totalFormatted}
                   </span>
                 </div>
-                <p className="text-[10px] text-[#E8E4DE]/40 font-mono mt-1">
+                <p className="text-[10px] text-[#E8E4DE]/30 font-mono mt-1 relative z-10">
                   Shipping calculated at checkout
                 </p>
               </div>

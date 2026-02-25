@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { WhiteBand } from "@/components/ui/WhiteBand";
 import { SplitFlap } from "@/components/ui/SplitFlap";
 import { gsap, useGSAP } from "@/lib/gsap";
 
@@ -27,9 +26,8 @@ export function ThePromise() {
   );
 
   return (
-    <section ref={sectionRef} className="py-6 px-6 bg-void">
-      <WhiteBand />
-      <div className="flex justify-center py-6 overflow-x-auto">
+    <section ref={sectionRef} className="py-14 md:py-20 px-6 bg-void border-t border-b border-cream/[0.06]">
+      <div className="flex justify-center py-8 overflow-x-auto">
         {visible ? (
           <SplitFlap
             value="FREE SHIP $75+ · 30-DAY RETURNS · TRACKED"
@@ -39,7 +37,6 @@ export function ThePromise() {
           <div className="h-[1.1em]" style={{ fontSize: "clamp(0.6rem, 1.5vw, 0.9rem)" }} />
         )}
       </div>
-      <WhiteBand />
     </section>
   );
 }

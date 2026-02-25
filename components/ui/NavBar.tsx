@@ -46,9 +46,9 @@ export function NavBar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 h-20 flex items-center transition-colors duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 h-20 flex items-center transition-all duration-300 ${
           scrolled
-            ? "bg-[rgba(20,20,20,0.85)] backdrop-blur-md noise-overlay"
+            ? "bg-[rgba(20,20,20,0.85)] backdrop-blur-xl noise-overlay"
             : "bg-transparent"
         }`}
       >
@@ -78,7 +78,7 @@ export function NavBar() {
 
             <Link
               href="/"
-              className="hidden sm:block font-mono text-[13px] tracking-[0.3em] text-cream hover:text-white transition-colors uppercase"
+              className="hidden sm:block font-mono text-[13px] tracking-[0.15em] text-cream hover:text-white transition-colors uppercase"
               onClick={() => setMenuOpen(false)}
             >
               After Hours Agenda
@@ -89,7 +89,7 @@ export function NavBar() {
           <div className="flex items-center gap-6">
             <Link
               href="/collections"
-              className="hidden md:block font-mono text-xs text-muted hover:text-white transition-colors uppercase tracking-[0.15em]"
+              className="hidden md:block font-mono text-xs text-muted hover:text-white transition-colors uppercase tracking-[0.15em] nav-link-hover"
             >
               Shop
             </Link>
@@ -114,7 +114,7 @@ export function NavBar() {
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
               {totalItems > 0 && (
-                <span className="absolute -top-2 -right-3 bg-line-yellow text-void text-[9px] font-mono font-bold px-1.5 h-4 flex items-center justify-center rounded-sm whitespace-nowrap shadow-[0_0_4px_rgba(252,204,10,0.4)]">
+                <span className="absolute -top-2 -right-3 bg-line-yellow text-void text-[9px] font-mono font-bold px-2 h-[18px] flex items-center justify-center rounded-full whitespace-nowrap shadow-[0_0_6px_rgba(252,204,10,0.35)] tracking-wide">
                   {totalFormatted || totalItems}
                 </span>
               )}
@@ -161,14 +161,15 @@ export function NavBar() {
             : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="pt-24 px-8 flex flex-col gap-2">
+        <div className="pt-28 px-8 flex flex-col gap-1">
           {/* Collection routes */}
           {COLLECTIONS.map((col) => (
             <Link
               key={col.slug}
               href={`/collections/${col.slug}`}
               onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-between py-3 text-muted hover:text-white transition-colors group"
+              className="flex items-center justify-between py-4 text-muted hover:text-white transition-colors group border-l-2 pl-4"
+              style={{ borderColor: col.line.color + "40" }}
             >
               <div className="flex items-center gap-4">
                 <RouteBadge slug={col.slug} size="md" />
@@ -181,7 +182,7 @@ export function NavBar() {
           ))}
 
           {/* Separator */}
-          <div className="my-4">
+          <div className="my-6">
             <WhiteBand />
           </div>
 
@@ -191,7 +192,7 @@ export function NavBar() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="font-mono text-lg text-muted hover:text-white transition-colors py-3"
+              className="font-mono text-lg text-muted hover:text-white transition-colors py-4 border-l-2 border-muted/20 pl-4"
             >
               {link.label}
             </Link>

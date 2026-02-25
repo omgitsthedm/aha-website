@@ -71,24 +71,28 @@ export function MostWanted({ products }: MostWantedProps) {
   return (
     <section ref={sectionRef} className="noise-overlay py-24 md:py-32 px-6 bg-void">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-end justify-between mb-12">
-          <h2 className="font-display font-bold text-section text-cream">
-            {headerLetters.map((char, i) => (
-              <span
-                key={i}
-                ref={(el) => { letterRefs.current[i] = el; }}
-                className="inline-block"
-              >
-                {char === " " ? "\u00A0" : char}
-              </span>
-            ))}
-          </h2>
-          <Link
-            href="/shop"
-            className="hidden md:block font-mono text-xs text-muted hover:text-white transition-colors uppercase tracking-[0.1em]"
-          >
-            View All &rarr;
-          </Link>
+        {/* Section header with rule line */}
+        <div className="mb-14">
+          <div className="flex items-end justify-between mb-4">
+            <h2 className="font-display font-bold text-section text-cream">
+              {headerLetters.map((char, i) => (
+                <span
+                  key={i}
+                  ref={(el) => { letterRefs.current[i] = el; }}
+                  className="inline-block"
+                >
+                  {char === " " ? "\u00A0" : char}
+                </span>
+              ))}
+            </h2>
+            <Link
+              href="/shop"
+              className="hidden md:block font-mono text-xs text-muted hover:text-cream transition-colors duration-300 uppercase tracking-[0.15em]"
+            >
+              View All &rarr;
+            </Link>
+          </div>
+          <div className="w-full h-px bg-cream/10" />
         </div>
 
         <div data-grid className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
@@ -98,14 +102,14 @@ export function MostWanted({ products }: MostWantedProps) {
               <div key={product.id} data-card className={colSpanClass[span]}>
                 <Link href={`/product/${product.slug}`} className="group block">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-sm text-muted group-hover:text-white transition-colors">
+                    <span className="font-mono text-sm text-muted group-hover:text-white transition-colors duration-300">
                       {product.name}
                     </span>
-                    <span className="font-mono text-sm text-muted">
+                    <span className="font-mono text-base font-medium text-cream/80 tabular-nums">
                       {product.priceFormatted}
                     </span>
                   </div>
-                  <div className="relative aspect-[3/4] overflow-hidden">
+                  <div className="relative aspect-[3/4] overflow-hidden border border-transparent group-hover:border-cream/10 transition-colors duration-500">
                     {product.images[0] ? (
                       <Image
                         src={product.images[0]}
@@ -126,6 +130,16 @@ export function MostWanted({ products }: MostWantedProps) {
               </div>
             );
           })}
+        </div>
+
+        {/* Mobile VIEW ALL link */}
+        <div className="flex justify-end mt-16 md:hidden">
+          <Link
+            href="/shop"
+            className="font-mono text-xs text-muted hover:text-cream transition-colors duration-300 uppercase tracking-[0.15em]"
+          >
+            View All &rarr;
+          </Link>
         </div>
       </div>
     </section>

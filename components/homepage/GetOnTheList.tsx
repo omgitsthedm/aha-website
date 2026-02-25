@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { WhiteBand } from "@/components/ui/WhiteBand";
 import { SplitFlap } from "@/components/ui/SplitFlap";
 import { gsap, useGSAP } from "@/lib/gsap";
 
@@ -51,12 +50,16 @@ export function GetOnTheList() {
   };
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-28 px-6 bg-void">
-      <WhiteBand />
-
-      <div ref={formRef} className="max-w-md mx-auto text-center py-8">
-        <span className="font-mono text-sm text-muted uppercase tracking-[0.15em] block mb-8">
-          NEXT ARRIVAL: YOUR INBOX
+    <section ref={sectionRef} className="py-24 md:py-32 px-6 bg-void border-t border-b border-cream/[0.06]">
+      <div ref={formRef} className="max-w-lg mx-auto text-center py-8">
+        <span
+          className="font-mono text-muted uppercase block mb-10"
+          style={{
+            fontSize: "clamp(0.6rem, 1vw, 0.75rem)",
+            letterSpacing: "0.25em",
+          }}
+        >
+          Next Arrival: Your Inbox
         </span>
 
         {submitted ? (
@@ -70,23 +73,21 @@ export function GetOnTheList() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              className="w-full bg-transparent border-0 border-b border-muted focus:border-cream font-mono text-sm text-cream placeholder:text-muted/50 focus:outline-none transition-colors py-3"
+              className="w-full bg-transparent border-0 border-b border-cream/20 focus:border-cream font-mono text-sm text-cream placeholder:text-muted/40 focus:outline-none transition-all duration-500 py-4 focus:shadow-[0_1px_0_0_rgba(232,228,222,0.4)]"
             />
             <button
               type="submit"
-              className="font-mono text-xs text-muted hover:text-white tracking-[0.1em] mt-4 transition-colors"
+              className="font-mono text-xs text-muted hover:text-white tracking-[0.15em] mt-6 transition-colors duration-300 uppercase"
             >
-              SUBSCRIBE &rarr;
+              Subscribe &rarr;
             </button>
           </form>
         )}
 
         {error && (
-          <p className="font-mono text-xs text-line-red mt-2">{error}</p>
+          <p className="font-mono text-xs text-line-red mt-3">{error}</p>
         )}
       </div>
-
-      <WhiteBand />
     </section>
   );
 }
