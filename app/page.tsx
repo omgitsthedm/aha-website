@@ -1,10 +1,11 @@
 import { Entrance } from "@/components/homepage/Entrance";
-import { Agenda } from "@/components/homepage/Agenda";
-import { MostWanted } from "@/components/homepage/MostWanted";
-import { Collections } from "@/components/homepage/Collections";
+import { LineDirectory } from "@/components/homepage/LineDirectory";
 import { LatestDrop } from "@/components/homepage/LatestDrop";
 import { ThePromise } from "@/components/homepage/ThePromise";
+import { MostWanted } from "@/components/homepage/MostWanted";
 import { EditorialGallery } from "@/components/homepage/EditorialGallery";
+import { Agenda } from "@/components/homepage/Agenda";
+import { Collections } from "@/components/homepage/Collections";
 import { GetOnTheList } from "@/components/homepage/GetOnTheList";
 import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
 import type { Product, Collection } from "@/lib/utils/types";
@@ -37,6 +38,7 @@ export default async function HomePage() {
   return (
     <>
       <Entrance />
+      <LineDirectory collections={collections} />
       <LatestDrop products={featured} />
       <ThePromise />
       <MostWanted products={mostWanted} />
