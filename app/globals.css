@@ -11,22 +11,22 @@
 
   html {
     scroll-behavior: smooth;
-    background-color: #080808;
-    color: #E8E4DD;
+    background-color: #0A0A0A;
+    color: #EDE9E3;
   }
 
   body {
-    font-family: var(--font-dm-sans), sans-serif;
-    background-color: #080808;
-    color: #E8E4DD;
+    font-family: var(--font-inter), sans-serif;
+    background-color: #0A0A0A;
+    color: #EDE9E3;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background-color: rgba(212, 168, 83, 0.3);
-    color: #E8E4DD;
+    background-color: rgba(200, 169, 97, 0.3);
+    color: #EDE9E3;
   }
 
   /* Scrollbar styling */
@@ -34,14 +34,14 @@
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #080808;
+    background: #0A0A0A;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2A2A2A;
+    background: #222020;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3A3A3A;
+    background: #3A3632;
   }
 }
 
@@ -56,7 +56,7 @@
   height: 200%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.025;
+  opacity: 0.02;
   animation: grain 0.5s steps(1) infinite;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
 }

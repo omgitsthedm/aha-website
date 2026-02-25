@@ -1,23 +1,15 @@
 import type { Metadata } from "next";
-import { Syne, DM_Sans, IBM_Plex_Mono, Instrument_Serif } from "next/font/google";
+import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { NavBar } from "@/components/ui/NavBar";
 import { FilmGrain } from "@/components/ui/FilmGrain";
 import { Footer } from "@/components/ui/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 
-const syne = Syne({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-syne",
+  variable: "--font-inter",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-dm-sans",
-  display: "swap",
-  weight: ["400", "500", "700"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -25,14 +17,6 @@ const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex",
   display: "swap",
   weight: ["400", "500"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  variable: "--font-instrument",
-  display: "swap",
-  weight: "400",
-  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -56,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${dmSans.variable} ${ibmPlexMono.variable} ${instrumentSerif.variable}`}
+      className={`${inter.variable} ${ibmPlexMono.variable}`}
     >
       <body className="bg-void text-cream font-body antialiased">
         <CartProvider>
