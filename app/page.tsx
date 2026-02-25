@@ -4,6 +4,7 @@ import { MostWanted } from "@/components/homepage/MostWanted";
 import { Collections } from "@/components/homepage/Collections";
 import { LatestDrop } from "@/components/homepage/LatestDrop";
 import { ThePromise } from "@/components/homepage/ThePromise";
+import { EditorialGallery } from "@/components/homepage/EditorialGallery";
 import { GetOnTheList } from "@/components/homepage/GetOnTheList";
 import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
 import type { Product, Collection } from "@/lib/utils/types";
@@ -36,11 +37,12 @@ export default async function HomePage() {
   return (
     <>
       <Entrance />
-      <Agenda />
-      <MostWanted products={mostWanted} />
-      <Collections collections={collections} />
       <LatestDrop products={featured} />
       <ThePromise />
+      <MostWanted products={mostWanted} />
+      <EditorialGallery />
+      <Agenda />
+      <Collections collections={collections} />
       <GetOnTheList />
     </>
   );
