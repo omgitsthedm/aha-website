@@ -30,7 +30,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand */}
           <div>
-            <h3 className="font-display font-bold text-lg mb-4">
+            <h3 className="font-mono text-sm tracking-[0.3em] uppercase mb-4">
               AFTER HOURS AGENDA
             </h3>
             <p className="text-muted text-sm leading-relaxed">
@@ -49,7 +49,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-cream/60 hover:text-glow transition-colors"
+                    className="text-sm text-cream/60 hover:text-gold transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -68,7 +68,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-cream/60 hover:text-glow transition-colors"
+                    className="text-sm text-cream/60 hover:text-gold transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -87,7 +87,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-cream/60 hover:text-glow transition-colors"
+                    className="text-sm text-cream/60 hover:text-gold transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -97,8 +97,22 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Sheep silhouette */}
+        <div className="flex justify-center mt-12">
+          <svg
+            className="w-24 h-24 text-cream opacity-10"
+            viewBox="0 0 200 160"
+            fill="currentColor"
+          >
+            <path d="M60 55 C40 50, 25 60, 25 78 C25 96, 35 108, 55 110 L55 140 L65 140 L65 112 L90 114 L90 140 L100 140 L100 114 L125 112 L125 140 L135 140 L135 110 L150 108 L150 140 L160 140 L160 105 C175 98, 180 85, 178 72 C176 58, 165 48, 150 48 C145 42, 135 40, 125 42 C115 36, 100 35, 88 38 C78 34, 65 38, 60 48 Z"/>
+            <path d="M25 78 C18 75, 10 68, 8 60 C6 52, 10 44, 18 40 C26 36, 35 38, 40 44 C42 48, 40 55, 35 60 C30 65, 25 72, 25 78 Z"/>
+            <ellipse cx="20" cy="54" rx="4" ry="5" fill="#0A0A0A"/>
+            <path d="M18 40 C14 32, 8 28, 4 30 C0 32, 2 38, 8 42 Z"/>
+          </svg>
+        </div>
+
         {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-8 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="font-mono text-[11px] text-muted">
             &copy; {new Date().getFullYear()} AFTER HOURS AGENDA. ALL RIGHTS RESERVED.
           </p>
@@ -107,7 +121,7 @@ export function Footer() {
               href="https://instagram.com/afterhoursagenda"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted hover:text-glow transition-colors"
+              className="text-muted hover:text-gold transition-colors"
               aria-label="Instagram"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -120,7 +134,7 @@ export function Footer() {
               href="https://tiktok.com/@afterhoursagenda"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted hover:text-glow transition-colors"
+              className="text-muted hover:text-gold transition-colors"
               aria-label="TikTok"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
