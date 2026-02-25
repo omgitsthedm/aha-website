@@ -3,166 +3,203 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/cart/CartProvider";
+import { RouteBadge } from "@/components/ui/RouteBadge";
+import { WhiteBand } from "@/components/ui/WhiteBand";
+import { SUBWAY_LINES } from "@/lib/utils/subway-lines";
+
+const COLLECTIONS = SUBWAY_LINES.map((line) => ({
+  slug: line.slug,
+  name: line.name,
+  line,
+}));
+
+const OTHER_LINKS = [
+  { label: "About", href: "/about" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Contact", href: "/contact" },
+];
 
 export function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { items, toggleCart } = useCart();
-
-  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const { totalItems, setCartOpen } = useCart();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll when menu is open
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [menuOpen]);
 
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 h-20 flex items-center transition-colors duration-300 ${
           scrolled
-            ? "bg-void/95 backdrop-blur-md border-b border-border"
+            ? "bg-[rgba(20,20,20,0.85)] backdrop-blur-md"
             : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Left: Sheep micro mark */}
-          <Link href="/" className="flex items-center gap-3 group" aria-label="Home">
-            <svg
-              className="w-6 h-6 text-cream group-hover:text-gold transition-colors"
-              viewBox="0 0 100 100"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M50 85 C30 85, 18 70, 18 55 C18 40, 28 28, 50 28 C72 28, 82 40, 82 55 C82 70, 70 85, 50 85 Z"/>
-              <path d="M22 45 C14 38, 6 32, 4 24 C2 16, 8 12, 16 16 C20 18, 20 28, 22 38"/>
-              <path d="M78 45 C86 38, 94 32, 96 24 C98 16, 92 12, 84 16 C80 18, 80 28, 78 38"/>
-            </svg>
-          </Link>
-
-          {/* Center: Brand name */}
-          <Link
-            href="/"
-            className="absolute left-1/2 -translate-x-1/2 font-mono text-sm tracking-[0.3em] uppercase text-cream hover:text-gold transition-colors"
-          >
-            AFTER HOURS AGENDA
-          </Link>
-
-          {/* Right side */}
+        <div className="w-full px-6 flex items-center justify-between">
+          {/* Left — Mark + Brand */}
           <div className="flex items-center gap-4">
-            {/* Desktop nav links */}
             <Link
-              href="/shop"
-              className="hidden md:block text-sm font-mono text-muted hover:text-cream transition-colors tracking-wide"
+              href="/"
+              className="text-cream hover:text-white transition-colors"
+              aria-label="Home"
+              onClick={() => setMenuOpen(false)}
+            >
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="block"
+              >
+                <path
+                  d="M50 10C30 10 15 25 15 45C15 55 20 63 28 68L25 85C25 88 28 90 30 88L38 78C42 80 46 81 50 81C70 81 85 66 85 46C85 26 70 10 50 10ZM35 45C33 45 31 43 31 41C31 39 33 37 35 37C37 37 39 39 39 41C39 43 37 45 35 45ZM55 55C50 60 40 60 35 55L55 55ZM65 45C63 45 61 43 61 41C61 39 63 37 65 37C67 37 69 39 69 41C69 43 67 45 65 45Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </Link>
+
+            <Link
+              href="/"
+              className="hidden sm:block font-mono text-[13px] tracking-[0.3em] text-cream hover:text-white transition-colors uppercase"
+              onClick={() => setMenuOpen(false)}
+            >
+              After Hours Agenda
+            </Link>
+          </div>
+
+          {/* Right — Shop + Cart + Hamburger */}
+          <div className="flex items-center gap-6">
+            <Link
+              href="/collections"
+              className="hidden md:block font-mono text-xs text-muted hover:text-white transition-colors uppercase tracking-[0.15em]"
             >
               Shop
             </Link>
 
-            {/* Cart */}
             <button
-              onClick={toggleCart}
-              className="relative p-2 text-muted hover:text-cream transition-colors"
+              onClick={() => setCartOpen(true)}
+              className="relative text-cream hover:text-white transition-colors"
               aria-label="Open cart"
             >
               <svg
-                width="20"
-                height="20"
+                width="22"
+                height="22"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold text-void text-[10px] font-mono font-bold rounded-full flex items-center justify-center">
-                  {itemCount}
+              {totalItems > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-line-yellow text-void text-[10px] font-mono font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                  {totalItems}
                 </span>
               )}
             </button>
 
-            {/* Mobile menu toggle */}
+            {/* Hamburger — mobile */}
             <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 text-muted hover:text-cream transition-colors"
-              aria-label="Toggle menu"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-[5px]"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
             >
-              <div className="w-5 flex flex-col gap-1.5">
-                <span
-                  className={`block h-[1.5px] bg-current transition-all duration-300 ${
-                    menuOpen ? "rotate-45 translate-y-[4.5px]" : ""
-                  }`}
-                />
-                <span
-                  className={`block h-[1.5px] bg-current transition-all duration-300 ${
-                    menuOpen ? "opacity-0" : ""
-                  }`}
-                />
-                <span
-                  className={`block h-[1.5px] bg-current transition-all duration-300 ${
-                    menuOpen ? "-rotate-45 -translate-y-[4.5px]" : ""
-                  }`}
-                />
-              </div>
+              <span
+                className={`block w-5 h-[1.5px] bg-cream transition-transform duration-300 origin-center ${
+                  menuOpen ? "translate-y-[6.5px] rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`block w-5 h-[1.5px] bg-cream transition-opacity duration-300 ${
+                  menuOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <span
+                className={`block w-5 h-[1.5px] bg-cream transition-transform duration-300 origin-center ${
+                  menuOpen ? "-translate-y-[6.5px] -rotate-45" : ""
+                }`}
+              />
             </button>
           </div>
         </div>
+
+        {/* Bottom white band when scrolled */}
+        {scrolled && (
+          <div className="absolute bottom-0 left-0 right-0">
+            <WhiteBand />
+          </div>
+        )}
       </nav>
 
-      {/* Mobile fullscreen menu */}
+      {/* Mobile menu — full-screen station directory */}
       <div
-        className={`fixed inset-0 z-40 bg-void/98 backdrop-blur-lg flex flex-col items-center justify-center transition-all duration-500 ${
+        className={`fixed inset-0 z-40 bg-void transition-opacity duration-300 ${
           menuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col items-center gap-8">
-          {[
-            { href: "/shop", label: "Shop" },
-            { href: "/collections/black-sheep", label: "Collections" },
-            { href: "/about", label: "About" },
-            { href: "/faq", label: "FAQ" },
-            { href: "/contact", label: "Contact" },
-          ].map((link, i) => (
+        <div className="pt-24 px-8 flex flex-col gap-2">
+          {/* Collection routes */}
+          {COLLECTIONS.map((col) => (
+            <Link
+              key={col.slug}
+              href={`/collections/${col.slug}`}
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center justify-between py-3 text-muted hover:text-white transition-colors group"
+            >
+              <div className="flex items-center gap-4">
+                <RouteBadge slug={col.slug} size="md" />
+                <span className="font-mono text-lg">{col.name}</span>
+              </div>
+              <span className="font-mono text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                &rarr;
+              </span>
+            </Link>
+          ))}
+
+          {/* Separator */}
+          <div className="my-4">
+            <WhiteBand />
+          </div>
+
+          {/* Other links */}
+          {OTHER_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="font-display text-4xl font-bold text-cream hover:text-gold transition-colors"
-              style={{ animationDelay: `${i * 80}ms` }}
+              className="font-mono text-lg text-muted hover:text-white transition-colors py-3"
             >
               {link.label}
             </Link>
           ))}
         </div>
-
-        {/* Subtle sheep silhouette at bottom */}
-        <div className="absolute bottom-12 opacity-10">
-          <svg
-            className="w-16 h-16 text-cream"
-            viewBox="0 0 200 160"
-            fill="currentColor"
-          >
-            <path d="M60 55 C40 50, 25 60, 25 78 C25 96, 35 108, 55 110 L55 140 L65 140 L65 112 L90 114 L90 140 L100 140 L100 114 L125 112 L125 140 L135 140 L135 110 L150 108 L150 140 L160 140 L160 105 C175 98, 180 85, 178 72 C176 58, 165 48, 150 48 C145 42, 135 40, 125 42 C115 36, 100 35, 88 38 C78 34, 65 38, 60 48 Z"/>
-            <path d="M25 78 C18 75, 10 68, 8 60 C6 52, 10 44, 18 40 C26 36, 35 38, 40 44 C42 48, 40 55, 35 60 C30 65, 25 72, 25 78 Z"/>
-            <ellipse cx="20" cy="54" rx="4" ry="5" fill="#0A0A0A"/>
-            <path d="M18 40 C14 32, 8 28, 4 30 C0 32, 2 38, 8 42 Z"/>
-          </svg>
-        </div>
       </div>
     </>
   );
 }
+
+export default NavBar;
