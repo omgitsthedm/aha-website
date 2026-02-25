@@ -2,37 +2,40 @@
 
 import { useState, useEffect } from "react";
 
-const messages = [
+const MESSAGES = [
   "FREE SHIPPING ON ORDERS $75+",
-  "TRACKED SHIPPING ON ALL ORDERS",
-  "30-DAY EASY RETURNS",
+  "TRACKED DELIVERY",
+  "30-DAY RETURNS",
 ];
+
+const FULL_LINE = MESSAGES.join("  \u00b7  ");
 
 export function AnnouncementBar() {
   const [index, setIndex] = useState(0);
-  const [fade, setFade] = useState(true);
 
+  // Cycle messages on mobile (instant swap, no fade)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setFade(false);
-      setTimeout(() => {
-        setIndex((prev) => (prev + 1) % messages.length);
-        setFade(true);
-      }, 300);
-    }, 5000);
-
-    return () => clearInterval(interval);
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % MESSAGES.length);
+    }, 3000);
+    return () => clearInterval(timer);
   }, []);
 
   return (
-    <div className="bg-void py-2 text-center">
-      <p
-        className={`font-mono text-[11px] text-muted tracking-[0.1em] transition-opacity duration-300 ${
-          fade ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        {messages[index]}
-      </p>
+    <div className="bg-void border-b border-white/10">
+      <div className="px-4 py-2 flex items-center justify-center">
+        {/* Desktop — all messages on one line */}
+        <p className="hidden sm:block font-mono text-[11px] text-muted tracking-[0.15em] text-center uppercase">
+          {FULL_LINE}
+        </p>
+
+        {/* Mobile — cycle messages with instant swap */}
+        <p className="block sm:hidden font-mono text-[11px] text-muted tracking-[0.15em] text-center uppercase">
+          {MESSAGES[index]}
+        </p>
+      </div>
     </div>
   );
 }
+
+export default AnnouncementBar;
