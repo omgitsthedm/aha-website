@@ -96,7 +96,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                   onClick={() => setActiveImage(i)}
                   className={`relative w-16 h-16 overflow-hidden rounded-sm border transition-all ${
                     i === activeImage
-                      ? "border-glow"
+                      ? "border-gold"
                       : "border-border hover:border-muted"
                   }`}
                 >
@@ -116,7 +116,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
         {/* Details */}
         <div className="lg:py-8">
           {collection && (
-            <span className="font-mono text-label text-glow uppercase tracking-[0.2em] block mb-3">
+            <span className="font-mono text-label text-gold uppercase tracking-[0.2em] block mb-3">
               {collection.name}
             </span>
           )}
@@ -158,7 +158,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
             onClick={handleAddToCart}
             className={`w-full py-4 font-display font-bold text-sm tracking-wide transition-all duration-300 ${
               addedFeedback
-                ? "bg-glow text-void"
+                ? "bg-gold text-void"
                 : "bg-cream text-void hover:bg-cream/80"
             }`}
           >
@@ -219,7 +219,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                   )}
                 </div>
                 <div className="mt-3 space-y-1">
-                  <h3 className="font-body text-sm truncate group-hover:text-glow transition-colors">
+                  <h3 className="font-body text-sm truncate group-hover:text-gold transition-colors">
                     {p.name}
                   </h3>
                   <p className="font-mono text-sm text-muted">{p.priceFormatted}</p>
