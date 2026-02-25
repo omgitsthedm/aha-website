@@ -7,26 +7,41 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        void: "#0A0A0A",
+        // Core — subway tunnel darkness
+        void: "#141414",
         charcoal: "#1C1A18",
         surface: {
-          DEFAULT: "#151413",
+          DEFAULT: "#1A1918",
           warm: "#252320",
         },
         elevated: "#2A2826",
         border: {
-          DEFAULT: "#222020",
+          DEFAULT: "#2A2725",
           warm: "#3A3632",
         },
+        // Text — aged porcelain (not pure white)
+        cream: "#E8E4DE",
+        muted: "#7A756E",
+        // MTA Subway Line Colors
+        line: {
+          red: "#EE352E",
+          blue: "#2850AD",
+          orange: "#FF6319",
+          green: "#00933C",
+          yellow: "#FCCC0A",
+          purple: "#B933AD",
+          brown: "#996633",
+          gray: "#A7A9AC",
+        },
+        // Utility
+        danger: "#EE352E",
+        success: "#00933C",
+        // Legacy alias
         gold: {
           DEFAULT: "#C8A961",
           dim: "rgba(200,169,97,0.25)",
           faint: "rgba(200,169,97,0.08)",
         },
-        cream: "#EDE9E3",
-        muted: "#7A756E",
-        danger: "#EA4A4A",
-        success: "#4AEA80",
       },
       fontFamily: {
         display: ["var(--font-inter)", "sans-serif"],
@@ -42,7 +57,6 @@ module.exports = {
       animation: {
         "fade-up": "fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "fade-in": "fadeIn 0.6s ease-out forwards",
-        "grain": "grain 0.5s steps(1) infinite",
         "slide-in-right": "slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "breathe": "breathe 3s ease-in-out infinite",
       },
@@ -54,18 +68,6 @@ module.exports = {
         fadeIn: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
-        },
-        grain: {
-          "0%, 100%": { transform: "translate(0, 0)" },
-          "10%": { transform: "translate(-5%, -10%)" },
-          "20%": { transform: "translate(-15%, 5%)" },
-          "30%": { transform: "translate(7%, -25%)" },
-          "40%": { transform: "translate(-5%, 25%)" },
-          "50%": { transform: "translate(-15%, 10%)" },
-          "60%": { transform: "translate(15%, 0%)" },
-          "70%": { transform: "translate(0%, 15%)" },
-          "80%": { transform: "translate(3%, 35%)" },
-          "90%": { transform: "translate(-10%, 10%)" },
         },
         slideInRight: {
           "0%": { transform: "translateX(100%)", opacity: "0" },
