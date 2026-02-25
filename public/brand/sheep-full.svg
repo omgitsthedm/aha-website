@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" fill="currentColor">
+  <!-- Black sheep silhouette matching AHA brand product imagery -->
+  <!-- Fluffy/cloud-like body -->
+  <path d="M60 55 C40 50, 25 60, 25 78 C25 96, 35 108, 55 110 L55 140 L65 140 L65 112 L90 114 L90 140 L100 140 L100 114 L125 112 L125 140 L135 140 L135 110 L150 108 L150 140 L160 140 L160 105 C175 98, 180 85, 178 72 C176 58, 165 48, 150 48 C145 42, 135 40, 125 42 C115 36, 100 35, 88 38 C78 34, 65 38, 60 48 Z"/>
+  <!-- Head (attached left, slight forward tilt) -->
+  <path d="M25 78 C18 75, 10 68, 8 60 C6 52, 10 44, 18 40 C26 36, 35 38, 40 44 C42 48, 40 55, 35 60 C30 65, 25 72, 25 78 Z"/>
+  <!-- Eye (negative space) -->
+  <ellipse cx="20" cy="54" rx="4" ry="5" fill="#0A0A0A" class="sheep-eye"/>
+  <!-- Ear -->
+  <path d="M18 40 C14 32, 8 28, 4 30 C0 32, 2 38, 8 42 Z"/>
+</svg>
