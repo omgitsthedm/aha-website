@@ -3,6 +3,7 @@
 import { useCart } from "./CartProvider";
 import Image from "next/image";
 import Link from "next/link";
+import { WhiteBand } from "@/components/ui/WhiteBand";
 
 export function CartDrawer() {
   const { items, isOpen, toggleCart, removeItem, updateQuantity, totalFormatted } =
@@ -20,23 +21,26 @@ export function CartDrawer() {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-full max-w-md bg-surface border-l border-border transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed top-0 right-0 z-50 h-full w-full max-w-md bg-void border-l border-border transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-            <h2 className="font-display font-bold text-lg">YOUR BAG</h2>
-            <button
-              onClick={toggleCart}
-              className="text-muted hover:text-cream transition-colors p-1"
-              aria-label="Close cart"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display font-bold text-lg">YOUR BAG</h2>
+              <button
+                onClick={toggleCart}
+                className="text-muted hover:text-cream transition-colors p-1"
+                aria-label="Close cart"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <WhiteBand />
           </div>
 
           {/* Items */}
@@ -46,7 +50,7 @@ export function CartDrawer() {
                 <p className="text-muted mb-4">Your bag is empty</p>
                 <button
                   onClick={toggleCart}
-                  className="font-mono text-sm text-gold hover:text-cream transition-colors"
+                  className="font-mono text-sm text-cream hover:text-white transition-colors"
                 >
                   CONTINUE SHOPPING &rarr;
                 </button>
@@ -59,7 +63,7 @@ export function CartDrawer() {
                     className="flex gap-4"
                   >
                     {item.image && (
-                      <div className="relative w-20 h-20 bg-elevated rounded overflow-hidden flex-shrink-0">
+                      <div className="relative w-20 h-20 bg-elevated overflow-hidden flex-shrink-0">
                         <Image
                           src={item.image}
                           alt={item.name}
@@ -78,7 +82,7 @@ export function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.variationId, item.quantity - 1)
                           }
-                          className="w-6 h-6 flex items-center justify-center border border-border text-xs hover:border-cream transition-colors"
+                          className="w-6 h-6 flex items-center justify-center border border-muted font-mono text-xs hover:border-cream transition-colors"
                         >
                           &minus;
                         </button>
@@ -89,13 +93,13 @@ export function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.variationId, item.quantity + 1)
                           }
-                          className="w-6 h-6 flex items-center justify-center border border-border text-xs hover:border-cream transition-colors"
+                          className="w-6 h-6 flex items-center justify-center border border-muted font-mono text-xs hover:border-cream transition-colors"
                         >
                           +
                         </button>
                         <button
                           onClick={() => removeItem(item.variationId)}
-                          className="ml-auto text-xs text-muted hover:text-danger transition-colors"
+                          className="ml-auto font-mono text-xs text-muted hover:text-line-red transition-colors"
                         >
                           Remove
                         </button>
@@ -109,10 +113,11 @@ export function CartDrawer() {
 
           {/* Footer */}
           {items.length > 0 && (
-            <div className="border-t border-border px-6 py-4 space-y-4">
-              <div className="flex justify-between items-center">
+            <div className="px-6 py-4 space-y-4">
+              <WhiteBand />
+              <div className="flex justify-between items-center font-mono">
                 <span className="text-sm text-muted">Subtotal</span>
-                <span className="font-mono font-medium">{totalFormatted}</span>
+                <span className="font-medium">{totalFormatted}</span>
               </div>
               <p className="text-xs text-muted">
                 Shipping calculated at checkout
@@ -120,12 +125,12 @@ export function CartDrawer() {
               <Link
                 href="/cart"
                 onClick={toggleCart}
-                className="block w-full py-3 bg-cream text-void font-display font-bold text-center text-sm tracking-wide hover:bg-gold transition-colors"
+                className="block w-full py-3 bg-cream text-void font-display font-bold text-center text-sm tracking-wide hover:bg-white transition-colors"
               >
                 CHECKOUT
               </Link>
-              {/* Trust badges */}
-              <p className="text-[10px] text-muted font-mono text-center pt-2 tracking-wide">
+              {/* Trust line */}
+              <p className="font-mono text-[10px] text-muted text-center pt-2 tracking-[0.1em]">
                 SECURE &middot; FREE SHIP $75+ &middot; 30-DAY RETURNS
               </p>
             </div>
