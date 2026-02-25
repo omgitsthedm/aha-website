@@ -46,7 +46,23 @@ export async function getAllProducts(): Promise<Product[]> {
   }
 
   return allItems
-    .filter((item) => !item.is_deleted)
+    .filter((item) => {
+      if (item.is_deleted) return false;
+      // Filter out service items (Billable Hour, Discount, etc.)
+      const productType = item.item_data?.product_type;
+      if (productType === "LEGACY_SQUARE_ONLINE_SERVICE") return false;
+      // Only include items that have at least one image
+      const imageIds = item.item_data?.image_ids || [];
+      const hasImage = imageIds.some((id: string) => imageMap.has(id));
+      if (!hasImage) return false;
+      // Filter out items with zero price
+      const variations = item.item_data?.variations || [];
+      const hasPrice = variations.some(
+        (v: any) => (v.item_variation_data?.price_money?.amount || 0) > 0
+      );
+      if (!hasPrice) return false;
+      return true;
+    })
     .map((item) => mapSquareItemToProduct(item, imageMap));
 }
 

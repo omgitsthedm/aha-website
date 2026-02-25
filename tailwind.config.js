@@ -18,12 +18,6 @@ module.exports = {
         },
         cream: "#E8E4DD",
         muted: "#6B6560",
-        neon: {
-          mint: "#4AEABC",
-          blue: "#4A9EEA",
-          gold: "#EAC74A",
-          sunrise: "#EA6E4A",
-        },
         danger: "#EA4A4A",
         success: "#4AEA80",
       },
@@ -42,29 +36,19 @@ module.exports = {
       animation: {
         "fade-up": "fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "fade-in": "fadeIn 0.6s ease-out forwards",
-        "neon-flicker": "neonFlicker 3s ease-in-out infinite",
         "grain": "grain 0.5s steps(1) infinite",
-        "pulse-glow": "pulseGlow 2s ease-in-out infinite",
         "text-reveal": "textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "slide-in-right": "slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "breathe": "breathe 3s ease-in-out infinite",
       },
       keyframes: {
         fadeUp: {
-          "0%": { opacity: "0", transform: "translateY(30px)" },
+          "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         fadeIn: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
-        },
-        neonFlicker: {
-          "0%, 100%": { opacity: "1" },
-          "41%": { opacity: "1" },
-          "42%": { opacity: "0.8" },
-          "43%": { opacity: "1" },
-          "45%": { opacity: "0.3" },
-          "46%": { opacity: "1" },
         },
         grain: {
           "0%, 100%": { transform: "translate(0, 0)" },
@@ -78,10 +62,6 @@ module.exports = {
           "80%": { transform: "translate(3%, 35%)" },
           "90%": { transform: "translate(-10%, 10%)" },
         },
-        pulseGlow: {
-          "0%, 100%": { opacity: "0.4" },
-          "50%": { opacity: "1" },
-        },
         textReveal: {
           "0%": { clipPath: "inset(100% 0 0 0)" },
           "100%": { clipPath: "inset(0 0 0 0)" },
@@ -91,12 +71,9 @@ module.exports = {
           "100%": { transform: "translateX(0)", opacity: "1" },
         },
         breathe: {
-          "0%, 100%": { opacity: "0.5", transform: "translateY(0)" },
-          "50%": { opacity: "1", transform: "translateY(-4px)" },
+          "0%, 100%": { opacity: "0.4", transform: "translateY(0)" },
+          "50%": { opacity: "0.7", transform: "translateY(-3px)" },
         },
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
     },
   },

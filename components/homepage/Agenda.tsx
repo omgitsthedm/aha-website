@@ -45,11 +45,8 @@ export function Agenda() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-32 md:py-48 px-6 overflow-hidden"
+      className="relative py-32 md:py-48 px-6"
     >
-      {/* Ambient glow */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-radial from-glow-faint to-transparent opacity-30" />
-
       <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
         {manifestoLines.map((line, i) => (
           <p
@@ -57,8 +54,8 @@ export function Agenda() {
             data-line={i}
             className={`font-display font-bold text-chapter transition-all duration-1000 ${
               visibleLines.has(i)
-                ? "opacity-100 translate-y-0 blur-0"
-                : "opacity-0 translate-y-8 blur-[2px]"
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-6"
             }`}
             style={{
               transitionDelay: `${i * 150}ms`,

@@ -159,17 +159,26 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
             className={`w-full py-4 font-display font-bold text-sm tracking-wide transition-all duration-300 ${
               addedFeedback
                 ? "bg-glow text-void"
-                : "bg-cream text-void hover:bg-glow"
+                : "bg-cream text-void hover:bg-cream/80"
             }`}
           >
-            {addedFeedback ? "✓ ADDED TO BAG" : "ADD TO BAG"}
+            {addedFeedback ? "ADDED TO BAG" : "ADD TO BAG"}
           </button>
 
           {/* Trust badges */}
-          <div className="flex items-center gap-4 mt-4 py-3 border-t border-border">
-            <span className="font-mono text-[10px] text-muted">🔒 Secure Checkout</span>
-            <span className="font-mono text-[10px] text-muted">📦 Free Ship $75+</span>
-            <span className="font-mono text-[10px] text-muted">🖨️ Made to Order</span>
+          <div className="flex items-center gap-6 mt-4 py-4 border-t border-border">
+            <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              Secure Checkout
+            </span>
+            <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              Free Ship $75+
+            </span>
+            <span className="font-mono text-[10px] text-muted flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              Made to Order
+            </span>
           </div>
 
           {/* Description */}

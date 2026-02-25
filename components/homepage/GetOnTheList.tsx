@@ -28,10 +28,7 @@ export function GetOnTheList() {
 
   return (
     <section className="relative py-24 md:py-32 px-6">
-      {/* Centered ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-radial from-glow-faint to-transparent opacity-40" />
-
-      <div className="relative z-10 max-w-lg mx-auto text-center">
+      <div className="max-w-lg mx-auto text-center">
         <ScrollReveal>
           <h2 className="font-editorial italic text-3xl md:text-4xl text-cream mb-3">
             Your name on the list?
@@ -63,7 +60,7 @@ export function GetOnTheList() {
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-cream text-void font-display font-bold text-sm tracking-wide hover:bg-glow transition-colors rounded-sm whitespace-nowrap"
+                className="px-6 py-3 bg-cream text-void font-display font-bold text-sm tracking-wide hover:bg-cream/80 transition-colors whitespace-nowrap"
               >
                 I&apos;M IN
               </button>
