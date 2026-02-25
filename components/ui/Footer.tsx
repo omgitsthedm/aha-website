@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { RouteBadge } from "@/components/ui/RouteBadge";
 import { WhiteBand } from "@/components/ui/WhiteBand";
