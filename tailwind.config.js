@@ -59,6 +59,9 @@ module.exports = {
         "fade-in": "fadeIn 0.6s ease-out forwards",
         "slide-in-right": "slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "breathe": "breathe 3s ease-in-out infinite",
+        "train-slide": "trainSlide 1.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        "letter-reveal": "letterReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "pulse-station": "pulseStation 2s ease-in-out infinite",
       },
       keyframes: {
         fadeUp: {
@@ -76,6 +79,18 @@ module.exports = {
         breathe: {
           "0%, 100%": { opacity: "0.4", transform: "translateY(0)" },
           "50%": { opacity: "0.7", transform: "translateY(-3px)" },
+        },
+        trainSlide: {
+          "0%": { transform: "translateX(-100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        letterReveal: {
+          "0%": { transform: "translateY(100%)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        pulseStation: {
+          "0%, 100%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.3)", opacity: "0.7" },
         },
       },
     },

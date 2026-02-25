@@ -1,5 +1,5 @@
 import { Entrance } from "@/components/homepage/Entrance";
-import { LineDirectory } from "@/components/homepage/LineDirectory";
+import { SubwayMap } from "@/components/homepage/SubwayMap";
 import { LatestDrop } from "@/components/homepage/LatestDrop";
 import { ThePromise } from "@/components/homepage/ThePromise";
 import { MostWanted } from "@/components/homepage/MostWanted";
@@ -38,7 +38,7 @@ export default async function HomePage() {
   return (
     <>
       <Entrance />
-      <LineDirectory collections={collections} />
+      <SubwayMap />
       <LatestDrop products={featured} />
       <ThePromise />
       <MostWanted products={mostWanted} />

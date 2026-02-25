@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product, Collection } from "@/lib/utils/types";
 import { RouteBadge } from "@/components/ui/RouteBadge";
 import { WhiteBand } from "@/components/ui/WhiteBand";
+import { gsap, useGSAP } from "@/lib/gsap";
 
 interface ShopContentProps {
   products: Product[];
@@ -16,6 +17,9 @@ export function ShopContent({ products, collections }: ShopContentProps) {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("name");
   const [viewMode, setViewMode] = useState<"grid" | "index">("grid");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const indexRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
     let result = products;
@@ -44,14 +48,66 @@ export function ShopContent({ products, collections }: ShopContentProps) {
     return undefined;
   };
 
+  /** Animate grid items on mount / filter change */
+  const animateGrid = useCallback(() => {
+    if (!gridRef.current) return;
+    const items = gridRef.current.children;
+    if (!items.length) return;
+    gsap.fromTo(
+      items,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: "power2.out", overwrite: true }
+    );
+  }, []);
+
+  /** Animate index rows on mount / filter change */
+  const animateIndex = useCallback(() => {
+    if (!indexRef.current) return;
+    const rows = indexRef.current.children;
+    if (!rows.length) return;
+    gsap.fromTo(
+      rows,
+      { opacity: 0, x: -40 },
+      { opacity: 1, x: 0, duration: 0.4, stagger: 0.08, ease: "power2.out", overwrite: true }
+    );
+  }, []);
+
+  /** Animate on initial load */
+  useGSAP(() => {
+    if (viewMode === "grid") animateGrid();
+    else animateIndex();
+  }, { scope: containerRef, dependencies: [filtered, viewMode] });
+
+  /** Animate view transition */
+  const handleViewChange = useCallback(
+    (mode: "grid" | "index") => {
+      if (mode === viewMode) return;
+      // Fade out current content
+      const currentRef = viewMode === "grid" ? gridRef.current : indexRef.current;
+      if (currentRef) {
+        gsap.to(currentRef.children, {
+          opacity: 0,
+          duration: 0.2,
+          ease: "power1.in",
+          onComplete: () => {
+            setViewMode(mode);
+          },
+        });
+      } else {
+        setViewMode(mode);
+      }
+    },
+    [viewMode]
+  );
+
   return (
-    <div>
+    <div ref={containerRef} className="noise-overlay">
       {/* View toggle + filter bar */}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-6">
         {/* View toggle */}
         <div className="flex items-center gap-3 mr-4">
           <button
-            onClick={() => setViewMode("grid")}
+            onClick={() => handleViewChange("grid")}
             className={`font-mono text-xs transition-colors ${
               viewMode === "grid" ? "text-cream" : "text-muted hover:text-white"
             }`}
@@ -59,7 +115,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
             Grid
           </button>
           <button
-            onClick={() => setViewMode("index")}
+            onClick={() => handleViewChange("index")}
             className={`font-mono text-xs transition-colors ${
               viewMode === "index" ? "text-cream" : "text-muted hover:text-white"
             }`}
@@ -112,7 +168,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
 
       {/* GRID VIEW */}
       {viewMode === "grid" && (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           {filtered.map((product, idx) => (
             <Link
               key={product.id}
@@ -152,7 +208,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
 
       {/* INDEX VIEW */}
       {viewMode === "index" && (
-        <div>
+        <div ref={indexRef}>
           {filtered.map((product) => {
             const colSlug = getProductCollectionSlug(product);
             return (

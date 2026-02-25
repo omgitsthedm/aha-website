@@ -3,6 +3,7 @@ import { ShopContent } from "@/components/shop/ShopContent";
 import { RouteBadge } from "@/components/ui/RouteBadge";
 import { notFound } from "next/navigation";
 import type { Product, Collection } from "@/lib/utils/types";
+import { getLineForCollection } from "@/lib/utils/subway-lines";
 
 export const revalidate = 300;
 
@@ -43,23 +44,35 @@ export default async function CollectionPage({ params }: { params: { slug: strin
     console.error("Error loading collection products:", error);
   }
 
+  const line = getLineForCollection(params.slug);
+
   return (
-    <div className="pt-24 pb-16 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-12 text-center">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <RouteBadge slug={params.slug} size="lg" />
-            <span className="font-mono text-label text-cream uppercase tracking-[0.2em]">
-              Collection
-            </span>
-          </div>
-          <h1 className="font-display font-bold text-hero mb-4">
-            {collection.name.toUpperCase()}
-          </h1>
-          <p className="font-body text-muted max-w-md mx-auto">
+    <div className="pt-20 pb-16">
+      {/* Station banner */}
+      <div
+        className="station-banner w-full py-10 px-6 text-center"
+        style={{ backgroundColor: line.color }}
+      >
+        <div className="flex items-center justify-center gap-4 mb-3">
+          <RouteBadge slug={params.slug} size="lg" />
+          <span className="font-mono text-sm text-white/80 uppercase tracking-[0.2em]">
+            Collection
+          </span>
+        </div>
+        <h1 className="font-display font-bold text-hero text-white">
+          {collection.name.toUpperCase()}
+        </h1>
+        {collection.description && (
+          <p className="font-body text-white/70 max-w-md mx-auto mt-3">
             {collection.description}
           </p>
-        </div>
+        )}
+      </div>
+
+      {/* Platform edge stripe */}
+      <div className="platform-edge" />
+
+      <div className="max-w-7xl mx-auto px-6 pt-12">
         <ShopContent products={products} collections={collections} />
       </div>
     </div>

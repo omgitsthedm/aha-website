@@ -29,7 +29,7 @@ export function CartDrawer() {
           {/* Header */}
           <div className="px-6 py-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display font-bold text-lg">YOUR BAG</h2>
+              <h2 className="font-display font-bold text-lg">YOUR METROCARD</h2>
               <button
                 onClick={toggleCart}
                 className="text-muted hover:text-cream transition-colors p-1"
@@ -47,12 +47,14 @@ export function CartDrawer() {
           <div className="flex-1 overflow-y-auto px-6 py-4">
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
-                <p className="text-muted mb-4">Your bag is empty</p>
+                <p className="font-mono text-sm text-muted mb-4 uppercase tracking-[0.1em]">
+                  No Fare Loaded
+                </p>
                 <button
                   onClick={toggleCart}
-                  className="font-mono text-sm text-cream hover:text-white transition-colors"
+                  className="font-mono text-sm text-cream hover:text-white transition-colors uppercase tracking-[0.1em]"
                 >
-                  CONTINUE SHOPPING &rarr;
+                  LOAD YOUR METROCARD &rarr;
                 </button>
               </div>
             ) : (
@@ -115,23 +117,31 @@ export function CartDrawer() {
           {items.length > 0 && (
             <div className="px-6 py-4 space-y-4">
               <WhiteBand />
-              <div className="flex justify-between items-center font-mono">
-                <span className="text-sm text-muted">Subtotal</span>
-                <span className="font-medium">{totalFormatted}</span>
+              {/* MetroCard reader display */}
+              <div className="bg-[#0a0a0a] border border-border/50 px-4 py-3">
+                <div className="flex justify-between items-center font-mono">
+                  <span className="text-xs text-[#E8E4DE]/60 uppercase tracking-[0.1em]">
+                    Subtotal
+                  </span>
+                  <span className="text-lg font-bold text-[#E8E4DE] tracking-wider">
+                    {totalFormatted}
+                  </span>
+                </div>
+                <p className="text-[10px] text-[#E8E4DE]/40 font-mono mt-1">
+                  Shipping calculated at checkout
+                </p>
               </div>
-              <p className="text-xs text-muted">
-                Shipping calculated at checkout
-              </p>
+              {/* Checkout button - MetroCard gradient */}
               <Link
                 href="/cart"
                 onClick={toggleCart}
-                className="block w-full py-3 bg-cream text-void font-display font-bold text-center text-sm tracking-wide hover:bg-white transition-colors"
+                className="metrocard-gradient block w-full py-3 font-display font-bold text-center text-sm tracking-wide hover:brightness-110 transition-all"
               >
-                CHECKOUT
+                ENTER THE PLATFORM &rarr;
               </Link>
               {/* Trust line */}
               <p className="font-mono text-[10px] text-muted text-center pt-2 tracking-[0.1em]">
-                SECURE &middot; FREE SHIP $75+ &middot; 30-DAY RETURNS
+                SECURE &middot; FREE TRANSFER $75+ &middot; 30-DAY RETURNS
               </p>
             </div>
           )}

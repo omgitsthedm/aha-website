@@ -1,20 +1,57 @@
+"use client";
+
+import { useRef } from "react";
 import Image from "next/image";
+import { gsap, useGSAP } from "@/lib/gsap";
 
 const photos = [
-  { src: "/brand/lifestyle/lifestyle-1.jpeg", alt: "AHA lifestyle", colSpan: "md:col-span-8", aspect: "aspect-[4/5]" },
-  { src: "/brand/lifestyle/lifestyle-2.jpg", alt: "AHA lifestyle", colSpan: "md:col-span-4", aspect: "aspect-square" },
-  { src: "/brand/lifestyle/lifestyle-3.jpg", alt: "AHA lifestyle", colSpan: "md:col-span-4", aspect: "aspect-square" },
-  { src: "/brand/lifestyle/lifestyle-4.jpg", alt: "AHA lifestyle", colSpan: "md:col-span-8", aspect: "aspect-[16/9]" },
+  { src: "/brand/lifestyle/lifestyle-1.jpeg", alt: "AHA lifestyle", colSpan: "md:col-span-8", aspect: "aspect-[4/5]", row: 1 },
+  { src: "/brand/lifestyle/lifestyle-2.jpg", alt: "AHA lifestyle", colSpan: "md:col-span-4", aspect: "aspect-square", row: 1 },
+  { src: "/brand/lifestyle/lifestyle-3.jpg", alt: "AHA lifestyle", colSpan: "md:col-span-4", aspect: "aspect-square", row: 2 },
+  { src: "/brand/lifestyle/lifestyle-4.jpg", alt: "AHA lifestyle", colSpan: "md:col-span-8", aspect: "aspect-[16/9]", row: 2 },
 ];
 
 export function EditorialGallery() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      if (!sectionRef.current) return;
+
+      // Images have parallax at different speeds based on row
+      const images = sectionRef.current.querySelectorAll("[data-parallax]");
+      images.forEach((img) => {
+        const row = (img as HTMLElement).dataset.parallax;
+        // First row moves slower (less parallax), second row moves faster (more depth)
+        const speed = row === "1" ? 30 : 60;
+
+        gsap.fromTo(
+          img,
+          { y: speed },
+          {
+            y: -speed,
+            ease: "none",
+            scrollTrigger: {
+              trigger: img,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          }
+        );
+      });
+    },
+    { scope: sectionRef }
+  );
+
   return (
-    <section className="py-16 md:py-24 px-6 bg-void">
+    <section ref={sectionRef} className="py-16 md:py-24 px-6 bg-void">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4">
           {photos.map((photo, i) => (
             <div
               key={i}
+              data-parallax={photo.row}
               className={`relative overflow-hidden ${photo.colSpan} ${photo.aspect}`}
             >
               <Image

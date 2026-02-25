@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product, Collection } from "@/lib/utils/types";
@@ -8,6 +8,7 @@ import { useCart } from "@/components/cart/CartProvider";
 import { RouteBadge } from "@/components/ui/RouteBadge";
 import { WhiteBand } from "@/components/ui/WhiteBand";
 import { getLineForCollection } from "@/lib/utils/subway-lines";
+import { gsap, useGSAP } from "@/lib/gsap";
 
 interface ProductDetailProps {
   product: Product;
@@ -22,6 +23,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
   );
   const [activeImage, setActiveImage] = useState(0);
   const [addedFeedback, setAddedFeedback] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   const currentVariation = product.variations.find(
     (v) => v.id === selectedVariation
@@ -30,6 +32,11 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
   const line = collection ? getLineForCollection(collection.slug) : null;
   const lineColor = line?.color || "#E8E4DE";
   const lineTextColor = line?.color === "#FCCC0A" ? "#141414" : "#FFFFFF";
+
+  // Check if the product description mentions "limited" or "exclusive"
+  const isLimitedOrExclusive =
+    product.description &&
+    /limited|exclusive/i.test(product.description);
 
   const handleAddToCart = () => {
     if (!currentVariation) return;
@@ -45,8 +52,29 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
       image: product.images[0] || "",
     });
 
-    setAddedFeedback(true);
-    setTimeout(() => setAddedFeedback(false), 2000);
+    // Turnstile swipe animation
+    const btn = btnRef.current;
+    if (btn) {
+      btn.classList.add("swiped");
+      setAddedFeedback(true);
+
+      gsap.fromTo(
+        btn,
+        { scale: 1 },
+        {
+          scale: 1.02,
+          duration: 0.2,
+          yoyo: true,
+          repeat: 1,
+          ease: "power2.out",
+        }
+      );
+
+      setTimeout(() => {
+        btn.classList.remove("swiped");
+        setAddedFeedback(false);
+      }, 2000);
+    }
   };
 
   // Sanitized HTML rendering for product description from CMS
@@ -56,15 +84,15 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
 
   return (
     <div className="pt-20 pb-16">
-      {/* Breadcrumb */}
+      {/* Station signage breadcrumb */}
       <div className="max-w-7xl mx-auto px-6 py-4">
         <nav className="font-mono text-xs text-muted flex items-center gap-2">
-          <Link href="/shop" className="hover:text-white transition-colors">
-            Shop
+          <Link href="/shop" className="hover:text-white transition-colors inline-flex items-center gap-1">
+            <span className="opacity-60">&larr;</span> PLATFORM
           </Link>
           {collection && (
             <>
-              <span>/</span>
+              <span className="text-muted/40">&rarr;</span>
               <Link
                 href={`/collections/${collection.slug}`}
                 className="hover:text-white transition-colors inline-flex items-center gap-1.5"
@@ -74,7 +102,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
               </Link>
             </>
           )}
-          <span>/</span>
+          <span className="text-muted/40">&rarr;</span>
           <span className="text-cream">{product.name}</span>
         </nav>
       </div>
@@ -147,6 +175,25 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
             {currentVariation?.priceFormatted || product.priceFormatted}
           </p>
 
+          {/* Service Advisory for limited/exclusive products */}
+          {isLimitedOrExclusive && (
+            <div className="mb-6 border-l-4 border-[#FCCC0A] bg-[#FCCC0A]/10 px-4 py-3">
+              <div className="flex items-center gap-2 mb-1">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FCCC0A" strokeWidth="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <span className="font-mono text-[10px] font-bold text-[#FCCC0A] uppercase tracking-[0.15em]">
+                  Service Advisory
+                </span>
+              </div>
+              <p className="font-mono text-[11px] text-[#FCCC0A]/80 leading-relaxed">
+                Limited availability. This item may sell out without prior notice.
+              </p>
+            </div>
+          )}
+
           {/* Size/Variation selector */}
           {product.variations.length > 1 && (
             <div className="mb-6">
@@ -180,17 +227,19 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
             </div>
           )}
 
-          {/* Add to cart */}
+          {/* Turnstile "SWIPE TO ADD" button */}
           <button
+            ref={btnRef}
             onClick={handleAddToCart}
-            className="w-full py-4 font-display font-bold text-sm tracking-wide transition-all duration-300"
-            style={{
-              backgroundColor: lineColor,
-              color: lineTextColor,
-              opacity: addedFeedback ? 0.85 : 1,
-            }}
+            className="turnstile-btn metrocard-gradient w-full py-4 font-display font-bold text-sm tracking-wide transition-all duration-300 cursor-pointer"
           >
-            {addedFeedback ? "ADDED TO BAG" : "ADD TO BAG"}
+            <span className="relative z-10">
+              {addedFeedback ? (
+                <span className="text-green-600">FARE ACCEPTED &#10003;</span>
+              ) : (
+                "SWIPE TO ADD"
+              )}
+            </span>
           </button>
 
           {/* Trust badges */}
@@ -230,16 +279,22 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
         </div>
       </div>
 
-      {/* Related products */}
+      {/* Related products - "NEXT TRAIN ARRIVING" */}
       {related.length > 0 && (
         <div className="max-w-7xl mx-auto px-6 mt-24">
-          <h2 className="font-display font-bold text-2xl mb-8">
-            You might also like
+          <h2 className="font-mono font-bold text-sm uppercase tracking-[0.2em] text-muted mb-8">
+            Next Train Arriving
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {related.map((p) => (
+            {related.map((p, idx) => (
               <Link key={p.id} href={`/product/${p.slug}`} className="group block">
                 <div className="relative aspect-[3/4] overflow-hidden bg-surface">
+                  {/* Track number label */}
+                  <div className="absolute top-2 left-2 z-10 bg-[#141414]/90 px-2 py-0.5">
+                    <span className="font-mono text-[9px] text-[#E8E4DE] tracking-[0.15em]">
+                      TRACK {String(idx + 1).padStart(2, "0")}
+                    </span>
+                  </div>
                   {p.images[0] ? (
                     <Image
                       src={p.images[0]}

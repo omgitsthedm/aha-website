@@ -1,12 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { WhiteBand } from "@/components/ui/WhiteBand";
+import { SplitFlap } from "@/components/ui/SplitFlap";
+import { gsap, useGSAP } from "@/lib/gsap";
 
 export function GetOnTheList() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const sectionRef = useRef<HTMLElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      if (!formRef.current) return;
+
+      // Form slides up from below like a turnstile panel rising
+      gsap.from(formRef.current, {
+        y: 60,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+          once: true,
+        },
+      });
+    },
+    { scope: sectionRef }
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,18 +51,18 @@ export function GetOnTheList() {
   };
 
   return (
-    <section className="py-20 md:py-28 px-6 bg-void">
+    <section ref={sectionRef} className="py-20 md:py-28 px-6 bg-void">
       <WhiteBand />
 
-      <div className="max-w-md mx-auto text-center py-8">
+      <div ref={formRef} className="max-w-md mx-auto text-center py-8">
         <span className="font-mono text-sm text-muted uppercase tracking-[0.15em] block mb-8">
           NEXT ARRIVAL: YOUR INBOX
         </span>
 
         {submitted ? (
-          <p className="font-mono text-xs text-line-green">
-            You&apos;re on the list.
-          </p>
+          <div className="flex justify-center">
+            <SplitFlap value="SUBSCRIBED" fontSize="1.5rem" />
+          </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <input

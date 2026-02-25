@@ -11,10 +11,10 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-void">
+    <footer className="bg-void subway-tiles-dark">
       <WhiteBand strong />
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="max-w-7xl mx-auto px-6 py-16 noise-overlay">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Col 1 — Office */}
           <div>
@@ -86,7 +86,7 @@ export function Footer() {
         {/* Sheep SVG */}
         <div className="flex justify-center mt-12">
           <svg
-            className="w-20 h-20 opacity-10 text-cream"
+            className="w-20 h-20 opacity-10 text-cream hover-flicker"
             viewBox="0 0 200 160"
             fill="currentColor"
           >

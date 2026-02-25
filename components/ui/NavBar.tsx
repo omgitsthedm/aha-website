@@ -22,7 +22,7 @@ const OTHER_LINKS = [
 export function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { totalItems, setCartOpen } = useCart();
+  const { totalItems, totalFormatted, setCartOpen } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -48,7 +48,7 @@ export function NavBar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 h-20 flex items-center transition-colors duration-300 ${
           scrolled
-            ? "bg-[rgba(20,20,20,0.85)] backdrop-blur-md"
+            ? "bg-[rgba(20,20,20,0.85)] backdrop-blur-md noise-overlay"
             : "bg-transparent"
         }`}
       >
@@ -114,8 +114,8 @@ export function NavBar() {
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
               {totalItems > 0 && (
-                <span className="absolute -top-1.5 -right-2 bg-line-yellow text-void text-[10px] font-mono font-bold w-4 h-4 flex items-center justify-center rounded-full">
-                  {totalItems}
+                <span className="absolute -top-2 -right-3 bg-line-yellow text-void text-[9px] font-mono font-bold px-1.5 h-4 flex items-center justify-center rounded-sm whitespace-nowrap shadow-[0_0_4px_rgba(252,204,10,0.4)]">
+                  {totalFormatted || totalItems}
                 </span>
               )}
             </button>
@@ -155,7 +155,7 @@ export function NavBar() {
 
       {/* Mobile menu — full-screen station directory */}
       <div
-        className={`fixed inset-0 z-40 bg-void transition-opacity duration-300 ${
+        className={`fixed inset-0 z-40 bg-void subway-tiles-dark transition-opacity duration-300 ${
           menuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
