@@ -182,6 +182,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
                     src={product.images[0]}
                     alt={product.name}
                     fill
+                    unoptimized={isPrintfulImage(product.images[0])}
                     className={`${
                       isPrintfulImage(product.images[0]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"
                     } transition-transform duration-700 group-hover:scale-[1.03]`}

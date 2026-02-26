@@ -75,6 +75,7 @@ export function CartDrawer() {
                           src={item.image}
                           alt={item.name}
                           fill
+                          unoptimized={isPrintfulImage(item.image)}
                           className={isPrintfulImage(item.image) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"}
                           sizes="80px"
                         />

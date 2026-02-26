@@ -118,6 +118,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                 src={product.images[activeImage]}
                 alt={product.name}
                 fill
+                unoptimized={isPrintfulImage(product.images[activeImage])}
                 className={`${
                   isPrintfulImage(product.images[activeImage]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"
                 } transition-all duration-500 ease-out`}
@@ -153,6 +154,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                     src={img}
                     alt={`${product.name} view ${i + 1}`}
                     fill
+                    unoptimized={isPrintfulImage(img)}
                     className={isPrintfulImage(img) ? "object-contain" : "object-cover"}
                     sizes="64px"
                   />
@@ -308,6 +310,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                       src={p.images[0]}
                       alt={p.name}
                       fill
+                      unoptimized={isPrintfulImage(p.images[0])}
                       className={`${
                         isPrintfulImage(p.images[0]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"
                       } transition-transform duration-700 group-hover:scale-105`}

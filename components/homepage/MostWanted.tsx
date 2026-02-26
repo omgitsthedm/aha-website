@@ -116,6 +116,7 @@ export function MostWanted({ products }: MostWantedProps) {
                         src={product.images[0]}
                         alt={product.name}
                         fill
+                        unoptimized={isPrintfulImage(product.images[0])}
                         className={isPrintfulImage(product.images[0]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"}
                         sizes={
                           span >= 7
