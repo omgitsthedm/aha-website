@@ -47,6 +47,7 @@ export function NavBar() {
   return (
     <>
       <nav
+        aria-label="Main navigation"
         className={`fixed top-0 left-0 right-0 z-50 h-20 flex items-center transition-all duration-300 backdrop-blur-xl ${
           scrolled
             ? "bg-[rgba(10,10,10,0.92)]"
@@ -127,8 +128,10 @@ export function NavBar() {
             {/* Hamburger — mobile */}
             <button
               onClick={() => setMenuOpen((prev) => !prev)}
-              className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-[5px]"
+              className="md:hidden flex flex-col justify-center items-center w-11 h-11 gap-[5px]"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav-menu"
             >
               <span
                 className={`block w-5 h-[1.5px] bg-[#E8E4DE] transition-transform duration-300 origin-center ${
@@ -155,6 +158,9 @@ export function NavBar() {
 
       {/* Mobile menu — full-screen station directory */}
       <div
+        id="mobile-nav-menu"
+        role="navigation"
+        aria-label="Mobile navigation"
         className={`fixed inset-0 z-40 bg-[#141414] subway-tiles-dark transition-opacity duration-300 ${
           menuOpen
             ? "opacity-100 pointer-events-auto"

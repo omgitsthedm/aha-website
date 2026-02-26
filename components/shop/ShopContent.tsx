@@ -108,10 +108,11 @@ export function ShopContent({ products, collections }: ShopContentProps) {
         <div className="mosaic-border-thin" />
         <div className="sign-panel-station py-3 px-4 flex flex-wrap items-center gap-x-6 gap-y-3">
           {/* View toggle */}
-          <div className="flex items-center gap-3 mr-4">
+          <div className="flex items-center gap-3 mr-4" role="group" aria-label="View mode">
             <button
               onClick={() => handleViewChange("grid")}
-              className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors ${
+              aria-pressed={viewMode === "grid"}
+              className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors min-h-[44px] px-2 ${
                 viewMode === "grid" ? "text-[#E8E4DE]" : "text-[#E8E4DE]/50 hover:text-[#E8E4DE]"
               }`}
             >
@@ -119,7 +120,8 @@ export function ShopContent({ products, collections }: ShopContentProps) {
             </button>
             <button
               onClick={() => handleViewChange("index")}
-              className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors ${
+              aria-pressed={viewMode === "index"}
+              className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors min-h-[44px] px-2 ${
                 viewMode === "index" ? "text-[#E8E4DE]" : "text-[#E8E4DE]/50 hover:text-[#E8E4DE]"
               }`}
             >
@@ -130,7 +132,8 @@ export function ShopContent({ products, collections }: ShopContentProps) {
           {/* Filter — All button */}
           <button
             onClick={() => setActiveFilter("all")}
-            className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors ${
+            aria-pressed={activeFilter === "all"}
+            className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors min-h-[44px] px-2 ${
               activeFilter === "all" ? "text-[#FCCC0A]" : "text-[#E8E4DE]/50 hover:text-[#E8E4DE]"
             }`}
           >
@@ -142,7 +145,9 @@ export function ShopContent({ products, collections }: ShopContentProps) {
             <button
               key={col.id}
               onClick={() => setActiveFilter(col.id)}
-              className={`transition-opacity ${
+              aria-pressed={activeFilter === col.id}
+              aria-label={`Filter by ${col.name}`}
+              className={`transition-opacity min-h-[44px] ${
                 activeFilter === col.id ? "opacity-100" : "opacity-60 hover:opacity-100"
               }`}
             >
@@ -152,10 +157,12 @@ export function ShopContent({ products, collections }: ShopContentProps) {
 
           {/* Sort */}
           <div className="ml-auto">
+            <label htmlFor="shop-sort" className="sr-only">Sort products by</label>
             <select
+              id="shop-sort"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="bg-transparent border-b border-[#E8E4DE]/30 font-body text-xs text-[#E8E4DE]/70 focus:border-[#FCCC0A] focus:outline-none py-1 pr-6 cursor-pointer"
+              className="bg-transparent border-b border-[#E8E4DE]/30 font-body text-xs text-[#E8E4DE]/70 focus:border-[#FCCC0A] focus:outline-none py-1 pr-6 cursor-pointer min-h-[44px]"
             >
               <option value="name">A-Z</option>
               <option value="price-asc">Price: Low</option>

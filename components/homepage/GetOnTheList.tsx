@@ -75,17 +75,24 @@ export function GetOnTheList() {
               <SplitFlap value="SUBSCRIBED" fontSize="1.5rem" />
             </div>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
+              <label htmlFor="newsletter-email" className="sr-only">
+                Email address
+              </label>
               <input
+                id="newsletter-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
+                aria-describedby={error ? "newsletter-error" : undefined}
+                aria-invalid={error ? true : undefined}
+                autoComplete="email"
                 className="w-full bg-transparent border-0 border-b border-[#E8E4DE]/20 focus:border-[#FCCC0A] font-body text-sm text-[#E8E4DE] placeholder:text-[#7A756E]/60 focus:outline-none transition-all duration-500 py-4"
               />
               <button
                 type="submit"
-                className="metrocard-gradient px-8 py-3 font-body text-xs font-bold tracking-[0.15em] mt-8 hover:brightness-110 transition-all uppercase"
+                className="metrocard-gradient px-8 py-3 font-body text-xs font-bold tracking-[0.15em] mt-8 hover:brightness-110 transition-all uppercase min-h-[44px]"
               >
                 Join &rarr;
               </button>
@@ -93,7 +100,7 @@ export function GetOnTheList() {
           )}
 
           {error && (
-            <p className="font-body text-xs text-line-red mt-3">{error}</p>
+            <p id="newsletter-error" role="alert" className="font-body text-xs text-line-red mt-3">{error}</p>
           )}
         </div>
       </div>

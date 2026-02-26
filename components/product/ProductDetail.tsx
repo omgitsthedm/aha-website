@@ -89,9 +89,9 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
 
   return (
     <div className="pt-20 pb-20">
-      {/* Station signage breadcrumb */}
+      {/* Breadcrumb navigation */}
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <nav className="font-body font-medium text-[10px] text-muted flex items-center gap-2">
+        <nav aria-label="Breadcrumb" className="font-body font-medium text-[10px] text-muted flex items-center gap-2">
           <Link href="/shop" className="hover:text-muted transition-colors inline-flex items-center gap-1">
             <span className="opacity-50">&larr;</span> Shop
           </Link>
@@ -138,11 +138,13 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
 
           {/* Image thumbnails */}
           {product.images.length > 1 && (
-            <div className="flex gap-2">
+            <div className="flex gap-2" role="group" aria-label="Product images">
               {product.images.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveImage(i)}
+                  aria-label={`View image ${i + 1} of ${product.images.length}`}
+                  aria-current={i === activeImage ? "true" : undefined}
                   className={`relative w-16 h-16 overflow-hidden border-b-2 transition-all duration-300 ${
                     i === activeImage
                       ? ""
@@ -209,15 +211,16 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           {/* Size/Variation selector */}
           {product.variations.length > 1 && (
             <div className="mb-8">
-              <label className="font-body font-medium text-label text-muted uppercase tracking-[0.15em] block mb-3">
+              <label id="size-label" className="font-body font-medium text-label text-muted uppercase tracking-[0.15em] block mb-3">
                 Size
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2" role="group" aria-labelledby="size-label">
                 {product.variations.map((v) => (
                   <button
                     key={v.id}
                     onClick={() => setSelectedVariation(v.id)}
-                    className={`px-4 py-2 border font-body font-medium text-sm transition-all ${
+                    aria-pressed={v.id === selectedVariation}
+                    className={`px-4 py-2 min-h-[44px] border font-body font-medium text-sm transition-all ${
                       v.id === selectedVariation
                         ? ""
                         : "border-border text-muted hover:border-cream hover:text-cream"

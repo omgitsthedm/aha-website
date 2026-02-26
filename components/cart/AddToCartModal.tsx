@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,6 +31,22 @@ export function AddToCartModal({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Close on Escape key
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        handleClose();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isOpen]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
 
   // Animate in when modal opens
   useEffect(() => {
@@ -106,6 +122,9 @@ export function AddToCartModal({
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
         <div
           ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Item added to bag"
           className="bg-void border border-cream/[0.12] w-full max-w-[480px] max-h-[90vh] overflow-y-auto pointer-events-auto shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >

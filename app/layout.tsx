@@ -59,6 +59,13 @@ export default function RootLayout({
       className={ibmPlexMono.variable}
     >
       <body className="text-cream font-body antialiased">
+        {/* Skip to main content link for keyboard users */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:bg-[#FCCC0A] focus:text-[#141414] focus:px-4 focus:py-2 focus:font-body focus:font-bold focus:text-sm"
+        >
+          Skip to main content
+        </a>
         {/* Global subway tile texture — fixed behind everything */}
         <div className="fixed inset-0 z-0 subway-tiles" aria-hidden="true" />
         {/* Animated MTA-colored dots flowing along invisible routes */}
@@ -66,7 +73,7 @@ export default function RootLayout({
         <CartProvider>
           <AnnouncementBar />
           <NavBar />
-          <main className="relative z-[2] min-h-screen subway-tiles">{children}</main>
+          <main id="main-content" className="relative z-[2] min-h-screen subway-tiles">{children}</main>
           <Footer />
         </CartProvider>
       </body>

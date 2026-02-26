@@ -120,20 +120,20 @@ export function CartPageContent() {
                         onClick={() =>
                           updateQuantity(item.variationId, item.quantity - 1)
                         }
-                        className="w-8 h-8 flex items-center justify-center border border-cream/15 font-mono text-xs text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
-                        aria-label="Decrease quantity"
+                        className="w-11 h-11 flex items-center justify-center border border-cream/15 font-mono text-sm text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
+                        aria-label={`Decrease quantity of ${item.name}`}
                       >
                         &minus;
                       </button>
-                      <span className="font-mono text-sm w-6 text-center">
+                      <span className="font-mono text-sm w-6 text-center" aria-live="polite" aria-atomic="true">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() =>
                           updateQuantity(item.variationId, item.quantity + 1)
                         }
-                        className="w-8 h-8 flex items-center justify-center border border-cream/15 font-mono text-xs text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
-                        aria-label="Increase quantity"
+                        className="w-11 h-11 flex items-center justify-center border border-cream/15 font-mono text-sm text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
+                        aria-label={`Increase quantity of ${item.name}`}
                       >
                         +
                       </button>

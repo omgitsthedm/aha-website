@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useCart } from "./CartProvider";
 import Image from "next/image";
@@ -17,6 +17,21 @@ export function CartDrawer() {
     setMounted(true);
   }, []);
 
+  // Close on Escape key
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        toggleCart();
+      }
+    },
+    [isOpen, toggleCart]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
   const drawer = (
     <>
       {/* Backdrop */}
@@ -29,6 +44,9 @@ export function CartDrawer() {
 
       {/* Drawer */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Shopping bag"
         className={`fixed top-0 right-0 z-[9999] h-full w-full max-w-md bg-void border-l border-border transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
@@ -93,18 +111,20 @@ export function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.variationId, item.quantity - 1)
                           }
-                          className="w-7 h-7 flex items-center justify-center border border-cream/15 font-mono text-xs text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
+                          className="w-11 h-11 flex items-center justify-center border border-cream/15 font-mono text-sm text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
+                          aria-label={`Decrease quantity of ${item.name}`}
                         >
                           &minus;
                         </button>
-                        <span className="font-mono text-xs w-4 text-center">
+                        <span className="font-mono text-xs w-6 text-center" aria-live="polite">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() =>
                             updateQuantity(item.variationId, item.quantity + 1)
                           }
-                          className="w-7 h-7 flex items-center justify-center border border-cream/15 font-mono text-xs text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
+                          className="w-11 h-11 flex items-center justify-center border border-cream/15 font-mono text-sm text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
+                          aria-label={`Increase quantity of ${item.name}`}
                         >
                           +
                         </button>
