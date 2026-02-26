@@ -9,6 +9,7 @@ import { RouteBadge } from "@/components/ui/RouteBadge";
 import { WhiteBand } from "@/components/ui/WhiteBand";
 import { getLineForCollection } from "@/lib/utils/subway-lines";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
 interface ProductDetailProps {
   product: Product;
@@ -117,7 +118,9 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                 src={product.images[activeImage]}
                 alt={product.name}
                 fill
-                className="object-cover transition-all duration-500 ease-out"
+                className={`${
+                  isPrintfulImage(product.images[activeImage]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"
+                } transition-all duration-500 ease-out`}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
@@ -150,7 +153,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                     src={img}
                     alt={`${product.name} view ${i + 1}`}
                     fill
-                    className="object-cover"
+                    className={isPrintfulImage(img) ? "object-contain" : "object-cover"}
                     sizes="64px"
                   />
                 </button>
@@ -305,7 +308,9 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                       src={p.images[0]}
                       alt={p.name}
                       fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      className={`${
+                        isPrintfulImage(p.images[0]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"
+                      } transition-transform duration-700 group-hover:scale-105`}
                       sizes="(max-width: 768px) 50vw, 25vw"
                     />
                   ) : (

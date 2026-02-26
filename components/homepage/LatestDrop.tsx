@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/utils/types";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
 interface LatestDropProps {
   products: Product[];
@@ -136,7 +137,7 @@ export function LatestDrop({ products }: LatestDropProps) {
                           src={product.images[0]}
                           alt={product.name}
                           fill
-                          className="object-cover"
+                          className={isPrintfulImage(product.images[0]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"}
                           sizes={
                             span === 8
                               ? "(max-width: 768px) 100vw, 66vw"

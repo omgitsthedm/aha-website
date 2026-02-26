@@ -7,6 +7,7 @@ import type { Product, Collection } from "@/lib/utils/types";
 import { RouteBadge } from "@/components/ui/RouteBadge";
 import { WhiteBand } from "@/components/ui/WhiteBand";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
 interface ShopContentProps {
   products: Product[];
@@ -181,7 +182,9 @@ export function ShopContent({ products, collections }: ShopContentProps) {
                     src={product.images[0]}
                     alt={product.name}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    className={`${
+                      isPrintfulImage(product.images[0]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"
+                    } transition-transform duration-700 group-hover:scale-[1.03]`}
                     sizes={
                       idx === 0
                         ? "(max-width: 768px) 100vw, 66vw"

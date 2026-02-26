@@ -4,6 +4,7 @@ import { useCart } from "./CartProvider";
 import Image from "next/image";
 import Link from "next/link";
 import { WhiteBand } from "@/components/ui/WhiteBand";
+import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
 export function CartDrawer() {
   const { items, isOpen, toggleCart, removeItem, updateQuantity, totalFormatted } =
@@ -74,7 +75,7 @@ export function CartDrawer() {
                           src={item.image}
                           alt={item.name}
                           fill
-                          className="object-cover"
+                          className={isPrintfulImage(item.image) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"}
                           sizes="80px"
                         />
                       </div>
