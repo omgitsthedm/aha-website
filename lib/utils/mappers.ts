@@ -1,4 +1,5 @@
 import type { Product, ProductVariation, Collection } from "./types";
+import { getPrintfulImage } from "./printful-images";
 
 function slugify(text: string): string {
   return text
@@ -38,11 +39,16 @@ export function mapSquareItemToProduct(
   const firstVariation = variations[0];
   const price = firstVariation?.price || 0;
 
-  // Build image URLs
+  // Build image URLs: local Printful PNG first, then Square CDN images
   const imageIds: string[] = itemData.image_ids || [];
-  const images = imageIds
+  const squareImages = imageIds
     .map((id: string) => imageMap.get(id))
     .filter(Boolean) as string[];
+
+  const printfulImage = getPrintfulImage(itemData.name || "");
+  const images = printfulImage
+    ? [printfulImage, ...squareImages]
+    : squareImages;
 
   // Get collection IDs from categories
   const collectionIds: string[] = (itemData.categories || []).map(
