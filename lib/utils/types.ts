@@ -33,6 +33,7 @@ export interface Collection {
 
 export interface CartItem {
   productId: string;
+  slug: string;
   variationId: string;
   name: string;
   variationName: string;

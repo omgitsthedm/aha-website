@@ -45,6 +45,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
     addItem(
       {
         productId: product.id,
+        slug: product.slug,
         variationId: currentVariation.id,
         name: product.name,
         variationName: currentVariation.name,
