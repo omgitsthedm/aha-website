@@ -14,6 +14,7 @@ const COLLECTIONS = Object.values(SUBWAY_LINES).map((line) => ({
 }));
 
 const OTHER_LINKS = [
+  { label: "Shop All", href: "/shop" },
   { label: "About", href: "/about" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
@@ -22,7 +23,7 @@ const OTHER_LINKS = [
 export function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { totalItems, totalFormatted, setCartOpen } = useCart();
+  const { totalItems, setCartOpen } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -48,7 +49,7 @@ export function NavBar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 h-20 flex items-center transition-all duration-300 ${
           scrolled
-            ? "bg-[rgba(20,20,20,0.85)] backdrop-blur-xl noise-overlay"
+            ? "bg-[rgba(10,10,10,0.92)] backdrop-blur-xl"
             : "bg-transparent"
         }`}
       >
@@ -57,7 +58,7 @@ export function NavBar() {
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="text-cream hover:text-white transition-colors"
+              className="text-[#E8E4DE] hover:text-white transition-colors"
               aria-label="Home"
               onClick={() => setMenuOpen(false)}
             >
@@ -78,7 +79,7 @@ export function NavBar() {
 
             <Link
               href="/"
-              className="hidden sm:block font-mono text-[13px] tracking-[0.15em] text-cream hover:text-white transition-colors uppercase"
+              className="hidden sm:block font-body font-bold text-[13px] tracking-[0.15em] text-[#E8E4DE] hover:text-white transition-colors uppercase"
               onClick={() => setMenuOpen(false)}
             >
               After Hours Agenda
@@ -88,15 +89,18 @@ export function NavBar() {
           {/* Right — Shop + Cart + Hamburger */}
           <div className="flex items-center gap-6">
             <Link
-              href="/collections"
-              className="hidden md:block font-mono text-xs text-muted hover:text-white transition-colors uppercase tracking-[0.15em] nav-link-hover"
+              href="/shop"
+              className="hidden md:flex items-center gap-2 font-body font-medium text-xs text-[#7A756E] hover:text-white transition-colors uppercase tracking-[0.15em] nav-link-hover"
             >
+              <span className="w-4 h-4 rounded-full bg-line-yellow inline-flex items-center justify-center flex-shrink-0">
+                <span className="text-[7px] font-mono font-bold text-[#141414] leading-none">S</span>
+              </span>
               Shop
             </Link>
 
             <button
               onClick={() => setCartOpen(true)}
-              className="relative text-cream hover:text-white transition-colors"
+              className="relative text-[#E8E4DE] hover:text-white transition-colors"
               aria-label="Open cart"
             >
               <svg
@@ -114,8 +118,8 @@ export function NavBar() {
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
               {totalItems > 0 && (
-                <span className="absolute -top-2 -right-3 bg-line-yellow text-void text-[9px] font-mono font-bold px-2 h-[18px] flex items-center justify-center rounded-full whitespace-nowrap shadow-[0_0_6px_rgba(252,204,10,0.35)] tracking-wide">
-                  {totalFormatted || totalItems}
+                <span className="absolute -top-2 -right-3 bg-line-yellow text-[#141414] text-[9px] font-mono font-bold w-[18px] h-[18px] flex items-center justify-center rounded-full whitespace-nowrap shadow-[0_0_6px_rgba(252,204,10,0.35)]">
+                  {totalItems}
                 </span>
               )}
             </button>
@@ -127,17 +131,17 @@ export function NavBar() {
               aria-label={menuOpen ? "Close menu" : "Open menu"}
             >
               <span
-                className={`block w-5 h-[1.5px] bg-cream transition-transform duration-300 origin-center ${
+                className={`block w-5 h-[1.5px] bg-[#E8E4DE] transition-transform duration-300 origin-center ${
                   menuOpen ? "translate-y-[6.5px] rotate-45" : ""
                 }`}
               />
               <span
-                className={`block w-5 h-[1.5px] bg-cream transition-opacity duration-300 ${
+                className={`block w-5 h-[1.5px] bg-[#E8E4DE] transition-opacity duration-300 ${
                   menuOpen ? "opacity-0" : "opacity-100"
                 }`}
               />
               <span
-                className={`block w-5 h-[1.5px] bg-cream transition-transform duration-300 origin-center ${
+                className={`block w-5 h-[1.5px] bg-[#E8E4DE] transition-transform duration-300 origin-center ${
                   menuOpen ? "-translate-y-[6.5px] -rotate-45" : ""
                 }`}
               />
@@ -147,15 +151,13 @@ export function NavBar() {
 
         {/* Bottom white band when scrolled */}
         {scrolled && (
-          <div className="absolute bottom-0 left-0 right-0">
-            <WhiteBand />
-          </div>
+          <div className="absolute bottom-0 left-0 right-0 platform-stripe" />
         )}
       </nav>
 
       {/* Mobile menu — full-screen station directory */}
       <div
-        className={`fixed inset-0 z-40 bg-void subway-tiles-dark transition-opacity duration-300 ${
+        className={`fixed inset-0 z-40 bg-[#141414] subway-tiles-dark transition-opacity duration-300 ${
           menuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -168,14 +170,14 @@ export function NavBar() {
               key={col.slug}
               href={`/collections/${col.slug}`}
               onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-between py-4 text-muted hover:text-white transition-colors group border-l-2 pl-4"
+              className="flex items-center justify-between py-4 text-[#7A756E] hover:text-white transition-colors group border-l-2 pl-4"
               style={{ borderColor: col.line.color + "40" }}
             >
               <div className="flex items-center gap-4">
                 <RouteBadge slug={col.slug} size="md" />
-                <span className="font-mono text-lg">{col.name}</span>
+                <span className="font-body font-medium text-lg">{col.name}</span>
               </div>
-              <span className="font-mono text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="font-body text-sm opacity-0 group-hover:opacity-100 transition-opacity">
                 &rarr;
               </span>
             </Link>
@@ -183,7 +185,7 @@ export function NavBar() {
 
           {/* Separator */}
           <div className="my-6">
-            <WhiteBand />
+            <WhiteBand dark />
           </div>
 
           {/* Other links */}
@@ -192,7 +194,7 @@ export function NavBar() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="font-mono text-lg text-muted hover:text-white transition-colors py-4 border-l-2 border-muted/20 pl-4"
+              className="font-body font-medium text-lg text-[#7A756E] hover:text-white transition-colors py-4 border-l-2 border-[#7A756E]/20 pl-4"
             >
               {link.label}
             </Link>
