@@ -43,7 +43,7 @@ export function Collections({ collections }: CollectionsProps) {
   const lined = collections.filter((c) => c.slug in SUBWAY_LINES);
 
   return (
-    <section ref={sectionRef} className="relative z-[2] py-28 md:py-36 px-6 bg-[#E8E4D8]">
+    <section ref={sectionRef} className="relative z-[2] py-28 md:py-36 px-6">
       <div className="max-w-3xl mx-auto">
         {/* NYCTA Sign Panel */}
         <div className="mb-10">

@@ -56,7 +56,7 @@ export function MostWanted({ products }: MostWantedProps) {
   if (products.length === 0) return null;
 
   return (
-    <section ref={sectionRef} className="relative z-[2] py-24 md:py-32 px-6 bg-[#E8E4D8]">
+    <section ref={sectionRef} className="relative z-[2] py-24 md:py-32 px-6">
       <div className="max-w-7xl mx-auto">
         {/* NYCTA Sign Panel with right-aligned action */}
         <div data-sign-panel className="mb-14">

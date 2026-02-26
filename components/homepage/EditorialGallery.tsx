@@ -45,7 +45,7 @@ export function EditorialGallery() {
   );
 
   return (
-    <section ref={sectionRef} className="relative z-[2] py-20 md:py-28 px-6 bg-[#E8E4D8]">
+    <section ref={sectionRef} className="relative z-[2] py-20 md:py-28 px-6">
       <div className="max-w-7xl mx-auto">
         {/* NYCTA Sign Panel */}
         <div className="mb-10">
