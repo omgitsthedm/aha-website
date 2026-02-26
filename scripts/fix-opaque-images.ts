@@ -16,8 +16,8 @@ const OPAQUE_PNGS = [
 
 // 2 non-Printful items: fetch their Square CDN image URLs
 const NON_PRINTFUL_PRODUCTS = [
-  { name: "Dots Sweater", filename: "Dots_Sweater.png" },
-  { name: "Zebra Cardigan", filename: "Zebra_Cardigan.png" },
+  { name: "Dots - Unisex Knitted Crewneck Sweater", filename: "Dots_-_Unisex_Knitted_Crewneck_Sweater.png" },
+  { name: "Zebra - Unisex Knitted Cardigan", filename: "Zebra_-_Unisex_Knitted_Cardigan.png" },
 ];
 
 async function processLocalPng(filename: string): Promise<void> {
