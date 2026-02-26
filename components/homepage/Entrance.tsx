@@ -92,7 +92,7 @@ export function Entrance() {
             className="absolute inset-0 will-change-transform"
           >
             <Image
-              src="/brand/mosaic-hero.png"
+              src="/brand/mosaic-hero.jpg"
               alt="After Hours Agenda — NYC subway mosaic with black sheep"
               fill
               className="object-cover object-center"

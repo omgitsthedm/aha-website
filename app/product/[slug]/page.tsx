@@ -1,5 +1,6 @@
 import { getAllProducts, getProduct, getAllCollections } from "@/lib/square/catalog";
 import { ProductDetail } from "@/components/product/ProductDetail";
+import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
 import { notFound } from "next/navigation";
 import type { Product, Collection } from "@/lib/utils/types";
 
@@ -13,9 +14,27 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   try {
     const product = await getProduct(params.slug);
     if (!product) return { title: "Product Not Found | After Hours Agenda" };
+
+    const description =
+      product.description?.replace(/<[^>]*>/g, "").slice(0, 160) ||
+      `Shop ${product.name} from After Hours Agenda`;
+    const image = product.images[0];
+
     return {
       title: `${product.name} | After Hours Agenda`,
-      description: product.description?.replace(/<[^>]*>/g, "").slice(0, 160) || `Shop ${product.name} from After Hours Agenda`,
+      description,
+      openGraph: {
+        title: `${product.name} | After Hours Agenda`,
+        description,
+        type: "website",
+        ...(image && { images: [{ url: image, alt: product.name }] }),
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: product.name,
+        description,
+        ...(image && { images: [image] }),
+      },
     };
   } catch {
     return { title: "After Hours Agenda" };
@@ -54,5 +73,10 @@ export default async function ProductPage({ params }: { params: { slug: string }
     product!.collectionIds.includes(c.id)
   );
 
-  return <ProductDetail product={product} related={related} collection={collection} />;
+  return (
+    <>
+      <ProductJsonLd product={product} />
+      <ProductDetail product={product} related={related} collection={collection} />
+    </>
+  );
 }

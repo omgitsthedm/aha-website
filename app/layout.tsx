@@ -17,15 +17,34 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "After Hours Agenda | Premium NYC Streetwear",
+  title: {
+    default: "After Hours Agenda | Premium NYC Streetwear",
+    template: "%s | After Hours Agenda",
+  },
   description:
     "Premium streetwear from New York City. Every piece made to order with a story to tell.",
-  keywords: ["streetwear", "NYC", "fashion", "urban", "clothing", "after hours", "premium", "made to order"],
+  keywords: [
+    "streetwear", "NYC", "fashion", "urban", "clothing", "after hours",
+    "premium", "made to order", "New York City", "streetwear brand",
+  ],
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.netlify.app"
+  ),
   openGraph: {
     title: "After Hours Agenda",
     description: "Premium streetwear from New York City. Every piece made to order with a story to tell.",
     type: "website",
     locale: "en_US",
+    siteName: "After Hours Agenda",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "After Hours Agenda",
+    description: "Premium streetwear from New York City. Every piece made to order with a story to tell.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
