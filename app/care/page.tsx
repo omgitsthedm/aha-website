@@ -20,7 +20,7 @@ export default function CarePage() {
             <div key={item.title} className="flex gap-4 bg-surface border border-border rounded-sm p-6">
               <span className="text-2xl flex-shrink-0">{item.icon}</span>
               <div>
-                <h2 className="font-display font-bold text-base mb-1">{item.title}</h2>
+                <h2 className="font-display font-bold text-lg mb-1">{item.title}</h2>
                 <p className="font-body text-sm text-cream/70">{item.detail}</p>
               </div>
             </div>

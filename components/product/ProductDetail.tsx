@@ -91,7 +91,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
     <div className="pt-20 pb-20">
       {/* Breadcrumb navigation */}
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <nav aria-label="Breadcrumb" className="font-body font-medium text-[11px] md:text-[10px] text-muted flex items-center gap-2">
+        <nav aria-label="Breadcrumb" className="font-body font-medium text-[10px] md:text-[11px] text-muted flex items-center gap-2">
           <Link href="/shop" className="hover:text-muted transition-colors inline-flex items-center gap-1">
             <span className="opacity-50">&larr;</span> Shop
           </Link>
