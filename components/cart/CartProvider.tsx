@@ -56,8 +56,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const saved = localStorage.getItem("aha-cart");
     if (saved) {
       try {
-        setItems(JSON.parse(saved));
-      } catch {}
+        const parsed = JSON.parse(saved);
+        // Validate that parsed data is an array of cart items
+        if (Array.isArray(parsed)) {
+          setItems(parsed);
+        }
+      } catch (err) {
+        console.warn("Failed to parse cart from localStorage:", err);
+        localStorage.removeItem("aha-cart");
+      }
     }
   }, []);
 
@@ -68,17 +75,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, mounted]);
 
+  const MAX_QUANTITY_PER_ITEM = 20;
+
   const addItem = useCallback((item: CartItem, relatedProducts?: Product[]) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.variationId === item.variationId);
       if (existing) {
         return prev.map((i) =>
           i.variationId === item.variationId
-            ? { ...i, quantity: i.quantity + item.quantity }
+            ? { ...i, quantity: Math.min(i.quantity + item.quantity, MAX_QUANTITY_PER_ITEM) }
             : i
         );
       }
-      return [...prev, item];
+      return [...prev, { ...item, quantity: Math.min(item.quantity, MAX_QUANTITY_PER_ITEM) }];
     });
     // Show confirmation modal instead of opening cart drawer
     setLastAddedItem(item);
@@ -96,9 +105,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         removeItem(variationId);
         return;
       }
+      const capped = Math.min(quantity, MAX_QUANTITY_PER_ITEM);
       setItems((prev) =>
         prev.map((i) =>
-          i.variationId === variationId ? { ...i, quantity } : i
+          i.variationId === variationId ? { ...i, quantity: capped } : i
         )
       );
     },

@@ -31,11 +31,37 @@ export async function POST(request: Request) {
   try {
     const body: CheckoutRequestBody = await request.json();
 
-    if (!body.items || body.items.length === 0) {
+    if (!body.items || !Array.isArray(body.items) || body.items.length === 0) {
       return NextResponse.json(
         { error: "No items provided" },
         { status: 400 }
       );
+    }
+
+    // Validate and cap quantities server-side
+    const MAX_QUANTITY = 20;
+    const MAX_ITEMS = 50;
+
+    if (body.items.length > MAX_ITEMS) {
+      return NextResponse.json(
+        { error: "Too many items in cart" },
+        { status: 400 }
+      );
+    }
+
+    for (const item of body.items) {
+      if (!item.catalogObjectId || typeof item.quantity !== "number" || item.quantity < 1) {
+        return NextResponse.json(
+          { error: "Invalid item in cart" },
+          { status: 400 }
+        );
+      }
+      if (item.quantity > MAX_QUANTITY) {
+        return NextResponse.json(
+          { error: `Maximum ${MAX_QUANTITY} per item` },
+          { status: 400 }
+        );
+      }
     }
 
     const locationId = process.env.SQUARE_LOCATION_ID;
@@ -55,9 +81,9 @@ export async function POST(request: Request) {
     }));
 
     const idempotencyKey = crypto.randomUUID();
-    const redirectUrl =
-      body.redirectUrl ||
-      `${process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.netlify.app"}/order-confirmed`;
+    // Always use our own redirect URL — never accept from client (prevents open redirect)
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.netlify.app";
+    const redirectUrl = `${siteUrl}/order-confirmed`;
 
     const response = await squareRequest<PaymentLinkResponse>(
       "/online-checkout/payment-links",

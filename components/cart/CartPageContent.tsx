@@ -40,7 +40,15 @@ export function CartPageContent() {
         throw new Error(data.error || "Checkout failed");
       }
 
-      // Redirect to Square's hosted checkout
+      // Validate checkout URL before redirecting (only allow Square domains)
+      const checkoutUrl = new URL(data.checkoutUrl);
+      const allowedHosts = ["squareup.com", "square.link"];
+      const isAllowedHost = allowedHosts.some(
+        (host) => checkoutUrl.hostname === host || checkoutUrl.hostname.endsWith(`.${host}`)
+      );
+      if (!isAllowedHost) {
+        throw new Error("Invalid checkout URL received");
+      }
       window.location.href = data.checkoutUrl;
     } catch (err) {
       setError(

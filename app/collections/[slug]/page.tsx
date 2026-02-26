@@ -19,7 +19,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: `${collection.name} | After Hours Agenda`,
       description: collection.description,
     };
-  } catch {
+  } catch (error) {
+    console.error("Error generating collection metadata:", error);
     return { title: "After Hours Agenda" };
   }
 }

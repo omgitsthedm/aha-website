@@ -33,7 +33,8 @@ export async function getShippingRates(
       minDeliveryDays: rate.min_delivery_days,
       maxDeliveryDays: rate.max_delivery_days,
     }));
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch shipping rates:", error);
     return [];
   }
 }

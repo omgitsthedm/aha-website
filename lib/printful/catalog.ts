@@ -22,7 +22,8 @@ export async function getSizeGuide(
       `/catalog-products/${catalogProductId}/sizes`
     );
     return res.data?.[0] || null;
-  } catch {
+  } catch (error) {
+    console.error(`Failed to fetch size guide for product ${catalogProductId}:`, error);
     return null;
   }
 }
@@ -42,7 +43,8 @@ export async function getProductAvailability(
       }
     }
     return availability;
-  } catch {
+  } catch (error) {
+    console.error(`Failed to fetch availability for product ${catalogProductId}:`, error);
     return {};
   }
 }

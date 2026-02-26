@@ -14,10 +14,17 @@ interface ProductJsonLdProps {
  * preventing script injection in the JSON-LD output.
  */
 export function ProductJsonLd({ product }: ProductJsonLdProps) {
+  // Guard against products with no variations (would crash Math.min/max)
+  if (product.variations.length === 0) return null;
+
   // Strip HTML tags from description (Square may include formatting)
   const cleanDescription = product.description
     .replace(/<[^>]*>/g, "")
     .slice(0, 500);
+
+  const prices = product.variations.map((v) => v.price);
+  const lowPrice = (Math.min(...prices) / 100).toFixed(2);
+  const highPrice = (Math.max(...prices) / 100).toFixed(2);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -33,12 +40,8 @@ export function ProductJsonLd({ product }: ProductJsonLdProps) {
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: product.currency || "USD",
-      lowPrice: (
-        Math.min(...product.variations.map((v) => v.price)) / 100
-      ).toFixed(2),
-      highPrice: (
-        Math.max(...product.variations.map((v) => v.price)) / 100
-      ).toFixed(2),
+      lowPrice,
+      highPrice,
       offerCount: product.variations.length,
       availability: "https://schema.org/InStock",
       seller: {

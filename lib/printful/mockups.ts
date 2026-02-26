@@ -59,7 +59,8 @@ export async function generateMockup(
     }
 
     return null;
-  } catch {
+  } catch (error) {
+    console.error("Failed to generate mockup:", error);
     return null;
   }
 }

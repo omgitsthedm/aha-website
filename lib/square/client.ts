@@ -1,5 +1,12 @@
 const SQUARE_BASE_URL = "https://connect.squareup.com/v2";
 
+// Fail fast if Square credentials are missing (server-side only)
+if (typeof window === "undefined" && !process.env.SQUARE_ACCESS_TOKEN) {
+  console.warn(
+    "⚠ SQUARE_ACCESS_TOKEN is not set. Square API calls will fail."
+  );
+}
+
 interface SquareRequestOptions {
   method?: string;
   body?: Record<string, unknown>;
@@ -37,6 +44,13 @@ export async function squareRequest<T>(
   endpoint: string,
   options: SquareRequestOptions = {}
 ): Promise<T> {
+  const token = process.env.SQUARE_ACCESS_TOKEN;
+  if (!token) {
+    throw new Error(
+      "SQUARE_ACCESS_TOKEN is not configured. Cannot make Square API requests."
+    );
+  }
+
   const { method = "GET", body, revalidate = 300 } = options;
 
   const res = await fetchWithRetry(
@@ -45,7 +59,7 @@ export async function squareRequest<T>(
       method,
       headers: {
         "Square-Version": process.env.SQUARE_API_VERSION || "2024-01-18",
-        Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: body ? JSON.stringify(body) : undefined,

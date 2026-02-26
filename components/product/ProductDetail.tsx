@@ -82,9 +82,27 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
     }
   };
 
-  // Sanitized HTML rendering for product description from CMS
+  // Sanitize HTML from CMS — strip script tags, event handlers, and dangerous elements
+  // while preserving safe formatting (p, strong, em, br, ul, li, etc.)
+  const sanitizeHtml = (html: string): string => {
+    return html
+      // Remove script/style/iframe tags and their content
+      .replace(/<script[\s\S]*?<\/script>/gi, "")
+      .replace(/<style[\s\S]*?<\/style>/gi, "")
+      .replace(/<iframe[\s\S]*?<\/iframe>/gi, "")
+      .replace(/<object[\s\S]*?<\/object>/gi, "")
+      .replace(/<embed[\s\S]*?\/?>/gi, "")
+      // Remove event handlers (onclick, onerror, onload, etc.)
+      .replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, "")
+      .replace(/\s+on\w+\s*=\s*\S+/gi, "")
+      // Remove javascript: protocol in href/src
+      .replace(/(?:href|src)\s*=\s*["']javascript:[^"']*["']/gi, "")
+      // Remove data: protocol in src (except safe image types)
+      .replace(/src\s*=\s*["']data:(?!image\/(?:png|jpe?g|gif|webp|svg\+xml))[^"']*["']/gi, "");
+  };
+
   const descriptionMarkup = product.description
-    ? { __html: product.description }
+    ? { __html: sanitizeHtml(product.description) }
     : null;
 
   return (

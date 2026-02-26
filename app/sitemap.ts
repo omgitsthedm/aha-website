@@ -30,8 +30,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.8,
     }));
-  } catch {
-    // Fail silently — sitemap still works with static pages
+  } catch (error) {
+    console.error("Sitemap: failed to fetch products:", error);
   }
 
   // Dynamic collection pages
@@ -44,8 +44,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.7,
     }));
-  } catch {
-    // Fail silently
+  } catch (error) {
+    console.error("Sitemap: failed to fetch collections:", error);
   }
 
   return [...staticPages, ...productPages, ...collectionPages];

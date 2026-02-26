@@ -36,7 +36,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         ...(image && { images: [image] }),
       },
     };
-  } catch {
+  } catch (error) {
+    console.error("Error generating product metadata:", error);
     return { title: "After Hours Agenda" };
   }
 }
