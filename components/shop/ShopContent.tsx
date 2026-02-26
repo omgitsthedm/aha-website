@@ -210,10 +210,10 @@ export function ShopContent({ products, collections }: ShopContentProps) {
 
                   {/* Poster info scrim */}
                   <div className="subway-poster-scrim">
-                    <h3 className="font-display font-bold text-[11px] md:text-xs text-[#E8E4DE] uppercase tracking-[0.06em] truncate">
+                    <h3 className="font-display font-bold text-xs md:text-sm text-[#E8E4DE] uppercase tracking-[0.06em] truncate">
                       {product.name}
                     </h3>
-                    <p className="font-mono text-xs md:text-sm font-semibold text-[#FCCC0A] mt-1">
+                    <p className="font-mono text-xs md:text-sm font-semibold text-[#FCCC0A] mt-0.5">
                       {product.priceFormatted}
                     </p>
                   </div>

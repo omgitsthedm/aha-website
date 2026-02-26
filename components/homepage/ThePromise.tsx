@@ -27,7 +27,7 @@ export function ThePromise() {
 
   return (
     <section ref={sectionRef} className="relative z-[2] bg-[#0a0a0a] border-t border-b border-white/[0.06]">
-      <div className="py-10 md:py-14 flex justify-center overflow-x-auto">
+      <div className="py-10 md:py-14 px-4 flex justify-center overflow-x-auto">
         {visible ? (
           <SplitFlap
             value="FREE SHIPPING $75+ · 30-DAY RETURNS · TRACKED DELIVERY"

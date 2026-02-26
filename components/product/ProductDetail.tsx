@@ -91,7 +91,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
     <div className="pt-20 pb-20">
       {/* Breadcrumb navigation */}
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <nav aria-label="Breadcrumb" className="font-body font-medium text-[10px] text-muted flex items-center gap-2">
+        <nav aria-label="Breadcrumb" className="font-body font-medium text-[11px] md:text-[10px] text-muted flex items-center gap-2">
           <Link href="/shop" className="hover:text-muted transition-colors inline-flex items-center gap-1">
             <span className="opacity-50">&larr;</span> Shop
           </Link>
@@ -261,18 +261,18 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           <div className="mt-6 py-6">
             <WhiteBand />
             <div className="flex items-center gap-3 pt-5 flex-wrap">
-              <span className="font-body font-medium text-[9px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <span className="font-body font-medium text-[10px] md:text-[11px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 Secure Checkout
               </span>
-              <span className="text-muted/50 text-[8px]">&bull;</span>
-              <span className="font-body font-medium text-[9px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <span className="text-muted/50 text-[9px]">&bull;</span>
+              <span className="font-body font-medium text-[10px] md:text-[11px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                 Free Shipping $75+
               </span>
-              <span className="text-muted/50 text-[8px]">&bull;</span>
-              <span className="font-body font-medium text-[9px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              <span className="text-muted/50 text-[9px]">&bull;</span>
+              <span className="font-body font-medium text-[10px] md:text-[11px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
                 Made to Order
               </span>
             </div>
@@ -331,10 +331,10 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
 
                     {/* Poster info scrim */}
                     <div className="subway-poster-scrim">
-                      <h3 className="font-display font-bold text-[11px] md:text-xs text-[#E8E4DE] uppercase tracking-[0.06em] truncate">
+                      <h3 className="font-display font-bold text-xs md:text-sm text-[#E8E4DE] uppercase tracking-[0.06em] truncate">
                         {p.name}
                       </h3>
-                      <p className="font-mono text-xs md:text-sm font-semibold text-[#FCCC0A] mt-1">
+                      <p className="font-mono text-xs md:text-sm font-semibold text-[#FCCC0A] mt-0.5">
                         {p.priceFormatted}
                       </p>
                     </div>

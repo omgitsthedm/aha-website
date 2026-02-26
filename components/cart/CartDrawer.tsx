@@ -155,7 +155,7 @@ export function CartDrawer() {
                   {totalFormatted}
                 </span>
               </div>
-              <p className="text-[11px] text-muted font-body mb-4">
+              <p className="text-xs text-muted font-body mb-4">
                 Shipping calculated at checkout
               </p>
               {/* Checkout button */}
@@ -167,7 +167,7 @@ export function CartDrawer() {
                 Checkout &rarr;
               </Link>
               {/* Trust line */}
-              <p className="font-body font-medium text-[10px] text-muted text-center pt-3 tracking-[0.1em]">
+              <p className="font-body font-medium text-[11px] text-muted text-center pt-3 tracking-[0.1em]">
                 Secure Checkout &middot; Free Shipping $75+ &middot; 30-Day Returns
               </p>
             </div>

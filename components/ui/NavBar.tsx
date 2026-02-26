@@ -167,7 +167,7 @@ export function NavBar() {
             : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="pt-28 px-8 flex flex-col gap-1">
+        <div className="pt-28 px-8 pb-24 flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-7rem)]">
           {/* Collection routes */}
           {COLLECTIONS.map((col) => (
             <Link

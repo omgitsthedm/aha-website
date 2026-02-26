@@ -30,7 +30,7 @@ export function AnnouncementBar() {
         </p>
 
         {/* Mobile — cycle messages with instant swap */}
-        <p className="block sm:hidden font-body font-medium text-[11px] text-[#7A756E] tracking-[0.15em] text-center uppercase">
+        <p className="block sm:hidden font-body font-medium text-xs text-[#7A756E] tracking-[0.12em] text-center uppercase">
           {MESSAGES[index]}
         </p>
       </div>

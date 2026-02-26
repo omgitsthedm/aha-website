@@ -111,7 +111,7 @@ export function Footer() {
           <WhiteBand strong />
           <div className="flex items-center justify-between mt-10">
             {/* Left — Copyright */}
-            <p className="font-body font-medium text-[11px] text-muted tracking-[0.15em]">
+            <p className="font-body font-medium text-xs text-muted tracking-[0.15em]">
               &copy; {new Date().getFullYear()} AFTER HOURS AGENDA. ALL RIGHTS RESERVED.
             </p>
 

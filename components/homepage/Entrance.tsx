@@ -116,7 +116,7 @@ export function Entrance() {
             <span
               className="font-body font-medium text-white/60 uppercase"
               style={{
-                fontSize: "clamp(0.5rem, 0.9vw, 0.65rem)",
+                fontSize: "clamp(0.65rem, 1.2vw, 0.75rem)",
                 letterSpacing: "0.25em",
               }}
             >

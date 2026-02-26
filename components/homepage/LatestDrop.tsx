@@ -120,7 +120,7 @@ export function LatestDrop({ products }: LatestDropProps) {
                         className={`font-display font-bold text-[#E8E4DE] uppercase tracking-[0.06em] truncate ${
                           isFeatured
                             ? "text-xs md:text-base"
-                            : "text-[11px] md:text-xs"
+                            : "text-xs md:text-sm"
                         }`}
                       >
                         {product.name}

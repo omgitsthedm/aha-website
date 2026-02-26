@@ -31,7 +31,7 @@ export default function AboutPage() {
               a way of seeing the world that doesn&apos;t follow the crowd.
             </p>
 
-            <blockquote className="border-l-2 border-muted pl-6 py-2 font-body italic text-2xl text-cream">
+            <blockquote className="border-l-2 border-muted pl-6 py-2 font-body italic text-xl md:text-2xl text-cream">
               &ldquo;Fashion with a point of view. Made for the ones who have one.&rdquo;
             </blockquote>
 
