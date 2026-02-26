@@ -11,7 +11,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="subway-tiles">
+    <footer className="relative z-[2] subway-tiles">
       <WhiteBand strong />
 
       <div className="max-w-7xl mx-auto px-6 py-20">

@@ -47,10 +47,10 @@ export function NavBar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 h-20 flex items-center transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 h-20 flex items-center transition-all duration-300 backdrop-blur-xl ${
           scrolled
-            ? "bg-[rgba(10,10,10,0.92)] backdrop-blur-xl"
-            : "bg-transparent"
+            ? "bg-[rgba(10,10,10,0.92)]"
+            : "bg-[rgba(10,10,10,0.75)]"
         }`}
       >
         <div className="w-full px-6 flex items-center justify-between">
@@ -149,10 +149,8 @@ export function NavBar() {
           </div>
         </div>
 
-        {/* Bottom white band when scrolled */}
-        {scrolled && (
-          <div className="absolute bottom-0 left-0 right-0 platform-stripe" />
-        )}
+        {/* Bottom platform stripe */}
+        <div className="absolute bottom-0 left-0 right-0 platform-stripe" />
       </nav>
 
       {/* Mobile menu — full-screen station directory */}

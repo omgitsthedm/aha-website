@@ -24,7 +24,7 @@ export default function ReturnsPage() {
           </div>
           <div className="bg-surface border border-border rounded-sm p-6">
             <h2 className="font-display font-bold text-lg mb-3">Exchanges</h2>
-            <p>Need a different size? We offer free exchanges for size swaps. Same process — email us and we'll take care of it.</p>
+            <p>Wrong size? No stress. We'll swap it for free. Same process — email us and we'll take care of it.</p>
           </div>
         </div>
       </div>

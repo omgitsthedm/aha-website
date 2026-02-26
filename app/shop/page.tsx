@@ -6,7 +6,7 @@ export const revalidate = 300;
 
 export const metadata = {
   title: "Shop | After Hours Agenda",
-  description: "Browse the full After Hours Agenda collection. NYC-born streetwear for those who write their own rules.",
+  description: "Shop the full After Hours Agenda collection. Premium streetwear, made to order in NYC.",
 };
 
 export default async function ShopPage() {
@@ -26,11 +26,15 @@ export default async function ShopPage() {
     <div className="pt-24 pb-16 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h1 className="font-display font-bold text-hero text-center mb-4">
-            SHOP
-          </h1>
-          <p className="font-body text-muted text-center max-w-md mx-auto">
-            Every piece tells a story. Find yours.
+          <div className="max-w-md mx-auto">
+            <div className="mosaic-border" />
+            <div className="sign-panel-station justify-center">
+              <span className="sign-panel-station-text text-lg md:text-xl tracking-[0.25em]">Shop</span>
+            </div>
+            <div className="mosaic-border" />
+          </div>
+          <p className="font-body text-muted text-center max-w-md mx-auto mt-6">
+            The full collection. Made to order, made to last.
           </p>
         </div>
         <ShopContent products={products} collections={collections} />

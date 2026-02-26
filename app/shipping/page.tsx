@@ -11,7 +11,7 @@ export default function ShippingPage() {
         <div className="space-y-6 font-body text-cream/80 leading-relaxed">
           <div className="bg-surface border border-border rounded-sm p-6">
             <h2 className="font-display font-bold text-lg mb-3">Made to Order</h2>
-            <p>Every After Hours Agenda piece is printed on demand, just for you. This means your order is crafted after you place it — no sitting in a warehouse, no mass production.</p>
+            <p>Every piece is crafted after you order it. No warehouses, no sitting on shelves — just freshly made gear shipped straight to you.</p>
           </div>
           <div className="bg-surface border border-border rounded-sm p-6">
             <h2 className="font-display font-bold text-lg mb-3">Processing Time</h2>

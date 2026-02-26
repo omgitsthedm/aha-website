@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { NavBar } from "@/components/ui/NavBar";
 import { AnnouncementBar } from "@/components/ui/AnnouncementBar";
 import { Footer } from "@/components/ui/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
+import { SubwayDotsBackground } from "@/components/ui/SubwayDotsBackground";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
+// Helvetica Neue — the Vignelli typeface (system font, zero download)
+// IBM Plex Mono retained ONLY for prices, tabular data, and SplitFlap
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-ibm-plex",
@@ -20,13 +17,13 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "After Hours Agenda | NYC Streetwear",
+  title: "After Hours Agenda | Premium NYC Streetwear",
   description:
-    "For the ones who stay out late. NYC-born streetwear for those who write their own rules.",
-  keywords: ["streetwear", "NYC", "fashion", "urban", "clothing", "after hours"],
+    "Premium streetwear from New York City. Every piece made to order with a story to tell.",
+  keywords: ["streetwear", "NYC", "fashion", "urban", "clothing", "after hours", "premium", "made to order"],
   openGraph: {
     title: "After Hours Agenda",
-    description: "NYC-born streetwear for those who write their own rules.",
+    description: "Premium streetwear from New York City. Every piece made to order with a story to tell.",
     type: "website",
     locale: "en_US",
   },
@@ -40,13 +37,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${ibmPlexMono.variable}`}
+      className={ibmPlexMono.variable}
     >
-      <body className="bg-void text-cream font-body antialiased">
+      <body className="text-cream font-body antialiased">
+        {/* Global subway tile texture — fixed behind everything */}
+        <div className="fixed inset-0 z-0 subway-tiles" aria-hidden="true" />
+        {/* Animated MTA-colored dots flowing along invisible routes */}
+        <SubwayDotsBackground />
         <CartProvider>
           <AnnouncementBar />
           <NavBar />
-          <main className="min-h-screen">{children}</main>
+          <main className="relative z-[2] min-h-screen">{children}</main>
           <Footer />
         </CartProvider>
       </body>

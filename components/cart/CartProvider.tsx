@@ -8,12 +8,13 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import type { CartItem } from "@/lib/utils/types";
+import type { CartItem, Product } from "@/lib/utils/types";
 import { CartDrawer } from "./CartDrawer";
+import { AddToCartModal } from "./AddToCartModal";
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (item: CartItem) => void;
+  addItem: (item: CartItem, relatedProducts?: Product[]) => void;
   removeItem: (variationId: string) => void;
   updateQuantity: (variationId: string, quantity: number) => void;
   clearCart: () => void;
@@ -23,6 +24,12 @@ interface CartContextType {
   total: number;
   totalItems: number;
   totalFormatted: string;
+  // Modal state
+  isModalOpen: boolean;
+  lastAddedItem: CartItem | null;
+  modalRelated: Product[];
+  closeModal: () => void;
+  openCartFromModal: () => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -37,6 +44,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  // Modal state for add-to-cart confirmation
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [lastAddedItem, setLastAddedItem] = useState<CartItem | null>(null);
+  const [modalRelated, setModalRelated] = useState<Product[]>([]);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -56,7 +68,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, mounted]);
 
-  const addItem = useCallback((item: CartItem) => {
+  const addItem = useCallback((item: CartItem, relatedProducts?: Product[]) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.variationId === item.variationId);
       if (existing) {
@@ -68,7 +80,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, item];
     });
-    setIsOpen(true);
+    // Show confirmation modal instead of opening cart drawer
+    setLastAddedItem(item);
+    setModalRelated(relatedProducts || []);
+    setIsModalOpen(true);
   }, []);
 
   const removeItem = useCallback((variationId: string) => {
@@ -94,6 +109,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const toggleCart = useCallback(() => setIsOpen((prev) => !prev), []);
   const setCartOpen = useCallback((open: boolean) => setIsOpen(open), []);
 
+  // Modal controls
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
+  const openCartFromModal = useCallback(() => {
+    setIsModalOpen(false);
+    setIsOpen(true);
+  }, []);
+
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalFormatted = new Intl.NumberFormat("en-US", {
@@ -115,10 +137,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
         total,
         totalItems,
         totalFormatted,
+        isModalOpen,
+        lastAddedItem,
+        modalRelated,
+        closeModal,
+        openCartFromModal,
       }}
     >
       {children}
       <CartDrawer />
+      <AddToCartModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onViewBag={openCartFromModal}
+        addedItem={lastAddedItem}
+        relatedProducts={modalRelated}
+      />
     </CartContext.Provider>
   );
 }

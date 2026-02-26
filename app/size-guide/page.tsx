@@ -8,7 +8,7 @@ export default function SizeGuidePage() {
     <div className="pt-24 pb-16 px-6">
       <div className="max-w-3xl mx-auto">
         <h1 className="font-display font-bold text-chapter text-center mb-4">SIZE GUIDE</h1>
-        <p className="text-center text-muted mb-12 max-w-md mx-auto">Most of our pieces run true to size. For an oversized fit, size up one.</p>
+        <p className="text-center text-muted mb-12 max-w-md mx-auto">Our pieces run true to size. Want that oversized look? Go up one.</p>
 
         <div className="space-y-8">
           <div>

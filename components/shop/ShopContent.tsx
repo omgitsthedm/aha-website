@@ -102,111 +102,118 @@ export function ShopContent({ products, collections }: ShopContentProps) {
   );
 
   return (
-    <div ref={containerRef} className="noise-overlay">
-      {/* View toggle + filter bar */}
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-6">
-        {/* View toggle */}
-        <div className="flex items-center gap-3 mr-4">
+    <div ref={containerRef}>
+      {/* View toggle + filter bar — sign panel for visibility */}
+      <div className="mb-6">
+        <div className="mosaic-border-thin" />
+        <div className="sign-panel-station py-3 px-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+          {/* View toggle */}
+          <div className="flex items-center gap-3 mr-4">
+            <button
+              onClick={() => handleViewChange("grid")}
+              className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors ${
+                viewMode === "grid" ? "text-[#E8E4DE]" : "text-[#E8E4DE]/50 hover:text-[#E8E4DE]"
+              }`}
+            >
+              Grid
+            </button>
+            <button
+              onClick={() => handleViewChange("index")}
+              className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors ${
+                viewMode === "index" ? "text-[#E8E4DE]" : "text-[#E8E4DE]/50 hover:text-[#E8E4DE]"
+              }`}
+            >
+              Index
+            </button>
+          </div>
+
+          {/* Filter — All button */}
           <button
-            onClick={() => handleViewChange("grid")}
-            className={`font-mono text-xs transition-colors ${
-              viewMode === "grid" ? "text-cream" : "text-muted hover:text-white"
+            onClick={() => setActiveFilter("all")}
+            className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors ${
+              activeFilter === "all" ? "text-[#FCCC0A]" : "text-[#E8E4DE]/50 hover:text-[#E8E4DE]"
             }`}
           >
-            Grid
+            All
           </button>
-          <button
-            onClick={() => handleViewChange("index")}
-            className={`font-mono text-xs transition-colors ${
-              viewMode === "index" ? "text-cream" : "text-muted hover:text-white"
-            }`}
-          >
-            Index
-          </button>
+
+          {/* Filter — RouteBadge per collection */}
+          {collections.map((col) => (
+            <button
+              key={col.id}
+              onClick={() => setActiveFilter(col.id)}
+              className={`transition-opacity ${
+                activeFilter === col.id ? "opacity-100" : "opacity-60 hover:opacity-100"
+              }`}
+            >
+              <RouteBadge slug={col.slug} size="sm" showName />
+            </button>
+          ))}
+
+          {/* Sort */}
+          <div className="ml-auto">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-transparent border-b border-[#E8E4DE]/30 font-body text-xs text-[#E8E4DE]/70 focus:border-[#FCCC0A] focus:outline-none py-1 pr-6 cursor-pointer"
+            >
+              <option value="name">A-Z</option>
+              <option value="price-asc">Price: Low</option>
+              <option value="price-desc">Price: High</option>
+            </select>
+          </div>
         </div>
-
-        {/* Filter — All button */}
-        <button
-          onClick={() => setActiveFilter("all")}
-          className={`font-mono text-xs transition-colors ${
-            activeFilter === "all" ? "text-cream" : "text-muted hover:text-white"
-          }`}
-        >
-          All
-        </button>
-
-        {/* Filter — RouteBadge per collection */}
-        {collections.map((col) => (
-          <button
-            key={col.id}
-            onClick={() => setActiveFilter(col.id)}
-            className={`transition-opacity ${
-              activeFilter === col.id ? "opacity-100" : "opacity-60 hover:opacity-100"
-            }`}
-          >
-            <RouteBadge slug={col.slug} size="sm" showName />
-          </button>
-        ))}
-
-        {/* Sort */}
-        <div className="ml-auto">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="bg-transparent border-b border-muted font-mono text-xs text-muted focus:border-cream focus:outline-none py-1 pr-6 cursor-pointer"
-          >
-            <option value="name">A-Z</option>
-            <option value="price-asc">Price: Low</option>
-            <option value="price-desc">Price: High</option>
-          </select>
-        </div>
+        <div className="mosaic-border-thin" />
       </div>
 
       {/* Product count */}
-      <p className="font-mono text-[11px] text-muted mb-6">
+      <p className="font-body text-[11px] text-muted mb-6">
         {filtered.length} {filtered.length === 1 ? "product" : "products"}
       </p>
 
-      {/* GRID VIEW */}
+      {/* GRID VIEW — Subway Poster Cards */}
       {viewMode === "grid" && (
         <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {filtered.map((product, idx) => (
-            <Link
-              key={product.id}
-              href={`/product/${product.slug}`}
-              className={`group block ${idx === 0 ? "md:col-span-2" : ""}`}
-            >
-              <div className={`relative overflow-hidden bg-surface ${idx === 0 ? "aspect-[3/2]" : "aspect-[3/4]"}`}>
-                {product.images[0] ? (
-                  <Image
-                    src={product.images[0]}
-                    alt={product.name}
-                    fill
-                    unoptimized={isPrintfulImage(product.images[0])}
-                    className={`${
-                      isPrintfulImage(product.images[0]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"
-                    } transition-transform duration-700 group-hover:scale-[1.03]`}
-                    sizes={
-                      idx === 0
-                        ? "(max-width: 768px) 100vw, 66vw"
-                        : "(max-width: 768px) 50vw, 33vw"
-                    }
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-elevated" />
-                )}
-              </div>
+          {filtered.map((product) => {
+            const isPrintful = isPrintfulImage(product.images[0]);
 
-              <div className="mt-3 space-y-1">
-                <h3 className="font-mono text-sm text-muted truncate group-hover:text-white transition-colors duration-300">
-                  {product.name}
-                </h3>
-                <p className="font-mono text-sm text-muted">
-                  {product.priceFormatted}
-                </p>
-              </div>
-            </Link>
-          ))}
+            return (
+              <Link
+                key={product.id}
+                href={`/product/${product.slug}`}
+                className="group block product-card-hover"
+              >
+                <div className="subway-poster aspect-[3/4] bg-surface">
+                  {product.images[0] ? (
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name}
+                      fill
+                      unoptimized={isPrintful}
+                      className={`${
+                        isPrintful
+                          ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
+                          : "object-cover"
+                      } transition-transform duration-700 group-hover:scale-[1.03]`}
+                      sizes="(max-width: 768px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-surface" />
+                  )}
+
+                  {/* Poster info scrim */}
+                  <div className="subway-poster-scrim">
+                    <h3 className="font-display font-bold text-[11px] md:text-xs text-[#E8E4DE] uppercase tracking-[0.06em] truncate">
+                      {product.name}
+                    </h3>
+                    <p className="font-mono text-xs md:text-sm font-semibold text-[#FCCC0A] mt-1">
+                      {product.priceFormatted}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
 
@@ -219,9 +226,9 @@ export function ShopContent({ products, collections }: ShopContentProps) {
               <div key={product.id}>
                 <Link
                   href={`/product/${product.slug}`}
-                  className="group flex items-center py-4 -mx-4 px-4 hover:bg-[#1A1918] transition-colors"
+                  className="group flex items-center py-4 -mx-4 px-4 hover:bg-surface transition-colors"
                 >
-                  <span className="font-mono text-sm text-muted group-hover:text-white flex-1 truncate">
+                  <span className="font-body font-medium text-sm text-muted group-hover:text-cream flex-1 truncate">
                     {product.name}
                   </span>
                   {colSlug && (
@@ -241,10 +248,10 @@ export function ShopContent({ products, collections }: ShopContentProps) {
       {/* Empty state */}
       {filtered.length === 0 && (
         <div className="text-center py-24">
-          <p className="font-mono text-sm text-muted">No products found</p>
+          <p className="font-body text-sm text-muted">No products found</p>
           <button
             onClick={() => setActiveFilter("all")}
-            className="mt-4 font-mono text-xs text-cream hover:text-white transition-colors"
+            className="mt-4 font-body font-medium text-xs text-cream hover:text-cream transition-colors"
           >
             Clear filter
           </button>

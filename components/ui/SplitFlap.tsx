@@ -105,7 +105,7 @@ function FlapCell({
       >
         {!isEmpty && (
           <span
-            className="text-cream font-mono font-medium translate-y-[50%]"
+            className="text-[#E8E4DE] font-mono font-medium translate-y-[50%]"
             style={{ lineHeight: 0 }}
           >
             {displayChar}
@@ -120,7 +120,7 @@ function FlapCell({
       >
         {!isEmpty && (
           <span
-            className="text-cream font-mono font-medium -translate-y-[50%]"
+            className="text-[#E8E4DE] font-mono font-medium -translate-y-[50%]"
             style={{ lineHeight: 0 }}
           >
             {displayChar}

@@ -30,7 +30,7 @@ export function Agenda() {
   );
 
   return (
-    <section ref={sectionRef} className="subway-tiles-dark py-32 md:py-48 px-6 bg-navy">
+    <section ref={sectionRef} className="relative z-[2] subway-tiles-dark py-32 md:py-48 px-6 bg-[#141414]">
       <WhiteBand dark />
 
       {/* Inner container with inset border for depth */}

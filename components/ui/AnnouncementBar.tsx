@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 
 const MESSAGES = [
-  "FREE SHIPPING ON ORDERS $75+",
-  "TRACKED DELIVERY",
-  "30-DAY RETURNS",
+  "Free Shipping on Orders $75+",
+  "Tracked Delivery on Every Order",
+  "Easy 30-Day Returns",
 ];
 
 const FULL_LINE = MESSAGES.join("  \u00b7  ");
@@ -22,15 +22,15 @@ export function AnnouncementBar() {
   }, []);
 
   return (
-    <div className="bg-void border-b border-white/10">
+    <div className="bg-[#141414] border-b border-white/10">
       <div className="px-4 py-2 flex items-center justify-center">
         {/* Desktop — all messages on one line */}
-        <p className="hidden sm:block font-mono text-[11px] text-muted tracking-[0.15em] text-center uppercase">
+        <p className="hidden sm:block font-body font-medium text-[11px] text-[#7A756E] tracking-[0.15em] text-center uppercase">
           {FULL_LINE}
         </p>
 
         {/* Mobile — cycle messages with instant swap */}
-        <p className="block sm:hidden font-mono text-[11px] text-muted tracking-[0.15em] text-center uppercase">
+        <p className="block sm:hidden font-body font-medium text-[11px] text-[#7A756E] tracking-[0.15em] text-center uppercase">
           {MESSAGES[index]}
         </p>
       </div>

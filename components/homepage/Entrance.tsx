@@ -6,10 +6,10 @@ import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { SplitFlap } from "@/components/ui/SplitFlap";
 
 const MESSAGES = [
-  "NOW SERVING · BLACK SHEEP · NO KINGS · NIGHT MODE",
-  "NYC FOREVER · NEW ARRIVALS · FREE SHIP $75+",
-  "BUILT FOR THE ONES STILL MOVING",
-  "EVERYTHING IS AFTER HOURS",
+  "NEW SEASON · BLACK SHEEP · NO KINGS · NIGHT MODE",
+  "NYC FOREVER · NEW ARRIVALS · FREE SHIPPING $75+",
+  "FOR THE ONES WHO DON'T CLOCK OUT",
+  "THE BEST THINGS HAPPEN AFTER HOURS",
 ];
 
 export function Entrance() {
@@ -102,34 +102,10 @@ export function Entrance() {
             />
           </div>
 
-          {/* Centered overlay text on the mosaic */}
-          <div className="absolute inset-0 z-[5] flex flex-col items-center justify-center pointer-events-none">
-            <h1
-              className="font-display font-black text-white/80 uppercase text-center leading-none mix-blend-overlay select-none"
-              style={{
-                fontSize: "clamp(2rem, 8vw, 7rem)",
-                letterSpacing: "0.15em",
-              }}
-            >
-              After Hours
-              <br />
-              Agenda
-            </h1>
-            <span
-              className="font-mono text-white/50 uppercase mt-4 select-none"
-              style={{
-                fontSize: "clamp(0.6rem, 1.2vw, 0.85rem)",
-                letterSpacing: "0.3em",
-              }}
-            >
-              Est. New York
-            </span>
-          </div>
-
           {/* Scroll-driven dark overlay */}
           <div
             ref={overlayRef}
-            className="absolute inset-0 bg-gradient-to-t from-void via-void/50 to-transparent opacity-0 z-10"
+            className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/50 to-transparent opacity-0 z-10"
           />
 
           {/* Scroll to enter indicator */}
@@ -138,13 +114,13 @@ export function Entrance() {
             className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[15] flex flex-col items-center gap-2"
           >
             <span
-              className="font-mono text-white/60 uppercase"
+              className="font-body font-medium text-white/60 uppercase"
               style={{
                 fontSize: "clamp(0.5rem, 0.9vw, 0.65rem)",
                 letterSpacing: "0.25em",
               }}
             >
-              Scroll to Enter
+              Explore
             </span>
             <span className="text-white/40 text-sm animate-bounce">
               &#8595;
@@ -156,21 +132,21 @@ export function Entrance() {
       {/* Platform edge safety stripe */}
       <div className="platform-edge" />
 
-      {/* Split-flap departure board — refined with borders and label */}
+      {/* Split-flap departure board */}
       <div className="bg-[#0a0a0a] border-t border-b border-white/[0.06]">
-        <div className="py-8 md:py-10 flex flex-col items-center gap-3 overflow-hidden">
+        <div className="py-10 md:py-14 flex flex-col items-center gap-4 overflow-hidden">
           <span
-            className="font-mono text-[#E8E4DE]/30 uppercase block"
+            className="font-body font-medium text-[#E8E4DE]/40 uppercase block"
             style={{
-              fontSize: "clamp(0.45rem, 0.7vw, 0.55rem)",
+              fontSize: "clamp(0.6rem, 1vw, 0.8rem)",
               letterSpacing: "0.35em",
             }}
           >
-            Service Status
+            Now Showing
           </span>
           <SplitFlap
             value={MESSAGES[messageIndex]}
-            fontSize="clamp(0.75rem, 2vw, 1.25rem)"
+            fontSize="clamp(1.8rem, 5vw, 3.5rem)"
             staggerDelay={20}
           />
         </div>

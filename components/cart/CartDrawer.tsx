@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useCart } from "./CartProvider";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,12 +11,17 @@ import { isPrintfulImage } from "@/lib/utils/image-helpers";
 export function CartDrawer() {
   const { items, isOpen, toggleCart, removeItem, updateQuantity, totalFormatted } =
     useCart();
+  const [mounted, setMounted] = useState(false);
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const drawer = (
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={toggleCart}
@@ -22,19 +29,15 @@ export function CartDrawer() {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-full max-w-md bg-void border-l border-border noise-overlay transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed top-0 right-0 z-[9999] h-full w-full max-w-md bg-void border-l border-border transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="px-6 py-4">
-            {/* Station label */}
-            <p className="font-mono text-[9px] text-muted/50 uppercase tracking-[0.2em] mb-3">
-              STATION: CHECKOUT
-            </p>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display font-bold text-lg">YOUR METROCARD</h2>
+              <h2 className="font-body font-bold text-lg uppercase tracking-[0.1em]">Your Bag</h2>
               <button
                 onClick={toggleCart}
                 className="text-muted hover:text-cream transition-colors p-1"
@@ -52,18 +55,18 @@ export function CartDrawer() {
           <div className="flex-1 overflow-y-auto px-6 py-4">
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
-                <p className="font-mono text-sm text-muted mb-4 uppercase tracking-[0.1em]">
-                  No Fare Loaded
+                <p className="font-body font-medium text-sm text-muted mb-4">
+                  Your bag is empty
                 </p>
                 <button
                   onClick={toggleCart}
-                  className="font-mono text-sm text-cream hover:text-white transition-colors uppercase tracking-[0.1em]"
+                  className="font-body font-medium text-sm text-cream hover:text-cream/70 transition-colors uppercase tracking-[0.1em]"
                 >
-                  LOAD YOUR METROCARD &rarr;
+                  Start Shopping &rarr;
                 </button>
               </div>
             ) : (
-              <ul className="divide-y divide-cream/5">
+              <ul className="divide-y divide-cream/10">
                 {items.map((item) => (
                   <li
                     key={item.variationId}
@@ -76,7 +79,7 @@ export function CartDrawer() {
                           alt={item.name}
                           fill
                           unoptimized={isPrintfulImage(item.image)}
-                          className={isPrintfulImage(item.image) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"}
+                          className={isPrintfulImage(item.image) ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]" : "object-cover"}
                           sizes="80px"
                         />
                       </div>
@@ -107,7 +110,7 @@ export function CartDrawer() {
                         </button>
                         <button
                           onClick={() => removeItem(item.variationId)}
-                          className="ml-auto font-mono text-xs text-muted hover:text-line-red transition-colors"
+                          className="ml-auto font-body font-medium text-xs text-muted hover:text-line-red transition-colors"
                         >
                           Remove
                         </button>
@@ -123,31 +126,29 @@ export function CartDrawer() {
           {items.length > 0 && (
             <div className="px-6 py-4 space-y-4">
               <WhiteBand />
-              {/* MetroCard reader display */}
-              <div className="bg-[#0a0a0a] border border-border/50 px-4 py-3 scan-lines overflow-hidden">
-                <div className="flex justify-between items-center font-mono relative z-10">
-                  <span className="text-[10px] text-[#E8E4DE]/50 uppercase tracking-[0.15em]">
-                    Subtotal
-                  </span>
-                  <span className="text-lg font-bold text-[#E8E4DE] tracking-wider">
-                    {totalFormatted}
-                  </span>
-                </div>
-                <p className="text-[10px] text-[#E8E4DE]/30 font-mono mt-1 relative z-10">
-                  Shipping calculated at checkout
-                </p>
+              {/* Subtotal */}
+              <div className="flex justify-between items-center py-3">
+                <span className="font-body font-medium text-sm text-muted uppercase tracking-[0.1em]">
+                  Subtotal
+                </span>
+                <span className="font-mono text-lg font-bold text-cream tracking-wider">
+                  {totalFormatted}
+                </span>
               </div>
-              {/* Checkout button - MetroCard gradient */}
+              <p className="text-[11px] text-muted font-body mb-4">
+                Shipping calculated at checkout
+              </p>
+              {/* Checkout button */}
               <Link
                 href="/cart"
                 onClick={toggleCart}
-                className="metrocard-gradient block w-full py-3 font-display font-bold text-center text-sm tracking-wide hover:brightness-110 transition-all"
+                className="metrocard-gradient block w-full py-3 font-body font-bold text-center text-sm tracking-wide hover:brightness-110 transition-all"
               >
-                ENTER THE PLATFORM &rarr;
+                Checkout &rarr;
               </Link>
               {/* Trust line */}
-              <p className="font-mono text-[10px] text-muted text-center pt-2 tracking-[0.1em]">
-                SECURE &middot; FREE TRANSFER $75+ &middot; 30-DAY RETURNS
+              <p className="font-body font-medium text-[10px] text-muted text-center pt-3 tracking-[0.1em]">
+                Secure Checkout &middot; Free Shipping $75+ &middot; 30-Day Returns
               </p>
             </div>
           )}
@@ -155,4 +156,7 @@ export function CartDrawer() {
       </div>
     </>
   );
+
+  if (!mounted) return null;
+  return createPortal(drawer, document.body);
 }

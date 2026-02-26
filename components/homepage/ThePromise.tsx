@@ -26,11 +26,11 @@ export function ThePromise() {
   );
 
   return (
-    <section ref={sectionRef} className="py-14 md:py-20 px-6 bg-void border-t border-b border-cream/[0.06]">
+    <section ref={sectionRef} className="py-14 md:py-20 px-6 border-t border-b border-cream/[0.06]">
       <div className="flex justify-center py-8 overflow-x-auto">
         {visible ? (
           <SplitFlap
-            value="FREE SHIP $75+ · 30-DAY RETURNS · TRACKED"
+            value="FREE SHIPPING $75+ · 30-DAY RETURNS · TRACKED DELIVERY"
             fontSize="clamp(0.6rem, 1.5vw, 0.9rem)"
           />
         ) : (

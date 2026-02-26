@@ -2,7 +2,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export const metadata = {
   title: "About | After Hours Agenda",
-  description: "The story behind After Hours Agenda. NYC-born streetwear for the ones who think different.",
+  description: "The story behind After Hours Agenda. Premium streetwear from New York City.",
 };
 
 export default function AboutPage() {
@@ -21,19 +21,18 @@ export default function AboutPage() {
         <ScrollReveal delay={200}>
           <div className="space-y-8 font-body text-cream/80 leading-relaxed">
             <p className="text-lg">
-              After Hours Agenda was born in the late-night energy of New York City &mdash;
-              in the hours when the rest of the world sleeps and the real ones come alive.
+              After Hours Agenda started in New York City &mdash; built in the hours
+              that matter most, the ones after the world clocks out.
             </p>
 
             <p>
-              We started with a simple belief: the clothes you wear should mean something.
-              Not just look good &mdash; but carry a message. Every collection we drop is
-              built around an idea, a mindset, a way of moving through the world.
+              We believe the clothes you wear should carry intention. Not just look good &mdash;
+              but mean something. Every collection is built around an idea, a perspective,
+              a way of seeing the world that doesn&apos;t follow the crowd.
             </p>
 
             <blockquote className="border-l-2 border-muted pl-6 py-2 font-body italic text-2xl text-cream">
-              &ldquo;For the ones who stay out late. For the ones who think different.
-              For the ones who write their own rules.&rdquo;
+              &ldquo;Fashion with a point of view. Made for the ones who have one.&rdquo;
             </blockquote>
 
             <p>
@@ -44,13 +43,13 @@ export default function AboutPage() {
             </p>
 
             <p>
-              Every piece is made to order &mdash; printed on premium blanks, shipped directly
-              to you. No overproduction. No waste. No shortcuts. Just quality streetwear
-              with a story behind every stitch.
+              Every piece is made to order &mdash; printed on premium blanks and shipped
+              directly to you. No overproduction, no waste, no compromises. Quality
+              streetwear that&apos;s worth the wait.
             </p>
 
             <p>
-              Based in NYC. Made for everywhere.
+              Based in New York. Shipped worldwide.
             </p>
           </div>
         </ScrollReveal>
