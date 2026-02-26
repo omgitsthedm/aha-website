@@ -605,6 +605,49 @@
 }
 
 /* ═══════════════════════════════════════════════
+   SURFACE TREATMENTS — Clean opaque backgrounds
+   for text contrast against tile textures.
+   Use on sections where text needs a solid surface.
+   ═══════════════════════════════════════════════ */
+
+:root {
+  /* Surface colors */
+  --surface-light: #E8E4D8;
+  --surface-dark: #141414;
+  --surface-panel: #0C1224;
+  --surface-elevated: #DDD9CE;
+
+  /* Text on light surfaces */
+  --text-primary: #1A1917;
+  --text-secondary: #6B665E;
+
+  /* Text on dark surfaces */
+  --text-on-dark: #E8E4DE;
+  --text-on-dark-muted: #7A756E;
+
+  /* Accents */
+  --accent-yellow: #FCCC0A;
+  --accent-gold: #C8A24E;
+}
+
+/* Opaque light surface — eliminates tile noise */
+.surface-light {
+  background-color: var(--surface-light);
+}
+
+/* Dark surface — for contrast sections */
+.surface-dark {
+  background-color: var(--surface-dark);
+  color: var(--text-on-dark);
+}
+
+/* Panel surface — deep navy for sign panels (alias) */
+.surface-panel {
+  background-color: var(--surface-panel);
+  color: var(--text-on-dark);
+}
+
+/* ═══════════════════════════════════════════════
    REDUCED MOTION
    ═══════════════════════════════════════════════ */
 

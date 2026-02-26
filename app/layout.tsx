@@ -47,7 +47,7 @@ export default function RootLayout({
         <CartProvider>
           <AnnouncementBar />
           <NavBar />
-          <main className="relative z-[2] min-h-screen">{children}</main>
+          <main className="relative z-[2] min-h-screen bg-[#E8E4D8]">{children}</main>
           <Footer />
         </CartProvider>
       </body>

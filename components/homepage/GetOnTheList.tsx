@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { SplitFlap } from "@/components/ui/SplitFlap";
+import { WhiteBand } from "@/components/ui/WhiteBand";
 
 import { gsap, useGSAP } from "@/lib/gsap";
 
@@ -51,8 +52,10 @@ export function GetOnTheList() {
   };
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-32 px-6">
-      <div className="max-w-lg mx-auto">
+    <section ref={sectionRef} className="relative z-[2] subway-tiles-dark py-24 md:py-32 px-6 bg-[#141414]">
+      <WhiteBand dark />
+
+      <div className="max-w-lg mx-auto py-8">
         {/* NYCTA Sign Panel */}
         <div className="mb-12">
           <div className="mosaic-border" />
@@ -62,9 +65,13 @@ export function GetOnTheList() {
           <div className="mosaic-border" />
         </div>
 
-        <div ref={formRef} className="text-center py-8">
+        <p className="font-body text-sm text-[#7A756E] text-center mb-8 leading-relaxed">
+          New drops, restocks, and stories — straight to your inbox.
+        </p>
+
+        <div ref={formRef} className="text-center">
           {submitted ? (
-            <div className="flex justify-center">
+            <div className="flex justify-center py-8">
               <SplitFlap value="SUBSCRIBED" fontSize="1.5rem" />
             </div>
           ) : (
@@ -74,7 +81,7 @@ export function GetOnTheList() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="w-full bg-transparent border-0 border-b border-cream/40 focus:border-cream font-body text-sm text-cream placeholder:text-muted/70 focus:outline-none transition-all duration-500 py-4 focus:shadow-[0_1px_0_0_rgba(26,25,23,0.3)]"
+                className="w-full bg-transparent border-0 border-b border-[#E8E4DE]/20 focus:border-[#FCCC0A] font-body text-sm text-[#E8E4DE] placeholder:text-[#7A756E]/60 focus:outline-none transition-all duration-500 py-4"
               />
               <button
                 type="submit"
@@ -90,6 +97,8 @@ export function GetOnTheList() {
           )}
         </div>
       </div>
+
+      <WhiteBand dark />
     </section>
   );
 }

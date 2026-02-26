@@ -38,12 +38,16 @@ export default async function HomePage() {
     <>
       <Entrance />
       <LatestDrop products={featured} />
+      <div className="platform-edge" />
       <ThePromise />
+      <div className="platform-edge" />
       <MostWanted products={mostWanted} />
       <EditorialGallery />
       <Agenda />
       <Collections collections={collections} />
+      <div className="platform-edge" />
       <GetOnTheList />
+      <div className="platform-edge" />
     </>
   );
 }
