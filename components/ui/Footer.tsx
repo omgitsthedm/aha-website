@@ -11,32 +11,38 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-void subway-tiles-dark">
+    <footer className="subway-tiles">
       <WhiteBand strong />
 
-      <div className="max-w-7xl mx-auto px-6 py-20 noise-overlay">
+      <div className="max-w-7xl mx-auto px-6 py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-          {/* Col 1 — Office */}
+          {/* Col 1 — Brand */}
           <div>
-            <p className="font-mono text-sm tracking-[0.2em] uppercase mb-8 pb-3 border-b border-cream/10">
-              EVERYTHING IS AFTER HOURS
-            </p>
+            <div className="mb-6">
+              <div className="mosaic-border-thin" />
+              <div className="sign-panel-station py-2.5 px-4">
+                <span className="sign-panel-station-text text-[11px]">After Hours Agenda</span>
+              </div>
+            </div>
             <p className="text-sm text-muted leading-relaxed">
-              NYC-born streetwear for those who write their own rules.
-              Every piece tells a story. Every line leads somewhere new.
+              Premium streetwear from New York City. Every piece made
+              to order, every collection with a story to tell.
             </p>
           </div>
 
           {/* Col 2 — Contact */}
           <div>
-            <h4 className="font-mono text-sm tracking-[0.2em] uppercase mb-8 pb-3 border-b border-cream/10">
-              Contact
-            </h4>
+            <div className="mb-6">
+              <div className="mosaic-border-thin" />
+              <div className="sign-panel-station py-2.5 px-4">
+                <span className="sign-panel-station-text text-[11px]">Contact</span>
+              </div>
+            </div>
             <ul className="space-y-4">
               <li>
                 <a
                   href="mailto:hello@afterhoursagenda.com"
-                  className="font-mono text-sm text-muted footer-link"
+                  className="font-body font-medium text-sm text-muted hover:text-cream transition-colors"
                 >
                   hello@afterhoursagenda.com
                 </a>
@@ -46,7 +52,7 @@ export function Footer() {
                   href="https://instagram.com/afterhoursagenda"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-sm text-muted footer-link"
+                  className="font-body font-medium text-sm text-muted hover:text-cream transition-colors"
                 >
                   Instagram
                 </a>
@@ -56,7 +62,7 @@ export function Footer() {
                   href="https://tiktok.com/@afterhoursagenda"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-sm text-muted footer-link"
+                  className="font-body font-medium text-sm text-muted hover:text-cream transition-colors"
                 >
                   TikTok
                 </a>
@@ -64,11 +70,14 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Col 3 — Lines */}
+          {/* Col 3 — Collections */}
           <div>
-            <h4 className="font-mono text-sm tracking-[0.2em] uppercase mb-8 pb-3 border-b border-cream/10">
-              Lines
-            </h4>
+            <div className="mb-6">
+              <div className="mosaic-border-thin" />
+              <div className="sign-panel-station py-2.5 px-4">
+                <span className="sign-panel-station-text text-[11px]">Collections</span>
+              </div>
+            </div>
             <div className="flex flex-col gap-4">
               {Object.values(SUBWAY_LINES).map((line) => (
                 <Link
@@ -92,24 +101,24 @@ export function Footer() {
           >
             <path d="M60 55 C40 50, 25 60, 25 78 C25 96, 35 108, 55 110 L55 140 L65 140 L65 112 L90 114 L90 140 L100 140 L100 114 L125 112 L125 140 L135 140 L135 110 L150 108 L150 140 L160 140 L160 105 C175 98, 180 85, 178 72 C176 58, 165 48, 150 48 C145 42, 135 40, 125 42 C115 36, 100 35, 88 38 C78 34, 65 38, 60 48 Z" />
             <path d="M25 78 C18 75, 10 68, 8 60 C6 52, 10 44, 18 40 C26 36, 35 38, 40 44 C42 48, 40 55, 35 60 C30 65, 25 72, 25 78 Z" />
-            <ellipse cx="20" cy="54" rx="4" ry="5" fill="#0A0A0A" />
+            <ellipse cx="20" cy="54" rx="4" ry="5" fill="#E8E4D8" />
             <path d="M18 40 C14 32, 8 28, 4 30 C0 32, 2 38, 8 42 Z" />
           </svg>
         </div>
 
         {/* Bottom bar */}
         <div className="mt-10 pt-10">
-          <WhiteBand />
+          <WhiteBand strong />
           <div className="flex items-center justify-between mt-10">
             {/* Left — Copyright */}
-            <p className="font-mono text-[11px] text-muted tracking-[0.15em]">
+            <p className="font-body font-medium text-[11px] text-muted tracking-[0.15em]">
               &copy; {new Date().getFullYear()} AFTER HOURS AGENDA. ALL RIGHTS RESERVED.
             </p>
 
             {/* Center — Back to top */}
             <button
               onClick={scrollToTop}
-              className="font-mono text-sm text-muted hover:text-white transition-all duration-200 w-9 h-9 flex items-center justify-center rounded-full hover:ring-1 hover:ring-cream/20"
+              className="font-body text-sm text-muted hover:text-cream transition-all duration-200 w-9 h-9 flex items-center justify-center rounded-full hover:ring-1 hover:ring-cream/20"
               aria-label="Back to top"
             >
               &uarr;
@@ -121,7 +130,7 @@ export function Footer() {
                 href="https://instagram.com/afterhoursagenda"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted hover:text-white transition-colors"
+                className="text-muted hover:text-cream transition-colors"
                 aria-label="Instagram"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -134,7 +143,7 @@ export function Footer() {
                 href="https://tiktok.com/@afterhoursagenda"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted hover:text-white transition-colors"
+                className="text-muted hover:text-cream transition-colors"
                 aria-label="TikTok"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
