@@ -11,22 +11,22 @@
 
   html {
     scroll-behavior: smooth;
-    background-color: #141414;
-    color: #E8E4DE;
+    background-color: #E8E4D8;
+    color: #1A1917;
   }
 
   body {
-    font-family: var(--font-inter), sans-serif;
-    background-color: #141414;
-    color: #E8E4DE;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #E8E4D8;
+    color: #1A1917;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background-color: rgba(232, 228, 222, 0.2);
-    color: #E8E4DE;
+    background-color: rgba(26, 25, 23, 0.15);
+    color: #1A1917;
   }
 
   /* Scrollbar styling */
@@ -34,14 +34,14 @@
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #141414;
+    background: #E8E4D8;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2A2725;
+    background: #C8C3B6;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3A3632;
+    background: #B0AB9E;
   }
 }
 
@@ -73,12 +73,12 @@
 .stagger-children.visible > *:nth-child(7) { transition-delay: 480ms; opacity: 1; transform: translateY(0); }
 .stagger-children.visible > *:nth-child(8) { transition-delay: 560ms; opacity: 1; transform: translateY(0); }
 
-/* MTA White Band dividers */
+/* MTA White Band dividers — THE signature NYCTA graphic element */
 .white-band {
-  border-bottom: 1px solid rgba(232, 228, 222, 0.15);
+  border-bottom: 2px solid rgba(26, 25, 23, 0.2);
 }
 .white-band-strong {
-  border-bottom: 1px solid #E8E4DE;
+  border-bottom: 2px solid #1A1917;
 }
 
 @layer utilities {
@@ -95,8 +95,8 @@
   --tile-w: 60px;
   --tile-h: 30px;
   --grout: 2px;
-  --tile-color: #f0ede6;
-  --grout-color: #b8b2a6;
+  --tile-color: #E8E4D8;
+  --grout-color: #B8B2A0;
   background-color: var(--grout-color);
   background-image:
     repeating-linear-gradient(
@@ -122,7 +122,7 @@
 }
 
 .subway-tiles-dark {
-  --tile-color: #1e1d1b;
+  --tile-color: #222120;
   --grout-color: #0e0d0c;
 }
 
@@ -139,10 +139,10 @@
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 50;
+  z-index: 1;
   pointer-events: none;
-  opacity: 0.07;
-  mix-blend-mode: soft-light;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 200px 200px;
@@ -252,12 +252,15 @@
 }
 
 /* ═══════════════════════════════════════════════
-   METROCARD GRADIENT
+   NYCTA FLAT YELLOW CTA (was MetroCard gradient)
+   No gradients — Vignelli spec: flat, solid fills
    ═══════════════════════════════════════════════ */
 
 .metrocard-gradient {
-  background: linear-gradient(135deg, #FCCC0A 0%, #F5B800 40%, #E8A400 100%);
+  background: #FCCC0A;
   color: #141414;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 700;
 }
 
 /* ═══════════════════════════════════════════════
@@ -276,12 +279,91 @@
 }
 
 /* ═══════════════════════════════════════════════
-   STATION SIGN OVERHEAD BANNER
+   NYCTA SIGN PANEL — Section headers
+   Black strip, white Helvetica Bold, thin rules
    ═══════════════════════════════════════════════ */
 
+.sign-panel {
+  background: #0C1224;
+  padding: 0.875rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sign-panel-text {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  color: #E8E4DE;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+/* ═══════════════════════════════════════════════
+   MOSAIC TILE BORDER — Decorative strip referencing
+   Wall St / Bleecker ceramic mosaic frames
+   Gold, brown, navy repeating tile pattern
+   ═══════════════════════════════════════════════ */
+
+.mosaic-border {
+  height: 6px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #C8A24E 0px,
+    #C8A24E 8px,
+    #7A5C2E 8px,
+    #7A5C2E 12px,
+    #0C1224 12px,
+    #0C1224 16px,
+    #C8A24E 16px,
+    #C8A24E 20px,
+    #0C1224 20px,
+    #0C1224 24px
+  );
+}
+
+.mosaic-border-thin {
+  height: 3px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #C8A24E 0px,
+    #C8A24E 6px,
+    #7A5C2E 6px,
+    #7A5C2E 9px,
+    #0C1224 9px,
+    #0C1224 12px
+  );
+}
+
+/* Enhanced sign panel with mosaic borders */
+.sign-panel-station {
+  background: #0C1224;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sign-panel-station-text {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: #E8E4DE;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+/* Platform edge stripe — nav scroll indicator */
+.platform-stripe {
+  height: 2px;
+  background: #FCCC0A;
+}
+
+/* Legacy alias — kept for Entrance only */
 .station-banner {
   padding: 0.75rem 1.5rem;
-  font-family: var(--font-inter), Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -371,8 +453,8 @@
     0deg,
     transparent,
     transparent 2px,
-    rgba(232, 228, 222, 0.03) 2px,
-    rgba(232, 228, 222, 0.03) 3px
+    rgba(26, 25, 23, 0.03) 2px,
+    rgba(26, 25, 23, 0.03) 3px
   );
   z-index: 1;
 }
@@ -389,6 +471,137 @@
 .footer-link:hover {
   color: #E8E4DE;
   transform: translateX(2px);
+}
+
+/* ═══════════════════════════════════════════════
+   PREMIUM PRODUCT CARD HOVER — luxury lift + shadow
+   ═══════════════════════════════════════════════ */
+
+.product-card-hover {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.product-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* Quick-view overlay on card hover */
+.product-card-overlay {
+  position: relative;
+}
+.product-card-overlay::after {
+  content: 'QUICK VIEW';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 25, 23, 0.6);
+  color: #E8E4DE;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+.product-card-overlay:hover::after {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   SUBWAY ADVERTISEMENT POSTER CARD
+   Products framed as self-contained subway ads
+   ═══════════════════════════════════════════════ */
+
+/* Poster frame — yellow top accent, subtle border */
+.subway-poster {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(26, 25, 23, 0.12);
+  border-top: 4px solid #FCCC0A;
+  transition: border-color 0.4s ease;
+}
+.subway-poster:hover {
+  border-color: rgba(26, 25, 23, 0.18);
+  border-top-color: #FCCC0A;
+}
+
+/* Yellow glow from top border on hover */
+.subway-poster.product-card-hover:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08),
+              0 4px 12px rgba(0, 0, 0, 0.04),
+              0 -2px 20px rgba(252, 204, 10, 0.12);
+}
+
+/* Dark gradient scrim for text overlaid on image */
+.subway-poster-scrim {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 3rem 0.875rem 0.875rem;
+  background: linear-gradient(
+    to top,
+    rgba(20, 20, 20, 0.92) 0%,
+    rgba(20, 20, 20, 0.5) 50%,
+    transparent 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+  transition: background 0.4s ease;
+}
+
+/* Scrim deepens on hover for added contrast */
+.subway-poster:hover .subway-poster-scrim {
+  background: linear-gradient(
+    to top,
+    rgba(20, 20, 20, 0.95) 0%,
+    rgba(20, 20, 20, 0.6) 55%,
+    transparent 100%
+  );
+}
+
+/* Mini poster for compact cards (modals, etc.) */
+.subway-poster-mini {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(26, 25, 23, 0.12);
+  border-top: 2px solid #FCCC0A;
+}
+
+.subway-poster-mini-scrim {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem 0.5rem 0.5rem;
+  background: linear-gradient(
+    to top,
+    rgba(20, 20, 20, 0.9) 0%,
+    rgba(20, 20, 20, 0.4) 60%,
+    transparent 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════
+   ADD-TO-CART MODAL ANIMATIONS
+   ═══════════════════════════════════════════════ */
+
+@keyframes modalBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalPanelIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* ═══════════════════════════════════════════════
