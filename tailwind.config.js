@@ -7,21 +7,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Core — subway tunnel darkness
-        void: "#141414",
-        charcoal: "#1C1A18",
+        // Core — grimy subway tile white
+        void: "#E8E4D8",
+        charcoal: "#D8D4C8",
         surface: {
-          DEFAULT: "#1A1918",
-          warm: "#252320",
+          DEFAULT: "#DDD9CE",
+          warm: "#D0CCc0",
         },
-        elevated: "#2A2826",
+        elevated: "#C8C3B6",
         border: {
-          DEFAULT: "#2A2725",
-          warm: "#3A3632",
+          DEFAULT: "#C4BFAE",
+          warm: "#B8B3A4",
         },
-        // Text — aged porcelain (not pure white)
-        cream: "#E8E4DE",
-        muted: "#7A756E",
+        // Text — near-black station ink
+        cream: "#1A1917",
+        muted: "#6B665E",
         // MTA Subway Line Colors
         line: {
           red: "#EE352E",
@@ -42,16 +42,25 @@ module.exports = {
           dim: "rgba(200,169,97,0.25)",
           faint: "rgba(200,169,97,0.08)",
         },
+        navy: "#0C1224",
+        mosaic: {
+          gold: "#C8A24E",
+          brown: "#7A5C2E",
+          dark: "#0C1224",
+        },
       },
       fontFamily: {
-        display: ["var(--font-inter)", "sans-serif"],
-        body: ["var(--font-inter)", "sans-serif"],
-        mono: ["var(--font-ibm-plex)", "monospace"],
+        // Helvetica Neue — NYCTA Graphics Standards Manual typeface
+        display: ["'Helvetica Neue'", "Helvetica", "Arial", "sans-serif"],
+        body: ["'Helvetica Neue'", "Helvetica", "Arial", "sans-serif"],
+        // IBM Plex Mono — prices, tabular data, SplitFlap only
+        mono: ["var(--font-ibm-plex)", "'SF Mono'", "Menlo", "monospace"],
       },
       fontSize: {
-        hero: ["clamp(4rem, 12vw, 9rem)", { lineHeight: "0.9", letterSpacing: "-0.03em" }],
-        chapter: ["clamp(2rem, 6vw, 4.5rem)", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
-        section: ["1.875rem", { lineHeight: "1.2" }],
+        hero: ["clamp(3.5rem, 10vw, 7rem)", { lineHeight: "0.9", letterSpacing: "-0.02em" }],
+        chapter: ["clamp(1.75rem, 5vw, 3.5rem)", { lineHeight: "1.05", letterSpacing: "-0.01em" }],
+        section: ["1.5rem", { lineHeight: "1.2" }],
+        sign: ["0.8125rem", { lineHeight: "1", letterSpacing: "0.2em" }],
         label: ["0.6875rem", { lineHeight: "1", letterSpacing: "0.15em" }],
       },
       animation: {
