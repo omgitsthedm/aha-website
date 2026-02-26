@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+
 import { gsap, useGSAP } from "@/lib/gsap";
 
 const photos = [
@@ -22,7 +23,6 @@ export function EditorialGallery() {
       const images = sectionRef.current.querySelectorAll("[data-parallax]");
       images.forEach((img) => {
         const row = (img as HTMLElement).dataset.parallax;
-        // First row moves slower (less parallax), second row moves faster (more depth)
         const speed = row === "1" ? 30 : 60;
 
         gsap.fromTo(
@@ -45,25 +45,23 @@ export function EditorialGallery() {
   );
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-28 px-6 bg-void">
+    <section ref={sectionRef} className="py-20 md:py-28 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section heading */}
-        <span
-          className="font-mono text-cream/25 uppercase block mb-8"
-          style={{
-            fontSize: "clamp(0.5rem, 0.8vw, 0.6rem)",
-            letterSpacing: "0.3em",
-          }}
-        >
-          From the Platform
-        </span>
+        {/* NYCTA Sign Panel */}
+        <div className="mb-10">
+          <div className="mosaic-border" />
+          <div className="sign-panel-station">
+            <span className="sign-panel-station-text">In the Wild</span>
+          </div>
+          <div className="mosaic-border" />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4">
           {photos.map((photo, i) => (
             <div
               key={i}
               data-parallax={photo.row}
-              className={`relative overflow-hidden ${photo.colSpan} ${photo.aspect} border border-cream/[0.08]`}
+              className={`relative overflow-hidden ${photo.colSpan} ${photo.aspect} border border-cream/[0.12]`}
             >
               <Image
                 src={photo.src}
@@ -81,7 +79,7 @@ export function EditorialGallery() {
           ))}
         </div>
         <p
-          className="font-mono text-muted/60 uppercase mt-8 text-center"
+          className="font-body font-medium text-muted uppercase mt-8 text-center"
           style={{
             fontSize: "clamp(0.5rem, 0.7vw, 0.6rem)",
             letterSpacing: "0.2em",

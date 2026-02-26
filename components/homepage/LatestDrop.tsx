@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/utils/types";
+
 import { gsap, useGSAP } from "@/lib/gsap";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
@@ -11,59 +12,42 @@ interface LatestDropProps {
   products: Product[];
 }
 
-const colSpanClass: Record<number, string> = {
-  4: "md:col-span-4",
-  8: "md:col-span-8",
-};
-
-const HEADER_TEXT = "Latest Drop";
-
 export function LatestDrop({ products }: LatestDropProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  const headerLetters = useMemo(() => HEADER_TEXT.split(""), []);
 
   useGSAP(
     () => {
       if (!sectionRef.current) return;
 
-      // Letter-by-letter stagger reveal on the header
-      const letters = letterRefs.current.filter(Boolean);
-      if (letters.length > 0) {
-        gsap.set(letters, { opacity: 0, y: 20 });
-        gsap.to(letters, {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-          stagger: 0.03,
+      // Sign panel slides up as a unit (authentic to real signage)
+      const panel = sectionRef.current.querySelector("[data-sign-panel]");
+      if (panel) {
+        gsap.from(panel, {
+          y: 20,
+          opacity: 0,
+          duration: 0.6,
           ease: "power2.out",
           scrollTrigger: {
-            trigger: letters[0],
+            trigger: panel,
             start: "top 85%",
             once: true,
           },
         });
       }
 
-      // Product cards slide in from alternating sides
-      const rows = sectionRef.current.querySelectorAll("[data-row]");
-      rows.forEach((row) => {
-        const cards = row.querySelectorAll("[data-card]");
-        cards.forEach((card, i) => {
-          const fromLeft = i % 2 === 0;
-          gsap.from(card, {
-            x: fromLeft ? -80 : 80,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              once: true,
-            },
-          });
-        });
+      // Product cards slide up with stagger
+      const cards = sectionRef.current.querySelectorAll("[data-card]");
+      gsap.from(cards, {
+        y: 60,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current.querySelector("[data-grid]"),
+          start: "top 85%",
+          once: true,
+        },
       });
     },
     { scope: sectionRef }
@@ -71,99 +55,100 @@ export function LatestDrop({ products }: LatestDropProps) {
 
   if (products.length === 0) return null;
 
-  // Build asymmetric rows: alternating large/small pattern
-  const rows: { product: Product; span: number }[][] = [];
-  const items = products.slice(0, 4);
-
-  for (let i = 0; i < items.length; i += 2) {
-    const row: { product: Product; span: number }[] = [];
-    const isEvenRow = rows.length % 2 === 0;
-
-    if (items[i]) {
-      row.push({
-        product: items[i],
-        span: isEvenRow ? 8 : 4,
-      });
-    }
-    if (items[i + 1]) {
-      row.push({
-        product: items[i + 1],
-        span: isEvenRow ? 4 : 8,
-      });
-    }
-    rows.push(row);
-  }
-
   return (
-    <section ref={sectionRef} className="noise-overlay py-24 md:py-32 px-6 bg-void">
+    <section ref={sectionRef} className="py-24 md:py-32 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section header with rule line */}
-        <div className="mb-14">
-          <span className="font-mono text-label text-muted uppercase tracking-[0.2em] block mb-4">
-            {headerLetters.map((char, i) => (
-              <span
-                key={i}
-                ref={(el) => { letterRefs.current[i] = el; }}
-                className="inline-block"
+        {/* NYCTA Sign Panel */}
+        <div data-sign-panel className="mb-14">
+          <div className="mosaic-border" />
+          <div className="sign-panel-station">
+            <span className="sign-panel-station-text">Just Dropped</span>
+          </div>
+          <div className="mosaic-border" />
+        </div>
+
+        {/* Station Domination: featured + supporting posters */}
+        <div data-grid className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+          {products.slice(0, 4).map((product, i) => {
+            const isFeatured = i === 0;
+            const isWide = i === 3;
+            const isPrintful = isPrintfulImage(product.images[0]);
+
+            return (
+              <div
+                key={product.id}
+                data-card
+                className={`product-card-hover ${
+                  isFeatured ? "md:col-span-2 md:row-span-2" : ""
+                }${isWide ? " md:col-span-2" : ""}`}
               >
-                {char === " " ? "\u00A0" : char}
-              </span>
-            ))}
-          </span>
-          <div className="w-full h-px bg-cream/10" />
-        </div>
+                <Link href={`/product/${product.slug}`} className="group block h-full">
+                  <div
+                    className={`subway-poster bg-surface ${
+                      isFeatured || isWide
+                        ? "aspect-[3/4] md:aspect-auto md:h-full md:min-h-[280px]"
+                        : "aspect-[3/4]"
+                    }`}
+                  >
+                    {product.images[0] ? (
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        unoptimized={isPrintful}
+                        className={`${
+                          isPrintful
+                            ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
+                            : "object-cover"
+                        } transition-transform duration-700 group-hover:scale-[1.03]`}
+                        sizes={
+                          isFeatured
+                            ? "(max-width: 768px) 50vw, 50vw"
+                            : isWide
+                            ? "(max-width: 768px) 50vw, 50vw"
+                            : "(max-width: 768px) 50vw, 25vw"
+                        }
+                        priority={i < 2}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-surface" />
+                    )}
 
-        <div className="space-y-20">
-          {rows.map((row, rowIndex) => (
-            <div
-              key={rowIndex}
-              data-row
-              className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6"
-            >
-              {row.map(({ product, span }) => (
-                <div key={product.id} data-card className={colSpanClass[span]}>
-                  <Link href={`/product/${product.slug}`} className="group block">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-mono text-sm text-muted group-hover:text-white transition-colors duration-300">
+                    {/* Poster info scrim */}
+                    <div className={`subway-poster-scrim ${isFeatured ? "md:p-5 md:pt-16" : ""}`}>
+                      <h3
+                        className={`font-display font-bold text-[#E8E4DE] uppercase tracking-[0.06em] truncate ${
+                          isFeatured
+                            ? "text-xs md:text-base"
+                            : "text-[11px] md:text-xs"
+                        }`}
+                      >
                         {product.name}
-                      </span>
-                      <span className="font-mono text-base font-medium text-cream/80 tabular-nums">
+                      </h3>
+                      <p
+                        className={`font-mono font-semibold text-[#FCCC0A] mt-1 ${
+                          isFeatured
+                            ? "text-sm md:text-lg"
+                            : "text-xs md:text-sm"
+                        }`}
+                      >
                         {product.priceFormatted}
-                      </span>
+                      </p>
                     </div>
-                    <div className="relative aspect-[3/4] overflow-hidden border border-transparent group-hover:border-cream/10 transition-colors duration-500">
-                      {product.images[0] ? (
-                        <Image
-                          src={product.images[0]}
-                          alt={product.name}
-                          fill
-                          unoptimized={isPrintfulImage(product.images[0])}
-                          className={isPrintfulImage(product.images[0]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"}
-                          sizes={
-                            span === 8
-                              ? "(max-width: 768px) 100vw, 66vw"
-                              : "(max-width: 768px) 100vw, 33vw"
-                          }
-                          priority={rowIndex === 0}
-                        />
-                      ) : (
-                        <div className="absolute inset-0 bg-void" />
-                      )}
-                    </div>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          ))}
+                  </div>
+                </Link>
+              </div>
+            );
+          })}
         </div>
 
-        {/* VIEW ALL link */}
-        <div className="flex justify-end mt-16">
+        {/* VIEW ALL */}
+        <div className="flex justify-center mt-16">
           <Link
             href="/shop"
-            className="font-mono text-xs text-muted hover:text-cream transition-colors duration-300 uppercase tracking-[0.15em]"
+            className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] hover:brightness-110 transition-all"
           >
-            View All &rarr;
+            Shop New Arrivals &rarr;
           </Link>
         </div>
       </div>

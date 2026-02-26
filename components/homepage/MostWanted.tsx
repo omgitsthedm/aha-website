@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/utils/types";
+
 import { gsap, useGSAP } from "@/lib/gsap";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
@@ -11,38 +12,23 @@ interface MostWantedProps {
   products: Product[];
 }
 
-const spanPattern = [7, 5, 5, 7, 6, 6];
-
-const colSpanClass: Record<number, string> = {
-  5: "md:col-span-5",
-  6: "md:col-span-6",
-  7: "md:col-span-7",
-};
-
-const HEADER_TEXT = "Most Wanted";
-
 export function MostWanted({ products }: MostWantedProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  const headerLetters = useMemo(() => HEADER_TEXT.split(""), []);
 
   useGSAP(
     () => {
       if (!sectionRef.current) return;
 
-      // Letter-by-letter stagger reveal on the header
-      const letters = letterRefs.current.filter(Boolean);
-      if (letters.length > 0) {
-        gsap.set(letters, { opacity: 0, y: 20 });
-        gsap.to(letters, {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-          stagger: 0.03,
+      // Sign panel slides up as a unit
+      const panel = sectionRef.current.querySelector("[data-sign-panel]");
+      if (panel) {
+        gsap.from(panel, {
+          y: 20,
+          opacity: 0,
+          duration: 0.6,
           ease: "power2.out",
           scrollTrigger: {
-            trigger: letters[0],
+            trigger: panel,
             start: "top 85%",
             once: true,
           },
@@ -70,63 +56,57 @@ export function MostWanted({ products }: MostWantedProps) {
   if (products.length === 0) return null;
 
   return (
-    <section ref={sectionRef} className="noise-overlay py-24 md:py-32 px-6 bg-void">
+    <section ref={sectionRef} className="py-24 md:py-32 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section header with rule line */}
-        <div className="mb-14">
-          <div className="flex items-end justify-between mb-4">
-            <h2 className="font-display font-bold text-section text-cream">
-              {headerLetters.map((char, i) => (
-                <span
-                  key={i}
-                  ref={(el) => { letterRefs.current[i] = el; }}
-                  className="inline-block"
-                >
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
-            </h2>
+        {/* NYCTA Sign Panel with right-aligned action */}
+        <div data-sign-panel className="mb-14">
+          <div className="mosaic-border" />
+          <div className="sign-panel-station">
+            <span className="sign-panel-station-text">Best Sellers</span>
             <Link
               href="/shop"
-              className="hidden md:block font-mono text-xs text-muted hover:text-cream transition-colors duration-300 uppercase tracking-[0.15em]"
+              className="hidden md:block font-body text-xs font-bold text-[#E8E4DE]/70 hover:text-[#E8E4DE] uppercase tracking-[0.15em] transition-colors"
             >
               View All &rarr;
             </Link>
           </div>
-          <div className="w-full h-px bg-cream/10" />
+          <div className="mosaic-border" />
         </div>
 
-        <div data-grid className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
-          {products.slice(0, 6).map((product, i) => {
-            const span = spanPattern[i] ?? 6;
+        <div data-grid className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          {products.slice(0, 6).map((product) => {
+            const isPrintful = isPrintfulImage(product.images[0]);
+
             return (
-              <div key={product.id} data-card className={colSpanClass[span]}>
+              <div key={product.id} data-card className="product-card-hover">
                 <Link href={`/product/${product.slug}`} className="group block">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-sm text-muted group-hover:text-white transition-colors duration-300">
-                      {product.name}
-                    </span>
-                    <span className="font-mono text-base font-medium text-cream/80 tabular-nums">
-                      {product.priceFormatted}
-                    </span>
-                  </div>
-                  <div className="relative aspect-[3/4] overflow-hidden border border-transparent group-hover:border-cream/10 transition-colors duration-500">
+                  <div className="subway-poster aspect-[3/4] bg-surface">
                     {product.images[0] ? (
                       <Image
                         src={product.images[0]}
                         alt={product.name}
                         fill
-                        unoptimized={isPrintfulImage(product.images[0])}
-                        className={isPrintfulImage(product.images[0]) ? "object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.15)]" : "object-cover"}
-                        sizes={
-                          span >= 7
-                            ? "(max-width: 768px) 100vw, 58vw"
-                            : "(max-width: 768px) 100vw, 42vw"
-                        }
+                        unoptimized={isPrintful}
+                        className={`${
+                          isPrintful
+                            ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
+                            : "object-cover"
+                        } transition-transform duration-700 group-hover:scale-[1.03]`}
+                        sizes="(max-width: 768px) 50vw, 33vw"
                       />
                     ) : (
-                      <div className="absolute inset-0 bg-void" />
+                      <div className="absolute inset-0 bg-surface" />
                     )}
+
+                    {/* Poster info scrim */}
+                    <div className="subway-poster-scrim">
+                      <h3 className="font-display font-bold text-[11px] md:text-xs text-[#E8E4DE] uppercase tracking-[0.06em] truncate">
+                        {product.name}
+                      </h3>
+                      <p className="font-mono text-xs md:text-sm font-semibold text-[#FCCC0A] mt-1">
+                        {product.priceFormatted}
+                      </p>
+                    </div>
                   </div>
                 </Link>
               </div>
@@ -134,11 +114,11 @@ export function MostWanted({ products }: MostWantedProps) {
           })}
         </div>
 
-        {/* Mobile VIEW ALL link */}
-        <div className="flex justify-end mt-16 md:hidden">
+        {/* Mobile VIEW ALL */}
+        <div className="flex justify-center mt-16 md:hidden">
           <Link
             href="/shop"
-            className="font-mono text-xs text-muted hover:text-cream transition-colors duration-300 uppercase tracking-[0.15em]"
+            className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] hover:brightness-110 transition-all"
           >
             View All &rarr;
           </Link>
