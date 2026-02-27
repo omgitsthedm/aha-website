@@ -58,6 +58,11 @@ export default function RootLayout({
       lang="en"
       className={ibmPlexMono.variable}
     >
+      <head>
+        {/* Preconnect to external image CDNs for faster LCP */}
+        <link rel="preconnect" href="https://items-images-production.s3.us-west-2.amazonaws.com" />
+        <link rel="dns-prefetch" href="https://items-images-production.s3.us-west-2.amazonaws.com" />
+      </head>
       <body className="text-cream font-body antialiased">
         {/* Skip to main content link for keyboard users */}
         <a

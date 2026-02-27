@@ -32,3 +32,7 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# Development plans and docs
+/docs/plans/
+/scripts/

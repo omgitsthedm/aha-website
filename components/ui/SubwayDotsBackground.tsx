@@ -155,7 +155,11 @@ function createDot(pathCount: number): Dot {
   };
 }
 
-const DOT_COUNT = 35;
+/** Fewer dots on mobile for battery life, more on desktop for ambiance */
+function getDotCount(): number {
+  if (typeof window === "undefined") return 20;
+  return window.innerWidth < 768 ? 16 : 35;
+}
 
 export function SubwayDotsBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -174,8 +178,9 @@ export function SubwayDotsBackground() {
     canvas.width = w;
     canvas.height = h;
 
+    const dotCount = getDotCount();
     pathsRef.current = generatePaths(w, h);
-    dotsRef.current = Array.from({ length: DOT_COUNT }, () =>
+    dotsRef.current = Array.from({ length: dotCount }, () =>
       createDot(pathsRef.current.length)
     );
 
