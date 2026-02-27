@@ -9,6 +9,8 @@ interface SplitFlapProps {
   fontSize?: string;
   className?: string;
   staggerDelay?: number;
+  /** When true, scales down the display to fit within its parent container */
+  shrinkToFit?: boolean;
 }
 
 function FlapCell({
@@ -144,12 +146,50 @@ export function SplitFlap({
   fontSize = "2rem",
   className = "",
   staggerDelay = 40,
+  shrinkToFit = false,
 }: SplitFlapProps) {
   const chars = value.toUpperCase().split("");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
 
-  return (
+  // Measure and scale to fit parent width when shrinkToFit is enabled
+  useEffect(() => {
+    if (!shrinkToFit || !containerRef.current || !innerRef.current) return;
+
+    const updateScale = () => {
+      const container = containerRef.current;
+      const inner = innerRef.current;
+      if (!container || !inner) return;
+
+      const parentWidth = container.parentElement?.clientWidth || container.clientWidth;
+      const contentWidth = inner.scrollWidth;
+
+      if (contentWidth > parentWidth && contentWidth > 0) {
+        setScale(parentWidth / contentWidth);
+      } else {
+        setScale(1);
+      }
+    };
+
+    // Initial measurement after a frame (allows layout to settle)
+    const raf = requestAnimationFrame(updateScale);
+
+    const observer = new ResizeObserver(updateScale);
+    if (containerRef.current.parentElement) {
+      observer.observe(containerRef.current.parentElement);
+    }
+
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+  }, [shrinkToFit, value]);
+
+  const flapContent = (
     <div
-      className={`inline-flex gap-[2px] ${className}`}
+      ref={innerRef}
+      className={`inline-flex gap-[2px] ${shrinkToFit ? "" : className}`}
       role="text"
       aria-label={value}
     >
@@ -161,6 +201,21 @@ export function SplitFlap({
           fontSize={fontSize}
         />
       ))}
+    </div>
+  );
+
+  if (!shrinkToFit) return flapContent;
+
+  return (
+    <div ref={containerRef} className={`w-full flex justify-center ${className}`}>
+      <div
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: "center center",
+        }}
+      >
+        {flapContent}
+      </div>
     </div>
   );
 }

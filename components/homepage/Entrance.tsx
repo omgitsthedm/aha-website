@@ -79,9 +79,11 @@ export function Entrance() {
     <section ref={containerRef} className="relative">
       {/* Subway tile frame */}
       <div className="subway-tiles p-2 md:p-3">
-        {/* Mosaic image container with inner shadow */}
+        {/* Mosaic image container with inner shadow.
+            On mobile: aspect-ratio container preserves the 3:2 landscape
+            image without side-cropping. On desktop: taller (85vh) for dramatic impact. */}
         <div
-          className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden noise-overlay"
+          className="relative w-full aspect-[3/2] md:aspect-auto md:h-[85vh] overflow-hidden noise-overlay"
           style={{
             boxShadow:
               "inset 0 0 60px rgba(0, 0, 0, 0.5), inset 0 0 120px rgba(0, 0, 0, 0.2)",
@@ -95,7 +97,7 @@ export function Entrance() {
               src="/brand/mosaic-hero.jpg"
               alt="After Hours Agenda — NYC subway mosaic with black sheep"
               fill
-              className="object-cover object-center"
+              className="object-cover object-center md:object-center"
               sizes="100vw"
               priority
               quality={90}
@@ -134,7 +136,7 @@ export function Entrance() {
 
       {/* Split-flap departure board */}
       <div className="bg-[#0a0a0a] border-t border-b border-white/[0.06]">
-        <div className="py-10 md:py-14 flex flex-col items-center gap-4 overflow-hidden">
+        <div className="py-10 md:py-14 flex flex-col items-center gap-4">
           <span
             className="font-body font-medium text-[#E8E4DE]/40 uppercase block"
             style={{
@@ -144,11 +146,14 @@ export function Entrance() {
           >
             Now Showing
           </span>
-          <SplitFlap
-            value={MESSAGES[messageIndex]}
-            fontSize="clamp(1.8rem, 5vw, 3.5rem)"
-            staggerDelay={20}
-          />
+          <div className="w-full px-4">
+            <SplitFlap
+              value={MESSAGES[messageIndex]}
+              fontSize="clamp(1.6rem, 4vw, 3.5rem)"
+              staggerDelay={20}
+              shrinkToFit
+            />
+          </div>
         </div>
       </div>
 
