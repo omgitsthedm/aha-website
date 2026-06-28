@@ -14,8 +14,8 @@
 ## Current Stamp
 
 - Updated: 2026-06-27
-- Updated By: Codex
-- Basis: Initial AHA AI-Ops onboarding; local read-only repo, stack, commerce clue, and dirty-state verification
+- Updated By: Claude
+- Basis: Read-only live/deploy verification pass (public HEAD/GET only); live URL confirmed from repo-evidenced source + observed
 - Git HEAD at onboarding: 23018a0
 
 ## Rules Version
@@ -26,16 +26,18 @@
 
 - High for canonical path, repo, branch, remote, and dirty status verified in this run.
 - Medium for stack and commerce clues from local file inspection.
-- Low/TBD for live URL, deploy state, production health, and commerce runtime state.
+- High for live URL + storefront homepage reachability (verified read-only 2026-06-27).
+- Low/TBD for Netlify deploy revision/metadata and commerce runtime state (not inspected/exercised).
 
 ## Current Live Truth
 
-- Live URL: TBD
-- Host: Netlify
-- Netlify live deploy status: TBD
-- Production health: TBD
-- Commerce runtime state: TBD
-- Production QA status for this setup task: Not run; no live behavior was changed.
+- Live URL (repo-evidenced canonical): `https://afterhoursagenda.netlify.app` — **HTTP 200**, `server: Netlify`, Netlify Edge, ~0.9s (read-only GET 2026-06-27). Found in committed `app/sitemap.ts`, `app/robots.ts`, `app/layout.tsx`, `app/api/checkout/route.ts`.
+- Custom domain: `https://www.afterhoursagenda.com/` — **HTTP 200** but `server: cloudflare` (Cloudflare-fronted; origin not confirmed read-only). Apex `afterhoursagenda.com` → 301 → `www`. NOTE: custom domain is observed live but NOT asserted from repo files; relationship between Cloudflare front and the Netlify deploy is unverified.
+- Host: Netlify (confirmed on `.netlify.app`); custom domain served via Cloudflare.
+- Netlify live deploy status: Serving (homepage 200) as of 2026-06-27 read-only check. Deploy revision/build metadata NOT inspected (no Netlify API/CLI read).
+- Production health: storefront homepage returns 200 on both URLs. No deeper route/commerce checks run.
+- Commerce runtime state: TBD — no transactional/commerce paths exercised.
+- Production QA status: Read-only public GET/HEAD only; NO transactional or commerce QA, no mutation.
 
 ## Dirty Repo State
 
@@ -57,11 +59,12 @@
 
 ## QA-PENDING
 
-- Verify live URL before production claims.
-- Verify Netlify deploy metadata before deployment claims.
+- ~~Verify live URL before production claims.~~ DONE 2026-06-27: `afterhoursagenda.netlify.app` 200 (Netlify); `www.afterhoursagenda.com` 200 (Cloudflare-fronted).
+- ~~Confirm safe observational storefront check path.~~ DONE: read-only HEAD/GET to public homepage is the safe path.
+- Verify Netlify deploy revision/metadata before any deployment claim (needs Netlify API/CLI read; not yet done).
+- Confirm the Cloudflare↔Netlify relationship for `www.afterhoursagenda.com` (is Cloudflare proxying the Netlify origin?).
 - Confirm whether dirty untracked files should be kept, ignored, or committed.
 - Confirm whether AHA needs `RELEASES.md` for product/drop history.
-- Confirm safe observational storefront check path.
 - Confirm Square/Printful integration boundaries without reading secrets.
 
 ## Do Not Touch
@@ -94,6 +97,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 - 2026-06-27: Codex performed initial AHA AI-Ops onboarding from read-only local inventory and local repo inspection. Created `.ai` governance files and did not edit source behavior, deploy, push, run commerce QA, inspect env contents, or modify the pre-existing dirty files.
 - 2026-06-27: AHA SESSION START dry run completed. Generated rules verified against `RULES_HEADER.md` + `RULES_BASE.md` with checksum `4054569368:9046`. Confirmed canonical repo, branch, remote, dirty state, lock, and commerce gates. No source behavior, push, deploy, production QA, checkout/payment/order/fulfillment test, env inspection, dirty-file cleanup, or commerce mutation. AHA AI-Ops onboarding files are ready for local commit.
+- 2026-06-27: Claude ran read-only live/deploy verification (public HEAD/GET only). Verified `afterhoursagenda.netlify.app` → 200 (Netlify Edge) and `www.afterhoursagenda.com` → 200 (Cloudflare-fronted); apex 301→www. Updated Current Live Truth + State Confidence; cleared the live-URL/safe-path QA-PENDING items. NO transactional/commerce QA, no push, no deploy, no env inspection, no dirty-file changes.
 
 ## Next Agent Directive
 
