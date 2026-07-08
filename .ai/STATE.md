@@ -44,7 +44,7 @@
 ## Dirty Repo State
 
 - Branch: `main`
-- Current working set: clean and pushed to `origin/main` as of commit `89776d9`.
+- Current working set: clean and pushed to `origin/main` as of commit `8f83e0c`.
 - PR #1 (`feature/retro-grunge-block-overhaul`) was merged into `main` as merge commit `55d63fc`.
 - Prior onboarding dirty files were preserved into the backup branch baseline and merged through PR #1; no `.env` contents were inspected.
 
@@ -95,7 +95,6 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 - Run a fresh AHA `SESSION START` before the next AHA task if another agent takes over.
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
-- Confirm how to handle the four pre-existing untracked dirty files.
 - Identify a safe read-only live URL verification path if David requests production observation.
 
 ## Recent Session History
