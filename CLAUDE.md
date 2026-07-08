@@ -114,6 +114,7 @@ styles/          → Global styles
 - Until Netlify Git linking is repaired, approved production restores must use the exact site id:
   `netlify deploy --prod --site 275b4115-16bf-42fb-9b36-6bce9bb93608`.
 - After any production deploy, run `npm run verify:netlify-live` and confirm the live page contains After Hours Agenda content and no wrong-site content.
+- Known platform gap as of 2026-07-08: Netlify still reports empty build settings and `prevent_non_git_prod_deploys: false`. Repair Git linking in Netlify and enable non-Git production deploy blocking before treating push-to-main as protected.
 - `netlify.toml` is configured — don't modify without good reason.
 - Build command: `next build`
 - Environment variables must be set in Netlify dashboard (never committed).
