@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --aha-void: #10100F;
+  --aha-void-deep: #070707;
+  --aha-charcoal: #181816;
+  --aha-panel: #20201C;
+  --aha-panel-warm: #2A241E;
+  --aha-paper: #E9E1D4;
+  --aha-paper-muted: #A9A093;
+  --aha-concrete: #7A7A7A;
+  --aha-dirty-yellow: #B5A642;
+  --aha-rust: #8C2727;
+  --aha-neon-green: #39FF14;
+  --aha-electric-purple: #BF00FF;
+  --aha-vivid-pink: #FF1493;
+  --aha-shock-pink: #FF006E;
+  --aha-cyan: #00FFFF;
+  --aha-sunburst: #FFAA00;
+  --aha-orange: #FF7F00;
+  --aha-lime: #CCFF00;
+  --aha-border: 4px;
+  --aha-block-gap: clamp(3rem, 7vw, 8rem);
+  --aha-radius: 0px;
+  --aha-font-grunge: 'Courier New', Courier, monospace;
+  --aha-font-display: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+}
+
 @layer base {
   * {
     margin: 0;
@@ -11,84 +37,70 @@
 
   html {
     scroll-behavior: smooth;
-    background-color: #10100F;
-    color: #E9E1D4;
+    background-color: var(--aha-void);
+    color: var(--aha-paper);
   }
 
   body {
-    font-family: 'Courier New', Courier, monospace;
-    background-color: #10100F;
-    color: #E9E1D4;
+    min-height: 100dvh;
+    font-family: var(--aha-font-grunge);
+    background:
+      radial-gradient(circle at 12% 12%, rgba(191, 0, 255, 0.16), transparent 26rem),
+      radial-gradient(circle at 86% 20%, rgba(0, 255, 255, 0.14), transparent 28rem),
+      radial-gradient(circle at 50% 92%, rgba(255, 0, 110, 0.12), transparent 30rem),
+      var(--aha-void);
+    color: var(--aha-paper);
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+  }
+
+  a,
+  button,
+  input[type='submit'],
+  input[type='button'] {
+    cursor: pointer;
   }
 
   ::selection {
-    background-color: #CCFF00;
-    color: #10100F;
+    background-color: var(--aha-lime);
+    color: var(--aha-void);
   }
 
-  /* Global focus-visible styles for keyboard accessibility */
   *:focus-visible {
-    outline: 3px solid #00FFFF;
+    outline: 3px solid var(--aha-cyan);
     outline-offset: 3px;
   }
 
-  /* Remove default outline for mouse users */
   *:focus:not(:focus-visible) {
     outline: none;
   }
 
-  /* Scrollbar styling */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #10100F;
+    background: var(--aha-void-deep);
   }
   ::-webkit-scrollbar-thumb {
-    background: #B5A642;
+    background: var(--aha-lime);
+    border: 2px solid var(--aha-void-deep);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #CCFF00;
+    background: var(--aha-cyan);
   }
 }
 
-/* Scroll reveal utility */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y proximity;
+  }
 
-/* Stagger children */
-.stagger-children > * {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.stagger-children.visible > *:nth-child(1) { transition-delay: 0ms; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(2) { transition-delay: 80ms; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(3) { transition-delay: 160ms; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(4) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(5) { transition-delay: 320ms; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(6) { transition-delay: 400ms; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(7) { transition-delay: 480ms; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(8) { transition-delay: 560ms; opacity: 1; transform: translateY(0); }
-
-/* MTA White Band dividers — THE signature NYCTA graphic element */
-.white-band {
-  border-bottom: 3px solid rgba(233, 225, 212, 0.82);
-}
-.white-band-strong {
-  border-bottom: 5px solid #E9E1D4;
+  main > section {
+    scroll-snap-align: start;
+    scroll-margin-top: 86px;
+  }
 }
 
 @layer utilities {
@@ -98,33 +110,53 @@
 }
 
 /* ═══════════════════════════════════════════════
-   SUBWAY TILE TEXTURES
+   BLACKLIGHT GRUNGE / BRUTALIST FOUNDATION
    ═══════════════════════════════════════════════ */
+
+.zine-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.zine-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: screen;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(233, 225, 212, 0.05) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(90deg, rgba(233, 225, 212, 0.04) 0 1px, transparent 1px 12px),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 260 260' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.48'/%3E%3C/svg%3E");
+  background-size: auto, auto, 220px 220px;
+}
+
+.color-pop-grid {
+  background-color: var(--aha-void);
+  background-image:
+    linear-gradient(90deg, rgba(57, 255, 20, 0.12) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0, 255, 255, 0.10) 1px, transparent 1px),
+    radial-gradient(circle at 8% 10%, rgba(255, 0, 110, 0.22), transparent 16rem),
+    radial-gradient(circle at 88% 20%, rgba(191, 0, 255, 0.22), transparent 18rem),
+    radial-gradient(circle at 55% 92%, rgba(255, 170, 0, 0.16), transparent 20rem);
+  background-size: 96px 96px, 96px 96px, auto, auto, auto;
+  animation: grid-drift 26s linear infinite;
+}
 
 .subway-tiles {
   --tile-w: 72px;
   --tile-h: 72px;
   --grout: 3px;
-  --tile-color: #10100F;
+  --tile-color: var(--aha-void);
   --grout-color: rgba(233, 225, 212, 0.1);
   background-color: var(--tile-color);
   background-image:
     repeating-linear-gradient(90deg, transparent 0 70px, rgba(204, 255, 0, 0.16) 70px 73px, transparent 73px 160px),
     repeating-linear-gradient(0deg, transparent 0 84px, rgba(255, 0, 110, 0.14) 84px 87px, transparent 87px 190px),
-    repeating-linear-gradient(
-      -4deg,
-      rgba(233, 225, 212, 0.045) 0,
-      rgba(233, 225, 212, 0.045) 1px,
-      transparent 1px,
-      transparent 11px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent var(--tile-w),
-      var(--grout-color) var(--tile-w),
-      var(--grout-color) calc(var(--tile-w) + var(--grout))
-    );
+    repeating-linear-gradient(-4deg, rgba(233, 225, 212, 0.045) 0 1px, transparent 1px 11px),
+    repeating-linear-gradient(90deg, transparent 0 var(--tile-w), var(--grout-color) var(--tile-w) calc(var(--tile-w) + var(--grout)));
   background-size: 160px 160px, 190px 190px, auto, auto;
 }
 
@@ -132,10 +164,6 @@
   --tile-color: #15110F;
   --grout-color: rgba(181, 166, 66, 0.12);
 }
-
-/* ═══════════════════════════════════════════════
-   NOISE / GRAIN OVERLAY
-   ═══════════════════════════════════════════════ */
 
 .noise-overlay {
   position: relative;
@@ -153,6 +181,383 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 200px 200px;
+}
+
+.zine-block,
+.zine-paper,
+.zine-block-hot,
+.zine-block-lime {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--aha-radius);
+  border: var(--aha-border) solid var(--aha-paper);
+  overflow: hidden;
+}
+
+.zine-block {
+  background:
+    linear-gradient(135deg, rgba(233, 225, 212, 0.06), rgba(233, 225, 212, 0.015)),
+    var(--aha-panel);
+  color: var(--aha-paper);
+  box-shadow: 10px 10px 0 rgba(191, 0, 255, 0.85);
+}
+
+.zine-paper {
+  background:
+    linear-gradient(135deg, rgba(255, 170, 0, 0.12), rgba(255, 0, 110, 0.08)),
+    var(--aha-paper);
+  color: var(--aha-void);
+  border-color: var(--aha-void);
+  box-shadow: 7px 7px 0 var(--aha-shock-pink);
+}
+
+.zine-block-hot {
+  background:
+    linear-gradient(135deg, var(--aha-sunburst) 0%, var(--aha-orange) 48%, var(--aha-shock-pink) 100%);
+  color: var(--aha-void);
+  border-color: var(--aha-paper);
+  box-shadow: 12px 12px 0 var(--aha-cyan), -7px -7px 0 var(--aha-electric-purple);
+}
+
+.zine-block-lime {
+  background:
+    linear-gradient(135deg, var(--aha-lime) 0%, var(--aha-neon-green) 58%, var(--aha-cyan) 130%);
+  color: var(--aha-void);
+  border-color: var(--aha-paper);
+  box-shadow: 12px 12px 0 var(--aha-shock-pink), -6px -6px 0 var(--aha-electric-purple);
+}
+
+.zine-block::before,
+.zine-paper::before,
+.zine-block-hot::before,
+.zine-block-lime::before,
+.subway-poster::before,
+.sign-panel-station::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  background-image:
+    repeating-linear-gradient(-2deg, rgba(16, 16, 15, 0.28) 0 1px, transparent 1px 9px),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.42'/%3E%3C/svg%3E");
+  background-size: auto, 180px 180px;
+}
+
+.zine-block::after,
+.zine-block-hot::after,
+.zine-block-lime::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: -32px;
+  width: 118px;
+  height: 30px;
+  z-index: 2;
+  pointer-events: none;
+  transform: rotate(8deg);
+  border: 2px solid rgba(16, 16, 15, 0.55);
+  background: repeating-linear-gradient(90deg, rgba(233, 225, 212, 0.86) 0 8px, rgba(181, 166, 66, 0.76) 8px 15px);
+  opacity: 0.78;
+}
+
+.zine-cut {
+  clip-path: polygon(0 1.5%, 98.8% 0, 100% 96.5%, 1.2% 100%);
+}
+
+.zine-cut-alt {
+  clip-path: polygon(1.2% 0, 100% 1.4%, 98.5% 100%, 0 97%);
+}
+
+.zine-sticker {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--aha-void);
+  padding: 0.45rem 0.7rem;
+  color: var(--aha-void);
+  font-family: var(--aha-font-grunge);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 rgba(16, 16, 15, 0.92);
+  transform: rotate(-1.5deg);
+}
+
+.zine-sticker:nth-child(even) {
+  transform: rotate(1.4deg);
+}
+
+.metrocard-gradient {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid var(--aha-void);
+  background:
+    linear-gradient(90deg, var(--aha-lime), var(--aha-neon-green) 26%, var(--aha-cyan) 50%, var(--aha-electric-purple) 74%, var(--aha-shock-pink));
+  color: var(--aha-void);
+  font-family: var(--aha-font-grunge);
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 8px 8px 0 var(--aha-paper);
+  filter: saturate(1.08) contrast(1.12);
+}
+
+.metrocard-gradient::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 2px dashed rgba(16, 16, 15, 0.52);
+  pointer-events: none;
+}
+
+.metrocard-gradient:hover {
+  box-shadow: 11px 11px 0 var(--aha-cyan);
+  filter: saturate(1.18) contrast(1.18);
+}
+
+.platform-edge {
+  height: 18px;
+  border-block: 3px solid var(--aha-paper);
+  background:
+    repeating-linear-gradient(90deg,
+      var(--aha-lime) 0 42px,
+      var(--aha-shock-pink) 42px 84px,
+      var(--aha-cyan) 84px 126px,
+      var(--aha-electric-purple) 126px 168px,
+      var(--aha-sunburst) 168px 210px,
+      var(--aha-paper) 210px 252px);
+  filter: saturate(1.05) contrast(1.16);
+}
+
+.mosaic-border {
+  height: 14px;
+  border: 3px solid var(--aha-paper);
+  background:
+    repeating-linear-gradient(90deg,
+      var(--aha-paper) 0 24px,
+      var(--aha-lime) 24px 48px,
+      var(--aha-shock-pink) 48px 72px,
+      var(--aha-cyan) 72px 96px,
+      var(--aha-electric-purple) 96px 120px,
+      var(--aha-sunburst) 120px 144px,
+      var(--aha-rust) 144px 168px);
+  box-shadow: 6px 6px 0 rgba(16, 16, 15, 0.84);
+}
+
+.sign-panel-station {
+  position: relative;
+  display: flex;
+  min-height: 92px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-inline: 4px solid var(--aha-paper);
+  background:
+    linear-gradient(135deg, rgba(0, 255, 255, 0.10), rgba(255, 0, 110, 0.10)),
+    var(--aha-void-deep);
+  padding: clamp(1rem, 3vw, 1.75rem);
+  color: var(--aha-paper);
+  box-shadow: inset 0 0 0 3px rgba(233, 225, 212, 0.12);
+}
+
+.sign-panel-station-text {
+  display: block;
+  font-family: var(--aha-font-display);
+  font-size: clamp(2.4rem, 8vw, 7rem);
+  font-weight: 900;
+  letter-spacing: -0.085em;
+  line-height: 0.78;
+  text-transform: uppercase;
+  color: var(--aha-paper);
+  text-shadow: 3px 3px 0 var(--aha-shock-pink), -3px -3px 0 var(--aha-cyan);
+}
+
+.white-band,
+.white-band-strong {
+  border-bottom-style: solid;
+  border-bottom-color: rgba(233, 225, 212, 0.88);
+}
+
+.white-band {
+  border-bottom-width: 3px;
+}
+
+.white-band-strong {
+  border-bottom-width: 5px;
+}
+
+.misprint {
+  text-shadow: 0.035em 0 var(--aha-cyan), -0.035em 0 var(--aha-shock-pink), 0.07em 0.07em rgba(16, 16, 15, 0.34);
+  animation: misprint-jitter 2.6s steps(2, end) infinite;
+}
+
+.xerox-image {
+  filter: grayscale(0.18) saturate(0.9) contrast(1.34) brightness(0.92);
+}
+
+.product-card-hover {
+  transform: rotate(-0.4deg);
+  transition: transform 220ms ease-out, filter 220ms ease-out;
+  will-change: transform;
+}
+
+.product-card-hover:nth-child(even) {
+  transform: rotate(0.5deg);
+}
+
+.product-card-hover:hover {
+  transform: translateY(-8px) rotate(0deg) scale(1.012);
+  filter: saturate(1.12) contrast(1.05);
+}
+
+.subway-poster {
+  position: relative;
+  overflow: hidden;
+  border: 4px solid var(--aha-paper);
+  background: var(--aha-panel-warm);
+  box-shadow: 9px 9px 0 var(--aha-shock-pink);
+}
+
+.product-card-hover:nth-child(3n + 2) .subway-poster {
+  box-shadow: 9px 9px 0 var(--aha-cyan);
+}
+
+.product-card-hover:nth-child(3n + 3) .subway-poster {
+  box-shadow: 9px 9px 0 var(--aha-lime);
+}
+
+.subway-poster::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, transparent 0 62%, rgba(255, 0, 110, 0.28) 62% 64%, transparent 64%),
+    repeating-linear-gradient(0deg, rgba(233, 225, 212, 0.05) 0 1px, transparent 1px 8px);
+  mix-blend-mode: screen;
+}
+
+.subway-poster-scrim {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 3;
+  border-top: 3px solid var(--aha-paper);
+  background:
+    linear-gradient(180deg, rgba(16, 16, 15, 0.12), rgba(16, 16, 15, 0.95) 34%, rgba(16, 16, 15, 0.98));
+  padding: 0.8rem;
+}
+
+.blacklight-collage {
+  position: relative;
+  min-height: 100%;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.blacklight-collage .collage-photo {
+  position: absolute;
+  inset: 9% 9% 17% 13%;
+  border: 4px solid var(--aha-paper);
+  box-shadow: 12px 12px 0 var(--aha-electric-purple);
+  transform: rotate(-3deg) translateZ(22px);
+  overflow: hidden;
+}
+
+.blacklight-collage .collage-shape {
+  position: absolute;
+  display: block;
+  border: 4px solid var(--aha-void);
+  box-shadow: 7px 7px 0 var(--aha-paper);
+  animation: shape-float 5.8s ease-in-out infinite;
+}
+
+.collage-shape.lime {
+  left: 4%;
+  top: 8%;
+  width: 7rem;
+  height: 7rem;
+  background: var(--aha-lime);
+  border-radius: 999px;
+}
+
+.collage-shape.cyan {
+  right: 2%;
+  top: 16%;
+  width: 8rem;
+  height: 4rem;
+  background: var(--aha-cyan);
+  transform: rotate(12deg);
+  animation-delay: -1.2s;
+}
+
+.collage-shape.pink {
+  left: 8%;
+  bottom: 7%;
+  width: 9rem;
+  height: 5rem;
+  background: var(--aha-shock-pink);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  animation-delay: -2.4s;
+}
+
+.collage-shape.sun {
+  right: 8%;
+  bottom: 11%;
+  width: 6.5rem;
+  height: 6.5rem;
+  background: var(--aha-sunburst);
+  transform: rotate(-10deg);
+  animation-delay: -3.1s;
+}
+
+.blacklight-collage .duct-tape {
+  position: absolute;
+  z-index: 5;
+  width: 9rem;
+  height: 2.1rem;
+  border: 2px solid rgba(16, 16, 15, 0.65);
+  background: repeating-linear-gradient(90deg, rgba(233, 225, 212, 0.88) 0 8px, rgba(181, 166, 66, 0.72) 8px 16px);
+  opacity: 0.86;
+}
+
+.blacklight-collage .duct-tape.one {
+  left: 8%;
+  top: 18%;
+  transform: rotate(-15deg);
+}
+
+.blacklight-collage .duct-tape.two {
+  right: 7%;
+  bottom: 24%;
+  transform: rotate(13deg);
+}
+
+.blacklight-collage .issue-label {
+  position: absolute;
+  right: 5%;
+  top: 5%;
+  z-index: 6;
+  border: 4px solid var(--aha-void);
+  background: var(--aha-lime);
+  color: var(--aha-void);
+  padding: 0.7rem 0.9rem;
+  font-family: var(--aha-font-grunge);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 6px 6px 0 var(--aha-shock-pink);
+  transform: rotate(4deg);
 }
 
 /* ═══════════════════════════════════════════════
@@ -219,25 +624,6 @@
   backface-visibility: hidden;
 }
 
-@keyframes flipDown {
-  0% { transform: rotateX(0deg); }
-  100% { transform: rotateX(-180deg); }
-}
-
-.flap-char .flap-panel.flipping {
-  animation: flipDown 0.15s ease-in forwards;
-}
-
-/* ═══════════════════════════════════════════════
-   TURNSTILE SWIPE ANIMATION
-   ═══════════════════════════════════════════════ */
-
-@property --swipe-progress {
-  syntax: "<percentage>";
-  initial-value: 0%;
-  inherits: false;
-}
-
 .turnstile-btn {
   position: relative;
   overflow: hidden;
@@ -249,7 +635,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: #39FF14;
+  background: var(--aha-neon-green);
   transform: translateX(-100%);
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -258,529 +644,96 @@
   transform: translateX(0);
 }
 
-/* ═══════════════════════════════════════════════
-   NYCTA FLAT YELLOW CTA (was MetroCard gradient)
-   No gradients — Vignelli spec: flat, solid fills
-   ═══════════════════════════════════════════════ */
-
-.metrocard-gradient {
-  background: #CCFF00;
-  color: #10100F;
-  font-family: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  border: 3px solid #E9E1D4;
-  box-shadow: 7px 7px 0 #FF006E;
-  text-transform: uppercase;
-}
-
-/* ═══════════════════════════════════════════════
-   PLATFORM EDGE (safety yellow stripe)
-   ═══════════════════════════════════════════════ */
-
-.platform-edge {
-  height: 10px;
-  background: repeating-linear-gradient(
-    90deg,
-    #CCFF00 0px,
-    #CCFF00 22px,
-    #10100F 22px,
-    #10100F 28px,
-    #FF006E 28px,
-    #FF006E 36px,
-    #10100F 36px,
-    #10100F 42px
-  );
-}
-
-/* ═══════════════════════════════════════════════
-   NYCTA SIGN PANEL — Section headers
-   Black strip, white Helvetica Bold, thin rules
-   ═══════════════════════════════════════════════ */
-
-.sign-panel {
-  background: #15110F;
-  padding: 0.9rem 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 3px solid #E9E1D4;
-  box-shadow: 6px 6px 0 #B5A642;
-  transform: rotate(-0.35deg);
-}
-
-.sign-panel-text {
-  font-family: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 0.8125rem;
-  color: #E9E1D4;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* ═══════════════════════════════════════════════
-   MOSAIC TILE BORDER — Decorative strip referencing
-   Wall St / Bleecker ceramic mosaic frames
-   Gold, brown, navy repeating tile pattern
-   ═══════════════════════════════════════════════ */
-
-.mosaic-border {
-  height: 9px;
-  background-image: repeating-linear-gradient(
-    90deg,
-    #39FF14 0px,
-    #39FF14 12px,
-    #BF00FF 12px,
-    #BF00FF 20px,
-    #FF006E 20px,
-    #FF006E 31px,
-    #00FFFF 31px,
-    #00FFFF 39px,
-    #10100F 39px,
-    #10100F 45px
-  );
-}
-
-.mosaic-border-thin {
-  height: 5px;
-  background-image: repeating-linear-gradient(
-    90deg,
-    #CCFF00 0px,
-    #CCFF00 9px,
-    #FF7F00 9px,
-    #FF7F00 14px,
-    #10100F 14px,
-    #10100F 19px
-  );
-}
-
-/* Enhanced sign panel with mosaic borders */
-.sign-panel-station {
-  background: #15110F;
-  padding: 1rem 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 4px solid #E9E1D4;
-  box-shadow: 8px 8px 0 #BF00FF;
-  transform: rotate(-0.4deg);
-}
-
-.sign-panel-station-text {
-  font-family: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: clamp(1.15rem, 2.8vw, 2rem);
-  color: #E9E1D4;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-}
-
-/* Platform edge stripe — nav scroll indicator */
-.platform-stripe {
-  height: 5px;
-  background: #CCFF00;
-}
-
-/* Legacy alias — kept for Entrance only */
-.station-banner {
-  padding: 0.75rem 1.5rem;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-align: center;
-}
-
-/* ═══════════════════════════════════════════════
-   RETRO GRUNGE / BLOCK SYSTEM
-   Blacklight color blocks, xerox texture, torn edges
-   ═══════════════════════════════════════════════ */
-
-.zine-page {
-  background:
-    repeating-linear-gradient(2deg, rgba(233, 225, 212, 0.035) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(94deg, rgba(255, 0, 110, 0.045) 0 2px, transparent 2px 96px),
-    repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.035) 0 2px, transparent 2px 112px),
-    linear-gradient(180deg, #10100F 0%, #15110F 50%, #10100F 100%);
-}
-
-.zine-block {
-  position: relative;
-  border: 4px solid #E9E1D4;
-  background: #15110F;
-  box-shadow: 10px 10px 0 #2E2E2E;
-}
-
-.zine-block::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.12;
-  mix-blend-mode: screen;
-  background-image:
-    repeating-linear-gradient(0deg, transparent 0 5px, rgba(233, 225, 212, 0.5) 5px 6px),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
-}
-
-.zine-block-hot {
-  background: #FF006E;
-  color: #10100F;
-  border-color: #E9E1D4;
-  box-shadow: 10px 10px 0 #00FFFF;
-}
-
-.zine-block-lime {
-  background: #CCFF00;
-  color: #10100F;
-  border-color: #E9E1D4;
-  box-shadow: 10px 10px 0 #BF00FF;
-}
-
-.zine-block-cyan {
-  background: #00FFFF;
-  color: #10100F;
-  border-color: #10100F;
-  box-shadow: 10px 10px 0 #FF006E;
-}
-
-.zine-paper {
-  background: #E9E1D4;
-  color: #10100F;
-  border: 3px solid #10100F;
-  box-shadow: 8px 8px 0 #B5A642;
-}
-
-.zine-sticker {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 32px;
-  padding: 0.4rem 0.7rem;
-  background: #FFAA00;
-  color: #10100F;
-  border: 2px solid #10100F;
-  box-shadow: 4px 4px 0 #BF00FF;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.75rem;
-  font-weight: 700;
-  line-height: 1;
-  text-transform: uppercase;
-  transform: rotate(-2deg);
-}
-
-.zine-cut {
-  clip-path: polygon(0 2%, 100% 0, 99% 96%, 4% 100%);
-}
-
-.zine-cut-alt {
-  clip-path: polygon(2% 0, 100% 4%, 97% 100%, 0 96%);
-}
-
-.xerox-image {
-  filter: saturate(1.25) contrast(1.18) brightness(0.94);
-}
-
-.misprint {
-  text-shadow: 2px 0 #FF006E, -2px 0 #00FFFF;
-}
-
-.color-pop-grid {
-  background-image:
-    linear-gradient(90deg, rgba(233, 225, 212, 0.12) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(233, 225, 212, 0.12) 1px, transparent 1px);
-  background-size: 42px 42px;
-}
-
-/* ═══════════════════════════════════════════════
-   VIEW TRANSITIONS
-   ═══════════════════════════════════════════════ */
-
-@view-transition {
-  navigation: auto;
-}
-
-::view-transition-old(root) {
-  animation: 0.3s ease-out both slide-out-left;
-}
-
-::view-transition-new(root) {
-  animation: 0.3s ease-out both slide-in-right-vt;
-}
-
-@keyframes slide-out-left {
-  to { transform: translateX(-10%); opacity: 0; }
-}
-
-@keyframes slide-in-right-vt {
-  from { transform: translateX(10%); opacity: 0; }
-}
-
-/* ═══════════════════════════════════════════════
-   FLUORESCENT FLICKER (product hover)
-   ═══════════════════════════════════════════════ */
-
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  92% { opacity: 1; }
-  93% { opacity: 0.85; }
-  94% { opacity: 1; }
-  96% { opacity: 0.9; }
-  97% { opacity: 1; }
-}
-
-.hover-flicker:hover {
-  animation: flicker 3s infinite;
-}
-
-/* ═══════════════════════════════════════════════
-   NAV LINK UNDERLINE ANIMATION
-   ═══════════════════════════════════════════════ */
-
-.nav-link-hover {
-  position: relative;
-}
-
-.nav-link-hover::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  width: 100%;
-  height: 1px;
-  background: #E8E4DE;
-  transform: translateX(-50%) scaleX(0);
-  transform-origin: center;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.nav-link-hover:hover::after {
-  transform: translateX(-50%) scaleX(1);
-}
-
-/* ═══════════════════════════════════════════════
-   CART DRAWER SCAN-LINE EFFECT
-   ═══════════════════════════════════════════════ */
-
-.scan-lines {
-  position: relative;
-}
-
-.scan-lines::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(26, 25, 23, 0.03) 2px,
-    rgba(26, 25, 23, 0.03) 3px
-  );
-  z-index: 1;
-}
-
-/* ═══════════════════════════════════════════════
-   FOOTER LINK HOVER SLIDE
-   ═══════════════════════════════════════════════ */
-
-.footer-link {
-  transition: color 0.25s ease, transform 0.25s ease;
-  display: inline-block;
-}
-
-.footer-link:hover {
-  color: #E8E4DE;
-  transform: translateX(2px);
-}
-
-/* ═══════════════════════════════════════════════
-   PREMIUM PRODUCT CARD HOVER — luxury lift + shadow
-   ═══════════════════════════════════════════════ */
-
-.product-card-hover {
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.product-card-hover:hover {
-  transform: translate(-4px, -4px) rotate(-0.4deg);
-  box-shadow: 12px 12px 0 #FF006E;
-}
-
-/* Quick-view overlay on card hover */
-.product-card-overlay {
-  position: relative;
-}
-.product-card-overlay::after {
-  content: 'QUICK VIEW';
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(26, 25, 23, 0.6);
-  color: #E8E4DE;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 700;
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+/* Scroll reveal utility */
+.reveal {
   opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-  z-index: 2;
+  transform: translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.product-card-overlay:hover::after {
+
+.reveal.visible {
   opacity: 1;
+  transform: translateY(0);
 }
 
-/* ═══════════════════════════════════════════════
-   SUBWAY ADVERTISEMENT POSTER CARD
-   Products framed as self-contained subway ads
-   ═══════════════════════════════════════════════ */
-
-/* Poster frame — yellow top accent, subtle border */
-.subway-poster {
-  position: relative;
-  overflow: hidden;
-  border: 4px solid #E9E1D4;
-  border-top: 12px solid #CCFF00;
-  background: #20201C;
-  transition: border-color 0.4s ease;
-}
-.subway-poster:hover {
-  border-color: #E9E1D4;
-  border-top-color: #00FFFF;
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Yellow glow from top border on hover */
-.subway-poster.product-card-hover:hover {
-  box-shadow: 12px 12px 0 #FF006E;
+.stagger-children.visible > *:nth-child(1) { transition-delay: 0ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(2) { transition-delay: 80ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(3) { transition-delay: 160ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(4) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(5) { transition-delay: 320ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(6) { transition-delay: 400ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(7) { transition-delay: 480ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(8) { transition-delay: 560ms; opacity: 1; transform: translateY(0); }
+
+@property --swipe-progress {
+  syntax: "<percentage>";
+  initial-value: 0%;
+  inherits: false;
 }
 
-/* Dark gradient scrim for text overlaid on image */
-.subway-poster-scrim {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 3rem 0.875rem 0.875rem;
-  background: linear-gradient(
-    to top,
-    rgba(16, 16, 15, 0.96) 0%,
-    rgba(16, 16, 15, 0.68) 52%,
-    transparent 100%
-  );
-  z-index: 3;
-  pointer-events: none;
-  transition: background 0.4s ease;
+@keyframes grid-drift {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 192px 96px, -96px 192px, 0 0, 0 0, 0 0; }
 }
 
-/* Scrim deepens on hover for added contrast */
-.subway-poster:hover .subway-poster-scrim {
-  background: linear-gradient(
-    to top,
-    rgba(16, 16, 15, 0.98) 0%,
-    rgba(16, 16, 15, 0.74) 55%,
-    transparent 100%
-  );
+@keyframes misprint-jitter {
+  0%, 93%, 100% { transform: translate(0, 0); }
+  94% { transform: translate(1px, -1px); }
+  96% { transform: translate(-1px, 1px); }
 }
 
-/* Mini poster for compact cards (modals, etc.) */
-.subway-poster-mini {
-  position: relative;
-  overflow: hidden;
-  border: 3px solid #E9E1D4;
-  border-top: 8px solid #CCFF00;
-  background: #20201C;
+@keyframes shape-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -12px; }
 }
 
-.subway-poster-mini-scrim {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 1.5rem 0.5rem 0.5rem;
-  background: linear-gradient(
-    to top,
-    rgba(16, 16, 15, 0.96) 0%,
-    rgba(16, 16, 15, 0.62) 60%,
-    transparent 100%
-  );
-  z-index: 3;
-  pointer-events: none;
+@keyframes flipDown {
+  0% { transform: rotateX(0deg); }
+  100% { transform: rotateX(-180deg); }
 }
 
-/* ═══════════════════════════════════════════════
-   ADD-TO-CART MODAL ANIMATIONS
-   ═══════════════════════════════════════════════ */
-
-@keyframes modalBackdropIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.flap-char .flap-panel.flipping {
+  animation: flipDown 0.15s ease-in forwards;
 }
 
-@keyframes modalPanelIn {
-  from { opacity: 0; transform: scale(0.95) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+@media (max-width: 767px) {
+  .zine-block,
+  .zine-paper,
+  .zine-block-hot,
+  .zine-block-lime,
+  .subway-poster {
+    box-shadow: 6px 6px 0 var(--aha-electric-purple);
+  }
+
+  .sign-panel-station {
+    min-height: 72px;
+  }
+
+  .blacklight-collage .collage-photo {
+    inset: 13% 9% 17% 9%;
+  }
+
+  .collage-shape.lime,
+  .collage-shape.cyan,
+  .collage-shape.pink,
+  .collage-shape.sun {
+    transform: scale(0.78);
+  }
 }
-
-/* ═══════════════════════════════════════════════
-   SURFACE TREATMENTS — Clean opaque backgrounds
-   for text contrast against tile textures.
-   Use on sections where text needs a solid surface.
-   ═══════════════════════════════════════════════ */
-
-:root {
-  /* Surface colors */
-  --surface-light: #10100F;
-  --surface-dark: #10100F;
-  --surface-panel: #15110F;
-  --surface-elevated: #20201C;
-
-  /* Text on light surfaces */
-  --text-primary: #E9E1D4;
-  --text-secondary: #A9A093;
-
-  /* Text on dark surfaces */
-  --text-on-dark: #E9E1D4;
-  --text-on-dark-muted: #A9A093;
-
-  /* Accents */
-  --accent-yellow: #CCFF00;
-  --accent-gold: #B5A642;
-}
-
-/* Opaque light surface — eliminates tile noise */
-.surface-light {
-  background-color: var(--surface-light);
-}
-
-/* Dark surface — for contrast sections */
-.surface-dark {
-  background-color: var(--surface-dark);
-  color: var(--text-on-dark);
-}
-
-/* Panel surface — deep navy for sign panels (alias) */
-.surface-panel {
-  background-color: var(--surface-panel);
-  color: var(--text-on-dark);
-}
-
-/* ═══════════════════════════════════════════════
-   REDUCED MOTION
-   ═══════════════════════════════════════════════ */
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }
