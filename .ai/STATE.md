@@ -43,9 +43,10 @@
 
 ## Dirty Repo State
 
-- Branch: `feature/retro-grunge-block-overhaul`, based on `backup/consolidation-20260629`
-- Current working set: retro grunge / vibrant block storefront redesign plus lint dependency cleanup, pending local commit/push at this stamp.
-- Prior onboarding dirty files were preserved into the backup branch baseline before this work; no `.env` contents were inspected.
+- Branch: `main`
+- Current working set: clean and pushed to `origin/main` as of commit `89776d9`.
+- PR #1 (`feature/retro-grunge-block-overhaul`) was merged into `main` as merge commit `55d63fc`.
+- Prior onboarding dirty files were preserved into the backup branch baseline and merged through PR #1; no `.env` contents were inspected.
 
 ## Commerce Risk
 
@@ -58,9 +59,9 @@
 
 - ~~Verify live URL before production claims.~~ DONE 2026-06-27: `afterhoursagenda.netlify.app` 200 (Netlify); `www.afterhoursagenda.com` 200 (Cloudflare-fronted).
 - ~~Confirm safe observational storefront check path.~~ DONE: read-only HEAD/GET to public homepage is the safe path.
-- Verify Netlify deploy revision/metadata before any deployment claim (needs Netlify API/CLI read; not yet done).
+- ~~Verify Netlify deploy revision/metadata before any deployment claim.~~ DONE 2026-07-08: deploy `6a4e3854c37b683eab4d38b8` verified through Netlify API/CLI.
 - Confirm the Cloudflare↔Netlify relationship for `www.afterhoursagenda.com` (is Cloudflare proxying the Netlify origin?).
-- Confirm whether dirty untracked files should be kept, ignored, or committed.
+- ~~Confirm whether dirty untracked files should be kept, ignored, or committed.~~ DONE 2026-07-08: prior AHA dirty files were preserved in the backup baseline and merged through PR #1.
 - Confirm whether AHA needs `RELEASES.md` for product/drop history.
 - Confirm Square/Printful integration boundaries without reading secrets.
 - Production dependency audit still reports Next.js/PostCSS advisories; npm's available automated fix is a breaking upgrade to `next@16.2.10`, so handle as a separate framework migration with Netlify compatibility review.
