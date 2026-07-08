@@ -17,20 +17,20 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "After Hours Agenda | Graphic Tees and Rebel Streetwear",
+    default: "After Hours Agenda | Blacklight Grunge Streetwear",
     template: "%s | After Hours Agenda",
   },
   description:
-    "Graphic tees, loud color, and anti-boring streetwear from After Hours Agenda.",
+    "Blacklight grunge graphic tees, loud color, and anti-boring streetwear from After Hours Agenda.",
   keywords: [
     "streetwear", "NYC", "fashion", "urban", "clothing", "after hours",
-    "premium", "made to order", "New York City", "streetwear brand",
+    "graphic tees", "blacklight grunge", "zine style", "New York City", "streetwear brand",
   ],
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://www.afterhoursagenda.com"
   ),
   openGraph: {
-    title: "After Hours Agenda",
+    title: "After Hours Agenda | Blacklight Grunge Streetwear",
     description: "Graphic tees, loud color, and anti-boring streetwear from After Hours Agenda.",
     type: "website",
     locale: "en_US",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "After Hours Agenda",
+    title: "After Hours Agenda | Blacklight Grunge Streetwear",
     description: "Graphic tees, loud color, and anti-boring streetwear from After Hours Agenda.",
   },
   robots: {
