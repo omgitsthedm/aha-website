@@ -44,7 +44,7 @@
 ## Dirty Repo State
 
 - Branch: `main`
-- Current working set: clean and pushed to `origin/main` as of commit `8f83e0c`.
+- Current working set: clean and pushed to `origin/main`.
 - PR #1 (`feature/retro-grunge-block-overhaul`) was merged into `main` as merge commit `55d63fc`.
 - Prior onboarding dirty files were preserved into the backup branch baseline and merged through PR #1; no `.env` contents were inspected.
 
