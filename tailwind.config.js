@@ -7,54 +7,60 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Core — grimy subway tile white
-        void: "#E8E4D8",
-        charcoal: "#D8D4C8",
+        // Core - blacklight zine storefront
+        void: "#10100F",
+        charcoal: "#181816",
         surface: {
-          DEFAULT: "#DDD9CE",
-          warm: "#D0CCc0",
+          DEFAULT: "#20201C",
+          warm: "#2A241E",
         },
-        elevated: "#C8C3B6",
+        elevated: "#2F2E28",
         border: {
-          DEFAULT: "#C4BFAE",
-          warm: "#B8B3A4",
+          DEFAULT: "#E9E1D4",
+          warm: "#B5A642",
         },
-        // Text — near-black station ink
-        cream: "#1A1917",
-        muted: "#6B665E",
-        // MTA Subway Line Colors
+        // Text
+        cream: "#E9E1D4",
+        muted: "#A9A093",
+        // Bright block colors
         line: {
-          red: "#EE352E",
-          blue: "#2850AD",
-          orange: "#FF6319",
+          red: "#FF006E",
+          blue: "#00FFFF",
+          orange: "#FF7F00",
           green: "#00933C",
-          yellow: "#FCCC0A",
+          yellow: "#CCFF00",
           purple: "#B933AD",
-          brown: "#996633",
-          gray: "#A7A9AC",
+          brown: "#B5A642",
+          gray: "#7A7A7A",
         },
         // Utility
-        danger: "#EE352E",
-        success: "#00933C",
+        danger: "#FF006E",
+        success: "#39FF14",
         // Legacy alias
         gold: {
-          DEFAULT: "#C8A961",
-          dim: "rgba(200,169,97,0.25)",
-          faint: "rgba(200,169,97,0.08)",
+          DEFAULT: "#B5A642",
+          dim: "rgba(181,166,66,0.28)",
+          faint: "rgba(181,166,66,0.1)",
         },
-        navy: "#0C1224",
+        neon: {
+          green: "#39FF14",
+          purple: "#BF00FF",
+          pink: "#FF1493",
+          cyan: "#00FFFF",
+          sun: "#FFAA00",
+          lime: "#CCFF00",
+        },
+        navy: "#15110F",
         mosaic: {
-          gold: "#C8A24E",
-          brown: "#7A5C2E",
-          dark: "#0C1224",
+          gold: "#B5A642",
+          brown: "#8C2727",
+          dark: "#10100F",
         },
       },
       fontFamily: {
-        // Helvetica Neue — NYCTA Graphics Standards Manual typeface
-        display: ["'Helvetica Neue'", "Helvetica", "Arial", "sans-serif"],
-        body: ["'Helvetica Neue'", "Helvetica", "Arial", "sans-serif"],
-        // IBM Plex Mono — prices, tabular data, SplitFlap only
-        mono: ["var(--font-ibm-plex)", "'SF Mono'", "Menlo", "monospace"],
+        display: ["'Arial Black'", "'Helvetica Neue'", "Arial", "sans-serif"],
+        body: ["'Courier New'", "Courier", "monospace"],
+        mono: ["var(--font-ibm-plex)", "'Courier New'", "Menlo", "monospace"],
       },
       fontSize: {
         hero: ["clamp(3.5rem, 10vw, 7rem)", { lineHeight: "0.9", letterSpacing: "-0.02em" }],

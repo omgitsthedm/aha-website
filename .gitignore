@@ -36,3 +36,6 @@ next-env.d.ts
 # Development plans and docs
 /docs/plans/
 /scripts/
+.env
+.env.*
+.env.local

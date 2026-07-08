@@ -56,19 +56,17 @@ export function LatestDrop({ products }: LatestDropProps) {
   if (products.length === 0) return null;
 
   return (
-    <section ref={sectionRef} className="relative z-[2] py-24 md:py-32 px-6">
+    <section ref={sectionRef} className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
       <div className="max-w-7xl mx-auto">
-        {/* NYCTA Sign Panel */}
         <div data-sign-panel className="mb-14">
           <div className="mosaic-border" />
           <div className="sign-panel-station">
-            <span className="sign-panel-station-text">Just Dropped</span>
+            <span className="sign-panel-station-text">Fresh Noise</span>
           </div>
           <div className="mosaic-border" />
         </div>
 
-        {/* Station Domination: featured + supporting posters */}
-        <div data-grid className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+        <div data-grid className="grid grid-cols-2 gap-5 md:grid-cols-5 md:gap-7">
           {products.slice(0, 4).map((product, i) => {
             const isFeatured = i === 0;
             const isWide = i === 3;
@@ -79,7 +77,7 @@ export function LatestDrop({ products }: LatestDropProps) {
                 key={product.id}
                 data-card
                 className={`product-card-hover ${
-                  isFeatured ? "md:col-span-2 md:row-span-2" : ""
+                  isFeatured ? "md:col-span-3 md:row-span-2" : "md:col-span-2"
                 }${isWide ? " md:col-span-2" : ""}`}
               >
                 <Link href={`/product/${product.slug}`} className="group block h-full">
@@ -99,7 +97,7 @@ export function LatestDrop({ products }: LatestDropProps) {
                         className={`${
                           isPrintful
                             ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
-                            : "object-cover"
+                            : "object-cover xerox-image"
                         } transition-transform duration-700 group-hover:scale-[1.03]`}
                         sizes={
                           isFeatured
@@ -142,13 +140,12 @@ export function LatestDrop({ products }: LatestDropProps) {
           })}
         </div>
 
-        {/* VIEW ALL */}
         <div className="flex justify-center mt-16">
           <Link
             href="/shop"
             className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] hover:brightness-110 transition-all"
           >
-            Shop New Arrivals &rarr;
+            Shop New Arrivals
           </Link>
         </div>
       </div>

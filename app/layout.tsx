@@ -7,8 +7,7 @@ import { Footer } from "@/components/ui/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { SubwayDotsBackground } from "@/components/ui/SubwayDotsBackground";
 
-// Helvetica Neue — the Vignelli typeface (system font, zero download)
-// IBM Plex Mono retained ONLY for prices, tabular data, and SplitFlap
+// IBM Plex Mono retained for prices, tabular data, and SplitFlap.
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-ibm-plex",
@@ -18,21 +17,21 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "After Hours Agenda | Premium NYC Streetwear",
+    default: "After Hours Agenda | Graphic Tees and Rebel Streetwear",
     template: "%s | After Hours Agenda",
   },
   description:
-    "Premium streetwear from New York City. Every piece made to order with a story to tell.",
+    "Graphic tees, loud color, and anti-boring streetwear from After Hours Agenda.",
   keywords: [
     "streetwear", "NYC", "fashion", "urban", "clothing", "after hours",
     "premium", "made to order", "New York City", "streetwear brand",
   ],
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.netlify.app"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.afterhoursagenda.com"
   ),
   openGraph: {
     title: "After Hours Agenda",
-    description: "Premium streetwear from New York City. Every piece made to order with a story to tell.",
+    description: "Graphic tees, loud color, and anti-boring streetwear from After Hours Agenda.",
     type: "website",
     locale: "en_US",
     siteName: "After Hours Agenda",
@@ -40,7 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "After Hours Agenda",
-    description: "Premium streetwear from New York City. Every piece made to order with a story to tell.",
+    description: "Graphic tees, loud color, and anti-boring streetwear from After Hours Agenda.",
   },
   robots: {
     index: true,
@@ -63,7 +62,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://items-images-production.s3.us-west-2.amazonaws.com" />
         <link rel="dns-prefetch" href="https://items-images-production.s3.us-west-2.amazonaws.com" />
       </head>
-      <body className="text-cream font-body antialiased">
+      <body className="text-cream font-body antialiased zine-page">
         {/* Skip to main content link for keyboard users */}
         <a
           href="#main-content"
@@ -71,14 +70,14 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        {/* Global subway tile texture — fixed behind everything */}
-        <div className="fixed inset-0 z-0 subway-tiles" aria-hidden="true" />
-        {/* Animated MTA-colored dots flowing along invisible routes */}
+        {/* Fixed rough paper grid behind everything */}
+        <div className="fixed inset-0 z-0 subway-tiles color-pop-grid" aria-hidden="true" />
+        {/* Animated color flecks flowing behind the storefront */}
         <SubwayDotsBackground />
         <CartProvider>
           <AnnouncementBar />
           <NavBar />
-          <main id="main-content" className="relative z-[2] min-h-screen subway-tiles">{children}</main>
+          <main id="main-content" className="relative z-[2] min-h-[100dvh]">{children}</main>
           <Footer />
         </CartProvider>
       </body>

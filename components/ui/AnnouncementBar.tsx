@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 
 const MESSAGES = [
-  "Free Shipping on Orders $75+",
-  "Tracked Delivery on Every Order",
-  "Easy 30-Day Returns",
+  "Free Shipping $75+",
+  "Made to Order",
+  "Thirty-Day Returns",
 ];
 
-const FULL_LINE = MESSAGES.join("  \u00b7  ");
+const FULL_LINE = MESSAGES.join("  /  ");
 
 export function AnnouncementBar() {
   const [index, setIndex] = useState(0);
@@ -22,15 +22,15 @@ export function AnnouncementBar() {
   }, []);
 
   return (
-    <div className="bg-[#141414] border-b border-white/10">
+    <div className="relative z-[60] bg-[#CCFF00] text-[#10100F] border-b-[3px] border-[#10100F]">
       <div className="px-4 py-2 flex items-center justify-center">
         {/* Desktop — all messages on one line */}
-        <p className="hidden sm:block font-body font-medium text-[11px] text-[#7A756E] tracking-[0.15em] text-center uppercase">
+        <p className="hidden sm:block font-body font-bold text-[12px] tracking-[0.12em] text-center uppercase">
           {FULL_LINE}
         </p>
 
         {/* Mobile — cycle messages with instant swap */}
-        <p className="block sm:hidden font-body font-medium text-xs text-[#7A756E] tracking-[0.12em] text-center uppercase">
+        <p className="block sm:hidden font-body font-bold text-xs tracking-[0.1em] text-center uppercase">
           {MESSAGES[index]}
         </p>
       </div>

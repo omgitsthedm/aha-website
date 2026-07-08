@@ -1,7 +1,7 @@
 import type { Product } from "@/lib/utils/types";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.netlify.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.afterhoursagenda.com";
 
 interface ProductJsonLdProps {
   product: Product;

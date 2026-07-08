@@ -43,54 +43,47 @@ export function Collections({ collections }: CollectionsProps) {
   const lined = collections.filter((c) => c.slug in SUBWAY_LINES);
 
   return (
-    <section ref={sectionRef} className="relative z-[2] py-28 md:py-36 px-6">
-      <div className="max-w-3xl mx-auto">
-        {/* NYCTA Sign Panel */}
+    <section ref={sectionRef} className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
+      <div className="mx-auto max-w-5xl">
         <div className="mb-10">
           <div className="mosaic-border" />
           <div className="sign-panel-station">
-            <span className="sign-panel-station-text">Collections</span>
+            <span className="sign-panel-station-text">Drop Index</span>
           </div>
           <div className="mosaic-border" />
         </div>
 
-        {lined.map((col) => {
+        <div className="grid gap-4 md:grid-cols-2">
+        {lined.map((col, i) => {
           const line = SUBWAY_LINES[col.slug];
           const lineColor = line?.color || "#A7A9AC";
 
           return (
-            <div key={col.id} data-row>
+            <div key={col.id} data-row className={i % 2 === 0 ? "rotate-[-0.5deg]" : "rotate-[0.5deg]"}>
               <Link
                 href={`/collections/${col.slug}`}
-                className="group flex items-center gap-5 py-7 hover:bg-surface transition-all duration-300 -mx-4 px-4 border-l-[3px] border-transparent"
+                className="group zine-block flex min-h-[132px] items-center gap-5 px-5 py-5 transition-transform duration-200 hover:-translate-y-1"
                 style={{
-                  // @ts-expect-error -- CSS custom property for hover border
-                  "--line-color": lineColor,
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderLeftColor = lineColor;
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderLeftColor = "transparent";
+                  boxShadow: `8px 8px 0 ${lineColor}`,
                 }}
               >
                 <RouteBadge slug={col.slug} size="lg" />
                 <div className="flex-1 min-w-0">
-                  <span className="font-body text-sm font-medium text-cream group-hover:text-cream transition-colors duration-300">
+                  <span className="font-display text-2xl font-black uppercase leading-none tracking-[-0.05em] text-cream transition-colors duration-300 group-hover:text-[#CCFF00]">
                     {col.name}
                   </span>
-                  <span className="block font-body text-xs text-muted mt-1 truncate">
+                  <span className="mt-2 block font-body text-sm font-bold leading-snug text-muted">
                     {col.description}
                   </span>
                 </div>
-                <span className="font-body text-xs font-medium text-muted group-hover:text-cream transition-all duration-300 group-hover:translate-x-1">
-                  Shop &rarr;
+                <span className="zine-sticker hidden bg-[#E9E1D4] md:inline-flex">
+                  Shop
                 </span>
               </Link>
-              <div className="w-full h-px bg-cream/[0.12]" />
             </div>
           );
         })}
+        </div>
       </div>
     </section>
   );

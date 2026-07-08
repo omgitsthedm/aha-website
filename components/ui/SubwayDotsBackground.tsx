@@ -3,22 +3,22 @@
 import { useRef, useEffect, useCallback } from "react";
 import { gsap } from "@/lib/gsap";
 
-// MTA palette — the 8 iconic line colors
-const MTA_COLORS = [
-  "#EE352E", // Red (1/2/3)
-  "#2850AD", // Blue (A/C/E)
-  "#FF6319", // Orange (B/D/F/M)
-  "#00933C", // Green (4/5/6)
-  "#FCCC0A", // Yellow (N/Q/R/W)
-  "#B933AD", // Purple (7)
-  "#6CBE45", // Lime (G)
-  "#A7A9AC", // Gray (S)
+// Blacklight registration marks for the retro-grunge storefront
+const MARK_COLORS = [
+  "#39FF14",
+  "#BF00FF",
+  "#FF006E",
+  "#00FFFF",
+  "#FFAA00",
+  "#FF7F00",
+  "#CCFF00",
+  "#B5A642",
 ];
 
 interface Dot {
   x: number;
   y: number;
-  radius: number;
+  size: number;
   color: string;
   opacity: number;
   speed: number;
@@ -146,9 +146,9 @@ function createDot(pathCount: number): Dot {
   return {
     x: 0,
     y: 0,
-    radius: 4 + Math.random() * 4, // 4-8px
-    color: MTA_COLORS[Math.floor(Math.random() * MTA_COLORS.length)],
-    opacity: 0.3 + Math.random() * 0.3, // 0.3-0.6
+    size: 5 + Math.random() * 5,
+    color: MARK_COLORS[Math.floor(Math.random() * MARK_COLORS.length)],
+    opacity: 0.26 + Math.random() * 0.24,
     speed: 0.0002 + Math.random() * 0.0008, // progress per frame (0.0002-0.001)
     progress: Math.random(), // random start position on path
     pathIndex,
@@ -242,24 +242,21 @@ export function SubwayDotsBackground() {
           dot.y = pos.y;
         }
 
-        // Draw dot with radial gradient glow
-        const gradient = ctx.createRadialGradient(
-          dot.x,
-          dot.y,
-          0,
-          dot.x,
-          dot.y,
-          dot.radius * 2.5
-        );
-        gradient.addColorStop(0, dot.color);
-        gradient.addColorStop(0.4, dot.color);
-        gradient.addColorStop(1, "transparent");
-
+        // Draw hard-edged print registration marks. No glow or bokeh.
+        ctx.save();
         ctx.globalAlpha = dot.opacity;
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(dot.x, dot.y, dot.radius * 2.5, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.translate(dot.x, dot.y);
+        ctx.rotate(((dot.pathIndex % 5) - 2) * 0.08);
+        ctx.fillStyle = dot.color;
+        ctx.fillRect(-dot.size / 2, -dot.size / 2, dot.size, dot.size);
+        ctx.strokeStyle = "#10100F";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(-dot.size / 2, -dot.size / 2, dot.size, dot.size);
+        if (dot.size > 7) {
+          ctx.fillRect(-dot.size * 0.9, -1, dot.size * 1.8, 2);
+          ctx.fillRect(-1, -dot.size * 0.9, 2, dot.size * 1.8);
+        }
+        ctx.restore();
       });
 
       ctx.globalAlpha = 1;

@@ -10,7 +10,7 @@ export function WhiteBand({ strong = false, dark = false, className = "" }: Whit
     return (
       <div
         className={`w-full ${className}`}
-        style={{ borderBottom: strong ? "2px solid #E8E4DE" : "2px solid rgba(232, 228, 222, 0.15)" }}
+        style={{ borderBottom: strong ? "4px solid #E9E1D4" : "3px solid rgba(233, 225, 212, 0.55)" }}
         role="separator"
       />
     );

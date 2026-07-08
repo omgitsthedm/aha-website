@@ -13,35 +13,35 @@ export default function OrderConfirmedPage() {
   }, [clearCart]);
 
   return (
-    <div className="pt-24 pb-16 px-6">
+    <div className="pt-28 pb-16 px-6">
       <div className="max-w-2xl mx-auto text-center">
-        <div className="mb-8">
-          <span className="inline-block text-4xl mb-4">✓</span>
-          <h1 className="font-display font-bold text-chapter mb-4">
+        <div className="zine-block zine-block-lime p-6 md:p-10 mb-8 -rotate-1">
+          <span className="zine-sticker mb-5">AHA ORDER SLIP</span>
+          <h1 className="font-display font-black text-chapter text-[#10100F] mb-4 misprint">
             Order Confirmed
           </h1>
-          <p className="font-body text-muted leading-relaxed">
+          <p className="font-body text-[#10100F] leading-relaxed max-w-xl mx-auto">
             Thank you for your order. Your pieces are being made just for you.
             You&apos;ll receive a confirmation email with tracking details once your
             order ships.
           </p>
         </div>
 
-        <div className="bg-surface border border-border rounded-sm p-8 mb-8">
-          <h2 className="font-display font-bold text-sm uppercase tracking-[0.1em] mb-4">
+        <div className="zine-block p-6 md:p-8 mb-8 text-left">
+          <h2 className="font-display font-black text-sm uppercase tracking-[0.1em] text-neon-cyan mb-5">
             What Happens Next
           </h2>
-          <div className="space-y-4 font-body text-sm text-cream/70 leading-relaxed text-left">
+          <div className="space-y-4 font-body text-sm text-cream leading-relaxed">
             <div className="flex gap-4">
-              <span className="text-[#FCCC0A] font-mono font-bold">01</span>
-              <p>Your order is sent to production. Every piece is made to order — no mass production.</p>
+              <span className="text-neon-lime font-mono font-bold">01</span>
+              <p>Your order is sent to production. Every piece is made to order, with no mass production.</p>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#FCCC0A] font-mono font-bold">02</span>
-              <p>Production takes 2–5 business days. Quality checked before it ships.</p>
+              <span className="text-neon-lime font-mono font-bold">02</span>
+              <p>Production takes 2 to 5 business days. Quality checked before it ships.</p>
             </div>
             <div className="flex gap-4">
-              <span className="text-[#FCCC0A] font-mono font-bold">03</span>
+              <span className="text-neon-lime font-mono font-bold">03</span>
               <p>You&apos;ll get a shipping confirmation with tracking info via email.</p>
             </div>
           </div>
@@ -49,9 +49,9 @@ export default function OrderConfirmedPage() {
 
         <Link
           href="/shop"
-          className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] hover:brightness-110 transition-all"
+          className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] transition-all hover:-translate-y-1"
         >
-          Continue Shopping &rarr;
+          Continue Shopping
         </Link>
       </div>
     </div>

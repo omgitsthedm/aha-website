@@ -114,7 +114,7 @@ export function AddToCartModal({
       {/* Backdrop */}
       <div
         ref={backdropRef}
-        className="fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 z-[9999] bg-[#10100F]/78 backdrop-blur-sm"
         onClick={handleClose}
       />
 
@@ -125,20 +125,17 @@ export function AddToCartModal({
           role="dialog"
           aria-modal="true"
           aria-label="Item added to bag"
-          className="bg-void border border-cream/[0.12] w-full max-w-[480px] max-h-[90vh] overflow-y-auto pointer-events-auto shadow-2xl"
+          className="zine-block max-h-[90vh] w-full max-w-[520px] overflow-y-auto pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header — NYCTA sign panel */}
           <div className="sign-panel">
             <span className="sign-panel-text">Added to Bag</span>
             <button
               onClick={handleClose}
-              className="text-[#E8E4DE]/60 hover:text-[#E8E4DE] transition-colors p-1"
+              className="min-h-11 border-[3px] border-[#E9E1D4] px-3 font-body text-xs font-bold uppercase text-[#E9E1D4] transition-colors hover:bg-[#E9E1D4] hover:text-[#10100F]"
               aria-label="Close"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
+              Close
             </button>
           </div>
           <WhiteBand />
@@ -147,43 +144,40 @@ export function AddToCartModal({
           <div className="px-6 py-5">
             <div className="flex gap-4 items-start">
               {addedItem.image && (
-                <div className="relative w-16 h-16 bg-surface overflow-hidden flex-shrink-0 border border-cream/[0.08]">
+                <div className="relative w-16 h-16 bg-surface overflow-hidden flex-shrink-0 border-[3px] border-[#E9E1D4]">
                   <Image
                     src={addedItem.image}
                     alt={addedItem.name}
                     fill
                     unoptimized={isPrintfulImage(addedItem.image)}
-                    className={isPrintfulImage(addedItem.image) ? "object-contain" : "object-cover"}
+                    className={isPrintfulImage(addedItem.image) ? "object-contain" : "object-cover xerox-image"}
                     sizes="64px"
                   />
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <h3 className="font-body font-medium text-sm text-cream truncate">
+                <h3 className="font-display text-xl font-black uppercase leading-none tracking-[-0.04em] text-cream truncate">
                   {addedItem.name}
                 </h3>
-                <p className="font-body text-xs text-muted mt-0.5">
+                <p className="font-body text-xs text-muted mt-1 font-bold uppercase">
                   {addedItem.variationName}
                 </p>
-                <p className="font-mono text-sm text-cream mt-1">
+                <p className="font-mono text-sm text-cream mt-1 font-bold">
                   {addedItem.priceFormatted}
                 </p>
               </div>
-              {/* Green checkmark */}
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00933C" strokeWidth="2.5">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
+              <div className="zine-sticker flex-shrink-0 bg-[#39FF14]">
+                In
               </div>
             </div>
           </div>
 
-          {/* Related products — Mini Subway Poster Cards */}
+          {/* Related products */}
           {suggested.length > 0 && (
             <>
               <WhiteBand />
               <div className="px-6 py-5">
-                <p className="font-body font-bold text-[10px] text-muted uppercase tracking-[0.2em] mb-4">
+                <p className="font-display text-2xl font-black uppercase leading-none tracking-[-0.05em] text-cream mb-4">
                   Complete the Look
                 </p>
                 <div className="grid grid-cols-3 gap-3">
@@ -204,7 +198,7 @@ export function AddToCartModal({
                             className={`${
                               isPrintfulImage(product.images[0])
                                 ? "object-contain"
-                                : "object-cover"
+                                : "object-cover xerox-image"
                             } transition-transform duration-500 group-hover:scale-105`}
                             sizes="140px"
                           />
@@ -214,10 +208,10 @@ export function AddToCartModal({
 
                         {/* Mini poster scrim */}
                         <div className="subway-poster-mini-scrim">
-                          <h4 className="font-display font-bold text-[9px] text-[#E8E4DE] uppercase tracking-[0.04em] truncate">
+                          <h4 className="font-display font-bold text-[9px] text-[#E9E1D4] uppercase tracking-[0.04em] truncate">
                             {product.name}
                           </h4>
-                          <p className="font-mono text-[10px] font-semibold text-[#FCCC0A] mt-0.5">
+                          <p className="font-mono text-[10px] font-semibold text-[#CCFF00] mt-0.5">
                             {product.priceFormatted}
                           </p>
                         </div>
@@ -234,15 +228,15 @@ export function AddToCartModal({
           <div className="px-6 py-5 flex gap-3">
             <button
               onClick={handleClose}
-              className="flex-1 py-3 border border-cream/30 font-body font-bold text-xs text-cream uppercase tracking-[0.1em] hover:border-cream hover:bg-cream/[0.04] transition-all duration-300"
+              className="flex-1 py-3 border-[3px] border-[#E9E1D4] font-body font-bold text-xs text-cream uppercase tracking-[0.1em] hover:bg-[#E9E1D4] hover:text-[#10100F] transition-all duration-300"
             >
               Keep Shopping
             </button>
             <button
               onClick={handleViewBag}
-              className="flex-1 py-3 metrocard-gradient font-body font-bold text-xs uppercase tracking-[0.1em] hover:brightness-110 transition-all duration-300"
+              className="flex-1 py-3 metrocard-gradient font-body font-bold text-xs uppercase tracking-[0.1em] transition-transform duration-300 hover:-translate-y-1"
             >
-              View Bag &rarr;
+              View Bag
             </button>
           </div>
         </div>
