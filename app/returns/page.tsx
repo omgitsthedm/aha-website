@@ -1,3 +1,5 @@
+import { RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
+
 export const metadata = {
   title: "Returns | After Hours Agenda",
   description: "Return policy for After Hours Agenda orders.",
@@ -11,7 +13,8 @@ export default function ReturnsPage() {
         <div className="space-y-6 font-body text-cream/80 leading-relaxed">
           <div className="zine-block p-6">
             <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">30-Day Return Policy</h2>
-            <p className="font-bold">Not feeling it? No problem. We accept returns within <strong className="text-cream">30 days</strong> of delivery. Items must be unworn, unwashed, and in original condition with tags attached.</p>
+            <p className="font-bold">Not feeling it? No problem. We accept returns within <strong className="text-cream">{RETURNS_WINDOW}</strong> of delivery. Items must be unworn, unwashed, and in original condition with tags attached.</p>
+            <p className="mt-3 font-bold">{RETURNS_SUMMARY}</p>
           </div>
           <div className="zine-block p-6">
             <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">How to Return</h2>
