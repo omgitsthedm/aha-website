@@ -17,6 +17,40 @@ const LEGAL_LINKS = [
   { label: "Terms", href: "/terms" },
 ];
 
+const SOCIAL_LINKS = [
+  { label: "Instagram", href: "https://instagram.com/afterhoursagenda", type: "instagram" as const },
+  { label: "TikTok", href: "https://tiktok.com/@afterhoursagenda", type: "tiktok" as const },
+  { label: "Email", href: "mailto:hello@afterhoursagenda.com", type: "mail" as const },
+];
+
+function SocialIcon({ type }: { type: "instagram" | "tiktok" | "mail" }) {
+  if (type === "instagram") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" strokeLinejoin="miter">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="12" cy="12" r="4" />
+        <path d="M17.5 6.5h.01" />
+      </svg>
+    );
+  }
+
+  if (type === "tiktok") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" strokeLinejoin="miter">
+        <path d="M14 3v11.2a4.2 4.2 0 1 1-4-4.2" />
+        <path d="M14 6.2c1.2 1.8 2.9 2.9 5 3.2" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" strokeLinejoin="miter">
+      <path d="M4 6h16v12H4z" />
+      <path d="m4 7 8 6 8-6" />
+    </svg>
+  );
+}
+
 export function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -28,7 +62,7 @@ export function Footer() {
         <div className="mb-10 grid gap-6 lg:grid-cols-[1.35fr_0.8fr_0.8fr]">
           <div className="zine-block-hot zine-cut p-6 md:p-8">
             <div className="mb-6 flex items-center gap-4">
-              <span className="flex h-14 w-14 items-center justify-center border-[3px] border-[#10100F] bg-[#CCFF00]">
+              <span className="flex h-14 w-14 items-center justify-center border-[3px] border-[#10100F] bg-[#CCFF00] shadow-[5px_5px_0_#BF00FF]">
                 <Image
                   src="/brand/sheep-head.svg"
                   alt=""
@@ -41,9 +75,9 @@ export function Footer() {
                 Everything is after hours
               </p>
             </div>
-            <p className="max-w-2xl font-body text-base font-bold leading-relaxed text-[#10100F]">
-              Graphic tees, noisy color, anti-corporate attitude, and pieces
-              made only after somebody actually wants one.
+            <p className="max-w-2xl font-body text-base font-black leading-relaxed text-[#10100F]">
+              Graphic tees, noisy color, anti-corporate attitude, hard borders,
+              and pieces made only after somebody actually wants one.
             </p>
           </div>
 
@@ -69,36 +103,26 @@ export function Footer() {
             <h2 className="mb-5 font-display text-3xl font-black uppercase leading-none tracking-[-0.05em]">
               Contact
             </h2>
-            <ul className="grid gap-3">
-              <li>
+            <a
+              href="mailto:hello@afterhoursagenda.com"
+              className="mb-5 block break-all font-body text-sm font-bold text-muted underline decoration-[#00FFFF] decoration-2 underline-offset-4 transition-colors hover:text-[#00FFFF]"
+            >
+              hello@afterhoursagenda.com
+            </a>
+            <div className="flex flex-wrap gap-3" aria-label="Social links">
+              {SOCIAL_LINKS.map((link) => (
                 <a
-                  href="mailto:hello@afterhoursagenda.com"
-                  className="break-all font-body text-sm font-bold text-muted underline decoration-[#00FFFF] decoration-2 underline-offset-4 transition-colors hover:text-[#00FFFF]"
+                  key={link.label}
+                  href={link.href}
+                  target={link.href.startsWith("http") ? "_blank" : undefined}
+                  rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  aria-label={link.label}
+                  className="inline-flex h-12 w-12 items-center justify-center border-[3px] border-[#E9E1D4] bg-[#15110F] text-[#E9E1D4] shadow-[5px_5px_0_#FF006E] transition-all duration-200 hover:-translate-y-1 hover:bg-[#CCFF00] hover:text-[#10100F]"
                 >
-                  hello@afterhoursagenda.com
+                  <SocialIcon type={link.type} />
                 </a>
-              </li>
-              <li>
-                <a
-                  href="https://instagram.com/afterhoursagenda"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-body text-sm font-bold uppercase text-muted underline decoration-[#FF006E] decoration-2 underline-offset-4 transition-colors hover:text-[#FF006E]"
-                >
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://tiktok.com/@afterhoursagenda"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-body text-sm font-bold uppercase text-muted underline decoration-[#BF00FF] decoration-2 underline-offset-4 transition-colors hover:text-[#BF00FF]"
-                >
-                  TikTok
-                </a>
-              </li>
-            </ul>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -128,7 +152,7 @@ export function Footer() {
           </div>
 
           <p className="font-body text-xs font-bold uppercase tracking-[0.08em] text-muted">
-            Copyright {new Date().getFullYear()} After Hours Agenda
+            Copyright 2026 After Hours Agenda
           </p>
 
           <button
