@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "verify:netlify-site": "bash ops/netlify-target-guard.sh site",
+    "verify:netlify-live": "bash ops/netlify-target-guard.sh live"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

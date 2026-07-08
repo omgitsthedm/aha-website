@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.netlify.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.afterhoursagenda.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages

@@ -82,7 +82,7 @@ export async function POST(request: Request) {
 
     const idempotencyKey = crypto.randomUUID();
     // Always use our own redirect URL — never accept from client (prevents open redirect)
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.netlify.app";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.afterhoursagenda.com";
     const redirectUrl = `${siteUrl}/order-confirmed`;
 
     const response = await squareRequest<PaymentLinkResponse>(

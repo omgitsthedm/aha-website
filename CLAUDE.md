@@ -109,7 +109,11 @@ styles/          → Global styles
 ---
 
 ## Deployment
-- Deploys to **Netlify** via git push.
+- Deploys to **Netlify** project `afterhoursagenda`, site id `275b4115-16bf-42fb-9b36-6bce9bb93608`.
+- Do not deploy by site name alone. Before any deploy, run `npm run verify:netlify-site`.
+- Until Netlify Git linking is repaired, approved production restores must use the exact site id:
+  `netlify deploy --prod --site 275b4115-16bf-42fb-9b36-6bce9bb93608`.
+- After any production deploy, run `npm run verify:netlify-live` and confirm the live page contains After Hours Agenda content and no wrong-site content.
 - `netlify.toml` is configured — don't modify without good reason.
 - Build command: `next build`
 - Environment variables must be set in Netlify dashboard (never committed).

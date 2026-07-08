@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "premium", "made to order", "New York City", "streetwear brand",
   ],
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.netlify.app"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.afterhoursagenda.com"
   ),
   openGraph: {
     title: "After Hours Agenda",
