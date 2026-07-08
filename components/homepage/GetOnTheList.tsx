@@ -52,31 +52,30 @@ export function GetOnTheList() {
   };
 
   return (
-    <section ref={sectionRef} className="relative z-[2] subway-tiles-dark py-24 md:py-32 px-6 bg-[#141414]">
+    <section ref={sectionRef} className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
       <WhiteBand dark />
 
-      <div className="max-w-lg mx-auto py-8">
-        {/* NYCTA Sign Panel */}
+      <div className="mx-auto max-w-2xl py-8">
         <div className="mb-12">
           <div className="mosaic-border" />
           <div className="sign-panel-station justify-center">
-            <span className="sign-panel-station-text">Stay in the Know</span>
+            <span className="sign-panel-station-text">Get on the List</span>
           </div>
           <div className="mosaic-border" />
         </div>
 
-        <p className="font-body text-sm text-[#7A756E] text-center mb-8 leading-relaxed">
-          New drops, restocks, and stories — straight to your inbox.
+        <p className="mb-8 text-center font-body text-base font-bold leading-relaxed text-[#E9E1D4]">
+          Drop alerts, restocks, and odd little dispatches. No polished brand noise.
         </p>
 
-        <div ref={formRef} className="text-center">
+        <div ref={formRef} className="zine-block p-5 text-center md:p-8">
           {submitted ? (
             <div className="flex justify-center py-8">
               <SplitFlap value="SUBSCRIBED" fontSize="1.5rem" />
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
-              <label htmlFor="newsletter-email" className="sr-only">
+              <label htmlFor="newsletter-email" className="mb-3 block text-left font-body text-xs font-bold uppercase tracking-[0.08em] text-[#CCFF00]">
                 Email address
               </label>
               <input
@@ -84,17 +83,17 @@ export function GetOnTheList() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
+                placeholder="name@example.com"
                 aria-describedby={error ? "newsletter-error" : undefined}
                 aria-invalid={error ? true : undefined}
                 autoComplete="email"
-                className="w-full bg-transparent border-0 border-b border-[#E8E4DE]/20 focus:border-[#FCCC0A] font-body text-sm text-[#E8E4DE] placeholder:text-[#7A756E]/60 focus:outline-none transition-all duration-500 py-4"
+                className="min-h-12 w-full border-[3px] border-[#E9E1D4] bg-[#10100F] px-4 py-3 font-body text-base font-bold text-[#E9E1D4] placeholder:text-[#A9A093] focus:border-[#00FFFF] focus:outline-none"
               />
               <button
                 type="submit"
-                className="metrocard-gradient px-8 py-3 font-body text-xs font-bold tracking-[0.15em] mt-8 hover:brightness-110 transition-all uppercase min-h-[44px]"
+                className="metrocard-gradient mt-8 min-h-12 px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.12em] transition-transform hover:-translate-y-1 active:translate-y-0"
               >
-                Join &rarr;
+                Join
               </button>
             </form>
           )}

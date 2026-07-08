@@ -45,29 +45,28 @@ export function EditorialGallery() {
   );
 
   return (
-    <section ref={sectionRef} className="relative z-[2] py-24 md:py-32 px-6">
+    <section ref={sectionRef} className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
       <div className="max-w-7xl mx-auto">
-        {/* NYCTA Sign Panel */}
         <div className="mb-10">
           <div className="mosaic-border" />
           <div className="sign-panel-station">
-            <span className="sign-panel-station-text">In the Wild</span>
+            <span className="sign-panel-station-text">Proof of Life</span>
           </div>
           <div className="mosaic-border" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-12 md:gap-7">
           {photos.map((photo, i) => (
             <div
               key={i}
               data-parallax={photo.row}
-              className={`relative overflow-hidden ${photo.colSpan} ${photo.aspect} border border-cream/[0.12]`}
+              className={`zine-block zine-cut relative overflow-hidden ${photo.colSpan} ${photo.aspect}`}
             >
               <Image
                 src={photo.src}
                 alt={photo.alt}
                 fill
-                className="object-cover"
+                className="xerox-image object-cover"
                 sizes={
                   photo.colSpan === "md:col-span-8"
                     ? "(max-width: 768px) 100vw, 66vw"
@@ -79,13 +78,13 @@ export function EditorialGallery() {
           ))}
         </div>
         <p
-          className="font-body font-medium text-muted uppercase mt-8 text-center"
+          className="mx-auto mt-8 max-w-xl border-[3px] border-[#E9E1D4] bg-[#15110F] px-4 py-3 text-center font-body font-bold uppercase text-[#E9E1D4]"
           style={{
-            fontSize: "clamp(0.5rem, 0.7vw, 0.6rem)",
-            letterSpacing: "0.2em",
+            fontSize: "clamp(0.65rem, 1vw, 0.85rem)",
+            letterSpacing: "0.08em",
           }}
         >
-          Shot on Location &mdash; New York City
+          Shot on location in New York City
         </p>
       </div>
     </section>

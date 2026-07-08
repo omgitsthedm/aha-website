@@ -56,29 +56,30 @@ export function MostWanted({ products }: MostWantedProps) {
   if (products.length === 0) return null;
 
   return (
-    <section ref={sectionRef} className="relative z-[2] py-24 md:py-32 px-6">
+    <section ref={sectionRef} className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
       <div className="max-w-7xl mx-auto">
-        {/* NYCTA Sign Panel with right-aligned action */}
         <div data-sign-panel className="mb-14">
           <div className="mosaic-border" />
           <div className="sign-panel-station">
-            <span className="sign-panel-station-text">Best Sellers</span>
+            <span className="sign-panel-station-text">Most Wanted</span>
             <Link
               href="/shop"
-              className="hidden md:block font-body text-xs font-bold text-[#E8E4DE]/70 hover:text-[#E8E4DE] uppercase tracking-[0.15em] transition-colors"
+              className="hidden min-h-11 items-center border-[3px] border-[#E9E1D4] bg-[#00FFFF] px-4 py-2 font-body text-xs font-bold uppercase tracking-[0.08em] text-[#10100F] shadow-[5px_5px_0_#FF006E] transition-transform hover:-translate-y-0.5 md:inline-flex"
             >
-              View All &rarr;
+              View All
             </Link>
           </div>
           <div className="mosaic-border" />
         </div>
 
-        <div data-grid className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {products.slice(0, 6).map((product) => {
+        <div data-grid className="grid grid-cols-2 gap-5 md:grid-cols-6 md:gap-7">
+          {products.slice(0, 6).map((product, i) => {
             const isPrintful = isPrintfulImage(product.images[0]);
+            const spanClass =
+              i === 0 || i === 5 ? "md:col-span-3" : "md:col-span-2";
 
             return (
-              <div key={product.id} data-card className="product-card-hover">
+              <div key={product.id} data-card className={`product-card-hover ${spanClass}`}>
                 <Link href={`/product/${product.slug}`} className="group block">
                   <div className="subway-poster aspect-[3/4] bg-surface">
                     {product.images[0] ? (
@@ -89,9 +90,9 @@ export function MostWanted({ products }: MostWantedProps) {
                         unoptimized={isPrintful}
                         className={`${
                           isPrintful
-                            ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
-                            : "object-cover"
-                        } transition-transform duration-700 group-hover:scale-[1.03]`}
+                          ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
+                          : "object-cover xerox-image"
+                      } transition-transform duration-700 group-hover:scale-[1.03]`}
                         sizes="(max-width: 768px) 50vw, 33vw"
                       />
                     ) : (
@@ -120,7 +121,7 @@ export function MostWanted({ products }: MostWantedProps) {
             href="/shop"
             className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] hover:brightness-110 transition-all"
           >
-            View All &rarr;
+            View All
           </Link>
         </div>
       </div>

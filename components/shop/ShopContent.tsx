@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product, Collection } from "@/lib/utils/types";
 import { RouteBadge } from "@/components/ui/RouteBadge";
-import { WhiteBand } from "@/components/ui/WhiteBand";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
@@ -103,17 +102,17 @@ export function ShopContent({ products, collections }: ShopContentProps) {
 
   return (
     <div ref={containerRef}>
-      {/* View toggle + filter bar — sign panel for visibility */}
       <div className="mb-6">
         <div className="mosaic-border-thin" />
-        <div className="sign-panel-station py-3 px-4 flex flex-wrap items-center gap-x-6 gap-y-3">
-          {/* View toggle */}
+        <div className="zine-block flex flex-wrap items-center gap-x-5 gap-y-3 px-4 py-4">
           <div className="flex items-center gap-3 mr-4" role="group" aria-label="View mode">
             <button
               onClick={() => handleViewChange("grid")}
               aria-pressed={viewMode === "grid"}
-              className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors min-h-[44px] px-2 ${
-                viewMode === "grid" ? "text-[#E8E4DE]" : "text-[#E8E4DE]/50 hover:text-[#E8E4DE]"
+              className={`min-h-11 border-[3px] px-3 font-body text-xs font-bold uppercase tracking-[0.08em] transition-colors ${
+                viewMode === "grid"
+                  ? "border-[#CCFF00] bg-[#CCFF00] text-[#10100F]"
+                  : "border-[#E9E1D4] text-[#E9E1D4] hover:bg-[#E9E1D4] hover:text-[#10100F]"
               }`}
             >
               Grid
@@ -121,26 +120,28 @@ export function ShopContent({ products, collections }: ShopContentProps) {
             <button
               onClick={() => handleViewChange("index")}
               aria-pressed={viewMode === "index"}
-              className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors min-h-[44px] px-2 ${
-                viewMode === "index" ? "text-[#E8E4DE]" : "text-[#E8E4DE]/50 hover:text-[#E8E4DE]"
+              className={`min-h-11 border-[3px] px-3 font-body text-xs font-bold uppercase tracking-[0.08em] transition-colors ${
+                viewMode === "index"
+                  ? "border-[#00FFFF] bg-[#00FFFF] text-[#10100F]"
+                  : "border-[#E9E1D4] text-[#E9E1D4] hover:bg-[#E9E1D4] hover:text-[#10100F]"
               }`}
             >
               Index
             </button>
           </div>
 
-          {/* Filter — All button */}
           <button
             onClick={() => setActiveFilter("all")}
             aria-pressed={activeFilter === "all"}
-            className={`font-body font-medium text-xs uppercase tracking-[0.1em] transition-colors min-h-[44px] px-2 ${
-              activeFilter === "all" ? "text-[#FCCC0A]" : "text-[#E8E4DE]/50 hover:text-[#E8E4DE]"
+            className={`min-h-11 border-[3px] px-3 font-body text-xs font-bold uppercase tracking-[0.08em] transition-colors ${
+              activeFilter === "all"
+                ? "border-[#FF006E] bg-[#FF006E] text-[#E9E1D4]"
+                : "border-[#E9E1D4] text-[#E9E1D4] hover:bg-[#E9E1D4] hover:text-[#10100F]"
             }`}
           >
             All
           </button>
 
-          {/* Filter — RouteBadge per collection */}
           {collections.map((col) => (
             <button
               key={col.id}
@@ -155,14 +156,13 @@ export function ShopContent({ products, collections }: ShopContentProps) {
             </button>
           ))}
 
-          {/* Sort */}
           <div className="ml-auto">
             <label htmlFor="shop-sort" className="sr-only">Sort products by</label>
             <select
               id="shop-sort"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="bg-transparent border-b border-[#E8E4DE]/30 font-body text-xs text-[#E8E4DE]/70 focus:border-[#FCCC0A] focus:outline-none py-1 pr-6 cursor-pointer min-h-[44px]"
+              className="min-h-11 cursor-pointer border-[3px] border-[#E9E1D4] bg-[#10100F] px-3 py-2 font-body text-xs font-bold uppercase text-[#E9E1D4] focus:border-[#00FFFF] focus:outline-none"
             >
               <option value="name">A-Z</option>
               <option value="price-asc">Price: Low</option>
@@ -174,21 +174,22 @@ export function ShopContent({ products, collections }: ShopContentProps) {
       </div>
 
       {/* Product count */}
-      <p className="font-body text-[11px] text-muted mb-6">
+      <p className="font-body text-xs font-bold uppercase tracking-[0.08em] text-muted mb-6">
         {filtered.length} {filtered.length === 1 ? "product" : "products"}
       </p>
 
       {/* GRID VIEW — Subway Poster Cards */}
       {viewMode === "grid" && (
-        <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {filtered.map((product) => {
+        <div ref={gridRef} className="grid grid-cols-2 gap-5 md:grid-cols-6 md:gap-7">
+          {filtered.map((product, i) => {
             const isPrintful = isPrintfulImage(product.images[0]);
+            const spanClass = i % 7 === 0 ? "md:col-span-3" : "md:col-span-2";
 
             return (
               <Link
                 key={product.id}
                 href={`/product/${product.slug}`}
-                className="group block product-card-hover"
+                className={`group block product-card-hover ${spanClass}`}
               >
                 <div className="subway-poster aspect-[3/4] bg-surface">
                   {product.images[0] ? (
@@ -200,7 +201,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
                       className={`${
                         isPrintful
                           ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
-                          : "object-cover"
+                          : "object-cover xerox-image"
                       } transition-transform duration-700 group-hover:scale-[1.03]`}
                       sizes="(max-width: 768px) 50vw, 33vw"
                     />
@@ -233,19 +234,18 @@ export function ShopContent({ products, collections }: ShopContentProps) {
               <div key={product.id}>
                 <Link
                   href={`/product/${product.slug}`}
-                  className="group flex items-center py-4 -mx-4 px-4 hover:bg-surface transition-colors"
+                  className="group zine-block my-3 flex items-center px-4 py-4 transition-transform hover:-translate-y-0.5"
                 >
-                  <span className="font-body font-medium text-sm text-muted group-hover:text-cream flex-1 truncate">
+                  <span className="font-body text-sm font-bold text-muted group-hover:text-[#CCFF00] flex-1 truncate">
                     {product.name}
                   </span>
                   {colSlug && (
                     <RouteBadge slug={colSlug} size="sm" className="mx-4" />
                   )}
-                  <span className="font-mono text-sm text-muted">
+                  <span className="font-mono text-sm font-bold text-cream">
                     {product.priceFormatted}
                   </span>
                 </Link>
-                <WhiteBand />
               </div>
             );
           })}
@@ -255,10 +255,10 @@ export function ShopContent({ products, collections }: ShopContentProps) {
       {/* Empty state */}
       {filtered.length === 0 && (
         <div className="text-center py-24">
-          <p className="font-body text-sm text-muted">No products found</p>
+          <p className="font-body text-sm font-bold text-muted">No products found</p>
           <button
             onClick={() => setActiveFilter("all")}
-            className="mt-4 font-body font-medium text-xs text-cream hover:text-cream transition-colors"
+            className="metrocard-gradient mt-6 px-6 py-3 font-body text-xs font-bold uppercase"
           >
             Clear filter
           </button>

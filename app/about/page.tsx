@@ -7,26 +7,26 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="pt-24 pb-16 px-6">
+    <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
       <div className="max-w-3xl mx-auto">
         <ScrollReveal>
-          <span className="font-mono text-label text-cream uppercase tracking-[0.2em] block mb-3 text-center">
+          <span className="zine-sticker mx-auto mb-5 bg-[#00FFFF]">
             Our Story
           </span>
-          <h1 className="font-display font-bold text-hero text-center mb-8">
+          <h1 className="misprint font-display text-[clamp(4rem,10vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] text-center mb-8">
             ABOUT
           </h1>
         </ScrollReveal>
 
         <ScrollReveal delay={200}>
-          <div className="space-y-8 font-body text-cream/80 leading-relaxed">
+          <div className="zine-block space-y-8 p-5 font-body text-cream/85 leading-relaxed md:p-8">
             <p className="text-lg">
-              After Hours Agenda started in New York City &mdash; built in the hours
+              After Hours Agenda started in New York City, built in the hours
               that matter most, the ones after the world clocks out.
             </p>
 
             <p>
-              We believe the clothes you wear should carry intention. Not just look good &mdash;
+              We believe the clothes you wear should carry intention. Not just look good,
               but mean something. Every collection is built around an idea, a perspective,
               a way of seeing the world that doesn&apos;t follow the crowd.
             </p>
@@ -43,7 +43,7 @@ export default function AboutPage() {
             </p>
 
             <p>
-              Every piece is made to order &mdash; printed on premium blanks and shipped
+              Every piece is made to order, printed on premium blanks and shipped
               directly to you. No overproduction, no waste, no compromises. Quality
               streetwear that&apos;s worth the wait.
             </p>

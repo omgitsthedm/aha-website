@@ -36,7 +36,7 @@ export function CartDrawer() {
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[9999] bg-[#10100F]/78 backdrop-blur-sm transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={toggleCart}
@@ -47,7 +47,7 @@ export function CartDrawer() {
         role="dialog"
         aria-modal="true"
         aria-label="Shopping bag"
-        className={`fixed top-0 right-0 z-[9999] h-full w-full max-w-md bg-void border-l border-border transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed top-0 right-0 z-[9999] h-full w-full max-w-md border-l-[5px] border-[#E9E1D4] bg-[#10100F] transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -55,15 +55,13 @@ export function CartDrawer() {
           {/* Header */}
           <div className="px-6 py-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-body font-bold text-lg uppercase tracking-[0.1em]">Your Bag</h2>
+              <h2 className="font-display text-4xl font-black uppercase leading-none tracking-[-0.06em]">Your Bag</h2>
               <button
                 onClick={toggleCart}
-                className="text-muted hover:text-cream transition-colors p-1"
+                className="min-h-11 border-[3px] border-[#E9E1D4] px-3 font-body text-xs font-bold uppercase text-muted transition-colors hover:bg-[#E9E1D4] hover:text-[#10100F]"
                 aria-label="Close cart"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
+                Close
               </button>
             </div>
             <WhiteBand />
@@ -78,40 +76,40 @@ export function CartDrawer() {
                 </p>
                 <button
                   onClick={toggleCart}
-                  className="font-body font-medium text-sm text-cream hover:text-cream/70 transition-colors uppercase tracking-[0.1em]"
+                  className="metrocard-gradient px-5 py-3 font-body text-xs font-bold uppercase tracking-[0.1em]"
                 >
-                  Start Shopping &rarr;
+                  Start Shopping
                 </button>
               </div>
             ) : (
-              <ul className="divide-y divide-cream/10">
+              <ul className="space-y-4">
                 {items.map((item) => (
                   <li
                     key={item.variationId}
-                    className="flex gap-4 py-6 first:pt-0"
+                    className="zine-block flex gap-4 p-4"
                   >
                     {item.image && (
-                      <div className="relative w-20 h-20 bg-elevated overflow-hidden flex-shrink-0">
+                      <div className="relative w-20 h-20 bg-elevated overflow-hidden flex-shrink-0 border-[3px] border-[#E9E1D4]">
                         <Image
                           src={item.image}
                           alt={item.name}
                           fill
                           unoptimized={isPrintfulImage(item.image)}
-                          className={isPrintfulImage(item.image) ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]" : "object-cover"}
+                          className={isPrintfulImage(item.image) ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]" : "object-cover xerox-image"}
                           sizes="80px"
                         />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-body truncate">{item.name}</h3>
-                      <p className="text-xs text-muted mt-0.5">{item.variationName}</p>
-                      <p className="font-mono text-sm mt-1">{item.priceFormatted}</p>
+                      <h3 className="truncate font-display text-lg font-black uppercase leading-none tracking-[-0.04em]">{item.name}</h3>
+                      <p className="text-xs text-muted mt-1 font-bold uppercase">{item.variationName}</p>
+                      <p className="font-mono text-sm mt-1 font-bold">{item.priceFormatted}</p>
                       <div className="flex items-center gap-3 mt-2">
                         <button
                           onClick={() =>
                             updateQuantity(item.variationId, item.quantity - 1)
                           }
-                          className="w-11 h-11 flex items-center justify-center border border-cream/15 font-mono text-sm text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
+                          className="w-11 h-11 flex items-center justify-center border-[3px] border-[#E9E1D4] font-mono text-sm font-bold text-muted hover:bg-[#E9E1D4] hover:text-[#10100F] transition-all duration-200"
                           aria-label={`Decrease quantity of ${item.name}`}
                         >
                           &minus;
@@ -123,14 +121,14 @@ export function CartDrawer() {
                           onClick={() =>
                             updateQuantity(item.variationId, item.quantity + 1)
                           }
-                          className="w-11 h-11 flex items-center justify-center border border-cream/15 font-mono text-sm text-muted hover:border-cream/40 hover:text-cream transition-all duration-200 rounded-sm"
+                          className="w-11 h-11 flex items-center justify-center border-[3px] border-[#E9E1D4] font-mono text-sm font-bold text-muted hover:bg-[#E9E1D4] hover:text-[#10100F] transition-all duration-200"
                           aria-label={`Increase quantity of ${item.name}`}
                         >
                           +
                         </button>
                         <button
                           onClick={() => removeItem(item.variationId)}
-                          className="ml-auto font-body font-medium text-xs text-muted hover:text-line-red transition-colors"
+                          className="ml-auto font-body font-bold text-xs text-muted hover:text-[#FF006E] transition-colors uppercase underline underline-offset-4"
                         >
                           Remove
                         </button>
@@ -162,13 +160,13 @@ export function CartDrawer() {
               <Link
                 href="/cart"
                 onClick={toggleCart}
-                className="metrocard-gradient block w-full py-3 font-body font-bold text-center text-sm tracking-wide hover:brightness-110 transition-all"
+                className="metrocard-gradient block w-full py-3 font-body font-bold text-center text-sm tracking-wide transition-transform hover:-translate-y-1"
               >
-                Checkout &rarr;
+                Checkout
               </Link>
               {/* Trust line */}
               <p className="font-body font-medium text-[11px] text-muted text-center pt-3 tracking-[0.1em]">
-                Secure Checkout &middot; Free Shipping $75+ &middot; 30-Day Returns
+                Secure Checkout / Free Shipping $75+ / Thirty-Day Returns
               </p>
             </div>
           )}

@@ -5,7 +5,7 @@ export const metadata = {
 
 const faqs = [
   { q: "How long does shipping take?", a: "Orders take 2-5 business days to produce, then 5-8 business days for US Standard shipping. Express options available at checkout." },
-  { q: "Are your products made to order?", a: "Every piece is made just for you — printed on premium blanks, shipped directly to your door. No overproduction, no waste." },
+  { q: "Are your products made to order?", a: "Every piece is made just for you, printed on premium blanks, and shipped directly to your door. No overproduction, no waste." },
   { q: "What's your return policy?", a: "We offer easy 30-day returns on unworn items in original condition. Need a different size? Exchanges are free." },
   { q: "Do you ship internationally?", a: "Yes, we ship worldwide. International shipping rates are calculated at checkout and typically take 8-16 business days." },
   { q: "What blanks do you use?", a: "We use premium Bella+Canvas, Gildan Heavy, and independent trading company blanks depending on the product. Each is selected for quality, fit, and durability." },
@@ -16,17 +16,17 @@ const faqs = [
 
 export default function FAQPage() {
   return (
-    <div className="pt-24 pb-16 px-6">
+    <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
       <div className="max-w-3xl mx-auto">
-        <h1 className="font-display font-bold text-chapter text-center mb-8">FAQ</h1>
+        <h1 className="misprint font-display text-[clamp(4rem,10vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] text-center mb-8">FAQ</h1>
         <div className="space-y-4">
           {faqs.map((faq, i) => (
-            <details key={i} className="group bg-surface border border-border rounded-sm">
-              <summary className="flex items-center justify-between p-6 cursor-pointer font-display font-bold text-sm hover:text-cream transition-colors">
+            <details key={i} className="group zine-block">
+              <summary className="flex cursor-pointer items-center justify-between p-6 font-display text-xl font-black uppercase leading-none tracking-[-0.04em] transition-colors hover:text-[#CCFF00]">
                 {faq.q}
                 <span className="text-muted group-open:rotate-45 transition-transform duration-200 text-lg">+</span>
               </summary>
-              <div className="px-6 pb-6 font-body text-sm text-cream/70 leading-relaxed">
+              <div className="px-6 pb-6 font-body text-sm font-bold text-cream/80 leading-relaxed">
                 {faq.a}
               </div>
             </details>

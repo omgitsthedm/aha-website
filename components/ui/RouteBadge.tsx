@@ -14,6 +14,16 @@ const sizes = {
   lg: { circle: "w-8 h-8", text: "text-xs", name: "text-sm" },
 };
 
+const DARK_TEXT_COLORS = new Set([
+  "#39FF14",
+  "#00FFFF",
+  "#CCFF00",
+  "#FCCC0A",
+  "#FFAA00",
+  "#FF7F00",
+  "#B5A642",
+]);
+
 export function RouteBadge({
   slug,
   line,
@@ -23,12 +33,15 @@ export function RouteBadge({
 }: RouteBadgeProps) {
   const resolvedLine = line || (slug ? getLineForCollection(slug) : DEFAULT_LINE);
   const s = sizes[size];
+  const textColor = DARK_TEXT_COLORS.has(resolvedLine.color)
+    ? "#10100F"
+    : "#E9E1D4";
 
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
       <span
         className={`${s.circle} rounded-full inline-flex items-center justify-center font-mono font-medium ${s.text} leading-none flex-shrink-0`}
-        style={{ backgroundColor: resolvedLine.color, color: resolvedLine.color === "#FCCC0A" ? "#141414" : "#FFFFFF" }}
+        style={{ backgroundColor: resolvedLine.color, color: textColor }}
         aria-label={resolvedLine.name}
       >
         {resolvedLine.abbr}

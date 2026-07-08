@@ -32,7 +32,17 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
 
   const line = collection ? getLineForCollection(collection.slug) : null;
   const lineColor = line?.color || "#1A1917";
-  const lineTextColor = line?.color === "#FCCC0A" ? "#141414" : "#FFFFFF";
+  const lineTextColor = [
+    "#39FF14",
+    "#00FFFF",
+    "#CCFF00",
+    "#FCCC0A",
+    "#FFAA00",
+    "#FF7F00",
+    "#B5A642",
+  ].includes(lineColor)
+    ? "#10100F"
+    : "#E9E1D4";
 
   // Check if the product description mentions "limited" or "exclusive"
   const isLimitedOrExclusive =
@@ -106,35 +116,35 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
     : null;
 
   return (
-    <div className="pt-20 pb-20">
+    <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32">
       {/* Breadcrumb navigation */}
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <nav aria-label="Breadcrumb" className="font-body font-medium text-[10px] md:text-[11px] text-muted flex items-center gap-2">
-          <Link href="/shop" className="hover:text-muted transition-colors inline-flex items-center gap-1">
-            <span className="opacity-50">&larr;</span> Shop
+      <div className="max-w-7xl mx-auto py-4">
+        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 font-body text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
+          <Link href="/shop" className="transition-colors hover:text-[#CCFF00]">
+            Shop
           </Link>
           {collection && (
             <>
-              <span className="text-muted/60">&rarr;</span>
+              <span className="text-muted/60">/</span>
               <Link
                 href={`/collections/${collection.slug}`}
-                className="hover:text-muted transition-colors inline-flex items-center gap-1.5"
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-[#CCFF00]"
               >
                 <RouteBadge slug={collection.slug} size="sm" />
                 {collection.name}
               </Link>
             </>
           )}
-          <span className="text-muted/60">&rarr;</span>
+          <span className="text-muted/60">/</span>
           <span className="text-muted/80">{product.name}</span>
         </nav>
       </div>
 
       {/* Product hero */}
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
         {/* Images */}
         <div className="space-y-4">
-          <div className="relative aspect-[3/4] overflow-hidden bg-surface">
+          <div className="zine-block zine-cut relative aspect-[3/4] overflow-hidden bg-surface">
             {product.images[activeImage] ? (
               <Image
                 src={product.images[activeImage]}
@@ -142,14 +152,14 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                 fill
                 unoptimized={isPrintfulImage(product.images[activeImage])}
                 className={`${
-                  isPrintfulImage(product.images[activeImage]) ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]" : "object-cover"
+                  isPrintfulImage(product.images[activeImage]) ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]" : "object-cover xerox-image"
                 } transition-all duration-500 ease-out`}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
             ) : (
               <div className="absolute inset-0 bg-elevated flex items-center justify-center">
-                <span className="font-body font-medium text-sm text-muted">NO IMAGE</span>
+                <span className="font-body text-sm font-bold uppercase text-muted">No image</span>
               </div>
             )}
           </div>
@@ -163,10 +173,10 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                   onClick={() => setActiveImage(i)}
                   aria-label={`View image ${i + 1} of ${product.images.length}`}
                   aria-current={i === activeImage ? "true" : undefined}
-                  className={`relative w-16 h-16 overflow-hidden border-b-2 transition-all duration-300 ${
+                  className={`relative h-16 w-16 overflow-hidden border-[3px] transition-all duration-300 ${
                     i === activeImage
                       ? ""
-                      : "border-transparent hover:border-muted"
+                      : "border-[#E9E1D4]/35 hover:border-[#E9E1D4]"
                   }`}
                   style={
                     i === activeImage
@@ -196,32 +206,27 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
             </div>
           )}
 
-          <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-[3.25rem] leading-[1.05] mb-5 tracking-tight">
+          <h1 className="misprint font-display text-[clamp(3rem,7vw,6rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] mb-6">
             {product.name}
           </h1>
 
           <p
-            className="font-mono text-3xl md:text-[2rem] text-cream mb-8 tracking-wide"
-            style={{ borderLeft: `3px solid ${lineColor}`, paddingLeft: '0.75rem' }}
+            className="mb-8 inline-block border-[4px] bg-[#15110F] px-4 py-3 font-mono text-3xl font-bold tracking-wide text-cream md:text-[2rem]"
+            style={{ borderColor: lineColor, boxShadow: `7px 7px 0 ${lineColor}` }}
           >
             {currentVariation?.priceFormatted || product.priceFormatted}
           </p>
 
           {/* Service Advisory for limited/exclusive products */}
           {isLimitedOrExclusive && (
-            <div className="mb-8 border-l-4 border-[#FCCC0A] bg-[#FCCC0A]/10 px-4 py-3">
-              <div className="flex items-center gap-2 mb-1">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FCCC0A" strokeWidth="2">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                  <line x1="12" y1="9" x2="12" y2="13" />
-                  <line x1="12" y1="17" x2="12.01" y2="17" />
-                </svg>
-                <span className="font-body text-[10px] font-bold text-[#FCCC0A] uppercase tracking-[0.15em]">
+            <div className="zine-paper mb-8 px-4 py-3">
+              <div className="mb-1 flex items-center gap-2">
+                <span className="font-body text-[11px] font-bold text-[#10100F] uppercase tracking-[0.08em]">
                   Limited Release
                 </span>
               </div>
-              <p className="font-body text-[11px] text-[#FCCC0A]/80 leading-relaxed">
-                Limited run. Once it's gone, it's gone.
+              <p className="font-body text-[12px] font-bold leading-relaxed text-[#10100F]">
+                Limited run. Once it&apos;s gone, it&apos;s gone.
               </p>
             </div>
           )}
@@ -229,7 +234,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           {/* Size/Variation selector */}
           {product.variations.length > 1 && (
             <div className="mb-8">
-              <label id="size-label" className="font-body font-medium text-label text-muted uppercase tracking-[0.15em] block mb-3">
+              <label id="size-label" className="font-body font-bold text-label text-muted uppercase tracking-[0.12em] block mb-3">
                 Size
               </label>
               <div className="flex flex-wrap gap-2" role="group" aria-labelledby="size-label">
@@ -238,10 +243,10 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                     key={v.id}
                     onClick={() => setSelectedVariation(v.id)}
                     aria-pressed={v.id === selectedVariation}
-                    className={`px-4 py-2 min-h-[44px] border font-body font-medium text-sm transition-all ${
+                    className={`min-h-[44px] border-[3px] px-4 py-2 font-body text-sm font-bold transition-all ${
                       v.id === selectedVariation
                         ? ""
-                        : "border-border text-muted hover:border-cream hover:text-cream"
+                        : "border-[#E9E1D4] text-muted hover:border-cream hover:text-cream"
                     }`}
                     style={
                       v.id === selectedVariation
@@ -260,15 +265,15 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
             </div>
           )}
 
-          {/* Turnstile "SWIPE TO ADD" button */}
+          {/* Add to bag */}
           <button
             ref={btnRef}
             onClick={handleAddToCart}
-            className="turnstile-btn metrocard-gradient w-full py-5 font-body font-bold text-base tracking-[0.08em] transition-all duration-300 cursor-pointer"
+            className="turnstile-btn metrocard-gradient w-full cursor-pointer py-5 font-body text-base font-bold tracking-[0.08em] transition-all duration-300"
           >
             <span className="relative z-10">
               {addedFeedback ? (
-                <span className="text-green-600">ADDED &#10003;</span>
+                <span className="text-[#10100F]">Added</span>
               ) : (
                 "ADD TO BAG"
               )}
@@ -278,19 +283,14 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           {/* Trust badges */}
           <div className="mt-6 py-6">
             <WhiteBand />
-            <div className="flex items-center gap-3 pt-5 flex-wrap">
-              <span className="font-body font-medium text-[10px] md:text-[11px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <div className="flex flex-wrap items-center gap-3 pt-5">
+              <span className="zine-sticker bg-[#00FFFF]">
                 Secure Checkout
               </span>
-              <span className="text-muted/50 text-[9px]">&bull;</span>
-              <span className="font-body font-medium text-[10px] md:text-[11px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <span className="zine-sticker bg-[#CCFF00]">
                 Free Shipping $75+
               </span>
-              <span className="text-muted/50 text-[9px]">&bull;</span>
-              <span className="font-body font-medium text-[10px] md:text-[11px] text-muted/70 flex items-center gap-1.5 tracking-wide uppercase">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              <span className="zine-sticker bg-[#FFAA00]">
                 Made to Order
               </span>
             </div>
@@ -301,11 +301,11 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
             <div className="mt-10">
               <WhiteBand />
               <div className="pt-8">
-                <h2 className="font-display font-bold text-sm mb-4 text-muted uppercase tracking-wide">
+                <h2 className="font-display font-black text-2xl mb-4 text-cream uppercase tracking-[-0.04em]">
                   About This Piece
                 </h2>
                 <div
-                  className="font-body text-sm text-cream/80 leading-relaxed prose prose-sm max-w-none"
+                  className="font-body text-sm font-bold text-cream/85 leading-relaxed prose prose-sm max-w-none"
                   dangerouslySetInnerHTML={descriptionMarkup}
                 />
               </div>
@@ -314,11 +314,11 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
         </div>
       </div>
 
-      {/* Related products - "NEXT TRAIN ARRIVING" — Subway Poster Cards */}
+      {/* Related products */}
       {related.length > 0 && (
-        <div className="max-w-7xl mx-auto px-6 mt-28">
+        <div className="max-w-7xl mx-auto mt-28">
           <WhiteBand />
-          <div className="sign-panel mb-1">
+          <div className="sign-panel my-2">
             <span className="sign-panel-text">You Might Also Like</span>
           </div>
           <WhiteBand />
@@ -338,8 +338,8 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                         unoptimized={isPrintful}
                         className={`${
                           isPrintful
-                            ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
-                            : "object-cover"
+                          ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
+                            : "object-cover xerox-image"
                         } transition-transform duration-700 group-hover:scale-105`}
                         sizes="(max-width: 768px) 50vw, 25vw"
                       />

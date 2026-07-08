@@ -1,9 +1,21 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { RouteBadge } from "@/components/ui/RouteBadge";
-import { WhiteBand } from "@/components/ui/WhiteBand";
 import { SUBWAY_LINES } from "@/lib/utils/subway-lines";
+
+const SUPPORT_LINKS = [
+  { label: "Shipping", href: "/shipping" },
+  { label: "Returns", href: "/returns" },
+  { label: "Care", href: "/care" },
+  { label: "Size Guide", href: "/size-guide" },
+];
+
+const LEGAL_LINKS = [
+  { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
+];
 
 export function Footer() {
   const scrollToTop = () => {
@@ -11,38 +23,57 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative z-[2] subway-tiles">
-      <WhiteBand strong />
-
-      <div className="max-w-7xl mx-auto px-6 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-          {/* Col 1 — Brand */}
-          <div>
-            <div className="mb-6">
-              <div className="mosaic-border-thin" />
-              <div className="sign-panel-station py-2.5 px-4">
-                <span className="sign-panel-station-text text-[11px]">After Hours Agenda</span>
-              </div>
+    <footer className="relative z-[2] border-t-[5px] border-[#E9E1D4] bg-[#10100F] px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-10 grid gap-6 lg:grid-cols-[1.35fr_0.8fr_0.8fr]">
+          <div className="zine-block-hot zine-cut p-6 md:p-8">
+            <div className="mb-6 flex items-center gap-4">
+              <span className="flex h-14 w-14 items-center justify-center border-[3px] border-[#10100F] bg-[#CCFF00]">
+                <Image
+                  src="/brand/sheep-head.svg"
+                  alt=""
+                  width={34}
+                  height={34}
+                  aria-hidden="true"
+                />
+              </span>
+              <p className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-black uppercase leading-[0.8] tracking-[-0.08em] text-[#10100F]">
+                Everything is after hours
+              </p>
             </div>
-            <p className="text-sm text-muted leading-relaxed">
-              Premium streetwear from New York City. Every piece made
-              to order, every collection with a story to tell.
+            <p className="max-w-2xl font-body text-base font-bold leading-relaxed text-[#10100F]">
+              Graphic tees, noisy color, anti-corporate attitude, and pieces
+              made only after somebody actually wants one.
             </p>
           </div>
 
-          {/* Col 2 — Contact */}
-          <div>
-            <div className="mb-6">
-              <div className="mosaic-border-thin" />
-              <div className="sign-panel-station py-2.5 px-4">
-                <span className="sign-panel-station-text text-[11px]">Contact</span>
-              </div>
-            </div>
-            <ul className="space-y-4">
+          <div className="zine-block p-6">
+            <h2 className="mb-5 font-display text-3xl font-black uppercase leading-none tracking-[-0.05em]">
+              Help
+            </h2>
+            <ul className="grid gap-3">
+              {SUPPORT_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="font-body text-sm font-bold uppercase text-muted underline decoration-[#CCFF00] decoration-2 underline-offset-4 transition-colors hover:text-[#CCFF00]"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="zine-block p-6">
+            <h2 className="mb-5 font-display text-3xl font-black uppercase leading-none tracking-[-0.05em]">
+              Contact
+            </h2>
+            <ul className="grid gap-3">
               <li>
                 <a
                   href="mailto:hello@afterhoursagenda.com"
-                  className="font-body font-medium text-sm text-muted hover:text-cream transition-colors"
+                  className="break-all font-body text-sm font-bold text-muted underline decoration-[#00FFFF] decoration-2 underline-offset-4 transition-colors hover:text-[#00FFFF]"
                 >
                   hello@afterhoursagenda.com
                 </a>
@@ -52,7 +83,7 @@ export function Footer() {
                   href="https://instagram.com/afterhoursagenda"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-body font-medium text-sm text-muted hover:text-cream transition-colors"
+                  className="font-body text-sm font-bold uppercase text-muted underline decoration-[#FF006E] decoration-2 underline-offset-4 transition-colors hover:text-[#FF006E]"
                 >
                   Instagram
                 </a>
@@ -62,96 +93,50 @@ export function Footer() {
                   href="https://tiktok.com/@afterhoursagenda"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-body font-medium text-sm text-muted hover:text-cream transition-colors"
+                  className="font-body text-sm font-bold uppercase text-muted underline decoration-[#BF00FF] decoration-2 underline-offset-4 transition-colors hover:text-[#BF00FF]"
                 >
                   TikTok
                 </a>
               </li>
             </ul>
           </div>
-
-          {/* Col 3 — Collections */}
-          <div>
-            <div className="mb-6">
-              <div className="mosaic-border-thin" />
-              <div className="sign-panel-station py-2.5 px-4">
-                <span className="sign-panel-station-text text-[11px]">Collections</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-4">
-              {Object.values(SUBWAY_LINES).map((line) => (
-                <Link
-                  key={line.slug}
-                  href={`/collections/${line.slug}`}
-                  className="hover:opacity-80 transition-opacity inline-block hover:translate-x-0.5 transition-transform duration-200"
-                >
-                  <RouteBadge slug={line.slug} size="md" showName />
-                </Link>
-              ))}
-            </div>
-          </div>
         </div>
 
-        {/* Sheep SVG */}
-        <div className="flex justify-center mt-16">
-          <svg
-            className="w-20 h-20 opacity-10 text-cream hover-flicker"
-            viewBox="0 0 200 160"
-            fill="currentColor"
-          >
-            <path d="M60 55 C40 50, 25 60, 25 78 C25 96, 35 108, 55 110 L55 140 L65 140 L65 112 L90 114 L90 140 L100 140 L100 114 L125 112 L125 140 L135 140 L135 110 L150 108 L150 140 L160 140 L160 105 C175 98, 180 85, 178 72 C176 58, 165 48, 150 48 C145 42, 135 40, 125 42 C115 36, 100 35, 88 38 C78 34, 65 38, 60 48 Z" />
-            <path d="M25 78 C18 75, 10 68, 8 60 C6 52, 10 44, 18 40 C26 36, 35 38, 40 44 C42 48, 40 55, 35 60 C30 65, 25 72, 25 78 Z" />
-            <ellipse cx="20" cy="54" rx="4" ry="5" fill="#E8E4D8" />
-            <path d="M18 40 C14 32, 8 28, 4 30 C0 32, 2 38, 8 42 Z" />
-          </svg>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-10 pt-10">
-          <WhiteBand strong />
-          <div className="flex items-center justify-between mt-10">
-            {/* Left — Copyright */}
-            <p className="font-body font-medium text-xs text-muted tracking-[0.15em]">
-              &copy; {new Date().getFullYear()} AFTER HOURS AGENDA. ALL RIGHTS RESERVED.
-            </p>
-
-            {/* Center — Back to top */}
-            <button
-              onClick={scrollToTop}
-              className="font-body text-sm text-muted hover:text-cream transition-all duration-200 w-9 h-9 flex items-center justify-center rounded-full hover:ring-1 hover:ring-cream/20"
-              aria-label="Back to top"
+        <div className="mb-10 flex flex-wrap gap-3">
+          {Object.values(SUBWAY_LINES).map((line) => (
+            <Link
+              key={line.slug}
+              href={`/collections/${line.slug}`}
+              className="transition-transform duration-200 hover:-translate-y-0.5"
             >
-              &uarr;
-            </button>
+              <RouteBadge slug={line.slug} size="md" showName />
+            </Link>
+          ))}
+        </div>
 
-            {/* Right — Social icons */}
-            <div className="flex items-center gap-6">
-              <a
-                href="https://instagram.com/afterhoursagenda"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted hover:text-cream transition-colors"
-                aria-label="Instagram"
+        <div className="flex flex-col gap-5 border-t-[3px] border-[#E9E1D4] pt-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-wrap gap-4">
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="font-body text-xs font-bold uppercase text-muted underline underline-offset-4 transition-colors hover:text-cream"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <rect x="2" y="2" width="20" height="20" rx="5" />
-                  <circle cx="12" cy="12" r="5" />
-                  <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" />
-                </svg>
-              </a>
-              <a
-                href="https://tiktok.com/@afterhoursagenda"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted hover:text-cream transition-colors"
-                aria-label="TikTok"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.46V13a8.28 8.28 0 005.58 2.16V11.7a4.84 4.84 0 01-3.02-1.04V6.69h3.02z" />
-                </svg>
-              </a>
-            </div>
+                {link.label}
+              </Link>
+            ))}
           </div>
+
+          <p className="font-body text-xs font-bold uppercase tracking-[0.08em] text-muted">
+            Copyright {new Date().getFullYear()} After Hours Agenda
+          </p>
+
+          <button
+            onClick={scrollToTop}
+            className="min-h-11 border-[3px] border-[#E9E1D4] bg-[#15110F] px-4 py-2 font-body text-xs font-bold uppercase tracking-[0.08em] text-[#E9E1D4] transition-colors hover:bg-[#CCFF00] hover:text-[#10100F]"
+          >
+            Back to Top
+          </button>
         </div>
       </div>
     </footer>

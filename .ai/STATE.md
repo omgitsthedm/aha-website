@@ -13,9 +13,9 @@
 
 ## Current Stamp
 
-- Updated: 2026-06-27
-- Updated By: Claude
-- Basis: Read-only live/deploy verification pass (public HEAD/GET only); live URL confirmed from repo-evidenced source + observed
+- Updated: 2026-07-08
+- Updated By: Codex
+- Basis: Local storefront redesign implementation, lint/build verification, and GitHub feature-branch push prep; no Netlify publish or live commerce QA
 - Git HEAD at onboarding: 23018a0
 
 ## Rules Version
@@ -41,14 +41,9 @@
 
 ## Dirty Repo State
 
-- Branch: main, up to date with `origin/main`
-- Dirty status before AI-Ops onboarding: DIRTY:4 untracked additions only
-- Tracked source modifications before AI-Ops onboarding: none
-- Dirty files recorded, not cleaned or modified:
-  - `components/homepage/SubwayMap.tsx`
-  - `public/brand/mosaic-hero.png`
-  - `CLAUDE.md`
-  - `.claude/`
+- Branch: `feature/retro-grunge-block-overhaul`, based on `backup/consolidation-20260629`
+- Current working set: retro grunge / vibrant block storefront redesign plus lint dependency cleanup, pending local commit/push at this stamp.
+- Prior onboarding dirty files were preserved into the backup branch baseline before this work; no `.env` contents were inspected.
 
 ## Commerce Risk
 
@@ -66,6 +61,8 @@
 - Confirm whether dirty untracked files should be kept, ignored, or committed.
 - Confirm whether AHA needs `RELEASES.md` for product/drop history.
 - Confirm Square/Printful integration boundaries without reading secrets.
+- Production dependency audit still reports Next.js/PostCSS advisories; npm's available automated fix is a breaking upgrade to `next@16.2.10`, so handle as a separate framework migration with Netlify compatibility review.
+- Netlify production publish/live verification was not run for the retro grunge redesign. Feature branch push is not a production approval.
 
 ## Do Not Touch
 
@@ -98,10 +95,11 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 - 2026-06-27: Codex performed initial AHA AI-Ops onboarding from read-only local inventory and local repo inspection. Created `.ai` governance files and did not edit source behavior, deploy, push, run commerce QA, inspect env contents, or modify the pre-existing dirty files.
 - 2026-06-27: AHA SESSION START dry run completed. Generated rules verified against `RULES_HEADER.md` + `RULES_BASE.md` with checksum `4054569368:9046`. Confirmed canonical repo, branch, remote, dirty state, lock, and commerce gates. No source behavior, push, deploy, production QA, checkout/payment/order/fulfillment test, env inspection, dirty-file cleanup, or commerce mutation. AHA AI-Ops onboarding files are ready for local commit.
 - 2026-06-27: Claude ran read-only live/deploy verification (public HEAD/GET only). Verified `afterhoursagenda.netlify.app` → 200 (Netlify Edge) and `www.afterhoursagenda.com` → 200 (Cloudflare-fronted); apex 301→www. Updated Current Live Truth + State Confidence; cleared the live-URL/safe-path QA-PENDING items. NO transactional/commerce QA, no push, no deploy, no env inspection, no dirty-file changes.
+- 2026-07-08: Codex implemented the black-background retro grunge / vibrant block visual overhaul on `feature/retro-grunge-block-overhaul`, covering global tokens, nav/footer, homepage, shop, product detail, cart, modal/drawer, collection/static pages, and order confirmation. Added standard Next 14 lint setup, removed unused `@imgly/background-removal-node`, added a `glob` override for lint tooling, and verified `npm run lint` plus `npm run build`. No checkout/payment/Square/Printful behavior changes, no `.env` inspection, no Netlify publish, and no live transactional QA.
 
 ## Next Agent Directive
 
-AHA AI-Ops onboarding is ready for local commit of governance files only. Continue to treat AHA as Tier 3 high-risk live commerce. Do not edit source behavior, deploy, push, run checkout/payment/order/fulfillment tests, inspect env contents, modify product/inventory/customer/order/fulfillment data, or touch Square/Printful/Netlify live settings without explicit approved scope.
+Continue to treat AHA as Tier 3 high-risk live commerce. The retro grunge redesign may be reviewed from the pushed feature branch/PR. Do not merge to `main`, deploy/publish Netlify, run checkout/payment/order/fulfillment tests, inspect env contents, modify product/inventory/customer/order/fulfillment data, or touch Square/Printful/Netlify live settings without `APPROVE LIVE CHANGE` scoped to that action.
 
 ## Emergency / Bypass Notes
 

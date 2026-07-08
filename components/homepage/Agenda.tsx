@@ -30,54 +30,38 @@ export function Agenda() {
   );
 
   return (
-    <section ref={sectionRef} className="relative z-[2] subway-tiles-dark py-32 md:py-48 px-6 bg-[#141414]">
+    <section ref={sectionRef} className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
       <WhiteBand dark />
 
-      {/* Inner container with inset border for depth */}
-      <div className="max-w-2xl mx-auto py-16 md:py-24 px-8 md:px-16 border border-[#E8E4DE]/[0.04] relative">
-        {/* Subtle corner accents for depth */}
-        <div className="absolute inset-4 border border-[#E8E4DE]/[0.03] pointer-events-none" />
-
-        <div className="text-center relative">
-          {/* Subtle sheep silhouette */}
-          <div data-fade-up className="flex justify-center mb-10">
+      <div className="zine-block-lime zine-cut mx-auto my-10 max-w-5xl px-5 py-12 md:px-12 md:py-16">
+        <div className="relative grid gap-8 md:grid-cols-[0.7fr_1.3fr] md:items-center">
+          <div data-fade-up className="flex justify-center md:justify-start">
             <Image
               src="/brand/sheep-full.svg"
               alt=""
               width={48}
               height={48}
-              className="w-12 h-12 opacity-15"
+              className="h-32 w-32 opacity-80 md:h-44 md:w-44"
               aria-hidden="true"
             />
           </div>
 
-          {/* Top decorative rule — plaque style */}
-          <div data-fade-up className="flex items-center justify-center gap-4 mb-10">
-            <div className="w-12 h-px bg-[#E8E4DE]/15" />
-            <div className="w-1 h-1 rounded-full bg-[#E8E4DE]/10" />
-            <div className="w-12 h-px bg-[#E8E4DE]/15" />
-          </div>
+          <div>
+            <span data-fade-up className="zine-sticker mb-5 bg-[#FF006E] text-[#E9E1D4]">
+              The agenda
+            </span>
+            <h2
+              data-fade-up
+              className="font-display text-[clamp(3rem,7vw,6rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] text-[#10100F]"
+            >
+              Uniform for the restless
+            </h2>
 
-          <h2
-            data-fade-up
-            className="font-display font-bold text-2xl md:text-4xl text-[#E8E4DE] uppercase"
-            style={{ letterSpacing: "0.12em" }}
-          >
-            Made for the After Hours
-          </h2>
-
-          <p data-fade-up className="font-body text-sm md:text-base text-[#7A756E] leading-relaxed mt-8 max-w-lg mx-auto">
-            Born in New York. Made for the hours that matter most — the ones
-            after the world clocks out. Every piece carries intent. Every
-            collection tells a story. This isn't fast fashion. It's fashion
-            with a point of view.
-          </p>
-
-          {/* Bottom decorative rule — plaque style */}
-          <div data-fade-up className="flex items-center justify-center gap-4 mt-10">
-            <div className="w-12 h-px bg-[#E8E4DE]/15" />
-            <div className="w-1 h-1 rounded-full bg-[#E8E4DE]/10" />
-            <div className="w-12 h-px bg-[#E8E4DE]/15" />
+            <p data-fade-up className="mt-7 max-w-2xl font-body text-base font-bold leading-relaxed text-[#10100F] md:text-lg">
+              Built for late walks, basement shows, bad ideas, good books, and
+              anyone who would rather be loud than polished. Every piece starts
+              as a graphic point of view, then gets made to order.
+            </p>
           </div>
         </div>
       </div>
