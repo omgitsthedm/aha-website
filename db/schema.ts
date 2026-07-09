@@ -1,0 +1,193 @@
+// After Hours Agenda — operational schema (Netlify DB / Neon, Drizzle).
+// Managed by Netlify: migrations in netlify/database/migrations auto-apply on deploy.
+// Rules (§14): external IDs stored; purchase-time snapshots; payment vs fulfillment status
+// SEPARATE; raw webhook payloads stored + deduped; no card data; no API tokens; minimize PII.
+import {
+  pgTable, serial, bigserial, bigint, text, integer, boolean, timestamp, jsonb, unique, index,
+} from "drizzle-orm/pg-core";
+
+const cents = (name: string) => integer(name);
+const createdAt = () => timestamp("created_at", { withTimezone: true }).defaultNow().notNull();
+const updatedAt = () => timestamp("updated_at", { withTimezone: true }).defaultNow().notNull();
+
+// ── Catalog (mirror of internal manifest for joins/queries) ──────────────────
+export const products = pgTable("products", {
+  id: text("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  productType: text("product_type").notNull(),
+  status: text("status").notNull(),
+  retailPrice: cents("retail_price").notNull(),
+  currency: text("currency").notNull().default("USD"),
+  dropId: text("drop_id"),
+  dataJson: jsonb("data_json").notNull().default({}),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+});
+
+export const productVariants = pgTable("product_variants", {
+  id: text("id").primaryKey(),
+  productId: text("product_id").notNull().references(() => products.id, { onDelete: "cascade" }),
+  sku: text("sku").notNull().unique(),
+  size: text("size").notNull(),
+  color: text("color"),
+  retailPrice: cents("retail_price").notNull(),
+  currency: text("currency").notNull().default("USD"),
+  status: text("status").notNull(),
+  squareCatalogObjectId: text("square_catalog_object_id"),
+  squareVariationId: text("square_variation_id"),
+  squareLocationId: text("square_location_id"),
+  printfulCatalogProductId: integer("printful_catalog_product_id"),
+  printfulCatalogVariantId: integer("printful_catalog_variant_id"),
+  printfulPlacementsJson: jsonb("printful_placements_json"),
+  costEstimate: cents("cost_estimate"),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+}, (t) => ({ byProduct: index("idx_variants_product").on(t.productId) }));
+
+export const collections = pgTable("collections", {
+  id: text("id").primaryKey(), slug: text("slug").notNull().unique(),
+  title: text("title").notNull(), dataJson: jsonb("data_json").notNull().default({}),
+});
+export const drops = pgTable("drops", {
+  id: text("id").primaryKey(), slug: text("slug").notNull().unique(), title: text("title").notNull(),
+  status: text("status").notNull(), launchDate: timestamp("launch_date", { withTimezone: true }),
+  dataJson: jsonb("data_json").notNull().default({}),
+});
+export const sizeGuides = pgTable("size_guides", {
+  id: text("id").primaryKey(), productType: text("product_type").notNull(), dataJson: jsonb("data_json").notNull().default({}),
+});
+export const lookbookEntries = pgTable("lookbook_entries", {
+  id: text("id").primaryKey(), slug: text("slug").notNull().unique(), dataJson: jsonb("data_json").notNull().default({}),
+});
+
+// ── Mapping tables (glue) ────────────────────────────────────────────────────
+export const squareCatalogMap = pgTable("square_catalog_map", {
+  ahaVariantId: text("aha_variant_id").primaryKey().references(() => productVariants.id, { onDelete: "cascade" }),
+  squareCatalogObjectId: text("square_catalog_object_id"), squareVariationId: text("square_variation_id"),
+  squareLocationId: text("square_location_id"), updatedAt: updatedAt(),
+});
+export const printfulV2VariantMap = pgTable("printful_v2_variant_map", {
+  ahaVariantId: text("aha_variant_id").primaryKey().references(() => productVariants.id, { onDelete: "cascade" }),
+  printfulCatalogProductId: integer("printful_catalog_product_id"), printfulCatalogVariantId: integer("printful_catalog_variant_id"),
+  placementsJson: jsonb("placements_json"), regionAvailabilityJson: jsonb("region_availability_json"), updatedAt: updatedAt(),
+});
+export const printfulV2CatalogSnapshots = pgTable("printful_v2_catalog_snapshots", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  takenAt: timestamp("taken_at", { withTimezone: true }).defaultNow().notNull(), payloadJson: jsonb("payload_json").notNull(),
+});
+
+// ── Customers / carts ────────────────────────────────────────────────────────
+export const customers = pgTable("customers", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  email: text("email").unique(), phone: text("phone"), createdAt: createdAt(),
+});
+export const carts = pgTable("carts", {
+  id: text("id").primaryKey(), customerId: bigint("customer_id", { mode: "number" }).references(() => customers.id),
+  status: text("status").notNull().default("open"), createdAt: createdAt(), updatedAt: updatedAt(),
+});
+export const cartItems = pgTable("cart_items", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  cartId: text("cart_id").notNull().references(() => carts.id, { onDelete: "cascade" }),
+  ahaVariantId: text("aha_variant_id").notNull(), quantity: integer("quantity").notNull(),
+  unitPrice: cents("unit_price").notNull(), createdAt: createdAt(),
+});
+
+// ── Orders (payment vs fulfillment status SEPARATE) ──────────────────────────
+export const orders = pgTable("orders", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  externalOrderNumber: text("external_order_number").notNull().unique(),
+  customerId: bigint("customer_id", { mode: "number" }).references(() => customers.id),
+  email: text("email").notNull(), phone: text("phone"), shippingName: text("shipping_name"),
+  shippingAddressJson: jsonb("shipping_address_json"), billingAddressJson: jsonb("billing_address_json"),
+  currency: text("currency").notNull().default("USD"),
+  subtotalAmount: cents("subtotal_amount").notNull().default(0), shippingAmount: cents("shipping_amount").notNull().default(0),
+  taxAmount: cents("tax_amount").notNull().default(0), discountAmount: cents("discount_amount").notNull().default(0),
+  totalAmount: cents("total_amount").notNull().default(0),
+  paymentStatus: text("payment_status").notNull().default("created"),
+  fulfillmentStatus: text("fulfillment_status").notNull().default("not_started"),
+  customerStatus: text("customer_status").notNull().default("Order received"),
+  squarePaymentId: text("square_payment_id"), squareOrderId: text("square_order_id"),
+  printfulOrderId: text("printful_order_id"), riskStatus: text("risk_status"),
+  createdAt: createdAt(), updatedAt: updatedAt(),
+}, (t) => ({
+  byPayment: index("idx_orders_payment_status").on(t.paymentStatus),
+  byFulfillment: index("idx_orders_fulfillment_status").on(t.fulfillmentStatus),
+}));
+
+export const orderItems = pgTable("order_items", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  orderId: bigint("order_id", { mode: "number" }).notNull().references(() => orders.id, { onDelete: "cascade" }),
+  ahaProductId: text("aha_product_id").notNull(), ahaVariantId: text("aha_variant_id").notNull(),
+  sku: text("sku").notNull(), titleSnapshot: text("title_snapshot").notNull(),
+  sizeSnapshot: text("size_snapshot"), colorSnapshot: text("color_snapshot"),
+  quantity: integer("quantity").notNull(), unitPrice: cents("unit_price").notNull(), lineTotal: cents("line_total").notNull(),
+  squareVariationId: text("square_variation_id"), printfulCatalogVariantId: integer("printful_catalog_variant_id"),
+  printfulPlacementSnapshotJson: jsonb("printful_placement_snapshot_json"), printfulFileSnapshotJson: jsonb("printful_file_snapshot_json"),
+  fulfillmentStatus: text("fulfillment_status").notNull().default("not_started"),
+  createdAt: createdAt(), updatedAt: updatedAt(),
+}, (t) => ({ byOrder: index("idx_order_items_order").on(t.orderId) }));
+
+export const payments = pgTable("payments", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
+  squarePaymentId: text("square_payment_id").unique(), status: text("status").notNull(),
+  amount: cents("amount").notNull(), currency: text("currency").notNull().default("USD"),
+  idempotencyKey: text("idempotency_key").unique(), createdAt: createdAt(),
+});
+export const fulfillments = pgTable("fulfillments", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
+  printfulOrderId: text("printful_order_id"), status: text("status").notNull().default("not_started"),
+  createdAt: createdAt(), updatedAt: updatedAt(),
+});
+export const shipments = pgTable("shipments", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
+  printfulShipmentId: text("printful_shipment_id"), carrier: text("carrier"),
+  trackingNumber: text("tracking_number"), trackingUrl: text("tracking_url"), status: text("status"),
+  shippedAt: timestamp("shipped_at", { withTimezone: true }), deliveredAt: timestamp("delivered_at", { withTimezone: true }),
+  dataJson: jsonb("data_json"),
+});
+
+// ── Growth / retention ───────────────────────────────────────────────────────
+export const restockRequests = pgTable("restock_requests", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  ahaVariantId: text("aha_variant_id").notNull(), email: text("email").notNull(),
+  createdAt: createdAt(), notifiedAt: timestamp("notified_at", { withTimezone: true }),
+}, (t) => ({ uniqReq: unique("uniq_restock").on(t.ahaVariantId, t.email) }));
+export const emailSubscribers = pgTable("email_subscribers", {
+  id: bigserial("id", { mode: "number" }).primaryKey(), email: text("email").notNull().unique(),
+  consent: boolean("consent").notNull().default(true), source: text("source"), createdAt: createdAt(),
+});
+export const smsSubscribers = pgTable("sms_subscribers", {
+  id: bigserial("id", { mode: "number" }).primaryKey(), phone: text("phone").notNull().unique(),
+  consent: boolean("consent").notNull().default(true), source: text("source"), createdAt: createdAt(),
+});
+
+// ── Webhooks / audit / ops ───────────────────────────────────────────────────
+export const webhookEvents = pgTable("webhook_events", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  provider: text("provider").notNull(), eventId: text("event_id"), eventType: text("event_type"),
+  signature: text("signature"), signatureValid: boolean("signature_valid").notNull().default(false),
+  rawPayload: jsonb("raw_payload").notNull(), processingStatus: text("processing_status").notNull().default("received"),
+  dedupeKey: text("dedupe_key").notNull(), processedAt: timestamp("processed_at", { withTimezone: true }), createdAt: createdAt(),
+}, (t) => ({ uniqEvent: unique("uniq_webhook").on(t.provider, t.dedupeKey) }));
+export const auditLog = pgTable("audit_log", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  entityType: text("entity_type").notNull(), entityId: text("entity_id").notNull(), action: text("action").notNull(),
+  oldStatus: text("old_status"), newStatus: text("new_status"), source: text("source"), actor: text("actor"),
+  metadataJson: jsonb("metadata_json"), createdAt: createdAt(),
+});
+export const syncRuns = pgTable("sync_runs", {
+  id: bigserial("id", { mode: "number" }).primaryKey(), kind: text("kind").notNull(), status: text("status").notNull(),
+  startedAt: timestamp("started_at", { withTimezone: true }).defaultNow().notNull(),
+  finishedAt: timestamp("finished_at", { withTimezone: true }), detailJson: jsonb("detail_json"),
+});
+const snapshotTable = (name: string) => pgTable(name, {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  takenAt: timestamp("taken_at", { withTimezone: true }).defaultNow().notNull(), payloadJson: jsonb("payload_json").notNull(),
+});
+export const inventorySnapshots = snapshotTable("inventory_snapshots");
+export const priceSnapshots = snapshotTable("price_snapshots");
+export const productFeedSnapshots = snapshotTable("product_feed_snapshots");

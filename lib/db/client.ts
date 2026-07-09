@@ -1,20 +1,26 @@
-// Thin Postgres access over Netlify DB (Neon serverless HTTP driver).
-// Safe when DATABASE_URL is unset (build/preview without DB) — callers should guard with isDbConfigured().
-// Never store card data or API tokens in the DB. See §14.
+// Drizzle over Netlify DB (Neon serverless HTTP). Connection is injected by Netlify as
+// NETLIFY_DATABASE_URL at runtime; falls back to DATABASE_URL for local/CI. Safe when unset
+// (build/preview without DB) — guard callers with isDbConfigured(). No card data / tokens in DB (§14).
+import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
+import * as schema from "@/db/schema";
 
-import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
-
-let sql: NeonQueryFunction<false, false> | null = null;
+function connectionUrl(): string {
+  return (process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL || "").trim();
+}
 
 export function isDbConfigured(): boolean {
-  return Boolean(process.env.DATABASE_URL?.trim());
+  return Boolean(connectionUrl());
 }
 
-/** Returns the tagged-template SQL function, or throws if the DB is not configured. */
-export function db(): NeonQueryFunction<false, false> {
+let _db: NeonHttpDatabase<typeof schema> | null = null;
+
+/** Drizzle db instance. Throws if the DB is not configured. */
+export function db(): NeonHttpDatabase<typeof schema> {
   if (!isDbConfigured()) {
-    throw new Error("DATABASE_URL is not set — provision Netlify DB (Neon) first. See db/README.md");
+    throw new Error("No NETLIFY_DATABASE_URL / DATABASE_URL — provision Netlify DB (Neon). See db/README.md");
   }
-  if (!sql) sql = neon(process.env.DATABASE_URL as string);
-  return sql;
+  if (!_db) _db = drizzle(connectionUrl(), { schema });
+  return _db;
 }
+
+export { schema };
