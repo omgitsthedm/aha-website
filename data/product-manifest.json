@@ -19251,6 +19251,109 @@
           "sortOrder": 19
         }
       ]
+    },
+    {
+      "ahaProductId": "yikes",
+      "slug": "yikes",
+      "title": "Yikes",
+      "shortDescription": "Yikes",
+      "fullDescription": "Yikes by After Hours Agenda. Printed to order.",
+      "productType": "tee",
+      "collectionIds": [
+        "tees"
+      ],
+      "status": "active",
+      "retailPrice": 2099,
+      "currency": "USD",
+      "fitDescription": "Standard unisex fit — true to size.",
+      "fabricDescription": "Ringspun cotton.",
+      "printMethod": "DTG/DTF",
+      "careInstructions": "Machine wash cold, inside out. Tumble dry low. Do not iron the print. Do not dry clean.",
+      "productionNote": "Made to order and printed just for you. Production takes 2–5 business days before shipping.",
+      "shippingNote": "Free shipping on every order. Delivery includes production time plus carrier transit.",
+      "returnsNote": "Exchanges and returns on unworn items within 30 days. Misprints and defects are always on us.",
+      "sizeGuideId": "sg-tee",
+      "featuredImage": "/products/yikes.webp",
+      "galleryImages": [],
+      "seoTitle": "Yikes — After Hours Agenda",
+      "seoDescription": "Yikes. NYC streetwear, printed to order. Free shipping.",
+      "ogImage": "/products/yikes.webp",
+      "badges": [],
+      "sortPriority": 0,
+      "variants": [
+        {
+          "ahaVariantId": "yikes-white-s",
+          "ahaProductId": "yikes",
+          "sku": "yikes-10252",
+          "size": "S",
+          "color": "White",
+          "retailPrice": 2099,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 0
+        },
+        {
+          "ahaVariantId": "yikes-white-m",
+          "ahaProductId": "yikes",
+          "sku": "yikes-10253",
+          "size": "M",
+          "color": "White",
+          "retailPrice": 2099,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 1
+        },
+        {
+          "ahaVariantId": "yikes-white-l",
+          "ahaProductId": "yikes",
+          "sku": "yikes-10254",
+          "size": "L",
+          "color": "White",
+          "retailPrice": 2099,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 2
+        },
+        {
+          "ahaVariantId": "yikes-white-xl",
+          "ahaProductId": "yikes",
+          "sku": "yikes-10255",
+          "size": "XL",
+          "color": "White",
+          "retailPrice": 2099,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 3
+        },
+        {
+          "ahaVariantId": "yikes-white-2xl",
+          "ahaProductId": "yikes",
+          "sku": "yikes-10256",
+          "size": "2XL",
+          "color": "White",
+          "retailPrice": 2099,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 4
+        },
+        {
+          "ahaVariantId": "yikes-white-3xl",
+          "ahaProductId": "yikes",
+          "sku": "yikes-10257",
+          "size": "3XL",
+          "color": "White",
+          "retailPrice": 2099,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 5
+        }
+      ]
     }
   ]
 }

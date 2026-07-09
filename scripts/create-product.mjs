@@ -26,7 +26,8 @@ if (!specPath || args.indexOf("--spec") === -1) {
 const spec = JSON.parse(readFileSync(specPath, "utf8"));
 
 const PF_TOKEN = process.env.PRINTFUL_API_TOKEN;
-const PF_STORE = process.env.PRINTFUL_STORE_ID;
+// Product creation must target the NATIVE (Manual/API) store — the Square-integrated store blocks it.
+const PF_STORE = process.env.PRINTFUL_NATIVE_STORE_ID || "697873";
 const SQ_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
 const SQ_VER = process.env.SQUARE_API_VERSION || "2024-01-18";
 const SQ_LOC = process.env.SQUARE_LOCATION_ID || "FGKRPYEXNV482";
@@ -49,8 +50,7 @@ async function api(url, opts, label, { fatal = true } = {}) {
 }
 
 async function createPrintful() {
-  // Printful v1 create sync product. NOTE: only works for Manual Order / API stores. Square-integrated
-  // Printful stores block this — products are created via the Printful dashboard / Square sync instead.
+  // Printful v1 create sync product on the NATIVE store (art attached via the file url).
   const body = {
     sync_product: { name: spec.name },
     sync_variants: spec.variants.map((v) => ({
@@ -63,12 +63,7 @@ async function createPrintful() {
     method: "POST",
     headers: { Authorization: `Bearer ${PF_TOKEN}`, "X-PF-Store-Id": PF_STORE, "Content-Type": "application/json" },
     body: JSON.stringify(body),
-  }, "Printful create", { fatal: false });
-  if (out?._error) {
-    console.warn(`  ⚠ Printful create unavailable via API for this store (status ${out.status}).`);
-    console.warn("    Square-integrated store: attach the art to this product in the Printful dashboard to enable fulfillment.");
-    return null;
-  }
+  }, "Printful create");
   return out?.result?.id;
 }
 
@@ -127,7 +122,7 @@ async function main() {
   }
   assert(PF_TOKEN && SQ_TOKEN, "PRINTFUL_API_TOKEN + SQUARE_ACCESS_TOKEN required in env");
   const pfId = await createPrintful();
-  if (pfId) console.log(`  ✓ Printful sync product created (id ${pfId})`);
+  console.log(`  ✓ Printful sync product created on native store (id ${pfId}) — art attached`);
   const sqId = await createSquare();
   console.log(`  ✓ Square item created (id ${sqId})`);
   if (sqId && spec.placements[0]?.fileUrl) await attachSquareImage(sqId, spec.placements[0].fileUrl);
@@ -139,10 +134,6 @@ async function main() {
   console.log("\n✓ Live in Square now (storefront picks it up via ISR within ~5 min).");
   console.log("  Commit the updated data/ and push to enable mapping/validation:");
   console.log("    git add data/ && git commit -m 'Add product: " + spec.name + "' && git push");
-  if (!pfId) {
-    console.log("\n  ⚠ Fulfillment: this Square-integrated Printful store can't accept API product creation.");
-    console.log("    Open Printful → your store → this product → attach the art (front) so orders fulfill automatically.");
-  }
 }
 
 main().catch((e) => { console.error("✗ create-product failed:", e.message); process.exit(1); });

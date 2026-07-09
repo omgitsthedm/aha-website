@@ -3873,6 +3873,36 @@
       "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
       "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
       "squareLocationId": "FGKRPYEXNV482"
+    },
+    "yikes-white-s": {
+      "squareCatalogObjectId": "WIICZ6W5POWL4LNTVVATL3BD",
+      "squareVariationId": "46G4YIYKBNEPEVSOZP5N3DIU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "yikes-white-m": {
+      "squareCatalogObjectId": "WIICZ6W5POWL4LNTVVATL3BD",
+      "squareVariationId": "P6PMMNWI7O5C5IMRBRK3BMM7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "yikes-white-l": {
+      "squareCatalogObjectId": "WIICZ6W5POWL4LNTVVATL3BD",
+      "squareVariationId": "XES7H4AP3AFD47EUK6FIG3A7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "yikes-white-xl": {
+      "squareCatalogObjectId": "WIICZ6W5POWL4LNTVVATL3BD",
+      "squareVariationId": "QP4534KM7YDYJBC5HORKIE2Y",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "yikes-white-2xl": {
+      "squareCatalogObjectId": "WIICZ6W5POWL4LNTVVATL3BD",
+      "squareVariationId": "N7J357VAGJHLNJW2Y6ZGXV37",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "yikes-white-3xl": {
+      "squareCatalogObjectId": "WIICZ6W5POWL4LNTVVATL3BD",
+      "squareVariationId": "YNRCR35WQ4GYZBHGEI3FWH7B",
+      "squareLocationId": "FGKRPYEXNV482"
     }
   }
 }

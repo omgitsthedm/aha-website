@@ -21,6 +21,7 @@ interface PrintfulMapEntry {
   printfulCatalogProductId?: number;
   printfulCatalogVariantId?: number;
   printfulSyncVariantId?: number;
+  printfulStoreId?: number;
   printfulRegionAvailability?: string[];
   printfulPlacements?: AhaVariant["printfulPlacements"];
   printfulTechnique?: AhaVariant["printfulTechnique"];

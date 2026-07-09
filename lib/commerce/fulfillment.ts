@@ -37,11 +37,19 @@ export async function startFulfillment(
     .from(orders).where(eq(orders.id, orderId)).limit(1);
   if (existing?.pf) return; // already has a Printful order — don't duplicate
 
-  const items = cart.items
-    .filter((i) => i.printfulSyncVariantId)
-    .map((i) => ({ source: "sync_variant", sync_variant_id: i.printfulSyncVariantId, quantity: i.quantity }));
+  // Group items by the Printful store their variant lives in (Square-integrated vs native/API store).
+  // A cart can mix both → one Printful draft order per store.
+  const defaultStore = Number(process.env.PRINTFUL_STORE_ID) || undefined;
+  const byStore = new Map<number, Array<{ source: string; sync_variant_id: number; quantity: number }>>();
+  for (const i of cart.items) {
+    if (!i.printfulSyncVariantId) continue;
+    const store = i.printfulStoreId || defaultStore;
+    if (!store) continue;
+    if (!byStore.has(store)) byStore.set(store, []);
+    byStore.get(store)!.push({ source: "sync_variant", sync_variant_id: i.printfulSyncVariantId, quantity: i.quantity });
+  }
 
-  if (items.length === 0) {
+  if (byStore.size === 0) {
     // Nothing maps to Printful — route to manual review rather than silently dropping.
     await setFulfillment(orderId, "manual_review", null);
     return;
@@ -55,17 +63,18 @@ export async function startFulfillment(
     email: contact.email,
   };
 
-  const res = await printfulRequest<PrintfulOrderResponse>("/orders", {
-    method: "POST",
-    body: { recipient, order_items: items },
-  });
-  const printfulOrderId = String(res?.data?.id ?? res?.id ?? "");
-  if (!printfulOrderId) throw new Error("Printful draft order returned no id");
-
-  await setFulfillment(orderId, "draft_created", printfulOrderId);
-
-  if (confirmAllowed()) {
-    await printfulRequest(`/orders/${printfulOrderId}/confirmation`, { method: "POST" });
-    await setFulfillment(orderId, "confirmed", printfulOrderId);
+  const createdIds: string[] = [];
+  for (const [store, items] of Array.from(byStore)) {
+    const res = await printfulRequest<PrintfulOrderResponse>("/orders", {
+      method: "POST", storeId: String(store), body: { recipient, order_items: items },
+    });
+    const printfulOrderId = String(res?.data?.id ?? res?.id ?? "");
+    if (!printfulOrderId) throw new Error(`Printful draft order (store ${store}) returned no id`);
+    createdIds.push(printfulOrderId);
+    if (confirmAllowed()) {
+      await printfulRequest(`/orders/${printfulOrderId}/confirmation`, { method: "POST", storeId: String(store) });
+    }
   }
+
+  await setFulfillment(orderId, confirmAllowed() ? "confirmed" : "draft_created", createdIds.join(",") || null);
 }

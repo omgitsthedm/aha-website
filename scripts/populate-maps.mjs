@@ -63,10 +63,13 @@ async function square(path) {
   if (!res.ok) throw new Error(`Square ${path} ${res.status}`);
   return res.json();
 }
-async function printful(path) {
+// Both Printful stores: the Square-integrated store + the native (API) store used for CLI-created products.
+const STORES = Array.from(new Set([PF_STORE, process.env.PRINTFUL_NATIVE_STORE_ID || "697873"].filter(Boolean)));
+
+async function printful(path, storeId = PF_STORE) {
   for (let attempt = 0; attempt < 5; attempt++) {
     const res = await fetch(`https://api.printful.com/v2${path}`, {
-      headers: { Authorization: `Bearer ${PF_TOKEN}`, "X-PF-Store-Id": PF_STORE },
+      headers: { Authorization: `Bearer ${PF_TOKEN}`, "X-PF-Store-Id": storeId },
     });
     if (res.status === 429) { await sleep(3000); continue; }
     if (!res.ok) throw new Error(`Printful ${path} ${res.status}`);
@@ -103,11 +106,12 @@ async function main() {
   // 2) Printful: all sync-products + their sync-variants
   console.log("→ pulling Printful sync-products…");
   const products = new Map(); // productName -> { name, variants: [...] }
+  for (const storeId of STORES) {
   let offset = 0, page;
   do {
-    page = await printful(`/sync-products?limit=100&offset=${offset}`);
+    page = await printful(`/sync-products?limit=100&offset=${offset}`, storeId);
     for (const p of page.data || []) {
-      const variants = await printful(`/sync-products/${p.id}/sync-variants`);
+      const variants = await printful(`/sync-products/${p.id}/sync-variants`, storeId);
       const list = (variants.data || []).filter((v) => !v.is_ignored && v.catalog_variant_id);
       if (!list.length) continue;
       // Match this Printful product to a Square item by normalized name (exact or prefix).
@@ -120,7 +124,7 @@ async function main() {
         const sizeKey = (size || "OS").toUpperCase();
         const sqSize = sq?.sizes.get(sizeKey);
         entry.variants.push({
-          catId: v.catalog_variant_id, syncVariantId: v.id, size: sizeKey, color,
+          catId: v.catalog_variant_id, syncVariantId: v.id, printfulStoreId: Number(storeId), size: sizeKey, color,
           price: sqSize?.price ?? Math.round(Number(v.retail_price || 0) * 100),
           squareObjectId: sq?.objectId, squareVariationId: sqSize?.variationId,
           placements: (v.placements || []).map((pl) => ({
@@ -135,6 +139,7 @@ async function main() {
     offset += 100;
     await sleep(300);
   } while ((page.data || []).length === 100);
+  }
   console.log(`  Printful sync-products: ${products.size}`);
 
   // 3) Compose manifest + maps
@@ -152,7 +157,7 @@ async function main() {
       const mapped = Boolean(v.squareVariationId && v.catId && fulfillable);
       if (mapped) matched++; else unmatchedVariants++;
       squareMap[vid] = { squareCatalogObjectId: v.squareObjectId, squareVariationId: v.squareVariationId, squareLocationId: SQUARE_LOCATION };
-      printfulMap[vid] = { printfulCatalogVariantId: v.catId, printfulSyncVariantId: v.syncVariantId, printfulPlacements: v.placements, printfulRegionAvailability: ["north_america"], printfulSizeGuideReference: sgId };
+      printfulMap[vid] = { printfulCatalogVariantId: v.catId, printfulSyncVariantId: v.syncVariantId, printfulStoreId: v.printfulStoreId, printfulPlacements: v.placements, printfulRegionAvailability: ["north_america"], printfulSizeGuideReference: sgId };
       return {
         ahaVariantId: vid, ahaProductId: slug, sku: `${slug}-${v.catId}`, size: v.size || "OS",
         color: v.color || undefined,

@@ -64,6 +64,8 @@ export interface AhaVariant {
   printfulCatalogVariantId?: number;
   /** Store sync-variant id — carries the configured print art server-side; the fulfillment key. */
   printfulSyncVariantId?: number;
+  /** Which Printful store the sync variant lives in (Square-integrated vs native/API store). */
+  printfulStoreId?: number;
   printfulSource: "catalog" | "sync_variant";
   printfulRegionAvailability?: string[];
   printfulPlacements?: PrintfulPlacement[];

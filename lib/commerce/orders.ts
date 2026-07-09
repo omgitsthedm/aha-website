@@ -29,6 +29,7 @@ export interface RevalidatedItem {
   squareVariationId: string;
   printfulCatalogVariantId?: number;
   printfulSyncVariantId?: number;
+  printfulStoreId?: number;
 }
 export interface RevalidatedCart {
   items: RevalidatedItem[];
@@ -74,6 +75,7 @@ export function revalidateCart(lines: CheckoutLine[]): RevalidatedCart {
       unitPrice, lineTotal, squareVariationId: variant.squareVariationId!,
       printfulCatalogVariantId: variant.printfulCatalogVariantId,
       printfulSyncVariantId: variant.printfulSyncVariantId,
+      printfulStoreId: variant.printfulStoreId,
     });
   }
   return { items, subtotal, currency };
