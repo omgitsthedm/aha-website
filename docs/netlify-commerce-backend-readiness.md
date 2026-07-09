@@ -1,19 +1,17 @@
 # AHA Netlify Commerce Backend Readiness
 
-Date: 2026-07-08
-Status: Local code readiness only. No push, deploy, DNS change, secret change, checkout test, order mutation, or fulfillment mutation has been performed.
+Last verified: 2026-07-08 21:57 MST by Codex.
+Status: Live on Netlify custom domain with commerce env names present. No live checkout, Square order creation, Printful fulfillment, or fulfillment automation has been verified.
 
-## What Changed
+## Current Backend Surface
 
-The backend now has the minimum safe surfaces needed before a custom-domain cutover rehearsal:
-
-- Square API client can target production or sandbox based on `SQUARE_ENVIRONMENT`.
-- Checkout redirect URL resolves from a validated configured site URL or request origin; client-supplied redirects remain ignored.
+- Square API client targets production or sandbox based on `SQUARE_ENVIRONMENT`.
+- Checkout redirect URL resolves from the configured site URL or request origin; client-supplied redirects remain ignored.
 - Cart checkout allows Square sandbox checkout hosts for deploy-preview testing.
-- Printful client now fails before sending requests when `PRINTFUL_API_TOKEN` is missing.
-- Square webhook receiver exists at `/api/webhooks/square`.
-- Printful webhook receiver exists at `/api/webhooks/printful`.
-- Commerce readiness endpoint exists at `/api/commerce/readiness`; it requires `AHA_READINESS_TOKEN` outside local dev.
+- Printful client fails before sending requests when `PRINTFUL_API_TOKEN` is missing.
+- Square webhook receiver: `/api/webhooks/square`.
+- Printful webhook receiver: `/api/webhooks/printful`.
+- Commerce readiness endpoint: `/api/commerce/readiness`; requires `AHA_READINESS_TOKEN` outside local dev.
 - `npm run verify:commerce-readiness:netlify` checks required Netlify env var names without printing secret values.
 - Netlify production defaults remain production/manual.
 - Netlify deploy previews and branch deploys default to sandbox/dry-run.
@@ -32,18 +30,23 @@ They do not:
 - send customer email
 - mutate product, inventory, customer, order, fulfillment, shipping, tax, discount, or analytics data
 
-Fulfillment remains held for manual review or dry-run handling until a separate approval adds durable order storage, idempotency, and Printful order creation.
+Fulfillment remains manual until a separate approved implementation adds durable order storage, idempotency, Printful draft order creation, review/approval controls, retry handling, and customer-facing order status.
 
-## Production Env Names Still Needed In Netlify
+## Production Env Name Readiness
 
-Set these in Netlify for site `afterhoursagenda` / `275b4115-16bf-42fb-9b36-6bce9bb93608`. Do not paste values into chat or Git.
+`npm run verify:commerce-readiness:netlify` passes for production context.
+
+Required names present:
 
 Square:
 
 - `SQUARE_ACCESS_TOKEN`
 - `SQUARE_APPLICATION_ID`
+- `SQUARE_ENVIRONMENT`
+- `SQUARE_API_VERSION`
 - `SQUARE_LOCATION_ID`
 - `SQUARE_WEBHOOK_SIGNATURE_KEY`
+- `SQUARE_WEBHOOK_NOTIFICATION_URL`
 
 Printful:
 
@@ -54,26 +57,40 @@ Printful:
 
 Public/internal runtime:
 
+- `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_SQUARE_APP_ID`
+- `AHA_FULFILLMENT_MODE`
 - `AHA_READINESS_TOKEN`
 
-Committed non-secret defaults now cover:
+Known non-secret production values observed:
 
 - `NEXT_PUBLIC_SITE_URL=https://www.afterhoursagenda.com`
-- `SQUARE_API_VERSION=2024-01-18`
-- `SQUARE_ENVIRONMENT=production` for production
-- `SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square` for production
-- `AHA_FULFILLMENT_MODE=manual` for production
-- `SQUARE_ENVIRONMENT=sandbox` for deploy previews and branch deploys
-- `AHA_FULFILLMENT_MODE=dry-run` for deploy previews and branch deploys
+- `SQUARE_ENVIRONMENT=production`
+- `AHA_FULFILLMENT_MODE=manual`
+- `SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square`
 
-## Webhook Setup Targets
+## Webhook Configuration
 
-Square production subscription URL:
+### Square
+
+Handoff reports Square production webhook:
+
+- Name: `AHA Netlify Square Webhook`
+- URL reported by handoff: `https://afterhoursagenda.netlify.app/api/webhooks/square`
+- Events:
+  - `order.created`
+  - `order.fulfillment.updated`
+  - `order.updated`
+  - `payment.created`
+  - `payment.updated`
+
+Current Netlify production env reports:
 
 ```text
-https://www.afterhoursagenda.com/api/webhooks/square
+SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square
 ```
+
+Important: Square signature verification uses the exact notification URL. If Square is posting to `.netlify.app` while the app verifies against `www.afterhoursagenda.com`, signature checks will fail. Confirm Square's configured URL and align one side before relying on Square webhook processing.
 
 Square signature validation uses:
 
@@ -82,13 +99,22 @@ Square signature validation uses:
 - exact notification URL: `SQUARE_WEBHOOK_NOTIFICATION_URL`
 - raw request body
 
-Square also sends `square-environment`; the route rejects events that do not match the configured `SQUARE_ENVIRONMENT`.
+### Printful
 
-Printful production webhook URL:
+Handoff reports Printful v2 webhook:
 
-```text
-https://www.afterhoursagenda.com/api/webhooks/printful
-```
+- URL: `https://afterhoursagenda.netlify.app/api/webhooks/printful`
+- Events:
+  - `order_created`
+  - `order_updated`
+  - `order_failed`
+  - `order_canceled`
+  - `shipment_sent`
+  - `shipment_returned`
+  - `shipment_out_of_stock`
+  - `shipment_canceled`
+  - `order_put_hold`
+  - `order_remove_hold`
 
 Printful signature validation uses:
 
@@ -111,10 +137,16 @@ Check production env names without printing values:
 npm run verify:commerce-readiness:netlify
 ```
 
-Expected current result before keys are set:
+Check Netlify default URL:
 
-```text
-Missing 10 required readiness vars.
+```bash
+npm run verify:netlify-live
+```
+
+Check custom apex URL:
+
+```bash
+LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live
 ```
 
 Build and type-check:
@@ -124,14 +156,14 @@ npm run lint
 npm run build
 ```
 
-## Remaining Cutover Blockers
+## Remaining Backend Work
 
-- Netlify project still must be Git-linked to `omgitsthedm/aha-website` and production branch `main`.
-- Netlify non-Git production deploy blocking still needs UI/API confirmation.
-- Required Netlify env names listed above must be added.
-- Square production and sandbox webhook subscriptions must be created.
-- Printful production webhook configuration must be created.
-- Sandbox checkout must be tested only through a scoped safe path.
-- Printful order creation remains intentionally unimplemented until durable storage/idempotency and manual review mode are built.
-- DNS must not change until the custom domain is attached to the correct Netlify site and rollback values are documented.
-
+- Confirm and align Square webhook URL versus `SQUARE_WEBHOOK_NOTIFICATION_URL`.
+- Add durable order/event storage before any fulfillment automation.
+- Add idempotency keyed by Square event ID/order/payment IDs.
+- Map Square variation/catalog IDs to Printful variant/external IDs.
+- Add Printful draft order creation in dry-run/manual-review mode.
+- Add manual review screen or operator workflow before confirming Printful fulfillment.
+- Add shipment tracking persistence and customer-facing order status.
+- Create a David-approved sandbox checkout test plan.
+- Create a David-approved live checkout safe path before any live transaction.

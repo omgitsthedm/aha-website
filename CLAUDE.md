@@ -6,6 +6,23 @@ These instructions are **always relevant** to any task in this repository.
 - After Hours Agenda is a **NYC streetwear brand** selling primarily online.
 - The website must feel **premium, bold, and intentional** — never generic, never templated.
 - Every change must protect the **purchase flow** above all else. If the cart or checkout breaks, nothing else matters.
+- AHA is now live on the real custom domain. Treat this as production commerce, not a staging site.
+
+---
+
+## Current Production Truth
+
+- Canonical branch: `main`
+- Current deployed commit: `13c25e83f696b19c7d9230ec4766900cc5485451`
+- Netlify project: `afterhoursagenda`
+- Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
+- Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
+- Default Netlify URL: `https://afterhoursagenda.netlify.app`
+- Primary custom URL: `https://afterhoursagenda.com`
+- `www` redirects to apex: `https://www.afterhoursagenda.com -> https://afterhoursagenda.com`
+- Latest verified production deploy id: `6a4f2851e4c1b9fb71f86a67`
+- PR #2 merged the current storefront/backend readiness work into `main`.
+- GitHub Action `Claude Code Review` failed only because Claude account billing was locked per handoff; it was not a verified app/build failure.
 
 ---
 
@@ -120,25 +137,41 @@ styles/          → Global styles
 ## Deployment
 - Deploys to **Netlify** project `afterhoursagenda`, site id `275b4115-16bf-42fb-9b36-6bce9bb93608`.
 - Do not deploy by site name alone. Before any deploy, run `npm run verify:netlify-site`.
-- Until Netlify Git linking is repaired, approved production restores must use the exact site id:
-  `netlify deploy --prod --site 275b4115-16bf-42fb-9b36-6bce9bb93608`.
+- Netlify is now Git-linked to `https://github.com/omgitsthedm/aha-website`, branch `main`.
+- Normal production deploys should be Git-backed from reviewed `main`.
+- Avoid manual production deploys except for a scoped emergency restore.
 - After any production deploy, run `npm run verify:netlify-live` and confirm the live page contains After Hours Agenda content and no wrong-site content.
-- Known platform gap as of 2026-07-08: Netlify still reports empty build settings and `prevent_non_git_prod_deploys: false`. Repair Git linking in Netlify and enable non-Git production deploy blocking before treating push-to-main as protected.
+- After custom-domain changes, run `LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live`.
+- Commerce env readiness must pass before relying on checkout/webhook behavior: `npm run verify:commerce-readiness:netlify`.
+- Known platform gap as of 2026-07-08 21:57 MST: Netlify is Git-linked, but API still reports `prevent_non_git_prod_deploys: false`. Keep exact site verification in place.
 - `netlify.toml` is configured — don't modify without good reason.
-- Build command: `next build`
+- Build command: `npm run build`
+- Publish directory: `.next`
 - Environment variables must be set in Netlify dashboard (never committed).
 - Always run `npm run build` locally before pushing to catch build errors.
+
+### Current Commerce Caveats
+
+- No live checkout was run during the custom-domain cutover.
+- No Square order was created.
+- No Printful fulfillment was triggered.
+- Webhook routes verify signatures and acknowledge/log events only. They do not create Printful orders or automate fulfillment.
+- Handoff says the Square production webhook was created at `https://afterhoursagenda.netlify.app/api/webhooks/square`, but Netlify production currently reports non-secret `SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square`. Square signature verification requires an exact URL match. Confirm and align before relying on Square webhooks.
+- David does not want rigid magic approval phrases going forward. For high-risk live changes, ask for clear scoped plain-language confirmation and restate the exact action before doing it. If generated `.ai/RULES.md` still conflicts, pause and clarify rather than taking live action.
 
 ---
 
 ## Before Deploying Checklist
 1. `npm run build` passes with no errors.
-2. Cart → Checkout → Payment flow works end-to-end.
-3. Product pages render with live Square/Printful data.
-4. Mobile layout is tested and looks premium.
-5. No hardcoded API keys, secrets, or test data in the codebase.
-6. No `console.log` statements left in production code.
-7. Sitemap and robots.txt are generating correctly.
+2. `npm run verify:netlify-site` passes for the exact target site.
+3. `npm run verify:commerce-readiness:netlify` passes if commerce backend behavior matters.
+4. Cart and checkout entry are smoke-tested without creating live orders.
+5. Live checkout/payment is tested only through a David-approved safe path.
+6. Product pages render with live Square/Printful data.
+7. Mobile layout is tested and looks premium.
+8. No hardcoded API keys, secrets, or test data in the codebase.
+9. No unnecessary `console.log` statements left in production code.
+10. Sitemap and robots.txt are generating correctly.
 
 ---
 

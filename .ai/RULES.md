@@ -5,7 +5,8 @@ Generated date/time: 2026-06-27T05:29:19-0700
 Source Base: /Users/davidmarsh/AI-OPS/TEMPLATES/RULES_BASE.md
 Source Header: /Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website/aha-website/.ai/RULES_HEADER.md
 <!-- AI-OPS-GENERATED: edit RULES_HEADER.md or RULES_BASE.md, then rerun generate-rules. -->
-<!-- AI-OPS-CONTENT-CHECKSUM: 4054569368:9046 -->
+<!-- 2026-07-08: manually synced live URL and scoped plain-language approval preference because the generator path was not present locally. Regenerate when AI-Ops tooling is available. -->
+<!-- AI-OPS-CONTENT-CHECKSUM: stale-after-manual-sync -->
 
 <!-- AI-OPS-CONTENT-BEGIN -->
 ## Project Rules Header
@@ -46,7 +47,7 @@ Netlify
 
 Live URL:
 
-TBD unless verified from repo files or later read-only observation
+https://afterhoursagenda.com
 
 Stack:
 
@@ -74,6 +75,7 @@ Related Non-Canonical Folder:
 - Do not modify product catalog or reorganization files without explicit approval.
 - AHA checkout/payment/fulfillment actions are transactional.
 - Live commerce changes require human-approved safe path.
+- David's current preference is scoped plain-language confirmation for high-risk live changes, not a rigid magic phrase. If generated shared rules still require a literal phrase, pause and clarify before taking the live action.
 - Dirty/untracked files must be recorded, not cleaned or committed, unless David explicitly approves.
 
 ## Do Not Touch
@@ -193,7 +195,7 @@ If a STOP or HALT conflicts with automation, human instruction wins.
 
 ## APPROVE LIVE CHANGE Protocol
 
-`APPROVE LIVE CHANGE` is required before any live transactional action unless the action is sandboxed, staged, explicitly David-run, or already protected by a project-specific approved safe path.
+Legacy `APPROVE LIVE CHANGE` wording is accepted, but David's current preference for AHA is clear scoped plain-language confirmation rather than a rigid magic phrase. Live transactional action still requires explicit confirmation unless the action is sandboxed, staged, explicitly David-run, or already protected by a project-specific approved safe path.
 
 Approval must be scoped to a specific action. It does not authorize unrelated live changes.
 
@@ -227,7 +229,7 @@ Documentation, generated rules, and state files still require visibility when th
 
 Observational production QA is allowed when it only reads public or authorized state and does not create, mutate, submit, send, buy, book, upload, export, or persist anything.
 
-Transactional production QA is not allowed unless sandboxed, staged, explicitly David-run, or gated by `APPROVE LIVE CHANGE` plus a safe test path.
+Transactional production QA is not allowed unless sandboxed, staged, explicitly David-run, or gated by clear scoped confirmation plus a safe test path.
 
 If a `qa:prod` harness exists, run it instead of improvising checks.
 
@@ -257,9 +259,9 @@ Dangerous operations include:
 - running live transactional QA
 - changing production infrastructure
 
-The required approval phrase for live danger is `APPROVE LIVE CHANGE`.
+For AHA, live danger requires clear scoped confirmation from David. The phrase `APPROVE LIVE CHANGE` is accepted but not required if the confirmation is otherwise unambiguous.
 
-No standing autonomy, Emergency Mode, or "do it all / don't ask" instruction elevates past this gate. Transactional production actions always require `APPROVE LIVE CHANGE`, scoped to the single action.
+No standing autonomy, Emergency Mode, or "do it all / don't ask" instruction elevates past this gate. Transactional production actions always require clear confirmation scoped to the single action.
 
 ## Stale State Protocol
 

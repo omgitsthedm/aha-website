@@ -13,121 +13,156 @@
 
 ## Current Stamp
 
-- Updated: 2026-07-08
+- Updated: 2026-07-08 21:57 MST
 - Updated By: Codex
-- Basis: Local `MASTER-UIUX-HANDOFF-v2.md` DTC storefront hardening, commerce/domain migration plan, and Netlify backend readiness scaffolding on `feature/uiux-doctrine-commerce-hardening`; no push, no Netlify deploy, no DNS change, no secret inspection, no checkout/payment/order/fulfillment QA
-- Git HEAD at onboarding: 23018a0
+- Basis: Aside AI cutover handoff plus Codex verification from local Git, GitHub PR metadata, Netlify CLI/API, DNS resolver checks, and public HTTPS checks.
+- Current HEAD: `13c25e83f696b19c7d9230ec4766900cc5485451`
+- Git HEAD at onboarding: `23018a0`
 
 ## Rules Version
 
 - 2026-06-27-aiops-foundation-v1
+- Note: David's current preference is scoped plain-language confirmation for high-risk live changes, not a rigid magic phrase. The generated `.ai/RULES.md` may still contain the older literal `APPROVE LIVE CHANGE` wording until the AI-Ops generator is available and rerun. If there is conflict before a live action, pause and clarify rather than taking the action.
 
 ## State Confidence
 
-- High for canonical path, repo, branch, remote, and dirty status verified in this run.
-- Medium for stack and commerce clues from local file inspection.
-- High for live URL + storefront homepage reachability (verified read-only 2026-06-27).
-- High for Netlify site id, project metadata, and wrong-site incident cause verified through Netlify CLI/API on 2026-07-08.
-- High for local UI/UX branch render checks against `/shop`, `/product/be-you`, `/cart`, and `/accessibility` on 2026-07-08.
-- High for 2026-07-08 custom-domain/DNS observation that `www.afterhoursagenda.com` still resolves through Cloudflare/Weebly and Netlify project `afterhoursagenda` has `custom_domain: null`.
-- High for 2026-07-08 Netlify production env name-only check returning zero configured env vars; no secret values were printed or inspected.
-- High for local Netlify backend readiness scaffolding build/lint passing on 2026-07-08.
-- Low/TBD for commerce runtime state (not inspected/exercised).
+- High for canonical path, repo, branch, remote, and clean status verified 2026-07-08 21:57 MST.
+- High for PR #2 merge metadata verified through GitHub CLI.
+- High for Netlify site id, project metadata, build settings, GitHub linkage, custom domain, and latest deploy metadata verified through Netlify CLI/API.
+- High for production env var name readiness verified by `npm run verify:commerce-readiness:netlify`; values were not printed.
+- High for `afterhoursagenda.com`, `www.afterhoursagenda.com`, and `afterhoursagenda.netlify.app` serving through Netlify by public HTTP checks.
+- High for public DNS resolver checks against `1.1.1.1`, `8.8.8.8`, and `9.9.9.9`.
+- Medium for Square/Printful webhook dashboard details supplied by Aside handoff; Codex did not inspect secret values or mutate dashboard state.
+- Low/TBD for live checkout/payment/order/fulfillment runtime behavior because no live checkout or fulfillment test has been run.
 
 ## Current Live Truth
 
-- Live URL (Netlify project): `https://afterhoursagenda.netlify.app` — restored 2026-07-08 to AHA content from `main` merge commit `55d63fc`, production deploy `6a4e3854c37b683eab4d38b8`, title `After Hours Agenda | Graphic Tees and Rebel Streetwear`, H1 `Wear It Loud`.
-- Wrong-site incident: before restoration, `https://afterhoursagenda.netlify.app/` served unrelated Pole Position IT HTML. The previous published deploy had `commit_ref: null`, `branch: null`, `commit_url: null`, and empty site `build_settings`.
-- Custom domain: `https://www.afterhoursagenda.com/` — **HTTP 200** but `server: cloudflare` / Weebly origin observed 2026-07-08; it is not currently served by this Netlify project.
-- Host: Netlify for `.netlify.app`; custom domain currently Cloudflare/Weebly.
-- Netlify live deploy status after restore: Serving AHA content from deploy `6a4e3854c37b683eab4d38b8`, published `2026-07-08T11:46:13.747Z`, deploy title `AHA production restore from omgitsthedm/aha-website@55d63fc`.
-- Production health: Netlify URL is reachable and no longer contains Pole Position strings. Custom domain still shows the public AHA storefront outside Netlify. No deeper route/commerce checks run.
-- Commerce runtime state: TBD — no transactional/commerce paths exercised.
-- Production QA status: Read-only public GET/HEAD only; NO transactional or commerce QA, no mutation.
+- Primary live URL: `https://afterhoursagenda.com/`
+- `www` behavior: `https://www.afterhoursagenda.com/` returns Netlify 301 to `https://afterhoursagenda.com/`.
+- Default Netlify URL: `https://afterhoursagenda.netlify.app/`
+- Live title verified by guard/browser handoff: `After Hours Agenda | Blacklight Grunge Streetwear`
+- Host: Netlify for apex, `www`, and `.netlify.app`.
+- Current deployed commit: `13c25e83f696b19c7d9230ec4766900cc5485451`
+- Latest verified production deploy: `6a4f2851e4c1b9fb71f86a67`, ready, production, branch `main`, commit-backed.
+- Netlify site: `afterhoursagenda`
+- Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
+- Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
+- Netlify custom domain: `afterhoursagenda.com`
+- Netlify build settings: GitHub provider, repo `omgitsthedm/aha-website`, branch `main`, command `npm run build`, publish `.next`.
+- Netlify `prevent_non_git_prod_deploys`: still reports `false`.
+- Production QA status: public read-only checks passed; NO live checkout/payment/order/fulfillment mutation has been performed.
+
+## Domain / DNS Truth
+
+- Authoritative DNS provider reported by handoff: Wix DNS
+- Nameservers:
+  - `ns8.wixdns.net`
+  - `ns9.wixdns.net`
+- Apex A record: `afterhoursagenda.com -> 75.2.60.5`
+- `www` CNAME: `www.afterhoursagenda.com -> afterhoursagenda.netlify.app`
+- Google Workspace MX records were preserved per handoff.
+- Public resolver checks against `1.1.1.1`, `8.8.8.8`, and `9.9.9.9` confirmed Netlify records.
+- Old Square/Weebly website is no longer the DNS target for apex or `www`.
 
 ## Repo State
 
-- Branch: `feature/uiux-doctrine-commerce-hardening`
-- Current working set: local `MASTER-UIUX-HANDOFF-v2.md` implementation, `docs/www-cutover-commerce-plan.md`, and Netlify commerce backend readiness scaffolding on this branch.
-- Push/deploy status: not pushed and not deployed.
-- Production remains on prior restored Netlify deploy `6a4e3854c37b683eab4d38b8` until a separate push/deploy approval is given.
-- PR #1 (`feature/retro-grunge-block-overhaul`) was merged into `main` as merge commit `55d63fc`.
-- Prior onboarding dirty files were preserved into the backup branch baseline and merged through PR #1; no `.env` contents were inspected.
+- Branch: `main`
+- Status before documentation update: clean and aligned with `origin/main`.
+- PR #2 (`feature/uiux-doctrine-commerce-hardening`) was merged into `main` as `13c25e83f696b19c7d9230ec4766900cc5485451`.
+- Remote feature branch `feature/uiux-doctrine-commerce-hardening` was deleted after merge.
+- PR #1 (`feature/retro-grunge-block-overhaul`) was merged earlier as merge commit `55d63fc`.
+- Current task is documentation/state update for Claude Code takeover.
 
 ## Commerce Risk
 
 - Stack: Next.js / Netlify
-- Commerce: `app/api/checkout` present; Square + Printful referenced in local code/docs.
-- Checkout/payment/order/fulfillment paths are transactional and gated.
+- Commerce: Square + Printful
+- Checkout route: `app/api/checkout`
+- Webhooks:
+  - Square: `app/api/webhooks/square/route.ts`
+  - Printful: `app/api/webhooks/printful/route.ts`
+- Readiness endpoint: `app/api/commerce/readiness/route.ts`
+- Current production fulfillment mode: `manual`
+- Webhook routes verify signatures and acknowledge/log events only.
+- Printful fulfillment automation is not implemented.
 - `.env.local` exists by filename only; contents were not inspected.
 
 ## QA-PENDING
 
-- ~~Verify live URL before production claims.~~ DONE 2026-06-27: `afterhoursagenda.netlify.app` 200 (Netlify); `www.afterhoursagenda.com` 200 (Cloudflare-fronted).
-- ~~Confirm safe observational storefront check path.~~ DONE: read-only HEAD/GET to public homepage is the safe path.
-- ~~Verify Netlify deploy revision/metadata before any deployment claim.~~ DONE 2026-07-08: deploy `6a4e3854c37b683eab4d38b8` verified through Netlify API/CLI.
-- Confirm the Cloudflare↔Netlify relationship for `www.afterhoursagenda.com` (is Cloudflare proxying the Netlify origin?).
-- ~~Confirm whether dirty untracked files should be kept, ignored, or committed.~~ DONE 2026-07-08: prior AHA dirty files were preserved in the backup baseline and merged through PR #1.
-- Confirm whether AHA needs `RELEASES.md` for product/drop history.
-- Confirm Square/Printful integration boundaries without reading secrets.
+- Confirm and align Square webhook URL versus `SQUARE_WEBHOOK_NOTIFICATION_URL`. Handoff says Square webhook URL is `https://afterhoursagenda.netlify.app/api/webhooks/square`; Netlify production currently reports non-secret `SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square`. Square signature verification requires an exact URL match.
+- Confirm whether Netlify can enable non-Git production deploy blocking for this site/account; API still reports `prevent_non_git_prod_deploys: false`.
+- Create and approve a sandbox checkout test plan.
+- Create and approve a live checkout safe path before any live payment/order test.
+- Add durable order/event storage before fulfillment automation.
+- Add idempotency keyed by Square webhook event/order/payment identifiers.
+- Map Square catalog/variation IDs to Printful variants.
+- Add Printful draft-order dry-run/manual-review flow.
+- Add shipment tracking/order status flow.
+- Confirm whether AHA needs `.ai/RELEASES.md` for product/drop history.
 - Production dependency audit still reports Next.js/PostCSS advisories; npm's available automated fix is a breaking upgrade to `next@16.2.10`, so handle as a separate framework migration with Netlify compatibility review.
-- ~~Netlify production publish/live verification was not run for the retro grunge redesign. Feature branch push is not a production approval.~~ DONE 2026-07-08: PR #1 merged to `main`, exact-site production deploy `6a4e3854c37b683eab4d38b8` published, and `npm run verify:netlify-live` passed.
-- Netlify site must be Git-linked and locked against non-Git production deploys so manual cross-project production deploys cannot recur. CLI/API attempts on 2026-07-08 did not successfully set `prevent_non_git_prod_deploys`; it still reports false.
-- UI/UX doctrine branch must be reviewed, pushed, PR-merged, and explicitly deployed before any live production claim.
-- Local dev logs a Next data-cache warning because the Square catalog response is over 2MB; this was not changed because Square fetch behavior is under the commerce integration gate.
-- Custom domain cutover is blocked until Netlify is Git-linked, the custom domain is attached to the correct Netlify site, production env vars are configured by name, DNS rollback records are documented, and Square/Printful checkout/fulfillment paths are sandbox-verified or deliberately manual-gated.
-- Netlify commerce readiness command currently reports 10 missing production readiness vars by name: `SQUARE_ACCESS_TOKEN`, `SQUARE_APPLICATION_ID`, `SQUARE_LOCATION_ID`, `SQUARE_WEBHOOK_SIGNATURE_KEY`, `PRINTFUL_API_TOKEN`, `PRINTFUL_STORE_ID`, `PRINTFUL_WEBHOOK_SECRET_KEY`, `PRINTFUL_WEBHOOK_PUBLIC_KEY`, `NEXT_PUBLIC_SQUARE_APP_ID`, and `AHA_READINESS_TOKEN`. Values were not printed.
 
-## Do Not Touch
+## Do Not Touch Without Scoped Confirmation
 
 - `.env`
 - `.env.local`
 - `PRODUCT_CATALOG.json`
 - `REORGANIZATION_LOG.csv`
-- checkout/payment code
-- Square integration behavior
-- Printful integration behavior
+- live checkout/payment/order/customer/fulfillment data
+- Square production settings or records
+- Printful production settings or records
 - product/inventory/customer/order/fulfillment data
-- Netlify deploy settings, except for the 2026-07-08 approved exact-site restore and non-secret guardrail documentation/scripts
-- live commerce analytics/pixels unless explicitly approved
+- DNS records
+- Netlify production deploy settings
+- live commerce analytics/pixels
+
+Name-only env readiness checks and public read-only GET/HEAD verification are allowed.
 
 ## Proposed Changes / Inbox
 
-- Proposal: Repair Netlify Git integration so project `afterhoursagenda` deploys only from `https://github.com/omgitsthedm/aha-website.git` and `main`, then enable Netlify's non-Git production deploy block.
-- Reason: The 2026-07-08 wrong-site incident bypassed GitHub entirely because the Netlify project was unlinked/manual.
-- Risk: Git-link repair may require Netlify UI/GitHub app access and must preserve environment variables. Do not delete/recreate the site.
-- Source evidence: Netlify API showed empty `build_settings`, `commit_ref: null`, `branch: null`, `commit_url: null`, and `prevent_non_git_prod_deploys: false` on the published wrong deploy.
-- Suggested owner: David/Codex with Netlify UI access.
+- Proposal: Regenerate AI-Ops rules so AHA accepts scoped plain-language confirmation for high-risk live changes instead of requiring a rigid literal magic phrase.
+- Reason: David explicitly stated after the cutover that he does not want exact approval phrase requirements going forward.
+- Risk: Too-loose approval language can cause accidental live changes; the replacement rule must still require clear scope, explicit user confirmation, and restating the exact action.
+- Source evidence: Aside handoff pasted by David in the 2026-07-08 takeover thread.
+- Suggested owner: David/Codex or AI-Ops maintainer when the rules generator path is available.
+
+- Proposal: Preserve exact-site Netlify target guard even though Netlify is now Git-linked.
+- Reason: AHA already had a wrong-site production incident; `prevent_non_git_prod_deploys` still reports false.
+- Risk: Low; guard is non-mutating.
+- Source evidence: Netlify API and `npm run verify:netlify-site`.
+- Suggested owner: all agents.
 
 Use this section for proposed rule changes before promoting them into `.ai/RULES_HEADER.md` or `~/AI-OPS/TEMPLATES/RULES_BASE.md`.
 
 ## Next Steps Queue
 
-- Run a fresh AHA `SESSION START` before the next AHA task if another agent takes over.
-- Review and decide whether to push `feature/uiux-doctrine-commerce-hardening` for PR.
-- Review `docs/www-cutover-commerce-plan.md` with Claude Code before any DNS, Netlify domain, secret, Square, Printful, or live checkout work.
-- Review `docs/netlify-commerce-backend-readiness.md`; set missing Netlify env vars by name only through Netlify UI/CLI, then rerun `npm run verify:commerce-readiness:netlify`.
+- Review `docs/claude-code-live-takeover.md` before further Claude Code work.
+- Confirm Square webhook URL/signature alignment.
+- Decide whether to update Square webhook URL to `https://www.afterhoursagenda.com/api/webhooks/square` or update Netlify `SQUARE_WEBHOOK_NOTIFICATION_URL` to the exact Square webhook URL.
+- Run browser QA on `https://afterhoursagenda.com` desktop and mobile.
+- Draft sandbox checkout safe path.
+- Plan durable order/event storage and idempotency before fulfillment automation.
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
-- Identify a safe read-only live URL verification path if David requests production observation.
 
 ## Recent Session History
 
 - 2026-06-27: Codex performed initial AHA AI-Ops onboarding from read-only local inventory and local repo inspection. Created `.ai` governance files and did not edit source behavior, deploy, push, run commerce QA, inspect env contents, or modify the pre-existing dirty files.
-- 2026-06-27: AHA SESSION START dry run completed. Generated rules verified against `RULES_HEADER.md` + `RULES_BASE.md` with checksum `4054569368:9046`. Confirmed canonical repo, branch, remote, dirty state, lock, and commerce gates. No source behavior, push, deploy, production QA, checkout/payment/order/fulfillment test, env inspection, dirty-file cleanup, or commerce mutation. AHA AI-Ops onboarding files are ready for local commit.
-- 2026-06-27: Claude ran read-only live/deploy verification (public HEAD/GET only). Verified `afterhoursagenda.netlify.app` → 200 (Netlify Edge) and `www.afterhoursagenda.com` → 200 (Cloudflare-fronted); apex 301→www. Updated Current Live Truth + State Confidence; cleared the live-URL/safe-path QA-PENDING items. NO transactional/commerce QA, no push, no deploy, no env inspection, no dirty-file changes.
-- 2026-07-08: Codex implemented the black-background retro grunge / vibrant block visual overhaul on `feature/retro-grunge-block-overhaul`, covering global tokens, nav/footer, homepage, shop, product detail, cart, modal/drawer, collection/static pages, and order confirmation. Added standard Next 14 lint setup, removed unused `@imgly/background-removal-node`, added a `glob` override for lint tooling, and verified `npm run lint` plus `npm run build`. No checkout/payment/Square/Printful behavior changes, no `.env` inspection, no Netlify publish, and no live transactional QA.
-- 2026-07-08: Codex verified `afterhoursagenda.netlify.app` was serving unrelated Pole Position IT content from Netlify project `afterhoursagenda` / site id `275b4115-16bf-42fb-9b36-6bce9bb93608`. Netlify metadata showed the published deploy was not Git-backed (`commit_ref`, `branch`, and `commit_url` all null) and the site had empty build settings with non-Git production deploys allowed. David approved a scoped live restore; guardrails are being added before production publish.
-- 2026-07-08: Codex merged PR #1 to `main` as merge commit `55d63fc`, preview-deployed exact site id `275b4115-16bf-42fb-9b36-6bce9bb93608` as deploy `6a4e37f520d26e3bd1d0b0aa`, verified AHA title/H1/no Pole Position strings, then production-deployed exact site id as deploy `6a4e3854c37b683eab4d38b8`. Live guard passed for `https://afterhoursagenda.netlify.app/`. Attempted to set `prevent_non_git_prod_deploys`; Netlify either rejected or ignored the CLI/API payload and the setting remains false.
-- 2026-07-08: Codex implemented local `MASTER-UIUX-HANDOFF-v2.md` DTC storefront hardening on `feature/uiux-doctrine-commerce-hardening`: shared commerce policy copy, PDP pre-purchase disclosures, cart shipping/tax/wallet expectations, add-to-cart feedback copy, shop product counts/availability/default featured sort, accessibility statement route, footer/sitemap links, and post-purchase/shipping/returns copy alignment. Verified locally with lint/build and Playwright route checks; did not push, deploy, inspect env contents, click checkout, or change Square/Printful behavior.
-- 2026-07-08: Codex created `docs/www-cutover-commerce-plan.md` for moving `www.afterhoursagenda.com` from Square/Weebly-hosted custom domain traffic to the custom Netlify storefront using Square checkout and Printful fulfillment. Verified DNS/HTTP state, Netlify target site metadata, Netlify env-var names only, and local code integration shape. Result: not ready to flip today; blockers are Netlify Git/domain/env readiness, missing Square sandbox path, and unproven Printful paid-order fulfillment/webhook workflow. No push, deploy, DNS change, secret inspection, live checkout, or commerce mutation.
-- 2026-07-08: Codex added local Netlify commerce backend readiness scaffolding: sandbox-aware Square client, validated checkout site URL resolution, Square/Printful webhook receivers with signature verification, token-gated readiness endpoint, Netlify production/manual and preview sandbox/dry-run context defaults, `.env.example` placeholders, and `npm run verify:commerce-readiness:netlify`. Verified `npm run lint`, `npm run build`, `npm run verify:netlify-site`, and name-only Netlify readiness check. Readiness check intentionally fails until 10 production env names are set. No push, deploy, DNS change, secret inspection, live checkout, Square mutation, Printful mutation, or fulfillment automation.
+- 2026-06-27: AHA SESSION START dry run completed. Generated rules verified against `RULES_HEADER.md` + `RULES_BASE.md` with checksum `4054569368:9046`. Confirmed canonical repo, branch, remote, dirty state, lock, and commerce gates. No source behavior, push, deploy, production QA, checkout/payment/order/fulfillment test, env inspection, dirty-file cleanup, or commerce mutation.
+- 2026-06-27: Claude ran read-only live/deploy verification (public HEAD/GET only). Verified `afterhoursagenda.netlify.app` 200 (Netlify) and `www.afterhoursagenda.com` 200 (Cloudflare-fronted); apex 301 to `www`. NO transactional/commerce QA, no push, no deploy, no env inspection, no dirty-file changes.
+- 2026-07-08: Codex implemented the black-background retro grunge / vibrant block visual overhaul on `feature/retro-grunge-block-overhaul`; verified lint/build; no checkout/payment/Square/Printful behavior changes, env inspection, Netlify publish, or live transactional QA.
+- 2026-07-08: Codex verified `afterhoursagenda.netlify.app` was serving unrelated Pole Position IT content from Netlify project `afterhoursagenda` / site id `275b4115-16bf-42fb-9b36-6bce9bb93608`. Netlify metadata showed the published deploy was not Git-backed and the site had empty build settings with non-Git production deploys allowed.
+- 2026-07-08: Codex merged PR #1 to `main` as `55d63fc`, preview-deployed and production-deployed exact site id, restoring AHA content at `afterhoursagenda.netlify.app`.
+- 2026-07-08: Codex implemented local `MASTER-UIUX-HANDOFF-v2.md` DTC storefront hardening on `feature/uiux-doctrine-commerce-hardening`; verified lint/build and Playwright route checks; no push, deploy, env inspection, checkout, or Square/Printful behavior mutation.
+- 2026-07-08: Codex created `docs/www-cutover-commerce-plan.md`, then added Netlify commerce backend readiness scaffolding and `docs/netlify-commerce-backend-readiness.md`; verified lint/build/site guard/name-only readiness before env setup.
+- 2026-07-08: Aside AI pushed the feature branch, opened and merged PR #2 into `main`, linked Netlify to GitHub, configured production env names, moved DNS from Square/Weebly/Wix records to Netlify, configured Square and Printful webhooks/tokens without printing secrets, and deployed production commit `13c25e8`.
+- 2026-07-08 21:57 MST: Codex took over from Aside handoff, fetched `main`, verified PR #2 merge, Netlify Git link/build settings/custom domain/latest deploy, production readiness env names, DNS, apex/`www` HTTPS, and `.netlify.app` live guard. No live checkout, Square order, Printful fulfillment, env secret inspection, DNS change, or production mutation performed by Codex during takeover.
 
 ## Next Agent Directive
 
-Continue to treat AHA as Tier 3 high-risk live commerce. The `.netlify.app` URL is restored, but Netlify Git linking, custom-domain attachment, production env vars, and non-Git production deploy blocking remain unresolved. Current UI/UX doctrine, cutover-plan, and backend readiness work is local on `feature/uiux-doctrine-commerce-hardening` and is not live. Before any AHA Netlify deploy, run `npm run verify:netlify-site` and target site id `275b4115-16bf-42fb-9b36-6bce9bb93608` explicitly. Before domain cutover, run `npm run verify:commerce-readiness:netlify` and resolve all missing env names. After deploy, run `npm run verify:netlify-live`. Do not run checkout/payment/order/fulfillment tests, inspect env contents, modify product/inventory/customer/order/fulfillment data, change DNS, or enable fulfillment automation without a separate scoped approval.
+Continue from `main` at `13c25e83f696b19c7d9230ec4766900cc5485451`. AHA is live on `https://afterhoursagenda.com`. Before any deploy or live config work, run `npm run verify:netlify-site`. Before relying on commerce backend state, run `npm run verify:commerce-readiness:netlify`. After deploy, run `npm run verify:netlify-live` and `LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live`. Do not run live checkout/payment/order/fulfillment tests, inspect env contents, modify product/inventory/customer/order/fulfillment data, change DNS, or enable fulfillment automation without clear scoped confirmation and a safe path.
 
 ## Emergency / Bypass Notes
 
-- 2026-07-08: David approved scoped live Netlify restore for AHA after wrong-site incident. This does not approve checkout/payment/order/fulfillment tests, env inspection, Square/Printful changes, product/inventory/customer/order/fulfillment data mutation, or unrelated infrastructure changes.
+- 2026-07-08: David approved scoped live Netlify restore for AHA after wrong-site incident. This did not approve checkout/payment/order/fulfillment tests, env inspection, Square/Printful changes, product/inventory/customer/order/fulfillment data mutation, or unrelated infrastructure changes.
+- 2026-07-08: Custom domain cutover completed by Aside AI. That cutover does not authorize future live checkout, Square order, Printful fulfillment, DNS, or deploy mutations without a new scoped confirmation.
 - Bypass/YOLO mode is only an execution accelerator for approved local setup and read-only verification.
 - Emergency mode requires stopping forward work, preserving evidence, and using the smallest reversible action.
