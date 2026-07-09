@@ -1,5 +1,6 @@
 import { getAllProducts, getProduct, getAllCollections } from "@/lib/square/catalog";
 import { getProductEnrichment } from "@/lib/data/enrichment";
+import { getStockByCatId } from "@/lib/data/stock";
 import { ProductDetail } from "@/components/product/ProductDetail";
 import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
 import { notFound } from "next/navigation";
@@ -77,10 +78,25 @@ export default async function ProductPage({ params }: { params: { slug: string }
 
   const enrichment = getProductEnrichment(product.slug);
 
+  // Live Printful stock per size (5-min fresh; fails open to in-stock).
+  const stockBySize: Record<string, boolean> = {};
+  if (enrichment) {
+    const stock = await getStockByCatId(Object.values(enrichment.catIdBySize));
+    for (const [size, catId] of Object.entries(enrichment.catIdBySize)) {
+      stockBySize[size] = stock[catId] ?? true;
+    }
+  }
+
   return (
     <>
       <ProductJsonLd product={product} />
-      <ProductDetail product={product} related={related} collection={collection} enrichment={enrichment} />
+      <ProductDetail
+        product={product}
+        related={related}
+        collection={collection}
+        enrichment={enrichment}
+        stockBySize={stockBySize}
+      />
     </>
   );
 }

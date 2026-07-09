@@ -22,9 +22,11 @@ interface ProductDetailProps {
   related: Product[];
   collection?: Collection;
   enrichment?: ProductEnrichment | null;
+  /** Live Printful stock by upper-cased size. false = out of stock. */
+  stockBySize?: Record<string, boolean>;
 }
 
-export function ProductDetail({ product, related, collection, enrichment }: ProductDetailProps) {
+export function ProductDetail({ product, related, collection, enrichment, stockBySize }: ProductDetailProps) {
   const { addItem } = useCart();
   const [selectedVariation, setSelectedVariation] = useState(
     product.variations[0]?.id || ""
@@ -44,6 +46,9 @@ export function ProductDetail({ product, related, collection, enrichment }: Prod
   const purchasable = enrichment
     ? (enrichment.purchasableBySize[currentSize] ?? { ok: false, reasons: ["size unavailable"] })
     : { ok: true, reasons: [] };
+  const sizeInStock = (size: string) => (stockBySize ? stockBySize[size.toUpperCase()] !== false : true);
+  const currentInStock = sizeInStock(currentSize);
+  const canBuy = purchasable.ok && currentInStock;
 
   const line = collection ? getLineForCollection(collection.slug) : null;
   const lineColor = line?.color || "#1A1917";
@@ -65,7 +70,7 @@ export function ProductDetail({ product, related, collection, enrichment }: Prod
     /limited|exclusive/i.test(product.description);
 
   const handleAddToCart = () => {
-    if (!currentVariation || !purchasable.ok) return;
+    if (!currentVariation || !canBuy) return;
 
     addItem(
       {
@@ -323,6 +328,22 @@ export function ProductDetail({ product, related, collection, enrichment }: Prod
             </div>
           )}
 
+          {/* Colors (from Printful) */}
+          {enrichment?.colors && enrichment.colors.length > 0 && (
+            <div className="mb-6">
+              <span className="font-body font-bold text-label text-muted uppercase tracking-[0.12em] block mb-2">
+                {enrichment.colors.length > 1 ? "Colors" : "Color"}
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {enrichment.colors.map((c) => (
+                  <span key={c} className="border-[3px] border-[#E9E1D4] px-3 py-1.5 font-body text-sm font-bold text-cream">
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Size/Variation selector */}
           {product.variations.length > 1 && (
             <div className="mb-8">
@@ -330,29 +351,31 @@ export function ProductDetail({ product, related, collection, enrichment }: Prod
                 Size
               </label>
               <div className="flex flex-wrap gap-2" role="group" aria-labelledby="size-label">
-                {product.variations.map((v) => (
-                  <button
-                    key={v.id}
-                    onClick={() => setSelectedVariation(v.id)}
-                    aria-pressed={v.id === selectedVariation}
-                    className={`min-h-[44px] border-[3px] px-4 py-2 font-body text-sm font-bold transition-all ${
-                      v.id === selectedVariation
-                        ? ""
-                        : "border-[#E9E1D4] text-muted hover:border-cream hover:text-cream"
-                    }`}
-                    style={
-                      v.id === selectedVariation
-                        ? {
-                            borderColor: lineColor,
-                            backgroundColor: lineColor,
-                            color: lineTextColor,
-                          }
-                        : undefined
-                    }
-                  >
-                    {v.name}
-                  </button>
-                ))}
+                {product.variations.map((v) => {
+                  const oos = !sizeInStock(v.name);
+                  return (
+                    <button
+                      key={v.id}
+                      onClick={() => setSelectedVariation(v.id)}
+                      aria-pressed={v.id === selectedVariation}
+                      aria-label={oos ? `${v.name} — out of stock` : v.name}
+                      className={`relative min-h-[44px] border-[3px] px-4 py-2 font-body text-sm font-bold transition-all ${
+                        oos ? "text-muted line-through decoration-2 opacity-60" : ""
+                      } ${
+                        v.id === selectedVariation
+                          ? ""
+                          : "border-[#E9E1D4] text-muted hover:border-cream hover:text-cream"
+                      }`}
+                      style={
+                        v.id === selectedVariation
+                          ? { borderColor: lineColor, backgroundColor: lineColor, color: lineTextColor }
+                          : undefined
+                      }
+                    >
+                      {v.name}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -361,15 +384,15 @@ export function ProductDetail({ product, related, collection, enrichment }: Prod
           <button
             ref={btnRef}
             onClick={handleAddToCart}
-            disabled={!purchasable.ok}
+            disabled={!canBuy}
             aria-live="polite"
-            aria-disabled={!purchasable.ok}
+            aria-disabled={!canBuy}
             className={`turnstile-btn metrocard-gradient w-full py-5 font-body text-base font-bold tracking-[0.08em] transition-all duration-300 ${
-              purchasable.ok ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+              canBuy ? "cursor-pointer" : "cursor-not-allowed opacity-50"
             }`}
           >
             <span className="relative z-10">
-              {!purchasable.ok ? (
+              {!canBuy ? (
                 "SOLD OUT"
               ) : addedFeedback ? (
                 <span className="text-[#10100F]">Added</span>
@@ -378,9 +401,9 @@ export function ProductDetail({ product, related, collection, enrichment }: Prod
               )}
             </span>
           </button>
-          {!purchasable.ok && (
+          {!canBuy && (
             <p className="mt-2 font-body text-xs font-bold leading-relaxed text-[#FFAA00]">
-              This size isn&apos;t available right now.{" "}
+              {!currentInStock ? "This size is out of stock right now." : "This size isn't available right now."}{" "}
               <Link href="/contact" className="underline underline-offset-4">Ask us about a restock</Link>.
             </p>
           )}

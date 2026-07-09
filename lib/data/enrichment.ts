@@ -14,6 +14,10 @@ export interface ProductEnrichment {
   sizeGuide?: SizeGuide;
   /** size (upper-cased) -> purchasable result. Absent size = not offered / not mapped. */
   purchasableBySize: Record<string, { ok: boolean; reasons: string[] }>;
+  /** size (upper-cased) -> Printful catalog variant id, for live stock lookups. */
+  catIdBySize: Record<string, number>;
+  /** distinct colors this product comes in (from Printful), if any. */
+  colors: string[];
 }
 
 let cache: Map<string, ProductEnrichment> | null = null;
@@ -23,8 +27,13 @@ function build(): Map<string, ProductEnrichment> {
   const map = new Map<string, ProductEnrichment>();
   for (const p of loadProducts()) {
     const purchasableBySize: Record<string, { ok: boolean; reasons: string[] }> = {};
+    const catIdBySize: Record<string, number> = {};
+    const colorSet = new Set<string>();
     for (const v of p.variants) {
-      purchasableBySize[v.size.toUpperCase()] = checkVariantPurchasable(p, v);
+      const size = v.size.toUpperCase();
+      purchasableBySize[size] = checkVariantPurchasable(p, v);
+      if (v.printfulCatalogVariantId) catIdBySize[size] = v.printfulCatalogVariantId;
+      if (v.color) colorSet.add(v.color);
     }
     map.set(p.slug, {
       fitDescription: p.fitDescription,
@@ -34,6 +43,8 @@ function build(): Map<string, ProductEnrichment> {
       productType: p.productType,
       sizeGuide: guides.get(p.sizeGuideId),
       purchasableBySize,
+      catIdBySize,
+      colors: Array.from(colorSet),
     });
   }
   return map;
