@@ -7,6 +7,12 @@
   NEXT_PUBLIC_SITE_URL = "https://www.afterhoursagenda.com"
   SQUARE_API_VERSION = "2024-01-18"
   AHA_FULFILLMENT_MODE = "manual"
+  # Non-secret PUBLIC identifiers that legitimately appear in committed docs
+  # (SOURCE_OF_TRUTH.md, docs/) and, for NEXT_PUBLIC_*, in the client bundle.
+  # Without this, Netlify secrets scanning fails the build (exit 2) on these
+  # values. Real secrets (SQUARE_ACCESS_TOKEN, PRINTFUL_API_TOKEN, webhook
+  # signature keys) are NOT listed here and remain fully scanned.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SQUARE_APP_ID,SQUARE_APPLICATION_ID,PRINTFUL_STORE_ID"
 
 [context.production.environment]
   SQUARE_ENVIRONMENT = "production"
