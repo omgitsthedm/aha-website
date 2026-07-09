@@ -10,6 +10,17 @@ These instructions are **always relevant** to any task in this repository.
 
 ---
 
+## Governing Build Doctrine (§47)
+
+This project is governed by `docs/MASTER-BUILD-INSTRUCTION.md` (the full ecommerce build spec, installed 2026-07-08) and, when supplied, `MASTER-UIUX-HANDOFF-v2.md`. **The UI/UX handoff doc is currently MISSING from the repo — provide it or the build instruction + this file serve as doctrine.**
+
+- **Primary archetype:** D2 — E-Commerce / DTC Store. **Secondary:** D1 — Marketing / Brand Site.
+- **Stack:** Netlify hosting/runtime · GitHub code/actions/release control · Square payments · Printful **API v2 beta** fulfillment. (Current repo: Next.js 14 App Router — adapt the spec's structure to it, don't impose Astro/`src/`.)
+- **Critical rules:** Useful>beautiful · Clear>clever · Fast>flashy · Accessible by default · Honest persuasion only · No fake urgency/scarcity/reviews · No hidden costs · No forced account before checkout · No unmapped products purchasable · No client-side Square/Printful secrets · No Printful fulfillment before Square payment success · No Printful live confirmation outside production flags (`PRINTFUL_ALLOW_CONFIRM_ORDERS=true` + `PRINTFUL_LIVE_MODE=true`) · Square SDK loads only on checkout/payment · Printful v2 beta is the required fulfillment target · AHA owns the storefront product layer because v2 has no sync products/templates.
+- **Every work session must end with:** what changed · files touched · tests run · risks · remaining gaps · next recommended step.
+
+---
+
 ## Current Production Truth
 
 - Canonical branch: `main`
