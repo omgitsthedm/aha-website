@@ -15,8 +15,11 @@ const COLLECTIONS = Object.values(SUBWAY_LINES).map((line) => ({
 
 const PRIMARY_LINKS = [
   { label: "Shop", href: "/shop" },
+  { label: "New", href: "/new-arrivals" },
+  { label: "Best Sellers", href: "/best-sellers" },
+  { label: "Drops", href: "/drops" },
+  { label: "Lookbook", href: "/lookbook" },
   { label: "About", href: "/about" },
-  { label: "FAQ", href: "/faq" },
 ];
 
 export function NavBar() {
