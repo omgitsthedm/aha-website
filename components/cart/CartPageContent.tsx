@@ -266,7 +266,7 @@ export function CartPageContent() {
               {/* Trust badges */}
               <div className="mt-4 space-y-2">
                 <p className="font-body text-[11px] font-bold text-muted text-center tracking-[0.08em] uppercase">
-                  Secure Checkout / Free Shipping $75+ / Thirty-Day Returns
+                  Secure Checkout / Free Shipping / Thirty-Day Returns
                 </p>
                 <p className="font-body text-[11px] font-bold text-muted text-center leading-relaxed">
                   {getFulfillmentSummary()}

@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
 import { squareRequest } from "@/lib/square/client";
 import { getSquareLocationId } from "@/lib/commerce/runtime";
 import {
-  revalidateCart, createOrder, markOrderPaid, markOrderFailed,
+  revalidateCart, createOrder, markOrderPaid, markOrderFailed, findPaidOrderByIdempotencyKey,
   type CheckoutLine, type OrderContact,
 } from "@/lib/commerce/orders";
 
@@ -11,6 +10,7 @@ export const dynamic = "force-dynamic";
 
 interface CreatePaymentBody {
   sourceId: string; // single-use payment token from Square Web Payments SDK
+  idempotencyKey: string; // stable per checkout attempt (client-generated) — dedupes retries
   verificationToken?: string; // SCA / 3DS token when present
   lines: CheckoutLine[];
   contact: OrderContact;
@@ -22,9 +22,9 @@ interface SquarePaymentResponse {
 
 /**
  * POST /api/create-payment
- * Server revalidates the cart (never trusts client prices), persists the order, then charges via
- * the Square Payments API with an idempotency key. Fulfillment is NOT triggered here — a paid
- * order is picked up by the Printful draft/confirm flow (Phase 4).
+ * Revalidates the cart server-side (never trusts client prices), persists the order, then charges
+ * via the Square Payments API with a STABLE idempotency key so retries never double-charge.
+ * Fulfillment is NOT triggered here — a paid order is picked up by the Printful draft/confirm flow.
  */
 export async function POST(request: Request) {
   let body: CreatePaymentBody;
@@ -34,11 +34,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  if (!body.sourceId || !body.contact?.email || !Array.isArray(body.lines)) {
+  if (!body.sourceId || !body.idempotencyKey || !body.contact?.email || !Array.isArray(body.lines)) {
     return NextResponse.json({ error: "Missing payment details." }, { status: 400 });
   }
 
-  // 1) Server-side truth: recompute the cart.
+  // 0) Fail fast if payment config is missing — don't spray orphaned failed orders.
+  const locationId = getSquareLocationId();
+  if (!locationId || !process.env.SQUARE_ACCESS_TOKEN) {
+    return NextResponse.json({ error: "Checkout is temporarily unavailable. Please try again shortly." }, { status: 503 });
+  }
+
+  // 1) Idempotency: if this attempt already succeeded, return the same order.
+  try {
+    const existing = await findPaidOrderByIdempotencyKey(body.idempotencyKey);
+    if (existing) return NextResponse.json({ ok: true, orderNumber: existing.externalOrderNumber, deduped: true });
+  } catch { /* non-fatal: fall through to normal path */ }
+
+  // 2) Server-side truth: recompute the cart.
   let cart;
   try {
     cart = revalidateCart(body.lines);
@@ -49,7 +61,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // 2) Persist the order before charging.
+  // 3) Persist the order before charging.
   let order;
   try {
     order = await createOrder(cart, body.contact);
@@ -58,16 +70,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Could not start the order. Please try again." }, { status: 500 });
   }
 
-  // 3) Charge via Square Payments API (idempotent).
+  // 4) Charge via Square Payments API (idempotent).
+  let payment: SquarePaymentResponse["payment"];
   try {
     const result = await squareRequest<SquarePaymentResponse>("/payments", {
       method: "POST",
       revalidate: 0,
       body: {
         source_id: body.sourceId,
-        idempotency_key: randomUUID(),
+        idempotency_key: body.idempotencyKey,
         amount_money: { amount: order.total, currency: cart.currency },
-        location_id: getSquareLocationId(),
+        location_id: locationId,
         reference_id: order.externalOrderNumber,
         buyer_email_address: body.contact.email,
         note: `After Hours Agenda ${order.externalOrderNumber}`,
@@ -75,18 +88,7 @@ export async function POST(request: Request) {
         ...(body.verificationToken ? { verification_token: body.verificationToken } : {}),
       },
     });
-
-    if (result.payment.status !== "COMPLETED" && result.payment.status !== "APPROVED") {
-      await markOrderFailed(order.orderId, `status ${result.payment.status}`);
-      return NextResponse.json({ error: "Payment was not completed." }, { status: 402 });
-    }
-
-    await markOrderPaid(order.orderId, result.payment.id);
-    return NextResponse.json({
-      ok: true,
-      orderNumber: order.externalOrderNumber,
-      receiptUrl: result.payment.receipt_url ?? null,
-    });
+    payment = result.payment;
   } catch (err) {
     await markOrderFailed(order.orderId, err instanceof Error ? err.message : "charge error").catch(() => {});
     console.error("Square payment failed:", err);
@@ -95,4 +97,26 @@ export async function POST(request: Request) {
       { status: 402 }
     );
   }
+
+  if (payment.status !== "COMPLETED" && payment.status !== "APPROVED") {
+    await markOrderFailed(order.orderId, `status ${payment.status}`).catch(() => {});
+    return NextResponse.json({ error: "Payment was not completed." }, { status: 402 });
+  }
+
+  // 5) Charge SUCCEEDED. From here we NEVER tell the customer they weren't charged — if the DB
+  //    write fails, log for reconciliation and still confirm the order.
+  try {
+    await markOrderPaid(order.orderId, payment.id, body.idempotencyKey, order.total, cart.currency);
+  } catch (err) {
+    console.error(
+      `RECONCILE: order ${order.externalOrderNumber} (id ${order.orderId}) charged (payment ${payment.id}) but DB update failed:`,
+      err
+    );
+  }
+
+  return NextResponse.json({
+    ok: true,
+    orderNumber: order.externalOrderNumber,
+    receiptUrl: payment.receipt_url ?? null,
+  });
 }

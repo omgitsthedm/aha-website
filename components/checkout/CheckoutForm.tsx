@@ -38,6 +38,12 @@ export function CheckoutForm({ squareConfig }: Props) {
 
   const paymentsRef = useRef<SquarePaymentsApi | null>(null);
   const cardRef = useRef<SquareCard | null>(null);
+  // Stable idempotency key for this checkout attempt. Kept the same across network retries so a
+  // lost-response-after-charge is deduped server-side; rotated only after a definitive decline.
+  const idempotencyKeyRef = useRef<string>("");
+  if (!idempotencyKeyRef.current && typeof crypto !== "undefined") {
+    idempotencyKeyRef.current = crypto.randomUUID();
+  }
 
   const initSquare = useCallback(async () => {
     if (!window.Square || paymentsRef.current) return;
@@ -69,7 +75,9 @@ export function CheckoutForm({ squareConfig }: Props) {
     return null;
   };
 
-  const pay = async () => {
+  const pay = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (status === "paying") return;
     setError(null);
     const invalid = validate();
     if (invalid) { setError(invalid); return; }
@@ -88,6 +96,7 @@ export function CheckoutForm({ squareConfig }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sourceId: tokenResult.token,
+          idempotencyKey: idempotencyKeyRef.current,
           lines: items.map((i) => ({ squareVariationId: i.variationId, quantity: i.quantity })),
           contact: {
             email: contact.email,
@@ -101,6 +110,8 @@ export function CheckoutForm({ squareConfig }: Props) {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
+        // Definitive decline/validation from the server → rotate the key so a corrected retry is a fresh attempt.
+        idempotencyKeyRef.current = crypto.randomUUID();
         setStatus("error");
         setError(data.error || "We couldn't complete the payment. Your card was not charged.");
         return;
@@ -108,8 +119,9 @@ export function CheckoutForm({ squareConfig }: Props) {
       clearCart();
       router.push(`/order-confirmed?order=${encodeURIComponent(data.orderNumber)}`);
     } catch {
+      // Unknown outcome (network) — KEEP the key so a retry is deduped server-side, not double-charged.
       setStatus("error");
-      setError("Something went wrong. Your card was not charged — please try again.");
+      setError("Connection dropped. Tap Pay again — you won't be charged twice.");
     }
   };
 
@@ -141,6 +153,7 @@ export function CheckoutForm({ squareConfig }: Props) {
               Checkout
             </h1>
 
+            <form onSubmit={pay} noValidate>
             <fieldset className="mb-8" disabled={status === "paying"}>
               <legend className="mb-3 font-display text-xl font-black uppercase tracking-[-0.03em] text-cream">Contact</legend>
               <label className={labelC} htmlFor="email">Email (for your receipt)</label>
@@ -209,15 +222,16 @@ export function CheckoutForm({ squareConfig }: Props) {
             )}
 
             <button
-              onClick={pay}
+              type="submit"
               disabled={status === "paying"}
               className={`mt-6 w-full metrocard-gradient py-5 font-body text-base font-bold uppercase tracking-[0.08em] transition-all ${status === "paying" ? "cursor-wait opacity-70" : "cursor-pointer"}`}
             >
               <span className="relative z-10">{status === "paying" ? "Processing…" : `Pay ${money(total)}`}</span>
             </button>
             <p className="mt-3 font-body text-xs font-bold leading-relaxed text-muted">
-              Secured by Square. Your card details never touch our servers. Free shipping — tax shown by Square before capture.
+              Secured by Square — your card details never touch our servers. Free shipping, and the price you see is the price you pay.
             </p>
+            </form>
           </div>
 
           {/* Order summary */}

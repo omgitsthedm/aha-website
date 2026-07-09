@@ -9,7 +9,7 @@ import { SplitFlap } from "@/components/ui/SplitFlap";
 const MESSAGES = [
   "BLACKLIGHT GRUNGE / HARD BORDERS / ZERO POLISH",
   "GRAPHIC TEES / LOUD COLOR / MADE AFTER HOURS",
-  "NO KINGS / NO BASICS / FREE SHIPPING $75+",
+  "NO KINGS / NO BASICS / FREE SHIPPING",
 ];
 
 export function Entrance() {

@@ -1,7 +1,7 @@
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export const metadata = {
-  title: "About | After Hours Agenda",
+  title: "About",
   description: "The story behind After Hours Agenda. Premium streetwear from New York City.",
 };
 

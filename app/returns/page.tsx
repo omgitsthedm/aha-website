@@ -1,7 +1,7 @@
 import { RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 
 export const metadata = {
-  title: "Returns | After Hours Agenda",
+  title: "Returns",
   description: "Return policy for After Hours Agenda orders.",
 };
 

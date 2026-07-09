@@ -6,7 +6,7 @@ import {
 import { formatCents } from "@/lib/utils/money";
 
 export const metadata = {
-  title: "Shipping | After Hours Agenda",
+  title: "Shipping",
   description: "Shipping information for After Hours Agenda orders.",
 };
 

@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Care Instructions | After Hours Agenda",
+  title: "Care Instructions",
   description: "How to care for your After Hours Agenda pieces.",
 };
 

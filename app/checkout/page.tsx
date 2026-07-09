@@ -3,7 +3,7 @@ import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Checkout | After Hours Agenda",
+  title: "Checkout",
   robots: { index: false, follow: false },
 };
 

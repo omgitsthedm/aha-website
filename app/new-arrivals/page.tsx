@@ -4,7 +4,7 @@ import type { Product, Collection } from "@/lib/utils/types";
 
 export const revalidate = 300;
 export const metadata = {
-  title: "New Arrivals | After Hours Agenda",
+  title: "New Arrivals",
   description: "The latest drops and fresh graphics from After Hours Agenda — made to order, shipped free.",
 };
 

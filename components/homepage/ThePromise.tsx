@@ -30,7 +30,7 @@ export function ThePromise() {
       <div className="px-4 py-8 md:py-10">
         {visible ? (
           <SplitFlap
-            value="FREE SHIPPING $75+ / THIRTY-DAY RETURNS / TRACKED DELIVERY"
+            value="FREE SHIPPING / THIRTY-DAY RETURNS / TRACKED DELIVERY"
             fontSize="clamp(0.7rem, 1.8vw, 1rem)"
             shrinkToFit
           />

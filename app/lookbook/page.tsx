@@ -6,7 +6,7 @@ import type { Product } from "@/lib/utils/types";
 
 export const revalidate = 300;
 export const metadata = {
-  title: "Lookbook | After Hours Agenda",
+  title: "Lookbook",
   description: "After Hours Agenda editorial — the graphics in the wild. Shop the look.",
 };
 
@@ -49,7 +49,7 @@ export default async function LookbookPage() {
                   className={`${isPrintfulImage(p.images[0]) ? "object-contain p-6" : "object-cover"} transition-transform duration-500 group-hover:scale-[1.03]`}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
-                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-[#10100F] to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-[#10100F] to-transparent p-4 opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100">
                   <span className="font-display text-lg font-black uppercase tracking-[-0.03em] text-cream">{p.name}</span>
                   <span className="font-body text-xs font-bold uppercase tracking-[0.08em] text-[#CCFF00]">Shop →</span>
                 </div>

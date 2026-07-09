@@ -1,7 +1,7 @@
 import { CartPageContent } from "@/components/cart/CartPageContent";
 
 export const metadata = {
-  title: "Your Bag | After Hours Agenda",
+  title: "Your Bag",
   description: "Review your shopping bag and proceed to checkout.",
 };
 

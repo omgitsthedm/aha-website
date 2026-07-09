@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Privacy Policy | After Hours Agenda",
+  title: "Privacy Policy",
   description: "Privacy policy for After Hours Agenda.",
 };
 

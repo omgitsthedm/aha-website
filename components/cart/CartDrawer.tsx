@@ -177,7 +177,7 @@ export function CartDrawer() {
               </Link>
               {/* Trust line */}
               <p className="font-body font-medium text-[11px] text-muted text-center pt-3 tracking-[0.1em]">
-                Secure Checkout / Free Shipping $75+ / Thirty-Day Returns
+                Secure Checkout / Free Shipping / Thirty-Day Returns
               </p>
               <p className="font-body text-[11px] text-muted text-center leading-relaxed">
                 {getFulfillmentSummary()}

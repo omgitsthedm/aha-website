@@ -37,9 +37,13 @@ export function ProductDetail({ product, related, collection, enrichment }: Prod
     (v) => v.id === selectedVariation
   );
 
-  // Purchasable gate for the selected size (defaults to allowed when no manifest enrichment).
+  // Purchasable gate for the selected size. If the product is mapped (has enrichment) but this
+  // size isn't a known purchasable variant, fail CLOSED. Only products with no manifest match
+  // at all default to allowed (live Square item not yet in the internal catalog).
   const currentSize = (currentVariation?.name || "").toUpperCase();
-  const purchasable = enrichment?.purchasableBySize[currentSize] ?? { ok: true, reasons: [] };
+  const purchasable = enrichment
+    ? (enrichment.purchasableBySize[currentSize] ?? { ok: false, reasons: ["size unavailable"] })
+    : { ok: true, reasons: [] };
 
   const line = collection ? getLineForCollection(collection.slug) : null;
   const lineColor = line?.color || "#1A1917";
@@ -299,7 +303,7 @@ export function ProductDetail({ product, related, collection, enrichment }: Prod
                   Checkout
                 </dt>
                 <dd className="mt-1 text-cream">
-                  Secure Square checkout confirms shipping and tax before payment.
+                  Secure Square checkout. Free shipping — the price you see is the price you pay.
                 </dd>
               </div>
             </dl>
@@ -393,7 +397,7 @@ export function ProductDetail({ product, related, collection, enrichment }: Prod
                 Secure Checkout
               </span>
               <span className="zine-sticker bg-[#CCFF00]">
-                Free Shipping $75+
+                Free Shipping
               </span>
               <span className="zine-sticker bg-[#FFAA00]">
                 Made to Order

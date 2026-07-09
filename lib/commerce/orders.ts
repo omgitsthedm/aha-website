@@ -1,7 +1,7 @@
 // Order layer: server-side cart revalidation (never trust client prices) + DB persistence.
 // Payment status and fulfillment status are tracked separately (§14/§28).
 import { db, isDbConfigured } from "@/lib/db/client";
-import { orders, orderItems, auditLog } from "@/db/schema";
+import { orders, orderItems, payments, auditLog } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { loadProducts } from "@/lib/data/products";
 import type { AhaProduct, AhaVariant } from "@/lib/types/product";
@@ -120,10 +120,29 @@ export async function createOrder(
   return { orderId: order.id, externalOrderNumber: external, total };
 }
 
-export async function markOrderPaid(orderId: number, squarePaymentId: string): Promise<void> {
+/** If a payment with this idempotency key already succeeded, return the order it belongs to. */
+export async function findPaidOrderByIdempotencyKey(
+  idempotencyKey: string
+): Promise<{ orderId: number; externalOrderNumber: string } | null> {
+  if (!isDbConfigured()) return null;
+  const [pay] = await db().select({ orderId: payments.orderId })
+    .from(payments).where(eq(payments.idempotencyKey, idempotencyKey)).limit(1);
+  if (!pay?.orderId) return null;
+  const [ord] = await db().select({ id: orders.id, num: orders.externalOrderNumber })
+    .from(orders).where(eq(orders.id, pay.orderId)).limit(1);
+  return ord ? { orderId: ord.id, externalOrderNumber: ord.num } : null;
+}
+
+export async function markOrderPaid(
+  orderId: number, squarePaymentId: string, idempotencyKey: string, amount: number, currency: string
+): Promise<void> {
   await db().update(orders)
     .set({ paymentStatus: "paid", squarePaymentId, customerStatus: "Payment confirmed", updatedAt: new Date() })
     .where(eq(orders.id, orderId));
+  // Records the payment; UNIQUE(idempotencyKey, squarePaymentId) enforces dedupe at the DB.
+  await db().insert(payments).values({
+    orderId, squarePaymentId, status: "paid", amount, currency, idempotencyKey,
+  }).onConflictDoNothing();
   await db().insert(auditLog).values({
     entityType: "order", entityId: String(orderId), action: "paid",
     oldStatus: "created", newStatus: "paid", source: "create-payment",

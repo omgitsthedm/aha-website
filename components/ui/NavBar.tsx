@@ -28,8 +28,13 @@ export function NavBar() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    if (menuOpen) document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
     };
   }, [menuOpen]);
 
@@ -119,10 +124,11 @@ export function NavBar() {
         id="mobile-nav-menu"
         role="navigation"
         aria-label="Mobile navigation"
-        className={`fixed inset-0 z-[90] bg-[#10100F] color-pop-grid px-6 pb-10 pt-28 transition-opacity duration-200 md:hidden ${
+        aria-hidden={!menuOpen}
+        className={`fixed inset-0 z-[90] overflow-y-auto overscroll-contain bg-[#10100F] color-pop-grid px-6 pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-28 transition-opacity duration-200 md:hidden ${
           menuOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+            ? "visible opacity-100 pointer-events-auto"
+            : "invisible opacity-0 pointer-events-none"
         }`}
       >
         <div className="zine-block-lime zine-cut mb-8 p-5">

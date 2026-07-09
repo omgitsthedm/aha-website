@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 const MESSAGES = [
-  "Free Shipping $75+",
+  "Free Shipping",
   "Made to Order",
   "Thirty-Day Returns",
 ];
