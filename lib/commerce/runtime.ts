@@ -17,6 +17,33 @@ export function getSquareBaseUrl(): string {
   return SQUARE_BASE_URLS[getCommerceEnvironment()];
 }
 
+export function getSquareLocationId(): string {
+  return process.env.SQUARE_LOCATION_ID || "";
+}
+
+const SQUARE_WEB_SDK_URLS: Record<CommerceEnvironment, string> = {
+  production: "https://web.squarecdn.com/v1/square.js",
+  sandbox: "https://sandbox.web.squarecdn.com/v1/square.js",
+};
+
+/** Public config for the browser Web Payments SDK. Resolved server-side, passed to the client. */
+export interface SquareWebPaymentsConfig {
+  environment: CommerceEnvironment;
+  applicationId: string;
+  locationId: string;
+  sdkUrl: string;
+}
+
+export function getSquareWebPaymentsConfig(): SquareWebPaymentsConfig {
+  const environment = getCommerceEnvironment();
+  return {
+    environment,
+    applicationId: process.env.NEXT_PUBLIC_SQUARE_APP_ID || process.env.SQUARE_APPLICATION_ID || "",
+    locationId: getSquareLocationId(),
+    sdkUrl: SQUARE_WEB_SDK_URLS[environment],
+  };
+}
+
 export function getFulfillmentMode(): FulfillmentMode {
   const value = (process.env.AHA_FULFILLMENT_MODE || "manual").toLowerCase();
   if (value === "dry-run") return "dry-run";
