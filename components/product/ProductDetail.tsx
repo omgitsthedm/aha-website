@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product, Collection } from "@/lib/utils/types";
+import type { ProductEnrichment } from "@/lib/data/enrichment";
 import { useCart } from "@/components/cart/CartProvider";
 import { RouteBadge } from "@/components/ui/RouteBadge";
 import { WhiteBand } from "@/components/ui/WhiteBand";
@@ -20,9 +21,10 @@ interface ProductDetailProps {
   product: Product;
   related: Product[];
   collection?: Collection;
+  enrichment?: ProductEnrichment | null;
 }
 
-export function ProductDetail({ product, related, collection }: ProductDetailProps) {
+export function ProductDetail({ product, related, collection, enrichment }: ProductDetailProps) {
   const { addItem } = useCart();
   const [selectedVariation, setSelectedVariation] = useState(
     product.variations[0]?.id || ""
@@ -34,6 +36,10 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
   const currentVariation = product.variations.find(
     (v) => v.id === selectedVariation
   );
+
+  // Purchasable gate for the selected size (defaults to allowed when no manifest enrichment).
+  const currentSize = (currentVariation?.name || "").toUpperCase();
+  const purchasable = enrichment?.purchasableBySize[currentSize] ?? { ok: true, reasons: [] };
 
   const line = collection ? getLineForCollection(collection.slug) : null;
   const lineColor = line?.color || "#1A1917";
@@ -55,7 +61,7 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
     /limited|exclusive/i.test(product.description);
 
   const handleAddToCart = () => {
-    if (!currentVariation) return;
+    if (!currentVariation || !purchasable.ok) return;
 
     addItem(
       {
@@ -263,13 +269,29 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
                   Fit
                 </dt>
                 <dd className="mt-1 text-cream">
-                  Size guide is one tap away before you choose.{" "}
+                  {enrichment?.fitDescription || "Standard unisex fit — true to size."}{" "}
                   <Link
                     href="/size-guide"
                     className="text-[#00FFFF] underline underline-offset-4"
                   >
-                    View sizes
+                    Size guide
                   </Link>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.1em] text-muted">
+                  Fabric
+                </dt>
+                <dd className="mt-1 text-cream">
+                  {enrichment?.fabricDescription || "Premium print, made to order."}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.1em] text-muted">
+                  Care
+                </dt>
+                <dd className="mt-1 text-cream">
+                  {enrichment?.careInstructions || "Machine wash cold, inside out. Do not iron the print."}
                 </dd>
               </div>
               <div>
@@ -335,17 +357,29 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           <button
             ref={btnRef}
             onClick={handleAddToCart}
+            disabled={!purchasable.ok}
             aria-live="polite"
-            className="turnstile-btn metrocard-gradient w-full cursor-pointer py-5 font-body text-base font-bold tracking-[0.08em] transition-all duration-300"
+            aria-disabled={!purchasable.ok}
+            className={`turnstile-btn metrocard-gradient w-full py-5 font-body text-base font-bold tracking-[0.08em] transition-all duration-300 ${
+              purchasable.ok ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+            }`}
           >
             <span className="relative z-10">
-              {addedFeedback ? (
+              {!purchasable.ok ? (
+                "SOLD OUT"
+              ) : addedFeedback ? (
                 <span className="text-[#10100F]">Added</span>
               ) : (
                 `ADD TO BAG - ${currentVariation?.priceFormatted || product.priceFormatted}`
               )}
             </span>
           </button>
+          {!purchasable.ok && (
+            <p className="mt-2 font-body text-xs font-bold leading-relaxed text-[#FFAA00]">
+              This size isn&apos;t available right now.{" "}
+              <Link href="/contact" className="underline underline-offset-4">Ask us about a restock</Link>.
+            </p>
+          )}
 
           <p className="mt-3 font-body text-xs font-bold leading-relaxed text-muted">
             {RETURNS_SUMMARY}

@@ -1,4 +1,5 @@
 import { getAllProducts, getProduct, getAllCollections } from "@/lib/square/catalog";
+import { getProductEnrichment } from "@/lib/data/enrichment";
 import { ProductDetail } from "@/components/product/ProductDetail";
 import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
 import { notFound } from "next/navigation";
@@ -74,10 +75,12 @@ export default async function ProductPage({ params }: { params: { slug: string }
     product!.collectionIds.includes(c.id)
   );
 
+  const enrichment = getProductEnrichment(product.slug);
+
   return (
     <>
       <ProductJsonLd product={product} />
-      <ProductDetail product={product} related={related} collection={collection} />
+      <ProductDetail product={product} related={related} collection={collection} enrichment={enrichment} />
     </>
   );
 }
