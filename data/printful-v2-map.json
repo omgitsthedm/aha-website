@@ -1,0 +1,4 @@
+{
+  "_note": "ahaVariantId -> Printful v2 catalog variant + placements + print files (fulfillment source of truth). Source is always 'catalog' (v2 has no sync products). Populated once real catalog variant IDs + production file URLs/ids + placements are supplied. See §24.",
+  "map": {}
+}

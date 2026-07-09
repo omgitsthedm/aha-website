@@ -7,6 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "validate:products": "tsx scripts/validate-products.ts",
+    "validate:square-map": "tsx scripts/validate-square-map.ts",
+    "validate:printful-v2-map": "tsx scripts/validate-printful-v2-map.ts",
+    "margin-check": "tsx scripts/margin-check.ts",
+    "validate:all": "npm run validate:products && npm run validate:square-map && npm run validate:printful-v2-map && npm run margin-check",
     "verify:commerce-readiness": "node ops/commerce-readiness.mjs",
     "verify:commerce-readiness:netlify": "node ops/commerce-readiness.mjs --netlify --context production",
     "verify:netlify-site": "bash ops/netlify-target-guard.sh site",
@@ -29,6 +35,7 @@
     "eslint-config-next": "^14.2.35",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
+    "tsx": "^4.19.2",
     "typescript": "^5.9.3"
   },
   "overrides": {

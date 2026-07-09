@@ -1,0 +1,4 @@
+{
+  "_note": "AHA-owned product storytelling + storefront metadata. External IDs are merged in from square-map.json and printful-v2-map.json by ahaVariantId at load. Populated from the 131-product catalog once Printful v2 catalog variant IDs + production print files + placements are supplied. See docs/MASTER-BUILD-INSTRUCTION.md §13.",
+  "products": []
+}

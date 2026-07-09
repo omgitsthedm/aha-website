@@ -26,6 +26,47 @@
   --aha-radius: 0px;
   --aha-font-grunge: 'Courier New', Courier, monospace;
   --aha-font-display: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  --aha-font-mono: var(--font-ibm-plex), 'Courier New', Menlo, monospace;
+
+  /* Semantic state tokens (commerce UI) — see docs/design-tokens.md */
+  --aha-state-success: var(--aha-neon-green);
+  --aha-state-danger: var(--aha-shock-pink);
+  --aha-state-warning: var(--aha-sunburst);
+  --aha-state-info: var(--aha-cyan);
+  --aha-state-sold-out: var(--aha-concrete);
+
+  /* Spacing scale (4px base) */
+  --aha-space-1: 0.25rem;
+  --aha-space-2: 0.5rem;
+  --aha-space-3: 0.75rem;
+  --aha-space-4: 1rem;
+  --aha-space-6: 1.5rem;
+  --aha-space-8: 2rem;
+  --aha-space-12: 3rem;
+  --aha-space-16: 4rem;
+
+  /* Motion (150–300ms doctrine; respect prefers-reduced-motion) */
+  --aha-motion-fast: 150ms;
+  --aha-motion-base: 220ms;
+  --aha-motion-slow: 300ms;
+  --aha-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Minimum touch target (WCAG 2.2 AA) */
+  --aha-tap-min: 44px;
+
+  /* Z-index scale */
+  --aha-z-nav: 100;
+  --aha-z-drawer: 200;
+  --aha-z-modal: 300;
+  --aha-z-toast: 400;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --aha-motion-fast: 0ms;
+    --aha-motion-base: 0ms;
+    --aha-motion-slow: 0ms;
+  }
 }
 
 @layer base {

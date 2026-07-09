@@ -1,0 +1,4 @@
+{
+  "_note": "ahaVariantId -> Square catalog identifiers (payments/orders source of truth). Values populated from Square. No secrets here — IDs only. See §7/§15.",
+  "map": {}
+}

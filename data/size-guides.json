@@ -1,0 +1,4 @@
+{
+  "_note": "Product-specific size guides (inches; cm derived at render). Keyed by size-guide id, referenced by product.sizeGuideId. Do not reuse one chart across blanks with different measurements. See §19.",
+  "sizeGuides": []
+}
