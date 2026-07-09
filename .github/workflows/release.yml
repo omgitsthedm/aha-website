@@ -1,0 +1,29 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+# Verifies the tagged commit is live and healthy. Does NOT create charges or confirm
+# Printful orders. Uses the repo's own exact-site + live guards.
+jobs:
+  verify-production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20", cache: "npm" }
+      - run: npm ci
+      - name: Verify live site serves AHA content
+        run: LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      - name: Generate changelog
+        run: |
+          echo "## ${GITHUB_REF_NAME}" > RELEASE_NOTES.md
+          git log --pretty=format:'- %s' $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null)..HEAD >> RELEASE_NOTES.md || true
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: RELEASE_NOTES.md

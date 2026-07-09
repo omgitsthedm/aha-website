@@ -1,0 +1,28 @@
+name: lighthouse
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+# Performance budgets (§39): LCP <=2.5s, INP <=200ms, CLS <=0.1. Runs against the built
+# site locally; tighten to Deploy Preview URLs once staging is wired.
+jobs:
+  performance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20", cache: "npm" }
+      - run: npm ci
+      - run: npm run build
+      - name: Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:3000/
+            http://localhost:3000/shop
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        env:
+          # start the server for LHCI
+          LHCI_START_COMMAND: "npm run start"
