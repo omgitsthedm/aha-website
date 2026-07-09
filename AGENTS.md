@@ -1,10 +1,9 @@
 # AI Tool Entry
 
-Read `.ai/RULES.md` and `.ai/STATE.md` before working.
+Read these before working (in order): `README.md` → `docs/MASTER-UIUX-HANDOFF-v2.md` (controlling doctrine) → `docs/MASTER-BUILD-INSTRUCTION.md` (build spec) → `CLAUDE.md` → `.ai/RULES.md` → `.ai/STATE.md`.
 
-The shared project rules live in `.ai/RULES.md`.
-The current project state lives in `.ai/STATE.md`.
-
-Do not duplicate project rules in this file.
+- Shared project rules: `.ai/RULES.md`. Current state: `.ai/STATE.md`. Live truth: `SOURCE_OF_TRUTH.md`.
+- Build order + phase status: `docs/MASTER-BUILD-INSTRUCTION.md §46` and `.ai/STATE.md`.
+- Commands: `README.md`. Do not duplicate project rules in this file.
 
 Do not push, deploy, delete, modify secrets, modify production data, alter commerce behavior, or touch live systems without the required project gate.
