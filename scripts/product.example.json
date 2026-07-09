@@ -1,0 +1,15 @@
+{
+  "_note": "Example product spec for scripts/create-product.mjs. catalogVariantId = the Printful CATALOG variant id for that garment+size (look up via GET /v2/catalog-products/{id} or the Printful catalog). fileUrl must be a publicly reachable print-ready PNG.",
+  "name": "Midnight Runners Tee",
+  "retailPrice": 3800,
+  "currency": "USD",
+  "placements": [
+    { "placement": "front", "technique": "dtg", "fileUrl": "https://afterhoursagenda.com/printful-assets/Be_You.png" }
+  ],
+  "variants": [
+    { "size": "S", "catalogVariantId": 4012 },
+    { "size": "M", "catalogVariantId": 4013 },
+    { "size": "L", "catalogVariantId": 4014 },
+    { "size": "XL", "catalogVariantId": 4015 }
+  ]
+}
