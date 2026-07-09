@@ -26,38 +26,13 @@ export function CartPageContent() {
   const shippingLine = getShippingLineCopy(total);
 
   const handleCheckout = async () => {
+    // On-brand, on-domain checkout (Square Web Payments). The old hosted-link flow (/api/checkout)
+    // remains as a fallback if this line is reverted.
     setIsCheckingOut(true);
     setError(null);
-
     try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items.map((item) => ({
-            catalogObjectId: item.variationId,
-            quantity: item.quantity,
-            name: item.name,
-          })),
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Checkout failed");
-      }
-
-      // Validate checkout URL before redirecting (only allow Square domains)
-      const checkoutUrl = new URL(data.checkoutUrl);
-      const allowedHosts = ["squareup.com", "square.link", "squareupsandbox.com"];
-      const isAllowedHost = allowedHosts.some(
-        (host) => checkoutUrl.hostname === host || checkoutUrl.hostname.endsWith(`.${host}`)
-      );
-      if (!isAllowedHost) {
-        throw new Error("Invalid checkout URL received");
-      }
-      window.location.href = data.checkoutUrl;
+      window.location.href = "/checkout";
+      return;
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Something went wrong. Please try again."

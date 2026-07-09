@@ -7,11 +7,16 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 
-type SquareCard = {
-  attach: (selector: string) => Promise<void>;
-  tokenize: () => Promise<{ status: string; token: string }>;
+type TokenResult = { status: string; token: string };
+type SquareCard = { attach: (selector: string) => Promise<void>; tokenize: () => Promise<TokenResult> };
+type SquareWallet = { attach?: (selector: string, opts?: unknown) => Promise<void>; tokenize: () => Promise<TokenResult> };
+type SquarePaymentRequest = unknown;
+type SquarePaymentsApi = {
+  card: () => Promise<SquareCard>;
+  paymentRequest: (req: unknown) => SquarePaymentRequest;
+  applePay: (req: SquarePaymentRequest) => Promise<SquareWallet>;
+  googlePay: (req: SquarePaymentRequest) => Promise<SquareWallet>;
 };
-type SquarePaymentsApi = { card: () => Promise<SquareCard> };
 declare global {
   interface Window {
     Square?: { payments: (appId: string, locationId: string) => SquarePaymentsApi };
@@ -38,6 +43,10 @@ export function CheckoutForm({ squareConfig }: Props) {
 
   const paymentsRef = useRef<SquarePaymentsApi | null>(null);
   const cardRef = useRef<SquareCard | null>(null);
+  const applePayRef = useRef<SquareWallet | null>(null);
+  const googlePayRef = useRef<SquareWallet | null>(null);
+  const [applePayReady, setApplePayReady] = useState(false);
+  const [googlePayReady, setGooglePayReady] = useState(false);
   // Stable idempotency key for this checkout attempt. Kept the same across network retries so a
   // lost-response-after-charge is deduped server-side; rotated only after a definitive decline.
   const idempotencyKeyRef = useRef<string>("");
@@ -58,9 +67,31 @@ export function CheckoutForm({ squareConfig }: Props) {
       await card.attach("#aha-card");
       cardRef.current = card;
       setSdkReady(true);
+
+      // Wallets — init defensively. Apple Pay needs a registered merchant domain in Square; if that
+      // isn't set up (or the device/browser doesn't support a wallet), init throws and we just hide it.
+      try {
+        const req = payments.paymentRequest({
+          countryCode: "US",
+          currencyCode: "USD",
+          total: { amount: (total / 100).toFixed(2), label: "After Hours Agenda" },
+        });
+        try {
+          applePayRef.current = await payments.applePay(req);
+          setApplePayReady(true);
+        } catch { /* Apple Pay unavailable */ }
+        try {
+          const gp = await payments.googlePay(req);
+          await gp.attach?.("#aha-gpay", { buttonColor: "white", buttonType: "long", buttonSizeMode: "fill" });
+          googlePayRef.current = gp;
+          setGooglePayReady(true);
+        } catch { /* Google Pay unavailable */ }
+      } catch { /* paymentRequest unavailable */ }
     } catch {
       setError("Could not load the secure card field. Refresh and try again.");
     }
+    // total is fixed for the life of this checkout page (cart doesn't change here).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [squareConfig.applicationId, squareConfig.locationId]);
 
   useEffect(() => {
@@ -75,27 +106,16 @@ export function CheckoutForm({ squareConfig }: Props) {
     return null;
   };
 
-  const pay = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    if (status === "paying") return;
-    setError(null);
-    const invalid = validate();
-    if (invalid) { setError(invalid); return; }
-    if (!cardRef.current) { setError("Payment field is still loading."); return; }
-
+  // Shared charge path for card + wallet tokens.
+  const submitWithToken = async (token: string) => {
     setStatus("paying");
+    setError(null);
     try {
-      const tokenResult = await cardRef.current.tokenize();
-      if (tokenResult.status !== "OK") {
-        setStatus("error");
-        setError("Please check your card details and try again.");
-        return;
-      }
       const res = await fetch("/api/create-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sourceId: tokenResult.token,
+          sourceId: token,
           idempotencyKey: idempotencyKeyRef.current,
           lines: items.map((i) => ({ squareVariationId: i.variationId, quantity: i.quantity })),
           contact: {
@@ -110,7 +130,7 @@ export function CheckoutForm({ squareConfig }: Props) {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        // Definitive decline/validation from the server → rotate the key so a corrected retry is a fresh attempt.
+        // Definitive decline/validation → rotate the key so a corrected retry is a fresh attempt.
         idempotencyKeyRef.current = crypto.randomUUID();
         setStatus("error");
         setError(data.error || "We couldn't complete the payment. Your card was not charged.");
@@ -122,6 +142,32 @@ export function CheckoutForm({ squareConfig }: Props) {
       // Unknown outcome (network) — KEEP the key so a retry is deduped server-side, not double-charged.
       setStatus("error");
       setError("Connection dropped. Tap Pay again — you won't be charged twice.");
+    }
+  };
+
+  const pay = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (status === "paying") return;
+    setError(null);
+    const invalid = validate();
+    if (invalid) { setError(invalid); return; }
+    if (!cardRef.current) { setError("Payment field is still loading."); return; }
+    const t = await cardRef.current.tokenize();
+    if (t.status !== "OK") { setError("Please check your card details and try again."); return; }
+    await submitWithToken(t.token);
+  };
+
+  const payWallet = async (wallet: SquareWallet | null) => {
+    if (!wallet || status === "paying") return;
+    setError(null);
+    const invalid = validate();
+    if (invalid) { setError(`${invalid} It's needed to ship your order.`); return; }
+    try {
+      const t = await wallet.tokenize();
+      if (t.status !== "OK") return; // shopper dismissed the wallet sheet
+      await submitWithToken(t.token);
+    } catch {
+      setError("Wallet payment didn't complete. Try again or use a card.");
     }
   };
 
@@ -208,6 +254,27 @@ export function CheckoutForm({ squareConfig }: Props) {
 
             <fieldset disabled={status === "paying"}>
               <legend className="mb-3 font-display text-xl font-black uppercase tracking-[-0.03em] text-cream">Payment</legend>
+
+              {/* Express wallets (shown only when the device/browser + Square support them) */}
+              {(applePayReady || googlePayReady) && (
+                <div className="mb-5">
+                  <p className="mb-2 font-body text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Express checkout</p>
+                  <div className="space-y-2">
+                    {applePayReady && (
+                      <button type="button" onClick={() => payWallet(applePayRef.current)} aria-label="Pay with Apple Pay"
+                        className="min-h-12 w-full bg-white font-body text-base font-bold uppercase tracking-[0.06em] text-black transition-transform hover:-translate-y-0.5"> Apple Pay </button>
+                    )}
+                    {googlePayReady && (
+                      <div id="aha-gpay" role="button" aria-label="Pay with Google Pay" onClick={() => payWallet(googlePayRef.current)}
+                        className="min-h-12 cursor-pointer overflow-hidden" />
+                    )}
+                  </div>
+                  <div className="my-4 flex items-center gap-3 font-body text-[11px] font-bold uppercase tracking-[0.12em] text-muted">
+                    <span className="h-px flex-1 bg-[#E9E1D4]/30" /> or pay with card <span className="h-px flex-1 bg-[#E9E1D4]/30" />
+                  </div>
+                </div>
+              )}
+
               {/* Square Web Payments SDK mounts the secure card field here */}
               <div id="aha-card" className="min-h-[56px] border-[3px] border-[#E9E1D4] bg-[#15110F] p-3" />
               {!sdkReady && !error && (
