@@ -15,6 +15,7 @@ const SUPPORT_LINKS = [
 const LEGAL_LINKS = [
   { label: "Privacy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
+  { label: "Accessibility", href: "/accessibility" },
 ];
 
 const SOCIAL_LINKS = [

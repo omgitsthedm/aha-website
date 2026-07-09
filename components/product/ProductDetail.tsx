@@ -10,6 +10,11 @@ import { WhiteBand } from "@/components/ui/WhiteBand";
 import { getLineForCollection } from "@/lib/utils/subway-lines";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
+import {
+  getFulfillmentSummary,
+  RETURNS_SUMMARY,
+  RETURNS_WINDOW,
+} from "@/lib/commerce/policies";
 
 interface ProductDetailProps {
   product: Product;
@@ -196,6 +201,17 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
               ))}
             </div>
           )}
+
+          {product.images[activeImage] && (
+            <a
+              href={product.images[activeImage]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center border-[3px] border-[#E9E1D4] bg-[#15110F] px-4 py-2 font-body text-xs font-bold uppercase tracking-[0.08em] text-[#E9E1D4] underline underline-offset-4 transition-colors hover:bg-[#E9E1D4] hover:text-[#10100F]"
+            >
+              Open full image
+            </a>
+          )}
         </div>
 
         {/* Details */}
@@ -216,6 +232,56 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           >
             {currentVariation?.priceFormatted || product.priceFormatted}
           </p>
+
+          <div className="zine-block mb-8 p-4 md:p-5">
+            <h2 className="mb-4 font-display text-2xl font-black uppercase leading-none tracking-[-0.05em] text-cream">
+              Before You Buy
+            </h2>
+            <dl className="grid gap-4 font-body text-sm font-bold leading-relaxed md:grid-cols-2">
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.1em] text-muted">
+                  Production
+                </dt>
+                <dd className="mt-1 text-cream">{getFulfillmentSummary()}</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.1em] text-muted">
+                  Returns
+                </dt>
+                <dd className="mt-1 text-cream">
+                  {RETURNS_WINDOW} for unworn pieces.{" "}
+                  <Link
+                    href="/returns"
+                    className="text-[#CCFF00] underline underline-offset-4"
+                  >
+                    Read policy
+                  </Link>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.1em] text-muted">
+                  Fit
+                </dt>
+                <dd className="mt-1 text-cream">
+                  Size guide is one tap away before you choose.{" "}
+                  <Link
+                    href="/size-guide"
+                    className="text-[#00FFFF] underline underline-offset-4"
+                  >
+                    View sizes
+                  </Link>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.1em] text-muted">
+                  Checkout
+                </dt>
+                <dd className="mt-1 text-cream">
+                  Secure Square checkout confirms shipping and tax before payment.
+                </dd>
+              </div>
+            </dl>
+          </div>
 
           {/* Service Advisory for limited/exclusive products */}
           {isLimitedOrExclusive && (
@@ -269,16 +335,21 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
           <button
             ref={btnRef}
             onClick={handleAddToCart}
+            aria-live="polite"
             className="turnstile-btn metrocard-gradient w-full cursor-pointer py-5 font-body text-base font-bold tracking-[0.08em] transition-all duration-300"
           >
             <span className="relative z-10">
               {addedFeedback ? (
                 <span className="text-[#10100F]">Added</span>
               ) : (
-                "ADD TO BAG"
+                `ADD TO BAG - ${currentVariation?.priceFormatted || product.priceFormatted}`
               )}
             </span>
           </button>
+
+          <p className="mt-3 font-body text-xs font-bold leading-relaxed text-muted">
+            {RETURNS_SUMMARY}
+          </p>
 
           {/* Trust badges */}
           <div className="mt-6 py-6">
@@ -292,6 +363,9 @@ export function ProductDetail({ product, related, collection }: ProductDetailPro
               </span>
               <span className="zine-sticker bg-[#FFAA00]">
                 Made to Order
+              </span>
+              <span className="zine-sticker bg-[#FF1493] text-[#E9E1D4]">
+                30-Day Returns
               </span>
             </div>
           </div>

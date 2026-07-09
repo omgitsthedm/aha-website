@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/cart/CartProvider";
+import { PRODUCTION_WINDOW, DELIVERY_WINDOW } from "@/lib/commerce/policies";
 
 export default function OrderConfirmedPage() {
   const { clearCart } = useCart();
@@ -38,21 +39,46 @@ export default function OrderConfirmedPage() {
             </div>
             <div className="flex gap-4">
               <span className="text-neon-lime font-mono font-bold">02</span>
-              <p>Production takes 2 to 5 business days. Quality checked before it ships.</p>
+              <p>Production takes {PRODUCTION_WINDOW}. Quality checked before it ships.</p>
             </div>
             <div className="flex gap-4">
               <span className="text-neon-lime font-mono font-bold">03</span>
-              <p>You&apos;ll get a shipping confirmation with tracking info via email.</p>
+              <p>Delivery is {DELIVERY_WINDOW}. You&apos;ll get tracking by email when it ships.</p>
             </div>
           </div>
         </div>
 
-        <Link
-          href="/shop"
-          className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] transition-all hover:-translate-y-1"
-        >
-          Continue Shopping
-        </Link>
+        <div className="zine-block mb-8 p-5 text-left">
+          <h2 className="mb-3 font-display text-sm font-black uppercase tracking-[0.1em] text-neon-cyan">
+            Need the receipt?
+          </h2>
+          <p className="font-body text-sm font-bold leading-relaxed text-cream/80">
+            Square sends the order receipt to the email used at checkout. If it
+            does not arrive, contact{" "}
+            <a
+              href="mailto:hello@afterhoursagenda.com"
+              className="text-neon-lime underline underline-offset-4"
+            >
+              hello@afterhoursagenda.com
+            </a>
+            .
+          </p>
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link
+            href="/shop"
+            className="metrocard-gradient inline-block min-h-11 px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] transition-all hover:-translate-y-1"
+          >
+            Continue Shopping
+          </Link>
+          <Link
+            href="/shipping"
+            className="inline-block min-h-11 border-[3px] border-[#E9E1D4] px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] text-[#E9E1D4] underline underline-offset-4 transition-all hover:bg-[#E9E1D4] hover:text-[#10100F]"
+          >
+            Shipping Details
+          </Link>
+        </div>
       </div>
     </div>
   );

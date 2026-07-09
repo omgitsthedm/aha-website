@@ -3,7 +3,23 @@
   publish = ".next"
 
 [build.environment]
+  NODE_VERSION = "20"
   NEXT_PUBLIC_SITE_URL = "https://www.afterhoursagenda.com"
+  SQUARE_API_VERSION = "2024-01-18"
+  AHA_FULFILLMENT_MODE = "manual"
+
+[context.production.environment]
+  SQUARE_ENVIRONMENT = "production"
+  SQUARE_WEBHOOK_NOTIFICATION_URL = "https://www.afterhoursagenda.com/api/webhooks/square"
+  AHA_FULFILLMENT_MODE = "manual"
+
+[context.deploy-preview.environment]
+  SQUARE_ENVIRONMENT = "sandbox"
+  AHA_FULFILLMENT_MODE = "dry-run"
+
+[context.branch-deploy.environment]
+  SQUARE_ENVIRONMENT = "sandbox"
+  AHA_FULFILLMENT_MODE = "dry-run"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

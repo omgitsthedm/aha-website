@@ -69,6 +69,15 @@ styles/          → Global styles
 
 ## Design Standards
 
+### UI / UX Doctrine
+- Follow `MASTER UI / UX / PRODUCT HANDOFF — v2` as the current Little Fight NYC product doctrine.
+- For AHA, classify the product as **E-Commerce / DTC Store** first, with content/editorial surfaces second.
+- Every storefront change must improve shopper comprehension, task completion, trust, speed, accessibility, or honest conversion.
+- PDPs must show price, size/variant choice, production/delivery expectations, return summary, full-image access, and an Add to Bag action before the shopper has to leave the page.
+- Cart and checkout-entry surfaces must show subtotal, shipping expectation, tax expectation, fulfillment expectation, support path on error, and Square/wallet handoff language before payment.
+- No fake urgency, fabricated scarcity, hidden fees, forced account creation, newsletter popups before value, or vague checkout CTAs.
+- Accessibility statement, visible focus, touch targets, semantic labels, reduced-motion respect, and mobile-first layouts are part of done.
+
 ### Brand Feel
 - **Bold, minimal, confident.** Not cluttered, not loud.
 - Dark palette with high-contrast accents. The brand should feel like it belongs on a night street in NYC.

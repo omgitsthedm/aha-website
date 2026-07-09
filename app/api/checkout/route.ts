@@ -1,4 +1,9 @@
 import { NextResponse } from "next/server";
+import {
+  getCommerceEnvironment,
+  getFulfillmentMode,
+  resolveSiteUrl,
+} from "@/lib/commerce/runtime";
 import { squareRequest } from "@/lib/square/client";
 
 interface CheckoutItem {
@@ -82,7 +87,7 @@ export async function POST(request: Request) {
 
     const idempotencyKey = crypto.randomUUID();
     // Always use our own redirect URL — never accept from client (prevents open redirect)
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.afterhoursagenda.com";
+    const siteUrl = resolveSiteUrl(request);
     const redirectUrl = `${siteUrl}/order-confirmed`;
 
     const response = await squareRequest<PaymentLinkResponse>(
@@ -108,6 +113,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       checkoutUrl: response.payment_link.url,
       orderId: response.payment_link.order_id,
+      environment: getCommerceEnvironment(),
+      fulfillmentMode: getFulfillmentMode(),
     });
   } catch (error) {
     console.error("Checkout error:", error);

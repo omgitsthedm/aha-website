@@ -225,19 +225,25 @@ export function AddToCartModal({
 
           {/* CTAs */}
           <WhiteBand />
-          <div className="px-6 py-5 flex gap-3">
-            <button
-              onClick={handleClose}
-              className="flex-1 py-3 border-[3px] border-[#E9E1D4] font-body font-bold text-xs text-cream uppercase tracking-[0.1em] hover:bg-[#E9E1D4] hover:text-[#10100F] transition-all duration-300"
-            >
-              Keep Shopping
-            </button>
-            <button
-              onClick={handleViewBag}
-              className="flex-1 py-3 metrocard-gradient font-body font-bold text-xs uppercase tracking-[0.1em] transition-transform duration-300 hover:-translate-y-1"
-            >
-              View Bag
-            </button>
+          <div className="px-6 py-5">
+            <p className="mb-4 font-body text-xs font-bold leading-relaxed text-muted">
+              Review shipping, tax, returns, and supported wallet options before
+              Square payment.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={handleClose}
+                className="flex-1 py-3 border-[3px] border-[#E9E1D4] font-body font-bold text-xs text-cream uppercase tracking-[0.1em] hover:bg-[#E9E1D4] hover:text-[#10100F] transition-all duration-300"
+              >
+                Keep Shopping
+              </button>
+              <button
+                onClick={handleViewBag}
+                className="flex-1 py-3 metrocard-gradient font-body font-bold text-xs uppercase tracking-[0.1em] transition-transform duration-300 hover:-translate-y-1"
+              >
+                Review Bag
+              </button>
+            </div>
           </div>
         </div>
       </div>

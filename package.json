@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "verify:commerce-readiness": "node ops/commerce-readiness.mjs",
+    "verify:commerce-readiness:netlify": "node ops/commerce-readiness.mjs --netlify --context production",
     "verify:netlify-site": "bash ops/netlify-target-guard.sh site",
     "verify:netlify-live": "bash ops/netlify-target-guard.sh live"
   },

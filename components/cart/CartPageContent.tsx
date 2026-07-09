@@ -6,6 +6,14 @@ import Link from "next/link";
 import { useCart } from "./CartProvider";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { WhiteBand } from "@/components/ui/WhiteBand";
+import {
+  FREE_SHIPPING_THRESHOLD_CENTS,
+  TAX_LINE_COPY,
+  WALLET_CHECKOUT_COPY,
+  formatFreeShippingDelta,
+  getFulfillmentSummary,
+  getShippingLineCopy,
+} from "@/lib/commerce/policies";
 
 export function CartPageContent() {
   const { items, removeItem, updateQuantity, totalFormatted, totalItems, total } =
@@ -13,9 +21,9 @@ export function CartPageContent() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const freeShippingThreshold = 7500; // $75 in cents
-  const qualifiesForFreeShipping = total >= freeShippingThreshold;
-  const amountToFreeShipping = freeShippingThreshold - total;
+  const qualifiesForFreeShipping = total >= FREE_SHIPPING_THRESHOLD_CENTS;
+  const amountToFreeShipping = formatFreeShippingDelta(total);
+  const shippingLine = getShippingLineCopy(total);
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
@@ -42,7 +50,7 @@ export function CartPageContent() {
 
       // Validate checkout URL before redirecting (only allow Square domains)
       const checkoutUrl = new URL(data.checkoutUrl);
-      const allowedHosts = ["squareup.com", "square.link"];
+      const allowedHosts = ["squareup.com", "square.link", "squareupsandbox.com"];
       const isAllowedHost = allowedHosts.some(
         (host) => checkoutUrl.hostname === host || checkoutUrl.hostname.endsWith(`.${host}`)
       );
@@ -66,6 +74,10 @@ export function CartPageContent() {
             Your Bag
           </h1>
           <p className="font-body text-muted mb-8 font-bold">Your bag is empty.</p>
+          <p className="mx-auto mb-8 max-w-md font-body text-sm font-bold leading-relaxed text-muted">
+            Pick a piece to start your bag. It saves in this browser, so you can
+            come back before Square checkout.
+          </p>
           <Link
             href="/shop"
             className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] hover:brightness-110 transition-all"
@@ -175,8 +187,16 @@ export function CartPageContent() {
                   <span className="font-mono">{totalFormatted}</span>
                 </div>
                 <div className="flex justify-between font-body text-sm font-bold">
-                  <span className="text-muted">Shipping</span>
-                  <span className="text-muted text-xs uppercase">Calculated at checkout</span>
+                  <span className="text-muted">Shipping estimate</span>
+                  <span className="max-w-[11rem] text-right text-xs uppercase text-muted">
+                    {shippingLine}
+                  </span>
+                </div>
+                <div className="flex justify-between gap-4 font-body text-sm font-bold">
+                  <span className="text-muted">Tax estimate</span>
+                  <span className="max-w-[11rem] text-right text-xs uppercase text-muted">
+                    {TAX_LINE_COPY}
+                  </span>
                 </div>
               </div>
 
@@ -184,21 +204,20 @@ export function CartPageContent() {
 
               <div className="flex justify-between items-center py-4">
                 <span className="font-body font-bold text-sm uppercase tracking-[0.1em]">
-                  Total
+                  Cart subtotal
                 </span>
                 <span className="font-mono text-lg font-bold">{totalFormatted}</span>
               </div>
+              <p className="mb-4 font-body text-xs font-bold leading-relaxed text-muted">
+                Final shipping, tax, and supported wallet options are shown by
+                Square before you pay.
+              </p>
 
               {/* Free shipping progress */}
               {!qualifiesForFreeShipping && (
                 <p className="font-body text-xs font-bold text-muted mb-4 text-center">
                   Add{" "}
-                  <span className="font-mono text-cream">
-                    {new Intl.NumberFormat("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                    }).format(amountToFreeShipping / 100)}
-                  </span>{" "}
+                  <span className="font-mono text-cream">{amountToFreeShipping}</span>{" "}
                   more for free shipping
                 </p>
               )}
@@ -210,10 +229,30 @@ export function CartPageContent() {
 
               {/* Error */}
               {error && (
-                <p className="font-body text-xs text-line-red mb-4 text-center">
-                  {error}
-                </p>
+                <div
+                  role="alert"
+                  className="mb-4 border-[3px] border-line-red bg-[#15110F] p-3 text-center"
+                >
+                  <p className="font-body text-xs font-bold text-line-red">
+                    {error}
+                  </p>
+                  <a
+                    href="mailto:hello@afterhoursagenda.com"
+                    className="mt-2 inline-block font-body text-[11px] font-bold uppercase text-muted underline underline-offset-4"
+                  >
+                    Contact support
+                  </a>
+                </div>
               )}
+
+              <div className="mb-4 border-[3px] border-[#00FFFF] bg-[#15110F] p-3">
+                <p className="font-body text-[11px] font-bold uppercase tracking-[0.08em] text-[#00FFFF]">
+                  Wallet-ready Square checkout
+                </p>
+                <p className="mt-1 font-body text-xs font-bold leading-relaxed text-muted">
+                  {WALLET_CHECKOUT_COPY}
+                </p>
+              </div>
 
               {/* Checkout button */}
               <button
@@ -221,13 +260,16 @@ export function CartPageContent() {
                 disabled={isCheckingOut}
                 className="metrocard-gradient block w-full py-3 font-body font-bold text-center text-sm tracking-wide transition-transform hover:-translate-y-1 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isCheckingOut ? "Processing..." : "Checkout"}
+                {isCheckingOut ? "Opening Square..." : `Checkout - ${totalFormatted} subtotal`}
               </button>
 
               {/* Trust badges */}
               <div className="mt-4 space-y-2">
                 <p className="font-body text-[11px] font-bold text-muted text-center tracking-[0.08em] uppercase">
                   Secure Checkout / Free Shipping $75+ / Thirty-Day Returns
+                </p>
+                <p className="font-body text-[11px] font-bold text-muted text-center leading-relaxed">
+                  {getFulfillmentSummary()}
                 </p>
               </div>
             </div>

@@ -7,11 +7,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { WhiteBand } from "@/components/ui/WhiteBand";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
+import {
+  TAX_LINE_COPY,
+  getFulfillmentSummary,
+  getShippingLineCopy,
+} from "@/lib/commerce/policies";
 
 export function CartDrawer() {
-  const { items, isOpen, toggleCart, removeItem, updateQuantity, totalFormatted } =
+  const { items, isOpen, toggleCart, removeItem, updateQuantity, totalFormatted, total } =
     useCart();
   const [mounted, setMounted] = useState(false);
+  const shippingLine = getShippingLineCopy(total);
 
   useEffect(() => {
     setMounted(true);
@@ -72,14 +78,16 @@ export function CartDrawer() {
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <p className="font-body font-medium text-sm text-muted mb-4">
-                  Your bag is empty
+                  Your bag is empty. Start with the full catalog; we will keep
+                  your picks in this browser.
                 </p>
-                <button
+                <Link
+                  href="/shop"
                   onClick={toggleCart}
                   className="metrocard-gradient px-5 py-3 font-body text-xs font-bold uppercase tracking-[0.1em]"
                 >
                   Start Shopping
-                </button>
+                </Link>
               </div>
             ) : (
               <ul className="space-y-4">
@@ -153,8 +161,11 @@ export function CartDrawer() {
                   {totalFormatted}
                 </span>
               </div>
-              <p className="text-xs text-muted font-body mb-4">
-                Shipping calculated at checkout
+              <p className="text-xs text-muted font-body mb-2 font-bold">
+                Shipping estimate: {shippingLine}
+              </p>
+              <p className="text-xs text-muted font-body mb-4 font-bold">
+                Tax estimate: {TAX_LINE_COPY}
               </p>
               {/* Checkout button */}
               <Link
@@ -162,11 +173,14 @@ export function CartDrawer() {
                 onClick={toggleCart}
                 className="metrocard-gradient block w-full py-3 font-body font-bold text-center text-sm tracking-wide transition-transform hover:-translate-y-1"
               >
-                Checkout
+                Review Bag
               </Link>
               {/* Trust line */}
               <p className="font-body font-medium text-[11px] text-muted text-center pt-3 tracking-[0.1em]">
                 Secure Checkout / Free Shipping $75+ / Thirty-Day Returns
+              </p>
+              <p className="font-body text-[11px] text-muted text-center leading-relaxed">
+                {getFulfillmentSummary()}
               </p>
             </div>
           )}
@@ -175,6 +189,6 @@ export function CartDrawer() {
     </>
   );
 
-  if (!mounted) return null;
+  if (!mounted || !isOpen) return null;
   return createPortal(drawer, document.body);
 }

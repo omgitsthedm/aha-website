@@ -15,11 +15,21 @@ interface ShopContentProps {
 
 export function ShopContent({ products, collections }: ShopContentProps) {
   const [activeFilter, setActiveFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("name");
+  const [sortBy, setSortBy] = useState<string>("featured");
   const [viewMode, setViewMode] = useState<"grid" | "index">("grid");
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const indexRef = useRef<HTMLDivElement>(null);
+
+  const collectionCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const product of products) {
+      for (const collectionId of product.collectionIds) {
+        counts.set(collectionId, (counts.get(collectionId) || 0) + 1);
+      }
+    }
+    return counts;
+  }, [products]);
 
   const filtered = useMemo(() => {
     let result = products;
@@ -28,7 +38,9 @@ export function ShopContent({ products, collections }: ShopContentProps) {
       result = result.filter((p) => p.collectionIds.includes(activeFilter));
     }
 
-    if (sortBy === "price-asc") {
+    if (sortBy === "featured") {
+      result = [...result];
+    } else if (sortBy === "price-asc") {
       result = [...result].sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-desc") {
       result = [...result].sort((a, b) => b.price - a.price);
@@ -38,6 +50,8 @@ export function ShopContent({ products, collections }: ShopContentProps) {
 
     return result;
   }, [products, activeFilter, sortBy]);
+
+  const heroImageSrc = filtered[0]?.images[0];
 
   /** Derive the collection slug for a product (first matching known collection) */
   const getProductCollectionSlug = (product: Product): string | undefined => {
@@ -147,12 +161,15 @@ export function ShopContent({ products, collections }: ShopContentProps) {
               key={col.id}
               onClick={() => setActiveFilter(col.id)}
               aria-pressed={activeFilter === col.id}
-              aria-label={`Filter by ${col.name}`}
+              aria-label={`Filter by ${col.name}, ${collectionCounts.get(col.id) || 0} products`}
               className={`transition-opacity min-h-[44px] ${
                 activeFilter === col.id ? "opacity-100" : "opacity-60 hover:opacity-100"
               }`}
             >
               <RouteBadge slug={col.slug} size="sm" showName />
+              <span className="ml-1 font-mono text-[10px] font-bold text-muted">
+                {collectionCounts.get(col.id) || 0}
+              </span>
             </button>
           ))}
 
@@ -164,6 +181,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
               onChange={(e) => setSortBy(e.target.value)}
               className="min-h-11 cursor-pointer border-[3px] border-[#E9E1D4] bg-[#10100F] px-3 py-2 font-body text-xs font-bold uppercase text-[#E9E1D4] focus:border-[#00FFFF] focus:outline-none"
             >
+              <option value="featured">Featured</option>
               <option value="name">A-Z</option>
               <option value="price-asc">Price: Low</option>
               <option value="price-desc">Price: High</option>
@@ -182,7 +200,9 @@ export function ShopContent({ products, collections }: ShopContentProps) {
       {viewMode === "grid" && (
         <div ref={gridRef} className="grid grid-cols-2 gap-5 md:grid-cols-6 md:gap-7">
           {filtered.map((product, i) => {
-            const isPrintful = isPrintfulImage(product.images[0]);
+            const productImage = product.images[0];
+            const isPrintful = isPrintfulImage(productImage);
+            const isHeroImage = productImage === heroImageSrc;
             const spanClass = i % 7 === 0 ? "md:col-span-3" : "md:col-span-2";
 
             return (
@@ -192,12 +212,13 @@ export function ShopContent({ products, collections }: ShopContentProps) {
                 className={`group block product-card-hover ${spanClass}`}
               >
                 <div className="subway-poster aspect-[3/4] bg-surface">
-                  {product.images[0] ? (
+                  {productImage ? (
                     <Image
-                      src={product.images[0]}
+                      src={productImage}
                       alt={product.name}
                       fill
                       unoptimized={isPrintful}
+                      priority={isHeroImage}
                       className={`${
                         isPrintful
                           ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
@@ -214,9 +235,14 @@ export function ShopContent({ products, collections }: ShopContentProps) {
                     <h3 className="font-display font-bold text-xs md:text-sm text-[#E8E4DE] uppercase tracking-[0.06em] truncate">
                       {product.name}
                     </h3>
-                    <p className="font-mono text-xs md:text-sm font-semibold text-[#FCCC0A] mt-0.5">
-                      {product.priceFormatted}
-                    </p>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <p className="font-mono text-xs font-semibold text-[#FCCC0A] md:text-sm">
+                        {product.priceFormatted}
+                      </p>
+                      <p className="font-body text-[9px] font-bold uppercase tracking-[0.08em] text-[#CCFF00]">
+                        Made to order
+                      </p>
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -245,6 +271,9 @@ export function ShopContent({ products, collections }: ShopContentProps) {
                   <span className="font-mono text-sm font-bold text-cream">
                     {product.priceFormatted}
                   </span>
+                  <span className="ml-4 hidden font-body text-[10px] font-bold uppercase tracking-[0.08em] text-[#CCFF00] sm:inline">
+                    Made to order
+                  </span>
                 </Link>
               </div>
             );
@@ -255,7 +284,9 @@ export function ShopContent({ products, collections }: ShopContentProps) {
       {/* Empty state */}
       {filtered.length === 0 && (
         <div className="text-center py-24">
-          <p className="font-body text-sm font-bold text-muted">No products found</p>
+          <p className="font-body text-sm font-bold text-muted">
+            No products match this filter. Clear it to get back to the full wall.
+          </p>
           <button
             onClick={() => setActiveFilter("all")}
             className="metrocard-gradient mt-6 px-6 py-3 font-body text-xs font-bold uppercase"
