@@ -2,8 +2,7 @@
 
 > Premium Clothing Brand Ecommerce Build · Netlify + GitHub + Square + Printful API v2 Beta
 > Version: July 8, 2026 · Installed verbatim as the governing build instruction on 2026-07-08.
-> Companion governing docs: this repo's `CLAUDE.md`, `SOURCE_OF_TRUTH.md`, `.ai/STATE.md`, and the root `START-HERE.md`.
-> NOTE (audit 2026-07-08): the referenced `MASTER-UIUX-HANDOFF-v2.md` is NOT present in the repo or client folder — provide it, or this file + repo CLAUDE.md serve as doctrine until it is supplied.
+> Companion governing docs: `docs/MASTER-UIUX-HANDOFF-v2.md` (controlling doctrine), this repo's `CLAUDE.md`, `SOURCE_OF_TRUTH.md`, `.ai/STATE.md`, and the root `START-HERE.md`.
 
 You are working on the After Hours Agenda clothing brand website. This is a premium 2026 headless ecommerce build for a clothing/lifestyle brand. It must combine:
 

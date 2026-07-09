@@ -12,7 +12,7 @@ These instructions are **always relevant** to any task in this repository.
 
 ## Governing Build Doctrine (§47)
 
-This project is governed by `docs/MASTER-BUILD-INSTRUCTION.md` (the full ecommerce build spec, installed 2026-07-08) and, when supplied, `MASTER-UIUX-HANDOFF-v2.md`. **The UI/UX handoff doc is currently MISSING from the repo — provide it or the build instruction + this file serve as doctrine.**
+This project is governed by `docs/MASTER-BUILD-INSTRUCTION.md` (the full ecommerce build spec) and `docs/MASTER-UIUX-HANDOFF-v2.md` (the universal LiFi UI/UX/product doctrine — the controlling doc; read it before building). Both installed 2026-07-08.
 
 - **Primary archetype:** D2 — E-Commerce / DTC Store. **Secondary:** D1 — Marketing / Brand Site.
 - **Stack:** Netlify hosting/runtime · GitHub code/actions/release control · Square payments · Printful **API v2 beta** fulfillment. (Current repo: Next.js 14 App Router — adapt the spec's structure to it, don't impose Astro/`src/`.)
