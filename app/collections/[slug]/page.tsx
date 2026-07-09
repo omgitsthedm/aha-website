@@ -14,9 +14,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   try {
     const collections = await getAllCollections();
     const collection = collections.find((c) => c.slug === params.slug);
-    if (!collection) return { title: "Collection Not Found | After Hours Agenda" };
+    if (!collection) return { title: "Collection Not Found" };
     return {
-      title: `${collection.name} | After Hours Agenda`,
+      title: collection.name,
       description: collection.description,
     };
   } catch (error) {

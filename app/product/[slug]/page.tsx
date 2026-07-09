@@ -15,7 +15,7 @@ export const dynamicParams = true;
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   try {
     const product = await getProduct(params.slug);
-    if (!product) return { title: "Product Not Found | After Hours Agenda" };
+    if (!product) return { title: "Product Not Found" };
 
     const description =
       product.description?.replace(/<[^>]*>/g, "").slice(0, 160) ||
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     const image = product.images[0];
 
     return {
-      title: `${product.name} | After Hours Agenda`,
+      title: product.name,
       description,
       openGraph: {
         title: `${product.name} | After Hours Agenda`,
