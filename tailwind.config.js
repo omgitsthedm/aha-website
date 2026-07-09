@@ -7,54 +7,52 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Core - blacklight zine storefront
-        void: "#10100F",
-        charcoal: "#181816",
+        // All colors read from the THEME CONTRACT channels in app/globals.css (--c-*),
+        // so swapping a [data-theme] re-themes every utility. Opacity modifiers work
+        // (e.g. bg-void/50) because values are rgb(<channels> / <alpha-value>).
+        void: "rgb(var(--c-bg) / <alpha-value>)",
+        charcoal: "rgb(var(--c-charcoal) / <alpha-value>)",
         surface: {
-          DEFAULT: "#20201C",
-          warm: "#2A241E",
+          DEFAULT: "rgb(var(--c-surface) / <alpha-value>)",
+          warm: "rgb(var(--c-surface-warm) / <alpha-value>)",
         },
-        elevated: "#2F2E28",
+        elevated: "rgb(var(--c-elevated) / <alpha-value>)",
         border: {
-          DEFAULT: "#E9E1D4",
-          warm: "#B5A642",
+          DEFAULT: "rgb(var(--c-content) / <alpha-value>)",
+          warm: "rgb(var(--c-gold) / <alpha-value>)",
         },
-        // Text
-        cream: "#E9E1D4",
-        muted: "#A9A093",
-        // Bright block colors
+        cream: "rgb(var(--c-content) / <alpha-value>)",
+        muted: "rgb(var(--c-muted) / <alpha-value>)",
         line: {
-          red: "#FF006E",
-          blue: "#00FFFF",
-          orange: "#FF7F00",
-          green: "#00933C",
-          yellow: "#CCFF00",
-          purple: "#B933AD",
-          brown: "#B5A642",
-          gray: "#7A7A7A",
+          red: "rgb(var(--c-pink) / <alpha-value>)",
+          blue: "rgb(var(--c-cyan) / <alpha-value>)",
+          orange: "rgb(var(--c-orange) / <alpha-value>)",
+          green: "rgb(var(--c-line-green) / <alpha-value>)",
+          yellow: "rgb(var(--c-lime) / <alpha-value>)",
+          purple: "rgb(var(--c-line-purple) / <alpha-value>)",
+          brown: "rgb(var(--c-gold) / <alpha-value>)",
+          gray: "rgb(var(--c-concrete) / <alpha-value>)",
         },
-        // Utility
-        danger: "#FF006E",
-        success: "#39FF14",
-        // Legacy alias
+        danger: "rgb(var(--c-pink) / <alpha-value>)",
+        success: "rgb(var(--c-green) / <alpha-value>)",
         gold: {
-          DEFAULT: "#B5A642",
-          dim: "rgba(181,166,66,0.28)",
-          faint: "rgba(181,166,66,0.1)",
+          DEFAULT: "rgb(var(--c-gold) / <alpha-value>)",
+          dim: "rgb(var(--c-gold) / 0.28)",
+          faint: "rgb(var(--c-gold) / 0.1)",
         },
         neon: {
-          green: "#39FF14",
-          purple: "#BF00FF",
-          pink: "#FF1493",
-          cyan: "#00FFFF",
-          sun: "#FFAA00",
-          lime: "#CCFF00",
+          green: "rgb(var(--c-green) / <alpha-value>)",
+          purple: "rgb(var(--c-purple) / <alpha-value>)",
+          pink: "rgb(var(--c-magenta) / <alpha-value>)",
+          cyan: "rgb(var(--c-cyan) / <alpha-value>)",
+          sun: "rgb(var(--c-sun) / <alpha-value>)",
+          lime: "rgb(var(--c-lime) / <alpha-value>)",
         },
-        navy: "#15110F",
+        navy: "rgb(var(--c-navy) / <alpha-value>)",
         mosaic: {
-          gold: "#B5A642",
-          brown: "#8C2727",
-          dark: "#10100F",
+          gold: "rgb(var(--c-gold) / <alpha-value>)",
+          brown: "rgb(var(--c-rust) / <alpha-value>)",
+          dark: "rgb(var(--c-bg) / <alpha-value>)",
         },
       },
       fontFamily: {

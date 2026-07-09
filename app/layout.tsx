@@ -55,6 +55,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme={process.env.NEXT_PUBLIC_AHA_THEME || "blacklight"}
       className={ibmPlexMono.variable}
     >
       <head>

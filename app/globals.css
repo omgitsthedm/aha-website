@@ -3,24 +3,52 @@
 @tailwind utilities;
 
 :root {
-  --aha-void: #10100F;
-  --aha-void-deep: #070707;
-  --aha-charcoal: #181816;
-  --aha-panel: #20201C;
-  --aha-panel-warm: #2A241E;
-  --aha-paper: #E9E1D4;
-  --aha-paper-muted: #A9A093;
-  --aha-concrete: #7A7A7A;
-  --aha-dirty-yellow: #B5A642;
-  --aha-rust: #8C2727;
-  --aha-neon-green: #39FF14;
-  --aha-electric-purple: #BF00FF;
-  --aha-vivid-pink: #FF1493;
-  --aha-shock-pink: #FF006E;
-  --aha-cyan: #00FFFF;
-  --aha-sunburst: #FFAA00;
-  --aha-orange: #FF7F00;
-  --aha-lime: #CCFF00;
+  /* ── THEME CONTRACT — design-system tokens as "R G B" channels ──────────────
+     Swap these values to re-theme the ENTIRE site (Tailwind colors + the aliases
+     below all read from them, opacity-safe). A new design system = one [data-theme]
+     block overriding these channels. Default theme = "blacklight". See docs/theming.md. */
+  --c-bg: 16 16 15;
+  --c-bg-deep: 7 7 7;
+  --c-charcoal: 24 24 22;
+  --c-surface: 32 32 28;
+  --c-surface-warm: 42 36 30;
+  --c-elevated: 47 46 40;
+  --c-navy: 21 17 15;
+  --c-content: 233 225 212;
+  --c-muted: 169 160 147;
+  --c-concrete: 122 122 122;
+  --c-gold: 181 166 66;
+  --c-rust: 140 39 39;
+  --c-lime: 204 255 0;
+  --c-cyan: 0 255 255;
+  --c-pink: 255 0 110;
+  --c-green: 57 255 20;
+  --c-purple: 191 0 255;
+  --c-magenta: 255 20 147;
+  --c-sun: 255 170 0;
+  --c-orange: 255 127 0;
+  --c-line-green: 0 147 60;
+  --c-line-purple: 185 51 173;
+
+  /* Backward-compatible color aliases (direct var() usage) — driven by the channels above */
+  --aha-void: rgb(var(--c-bg));
+  --aha-void-deep: rgb(var(--c-bg-deep));
+  --aha-charcoal: rgb(var(--c-charcoal));
+  --aha-panel: rgb(var(--c-surface));
+  --aha-panel-warm: rgb(var(--c-surface-warm));
+  --aha-paper: rgb(var(--c-content));
+  --aha-paper-muted: rgb(var(--c-muted));
+  --aha-concrete: rgb(var(--c-concrete));
+  --aha-dirty-yellow: rgb(var(--c-gold));
+  --aha-rust: rgb(var(--c-rust));
+  --aha-neon-green: rgb(var(--c-green));
+  --aha-electric-purple: rgb(var(--c-purple));
+  --aha-vivid-pink: rgb(var(--c-magenta));
+  --aha-shock-pink: rgb(var(--c-pink));
+  --aha-cyan: rgb(var(--c-cyan));
+  --aha-sunburst: rgb(var(--c-sun));
+  --aha-orange: rgb(var(--c-orange));
+  --aha-lime: rgb(var(--c-lime));
   --aha-border: 4px;
   --aha-block-gap: clamp(3rem, 7vw, 8rem);
   --aha-radius: 0px;
@@ -67,6 +95,31 @@
     --aha-motion-base: 0ms;
     --aha-motion-slow: 0ms;
   }
+}
+
+/* ── Example alternate design system ────────────────────────────────────────
+   Proves the swap: set <html data-theme="paper"> to re-skin the whole site by
+   overriding ONLY the channel tokens. Copy this block, rename, restyle to drop in
+   a brand-new design system without touching a single component. See docs/theming.md. */
+[data-theme="paper"] {
+  --c-bg: 244 241 234;
+  --c-bg-deep: 255 255 255;
+  --c-charcoal: 228 223 214;
+  --c-surface: 255 255 255;
+  --c-surface-warm: 249 245 238;
+  --c-elevated: 238 233 224;
+  --c-navy: 232 227 219;
+  --c-content: 22 21 19;
+  --c-muted: 92 88 80;
+  --c-concrete: 150 150 150;
+  --c-gold: 150 120 40;
+  --c-lime: 40 40 38;
+  --c-cyan: 0 90 110;
+  --c-pink: 200 0 80;
+  --c-green: 20 130 60;
+  --c-purple: 120 40 160;
+  --c-sun: 200 130 0;
+  --c-orange: 200 90 0;
 }
 
 @layer base {
