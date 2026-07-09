@@ -50,7 +50,7 @@ export function CartPageContent() {
 
       // Validate checkout URL before redirecting (only allow Square domains)
       const checkoutUrl = new URL(data.checkoutUrl);
-      const allowedHosts = ["squareup.com", "square.link"];
+      const allowedHosts = ["squareup.com", "square.link", "squareupsandbox.com"];
       const isAllowedHost = allowedHosts.some(
         (host) => checkoutUrl.hostname === host || checkoutUrl.hostname.endsWith(`.${host}`)
       );

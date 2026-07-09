@@ -1,4 +1,4 @@
-const SQUARE_BASE_URL = "https://connect.squareup.com/v2";
+import { getCommerceEnvironment, getSquareBaseUrl } from "@/lib/commerce/runtime";
 
 // Fail fast if Square credentials are missing (server-side only)
 if (typeof window === "undefined" && !process.env.SQUARE_ACCESS_TOKEN) {
@@ -44,17 +44,21 @@ export async function squareRequest<T>(
   endpoint: string,
   options: SquareRequestOptions = {}
 ): Promise<T> {
+  if (!endpoint.startsWith("/")) {
+    throw new Error("Square endpoint must be a relative /v2 path.");
+  }
+
   const token = process.env.SQUARE_ACCESS_TOKEN;
   if (!token) {
     throw new Error(
-      "SQUARE_ACCESS_TOKEN is not configured. Cannot make Square API requests."
+      `SQUARE_ACCESS_TOKEN is not configured for ${getCommerceEnvironment()} Square requests.`
     );
   }
 
   const { method = "GET", body, revalidate = 300 } = options;
 
   const res = await fetchWithRetry(
-    `${SQUARE_BASE_URL}${endpoint}`,
+    `${getSquareBaseUrl()}${endpoint}`,
     {
       method,
       headers: {

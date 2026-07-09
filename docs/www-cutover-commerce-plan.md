@@ -88,6 +88,20 @@ Do not paste secrets into chat or Git. Set secrets in Netlify UI or CLI only.
 
 ## Key Technical Gaps
 
+### Backend readiness started 2026-07-08
+
+Local code now includes the first Netlify commerce readiness layer:
+
+- sandbox-aware Square API base URL selection via `SQUARE_ENVIRONMENT`
+- Square webhook receiver at `/api/webhooks/square`
+- Printful webhook receiver at `/api/webhooks/printful`
+- token-gated readiness endpoint at `/api/commerce/readiness`
+- name-only env readiness command: `npm run verify:commerce-readiness:netlify`
+- production Netlify context defaults to Square production/manual fulfillment
+- deploy-preview and branch-deploy contexts default to Square sandbox/dry-run fulfillment
+
+Current readiness command result: Netlify production is still missing 10 required readiness vars by name. See `docs/netlify-commerce-backend-readiness.md`.
+
 ### 1. Netlify is not safe enough for production cutover yet
 
 Before DNS moves, Netlify must be repaired:

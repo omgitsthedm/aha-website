@@ -28,13 +28,24 @@ export async function printfulRequest<T>(
   endpoint: string,
   options: PrintfulRequestOptions = {}
 ): Promise<T> {
+  if (!endpoint.startsWith("/")) {
+    throw new Error("Printful endpoint must be a relative /v2 path.");
+  }
+
   await waitForRateLimit();
 
   const { method = "GET", body, storeId } = options;
   const store = storeId || process.env.PRINTFUL_STORE_ID;
+  const token = process.env.PRINTFUL_API_TOKEN;
+
+  if (!token) {
+    throw new Error(
+      "PRINTFUL_API_TOKEN is not configured. Cannot make Printful API requests."
+    );
+  }
 
   const headers: Record<string, string> = {
-    Authorization: `Bearer ${process.env.PRINTFUL_API_TOKEN}`,
+    Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   };
 
