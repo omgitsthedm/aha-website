@@ -40,6 +40,16 @@ npm run create-product -- --spec my-product.json --live
    git add data/ && git commit -m "Add product: <name>" && git push
    ```
 
+## Store type matters (important)
+AHA's Printful store is **Square-integrated**, so Printful's product-creation API is **blocked**
+("applies only to Manual Order / API platform stores"). For this store type the CLI:
+- **Creates the product in Square** (item + sizes + price + art image) → it goes live/buyable on the storefront.
+- **Cannot create the Printful product with art via API** — that's a Printful-dashboard step. To enable
+  auto-fulfillment, open Printful → your store → the product → attach the art. Until then, orders for it
+  route to `manual_review` (never a silent failure).
+A Square-only product also isn't in `data/` (the manifest is built from Printful products), so it shows
+from live Square without manifest enrichment until it's mapped in Printful.
+
 ## Notes
 - The join is by normalized product **name** + **size**, so keep the Printful and Square names identical (the script does this).
 - Live stock, PDP enrichment, and the purchasable gate all apply automatically once mapped.
