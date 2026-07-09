@@ -15,6 +15,7 @@
     "validate:printful-v2-map": "tsx scripts/validate-printful-v2-map.ts",
     "margin-check": "tsx scripts/margin-check.ts",
     "validate:all": "npm run validate:products && npm run validate:square-map && npm run validate:printful-v2-map && npm run margin-check",
+    "create-product": "node scripts/create-product.mjs",
     "db:generate": "drizzle-kit generate",
     "db:apply": "netlify database migrations apply",
     "verify:commerce-readiness": "node ops/commerce-readiness.mjs",
