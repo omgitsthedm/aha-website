@@ -12,7 +12,7 @@
   # Without this, Netlify secrets scanning fails the build (exit 2) on these
   # values. Real secrets (SQUARE_ACCESS_TOKEN, PRINTFUL_API_TOKEN, webhook
   # signature keys) are NOT listed here and remain fully scanned.
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SQUARE_APP_ID,SQUARE_APPLICATION_ID,PRINTFUL_STORE_ID"
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SQUARE_APP_ID,SQUARE_APPLICATION_ID,SQUARE_LOCATION_ID,PRINTFUL_STORE_ID"
 
 [context.production.environment]
   SQUARE_ENVIRONMENT = "production"
