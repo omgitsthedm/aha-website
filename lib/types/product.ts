@@ -62,7 +62,9 @@ export interface AhaVariant {
   // Printful v2 mapping (fulfillment source of truth)
   printfulCatalogProductId?: number;
   printfulCatalogVariantId?: number;
-  printfulSource: "catalog";
+  /** Store sync-variant id — carries the configured print art server-side; the fulfillment key. */
+  printfulSyncVariantId?: number;
+  printfulSource: "catalog" | "sync_variant";
   printfulRegionAvailability?: string[];
   printfulPlacements?: PrintfulPlacement[];
   printfulTechnique?: PrintTechnique;

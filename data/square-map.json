@@ -1,4 +1,3878 @@
 {
-  "_note": "ahaVariantId -> Square catalog identifiers (payments/orders source of truth). Values populated from Square. No secrets here — IDs only. See §7/§15.",
-  "map": {}
+  "map": {
+    "dont-fuck-fascists-shirt-black-xs": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-black-s": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-black-m": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-black-l": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-black-xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-black-2xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-black-3xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-midnight-navy-xs": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-midnight-navy-s": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-midnight-navy-m": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-midnight-navy-l": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-midnight-navy-xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-midnight-navy-2xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-midnight-navy-3xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-royal-blue-xs": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-royal-blue-s": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-royal-blue-m": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-royal-blue-l": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-royal-blue-xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-royal-blue-2xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "link-s-lawn-service-white-unisex-short-sleeve-t-shirt-xs": {
+      "squareCatalogObjectId": "2T45UWPUBOPMNGPZ4EFCZSM4",
+      "squareVariationId": "YLHHSHOXZID3PT7XYYJEUQAV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "link-s-lawn-service-white-unisex-short-sleeve-t-shirt-s": {
+      "squareCatalogObjectId": "2T45UWPUBOPMNGPZ4EFCZSM4",
+      "squareVariationId": "KJH6YL3GFQK6D2WIGC6ABTNC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "link-s-lawn-service-white-unisex-short-sleeve-t-shirt-m": {
+      "squareCatalogObjectId": "2T45UWPUBOPMNGPZ4EFCZSM4",
+      "squareVariationId": "3SPPNXRAFGE5TQ62O6OBIAG7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "link-s-lawn-service-white-unisex-short-sleeve-t-shirt-l": {
+      "squareCatalogObjectId": "2T45UWPUBOPMNGPZ4EFCZSM4",
+      "squareVariationId": "VSCKGDGTHNRDGYGTIPPSXKFP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "link-s-lawn-service-white-unisex-short-sleeve-t-shirt-xl": {
+      "squareCatalogObjectId": "2T45UWPUBOPMNGPZ4EFCZSM4",
+      "squareVariationId": "Q4U6DRBXWK5UTTXDNMOUGK5E",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "link-s-lawn-service-white-unisex-short-sleeve-t-shirt-2xl": {
+      "squareCatalogObjectId": "2T45UWPUBOPMNGPZ4EFCZSM4",
+      "squareVariationId": "3P5RTNAS6UBQAVEBGNQV4JMO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "link-s-lawn-service-white-unisex-short-sleeve-t-shirt-3xl": {
+      "squareCatalogObjectId": "2T45UWPUBOPMNGPZ4EFCZSM4",
+      "squareVariationId": "IFQSHVVX6Q7KRT5F4PIZWIDI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-3-3": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareVariationId": "6SWQPHQRWCYMAEEYNGSDDQWI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-4-4": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareVariationId": "ZKJSG2KGWYQLYNHJYQNSEPHO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-5-5-5-5": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareVariationId": "EZ73647IOKPP4JLIH26SFQRZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-black-s": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-black-m": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-black-l": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-black-xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-black-2xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-black-3xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-navy-blazer-s": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-navy-blazer-m": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-navy-blazer-l": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-navy-blazer-xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-navy-blazer-2xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-navy-blazer-3xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-maroon-s": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-maroon-m": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-maroon-l": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-maroon-xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-maroon-2xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-maroon-3xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-charcoal-heather-s": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-charcoal-heather-m": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sex-fashion-and-rock-n-roll-xs": {
+      "squareCatalogObjectId": "3JVMXP2XKUDYTRWQBI5G2YGP",
+      "squareVariationId": "B4J3JATV6ULMYI2HOERWVSRP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sex-fashion-and-rock-n-roll-s": {
+      "squareCatalogObjectId": "3JVMXP2XKUDYTRWQBI5G2YGP",
+      "squareVariationId": "DWNC5OWKXFT3EKCC7SUGQX6Z",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sex-fashion-and-rock-n-roll-m": {
+      "squareCatalogObjectId": "3JVMXP2XKUDYTRWQBI5G2YGP",
+      "squareVariationId": "BZCX7ILIANHHMIADWWHP6Q2I",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sex-fashion-and-rock-n-roll-l": {
+      "squareCatalogObjectId": "3JVMXP2XKUDYTRWQBI5G2YGP",
+      "squareVariationId": "NK6OUV3NKPSWBSQBTORAWBI7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sex-fashion-and-rock-n-roll-xl": {
+      "squareCatalogObjectId": "3JVMXP2XKUDYTRWQBI5G2YGP",
+      "squareVariationId": "LJEJECMCQ6CAU2VHMP6FFQJG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sex-fashion-and-rock-n-roll-2xl": {
+      "squareCatalogObjectId": "3JVMXP2XKUDYTRWQBI5G2YGP",
+      "squareVariationId": "ZK4BXKSYK243GAOKXS2W2LMN",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sex-fashion-and-rock-n-roll-3xl": {
+      "squareCatalogObjectId": "3JVMXP2XKUDYTRWQBI5G2YGP",
+      "squareVariationId": "YU2PQ5J2VSALDJJ5ZE2COKQA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cities-xs": {
+      "squareCatalogObjectId": "3PBZ2WVZ3JUBJVQ6HWQO2O6I",
+      "squareVariationId": "7IMOLAEESXR7BRYNSJVQJ5IG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cities-s": {
+      "squareCatalogObjectId": "3PBZ2WVZ3JUBJVQ6HWQO2O6I",
+      "squareVariationId": "LZ7TIVR7CRCZ3LE4MRPMUU4V",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cities-m": {
+      "squareCatalogObjectId": "3PBZ2WVZ3JUBJVQ6HWQO2O6I",
+      "squareVariationId": "WI5NKALBCBLQ6QGRHROAFNJ6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cities-l": {
+      "squareCatalogObjectId": "3PBZ2WVZ3JUBJVQ6HWQO2O6I",
+      "squareVariationId": "3QZSVVN4TEMIZOLVZJZT7GWV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cities-xl": {
+      "squareCatalogObjectId": "3PBZ2WVZ3JUBJVQ6HWQO2O6I",
+      "squareVariationId": "V57WQWWCID5WYLUG22CW54ZF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cities-2xl": {
+      "squareCatalogObjectId": "3PBZ2WVZ3JUBJVQ6HWQO2O6I",
+      "squareVariationId": "NHXDNCWFMPXNHFQDSWQ3SH4X",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cities-3xl": {
+      "squareCatalogObjectId": "3PBZ2WVZ3JUBJVQ6HWQO2O6I",
+      "squareVariationId": "G7GEUMUHRTXEA3TJMIW4RP7W",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-charcoal-heather-l": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-charcoal-heather-xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-charcoal-heather-2xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-charcoal-heather-3xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-team-royal-s": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-team-royal-m": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-black-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-black-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-black-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-black-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-black-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-black-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-black-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mystic-blue-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mystic-blue-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mystic-blue-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mystic-blue-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mystic-blue-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mystic-blue-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mystic-blue-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ivory-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ivory-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ivory-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ivory-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ivory-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ivory-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-navy-blazer-s": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-navy-blazer-m": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-navy-blazer-l": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-navy-blazer-xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-navy-blazer-2xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-navy-blazer-3xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-charcoal-heather-s": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-charcoal-heather-m": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-charcoal-heather-l": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-charcoal-heather-xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-charcoal-heather-2xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-charcoal-heather-3xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-team-royal-s": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-team-royal-m": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-red-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-red-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-red-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-red-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-red-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-red-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-red-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-true-navy-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-true-navy-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-true-navy-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-true-navy-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-true-navy-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-true-navy-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-grey-unisex-hoodie-s": {
+      "squareCatalogObjectId": "4ZXMDPVOUKFMM24HK2MWW7RP",
+      "squareVariationId": "WZK3TBZV3AQNGMNWCRG6JEJY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-grey-unisex-hoodie-m": {
+      "squareCatalogObjectId": "4ZXMDPVOUKFMM24HK2MWW7RP",
+      "squareVariationId": "T75TJV2JA7WNMCIVXQ2ADF45",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-grey-unisex-hoodie-l": {
+      "squareCatalogObjectId": "4ZXMDPVOUKFMM24HK2MWW7RP",
+      "squareVariationId": "RZDN2M2X5UEF7PWNCYDVT6E2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-grey-unisex-hoodie-xl": {
+      "squareCatalogObjectId": "4ZXMDPVOUKFMM24HK2MWW7RP",
+      "squareVariationId": "JL3VEDLMN4QXSYQYVQ3Q2QGW",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-grey-unisex-hoodie-2xl": {
+      "squareCatalogObjectId": "4ZXMDPVOUKFMM24HK2MWW7RP",
+      "squareVariationId": "ZPLCMNFLACK4DTLTFOSKBPQ5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-grey-unisex-hoodie-3xl": {
+      "squareCatalogObjectId": "4ZXMDPVOUKFMM24HK2MWW7RP",
+      "squareVariationId": "MCDH4FTBOASER5OFMK7RIU4D",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "palms-xs": {
+      "squareCatalogObjectId": "57ABG7JJ45TXRHQJNIVAENWE",
+      "squareVariationId": "J3RTDFMUPXAJ24CC6ERVNLRJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "palms-s": {
+      "squareCatalogObjectId": "57ABG7JJ45TXRHQJNIVAENWE",
+      "squareVariationId": "54FKYTCXSA7S6WJT5X5UJDQ6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "palms-m": {
+      "squareCatalogObjectId": "57ABG7JJ45TXRHQJNIVAENWE",
+      "squareVariationId": "FNSQ7OZH3NX6IWZ5EJDJN7XI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "palms-l": {
+      "squareCatalogObjectId": "57ABG7JJ45TXRHQJNIVAENWE",
+      "squareVariationId": "ES5F263UGGSWMHSE255SUG36",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "palms-xl": {
+      "squareCatalogObjectId": "57ABG7JJ45TXRHQJNIVAENWE",
+      "squareVariationId": "PZQON2I764NCCNAAE5DOSKC3",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "palms-2xl": {
+      "squareCatalogObjectId": "57ABG7JJ45TXRHQJNIVAENWE",
+      "squareVariationId": "JFAJQETORBQSYMGS46PFJ3OO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "palms-3xl": {
+      "squareCatalogObjectId": "57ABG7JJ45TXRHQJNIVAENWE",
+      "squareVariationId": "2ONVCMJCRYUAROIU7EIJTPJY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-pink-sheep-comfy-socks": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-pepper-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-pepper-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-pepper-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-pepper-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-pepper-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-pepper-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-pepper-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mustard-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mustard-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mustard-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mustard-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mustard-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mustard-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-mustard-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-seafoam-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-seafoam-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-seafoam-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-seafoam-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-seafoam-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-seafoam-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-grey-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "6GNYF4IGDV7WGLZNW2ZVKJV6",
+      "squareVariationId": "5IW4EMOBXSZM2JG3KC6BPMFZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-grey-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "6GNYF4IGDV7WGLZNW2ZVKJV6",
+      "squareVariationId": "AJRWAHFLDTGCVN6SWUZ6AJIG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-grey-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "6GNYF4IGDV7WGLZNW2ZVKJV6",
+      "squareVariationId": "RBVQNSGFA4T3OT54PJBX475R",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-grey-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "6GNYF4IGDV7WGLZNW2ZVKJV6",
+      "squareVariationId": "QV2SEGEI72A26HPTT2NEEMG6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-grey-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "6GNYF4IGDV7WGLZNW2ZVKJV6",
+      "squareVariationId": "5D3AVGU3HA3RRFS3MMSCRDOF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-grey-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "6GNYF4IGDV7WGLZNW2ZVKJV6",
+      "squareVariationId": "SAGHXZA5KZU67M3XF7OEMD35",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "scarlet-letter-xs": {
+      "squareCatalogObjectId": "6MRGHBFZB6ZHUGFG5FBUZBQH",
+      "squareVariationId": "IJC3Y73PRQ6A32QQRG5574AQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "scarlet-letter-s": {
+      "squareCatalogObjectId": "6MRGHBFZB6ZHUGFG5FBUZBQH",
+      "squareVariationId": "2ZXNJNJDDG4KF7E3SKTCBLDG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "scarlet-letter-m": {
+      "squareCatalogObjectId": "6MRGHBFZB6ZHUGFG5FBUZBQH",
+      "squareVariationId": "TH5XPSDQHC4RLQ4PBPPFBEIF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "scarlet-letter-l": {
+      "squareCatalogObjectId": "6MRGHBFZB6ZHUGFG5FBUZBQH",
+      "squareVariationId": "YWYM6SBVMMONLMW6WZ5E4U3W",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "scarlet-letter-xl": {
+      "squareCatalogObjectId": "6MRGHBFZB6ZHUGFG5FBUZBQH",
+      "squareVariationId": "UG5E333K6MECVB4MFUCE6QDS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "scarlet-letter-2xl": {
+      "squareCatalogObjectId": "6MRGHBFZB6ZHUGFG5FBUZBQH",
+      "squareVariationId": "X5GGPH7FBLWUS7EOVRN3ZOWS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "scarlet-letter-3xl": {
+      "squareCatalogObjectId": "6MRGHBFZB6ZHUGFG5FBUZBQH",
+      "squareVariationId": "ZLS4XKGGMOMJB5M2CFYUPZZP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-wall-crossbody-bag-aha-wall-crossbody-bag": {
+      "squareCatalogObjectId": "6Q4KOD6MLQTPIMGLA47ZBWMU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-black-xs": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-black-s": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-black-m": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-black-l": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-black-xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-black-2xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-black-3xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-midnight-navy-xs": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-midnight-navy-s": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-midnight-navy-m": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-midnight-navy-l": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-midnight-navy-xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-midnight-navy-2xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-midnight-navy-3xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-red-xs": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-red-s": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-red-m": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-red-l": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-red-xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-red-2xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "zebra-unisex-knitted-cardigan-2xs": {
+      "squareCatalogObjectId": "7DIZTCWPV4BF65X5SZBIAL64",
+      "squareVariationId": "JUHCY3GQNDZHIOAXWS265EXG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "zebra-unisex-knitted-cardigan-xs": {
+      "squareCatalogObjectId": "7DIZTCWPV4BF65X5SZBIAL64",
+      "squareVariationId": "GCZC2DPOJIXQMX24AUVZURNZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "zebra-unisex-knitted-cardigan-s": {
+      "squareCatalogObjectId": "7DIZTCWPV4BF65X5SZBIAL64",
+      "squareVariationId": "BJRAJUCBF2JB5FHA5SZCGBRD",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "zebra-unisex-knitted-cardigan-m": {
+      "squareCatalogObjectId": "7DIZTCWPV4BF65X5SZBIAL64",
+      "squareVariationId": "765C45BFH3XNPIFPVY4C2X3J",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "zebra-unisex-knitted-cardigan-l": {
+      "squareCatalogObjectId": "7DIZTCWPV4BF65X5SZBIAL64",
+      "squareVariationId": "7LDIGLXQSISPZEP4JT74MMQM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "zebra-unisex-knitted-cardigan-xl": {
+      "squareCatalogObjectId": "7DIZTCWPV4BF65X5SZBIAL64",
+      "squareVariationId": "TX3IQZWAK4KR6HHQCYOTLGZ2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "zebra-unisex-knitted-cardigan-2xl": {
+      "squareCatalogObjectId": "7DIZTCWPV4BF65X5SZBIAL64",
+      "squareVariationId": "PWUPCPAIIIFXB45A4TGBRNZC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "zebra-unisex-knitted-cardigan-3xl": {
+      "squareCatalogObjectId": "7DIZTCWPV4BF65X5SZBIAL64",
+      "squareVariationId": "6AS62HTEJ3IHMGG46DZUV32K",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "fuck-walter-xs": {
+      "squareCatalogObjectId": "7PBXFAUI36E2OMMFUTWKSPGA",
+      "squareVariationId": "X4VBX3OCV4F6G3VDREAHKFOJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "fuck-walter-s": {
+      "squareCatalogObjectId": "7PBXFAUI36E2OMMFUTWKSPGA",
+      "squareVariationId": "R2FGTCQBSNGD3SLU2SHHELOS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "fuck-walter-m": {
+      "squareCatalogObjectId": "7PBXFAUI36E2OMMFUTWKSPGA",
+      "squareVariationId": "QDYKX7DXH66B4XO3XTZZKSVU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "fuck-walter-l": {
+      "squareCatalogObjectId": "7PBXFAUI36E2OMMFUTWKSPGA",
+      "squareVariationId": "PGKZYCIE4OYAIA3VCGYMYUFM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "fuck-walter-xl": {
+      "squareCatalogObjectId": "7PBXFAUI36E2OMMFUTWKSPGA",
+      "squareVariationId": "D2SCRTL3Z3BVE2356DP53QRM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "fuck-walter-2xl": {
+      "squareCatalogObjectId": "7PBXFAUI36E2OMMFUTWKSPGA",
+      "squareVariationId": "AMHPDKMFUCQX22D5C7K3MEP7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "fuck-walter-3xl": {
+      "squareCatalogObjectId": "7PBXFAUI36E2OMMFUTWKSPGA",
+      "squareVariationId": "UKOWRIHFY7CNUY35URZQW52G",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "splatter-xs": {
+      "squareCatalogObjectId": "7RE646QR3G2RKHHBFQ4TRNFS",
+      "squareVariationId": "HHLSUGNBZZHKFUATRRLLAIV4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "splatter-s": {
+      "squareCatalogObjectId": "7RE646QR3G2RKHHBFQ4TRNFS",
+      "squareVariationId": "J54NEWTYJFZKQ6JUBDSHXZTO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "splatter-m": {
+      "squareCatalogObjectId": "7RE646QR3G2RKHHBFQ4TRNFS",
+      "squareVariationId": "ZFPUUOO5KZICURR5IX2XGWR5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "splatter-l": {
+      "squareCatalogObjectId": "7RE646QR3G2RKHHBFQ4TRNFS",
+      "squareVariationId": "M62OZO43FIOMX2PLZIFXBHV4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "splatter-xl": {
+      "squareCatalogObjectId": "7RE646QR3G2RKHHBFQ4TRNFS",
+      "squareVariationId": "PF7KH53R4EJCDGRQXSLR7XFK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "splatter-2xl": {
+      "squareCatalogObjectId": "7RE646QR3G2RKHHBFQ4TRNFS",
+      "squareVariationId": "OAE4LBAETGZHBI3S5KQ22DDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-purple-shirt-s": {
+      "squareCatalogObjectId": "QWFDZPMI7HJT43L5ON6PKDTA",
+      "squareVariationId": "IDOQ5NOBD55U2EQUYSGNO4FO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-purple-shirt-m": {
+      "squareCatalogObjectId": "QWFDZPMI7HJT43L5ON6PKDTA",
+      "squareVariationId": "AXUQG37CW7B4AFPRFIXBXPNA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-purple-shirt-l": {
+      "squareCatalogObjectId": "QWFDZPMI7HJT43L5ON6PKDTA",
+      "squareVariationId": "UIWRICWJ72BMBJ5QNPZWESRC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-purple-shirt-xl": {
+      "squareCatalogObjectId": "QWFDZPMI7HJT43L5ON6PKDTA",
+      "squareVariationId": "AK6BYH4I3OJKOSKXOMJSRBLQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-purple-shirt-2xl": {
+      "squareCatalogObjectId": "QWFDZPMI7HJT43L5ON6PKDTA",
+      "squareVariationId": "66FA4OWFHH4NENZEQAIGJSRJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-purple-shirt-3xl": {
+      "squareCatalogObjectId": "QWFDZPMI7HJT43L5ON6PKDTA",
+      "squareVariationId": "SJW6DTTRFWKHKW5KN45TUHKH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-paprika-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-paprika-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-paprika-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-paprika-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-paprika-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-paprika-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "lipstick-xs": {
+      "squareCatalogObjectId": "AGZJVE7T2P6SI4ZG6QKRJHQ4",
+      "squareVariationId": "6HCWJPW4OFQ2JQK6O43DA2PL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "lipstick-s": {
+      "squareCatalogObjectId": "AGZJVE7T2P6SI4ZG6QKRJHQ4",
+      "squareVariationId": "YMIYAKEGTKLQGQUKAXLVIPFZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "lipstick-m": {
+      "squareCatalogObjectId": "AGZJVE7T2P6SI4ZG6QKRJHQ4",
+      "squareVariationId": "ECQMRKGQHP5D33Y5EC5VV2FM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "lipstick-l": {
+      "squareCatalogObjectId": "AGZJVE7T2P6SI4ZG6QKRJHQ4",
+      "squareVariationId": "VS3UB4JO2XBCSUZZKPFQFX4W",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "lipstick-xl": {
+      "squareCatalogObjectId": "AGZJVE7T2P6SI4ZG6QKRJHQ4",
+      "squareVariationId": "QTKLFXWOQNXEDV2IWSWX2RH4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "lipstick-2xl": {
+      "squareCatalogObjectId": "AGZJVE7T2P6SI4ZG6QKRJHQ4",
+      "squareVariationId": "PUKCBWEOCBJTD56EIMG3XR7O",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "lipstick-3xl": {
+      "squareCatalogObjectId": "AGZJVE7T2P6SI4ZG6QKRJHQ4",
+      "squareVariationId": "7M5YZF77DHRHUM4DCJRCB27T",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "royal-black-unisex-hoodie-s": {
+      "squareCatalogObjectId": "ANDP7LX74OJQUHTRBBKSMKAR",
+      "squareVariationId": "PBXLXYDRDI5PWEAV5R33YPP2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "royal-black-unisex-hoodie-m": {
+      "squareCatalogObjectId": "ANDP7LX74OJQUHTRBBKSMKAR",
+      "squareVariationId": "Z3OUEGFJXS5K7XTSRLPI67LE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "royal-black-unisex-hoodie-l": {
+      "squareCatalogObjectId": "ANDP7LX74OJQUHTRBBKSMKAR",
+      "squareVariationId": "ZLHQ4G4PCZJPK4UNKXGU3QXK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "royal-black-unisex-hoodie-xl": {
+      "squareCatalogObjectId": "ANDP7LX74OJQUHTRBBKSMKAR",
+      "squareVariationId": "NMZC34E2O6F6JEGYP2TSNV36",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "royal-black-unisex-hoodie-2xl": {
+      "squareCatalogObjectId": "ANDP7LX74OJQUHTRBBKSMKAR",
+      "squareVariationId": "NBJI26OQLPTD7CUAOZMC5ZDC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "royal-black-unisex-hoodie-3xl": {
+      "squareCatalogObjectId": "ANDP7LX74OJQUHTRBBKSMKAR",
+      "squareVariationId": "EYMISBMH53LSF3SJEQO6XQIP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-black-unisex-hoodie-s": {
+      "squareCatalogObjectId": "AO6IEUS3SAJV4HMZL6Q2BDBZ",
+      "squareVariationId": "HCZETH5URQMXELYCUGK4MC57",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-black-unisex-hoodie-m": {
+      "squareCatalogObjectId": "AO6IEUS3SAJV4HMZL6Q2BDBZ",
+      "squareVariationId": "CLGA2S66PFNH3SFA7AWNV52N",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-black-unisex-hoodie-l": {
+      "squareCatalogObjectId": "AO6IEUS3SAJV4HMZL6Q2BDBZ",
+      "squareVariationId": "XANQTRDZG6VPBM5FFHDSWEQI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-black-unisex-hoodie-xl": {
+      "squareCatalogObjectId": "AO6IEUS3SAJV4HMZL6Q2BDBZ",
+      "squareVariationId": "KYF3HIBIMCCJHPWBV376R7QF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-black-unisex-hoodie-2xl": {
+      "squareCatalogObjectId": "AO6IEUS3SAJV4HMZL6Q2BDBZ",
+      "squareVariationId": "UDQQY5LXERTGUFHGODEEPNXV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-black-unisex-hoodie-3xl": {
+      "squareCatalogObjectId": "AO6IEUS3SAJV4HMZL6Q2BDBZ",
+      "squareVariationId": "YIHJE4VQYIN3WBQ2UW4WEEYX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "social-club-xs": {
+      "squareCatalogObjectId": "AONOKECUUAPXW3UFUNLAJMTY",
+      "squareVariationId": "FXCSXN62NSPJ3RHSS7A2PHYY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "social-club-s": {
+      "squareCatalogObjectId": "AONOKECUUAPXW3UFUNLAJMTY",
+      "squareVariationId": "BMA67HO5HIVKTRET3BKAKOEU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "social-club-m": {
+      "squareCatalogObjectId": "AONOKECUUAPXW3UFUNLAJMTY",
+      "squareVariationId": "DPBHA5X6EONXBWQWH3QTA76O",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "social-club-l": {
+      "squareCatalogObjectId": "AONOKECUUAPXW3UFUNLAJMTY",
+      "squareVariationId": "4IGEWUT76VCV6VOMH5QSS2UZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "social-club-xl": {
+      "squareCatalogObjectId": "AONOKECUUAPXW3UFUNLAJMTY",
+      "squareVariationId": "2ITZE2R6LRKAAKEHYDCBXWF5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "social-club-2xl": {
+      "squareCatalogObjectId": "AONOKECUUAPXW3UFUNLAJMTY",
+      "squareVariationId": "C2U7J5NS4QRZS4ZOKMW5Z22K",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "social-club-3xl": {
+      "squareCatalogObjectId": "AONOKECUUAPXW3UFUNLAJMTY",
+      "squareVariationId": "YEFFXGJVGARXCLCM66O2U56I",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-moss-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-moss-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-moss-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-moss-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-moss-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-moss-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-moss-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-violet-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-violet-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-violet-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-violet-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-violet-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-violet-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-violet-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-graphite-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-graphite-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-graphite-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-graphite-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-graphite-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-graphite-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-graphite-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-maroon-unisex-hoodie-s": {
+      "squareCatalogObjectId": "CAO5L4WWE7PA6VFDOOIAMIYN",
+      "squareVariationId": "ZPBYQYYZBK2PHV2FVYC3HEGQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-maroon-unisex-hoodie-m": {
+      "squareCatalogObjectId": "CAO5L4WWE7PA6VFDOOIAMIYN",
+      "squareVariationId": "H3EXMNFBTCGN4ZAKNMUGK2ID",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-maroon-unisex-hoodie-l": {
+      "squareCatalogObjectId": "CAO5L4WWE7PA6VFDOOIAMIYN",
+      "squareVariationId": "N5SXOJ2O6UCPTWS255GSH2CQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-maroon-unisex-hoodie-xl": {
+      "squareCatalogObjectId": "CAO5L4WWE7PA6VFDOOIAMIYN",
+      "squareVariationId": "M5LNU6CLYC544DI35EP77Y2K",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-maroon-unisex-hoodie-2xl": {
+      "squareCatalogObjectId": "CAO5L4WWE7PA6VFDOOIAMIYN",
+      "squareVariationId": "DK3R32DWXIMNWLCCCXA4ZJMV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-maroon-unisex-hoodie-3xl": {
+      "squareCatalogObjectId": "CAO5L4WWE7PA6VFDOOIAMIYN",
+      "squareVariationId": "Z26PORSG37OZMKMY4YHLVTOW",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "glen-coco-xs": {
+      "squareCatalogObjectId": "CBX2NKDXXCXDUULGJ55QDI3Q",
+      "squareVariationId": "3SQ7VVB5LRB4LRGQH4ZKNYBR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "glen-coco-s": {
+      "squareCatalogObjectId": "CBX2NKDXXCXDUULGJ55QDI3Q",
+      "squareVariationId": "ZYG4BWKLPQLTXHG3PGLNUETZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "glen-coco-m": {
+      "squareCatalogObjectId": "CBX2NKDXXCXDUULGJ55QDI3Q",
+      "squareVariationId": "SHODA65NX3X3UZ3PA25YE5CK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "glen-coco-l": {
+      "squareCatalogObjectId": "CBX2NKDXXCXDUULGJ55QDI3Q",
+      "squareVariationId": "WMD3ISGZHSEFZXYSTKHZPSJG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "glen-coco-xl": {
+      "squareCatalogObjectId": "CBX2NKDXXCXDUULGJ55QDI3Q",
+      "squareVariationId": "3E7UDTKQZLHRG4XMFR6H2U3Y",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "glen-coco-2xl": {
+      "squareCatalogObjectId": "CBX2NKDXXCXDUULGJ55QDI3Q",
+      "squareVariationId": "OQ54XUWAINJPPQKMOTSULBXK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "glen-coco-3xl": {
+      "squareCatalogObjectId": "CBX2NKDXXCXDUULGJ55QDI3Q",
+      "squareVariationId": "IF5VYCBO2FFC3QBPIMOBFKL5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-blossom-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-blossom-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-blossom-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-blossom-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-blossom-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-blossom-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-blossom-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chambray-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chambray-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chambray-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chambray-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chambray-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chambray-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chambray-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-white-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-white-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-white-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-white-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-white-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-white-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "be-you-xs": {
+      "squareCatalogObjectId": "CJRE6IETYXKNGDAIPT2DOXSZ",
+      "squareVariationId": "O5GKM3RD5RTBCLAS7DDEPTXJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "be-you-s": {
+      "squareCatalogObjectId": "CJRE6IETYXKNGDAIPT2DOXSZ",
+      "squareVariationId": "KNDMTZCGI3FO6PVW7UKMU2G2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "be-you-m": {
+      "squareCatalogObjectId": "CJRE6IETYXKNGDAIPT2DOXSZ",
+      "squareVariationId": "527LABPIUKYM2S3XNVZQ4J5C",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "be-you-l": {
+      "squareCatalogObjectId": "CJRE6IETYXKNGDAIPT2DOXSZ",
+      "squareVariationId": "W7TCXRFTZGDPLQR3G4AFTQ22",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "be-you-xl": {
+      "squareCatalogObjectId": "CJRE6IETYXKNGDAIPT2DOXSZ",
+      "squareVariationId": "BD326JFSYCJAU5DXIGOW7CSZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "be-you-2xl": {
+      "squareCatalogObjectId": "CJRE6IETYXKNGDAIPT2DOXSZ",
+      "squareVariationId": "HKLCHA3J6DQGF6HWXPVELRHV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "be-you-3xl": {
+      "squareCatalogObjectId": "CJRE6IETYXKNGDAIPT2DOXSZ",
+      "squareVariationId": "JWM5GHJHV7ANDB4X3KWCHK5P",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-regular-12-oz": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "RDWHTX4VWWYBVQS3PVKKR462",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-slim-12-oz": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "23ABZBE6A5ZPULEIWLRC4HFR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "not-a-220-sweater-navy-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "CTLASTY4KYNPEQADAKHAZJXR",
+      "squareVariationId": "2LTRCOL5Y7XOXRM5LKWS47TE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "not-a-220-sweater-navy-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "CTLASTY4KYNPEQADAKHAZJXR",
+      "squareVariationId": "2LWNW7C6RSKE4OD7LAFINKIK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "not-a-220-sweater-navy-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "CTLASTY4KYNPEQADAKHAZJXR",
+      "squareVariationId": "SJL5AA63647LAJ3HDMP75A4Z",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "not-a-220-sweater-navy-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "CTLASTY4KYNPEQADAKHAZJXR",
+      "squareVariationId": "ZCQ4DY6ABE7BLCOVIYW6MKAG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "not-a-220-sweater-navy-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "CTLASTY4KYNPEQADAKHAZJXR",
+      "squareVariationId": "PR2TIXI4OXXBVFLYRIIHLRMS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "not-a-220-sweater-navy-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "CTLASTY4KYNPEQADAKHAZJXR",
+      "squareVariationId": "YJPH4ZEGX3Z3US6TTAS5ZC2L",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ice-blue-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ice-blue-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ice-blue-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ice-blue-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ice-blue-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-ice-blue-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "avenue-b-new-york-grey-unisex-hoodie-s": {
+      "squareCatalogObjectId": "DFZK4LYYBCECRBCCUGIF3KJX",
+      "squareVariationId": "XQ4MADSTKDUGHXE5N4M2HEH4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "avenue-b-new-york-grey-unisex-hoodie-m": {
+      "squareCatalogObjectId": "DFZK4LYYBCECRBCCUGIF3KJX",
+      "squareVariationId": "JJGKBCGEPLEBJHVI376MINV4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "avenue-b-new-york-grey-unisex-hoodie-l": {
+      "squareCatalogObjectId": "DFZK4LYYBCECRBCCUGIF3KJX",
+      "squareVariationId": "XEV5ODYO5KIEXUHSDDKCGH27",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "avenue-b-new-york-grey-unisex-hoodie-xl": {
+      "squareCatalogObjectId": "DFZK4LYYBCECRBCCUGIF3KJX",
+      "squareVariationId": "CF42L235ASUOIGEPFHBC2IBV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "avenue-b-new-york-grey-unisex-hoodie-2xl": {
+      "squareCatalogObjectId": "DFZK4LYYBCECRBCCUGIF3KJX",
+      "squareVariationId": "DQCL3ECZ2SU2LV2BUQ6VVXKG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "avenue-b-new-york-grey-unisex-hoodie-3xl": {
+      "squareCatalogObjectId": "DFZK4LYYBCECRBCCUGIF3KJX",
+      "squareVariationId": "L42B63WD7RBW74EE3LEZHYWU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-navy-blazer-s": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-navy-blazer-m": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-navy-blazer-l": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-navy-blazer-xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-navy-blazer-2xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-navy-blazer-3xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-charcoal-heather-s": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-charcoal-heather-m": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-charcoal-heather-l": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-charcoal-heather-xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-charcoal-heather-2xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-charcoal-heather-3xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-team-royal-s": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-team-royal-m": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "super-bros-black-short-sleeve-t-shirt-xs": {
+      "squareCatalogObjectId": "E4MCZW5HDMKZMIESFZM7H3OK",
+      "squareVariationId": "2MFTW3CU5AR7MAUHPMQVW2OZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "super-bros-black-short-sleeve-t-shirt-s": {
+      "squareCatalogObjectId": "E4MCZW5HDMKZMIESFZM7H3OK",
+      "squareVariationId": "3GREQ7NBFN4DOS6L5CY33U34",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "super-bros-black-short-sleeve-t-shirt-m": {
+      "squareCatalogObjectId": "E4MCZW5HDMKZMIESFZM7H3OK",
+      "squareVariationId": "YF45XPFTNHGP6UG7PUKKDFLS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "super-bros-black-short-sleeve-t-shirt-l": {
+      "squareCatalogObjectId": "E4MCZW5HDMKZMIESFZM7H3OK",
+      "squareVariationId": "KB3XAPWBRN7P7MYN32CRZL3H",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "super-bros-black-short-sleeve-t-shirt-xl": {
+      "squareCatalogObjectId": "E4MCZW5HDMKZMIESFZM7H3OK",
+      "squareVariationId": "OHG3HU7TYEXGDA6BZUJ5LEA2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "super-bros-black-short-sleeve-t-shirt-2xl": {
+      "squareCatalogObjectId": "E4MCZW5HDMKZMIESFZM7H3OK",
+      "squareVariationId": "3ZUTVS7NJIQK4AJ3JBCYP7PX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "super-bros-black-short-sleeve-t-shirt-3xl": {
+      "squareCatalogObjectId": "E4MCZW5HDMKZMIESFZM7H3OK",
+      "squareVariationId": "3KFHCUXO5RFK3YZKLIHDAPGG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dad-hat-black": {
+      "squareCatalogObjectId": "EOHCMLD3JPNIXCPGXMDDFJKP",
+      "squareVariationId": "NNGUY6OLJ2PE35JT25X5SR5N",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dad-hat-cranberry": {
+      "squareCatalogObjectId": "EOHCMLD3JPNIXCPGXMDDFJKP",
+      "squareVariationId": "BIRG6RLMLZA24TMS4CW5G2TT",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dad-hat-green-camo": {
+      "squareCatalogObjectId": "EOHCMLD3JPNIXCPGXMDDFJKP",
+      "squareVariationId": "RAD4KZ5R7SUSR6H6UVMZLW4B",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dad-hat-pink": {
+      "squareCatalogObjectId": "EOHCMLD3JPNIXCPGXMDDFJKP",
+      "squareVariationId": "7XZGGAVN2EAVRXA5X6DMJT5X",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dad-hat-white": {
+      "squareCatalogObjectId": "EOHCMLD3JPNIXCPGXMDDFJKP",
+      "squareVariationId": "F3ZZO5574IC6Y2W6PNWXPZVR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "ninja-turtles-xs": {
+      "squareCatalogObjectId": "ET3DETZDV7P4YWRIROZCM5A4",
+      "squareVariationId": "UKGG4AOBHCHMNVF7DJ3RNO5W",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "ninja-turtles-s": {
+      "squareCatalogObjectId": "ET3DETZDV7P4YWRIROZCM5A4",
+      "squareVariationId": "WEPVSQ5GQHFLJLWPXU32XNDH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "ninja-turtles-m": {
+      "squareCatalogObjectId": "ET3DETZDV7P4YWRIROZCM5A4",
+      "squareVariationId": "JT6PHS7IDGSCKY7T5PPNLQ65",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "ninja-turtles-l": {
+      "squareCatalogObjectId": "ET3DETZDV7P4YWRIROZCM5A4",
+      "squareVariationId": "HUFE6YZRFQSXIP76FXRBV7KZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "ninja-turtles-xl": {
+      "squareCatalogObjectId": "ET3DETZDV7P4YWRIROZCM5A4",
+      "squareVariationId": "A2G5M2BM5NNZJWBFLH54MDZO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "ninja-turtles-2xl": {
+      "squareCatalogObjectId": "ET3DETZDV7P4YWRIROZCM5A4",
+      "squareVariationId": "CAQOZMY7PMJE4NXDSJ2CGL7M",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "ninja-turtles-3xl": {
+      "squareCatalogObjectId": "ET3DETZDV7P4YWRIROZCM5A4",
+      "squareVariationId": "2GFJ6KUVXZIP5TFGKNFVMCH5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-black-xs": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-midnight-navy-xs": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-midnight-navy-s": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-midnight-navy-m": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-midnight-navy-l": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-midnight-navy-xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-midnight-navy-2xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-midnight-navy-3xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-royal-blue-xs": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-royal-blue-s": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-royal-blue-m": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-royal-blue-l": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-royal-blue-xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "enemy-of-the-state-unisex-hoodie-royal-blue-2xl": {
+      "squareCatalogObjectId": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-black": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "4OU4OEY6OJXU73QVRWU64IK2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-brown": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "YIWDQLT756UVVDG4KFYGIT5I",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-navy": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "W3K2DF7DXPLULULB4QKLMHL7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-dark-grey": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "LUU5Z2CGYV7I6AED6T7XXNEM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-royal": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "36CLCSHCOK7MIYDET4IABIW5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-red": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "VXVLHB5ELCDMVIY5ZLU7UQR7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-olive": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "J3BM6WCBHFAGOXKCI62CFKGB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-spruce": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "4BOZMW6GVFNQ4ME4IXRNOTLH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-heather-grey": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "ZYG3WFA3OLGAOVFDIBQMX7QT",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-gold": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "YAQESRLLD7D2YKEX3S4L63HK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-baby-pink": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "XPGGV26DR72EHOGHR7DYUOSW",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "aha-cuffed-beanie-white": {
+      "squareCatalogObjectId": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "squareVariationId": "L2AAMJ2F3RCXHNENLQ4SAD4Y",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-xs": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "36UDCZNU5HPMY5FT5EAYLK7J",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-s": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "S4XZTM2HWM533TAQEHJ2YGNV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-m": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "2ZYODZLBWS6U23BJ3XPQF2BR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-l": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "2K6SCZIZU5WL6IRMKLMZ6IUQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-xl": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "A3V37VR5MDIL5GXRWY6SWCME",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-2xl": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "UNWF2RMVWHWGJGSRDN2W45HL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-3xl": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "2HZW66XWXCRBUDSVCYFRJ6OM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "club-technoir-black-unisex-short-sleeve-t-shirt-xs": {
+      "squareCatalogObjectId": "FTK3ZSXDIFY75HRPAH4ZDMFA",
+      "squareVariationId": "CLGARCSAX7TBUYPXBYN7F24S",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "club-technoir-black-unisex-short-sleeve-t-shirt-s": {
+      "squareCatalogObjectId": "FTK3ZSXDIFY75HRPAH4ZDMFA",
+      "squareVariationId": "GKC7CS7VXUMZMBPSAEWR3ZMR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "club-technoir-black-unisex-short-sleeve-t-shirt-m": {
+      "squareCatalogObjectId": "FTK3ZSXDIFY75HRPAH4ZDMFA",
+      "squareVariationId": "2N5FYVVS6EFQNIDATG4F3NP7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "club-technoir-black-unisex-short-sleeve-t-shirt-l": {
+      "squareCatalogObjectId": "FTK3ZSXDIFY75HRPAH4ZDMFA",
+      "squareVariationId": "DDVD735OXJTIAPEOHIBKGVMI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "club-technoir-black-unisex-short-sleeve-t-shirt-xl": {
+      "squareCatalogObjectId": "FTK3ZSXDIFY75HRPAH4ZDMFA",
+      "squareVariationId": "DFWUGHQFPRBZPZE2JE3YJL63",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "club-technoir-black-unisex-short-sleeve-t-shirt-2xl": {
+      "squareCatalogObjectId": "FTK3ZSXDIFY75HRPAH4ZDMFA",
+      "squareVariationId": "56YAED6EOPAEYPB6JQUF6AOG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "club-technoir-black-unisex-short-sleeve-t-shirt-3xl": {
+      "squareCatalogObjectId": "FTK3ZSXDIFY75HRPAH4ZDMFA",
+      "squareVariationId": "3BG6RFK5DR3Z6TYR7TQ7RQ7I",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-s-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-l-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-black-unisex-short-sleeve-t-shirt-xs": {
+      "squareCatalogObjectId": "FX7I4AJMGOAGFZWDY2XH7TIS",
+      "squareVariationId": "TJDIIT7SYZWNDJVSFQ4X3RIQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-black-unisex-short-sleeve-t-shirt-s": {
+      "squareCatalogObjectId": "FX7I4AJMGOAGFZWDY2XH7TIS",
+      "squareVariationId": "VSUNFL4H5PGLZG2AQTXCAP7J",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-black-unisex-short-sleeve-t-shirt-m": {
+      "squareCatalogObjectId": "FX7I4AJMGOAGFZWDY2XH7TIS",
+      "squareVariationId": "RHU6CPDVV55MNJDQ7BRJISNJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-black-unisex-short-sleeve-t-shirt-l": {
+      "squareCatalogObjectId": "FX7I4AJMGOAGFZWDY2XH7TIS",
+      "squareVariationId": "RCRIRS4DZM3FT6DPVYAK6YC2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-black-unisex-short-sleeve-t-shirt-xl": {
+      "squareCatalogObjectId": "FX7I4AJMGOAGFZWDY2XH7TIS",
+      "squareVariationId": "YBGJIWS5TS2PKRKDONPX3CMY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-black-unisex-short-sleeve-t-shirt-2xl": {
+      "squareCatalogObjectId": "FX7I4AJMGOAGFZWDY2XH7TIS",
+      "squareVariationId": "TLET6CSFWWAEZ3C7QG4ZBWXH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-black-unisex-short-sleeve-t-shirt-3xl": {
+      "squareCatalogObjectId": "FX7I4AJMGOAGFZWDY2XH7TIS",
+      "squareVariationId": "2PLQ5GQGPRXGBSLCVWATUGXY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-golf-rope-cap-black-white": {
+      "squareCatalogObjectId": "G3CSQA4J2MTPALKL4SNYBWEL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-golf-rope-cap-navy-mint": {
+      "squareCatalogObjectId": "G3CSQA4J2MTPALKL4SNYBWEL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-golf-rope-cap-turquoise-white": {
+      "squareCatalogObjectId": "G3CSQA4J2MTPALKL4SNYBWEL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "relativity-xs": {
+      "squareCatalogObjectId": "GIRAJA764NYDKCQYCRQZLQR7",
+      "squareVariationId": "6YPTV3W5YYO7RL5CLSYVEM6R",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "relativity-s": {
+      "squareCatalogObjectId": "GIRAJA764NYDKCQYCRQZLQR7",
+      "squareVariationId": "NZA576XY3CZC4O4VRFOTM47R",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "relativity-m": {
+      "squareCatalogObjectId": "GIRAJA764NYDKCQYCRQZLQR7",
+      "squareVariationId": "Q57NCTW64MGEHLKSUROHRHA7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "relativity-l": {
+      "squareCatalogObjectId": "GIRAJA764NYDKCQYCRQZLQR7",
+      "squareVariationId": "DKI2773GKO2ALGNQYOKN3PFE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "relativity-xl": {
+      "squareCatalogObjectId": "GIRAJA764NYDKCQYCRQZLQR7",
+      "squareVariationId": "JVKWCLZSAVS6NH2RBDQB7GMJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "relativity-2xl": {
+      "squareCatalogObjectId": "GIRAJA764NYDKCQYCRQZLQR7",
+      "squareVariationId": "4KZJUPR6DKG4EXYS256AOHFY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "relativity-3xl": {
+      "squareCatalogObjectId": "GIRAJA764NYDKCQYCRQZLQR7",
+      "squareVariationId": "VNSVZVZYUCZNJRVQU2ONONNU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-dad-hat-black": {
+      "squareCatalogObjectId": "GX6WUI36C6LDR5AM7AJW7RME",
+      "squareVariationId": "VQUFCSD2GPDKV2IGXA4MPECC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-dad-hat-cranberry": {
+      "squareCatalogObjectId": "GX6WUI36C6LDR5AM7AJW7RME",
+      "squareVariationId": "S6L4CA6KRVJZ6VIKBASYFHN2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-dad-hat-green-camo": {
+      "squareCatalogObjectId": "GX6WUI36C6LDR5AM7AJW7RME",
+      "squareVariationId": "N3EDIRB6FKFIQOL2WHVKF4YS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-dad-hat-pink": {
+      "squareCatalogObjectId": "GX6WUI36C6LDR5AM7AJW7RME",
+      "squareVariationId": "DV2V5Y7BR4ESGIWM27Y5KPLN",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-dad-hat-white": {
+      "squareCatalogObjectId": "GX6WUI36C6LDR5AM7AJW7RME",
+      "squareVariationId": "NIRP3QD7E5LKFEI4XWPJGLP5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hope-and-tomorrow-dark-grey-cuffed-beanie-hope-and-tomorrow-dark-grey-cuffed-beanie": {
+      "squareCatalogObjectId": "H4LTHIYKHH4ICQU5PBWL4TMO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-light-blue-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "VEAIHNN42OHQ6D44FHQHRRQ4",
+      "squareVariationId": "5V5XP7MM22VHIPO4JUB52HEG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-light-blue-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "VEAIHNN42OHQ6D44FHQHRRQ4",
+      "squareVariationId": "YSVNGSVCK72UMGWGSRDMFGSN",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-light-blue-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "VEAIHNN42OHQ6D44FHQHRRQ4",
+      "squareVariationId": "R4QPAIMM5V7OSO62D5EFZ7VH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-light-blue-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "VEAIHNN42OHQ6D44FHQHRRQ4",
+      "squareVariationId": "H7U525MUVXFJJBDGDRJ76E6B",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-light-blue-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "VEAIHNN42OHQ6D44FHQHRRQ4",
+      "squareVariationId": "65JJNURSUYEYDX2L5BYIBEJB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-light-blue-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "VEAIHNN42OHQ6D44FHQHRRQ4",
+      "squareVariationId": "GD672JZB5XH7TUWJHLATNDTJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "set-2-of-pin-buttons-1-25": {
+      "squareCatalogObjectId": "IR43NDPVMGIUSWPJ7CAMBADJ",
+      "squareVariationId": "OWX46IHVL5PZVLF2VGB6NHVY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "set-2-of-pin-buttons-2-25": {
+      "squareCatalogObjectId": "IR43NDPVMGIUSWPJ7CAMBADJ",
+      "squareVariationId": "7G3C4NIM5SCVWVWO4F6J2ECJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crunchberry-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crunchberry-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crunchberry-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crunchberry-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crunchberry-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crunchberry-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crunchberry-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chalky-mint-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chalky-mint-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chalky-mint-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chalky-mint-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chalky-mint-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-chalky-mint-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "haze-lavender-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "ITWZLQZKEJON5K4QUS6CSK7F",
+      "squareVariationId": "SWMICGNYHUDG2JKHMXPRMINJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "haze-lavender-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "ITWZLQZKEJON5K4QUS6CSK7F",
+      "squareVariationId": "ICV36HGVQ7LCP3IBEVONBQQL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "haze-lavender-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "ITWZLQZKEJON5K4QUS6CSK7F",
+      "squareVariationId": "INOLLW6JB2N2J6XGBFVHYWVI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "haze-lavender-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "ITWZLQZKEJON5K4QUS6CSK7F",
+      "squareVariationId": "5F7GFJ5MTS5S2TNRSJYXWVS4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "haze-lavender-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "ITWZLQZKEJON5K4QUS6CSK7F",
+      "squareVariationId": "UIJCXVFV7FF6WHN5TY6EUMEO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "haze-lavender-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "ITWZLQZKEJON5K4QUS6CSK7F",
+      "squareVariationId": "N42TWUGGF6J5Q6LAZXUY5VHB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hot-air-xs": {
+      "squareCatalogObjectId": "IXIDT2JHXHGJP7TMG3V4BAXX",
+      "squareVariationId": "OJIP3MQN24IM7T24X6OSJH5J",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hot-air-s": {
+      "squareCatalogObjectId": "IXIDT2JHXHGJP7TMG3V4BAXX",
+      "squareVariationId": "FVLYWATFHKIWI6GZGHSAXQG4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hot-air-m": {
+      "squareCatalogObjectId": "IXIDT2JHXHGJP7TMG3V4BAXX",
+      "squareVariationId": "ALEFFJDX7XT7JA5DGWIO7PKY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hot-air-l": {
+      "squareCatalogObjectId": "IXIDT2JHXHGJP7TMG3V4BAXX",
+      "squareVariationId": "WBFO4HX745ZFGMGEDWE6LBEH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hot-air-xl": {
+      "squareCatalogObjectId": "IXIDT2JHXHGJP7TMG3V4BAXX",
+      "squareVariationId": "VO4RPM4BGQO5FCITWMWYSUF5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hot-air-2xl": {
+      "squareCatalogObjectId": "IXIDT2JHXHGJP7TMG3V4BAXX",
+      "squareVariationId": "U2KTTL5RNK4UPF3JEWQNT3MO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hot-air-3xl": {
+      "squareCatalogObjectId": "IXIDT2JHXHGJP7TMG3V4BAXX",
+      "squareVariationId": "NC4Z7IPDBFH3Y45EJDQ7FWCL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-black": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-oyster": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "keano-xs": {
+      "squareCatalogObjectId": "JFFQHATGLHYYTROJSBSZB5IT",
+      "squareVariationId": "NBLDUO4MN73IQ3QLGNHZOTKK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "keano-s": {
+      "squareCatalogObjectId": "JFFQHATGLHYYTROJSBSZB5IT",
+      "squareVariationId": "RLILT4HEL5LQ3FZDFSCBMBRI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "keano-m": {
+      "squareCatalogObjectId": "JFFQHATGLHYYTROJSBSZB5IT",
+      "squareVariationId": "Z7VK5AMQ23C3BHIVB4A4EIUS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "keano-l": {
+      "squareCatalogObjectId": "JFFQHATGLHYYTROJSBSZB5IT",
+      "squareVariationId": "ENL4DESTEOQN6SH4HQHDTAZK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "keano-xl": {
+      "squareCatalogObjectId": "JFFQHATGLHYYTROJSBSZB5IT",
+      "squareVariationId": "6MK4ALTBFGERC4CQJTE7U7XS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "keano-2xl": {
+      "squareCatalogObjectId": "JFFQHATGLHYYTROJSBSZB5IT",
+      "squareVariationId": "NAPI7PUYFJEVSNJJ4OS2IRMR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "keano-3xl": {
+      "squareCatalogObjectId": "JFFQHATGLHYYTROJSBSZB5IT",
+      "squareVariationId": "BPIDZHF4EKZUTA3XZ74PUWV4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "number-7-xs": {
+      "squareCatalogObjectId": "JHQP6CIGEOSRGH6KYSK43PEZ",
+      "squareVariationId": "RSPW3DUPUN4L4P6RCBDFV2II",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "number-7-s": {
+      "squareCatalogObjectId": "JHQP6CIGEOSRGH6KYSK43PEZ",
+      "squareVariationId": "EJRQYG7ZXZIBGIPH3REEHPK5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "number-7-m": {
+      "squareCatalogObjectId": "JHQP6CIGEOSRGH6KYSK43PEZ",
+      "squareVariationId": "UXBIZWBZDW6P2P47S4BZ2L34",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "number-7-l": {
+      "squareCatalogObjectId": "JHQP6CIGEOSRGH6KYSK43PEZ",
+      "squareVariationId": "LLZ6UD7SVKY2ESYEZTMMSUGG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "number-7-xl": {
+      "squareCatalogObjectId": "JHQP6CIGEOSRGH6KYSK43PEZ",
+      "squareVariationId": "XNS4MOCE3L4GZQAGV25N3LC4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "number-7-2xl": {
+      "squareCatalogObjectId": "JHQP6CIGEOSRGH6KYSK43PEZ",
+      "squareVariationId": "I4SRC4J4UN4I7POJXL2L6YEP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "number-7-3xl": {
+      "squareCatalogObjectId": "JHQP6CIGEOSRGH6KYSK43PEZ",
+      "squareVariationId": "FMNA7NEARBDR62WUBJIHYQFH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-navy-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-navy-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-navy-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-navy-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-navy-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-navy-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-navy-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-burnt-orange-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-burnt-orange-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-burnt-orange-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-burnt-orange-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-burnt-orange-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-burnt-orange-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-maroon-s": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-maroon-m": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-maroon-l": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-maroon-xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-maroon-2xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-maroon-3xl": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-punk-doodle-sticker-sheet": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "you-are-here-black-unisex-short-sleeve-t-shirt-xs": {
+      "squareCatalogObjectId": "XTN3LMZAQM7OAN2LLYRX23DT",
+      "squareVariationId": "S3EL4T6LGQHLB6GLLHVRHSEF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "you-are-here-black-unisex-short-sleeve-t-shirt-s": {
+      "squareCatalogObjectId": "XTN3LMZAQM7OAN2LLYRX23DT",
+      "squareVariationId": "NMQT2AXYVQAGNQM3AAU6HYOF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "you-are-here-black-unisex-short-sleeve-t-shirt-m": {
+      "squareCatalogObjectId": "XTN3LMZAQM7OAN2LLYRX23DT",
+      "squareVariationId": "ZTBWWDKXXBSQRDU6IV7R2GJI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "you-are-here-black-unisex-short-sleeve-t-shirt-l": {
+      "squareCatalogObjectId": "XTN3LMZAQM7OAN2LLYRX23DT",
+      "squareVariationId": "P6G3Y2FZIFA2BPPWLX74ZLEI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "you-are-here-black-unisex-short-sleeve-t-shirt-xl": {
+      "squareCatalogObjectId": "XTN3LMZAQM7OAN2LLYRX23DT",
+      "squareVariationId": "3DDPIS3WIQU52APPCGSBKYMY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "you-are-here-black-unisex-short-sleeve-t-shirt-2xl": {
+      "squareCatalogObjectId": "XTN3LMZAQM7OAN2LLYRX23DT",
+      "squareVariationId": "DQ5NH6NCYNKRQHD73QRITAU6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "you-are-here-black-unisex-short-sleeve-t-shirt-3xl": {
+      "squareCatalogObjectId": "XTN3LMZAQM7OAN2LLYRX23DT",
+      "squareVariationId": "QKW3W75UTALT2YLLHPGQCQLZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "revolution-xs": {
+      "squareCatalogObjectId": "KMZO4ZOZJG7PTGLBPLNABGDB",
+      "squareVariationId": "MDOA4HG7QYPMZRAB2VW7VZDS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "revolution-s": {
+      "squareCatalogObjectId": "KMZO4ZOZJG7PTGLBPLNABGDB",
+      "squareVariationId": "5XHW7SY5FQPMDZBPKN3CFR2T",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "revolution-m": {
+      "squareCatalogObjectId": "KMZO4ZOZJG7PTGLBPLNABGDB",
+      "squareVariationId": "XGFT74E6F5JZ5CPY3FEGMABU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "revolution-l": {
+      "squareCatalogObjectId": "KMZO4ZOZJG7PTGLBPLNABGDB",
+      "squareVariationId": "EPK377YFJM22YQHSRNJWWQCK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "revolution-xl": {
+      "squareCatalogObjectId": "KMZO4ZOZJG7PTGLBPLNABGDB",
+      "squareVariationId": "SL4AYRZ6AN3ZGXVXQ2NV2WOM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "revolution-2xl": {
+      "squareCatalogObjectId": "KMZO4ZOZJG7PTGLBPLNABGDB",
+      "squareVariationId": "4ENVQX5SBRL6M5YW5OD5I3J2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "revolution-3xl": {
+      "squareCatalogObjectId": "KMZO4ZOZJG7PTGLBPLNABGDB",
+      "squareVariationId": "F4VCN6XO2S5RUN56BR5LFEFU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crimson-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crimson-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crimson-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crimson-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crimson-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-crimson-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-white-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "KWO4RCGRGDTQDFACGZMRUGT3",
+      "squareVariationId": "JQ2WDMA2A43GUCQQ74A4TDJ6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-white-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "KWO4RCGRGDTQDFACGZMRUGT3",
+      "squareVariationId": "ZNKUB3QGOLBRC55M7UCMKPXA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-white-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "KWO4RCGRGDTQDFACGZMRUGT3",
+      "squareVariationId": "JRJEZSDNXGSWALX36JEVPINX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-white-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "KWO4RCGRGDTQDFACGZMRUGT3",
+      "squareVariationId": "GTVJ4OPLMUTMQR52RIR5ND37",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-white-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "KWO4RCGRGDTQDFACGZMRUGT3",
+      "squareVariationId": "Q3WBSI4GQB62JTCN2FFTH7AC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-white-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "KWO4RCGRGDTQDFACGZMRUGT3",
+      "squareVariationId": "MEBACAKI5N7KUT7HWE57LBJN",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "counting-sheep-crossbody-bag-counting-sheep-crossbody-bag": {
+      "squareCatalogObjectId": "LBR54FECNTFXMCANYU46KKGG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "believe-xs": {
+      "squareCatalogObjectId": "M37XHVM57SKTTGV3ZP3XRNFB",
+      "squareVariationId": "SE7MBEYXFFFZ4FKUKQHRNVIH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "believe-s": {
+      "squareCatalogObjectId": "M37XHVM57SKTTGV3ZP3XRNFB",
+      "squareVariationId": "EPFWXAZCSUURG67NP6MH3XUQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "believe-m": {
+      "squareCatalogObjectId": "M37XHVM57SKTTGV3ZP3XRNFB",
+      "squareVariationId": "FJGO3JOAK3RGS3VXH5AY3Y3R",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "believe-l": {
+      "squareCatalogObjectId": "M37XHVM57SKTTGV3ZP3XRNFB",
+      "squareVariationId": "2WVWSVVFJYOIUJCRFVOXSY5I",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "believe-xl": {
+      "squareCatalogObjectId": "M37XHVM57SKTTGV3ZP3XRNFB",
+      "squareVariationId": "676SVK7BBH32TGPJOPHPE42Y",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "believe-2xl": {
+      "squareCatalogObjectId": "M37XHVM57SKTTGV3ZP3XRNFB",
+      "squareVariationId": "W727SYHFAVHCNELL77QNW5JX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "believe-3xl": {
+      "squareCatalogObjectId": "M37XHVM57SKTTGV3ZP3XRNFB",
+      "squareVariationId": "SXG7AVLFMHY6QG4PV2X72RYI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-dark-tan-unisex-hoodie-s": {
+      "squareCatalogObjectId": "MBSW7EUBK7LNKDWFSOHFSOPK",
+      "squareVariationId": "OJCGPZCXRAHOUR2N6HGM7AIR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-dark-tan-unisex-hoodie-m": {
+      "squareCatalogObjectId": "MBSW7EUBK7LNKDWFSOHFSOPK",
+      "squareVariationId": "UU3H6GYEK2AQE3R6URREVQOL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-dark-tan-unisex-hoodie-l": {
+      "squareCatalogObjectId": "MBSW7EUBK7LNKDWFSOHFSOPK",
+      "squareVariationId": "QQQD4Q5UMLTNNFMVBHDMZMMH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-dark-tan-unisex-hoodie-xl": {
+      "squareCatalogObjectId": "MBSW7EUBK7LNKDWFSOHFSOPK",
+      "squareVariationId": "MO2TOVLP2S4GXIM3UWFQRJ3Z",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-dark-tan-unisex-hoodie-2xl": {
+      "squareCatalogObjectId": "MBSW7EUBK7LNKDWFSOHFSOPK",
+      "squareVariationId": "Y5OK5C4ZYN5AZKDM5S3YI6HF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "sheep-min-dark-tan-unisex-hoodie-3xl": {
+      "squareCatalogObjectId": "MBSW7EUBK7LNKDWFSOHFSOPK",
+      "squareVariationId": "ZIPBMKQSVVJGJY2RKHWDLB3Z",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-maroon-s": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-maroon-m": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-maroon-l": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-maroon-xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-maroon-2xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "deny-defend-depose-maroon-3xl": {
+      "squareCatalogObjectId": "75CSRC2DDB6VGRH5RBK76IDV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dots-unisex-knitted-crewneck-sweater-3xs": {
+      "squareCatalogObjectId": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "squareVariationId": "Y344HUL23FFO322MDQERDWDW",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dots-unisex-knitted-crewneck-sweater-2xs": {
+      "squareCatalogObjectId": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "squareVariationId": "V5U6MHCDPYT55NMFRSSYEIGS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dots-unisex-knitted-crewneck-sweater-xs": {
+      "squareCatalogObjectId": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "squareVariationId": "QAF6GXP3TKZWB7DBQAC5R3IF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dots-unisex-knitted-crewneck-sweater-s": {
+      "squareCatalogObjectId": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "squareVariationId": "HUE5PWC6RHZ2AHTCYW3OEKN4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dots-unisex-knitted-crewneck-sweater-m": {
+      "squareCatalogObjectId": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "squareVariationId": "E5ZXOARLKXNOHNCLRPLFV2TM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dots-unisex-knitted-crewneck-sweater-l": {
+      "squareCatalogObjectId": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "squareVariationId": "65LXDGZNDCWHGDWNBC6ZXMEH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dots-unisex-knitted-crewneck-sweater-xl": {
+      "squareCatalogObjectId": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "squareVariationId": "5YYGGXOX7NDAIXJIPGXAPYTJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dots-unisex-knitted-crewneck-sweater-2xl": {
+      "squareCatalogObjectId": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "squareVariationId": "2O7BR6NMFD6AOQMCWRAPDRA4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dots-unisex-knitted-crewneck-sweater-3xl": {
+      "squareCatalogObjectId": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "squareVariationId": "G5ICJO2O2KWUMYYHCFVAA5LS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "winter-track-relay-unisex-classic-tee-s": {
+      "squareCatalogObjectId": "MY575EFDGM5EZGLB2NXI6MEK",
+      "squareVariationId": "Z6XM2NSC4VDZGFEOLKR5I2JP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "winter-track-relay-unisex-classic-tee-m": {
+      "squareCatalogObjectId": "MY575EFDGM5EZGLB2NXI6MEK",
+      "squareVariationId": "GBGBGSQRY7BNH5RZPF2MKQ65",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "winter-track-relay-unisex-classic-tee-l": {
+      "squareCatalogObjectId": "MY575EFDGM5EZGLB2NXI6MEK",
+      "squareVariationId": "JU6CVYRCXNAISMDEAF7KZLGQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "winter-track-relay-unisex-classic-tee-xl": {
+      "squareCatalogObjectId": "MY575EFDGM5EZGLB2NXI6MEK",
+      "squareVariationId": "AN66SDAXTPUFP3QYKLUSB2TK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "winter-track-relay-unisex-classic-tee-2xl": {
+      "squareCatalogObjectId": "MY575EFDGM5EZGLB2NXI6MEK",
+      "squareVariationId": "Z43FDEDZXLV2FOWIBU4UZOX7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "winter-track-relay-unisex-classic-tee-3xl": {
+      "squareCatalogObjectId": "MY575EFDGM5EZGLB2NXI6MEK",
+      "squareVariationId": "EGRPH3YUASUQ7APEWWFXYGYP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "winter-track-relay-unisex-classic-tee-4xl": {
+      "squareCatalogObjectId": "MY575EFDGM5EZGLB2NXI6MEK",
+      "squareVariationId": "F6BSRV4XXP3U7JO73O4UMOJL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "winter-track-relay-unisex-classic-tee-5xl": {
+      "squareCatalogObjectId": "MY575EFDGM5EZGLB2NXI6MEK",
+      "squareVariationId": "H67ABFMJP67UNV22XFCW6PU4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-dark-grey-unisex-hoodie-s": {
+      "squareCatalogObjectId": "N6TU2FXT4YHSKK2ZYIPPDJHJ",
+      "squareVariationId": "CMYI46DP7UZKE7NFZOW2ZIF6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-dark-grey-unisex-hoodie-m": {
+      "squareCatalogObjectId": "N6TU2FXT4YHSKK2ZYIPPDJHJ",
+      "squareVariationId": "WEON2SVMWBGBMKW42DFHNPOF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-dark-grey-unisex-hoodie-l": {
+      "squareCatalogObjectId": "N6TU2FXT4YHSKK2ZYIPPDJHJ",
+      "squareVariationId": "KNI4NA7G4IP6MG74UJUJX6MN",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-dark-grey-unisex-hoodie-xl": {
+      "squareCatalogObjectId": "N6TU2FXT4YHSKK2ZYIPPDJHJ",
+      "squareVariationId": "3QMC5IOWVO7VRVQZ5N4LDLSW",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-dark-grey-unisex-hoodie-2xl": {
+      "squareCatalogObjectId": "N6TU2FXT4YHSKK2ZYIPPDJHJ",
+      "squareVariationId": "DXW3SLLQRLDV3G4KGWD33PDG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-dark-grey-unisex-hoodie-3xl": {
+      "squareCatalogObjectId": "N6TU2FXT4YHSKK2ZYIPPDJHJ",
+      "squareVariationId": "N6ASSJZPUEO3KFYY6SA5IGQO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "set-1-of-pin-buttons-set-1-of-pin-buttons": {
+      "squareCatalogObjectId": "NB3JKLXNX5GVWBGNAIYXTSS6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cover-story-xs": {
+      "squareCatalogObjectId": "NHVBOTQFVXWUZLZKDJ6N3VTR",
+      "squareVariationId": "67XQH6QAXUOH5B3RMW4FALJ5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cover-story-s": {
+      "squareCatalogObjectId": "NHVBOTQFVXWUZLZKDJ6N3VTR",
+      "squareVariationId": "HB5NS7Q2JW7JB2JMJAJMSRNV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cover-story-m": {
+      "squareCatalogObjectId": "NHVBOTQFVXWUZLZKDJ6N3VTR",
+      "squareVariationId": "43376NYSHZUY3K42RLG6P7NP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cover-story-l": {
+      "squareCatalogObjectId": "NHVBOTQFVXWUZLZKDJ6N3VTR",
+      "squareVariationId": "NVB5KFKH2BXPSTGU7RFTRHSK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cover-story-xl": {
+      "squareCatalogObjectId": "NHVBOTQFVXWUZLZKDJ6N3VTR",
+      "squareVariationId": "J7GAYIIJ5LG5U65BA7KHWI2C",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cover-story-2xl": {
+      "squareCatalogObjectId": "NHVBOTQFVXWUZLZKDJ6N3VTR",
+      "squareVariationId": "D3RORYWKT6KUTSSS7K73CXVO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "cover-story-3xl": {
+      "squareCatalogObjectId": "NHVBOTQFVXWUZLZKDJ6N3VTR",
+      "squareVariationId": "TANEV6UIR23YVDDNOHGHGEWW",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "counting-sheep-tote-bag-regular-counting-sheep-tote-bag-regular": {
+      "squareCatalogObjectId": "NJT4R2YINL5XP4RASKBCVZLO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "just-trying-my-best-xs": {
+      "squareCatalogObjectId": "NXBZPAIZ34LDY5RSKBHJPPMU",
+      "squareVariationId": "4M3GZ37LTJP2FJJSSGNMCTDC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "just-trying-my-best-s": {
+      "squareCatalogObjectId": "NXBZPAIZ34LDY5RSKBHJPPMU",
+      "squareVariationId": "O7S4AOBVVAVB3S66Z4XH6DO4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "just-trying-my-best-m": {
+      "squareCatalogObjectId": "NXBZPAIZ34LDY5RSKBHJPPMU",
+      "squareVariationId": "N4XDHD3U5LV4J7XF65EY7LSH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "just-trying-my-best-l": {
+      "squareCatalogObjectId": "NXBZPAIZ34LDY5RSKBHJPPMU",
+      "squareVariationId": "4CMHADHL2TF65BXS5WJ7MHCS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "just-trying-my-best-xl": {
+      "squareCatalogObjectId": "NXBZPAIZ34LDY5RSKBHJPPMU",
+      "squareVariationId": "FFKEOMRZDLWOBKSSGFHEKBEJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "just-trying-my-best-2xl": {
+      "squareCatalogObjectId": "NXBZPAIZ34LDY5RSKBHJPPMU",
+      "squareVariationId": "LTYWLJODROXCXDK4VHHKWVKP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "just-trying-my-best-3xl": {
+      "squareCatalogObjectId": "NXBZPAIZ34LDY5RSKBHJPPMU",
+      "squareVariationId": "UXKHIW5GTHVEQSLZMJODTZM4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-dark-grey-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "O3SDH7NXKDTYLRBXBOGPI457",
+      "squareVariationId": "HFCLWN5S7IZP6ZVCSDYZA4ZA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-dark-grey-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "O3SDH7NXKDTYLRBXBOGPI457",
+      "squareVariationId": "WDTOJMKU5AWEL4T6CB37BYFR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-dark-grey-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "O3SDH7NXKDTYLRBXBOGPI457",
+      "squareVariationId": "RXTAI4IQVSF77MB6FL7PAGST",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-dark-grey-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "O3SDH7NXKDTYLRBXBOGPI457",
+      "squareVariationId": "SQNILEXWAG6IFN2X6QEHTSPV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-dark-grey-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "O3SDH7NXKDTYLRBXBOGPI457",
+      "squareVariationId": "42HKEQPUGHIU4MBKJ5SHPD6G",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-dark-grey-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "O3SDH7NXKDTYLRBXBOGPI457",
+      "squareVariationId": "PTVRU2ENUE4URA77TWMB7OUA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-black-s": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "G52UON7ZOLQJHVGJIZQMMCOA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-black-m": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "GH63UILHXP2W4MDMTIEN33EX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-black-l": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "65Q54BSFVKZEFXX6SWVUASGS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-black-xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "BDCOBRDNVFOGZXSK5EYZF56B",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-black-2xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "UVBXWQ3DU2BLDPPVOJFCUN56",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-black-3xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "UKO6JBWW4P7NVD7E2WEXIZ4Y",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-navy-blazer-s": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "G52UON7ZOLQJHVGJIZQMMCOA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-navy-blazer-m": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "GH63UILHXP2W4MDMTIEN33EX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-navy-blazer-l": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "65Q54BSFVKZEFXX6SWVUASGS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-navy-blazer-xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "BDCOBRDNVFOGZXSK5EYZF56B",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-navy-blazer-2xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "UVBXWQ3DU2BLDPPVOJFCUN56",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-navy-blazer-3xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "UKO6JBWW4P7NVD7E2WEXIZ4Y",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-maroon-s": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "G52UON7ZOLQJHVGJIZQMMCOA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-maroon-m": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "GH63UILHXP2W4MDMTIEN33EX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-maroon-l": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "65Q54BSFVKZEFXX6SWVUASGS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-maroon-xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "BDCOBRDNVFOGZXSK5EYZF56B",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-maroon-2xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "UVBXWQ3DU2BLDPPVOJFCUN56",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-maroon-3xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "UKO6JBWW4P7NVD7E2WEXIZ4Y",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-charcoal-heather-s": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "G52UON7ZOLQJHVGJIZQMMCOA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-charcoal-heather-m": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "GH63UILHXP2W4MDMTIEN33EX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-flo-blue-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-flo-blue-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-flo-blue-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-flo-blue-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-flo-blue-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-flo-blue-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "rebel-rebel-xs": {
+      "squareCatalogObjectId": "PEP2IHGCVXGTBVZ3D3MACNID",
+      "squareVariationId": "IASZK2RF4AZVH74HG5OEENSM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "rebel-rebel-s": {
+      "squareCatalogObjectId": "PEP2IHGCVXGTBVZ3D3MACNID",
+      "squareVariationId": "K6Q3EZECHWA7Y323E657Q5LK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "rebel-rebel-m": {
+      "squareCatalogObjectId": "PEP2IHGCVXGTBVZ3D3MACNID",
+      "squareVariationId": "PXZ4RMZTDLB4FVHRMNVIWJJX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "rebel-rebel-l": {
+      "squareCatalogObjectId": "PEP2IHGCVXGTBVZ3D3MACNID",
+      "squareVariationId": "F7ZTDF2QRQWW6NZHHJW3KWKX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "rebel-rebel-xl": {
+      "squareCatalogObjectId": "PEP2IHGCVXGTBVZ3D3MACNID",
+      "squareVariationId": "VOKXY4PKGSYWDJNQ45DN5XO2",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "rebel-rebel-2xl": {
+      "squareCatalogObjectId": "PEP2IHGCVXGTBVZ3D3MACNID",
+      "squareVariationId": "TO4R6IOMDMPYID7WPDNHYTB6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "rebel-rebel-3xl": {
+      "squareCatalogObjectId": "PEP2IHGCVXGTBVZ3D3MACNID",
+      "squareVariationId": "QOZLKQK5HCDBVAHVT3MQDYWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-black-s": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "S4XZTM2HWM533TAQEHJ2YGNV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-black-m": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "2ZYODZLBWS6U23BJ3XPQF2BR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-black-l": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "2K6SCZIZU5WL6IRMKLMZ6IUQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-black-xl": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "A3V37VR5MDIL5GXRWY6SWCME",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-black-2xl": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "UNWF2RMVWHWGJGSRDN2W45HL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-black-3xl": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "2HZW66XWXCRBUDSVCYFRJ6OM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-purple-s": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "S4XZTM2HWM533TAQEHJ2YGNV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-purple-m": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "2ZYODZLBWS6U23BJ3XPQF2BR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-purple-l": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "2K6SCZIZU5WL6IRMKLMZ6IUQ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-purple-xl": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "A3V37VR5MDIL5GXRWY6SWCME",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-purple-2xl": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "UNWF2RMVWHWGJGSRDN2W45HL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-orange-shirt-purple-3xl": {
+      "squareCatalogObjectId": "FDHAMCB77LCAKEOX546R6J63",
+      "squareVariationId": "2HZW66XWXCRBUDSVCYFRJ6OM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "nys-ecto-black-short-sleeve-t-shirt-xs": {
+      "squareCatalogObjectId": "PI3INR3CLAU6NJVAXWOXTMCC",
+      "squareVariationId": "OWJXFGYYBH4DOAYKIYQKVTVN",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "nys-ecto-black-short-sleeve-t-shirt-s": {
+      "squareCatalogObjectId": "PI3INR3CLAU6NJVAXWOXTMCC",
+      "squareVariationId": "LBLV7EPGUIVP6WZJBVSAWB66",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "nys-ecto-black-short-sleeve-t-shirt-m": {
+      "squareCatalogObjectId": "PI3INR3CLAU6NJVAXWOXTMCC",
+      "squareVariationId": "OH3HHJLCQUWU5SUMUBZGLWWA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "nys-ecto-black-short-sleeve-t-shirt-l": {
+      "squareCatalogObjectId": "PI3INR3CLAU6NJVAXWOXTMCC",
+      "squareVariationId": "EZCUT3PVYX3IZKIUABKZGTTU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "nys-ecto-black-short-sleeve-t-shirt-xl": {
+      "squareCatalogObjectId": "PI3INR3CLAU6NJVAXWOXTMCC",
+      "squareVariationId": "6RFVR5CCURNOMCD6BGLFJPY4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "nys-ecto-black-short-sleeve-t-shirt-2xl": {
+      "squareCatalogObjectId": "PI3INR3CLAU6NJVAXWOXTMCC",
+      "squareVariationId": "5GRHINL434QZHLFJULRDYDUB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "nys-ecto-black-short-sleeve-t-shirt-3xl": {
+      "squareCatalogObjectId": "PI3INR3CLAU6NJVAXWOXTMCC",
+      "squareVariationId": "5ECKYBP6L5Y556XXTTJIZXWW",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-black-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "PIH5WY3HTUIW2WXKWAPRC2GI",
+      "squareVariationId": "N5UAAHERP5WDATJ2BOAIEXCX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-black-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "PIH5WY3HTUIW2WXKWAPRC2GI",
+      "squareVariationId": "UUVYSXBUCTKE5KF3QZCHWHAC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-black-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "PIH5WY3HTUIW2WXKWAPRC2GI",
+      "squareVariationId": "CRPXN6E7TJR22634DXKHRPFU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-black-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "PIH5WY3HTUIW2WXKWAPRC2GI",
+      "squareVariationId": "CNXBQJTTNC46SK2TM44SWEYN",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-black-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "PIH5WY3HTUIW2WXKWAPRC2GI",
+      "squareVariationId": "NZKSCXKKA4CJWY7VFRZDBQT5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "eras-to-remember-black-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "PIH5WY3HTUIW2WXKWAPRC2GI",
+      "squareVariationId": "XE47I5H2HMSBML35Y7N62N54",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-true-navy-4xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-3-3": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-4-4": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-5-5-5-5": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dont-fuck-fascists-shirt-15-3-75": {
+      "squareCatalogObjectId": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "alter-ego-xs": {
+      "squareCatalogObjectId": "PZ47TIFZDB32KBGNMCSMSABQ",
+      "squareVariationId": "ZK7QTRU72EFKFS7GTJCNWPUW",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "alter-ego-s": {
+      "squareCatalogObjectId": "PZ47TIFZDB32KBGNMCSMSABQ",
+      "squareVariationId": "S7EYM52VF5W7KVGPAPH2GCKU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "alter-ego-m": {
+      "squareCatalogObjectId": "PZ47TIFZDB32KBGNMCSMSABQ",
+      "squareVariationId": "ZZWEDRWGJK3TPCEMEITXNLKI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "alter-ego-l": {
+      "squareCatalogObjectId": "PZ47TIFZDB32KBGNMCSMSABQ",
+      "squareVariationId": "GWNGZCGZT3XGB242Y5EMSM36",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "alter-ego-xl": {
+      "squareCatalogObjectId": "PZ47TIFZDB32KBGNMCSMSABQ",
+      "squareVariationId": "6DXVV7DXSBPVVBK4Z7HP3HWV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "alter-ego-2xl": {
+      "squareCatalogObjectId": "PZ47TIFZDB32KBGNMCSMSABQ",
+      "squareVariationId": "V56RNX75XFDWCVCBEHNQIOF3",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "alter-ego-3xl": {
+      "squareCatalogObjectId": "PZ47TIFZDB32KBGNMCSMSABQ",
+      "squareVariationId": "SDFMINYKLWLHEDFKGQLS65ZV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "japanese-garden-puzzle-charcoal-unisex-hoodie-s": {
+      "squareCatalogObjectId": "Q4EBGFK6ZPBL7GC24WCVCQTW",
+      "squareVariationId": "3DZDQ2PQGAGG4HE4D7GO4A5M",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "japanese-garden-puzzle-charcoal-unisex-hoodie-m": {
+      "squareCatalogObjectId": "Q4EBGFK6ZPBL7GC24WCVCQTW",
+      "squareVariationId": "YTQ47ULALLXELRGL6KCCI7BH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "japanese-garden-puzzle-charcoal-unisex-hoodie-l": {
+      "squareCatalogObjectId": "Q4EBGFK6ZPBL7GC24WCVCQTW",
+      "squareVariationId": "EY3QDSRTHQPHIGQ5CZIDA37I",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "japanese-garden-puzzle-charcoal-unisex-hoodie-xl": {
+      "squareCatalogObjectId": "Q4EBGFK6ZPBL7GC24WCVCQTW",
+      "squareVariationId": "4BSZNHQOPDOXHORL5H3V4YVP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "japanese-garden-puzzle-charcoal-unisex-hoodie-2xl": {
+      "squareCatalogObjectId": "Q4EBGFK6ZPBL7GC24WCVCQTW",
+      "squareVariationId": "BCQPFK3TV7SD75RJWPMT37UI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "japanese-garden-puzzle-charcoal-unisex-hoodie-3xl": {
+      "squareCatalogObjectId": "Q4EBGFK6ZPBL7GC24WCVCQTW",
+      "squareVariationId": "I4JJ6OEDFBFTGOXWLUGN3MVR",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "yellow-reversible-bucket-hat-xs": {
+      "squareCatalogObjectId": "Q4UUZEIZVY2DZCYX7GAHRMIE",
+      "squareVariationId": "JJEJOZLHAHGM3IOIWMHISXQY",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "yellow-reversible-bucket-hat-s-m": {
+      "squareCatalogObjectId": "Q4UUZEIZVY2DZCYX7GAHRMIE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "yellow-reversible-bucket-hat-l-xl": {
+      "squareCatalogObjectId": "Q4UUZEIZVY2DZCYX7GAHRMIE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dropout-xs": {
+      "squareCatalogObjectId": "QOMFTIGM5HTL5AWDBLZHYLBZ",
+      "squareVariationId": "D4UVATZ2D2XZAJFASEC5VXYE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dropout-s": {
+      "squareCatalogObjectId": "QOMFTIGM5HTL5AWDBLZHYLBZ",
+      "squareVariationId": "CXQALYDGS42IVVV4HU2LXOYO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dropout-m": {
+      "squareCatalogObjectId": "QOMFTIGM5HTL5AWDBLZHYLBZ",
+      "squareVariationId": "R4YRUOYVGEKL2HCGNL6P4QJM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dropout-l": {
+      "squareCatalogObjectId": "QOMFTIGM5HTL5AWDBLZHYLBZ",
+      "squareVariationId": "Q6AXURZAPDVSMZS6NJHXAMCZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dropout-xl": {
+      "squareCatalogObjectId": "QOMFTIGM5HTL5AWDBLZHYLBZ",
+      "squareVariationId": "ZOU4CNKFEHBLIMXFIQ37ILAP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dropout-2xl": {
+      "squareCatalogObjectId": "QOMFTIGM5HTL5AWDBLZHYLBZ",
+      "squareVariationId": "IF6ZZBUZJEDZVNFQSPULXOBF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "dropout-3xl": {
+      "squareCatalogObjectId": "QOMFTIGM5HTL5AWDBLZHYLBZ",
+      "squareVariationId": "GIGICSW3SBNG66F4ROJUC3CP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "do-it-for-al-purple-shirt-xs": {
+      "squareCatalogObjectId": "QWFDZPMI7HJT43L5ON6PKDTA",
+      "squareVariationId": "UVBLUWZ6EOY4A3I6WGCF6YVL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-black-s": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-black-m": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-black-l": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-black-xl": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-black-2xl": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-black-3xl": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-navy-blazer-s": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-navy-blazer-m": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-navy-blazer-l": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-navy-blazer-xl": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-navy-blazer-2xl": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-navy-blazer-3xl": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-maroon-s": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-maroon-m": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-maroon-l": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-maroon-xl": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-maroon-2xl": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-maroon-3xl": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-charcoal-heather-s": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "branded-unisex-hoodie-charcoal-heather-m": {
+      "squareCatalogObjectId": "QXL7RGM5HZIEBXDQRVXGME76",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-charcoal-black-triblend-xs": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-charcoal-black-triblend-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-charcoal-black-triblend-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-charcoal-black-triblend-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-charcoal-black-triblend-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-charcoal-black-triblend-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-grey-triblend-xs": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-grey-triblend-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-grey-triblend-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-grey-triblend-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-grey-triblend-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-grey-triblend-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "waves-xs": {
+      "squareCatalogObjectId": "R7ERO243J4IODTSCROETORFG",
+      "squareVariationId": "SVWQYAUEY3JQUM7C5OYLWWAK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "waves-s": {
+      "squareCatalogObjectId": "R7ERO243J4IODTSCROETORFG",
+      "squareVariationId": "OAVA7MYJRYSUHW5WWAKZ66ST",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "waves-m": {
+      "squareCatalogObjectId": "R7ERO243J4IODTSCROETORFG",
+      "squareVariationId": "LQDH5RHVTJN5KIOX5XHA42S6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "waves-l": {
+      "squareCatalogObjectId": "R7ERO243J4IODTSCROETORFG",
+      "squareVariationId": "M37EE3JHNCI5FF3FGDLMA6NH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "waves-xl": {
+      "squareCatalogObjectId": "R7ERO243J4IODTSCROETORFG",
+      "squareVariationId": "AFMFOYK4NREHA4YO7N2IS2NK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "waves-2xl": {
+      "squareCatalogObjectId": "R7ERO243J4IODTSCROETORFG",
+      "squareVariationId": "XOV3V3XCRKY4SY5V2DEH7N3K",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "waves-3xl": {
+      "squareCatalogObjectId": "R7ERO243J4IODTSCROETORFG",
+      "squareVariationId": "2UJ4AJ5TLLCOJXJTFGOFNTNO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hope-tomorrow-pink-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "RQGX6K5DLUO2SXKJ6OLASMVE",
+      "squareVariationId": "UCLUAO2Y2CRLMZRVT4IH3FWL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hope-tomorrow-pink-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "RQGX6K5DLUO2SXKJ6OLASMVE",
+      "squareVariationId": "BLF3UA2G7WOHBKUBFBY62CRG",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hope-tomorrow-pink-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "RQGX6K5DLUO2SXKJ6OLASMVE",
+      "squareVariationId": "UUU4UZ3JZOAALVRYMKXJH3NJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hope-tomorrow-pink-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "RQGX6K5DLUO2SXKJ6OLASMVE",
+      "squareVariationId": "IKOCDIFRM7I6BZZRWLTVADQP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hope-tomorrow-pink-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "RQGX6K5DLUO2SXKJ6OLASMVE",
+      "squareVariationId": "UGS7KR2LZ6AVTOC5IL3ZUYKB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hope-tomorrow-pink-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "RQGX6K5DLUO2SXKJ6OLASMVE",
+      "squareVariationId": "M2NEBIJSJCOKV7EYDTSXKIBO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "party-people-xs": {
+      "squareCatalogObjectId": "RTJFDWSL2KCIATMFI6X7BVLH",
+      "squareVariationId": "F4QX5GWKLYPAPG3BB3F4QUAI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "party-people-s": {
+      "squareCatalogObjectId": "RTJFDWSL2KCIATMFI6X7BVLH",
+      "squareVariationId": "GDNGGQ3L566CW7VJJ7YTJN5H",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "party-people-m": {
+      "squareCatalogObjectId": "RTJFDWSL2KCIATMFI6X7BVLH",
+      "squareVariationId": "VFJL7EA57IE25VMFL3AY473M",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "party-people-l": {
+      "squareCatalogObjectId": "RTJFDWSL2KCIATMFI6X7BVLH",
+      "squareVariationId": "MDJN64PYZ2QNTRQADDXJWY3Y",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "party-people-xl": {
+      "squareCatalogObjectId": "RTJFDWSL2KCIATMFI6X7BVLH",
+      "squareVariationId": "P7IEIFCNKKXS5GQUJI6UA4AL",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "party-people-2xl": {
+      "squareCatalogObjectId": "RTJFDWSL2KCIATMFI6X7BVLH",
+      "squareVariationId": "FERNQ2E5M6YDOF5OWTGSF22T",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "party-people-3xl": {
+      "squareCatalogObjectId": "RTJFDWSL2KCIATMFI6X7BVLH",
+      "squareVariationId": "O4CI5GLEBFIEEG2IFJ7EOJ6K",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-white-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "S63GHS7AFO7YGSE7E3WG4ZHG",
+      "squareVariationId": "WIR47S3Z65Z3VGI3ZAI4CPMH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-white-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "S63GHS7AFO7YGSE7E3WG4ZHG",
+      "squareVariationId": "I6FC2PODEM7UDWD5AI52OWE6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-white-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "S63GHS7AFO7YGSE7E3WG4ZHG",
+      "squareVariationId": "CWRSPNNLI7R3EIJLZA42DELF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-white-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "S63GHS7AFO7YGSE7E3WG4ZHG",
+      "squareVariationId": "HQMJ75NTNWTU2VCEDHCPRBML",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-white-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "S63GHS7AFO7YGSE7E3WG4ZHG",
+      "squareVariationId": "35TSQEUL6TOSWSQZY4D573R5",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "emo-but-in-heels-white-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "S63GHS7AFO7YGSE7E3WG4ZHG",
+      "squareVariationId": "MBMDTTHOHGI5SCOZ3CZ4VV7T",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "library-tote-bag-black": {
+      "squareCatalogObjectId": "U647Q3G2WVIZIJBCTKRZEWHJ",
+      "squareVariationId": "JBC2N55HGRDR4WO434VNW3UI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "library-tote-bag-oyster": {
+      "squareCatalogObjectId": "U647Q3G2WVIZIJBCTKRZEWHJ",
+      "squareVariationId": "XUSN54IVDGYXD7QSSF3FQE4X",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-xs": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "OEC33DPXZ73ACB3GXANUYQM3",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-s": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "G52UON7ZOLQJHVGJIZQMMCOA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-m": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "GH63UILHXP2W4MDMTIEN33EX",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-l": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "65Q54BSFVKZEFXX6SWVUASGS",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "BDCOBRDNVFOGZXSK5EYZF56B",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-2xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "UVBXWQ3DU2BLDPPVOJFCUN56",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "colors-3xl": {
+      "squareCatalogObjectId": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "squareVariationId": "UKO6JBWW4P7NVD7E2WEXIZ4Y",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "hope-and-tomorrow-red-cuffed-beanie-hope-and-tomorrow-red-cuffed-beanie": {
+      "squareCatalogObjectId": "UFZZ6MY2SNZ2EDVJQKLG67VB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-black-s": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-black-m": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-black-l": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-black-xl": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-black-2xl": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-black-3xl": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-navy-blazer-s": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-navy-blazer-m": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-navy-blazer-l": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-navy-blazer-xl": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-navy-blazer-2xl": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-navy-blazer-3xl": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-maroon-s": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-maroon-m": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-maroon-l": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-maroon-xl": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-maroon-2xl": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-maroon-3xl": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-charcoal-heather-s": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "retro-colors-unisex-hoodie-charcoal-heather-m": {
+      "squareCatalogObjectId": "VCA32RQG6RQBGW4M5QULU3WC",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "libert-xs": {
+      "squareCatalogObjectId": "VGTIMQTR2CEGNF3CCGVK3JQX",
+      "squareVariationId": "VFX2GCARZLLEVTTI4CIVLACE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "libert-s": {
+      "squareCatalogObjectId": "VGTIMQTR2CEGNF3CCGVK3JQX",
+      "squareVariationId": "QEGBCA2E5A7ITV6WO4LA4HPK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "libert-m": {
+      "squareCatalogObjectId": "VGTIMQTR2CEGNF3CCGVK3JQX",
+      "squareVariationId": "4BMSE3DIQQ6I7VHQGEE3W6MN",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "libert-l": {
+      "squareCatalogObjectId": "VGTIMQTR2CEGNF3CCGVK3JQX",
+      "squareVariationId": "GPMQH6T77A2ZAVLHPGZBLPRE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "libert-xl": {
+      "squareCatalogObjectId": "VGTIMQTR2CEGNF3CCGVK3JQX",
+      "squareVariationId": "JXF3YO5RUN2UBJTFOAQ6JB2X",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "libert-2xl": {
+      "squareCatalogObjectId": "VGTIMQTR2CEGNF3CCGVK3JQX",
+      "squareVariationId": "PAZH5NQISXOKWUHIOAHPFSRJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "libert-3xl": {
+      "squareCatalogObjectId": "VGTIMQTR2CEGNF3CCGVK3JQX",
+      "squareVariationId": "RLEV7UHZMDOYEIYC4HQUW7LZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "start-a-riot-xs": {
+      "squareCatalogObjectId": "VTW4NXXWULXMBTFVPGHAHNLE",
+      "squareVariationId": "KKEPIH4QEYRWSHBCUSZ2EJ5R",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "start-a-riot-s": {
+      "squareCatalogObjectId": "VTW4NXXWULXMBTFVPGHAHNLE",
+      "squareVariationId": "MNLD62DFOI6C42BIKESWKBPZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "start-a-riot-m": {
+      "squareCatalogObjectId": "VTW4NXXWULXMBTFVPGHAHNLE",
+      "squareVariationId": "UKAZDZPIYS33HSA3FEWM7RV6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "start-a-riot-l": {
+      "squareCatalogObjectId": "VTW4NXXWULXMBTFVPGHAHNLE",
+      "squareVariationId": "CLIGDMVFLS7YOTFAENP2Q25W",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "start-a-riot-xl": {
+      "squareCatalogObjectId": "VTW4NXXWULXMBTFVPGHAHNLE",
+      "squareVariationId": "ZRV2VL2DNB2XG736J6VH6Z7I",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "start-a-riot-2xl": {
+      "squareCatalogObjectId": "VTW4NXXWULXMBTFVPGHAHNLE",
+      "squareVariationId": "D6ORPNCW4KEGCKMFVOUI64ZM",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "start-a-riot-3xl": {
+      "squareCatalogObjectId": "VTW4NXXWULXMBTFVPGHAHNLE",
+      "squareVariationId": "ITZJHOOP5KW5YIUW5DN5L3H3",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-charcoal-unisex-premium-sweatshirt-s": {
+      "squareCatalogObjectId": "VVBBCWCEUFFOET54FX5LJLZY",
+      "squareVariationId": "JJAP4MGPXM6U77KE5TXAAW6S",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-charcoal-unisex-premium-sweatshirt-m": {
+      "squareCatalogObjectId": "VVBBCWCEUFFOET54FX5LJLZY",
+      "squareVariationId": "EY4WX4G4453W6LJQLSP773IF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-charcoal-unisex-premium-sweatshirt-l": {
+      "squareCatalogObjectId": "VVBBCWCEUFFOET54FX5LJLZY",
+      "squareVariationId": "POD35ZNZ5SKALQX3PODKTFHZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-charcoal-unisex-premium-sweatshirt-xl": {
+      "squareCatalogObjectId": "VVBBCWCEUFFOET54FX5LJLZY",
+      "squareVariationId": "3AUFH6OZBJ6XX2CB3UZD32VT",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-charcoal-unisex-premium-sweatshirt-2xl": {
+      "squareCatalogObjectId": "VVBBCWCEUFFOET54FX5LJLZY",
+      "squareVariationId": "FTXYFOTTTCX7PYEQK3BMZBXB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-place-like-new-york-charcoal-unisex-premium-sweatshirt-3xl": {
+      "squareCatalogObjectId": "VVBBCWCEUFFOET54FX5LJLZY",
+      "squareVariationId": "5GAQAUI6MIZCQQ5Y7ILF2OER",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "native-xs": {
+      "squareCatalogObjectId": "WQ57R4YN5Q3YTOZ2FGUN4X64",
+      "squareVariationId": "ZSSGOMZ4G2Z656FQNVG6Z76O",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "native-s": {
+      "squareCatalogObjectId": "WQ57R4YN5Q3YTOZ2FGUN4X64",
+      "squareVariationId": "WWKRUY4IP77OIAI7D5HVE2HU",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "native-m": {
+      "squareCatalogObjectId": "WQ57R4YN5Q3YTOZ2FGUN4X64",
+      "squareVariationId": "6L4XIYNTYN73DQMV3ABNYBJD",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "native-l": {
+      "squareCatalogObjectId": "WQ57R4YN5Q3YTOZ2FGUN4X64",
+      "squareVariationId": "GW3XSGCERRBXGP7NG4OFX2UV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "native-xl": {
+      "squareCatalogObjectId": "WQ57R4YN5Q3YTOZ2FGUN4X64",
+      "squareVariationId": "XFKRMYIPG2O4MCEGAAD56D4H",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "native-2xl": {
+      "squareCatalogObjectId": "WQ57R4YN5Q3YTOZ2FGUN4X64",
+      "squareVariationId": "64YAZJNLEB53NS6N45Q7M3Z7",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "native-3xl": {
+      "squareCatalogObjectId": "WQ57R4YN5Q3YTOZ2FGUN4X64",
+      "squareVariationId": "ILEVFCKOA6MKIALUPM5GHENF",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "club-technoir-black-unisex-short-sleeve-t-shirt-club-technoir-unisex-short-sleeve-t-shirt": {
+      "squareCatalogObjectId": "FTK3ZSXDIFY75HRPAH4ZDMFA",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "counting-sheep-tote-bag-regular-counting-sheep-tote-bag-large-with-pocket": {
+      "squareCatalogObjectId": "NJT4R2YINL5XP4RASKBCVZLO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "circle-xs": {
+      "squareCatalogObjectId": "XMNROVD2ZK5TCHAGP6PJAWCN",
+      "squareVariationId": "SAR4B75J3HUNO4CGLCYBFWTI",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "circle-s": {
+      "squareCatalogObjectId": "XMNROVD2ZK5TCHAGP6PJAWCN",
+      "squareVariationId": "JMZUIHUV5EUZFLCRFBLQELU4",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "circle-m": {
+      "squareCatalogObjectId": "XMNROVD2ZK5TCHAGP6PJAWCN",
+      "squareVariationId": "VHE5ICKKI32K5RGVY63PTKOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "circle-l": {
+      "squareCatalogObjectId": "XMNROVD2ZK5TCHAGP6PJAWCN",
+      "squareVariationId": "MCAYGCLDHNDDLUPKZVGGJ4DT",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "circle-xl": {
+      "squareCatalogObjectId": "XMNROVD2ZK5TCHAGP6PJAWCN",
+      "squareVariationId": "T4WCG2LC4PZDD7HSSKXL2U2O",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "circle-2xl": {
+      "squareCatalogObjectId": "XMNROVD2ZK5TCHAGP6PJAWCN",
+      "squareVariationId": "CCZLXLSR6HLO2MKBB2UWO2TV",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "circle-3xl": {
+      "squareCatalogObjectId": "XMNROVD2ZK5TCHAGP6PJAWCN",
+      "squareVariationId": "SO6V2FXQPCETTVF2MTQMAHFO",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "no-kings-white-unisex-premium-sweatshirt-xs": {
+      "squareCatalogObjectId": "KWO4RCGRGDTQDFACGZMRUGT3",
+      "squareVariationId": "YI5S4VOZ7OOB26NF4R3CUNSJ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "roaring-20s-s": {
+      "squareCatalogObjectId": "YXUEWD4FTKROYEUFO5ZBCTOX",
+      "squareVariationId": "7SWAUXPJQM2OHS4G6CAYVRT6",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "roaring-20s-m": {
+      "squareCatalogObjectId": "YXUEWD4FTKROYEUFO5ZBCTOX",
+      "squareVariationId": "HIOLFNNDKJUJUMUC3CJAGEOE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "roaring-20s-l": {
+      "squareCatalogObjectId": "YXUEWD4FTKROYEUFO5ZBCTOX",
+      "squareVariationId": "ZFM66BWZBD7WOKCEQD2RW54N",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "roaring-20s-xl": {
+      "squareCatalogObjectId": "YXUEWD4FTKROYEUFO5ZBCTOX",
+      "squareVariationId": "MP7MCSCOPJCQMQXICISJTCAE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "roaring-20s-2xl": {
+      "squareCatalogObjectId": "YXUEWD4FTKROYEUFO5ZBCTOX",
+      "squareVariationId": "V4C64EEOY6Z6PWA3UTC4MEYZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "roaring-20s-3xl": {
+      "squareCatalogObjectId": "YXUEWD4FTKROYEUFO5ZBCTOX",
+      "squareVariationId": "DLIXKXIY6VADUU62NWSEHNYE",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-berry-s": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "ULVLQKYFURDL2TKTPUPTPRWH",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-berry-m": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "A33EDBJGXJXW3CNOCPR75TXP",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-berry-l": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "TWMBIRHIR6OMTZDZOLAOHTVZ",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-berry-xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "LFN6APQWFR3VAN3ZB7AFFESK",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-berry-2xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "5U2OZDR6J6NI7ILN5ES7MJOB",
+      "squareLocationId": "FGKRPYEXNV482"
+    },
+    "classic-aha-berry-3xl": {
+      "squareCatalogObjectId": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "squareVariationId": "XHODDYC5CT37RIJ5EUL4SYQK",
+      "squareLocationId": "FGKRPYEXNV482"
+    }
+  }
 }

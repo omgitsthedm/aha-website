@@ -1,4 +1,32 @@
 {
-  "_note": "Product-specific size guides (inches; cm derived at render). Keyed by size-guide id, referenced by product.sizeGuideId. Do not reuse one chart across blanks with different measurements. See §19.",
-  "sizeGuides": []
+  "sizeGuides": [
+    {
+      "id": "sg-tee",
+      "productType": "tee",
+      "fit": "Standard unisex fit — true to size.",
+      "measurements": [],
+      "note": "Product-specific measurements pending."
+    },
+    {
+      "id": "sg-hoodie",
+      "productType": "hoodie",
+      "fit": "Relaxed, midweight fleece — true to size.",
+      "measurements": [],
+      "note": "Product-specific measurements pending."
+    },
+    {
+      "id": "sg-accessory",
+      "productType": "accessory",
+      "fit": "One size.",
+      "measurements": [],
+      "note": "Product-specific measurements pending."
+    },
+    {
+      "id": "sg-sweater",
+      "productType": "sweater",
+      "fit": "Relaxed fit, midweight — true to size.",
+      "measurements": [],
+      "note": "Product-specific measurements pending."
+    }
+  ]
 }

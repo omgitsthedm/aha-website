@@ -20,6 +20,7 @@ interface SquareMapEntry {
 interface PrintfulMapEntry {
   printfulCatalogProductId?: number;
   printfulCatalogVariantId?: number;
+  printfulSyncVariantId?: number;
   printfulRegionAvailability?: string[];
   printfulPlacements?: AhaVariant["printfulPlacements"];
   printfulTechnique?: AhaVariant["printfulTechnique"];

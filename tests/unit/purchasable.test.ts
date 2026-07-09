@@ -49,9 +49,15 @@ describe("checkVariantPurchasable", () => {
     expect(checkVariantPurchasable(p, v).reasons).toContain("product not active");
   });
 
-  it("blocks when a placement has no print file", () => {
-    const v = fullyMappedVariant({ printfulPlacements: [{ placement: "front", technique: "dtg" }] });
+  it("blocks when there is no print art (no sync variant and no file)", () => {
+    const v = fullyMappedVariant({ printfulSyncVariantId: undefined, printfulPlacements: [{ placement: "front", technique: "dtg" }] });
     const p = activeProduct({ variants: [v] });
-    expect(checkVariantPurchasable(p, v).reasons).toContain("missing print file url/id");
+    expect(checkVariantPurchasable(p, v).reasons).toContain("missing print art (sync variant or file)");
+  });
+
+  it("passes fulfillment via sync variant even when placement files are empty", () => {
+    const v = fullyMappedVariant({ printfulSyncVariantId: 4616188601, printfulPlacements: [{ placement: "front", technique: "dtg" }] });
+    const p = activeProduct({ variants: [v] });
+    expect(checkVariantPurchasable(p, v)).toEqual({ ok: true, reasons: [] });
   });
 });

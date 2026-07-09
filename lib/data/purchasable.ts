@@ -23,12 +23,14 @@ export function checkVariantPurchasable(
   if (!variant.squareCatalogObjectId) reasons.push("missing Square catalog object id");
   if (!variant.squareVariationId) reasons.push("missing Square variation id");
 
-  // Printful v2 mapping
+  // Printful v2 mapping. Fulfillment uses the store sync-variant (art configured server-side);
+  // a catalog file url/id is only required when there is no sync variant.
   if (!variant.printfulCatalogVariantId) reasons.push("missing Printful v2 catalog variant id");
   const placements = variant.printfulPlacements ?? [];
   if (placements.length === 0) reasons.push("missing Printful placement data");
-  const hasPrintFile = placements.some((p) => Boolean(p.fileUrl || p.fileId));
-  if (placements.length > 0 && !hasPrintFile) reasons.push("missing print file url/id");
+  const hasArt =
+    Boolean(variant.printfulSyncVariantId) || placements.some((p) => Boolean(p.fileUrl || p.fileId));
+  if (!hasArt) reasons.push("missing print art (sync variant or file)");
 
   // Commercial fields
   if (!(variant.retailPrice > 0)) reasons.push("missing retail price");
