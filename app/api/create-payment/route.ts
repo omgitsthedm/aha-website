@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { squareRequest } from "@/lib/square/client";
+import { createPricedSquareOrder } from "@/lib/square/orders";
 import { getSquareLocationId } from "@/lib/commerce/runtime";
 import {
   revalidateCart, createOrder, markOrderPaid, markOrderFailed, findPaidOrderByIdempotencyKey,
   type CheckoutLine, type OrderContact,
 } from "@/lib/commerce/orders";
+import { startFulfillment } from "@/lib/commerce/fulfillment";
 
 export const dynamic = "force-dynamic";
 
@@ -20,11 +22,18 @@ interface SquarePaymentResponse {
   payment: { id: string; status: string; receipt_url?: string };
 }
 
+function splitName(name?: string): { firstName: string; lastName: string } {
+  const parts = (name || "").trim().split(/\s+/);
+  return { firstName: parts[0] || "AHA", lastName: parts.slice(1).join(" ") || "Customer" };
+}
+
 /**
  * POST /api/create-payment
- * Revalidates the cart server-side (never trusts client prices), persists the order, then charges
- * via the Square Payments API with a STABLE idempotency key so retries never double-charge.
- * Fulfillment is NOT triggered here — a paid order is picked up by the Printful draft/confirm flow.
+ * 1) revalidate cart server-side (never trust client prices)
+ * 2) create a Square Order so SQUARE computes price + location tax authoritatively
+ * 3) persist the internal order with those totals
+ * 4) charge via Payments API against the order id with a stable idempotency key
+ * Fulfillment starts (Printful DRAFT, confirm gated) only after payment succeeds.
  */
 export async function POST(request: Request) {
   let body: CreatePaymentBody;
@@ -38,19 +47,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing payment details." }, { status: 400 });
   }
 
-  // 0) Fail fast if payment config is missing — don't spray orphaned failed orders.
   const locationId = getSquareLocationId();
   if (!locationId || !process.env.SQUARE_ACCESS_TOKEN) {
     return NextResponse.json({ error: "Checkout is temporarily unavailable. Please try again shortly." }, { status: 503 });
   }
 
-  // 1) Idempotency: if this attempt already succeeded, return the same order.
+  // Idempotency: if this attempt already succeeded, return the same order.
   try {
     const existing = await findPaidOrderByIdempotencyKey(body.idempotencyKey);
     if (existing) return NextResponse.json({ ok: true, orderNumber: existing.externalOrderNumber, deduped: true });
-  } catch { /* non-fatal: fall through to normal path */ }
+  } catch { /* non-fatal */ }
 
-  // 2) Server-side truth: recompute the cart.
+  // 1) Server-side truth: recompute + validate the cart (also yields Printful mapping for fulfillment).
   let cart;
   try {
     cart = revalidateCart(body.lines);
@@ -61,16 +69,34 @@ export async function POST(request: Request) {
     );
   }
 
-  // 3) Persist the order before charging.
+  // 2) Square prices the order (price + location tax). Shipping address drives destination tax.
+  const addr = body.contact.shippingAddress as Record<string, string> | undefined;
+  const { firstName, lastName } = splitName(body.contact.shippingName);
+  let priced;
+  try {
+    priced = await createPricedSquareOrder({
+      lineItems: cart.items.map((it) => ({ catalogObjectId: it.squareVariationId, quantity: String(it.quantity) })),
+      shippingAddress: addr ? {
+        addressLine1: addr.address1, locality: addr.city,
+        administrativeDistrictLevel1: addr.state, postalCode: addr.zip, country: addr.country,
+        firstName, lastName,
+      } : undefined,
+    });
+  } catch (err) {
+    console.error("Square order pricing failed:", err);
+    return NextResponse.json({ error: "We couldn't price your order. Please try again." }, { status: 409 });
+  }
+
+  // 3) Persist the order with Square-authoritative totals before charging.
   let order;
   try {
-    order = await createOrder(cart, body.contact);
+    order = await createOrder(cart, body.contact, priced);
   } catch (err) {
     console.error("createOrder failed:", err);
     return NextResponse.json({ error: "Could not start the order. Please try again." }, { status: 500 });
   }
 
-  // 4) Charge via Square Payments API (idempotent).
+  // 4) Charge against the Square order (idempotent).
   let payment: SquarePaymentResponse["payment"];
   try {
     const result = await squareRequest<SquarePaymentResponse>("/payments", {
@@ -79,7 +105,8 @@ export async function POST(request: Request) {
       body: {
         source_id: body.sourceId,
         idempotency_key: body.idempotencyKey,
-        amount_money: { amount: order.total, currency: cart.currency },
+        order_id: priced.squareOrderId,
+        amount_money: { amount: priced.total, currency: priced.currency },
         location_id: locationId,
         reference_id: order.externalOrderNumber,
         buyer_email_address: body.contact.email,
@@ -103,15 +130,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Payment was not completed." }, { status: 402 });
   }
 
-  // 5) Charge SUCCEEDED. From here we NEVER tell the customer they weren't charged — if the DB
-  //    write fails, log for reconciliation and still confirm the order.
+  // 5) Charge SUCCEEDED — never tell the customer otherwise. Record + start fulfillment; failures
+  //    here are logged for reconciliation, not surfaced as a failed payment.
   try {
-    await markOrderPaid(order.orderId, payment.id, body.idempotencyKey, order.total, cart.currency);
+    await markOrderPaid(order.orderId, payment.id, body.idempotencyKey, priced.total, priced.currency);
   } catch (err) {
-    console.error(
-      `RECONCILE: order ${order.externalOrderNumber} (id ${order.orderId}) charged (payment ${payment.id}) but DB update failed:`,
-      err
-    );
+    console.error(`RECONCILE: order ${order.externalOrderNumber} charged (payment ${payment.id}) but DB update failed:`, err);
+  }
+  try {
+    await startFulfillment(order.orderId, cart, body.contact);
+  } catch (err) {
+    console.error(`FULFILLMENT: order ${order.externalOrderNumber} paid but draft creation failed (will retry):`, err);
   }
 
   return NextResponse.json({

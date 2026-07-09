@@ -83,22 +83,36 @@ function orderNumber(): string {
   return `AHA-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 1e4).toString().padStart(4, "0")}`;
 }
 
+/** Square-authoritative pricing (price + location tax) to charge and persist. */
+export interface OrderPricing {
+  squareOrderId: string;
+  subtotal: number;
+  tax: number;
+  total: number;
+  currency: string;
+}
+
 /** Persist a new order (payment_status=created) with purchase-time snapshots. Returns ids. */
 export async function createOrder(
   cart: RevalidatedCart,
-  contact: OrderContact
+  contact: OrderContact,
+  pricing?: OrderPricing
 ): Promise<{ orderId: number; externalOrderNumber: string; total: number }> {
   if (!isDbConfigured()) throw new Error("Order store unavailable.");
   const external = orderNumber();
-  const shipping = 0; // free shipping (brand policy); tax computed by Square at capture
-  const total = cart.subtotal + shipping;
+  const shipping = 0; // free shipping (brand policy)
+  const subtotal = pricing?.subtotal ?? cart.subtotal;
+  const tax = pricing?.tax ?? 0;
+  const total = pricing?.total ?? cart.subtotal + shipping;
+  const currency = pricing?.currency ?? cart.currency;
 
   const [order] = await db()
     .insert(orders)
     .values({
       externalOrderNumber: external, email: contact.email, phone: contact.phone,
       shippingName: contact.shippingName, shippingAddressJson: contact.shippingAddress ?? null,
-      currency: cart.currency, subtotalAmount: cart.subtotal, shippingAmount: shipping,
+      squareOrderId: pricing?.squareOrderId ?? null,
+      currency, subtotalAmount: subtotal, shippingAmount: shipping, taxAmount: tax,
       totalAmount: total, paymentStatus: "created", fulfillmentStatus: "not_started",
     })
     .returning({ id: orders.id });

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { getFulfillmentMode } from "@/lib/commerce/runtime";
 import { verifyPrintfulWebhookSignature } from "@/lib/printful/webhooks";
+import { recordWebhookEvent, applyPrintfulEvent } from "@/lib/commerce/webhooks";
 
 export const runtime = "nodejs";
 
@@ -37,12 +39,18 @@ export async function POST(request: Request) {
   }
 
   const fulfillmentMode = getFulfillmentMode();
-  console.info("Printful webhook received", {
-    type: event.type || null,
-    occurredAt: event.occurred_at || null,
-    storeId: event.store_id || null,
-    fulfillmentMode,
-  });
+
+  // Printful events carry no unique id — dedupe on a hash of the raw body.
+  const dedupeKey = createHash("sha256").update(rawBody).digest("hex");
+  try {
+    const { isNew } = await recordWebhookEvent({
+      provider: "printful", eventId: null, eventType: event.type,
+      signatureValid: true, rawPayload: event, dedupeKey,
+    });
+    if (isNew) await applyPrintfulEvent(event);
+  } catch (err) {
+    console.error("Printful webhook processing failed:", err);
+  }
 
   return NextResponse.json(
     {

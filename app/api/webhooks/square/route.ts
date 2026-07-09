@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { getFulfillmentMode, getCommerceEnvironment } from "@/lib/commerce/runtime";
 import {
   normalizeSquareWebhookEnvironment,
   verifySquareWebhookSignature,
 } from "@/lib/square/webhooks";
+import { recordWebhookEvent, applySquareEvent } from "@/lib/commerce/webhooks";
 
 export const runtime = "nodejs";
 
@@ -51,11 +53,18 @@ export async function POST(request: Request) {
   }
 
   const fulfillmentMode = getFulfillmentMode();
-  console.info("Square webhook received", {
-    eventId: event.event_id || null,
-    type: event.type || null,
-    fulfillmentMode,
-  });
+
+  // Store raw + dedupe, then reconcile order status (best-effort; respond 2xx fast regardless).
+  const dedupeKey = event.event_id || createHash("sha256").update(rawBody).digest("hex");
+  try {
+    const { isNew } = await recordWebhookEvent({
+      provider: "square", eventId: event.event_id, eventType: event.type,
+      signatureValid: true, rawPayload: event, dedupeKey,
+    });
+    if (isNew) await applySquareEvent(event);
+  } catch (err) {
+    console.error("Square webhook processing failed:", err);
+  }
 
   return NextResponse.json(
     {
