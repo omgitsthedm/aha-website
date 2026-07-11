@@ -14,6 +14,8 @@ interface CreatePaymentBody {
   sourceId: string; // single-use payment token from Square Web Payments SDK
   idempotencyKey: string; // stable per checkout attempt (client-generated) — dedupes retries
   verificationToken?: string; // SCA / 3DS token when present
+  quotedTotal: number; // tax-inclusive total the shopper reviewed before tokenization
+  quotedCurrency: string;
   lines: CheckoutLine[];
   contact: OrderContact;
 }
@@ -43,7 +45,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  if (!body.sourceId || !body.idempotencyKey || !body.contact?.email || !Array.isArray(body.lines)) {
+  if (
+    !body.sourceId || !body.idempotencyKey || !body.contact?.email || !Array.isArray(body.lines) ||
+    !Number.isInteger(body.quotedTotal) || body.quotedTotal < 0 || !body.quotedCurrency
+  ) {
     return NextResponse.json({ error: "Missing payment details." }, { status: 400 });
   }
 
@@ -85,6 +90,18 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error("Square order pricing failed:", err);
     return NextResponse.json({ error: "We couldn't price your order. Please try again." }, { status: 409 });
+  }
+
+  // The customer must explicitly review the exact tax-inclusive amount that will be charged.
+  // If Square changed the price/tax after the quote, stop before persistence or payment.
+  if (priced.total !== body.quotedTotal || priced.currency !== body.quotedCurrency) {
+    return NextResponse.json({
+      code: "QUOTE_CHANGED",
+      error: "Your final total changed. Review the updated tax and total before paying.",
+      quote: {
+        subtotal: priced.subtotal, tax: priced.tax, total: priced.total, currency: priced.currency,
+      },
+    }, { status: 409 });
   }
 
   // 3) Persist the order with Square-authoritative totals before charging.

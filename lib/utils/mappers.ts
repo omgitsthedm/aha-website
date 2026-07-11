@@ -17,7 +17,8 @@ function formatMoney(amount: number, currency = "USD"): string {
 
 export function mapSquareItemToProduct(
   item: any,
-  imageMap: Map<string, string>
+  imageMap: Map<string, string>,
+  slugOverride?: string
 ): Product {
   const itemData = item.item_data || {};
   const variations: ProductVariation[] = (itemData.variations || []).map(
@@ -57,7 +58,7 @@ export function mapSquareItemToProduct(
 
   return {
     id: item.id,
-    slug: slugify(itemData.name || item.id),
+    slug: slugOverride || slugify(itemData.name || item.id),
     name: itemData.name || "Untitled",
     description: itemData.description_html || itemData.description || "",
     price,

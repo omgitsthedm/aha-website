@@ -1,34 +1,56 @@
-# Design Tokens — After Hours Agenda
+# After Hours Agenda Design Tokens
 
-The AHA design system is **token-based** (per MASTER-UIUX-HANDOFF-v2 §E). Tokens live as CSS custom properties in `app/globals.css` `:root`, mirrored by the Tailwind theme in `tailwind.config.js`. **Do not hardcode hex/px in components — reference tokens.**
+Effective: 2026-07-10. This file replaces the former blacklight, neon, zine, and subway token model.
 
-## Direction
-Blacklight-grunge / 90s zine on near-black. Shipped and live — do not full-reset. Brand surfaces expressive; money/checkout surfaces calm.
+The source of truth is `app/globals.css`, mirrored by semantic names in `tailwind.config.js`. Components must not introduce raw color values.
 
 ## Color
-| Token | Value | Use |
-|---|---|---|
-| `--aha-void` / `--aha-void-deep` | `#10100F` / `#070707` | page background |
-| `--aha-charcoal` / `--aha-panel` / `--aha-panel-warm` | `#181816` / `#20201C` / `#2A241E` | surfaces/cards |
-| `--aha-paper` / `--aha-paper-muted` | `#E9E1D4` / `#A9A093` | text / muted text |
-| `--aha-lime` `--aha-cyan` `--aha-shock-pink` `--aha-electric-purple` `--aha-sunburst` `--aha-orange` `--aha-neon-green` | bright accents | block color, signals |
 
-**Semantic (commerce):** `--aha-state-success` (green), `--aha-state-danger` (shock pink), `--aha-state-warning` (sunburst), `--aha-state-info` (cyan), `--aha-state-sold-out` (concrete). Never use color alone to convey status — pair with text/icon (WCAG).
+| Role | CSS primitive | Tailwind | Value | Use |
+|---|---|---|---|---|
+| Page ink | `--aha-ink` | `void` | `#0f0f0e` | page and drawer background |
+| Soft ink | `--aha-ink-soft` | `charcoal` | `#171716` | section distinction |
+| Surface | `--aha-surface` | `surface` | `#20201e` | quiet grouped content |
+| Paper | `--aha-paper` | `cream` / `border` | `#f0ebe3` | primary text and high-contrast marks |
+| Muted paper | `--aha-paper-muted` | `muted` | `#b9b2a8` | supporting text |
+| Rule | `--aha-line` | `border` with opacity | `#4b4944` | separators and controls |
+| AHA pink | `--aha-accent` | `accent` | `#ff5a8a` | primary action, focus, selected state |
+| Success | `--aha-success` | `success` | `#77c991` | confirmed success only |
+| Warning | `--aha-warning` | `warning` | `#e9b85a` | recoverable attention state |
+| Error | `--aha-error` | `danger` | `#ff6b6b` | blocking failure only |
+
+Only AHA pink is a brand accent. Success, warning, and error are functional states, never decorative alternatives.
 
 ## Type
-- Display: `--aha-font-display` (Arial Black) — headlines/graphic moments.
-- Body/utility: `--aha-font-grunge` (Courier New) — the shipped brand default.
-- Mono: `--aha-font-mono` (IBM Plex Mono) — data/labels.
-- Max two font families per surface; `font-display: swap`.
 
-## Space / radius / border
-4px scale `--aha-space-1..16`. `--aha-radius: 0` (hard blocks). `--aha-border: 4px`. `--aha-block-gap` for section rhythm.
+- Display: Arial Black with Helvetica/Arial system fallback.
+- Body, labels, controls, prices, and data: IBM Plex Mono in weights 400, 500, 600, and 700.
+- Maximum of two type families on any route.
+- Use the display face for hierarchy, not paragraphs or controls.
+
+## Shape and layout
+
+- Corners remain square. Do not introduce rounded cards or pill-shaped controls.
+- Default border is 1px. A 2px AHA pink rule may mark a page or section start.
+- Group content with spacing, rules, and shared alignment before adding containers.
+- Product media uses native image ratio and a single quiet border.
+- Minimum interactive target is 44 by 44 CSS pixels.
 
 ## Motion
-`--aha-motion-fast|base|slow` (150/220/300ms), `--aha-ease-out`. Zeroed under `prefers-reduced-motion`. No animation over 300ms; motion must earn its place.
 
-## Accessibility constants
-`--aha-tap-min: 44px` (min touch target). Focus ring: 3px cyan, 3px offset (in `:root` base). Contrast checked at token level (AA).
+- Default duration is 120ms for action feedback.
+- Product image hover may use a restrained 1.02 scale over 300ms.
+- Dialogs and drawers do not require decorative entrance animation.
+- `prefers-reduced-motion` removes nonessential animation and smooth scrolling.
 
-## Z-index
-`--aha-z-nav|drawer|modal|toast` = 100/200/300/400.
+## Actions and states
+
+- `.primary-action` is the only solid AHA pink action treatment.
+- Secondary actions use transparent background and a quiet border or underlined text.
+- Disabled state reduces contrast and preserves the label.
+- Selected filters and sizes use AHA pink plus `aria-pressed`.
+- Status is always conveyed with text, not color alone.
+
+## Prohibited legacy language
+
+Do not add blacklight, neon, subway, metrocard, split-flap, zine-sticker, misprint, mosaic-border, tape, rotation, glow, particle canvas, or multicolor collection accents. Those visual systems were removed in the v3 overhaul.

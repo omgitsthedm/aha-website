@@ -1,56 +1,27 @@
-import { getLineForCollection, type SubwayLine, DEFAULT_LINE } from "@/lib/utils/subway-lines";
+import { getCollectionCode, type CollectionCode, DEFAULT_COLLECTION_CODE } from "@/lib/utils/collection-codes";
 
 interface RouteBadgeProps {
   slug?: string;
-  line?: SubwayLine;
+  code?: CollectionCode;
   size?: "sm" | "md" | "lg";
   showName?: boolean;
   className?: string;
 }
 
 const sizes = {
-  sm: { circle: "w-5 h-5", text: "text-[9px]", name: "text-[10px]" },
-  md: { circle: "w-6 h-6", text: "text-[10px]", name: "text-xs" },
-  lg: { circle: "w-8 h-8", text: "text-xs", name: "text-sm" },
+  sm: "min-h-7 px-2 text-[10px]",
+  md: "min-h-8 px-2.5 text-xs",
+  lg: "min-h-10 px-3 text-sm",
 };
 
-const DARK_TEXT_COLORS = new Set([
-  "#39FF14",
-  "#00FFFF",
-  "#CCFF00",
-  "#FCCC0A",
-  "#FFAA00",
-  "#FF7F00",
-  "#B5A642",
-]);
-
-export function RouteBadge({
-  slug,
-  line,
-  size = "md",
-  showName = false,
-  className = "",
-}: RouteBadgeProps) {
-  const resolvedLine = line || (slug ? getLineForCollection(slug) : DEFAULT_LINE);
-  const s = sizes[size];
-  const textColor = DARK_TEXT_COLORS.has(resolvedLine.color)
-    ? "#10100F"
-    : "#E9E1D4";
-
+export function RouteBadge({ slug, code, size = "md", showName = false, className = "" }: RouteBadgeProps) {
+  const resolved = code || (slug ? getCollectionCode(slug) : DEFAULT_COLLECTION_CODE);
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
-      <span
-        className={`${s.circle} rounded-full inline-flex items-center justify-center font-mono font-medium ${s.text} leading-none flex-shrink-0`}
-        style={{ backgroundColor: resolvedLine.color, color: textColor }}
-        aria-label={resolvedLine.name}
-      >
-        {resolvedLine.abbr}
+      <span className={`${sizes[size]} inline-flex items-center border border-accent font-mono font-bold uppercase tracking-[0.06em] text-accent`}>
+        {resolved.abbr}
       </span>
-      {showName && (
-        <span className={`font-mono ${s.name} text-muted`}>
-          {resolvedLine.name}
-        </span>
-      )}
+      {showName && <span className="font-mono text-xs text-muted">{resolved.name}</span>}
     </span>
   );
 }

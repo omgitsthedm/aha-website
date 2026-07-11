@@ -1,266 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
-import { WhiteBand } from "@/components/ui/WhiteBand";
-import {
-  FREE_SHIPPING_THRESHOLD_CENTS,
-  TAX_LINE_COPY,
-  WALLET_CHECKOUT_COPY,
-  formatFreeShippingDelta,
-  getFulfillmentSummary,
-  getShippingLineCopy,
-} from "@/lib/commerce/policies";
+import { formatCents } from "@/lib/utils/money";
+import { TAX_LINE_COPY, WALLET_CHECKOUT_COPY, getFulfillmentSummary, getShippingLineCopy } from "@/lib/commerce/policies";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { trackCommerceEvent } from "@/lib/analytics/events";
 
 export function CartPageContent() {
-  const { items, removeItem, updateQuantity, totalFormatted, totalItems, total } =
-    useCart();
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { items, removeItem, updateQuantity, totalFormatted, totalItems, total } = useCart();
 
-  const qualifiesForFreeShipping = total >= FREE_SHIPPING_THRESHOLD_CENTS;
-  const amountToFreeShipping = formatFreeShippingDelta(total);
-  const shippingLine = getShippingLineCopy(total);
-
-  const handleCheckout = async () => {
-    // On-brand, on-domain checkout (Square Web Payments). The old hosted-link flow (/api/checkout)
-    // remains as a fallback if this line is reverted.
-    setIsCheckingOut(true);
-    setError(null);
-    try {
-      window.location.href = "/checkout";
-      return;
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Something went wrong. Please try again."
-      );
-      setIsCheckingOut(false);
-    }
-  };
+  useEffect(() => {
+    if (items.length > 0) trackCommerceEvent({ name: "view_cart", valueCents: total, currency: "USD", quantity: totalItems });
+  }, [items.length, total, totalItems]);
 
   if (items.length === 0) {
-    return (
-      <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="misprint font-display text-[clamp(3.5rem,9vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] mb-4">
-            Your Bag
-          </h1>
-          <p className="font-body text-muted mb-8 font-bold">Your bag is empty.</p>
-          <p className="mx-auto mb-8 max-w-md font-body text-sm font-bold leading-relaxed text-muted">
-            Pick a piece to start your bag. It saves in this browser, so you can
-            come back before Square checkout.
-          </p>
-          <Link
-            href="/shop"
-            className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] hover:brightness-110 transition-all"
-          >
-            Start Shopping
-          </Link>
-        </div>
-      </div>
-    );
+    return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><PageHeader eyebrow="0 items" title="Your bag" description="Your bag is empty. Items stay saved in this browser until you remove them or complete a verified checkout." /><Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link></div></div>;
   }
 
   return (
-    <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="misprint font-display text-[clamp(3.5rem,9vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] mb-3">
-          Your Bag
-        </h1>
-        <p className="font-body text-sm text-muted mb-8 font-bold uppercase tracking-[0.08em]">
-          {totalItems} {totalItems === 1 ? "item" : "items"}
-        </p>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          {/* Items column */}
-          <div className="lg:col-span-2">
-            <WhiteBand />
-            <ul className="space-y-5">
-              {items.map((item) => (
-                <li key={item.variationId} className="zine-block flex gap-4 p-4 md:gap-6 md:p-5">
-                  {/* Image */}
-                  <Link
-                    href={`/product/${item.slug || item.productId}`}
-                    className="relative block h-24 w-24 flex-shrink-0 overflow-hidden border-[3px] border-[#E9E1D4] bg-elevated md:h-32 md:w-32"
-                  >
-                    {item.image && (
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        unoptimized={isPrintfulImage(item.image)}
-                        className={
-                          isPrintfulImage(item.image)
-                            ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
-                            : "object-cover xerox-image"
-                        }
-                        sizes="128px"
-                      />
-                    )}
-                  </Link>
-
-                  {/* Details */}
-                  <div className="flex-1 min-w-0">
-                    <Link
-                      href={`/product/${item.slug || item.productId}`}
-                      className="font-display text-xl font-black uppercase leading-none tracking-[-0.04em] transition-colors hover:text-[#CCFF00]"
-                    >
-                      {item.name}
-                    </Link>
-                    <p className="text-xs font-bold uppercase text-muted mt-1">{item.variationName}</p>
-                    <p className="font-mono text-sm font-bold mt-2">{item.priceFormatted}</p>
-
-                    {/* Quantity + Remove */}
-                    <div className="flex items-center gap-3 mt-4">
-                      <button
-                        onClick={() =>
-                          updateQuantity(item.variationId, item.quantity - 1)
-                        }
-                        className="flex h-11 w-11 items-center justify-center border-[3px] border-[#E9E1D4] font-mono text-sm font-bold text-muted transition-all duration-200 hover:bg-[#E9E1D4] hover:text-[#10100F]"
-                        aria-label={`Decrease quantity of ${item.name}`}
-                      >
-                        &minus;
-                      </button>
-                      <span className="font-mono text-sm w-6 text-center" aria-live="polite" aria-atomic="true">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() =>
-                          updateQuantity(item.variationId, item.quantity + 1)
-                        }
-                        className="flex h-11 w-11 items-center justify-center border-[3px] border-[#E9E1D4] font-mono text-sm font-bold text-muted transition-all duration-200 hover:bg-[#E9E1D4] hover:text-[#10100F]"
-                        aria-label={`Increase quantity of ${item.name}`}
-                      >
-                        +
-                      </button>
-                      <button
-                        onClick={() => removeItem(item.variationId)}
-                        className="ml-auto font-body text-xs font-bold uppercase text-muted underline underline-offset-4 transition-colors hover:text-[#FF006E]"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Order summary column */}
-          <div className="lg:col-span-1">
-            <div className="zine-block p-6 lg:sticky lg:top-28">
-              <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-6">
-                Order Summary
-              </h2>
-
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between font-body text-sm font-bold">
-                  <span className="text-muted">Subtotal</span>
-                  <span className="font-mono">{totalFormatted}</span>
+    <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-6xl">
+      <PageHeader eyebrow={`${totalItems} ${totalItems === 1 ? "item" : "items"}`} title="Your bag" description="Review sizes and quantities before moving to the secure Square payment step." />
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
+        <ul className="border-t border-border/40" aria-label="Bag items">
+          {items.map((item) => (
+            <li key={item.variationId} className="grid grid-cols-[6rem_1fr] gap-4 border-b border-border/40 py-5 md:grid-cols-[8rem_1fr] md:gap-6">
+              <Link href={`/product/${item.slug || item.productId}`} className="relative aspect-square overflow-hidden border border-border/40 bg-surface">
+                {item.image && <Image src={item.image} alt={item.name} fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="128px" />}
+              </Link>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div><Link href={`/product/${item.slug || item.productId}`} className="font-display text-lg font-black uppercase leading-tight hover:text-accent md:text-xl">{item.name}</Link><p className="mt-1 text-xs font-bold uppercase text-muted">{item.variationName}</p></div>
+                  <p className="font-mono text-sm font-bold">{formatCents(item.price * item.quantity)}</p>
                 </div>
-                <div className="flex justify-between font-body text-sm font-bold">
-                  <span className="text-muted">Shipping estimate</span>
-                  <span className="max-w-[11rem] text-right text-xs uppercase text-muted">
-                    {shippingLine}
-                  </span>
-                </div>
-                <div className="flex justify-between gap-4 font-body text-sm font-bold">
-                  <span className="text-muted">Tax estimate</span>
-                  <span className="max-w-[11rem] text-right text-xs uppercase text-muted">
-                    {TAX_LINE_COPY}
-                  </span>
+                <p className="mt-2 text-xs text-muted">{formatCents(item.price)} each</p>
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <button type="button" onClick={() => updateQuantity(item.variationId, item.quantity - 1)} className="flex h-11 w-11 items-center justify-center border border-border/60 text-sm font-bold hover:border-accent" aria-label={`Decrease quantity of ${item.name}`}>&minus;</button>
+                  <span className="w-8 text-center font-mono text-sm" aria-live="polite" aria-atomic="true">{item.quantity}</span>
+                  <button type="button" onClick={() => updateQuantity(item.variationId, item.quantity + 1)} className="flex h-11 w-11 items-center justify-center border border-border/60 text-sm font-bold hover:border-accent" aria-label={`Increase quantity of ${item.name}`}>+</button>
+                  <button type="button" onClick={() => removeItem(item.variationId)} className="ml-auto min-h-11 px-2 text-xs font-bold uppercase text-muted underline underline-offset-4 hover:text-accent">Remove</button>
                 </div>
               </div>
+            </li>
+          ))}
+        </ul>
 
-              <WhiteBand />
-
-              <div className="flex justify-between items-center py-4">
-                <span className="font-body font-bold text-sm uppercase tracking-[0.1em]">
-                  Cart subtotal
-                </span>
-                <span className="font-mono text-lg font-bold">{totalFormatted}</span>
-              </div>
-              <p className="mb-4 font-body text-xs font-bold leading-relaxed text-muted">
-                Final shipping, tax, and supported wallet options are shown by
-                Square before you pay.
-              </p>
-
-              {/* Free shipping progress */}
-              {!qualifiesForFreeShipping && (
-                <p className="font-body text-xs font-bold text-muted mb-4 text-center">
-                  Add{" "}
-                  <span className="font-mono text-cream">{amountToFreeShipping}</span>{" "}
-                  more for free shipping
-                </p>
-              )}
-              {qualifiesForFreeShipping && (
-                <p className="font-body text-xs text-[#39FF14] mb-4 text-center font-bold uppercase">
-                  You qualify for free shipping
-                </p>
-              )}
-
-              {/* Error */}
-              {error && (
-                <div
-                  role="alert"
-                  className="mb-4 border-[3px] border-line-red bg-[#15110F] p-3 text-center"
-                >
-                  <p className="font-body text-xs font-bold text-line-red">
-                    {error}
-                  </p>
-                  <a
-                    href="mailto:hello@afterhoursagenda.com"
-                    className="mt-2 inline-block font-body text-[11px] font-bold uppercase text-muted underline underline-offset-4"
-                  >
-                    Contact support
-                  </a>
-                </div>
-              )}
-
-              <div className="mb-4 border-[3px] border-[#00FFFF] bg-[#15110F] p-3">
-                <p className="font-body text-[11px] font-bold uppercase tracking-[0.08em] text-[#00FFFF]">
-                  Wallet-ready Square checkout
-                </p>
-                <p className="mt-1 font-body text-xs font-bold leading-relaxed text-muted">
-                  {WALLET_CHECKOUT_COPY}
-                </p>
-              </div>
-
-              {/* Checkout button */}
-              <button
-                onClick={handleCheckout}
-                disabled={isCheckingOut}
-                className="metrocard-gradient block w-full py-3 font-body font-bold text-center text-sm tracking-wide transition-transform hover:-translate-y-1 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isCheckingOut ? "Opening Square..." : `Checkout - ${totalFormatted} subtotal`}
-              </button>
-
-              {/* Trust badges */}
-              <div className="mt-4 space-y-2">
-                <p className="font-body text-[11px] font-bold text-muted text-center tracking-[0.08em] uppercase">
-                  Secure Checkout / Free Shipping / Thirty-Day Returns
-                </p>
-                <p className="font-body text-[11px] font-bold text-muted text-center leading-relaxed">
-                  {getFulfillmentSummary()}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Continue shopping */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/shop"
-            className="font-body text-xs font-bold text-muted hover:text-cream transition-colors uppercase tracking-[0.1em] underline underline-offset-4"
-          >
-            Continue Shopping
-          </Link>
-        </div>
+        <aside aria-labelledby="summary-heading" className="border-t-2 border-accent pt-5 lg:sticky lg:top-28 lg:self-start">
+          <h2 id="summary-heading" className="font-display text-2xl font-black uppercase">Order summary</h2>
+          <dl className="mt-5 space-y-4 border-y border-border/40 py-5 text-sm">
+            <div className="flex justify-between gap-4"><dt className="text-muted">Subtotal</dt><dd className="font-mono font-bold">{totalFormatted}</dd></div>
+            <div className="flex justify-between gap-4"><dt className="text-muted">Shipping</dt><dd className="max-w-[12rem] text-right text-xs">{getShippingLineCopy(total)}</dd></div>
+            <div className="flex justify-between gap-4"><dt className="text-muted">Tax</dt><dd className="max-w-[12rem] text-right text-xs">{TAX_LINE_COPY}</dd></div>
+          </dl>
+          <div className="flex items-center justify-between py-5"><span className="text-xs font-bold uppercase tracking-[0.08em]">Cart subtotal</span><strong className="font-mono text-lg">{totalFormatted}</strong></div>
+          <Link href="/checkout" className="primary-action flex min-h-14 w-full items-center justify-center px-5 py-4 text-sm">Continue to checkout</Link>
+          <p className="mt-4 text-xs leading-relaxed text-muted">{WALLET_CHECKOUT_COPY}</p>
+          <p className="mt-3 text-xs leading-relaxed text-muted">{getFulfillmentSummary()}</p>
+          <div className="mt-5 flex gap-4 text-xs font-bold uppercase tracking-[0.05em]"><Link href="/returns" className="text-accent underline underline-offset-4">Returns</Link><Link href="/shipping" className="text-accent underline underline-offset-4">Shipping</Link></div>
+        </aside>
       </div>
-    </div>
+    </div></div>
   );
 }

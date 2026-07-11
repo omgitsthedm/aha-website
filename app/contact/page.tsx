@@ -1,28 +1,15 @@
-export const metadata = {
-  title: "Contact",
-  description: "Get in touch with After Hours Agenda.",
-};
+import { PageHeader } from "@/components/ui/PageHeader";
+
+export const metadata = { title: "Contact", description: "Contact After Hours Agenda for order, product, or accessibility support.", alternates: { canonical: "/contact" } };
 
 export default function ContactPage() {
   return (
-    <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
-      <div className="max-w-3xl mx-auto text-center">
-        <h1 className="misprint font-display text-[clamp(4rem,10vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] mb-4">CONTACT</h1>
-        <p className="font-body text-muted mb-12 max-w-md mx-auto font-bold">
-          Questions, feedback, or just saying hey. We&apos;d love to hear from you.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-          <div className="zine-block p-8">
-            <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">Email</h2>
-            <p className="font-mono text-sm text-cream">hello@afterhoursagenda.com</p>
-            <p className="text-sm text-muted mt-2">We&apos;ll get back to you within 24 hours.</p>
-          </div>
-          <div className="zine-block p-8">
-            <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">Social</h2>
-            <p className="font-mono text-sm text-cream">@afterhoursagenda</p>
-            <p className="text-sm text-muted mt-2">Slide into our DMs on Instagram or TikTok.</p>
-          </div>
+    <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32">
+      <div className="mx-auto max-w-4xl">
+        <PageHeader eyebrow="Customer support" title="Talk to us" description="Questions about an order, product, fit, return, or site access all go to the same place." />
+        <div className="grid border-y border-border/40 md:grid-cols-2">
+          <section className="border-b border-border/40 py-7 md:border-b-0 md:border-r md:pr-8"><p className="text-xs font-bold uppercase tracking-[0.08em] text-accent">Email</p><h2 className="mt-3 font-display text-2xl font-black uppercase">hello@afterhoursagenda.com</h2><a href="mailto:hello@afterhoursagenda.com" className="mt-5 inline-flex min-h-11 items-center border border-accent px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] text-accent hover:bg-accent hover:text-void">Open email</a></section>
+          <section className="py-7 md:pl-8"><p className="text-xs font-bold uppercase tracking-[0.08em] text-accent">Order help</p><h2 className="mt-3 font-display text-2xl font-black uppercase">Include the order number</h2><p className="mt-3 text-sm leading-relaxed text-muted">For an existing order, include the confirmation number and the email used at checkout. Do not send card details.</p></section>
         </div>
       </div>
     </div>

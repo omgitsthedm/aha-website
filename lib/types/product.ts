@@ -27,7 +27,18 @@ export type ProductType =
   | "accessory"
   | "other";
 
-export type PrintTechnique = "dtg" | "dtf" | "embroidery" | "sublimation" | "cut-sew";
+export type PrintTechnique =
+  | "dtg"
+  | "dtf"
+  | "dtfilm"
+  | "embroidery"
+  | "sublimation"
+  | "cut-sew"
+  | "sticker"
+  | "digital"
+  | "knitting"
+  | "knitwear"
+  | "phone-case";
 
 /** A single print placement on a garment (front, back, sleeve, …). */
 export interface PrintfulPlacement {

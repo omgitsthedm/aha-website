@@ -1,248 +1,153 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { Product, Collection } from "@/lib/utils/types";
+import type { Collection, Product } from "@/lib/utils/types";
 import { RouteBadge } from "@/components/ui/RouteBadge";
-import { gsap, useGSAP } from "@/lib/gsap";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
+import { trackCommerceEvent } from "@/lib/analytics/events";
 
 interface ShopContentProps {
   products: Product[];
   collections: Collection[];
 }
 
+const APPAREL_SIZE_ORDER = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
+const PAGE_SIZE = 24;
+const variationSize = (name: string) => name.split("/").pop()?.trim().toUpperCase() || name.toUpperCase();
+
 export function ShopContent({ products, collections }: ShopContentProps) {
-  const [activeFilter, setActiveFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("featured");
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeSize, setActiveSize] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "index">("grid");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const indexRef = useRef<HTMLDivElement>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const collectionCounts = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const product of products) {
-      for (const collectionId of product.collectionIds) {
-        counts.set(collectionId, (counts.get(collectionId) || 0) + 1);
-      }
-    }
+    products.forEach((product) => product.collectionIds.forEach((id) => counts.set(id, (counts.get(id) || 0) + 1)));
     return counts;
   }, [products]);
 
+  const sizeOptions = useMemo(() => {
+    const available = new Set(products.flatMap((product) => product.variations.map((variation) => variationSize(variation.name))));
+    return APPAREL_SIZE_ORDER.filter((size) => available.has(size));
+  }, [products]);
+
   const filtered = useMemo(() => {
-    let result = products;
+    const query = searchTerm.trim().toLowerCase();
+    const result = products.filter((product) => {
+      const inCollection = activeFilter === "all" || product.collectionIds.includes(activeFilter);
+      const inSize = activeSize === "all" || product.variations.some((variation) => variationSize(variation.name) === activeSize);
+      const matchesSearch = !query || product.name.toLowerCase().includes(query);
+      return inCollection && inSize && matchesSearch;
+    });
 
-    if (activeFilter !== "all") {
-      result = result.filter((p) => p.collectionIds.includes(activeFilter));
-    }
-
-    if (sortBy === "featured") {
-      result = [...result];
-    } else if (sortBy === "price-asc") {
-      result = [...result].sort((a, b) => a.price - b.price);
-    } else if (sortBy === "price-desc") {
-      result = [...result].sort((a, b) => b.price - a.price);
-    } else {
-      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-    }
-
+    if (sortBy === "price-asc") return [...result].sort((a, b) => a.price - b.price);
+    if (sortBy === "price-desc") return [...result].sort((a, b) => b.price - a.price);
+    if (sortBy === "name") return [...result].sort((a, b) => a.name.localeCompare(b.name));
     return result;
-  }, [products, activeFilter, sortBy]);
+  }, [activeFilter, activeSize, products, searchTerm, sortBy]);
+  const visibleProducts = filtered.slice(0, visibleCount);
 
-  const heroImageSrc = filtered[0]?.images[0];
-
-  /** Derive the collection slug for a product (first matching known collection) */
-  const getProductCollectionSlug = (product: Product): string | undefined => {
-    for (const cid of product.collectionIds) {
-      const col = collections.find((c) => c.id === cid);
-      if (col) return col.slug;
-    }
-    return undefined;
+  const resetDiscovery = () => {
+    setActiveFilter("all");
+    setActiveSize("all");
+    setSearchTerm("");
   };
 
-  /** Animate grid items on mount / filter change */
-  const animateGrid = useCallback(() => {
-    if (!gridRef.current) return;
-    const items = gridRef.current.children;
-    if (!items.length) return;
-    gsap.fromTo(
-      items,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: "power2.out", overwrite: true }
-    );
-  }, []);
+  const hasActiveDiscovery = activeFilter !== "all" || activeSize !== "all" || searchTerm.trim().length > 0;
+  const collectionFor = (product: Product) => collections.find((collection) => product.collectionIds.includes(collection.id));
+  const control = "min-h-11 border border-border/60 bg-void px-3 py-2 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none";
+  const toggle = "min-h-11 border px-3 text-xs font-bold uppercase tracking-[0.06em] transition-colors";
 
-  /** Animate index rows on mount / filter change */
-  const animateIndex = useCallback(() => {
-    if (!indexRef.current) return;
-    const rows = indexRef.current.children;
-    if (!rows.length) return;
-    gsap.fromTo(
-      rows,
-      { opacity: 0, x: -40 },
-      { opacity: 1, x: 0, duration: 0.4, stagger: 0.08, ease: "power2.out", overwrite: true }
-    );
-  }, []);
+  useEffect(() => {
+    if (searchTerm.trim().length < 2) return;
+    const timer = window.setTimeout(() => {
+      trackCommerceEvent({ name: filtered.length ? "search" : "search_no_results", resultCount: filtered.length });
+    }, 700);
+    return () => window.clearTimeout(timer);
+  }, [filtered.length, searchTerm]);
 
-  /** Animate on initial load */
-  useGSAP(() => {
-    if (viewMode === "grid") animateGrid();
-    else animateIndex();
-  }, { scope: containerRef, dependencies: [filtered, viewMode] });
-
-  /** Animate view transition */
-  const handleViewChange = useCallback(
-    (mode: "grid" | "index") => {
-      if (mode === viewMode) return;
-      // Fade out current content
-      const currentRef = viewMode === "grid" ? gridRef.current : indexRef.current;
-      if (currentRef) {
-        gsap.to(currentRef.children, {
-          opacity: 0,
-          duration: 0.2,
-          ease: "power1.in",
-          onComplete: () => {
-            setViewMode(mode);
-          },
-        });
-      } else {
-        setViewMode(mode);
-      }
-    },
-    [viewMode]
-  );
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [activeFilter, activeSize, searchTerm, sortBy, viewMode]);
 
   return (
-    <div ref={containerRef}>
-      <div className="mb-6">
-        <div className="mosaic-border-thin" />
-        <div className="zine-block flex flex-wrap items-center gap-x-5 gap-y-3 px-4 py-4">
-          <div className="flex items-center gap-3 mr-4" role="group" aria-label="View mode">
-            <button
-              onClick={() => handleViewChange("grid")}
-              aria-pressed={viewMode === "grid"}
-              className={`min-h-11 border-[3px] px-3 font-body text-xs font-bold uppercase tracking-[0.08em] transition-colors ${
-                viewMode === "grid"
-                  ? "border-[#CCFF00] bg-[#CCFF00] text-[#10100F]"
-                  : "border-[#E9E1D4] text-[#E9E1D4] hover:bg-[#E9E1D4] hover:text-[#10100F]"
-              }`}
-            >
-              Grid
-            </button>
-            <button
-              onClick={() => handleViewChange("index")}
-              aria-pressed={viewMode === "index"}
-              className={`min-h-11 border-[3px] px-3 font-body text-xs font-bold uppercase tracking-[0.08em] transition-colors ${
-                viewMode === "index"
-                  ? "border-[#00FFFF] bg-[#00FFFF] text-[#10100F]"
-                  : "border-[#E9E1D4] text-[#E9E1D4] hover:bg-[#E9E1D4] hover:text-[#10100F]"
-              }`}
-            >
-              Index
-            </button>
+    <section aria-label="Product catalog">
+      <div className="mb-8 border-y border-border/40 py-5">
+        <div className="grid gap-4 xl:grid-cols-[minmax(15rem,1fr)_auto] xl:items-start">
+          <div>
+            <label htmlFor="shop-search" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Search</label>
+            <input id="shop-search" type="search" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Product name" className={`${control} w-full`} />
           </div>
+          <div className="flex flex-wrap gap-2 xl:pt-6" role="group" aria-label="Catalog view">
+            {(["grid", "index"] as const).map((mode) => (
+              <button key={mode} type="button" onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode} className={`${toggle} ${viewMode === mode ? "border-accent bg-accent text-void" : "border-border/60 text-cream hover:border-accent"}`}>
+                {mode}
+              </button>
+            ))}
+          </div>
+        </div>
 
-          <button
-            onClick={() => setActiveFilter("all")}
-            aria-pressed={activeFilter === "all"}
-            className={`min-h-11 border-[3px] px-3 font-body text-xs font-bold uppercase tracking-[0.08em] transition-colors ${
-              activeFilter === "all"
-                ? "border-[#FF006E] bg-[#FF006E] text-[#E9E1D4]"
-                : "border-[#E9E1D4] text-[#E9E1D4] hover:bg-[#E9E1D4] hover:text-[#10100F]"
-            }`}
-          >
-            All
-          </button>
+        <div className="mt-5">
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-muted">Collection</p>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by collection">
+            <button type="button" onClick={() => setActiveFilter("all")} aria-pressed={activeFilter === "all"} className={`${toggle} ${activeFilter === "all" ? "border-accent bg-accent text-void" : "border-border/60 text-cream hover:border-accent"}`}>All <span aria-hidden="true">{products.length}</span></button>
+            {collections.filter((collection) => collectionCounts.get(collection.id)).map((collection) => (
+              <button key={collection.id} type="button" onClick={() => setActiveFilter(collection.id)} aria-pressed={activeFilter === collection.id} aria-label={`${collection.name}, ${collectionCounts.get(collection.id)} products`} className={`${toggle} inline-flex items-center gap-2 ${activeFilter === collection.id ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}>
+                <RouteBadge slug={collection.slug} size="sm" />
+                {collection.name} <span aria-hidden="true">{collectionCounts.get(collection.id)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
-          {collections.map((col) => (
-            <button
-              key={col.id}
-              onClick={() => setActiveFilter(col.id)}
-              aria-pressed={activeFilter === col.id}
-              aria-label={`Filter by ${col.name}, ${collectionCounts.get(col.id) || 0} products`}
-              className={`transition-opacity min-h-[44px] ${
-                activeFilter === col.id ? "opacity-100" : "opacity-60 hover:opacity-100"
-              }`}
-            >
-              <RouteBadge slug={col.slug} size="sm" showName />
-              <span className="ml-1 font-mono text-[10px] font-bold text-muted">
-                {collectionCounts.get(col.id) || 0}
-              </span>
-            </button>
-          ))}
-
-          <div className="ml-auto">
-            <label htmlFor="shop-sort" className="sr-only">Sort products by</label>
-            <select
-              id="shop-sort"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="min-h-11 cursor-pointer border-[3px] border-[#E9E1D4] bg-[#10100F] px-3 py-2 font-body text-xs font-bold uppercase text-[#E9E1D4] focus:border-[#00FFFF] focus:outline-none"
-            >
-              <option value="featured">Featured</option>
-              <option value="name">A-Z</option>
-              <option value="price-asc">Price: Low</option>
-              <option value="price-desc">Price: High</option>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          {sizeOptions.length > 0 && (
+            <div>
+              <label htmlFor="shop-size" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Size</label>
+              <select id="shop-size" value={activeSize} onChange={(event) => setActiveSize(event.target.value)} className={`${control} w-full cursor-pointer`}>
+                <option value="all">All sizes</option>
+                {sizeOptions.map((size) => <option key={size} value={size}>{size}</option>)}
+              </select>
+            </div>
+          )}
+          <div>
+            <label htmlFor="shop-sort" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Sort</label>
+            <select id="shop-sort" value={sortBy} onChange={(event) => setSortBy(event.target.value)} className={`${control} w-full cursor-pointer`}>
+              <option value="featured">Catalog order</option>
+              <option value="name">Name, A to Z</option>
+              <option value="price-asc">Price, low to high</option>
+              <option value="price-desc">Price, high to low</option>
             </select>
           </div>
         </div>
-        <div className="mosaic-border-thin" />
       </div>
 
-      {/* Product count */}
-      <p className="font-body text-xs font-bold uppercase tracking-[0.08em] text-muted mb-6">
-        {filtered.length} {filtered.length === 1 ? "product" : "products"}
-      </p>
+      <div className="mb-6 flex min-h-11 flex-wrap items-center justify-between gap-3 text-xs font-bold uppercase tracking-[0.08em] text-muted">
+        <p aria-live="polite">{filtered.length} {filtered.length === 1 ? "product" : "products"}</p>
+        {hasActiveDiscovery && <button type="button" onClick={resetDiscovery} className="min-h-11 text-accent underline underline-offset-4">Clear filters</button>}
+      </div>
 
-      {/* GRID VIEW — Subway Poster Cards */}
-      {viewMode === "grid" && (
-        <div ref={gridRef} className="grid grid-cols-2 gap-5 md:grid-cols-6 md:gap-7">
-          {filtered.map((product, i) => {
-            const productImage = product.images[0];
-            const isPrintful = isPrintfulImage(productImage);
-            const isHeroImage = productImage === heroImageSrc;
-            const spanClass = i % 7 === 0 ? "md:col-span-3" : "md:col-span-2";
-
+      {viewMode === "grid" && filtered.length > 0 && (
+        <div className="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4">
+          {visibleProducts.map((product, index) => {
+            const image = product.images[0];
+            const collection = collectionFor(product);
             return (
-              <Link
-                key={product.id}
-                href={`/product/${product.slug}`}
-                className={`group block product-card-hover ${spanClass}`}
-              >
-                <div className="subway-poster aspect-[3/4] bg-surface">
-                  {productImage ? (
-                    <Image
-                      src={productImage}
-                      alt={product.name}
-                      fill
-                      unoptimized={isPrintful}
-                      priority={isHeroImage}
-                      className={`${
-                        isPrintful
-                          ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
-                          : "object-cover xerox-image"
-                      } transition-transform duration-700 group-hover:scale-[1.03]`}
-                      sizes="(max-width: 768px) 50vw, 33vw"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-surface" />
-                  )}
-
-                  {/* Poster info scrim */}
-                  <div className="subway-poster-scrim">
-                    <h3 className="font-display font-bold text-xs md:text-sm text-[#E8E4DE] uppercase tracking-[0.06em] truncate">
-                      {product.name}
-                    </h3>
-                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-                      <p className="font-mono text-xs font-semibold text-[#FCCC0A] md:text-sm">
-                        {product.priceFormatted}
-                      </p>
-                      <p className="font-body text-[9px] font-bold uppercase tracking-[0.08em] text-[#CCFF00]">
-                        Made to order
-                      </p>
-                    </div>
+              <Link key={product.id} href={`/product/${product.slug}`} className="group block focus-visible:outline-offset-4">
+                <div className="relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">
+                  {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={isPrintfulImage(image) ? "object-contain transition-transform duration-300 group-hover:scale-[1.02]" : "object-cover transition-transform duration-300 group-hover:scale-[1.02]"} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
+                </div>
+                <div className="border-b border-border/40 py-3">
+                  {collection && <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.08em] text-accent">{collection.name}</p>}
+                  <h2 className="line-clamp-2 font-display text-base font-black uppercase leading-tight text-cream">{product.name}</h2>
+                  <div className="mt-2 flex items-center justify-between gap-2 text-xs font-bold">
+                    <span>{product.priceFormatted}</span>
+                    <span className="text-muted">Made to order</span>
                   </div>
                 </div>
               </Link>
@@ -251,50 +156,36 @@ export function ShopContent({ products, collections }: ShopContentProps) {
         </div>
       )}
 
-      {/* INDEX VIEW */}
-      {viewMode === "index" && (
-        <div ref={indexRef}>
-          {filtered.map((product) => {
-            const colSlug = getProductCollectionSlug(product);
+      {viewMode === "index" && filtered.length > 0 && (
+        <div className="border-t border-border/40">
+          {visibleProducts.map((product) => {
+            const collection = collectionFor(product);
             return (
-              <div key={product.id}>
-                <Link
-                  href={`/product/${product.slug}`}
-                  className="group zine-block my-3 flex items-center px-4 py-4 transition-transform hover:-translate-y-0.5"
-                >
-                  <span className="font-body text-sm font-bold text-muted group-hover:text-[#CCFF00] flex-1 truncate">
-                    {product.name}
-                  </span>
-                  {colSlug && (
-                    <RouteBadge slug={colSlug} size="sm" className="mx-4" />
-                  )}
-                  <span className="font-mono text-sm font-bold text-cream">
-                    {product.priceFormatted}
-                  </span>
-                  <span className="ml-4 hidden font-body text-[10px] font-bold uppercase tracking-[0.08em] text-[#CCFF00] sm:inline">
-                    Made to order
-                  </span>
-                </Link>
-              </div>
+              <Link key={product.id} href={`/product/${product.slug}`} className="grid min-h-16 grid-cols-[1fr_auto] items-center gap-4 border-b border-border/40 py-3 transition-colors hover:bg-surface sm:grid-cols-[1fr_12rem_auto] sm:px-3">
+                <span className="font-display text-base font-black uppercase leading-tight text-cream">{product.name}</span>
+                <span className="hidden text-xs uppercase tracking-[0.06em] text-muted sm:block">{collection?.name || "Catalog"}</span>
+                <span className="font-mono text-sm font-bold text-cream">{product.priceFormatted}</span>
+              </Link>
             );
           })}
         </div>
       )}
 
-      {/* Empty state */}
-      {filtered.length === 0 && (
-        <div className="text-center py-24">
-          <p className="font-body text-sm font-bold text-muted">
-            No products match this filter. Clear it to get back to the full wall.
-          </p>
-          <button
-            onClick={() => setActiveFilter("all")}
-            className="metrocard-gradient mt-6 px-6 py-3 font-body text-xs font-bold uppercase"
-          >
-            Clear filter
+      {visibleCount < filtered.length && (
+        <div className="mt-10 flex justify-center">
+          <button type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)} className="min-h-12 border border-border/60 px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">
+            Load more products
           </button>
         </div>
       )}
-    </div>
+
+      {filtered.length === 0 && (
+        <div className="border border-border/40 bg-surface px-5 py-16 text-center">
+          <h2 className="font-display text-2xl font-black uppercase">No matches</h2>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">Try another product name, size, or collection.</p>
+          <button type="button" onClick={resetDiscovery} className="primary-action mt-6 min-h-11 px-6 py-3 text-xs">Clear filters</button>
+        </div>
+      )}
+    </section>
   );
 }

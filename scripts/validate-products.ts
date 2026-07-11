@@ -6,8 +6,23 @@ import { productHasPurchasableVariant } from "@/lib/data/purchasable";
 const products = loadProducts();
 const sizeGuideIds = new Set(loadSizeGuides().map((g) => g.id));
 const errors: string[] = [];
+const seenProductIds = new Set<string>();
+const seenSlugs = new Set<string>();
+const seenVariantIds = new Set<string>();
+const seenSkus = new Set<string>();
+
+function requireUnique(value: string, seen: Set<string>, label: string): void {
+  if (seen.has(value)) errors.push(`duplicate ${label}: ${value}`);
+  seen.add(value);
+}
 
 for (const p of products) {
+  requireUnique(p.ahaProductId, seenProductIds, "ahaProductId");
+  requireUnique(p.slug, seenSlugs, "product slug");
+  for (const variant of p.variants) {
+    requireUnique(variant.ahaVariantId, seenVariantIds, "ahaVariantId");
+    requireUnique(variant.sku, seenSkus, "SKU");
+  }
   if (p.status !== "active") continue;
   const need: [string, unknown][] = [
     ["title", p.title], ["slug", p.slug], ["retailPrice", p.retailPrice > 0 || undefined],

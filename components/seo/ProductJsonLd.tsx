@@ -1,7 +1,7 @@
 import type { Product } from "@/lib/utils/types";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.afterhoursagenda.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com";
 
 interface ProductJsonLdProps {
   product: Product;

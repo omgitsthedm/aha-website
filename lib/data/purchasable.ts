@@ -9,6 +9,8 @@ export interface ReadinessResult {
   reasons: string[];
 }
 
+export const MIN_PRODUCT_MARGIN_RATIO = Number(process.env.AHA_MIN_MARGIN_RATIO ?? "0.35");
+
 /** Full purchasable check for a variant in the context of its product. */
 export function checkVariantPurchasable(
   product: AhaProduct,
@@ -34,6 +36,11 @@ export function checkVariantPurchasable(
 
   // Commercial fields
   if (!(variant.retailPrice > 0)) reasons.push("missing retail price");
+  if (variant.costEstimate == null) {
+    reasons.push("missing verified fulfillment cost");
+  } else if ((variant.retailPrice - variant.costEstimate) / variant.retailPrice < MIN_PRODUCT_MARGIN_RATIO) {
+    reasons.push(`product-cost margin below ${Math.round(MIN_PRODUCT_MARGIN_RATIO * 100)}% floor`);
+  }
   if (!variant.size) reasons.push("missing size");
   if (!product.sizeGuideId) reasons.push("missing size guide");
 

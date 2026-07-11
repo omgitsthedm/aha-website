@@ -1,253 +1,49 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import type { CartItem, Product } from "@/lib/utils/types";
-import { WhiteBand } from "@/components/ui/WhiteBand";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
-import { gsap } from "@/lib/gsap";
 
-interface AddToCartModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onViewBag: () => void;
-  addedItem: CartItem | null;
-  relatedProducts: Product[];
-}
+interface AddToCartModalProps { isOpen: boolean; onClose: () => void; onViewBag: () => void; addedItem: CartItem | null; relatedProducts: Product[]; }
 
-export function AddToCartModal({
-  isOpen,
-  onClose,
-  onViewBag,
-  addedItem,
-  relatedProducts,
-}: AddToCartModalProps) {
-  const backdropRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
+export function AddToCartModal({ isOpen, onClose, onViewBag, addedItem, relatedProducts }: AddToCartModalProps) {
   const [mounted, setMounted] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (!isOpen) return;
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusable = panelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+    focusable?.[0]?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { onClose(); return; }
+      if (event.key !== "Tab" || !focusable?.length) return;
+      const first = focusable[0]; const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", onKeyDown); previouslyFocused?.focus(); };
+  }, [isOpen, onClose]);
 
-  // Close on Escape key
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        handleClose();
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isOpen]
-  );
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
-
-  // Animate in when modal opens
-  useEffect(() => {
-    if (!isOpen || !panelRef.current || !backdropRef.current) return;
-
-    gsap.fromTo(
-      backdropRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.3, ease: "power2.out" }
-    );
-    gsap.fromTo(
-      panelRef.current,
-      { opacity: 0, scale: 0.95, y: 10 },
-      { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "power2.out", delay: 0.1 }
-    );
-  }, [isOpen]);
-
-  // Animate out then close
-  const handleClose = () => {
-    if (!panelRef.current || !backdropRef.current) {
-      onClose();
-      return;
-    }
-    gsap.to(panelRef.current, {
-      opacity: 0,
-      scale: 0.95,
-      y: 10,
-      duration: 0.2,
-      ease: "power2.in",
-    });
-    gsap.to(backdropRef.current, {
-      opacity: 0,
-      duration: 0.25,
-      ease: "power2.in",
-      onComplete: onClose,
-    });
-  };
-
-  const handleViewBag = () => {
-    if (!panelRef.current || !backdropRef.current) {
-      onViewBag();
-      return;
-    }
-    gsap.to(panelRef.current, {
-      opacity: 0,
-      scale: 0.95,
-      duration: 0.2,
-      ease: "power2.in",
-    });
-    gsap.to(backdropRef.current, {
-      opacity: 0,
-      duration: 0.25,
-      ease: "power2.in",
-      onComplete: onViewBag,
-    });
-  };
-
-  if (!isOpen || !addedItem || !mounted) return null;
-
-  // Show up to 3 related products
+  if (!mounted || !isOpen || !addedItem) return null;
   const suggested = relatedProducts.slice(0, 3);
 
   return createPortal(
-    <>
-      {/* Backdrop */}
-      <div
-        ref={backdropRef}
-        className="fixed inset-0 z-[9999] bg-[#10100F]/78 backdrop-blur-sm"
-        onClick={handleClose}
-      />
-
-      {/* Panel */}
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
-        <div
-          ref={panelRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Item added to bag"
-          className="zine-block max-h-[90vh] w-full max-w-[520px] overflow-y-auto pointer-events-auto"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="sign-panel">
-            <span className="sign-panel-text">Added to Bag</span>
-            <button
-              onClick={handleClose}
-              className="min-h-11 border-[3px] border-[#E9E1D4] px-3 font-body text-xs font-bold uppercase text-[#E9E1D4] transition-colors hover:bg-[#E9E1D4] hover:text-[#10100F]"
-              aria-label="Close"
-            >
-              Close
-            </button>
-          </div>
-          <WhiteBand />
-
-          {/* Added item */}
-          <div className="px-6 py-5">
-            <div className="flex gap-4 items-start">
-              {addedItem.image && (
-                <div className="relative w-16 h-16 bg-surface overflow-hidden flex-shrink-0 border-[3px] border-[#E9E1D4]">
-                  <Image
-                    src={addedItem.image}
-                    alt={addedItem.name}
-                    fill
-                    unoptimized={isPrintfulImage(addedItem.image)}
-                    className={isPrintfulImage(addedItem.image) ? "object-contain" : "object-cover xerox-image"}
-                    sizes="64px"
-                  />
-                </div>
-              )}
-              <div className="flex-1 min-w-0">
-                <h3 className="font-display text-xl font-black uppercase leading-none tracking-[-0.04em] text-cream truncate">
-                  {addedItem.name}
-                </h3>
-                <p className="font-body text-xs text-muted mt-1 font-bold uppercase">
-                  {addedItem.variationName}
-                </p>
-                <p className="font-mono text-sm text-cream mt-1 font-bold">
-                  {addedItem.priceFormatted}
-                </p>
-              </div>
-              <div className="zine-sticker flex-shrink-0 bg-[#39FF14]">
-                In
-              </div>
-            </div>
-          </div>
-
-          {/* Related products */}
-          {suggested.length > 0 && (
-            <>
-              <WhiteBand />
-              <div className="px-6 py-5">
-                <p className="font-display text-2xl font-black uppercase leading-none tracking-[-0.05em] text-cream mb-4">
-                  Complete the Look
-                </p>
-                <div className="grid grid-cols-3 gap-3">
-                  {suggested.map((product) => (
-                    <Link
-                      key={product.id}
-                      href={`/product/${product.slug}`}
-                      onClick={handleClose}
-                      className="group block"
-                    >
-                      <div className="subway-poster-mini aspect-[3/4] bg-surface/50">
-                        {product.images[0] ? (
-                          <Image
-                            src={product.images[0]}
-                            alt={product.name}
-                            fill
-                            unoptimized={isPrintfulImage(product.images[0])}
-                            className={`${
-                              isPrintfulImage(product.images[0])
-                                ? "object-contain"
-                                : "object-cover xerox-image"
-                            } transition-transform duration-500 group-hover:scale-105`}
-                            sizes="140px"
-                          />
-                        ) : (
-                          <div className="absolute inset-0 bg-surface" />
-                        )}
-
-                        {/* Mini poster scrim */}
-                        <div className="subway-poster-mini-scrim">
-                          <h4 className="font-display font-bold text-[9px] text-[#E9E1D4] uppercase tracking-[0.04em] truncate">
-                            {product.name}
-                          </h4>
-                          <p className="font-mono text-[10px] font-semibold text-[#CCFF00] mt-0.5">
-                            {product.priceFormatted}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* CTAs */}
-          <WhiteBand />
-          <div className="px-6 py-5">
-            <p className="mb-4 font-body text-xs font-bold leading-relaxed text-muted">
-              Review shipping, tax, returns, and supported wallet options before
-              Square payment.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={handleClose}
-                className="flex-1 py-3 border-[3px] border-[#E9E1D4] font-body font-bold text-xs text-cream uppercase tracking-[0.1em] hover:bg-[#E9E1D4] hover:text-[#10100F] transition-all duration-300"
-              >
-                Keep Shopping
-              </button>
-              <button
-                onClick={handleViewBag}
-                className="flex-1 py-3 metrocard-gradient font-body font-bold text-xs uppercase tracking-[0.1em] transition-transform duration-300 hover:-translate-y-1"
-              >
-                Review Bag
-              </button>
-            </div>
-          </div>
-        </div>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      <button type="button" aria-label="Close added item dialog" className="absolute inset-0 h-full w-full cursor-default bg-void/80" onClick={onClose} />
+      <div ref={panelRef} role="dialog" aria-modal="true" aria-labelledby="added-title" className="relative max-h-[90vh] w-full max-w-xl overflow-y-auto border border-border/60 bg-void">
+        <header className="flex items-center justify-between border-b border-border/40 px-5 py-4"><div><p className="text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Bag updated</p><h2 id="added-title" className="mt-1 font-display text-2xl font-black uppercase">Added to bag</h2></div><button type="button" onClick={onClose} className="min-h-11 border border-border/60 px-3 text-xs font-bold uppercase hover:border-accent">Close</button></header>
+        <div className="grid grid-cols-[4rem_1fr] gap-4 p-5">{addedItem.image && <div className="relative aspect-square overflow-hidden border border-border/40 bg-surface"><Image src={addedItem.image} alt={addedItem.name} fill className={isPrintfulImage(addedItem.image) ? "object-contain" : "object-cover"} sizes="64px" /></div>}<div className="min-w-0"><h3 className="truncate font-display text-lg font-black uppercase">{addedItem.name}</h3><p className="mt-1 text-xs font-bold uppercase text-muted">{addedItem.variationName}</p><p className="mt-1 font-mono text-sm font-bold">{addedItem.priceFormatted}</p></div></div>
+        {suggested.length > 0 && <section className="border-t border-border/40 p-5"><h3 className="font-display text-xl font-black uppercase">Related pieces</h3><div className="mt-4 grid grid-cols-3 gap-3">{suggested.map((product) => { const image = product.images[0]; return <Link key={product.id} href={`/product/${product.slug}`} onClick={onClose} className="group block"><div className="relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">{image && <Image src={image} alt={product.name} fill className={isPrintfulImage(image) ? "object-contain" : "object-cover"} sizes="160px" />}</div><h4 className="mt-2 line-clamp-2 text-[10px] font-bold uppercase leading-tight">{product.name}</h4><p className="mt-1 font-mono text-[10px] text-muted">{product.priceFormatted}</p></Link>; })}</div></section>}
+        <footer className="grid gap-3 border-t border-border/40 p-5 sm:grid-cols-2"><button type="button" onClick={onClose} className="min-h-12 border border-border/60 px-5 py-3 text-xs font-bold uppercase hover:border-accent">Keep shopping</button><button type="button" onClick={onViewBag} className="primary-action min-h-12 px-5 py-3 text-xs">Review bag</button></footer>
       </div>
-    </>,
-    document.body
+    </div>, document.body
   );
 }

@@ -1,80 +1,148 @@
-// Fulfillment engine (§25). Runs AFTER Square payment succeeds. Creates a Printful v2 DRAFT order
-// from the store's sync variants (art configured server-side). The order is only CONFIRMED (charged
-// to us + sent to production) when BOTH live flags are on — otherwise it stays a safe draft.
+// Fulfillment engine (§25). Runs only after Square payment succeeds. Each Printful store gets its
+// own durable fulfillment row so retries and webhooks can reconcile provider orders independently.
+// Confirmation remains gated by both explicit production flags.
 import { printfulRequest } from "@/lib/printful/client";
 import { db, isDbConfigured } from "@/lib/db/client";
 import { orders, fulfillments, auditLog } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import type { RevalidatedCart, OrderContact } from "./orders";
+import {
+  aggregateFulfillmentStatus, groupItemsByPrintfulStore, isPrintfulConfirmationAllowed,
+} from "./fulfillment-state";
 
 function confirmAllowed(): boolean {
-  return process.env.PRINTFUL_ALLOW_CONFIRM_ORDERS === "true" && process.env.PRINTFUL_LIVE_MODE === "true";
+  return isPrintfulConfirmationAllowed({
+    fulfillmentMode: process.env.AHA_FULFILLMENT_MODE,
+    allowConfirm: process.env.PRINTFUL_ALLOW_CONFIRM_ORDERS,
+    liveMode: process.env.PRINTFUL_LIVE_MODE,
+  });
 }
 
 interface PrintfulOrderResponse { data?: { id?: number | string }; id?: number | string }
 
-async function setFulfillment(orderId: number, status: string, printfulOrderId: string | null): Promise<void> {
+function customerStatus(status: string): string {
+  switch (status) {
+    case "draft_created": return "Preparing your order";
+    case "confirmed": return "In production";
+    case "partially_shipped": return "Partially shipped";
+    case "shipped": return "Shipped";
+    case "delivered": return "Delivered";
+    case "manual_review": return "Action needed";
+    case "canceled": return "Canceled";
+    default: return "Payment confirmed";
+  }
+}
+
+export async function syncOrderFulfillmentStatus(orderId: number): Promise<string> {
+  const rows = await db().select({ status: fulfillments.status })
+    .from(fulfillments).where(eq(fulfillments.orderId, orderId));
+  const status = aggregateFulfillmentStatus(rows.map((row) => row.status));
   await db().update(orders)
-    .set({ fulfillmentStatus: status, printfulOrderId, updatedAt: new Date() })
+    .set({ fulfillmentStatus: status, customerStatus: customerStatus(status), updatedAt: new Date() })
     .where(eq(orders.id, orderId));
-  await db().insert(fulfillments).values({ orderId, printfulOrderId, status });
+  return status;
+}
+
+async function markManualReview(orderId: number, reason: string): Promise<void> {
+  await db().update(orders)
+    .set({ fulfillmentStatus: "manual_review", customerStatus: "Action needed", updatedAt: new Date() })
+    .where(eq(orders.id, orderId));
   await db().insert(auditLog).values({
-    entityType: "order", entityId: String(orderId), action: `fulfillment:${status}`,
-    newStatus: status, source: "fulfillment", metadataJson: { printfulOrderId, confirmAllowed: confirmAllowed() },
+    entityType: "order", entityId: String(orderId), action: "fulfillment:manual_review",
+    newStatus: "manual_review", source: "fulfillment", metadataJson: { reason },
   });
 }
 
 /**
- * Create (and, if allowed, confirm) the Printful order for a paid internal order.
- * Idempotency: skips if the order already has a printful_order_id.
+ * Create one Printful draft per owning store. A unique (order, store) row is claimed before the
+ * remote call, preventing concurrent retries from creating two drafts for the same provider store.
  */
 export async function startFulfillment(
   orderId: number, cart: RevalidatedCart, contact: OrderContact
 ): Promise<void> {
   if (!isDbConfigured()) return;
 
-  const [existing] = await db().select({ pf: orders.printfulOrderId, status: orders.fulfillmentStatus })
-    .from(orders).where(eq(orders.id, orderId)).limit(1);
-  if (existing?.pf) return; // already has a Printful order — don't duplicate
-
-  // Group items by the Printful store their variant lives in (Square-integrated vs native/API store).
-  // A cart can mix both → one Printful draft order per store.
   const defaultStore = Number(process.env.PRINTFUL_STORE_ID) || undefined;
-  const byStore = new Map<number, Array<{ source: string; sync_variant_id: number; quantity: number }>>();
-  for (const i of cart.items) {
-    if (!i.printfulSyncVariantId) continue;
-    const store = i.printfulStoreId || defaultStore;
-    if (!store) continue;
-    if (!byStore.has(store)) byStore.set(store, []);
-    byStore.get(store)!.push({ source: "sync_variant", sync_variant_id: i.printfulSyncVariantId, quantity: i.quantity });
-  }
-
+  const byStore = groupItemsByPrintfulStore(cart.items, defaultStore);
   if (byStore.size === 0) {
-    // Nothing maps to Printful — route to manual review rather than silently dropping.
-    await setFulfillment(orderId, "manual_review", null);
+    await markManualReview(orderId, "No cart item has a Printful sync-variant/store mapping");
     return;
   }
 
   const addr = (contact.shippingAddress ?? {}) as Record<string, string>;
   const recipient = {
     name: contact.shippingName || contact.email,
-    address1: addr.address1, city: addr.city,
-    state_code: addr.state || undefined, country_code: addr.country || "US", zip: addr.zip,
+    address1: addr.address1,
+    city: addr.city,
+    state_code: addr.state || undefined,
+    country_code: addr.country || "US",
+    zip: addr.zip,
     email: contact.email,
   };
 
-  const createdIds: string[] = [];
-  for (const [store, items] of Array.from(byStore)) {
-    const res = await printfulRequest<PrintfulOrderResponse>("/orders", {
-      method: "POST", storeId: String(store), body: { recipient, order_items: items },
-    });
-    const printfulOrderId = String(res?.data?.id ?? res?.id ?? "");
-    if (!printfulOrderId) throw new Error(`Printful draft order (store ${store}) returned no id`);
-    createdIds.push(printfulOrderId);
-    if (confirmAllowed()) {
-      await printfulRequest(`/orders/${printfulOrderId}/confirmation`, { method: "POST", storeId: String(store) });
+  for (const [storeId, items] of Array.from(byStore)) {
+    const [existing] = await db().select({
+      id: fulfillments.id,
+      printfulOrderId: fulfillments.printfulOrderId,
+      status: fulfillments.status,
+    }).from(fulfillments).where(and(
+      eq(fulfillments.orderId, orderId),
+      eq(fulfillments.providerStoreId, storeId)
+    )).limit(1);
+
+    if (existing?.printfulOrderId) continue;
+    if (existing?.status === "draft_creating") {
+      await markManualReview(orderId, `Printful store ${storeId} has an unresolved draft creation attempt`);
+      continue;
+    }
+
+    const claimed = existing
+      ? await db().update(fulfillments).set({ status: "draft_creating", lastError: null, updatedAt: new Date() })
+          .where(eq(fulfillments.id, existing.id)).returning({ id: fulfillments.id })
+      : await db().insert(fulfillments).values({
+          orderId, providerStoreId: storeId, status: "draft_creating",
+        }).onConflictDoNothing().returning({ id: fulfillments.id });
+
+    if (!claimed[0]) continue; // another request claimed this order/store pair
+
+    try {
+      const res = await printfulRequest<PrintfulOrderResponse>("/orders", {
+        method: "POST",
+        storeId: String(storeId),
+        body: { recipient, order_items: items },
+      });
+      const printfulOrderId = String(res?.data?.id ?? res?.id ?? "");
+      if (!printfulOrderId) throw new Error(`Printful draft order (store ${storeId}) returned no id`);
+
+      let status = "draft_created";
+      if (confirmAllowed()) {
+        await printfulRequest(`/orders/${printfulOrderId}/confirmation`, {
+          method: "POST", storeId: String(storeId),
+        });
+        status = "confirmed";
+      }
+
+      await db().update(fulfillments).set({
+        printfulOrderId, status, lastError: null, updatedAt: new Date(),
+      }).where(eq(fulfillments.id, claimed[0].id));
+
+      // Legacy single-id column remains a pointer to the first provider order only.
+      await db().update(orders).set({ printfulOrderId, updatedAt: new Date() })
+        .where(and(eq(orders.id, orderId), isNull(orders.printfulOrderId)));
+      await db().insert(auditLog).values({
+        entityType: "order", entityId: String(orderId), action: `fulfillment:${status}`,
+        newStatus: status, source: "fulfillment",
+        metadataJson: { printfulOrderId, storeId, confirmAllowed: confirmAllowed() },
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message.slice(0, 500) : "Printful draft creation failed";
+      await db().update(fulfillments).set({
+        status: "manual_review", lastError: message, updatedAt: new Date(),
+      }).where(eq(fulfillments.id, claimed[0].id));
+      await syncOrderFulfillmentStatus(orderId);
+      throw error;
     }
   }
 
-  await setFulfillment(orderId, confirmAllowed() ? "confirmed" : "draft_created", createdIds.join(",") || null);
+  await syncOrderFulfillmentStatus(orderId);
 }

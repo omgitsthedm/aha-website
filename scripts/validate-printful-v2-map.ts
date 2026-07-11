@@ -3,6 +3,7 @@
 import { loadProducts } from "@/lib/data/products";
 
 const errors: string[] = [];
+const seenSyncVariants = new Set<string>();
 for (const p of loadProducts()) {
   if (p.status !== "active") continue;
   for (const v of p.variants) {
@@ -10,6 +11,12 @@ for (const p of loadProducts()) {
     const id = `${p.slug}/${v.sku}`;
     // printfulCatalogProductId is not required for sync_variant fulfillment.
     if (!v.printfulCatalogVariantId) errors.push(`[${id}] missing printfulCatalogVariantId`);
+    if (!v.printfulStoreId) errors.push(`[${id}] missing printfulStoreId`);
+    if (v.printfulSyncVariantId && v.printfulStoreId) {
+      const providerKey = `${v.printfulStoreId}:${v.printfulSyncVariantId}`;
+      if (seenSyncVariants.has(providerKey)) errors.push(`[${id}] duplicate Printful sync variant ${providerKey}`);
+      else seenSyncVariants.add(providerKey);
+    }
     if (!v.printfulSyncVariantId && (v.printfulPlacements ?? []).length === 0) {
       errors.push(`[${id}] no fulfillment path (no sync variant and no placements)`);
     }

@@ -1,26 +1,17 @@
-export const metadata = {
-  title: "Terms of Service",
-  description: "Terms of service for After Hours Agenda.",
-};
+import { PageHeader } from "@/components/ui/PageHeader";
+
+export const metadata = { title: "Terms of Service", description: "Terms of service for After Hours Agenda.", alternates: { canonical: "/terms" } };
+
+const sections = [
+  ["Orders", "Products are made to order. An order is accepted when payment is approved and the storefront issues a confirmation. We may cancel and refund an order if a product, price, payment, or fulfillment error prevents completion."],
+  ["Pricing and payment", "Prices are shown in USD. Tax and the final order total are calculated before payment. Payments are processed through Square."],
+  ["Products", "Product images and colors can appear differently across screens. Garment measurements may vary slightly by blank and production batch. Product-specific details take priority over general site guidance."],
+  ["Shipping and returns", "Production, shipping, and return terms are described on the Shipping and Returns pages. Made-to-order production fees may be non-refundable after printing begins."],
+  ["Intellectual property", "The After Hours Agenda name, marks, graphics, photography, and site content may not be copied or distributed without permission, except where applicable law allows."],
+  ["Site use", "Do not misuse the site, interfere with its operation, attempt unauthorized access, or submit fraudulent orders. We may restrict access when needed to protect customers or the store."],
+  ["Contact", "Questions about these terms can be sent to hello@afterhoursagenda.com."],
+];
 
 export default function TermsPage() {
-  return (
-    <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="misprint font-display text-[clamp(3.5rem,9vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] text-center mb-8">TERMS OF SERVICE</h1>
-        <div className="zine-block space-y-6 p-6 font-body text-cream/80 leading-relaxed text-sm md:p-8">
-          <p>Last updated: February 2026</p>
-          <p>By using afterhoursagenda.com, you agree to these terms. If you don&apos;t agree, that&apos;s cool. Please don&apos;t use the site.</p>
-          <h2 className="font-display font-bold text-base text-cream !mt-8">Products & Orders</h2>
-          <p>All products are made to order. Prices are in USD and subject to change. We reserve the right to limit quantities or refuse orders. Colors may vary slightly from screen to print.</p>
-          <h2 className="font-display font-bold text-base text-cream !mt-8">Intellectual Property</h2>
-          <p>All designs, logos, and content on this site are property of After Hours Agenda. Don&apos;t copy, reproduce, or distribute without written permission.</p>
-          <h2 className="font-display font-bold text-base text-cream !mt-8">Limitation of Liability</h2>
-          <p>We&apos;re a small brand doing our best. We&apos;re not liable for indirect, incidental, or consequential damages arising from use of our site or products.</p>
-          <h2 className="font-display font-bold text-base text-cream !mt-8">Changes</h2>
-          <p>We may update these terms from time to time. Continued use of the site after changes means you accept the new terms.</p>
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><article className="mx-auto max-w-4xl"><PageHeader eyebrow="Last updated July 10, 2026" title="Terms of service" description="These terms govern use of the storefront and purchases from After Hours Agenda." /><div className="divide-y divide-border/40 border-y border-border/40">{sections.map(([title, body]) => <section key={title} className="grid gap-3 py-7 md:grid-cols-[13rem_1fr] md:gap-8"><h2 className="font-display text-lg font-black uppercase">{title}</h2><p className="text-sm leading-relaxed text-muted">{body}</p></section>)}</div></article></div>;
 }

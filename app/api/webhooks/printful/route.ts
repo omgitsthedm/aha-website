@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { getFulfillmentMode } from "@/lib/commerce/runtime";
 import { verifyPrintfulWebhookSignature } from "@/lib/printful/webhooks";
-import { recordWebhookEvent, applyPrintfulEvent } from "@/lib/commerce/webhooks";
+import {
+  recordWebhookEvent, applyPrintfulEvent, markWebhookProcessed, markWebhookFailed,
+} from "@/lib/commerce/webhooks";
 
 export const runtime = "nodejs";
 
@@ -42,13 +44,19 @@ export async function POST(request: Request) {
 
   // Printful events carry no unique id — dedupe on a hash of the raw body.
   const dedupeKey = createHash("sha256").update(rawBody).digest("hex");
+  let eventRecordId: number | null = null;
   try {
-    const { isNew } = await recordWebhookEvent({
+    const recorded = await recordWebhookEvent({
       provider: "printful", eventId: null, eventType: event.type,
       signatureValid: true, rawPayload: event, dedupeKey,
     });
-    if (isNew) await applyPrintfulEvent(event);
+    eventRecordId = recorded.eventRecordId;
+    if (recorded.isNew) {
+      await applyPrintfulEvent(event);
+      await markWebhookProcessed(eventRecordId);
+    }
   } catch (err) {
+    await markWebhookFailed(eventRecordId, err).catch(() => {});
     console.error("Printful webhook processing failed:", err);
   }
 
@@ -74,4 +82,3 @@ export function GET() {
     { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex" } }
   );
 }
-

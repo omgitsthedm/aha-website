@@ -1,58 +1,33 @@
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import Image from "next/image";
+import Link from "next/link";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata = {
   title: "About",
-  description: "The story behind After Hours Agenda. Premium streetwear from New York City.",
+  description: "The point of view behind After Hours Agenda, an independent New York streetwear label.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
   return (
-    <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
-      <div className="max-w-3xl mx-auto">
-        <ScrollReveal>
-          <span className="zine-sticker mx-auto mb-5 bg-[#00FFFF]">
-            Our Story
-          </span>
-          <h1 className="misprint font-display text-[clamp(4rem,10vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] text-center mb-8">
-            ABOUT
-          </h1>
-        </ScrollReveal>
-
-        <ScrollReveal delay={200}>
-          <div className="zine-block space-y-8 p-5 font-body text-cream/85 leading-relaxed md:p-8">
-            <p className="text-lg">
-              After Hours Agenda started in New York City, built in the hours
-              that matter most, the ones after the world clocks out.
-            </p>
-
-            <p>
-              We believe the clothes you wear should carry intention. Not just look good,
-              but mean something. Every collection is built around an idea, a perspective,
-              a way of seeing the world that doesn&apos;t follow the crowd.
-            </p>
-
-            <blockquote className="border-l-2 border-muted pl-6 py-2 font-body italic text-xl md:text-2xl text-cream">
-              &ldquo;Fashion with a point of view. Made for the ones who have one.&rdquo;
-            </blockquote>
-
-            <p>
-              <strong className="text-cream">Black Sheep</strong> is for the ones who stand apart.{" "}
-              <strong className="text-cream">No Kings</strong> is for those who lead themselves.{" "}
-              <strong className="text-cream">Night Mode</strong> is for the hours between midnight and dawn.{" "}
-              <strong className="text-cream">NYC Forever</strong> carries the energy of the city that made us.
-            </p>
-
-            <p>
-              Every piece is made to order, printed on premium blanks and shipped
-              directly to you. No overproduction, no waste, no compromises. Quality
-              streetwear that&apos;s worth the wait.
-            </p>
-
-            <p>
-              Based in New York. Shipped worldwide.
-            </p>
+    <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32">
+      <div className="mx-auto max-w-6xl">
+        <PageHeader eyebrow="Independent label / New York" title="Built after hours" description="After Hours Agenda is for people who make their own lane. The clothes carry that point of view without asking for permission." />
+        <div className="grid border-y border-border/40 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="flex min-h-80 items-center justify-center border-b border-border/40 bg-cream p-10 lg:border-b-0 lg:border-r">
+            <Image src="/brand/sheep-head.svg" alt="After Hours Agenda black sheep mark" width={280} height={280} className="h-auto w-full max-w-64" />
           </div>
-        </ScrollReveal>
+          <div className="space-y-6 p-6 text-sm leading-relaxed text-cream/85 md:p-10 md:text-base">
+            <p className="text-lg font-bold text-cream">The work started in New York, in the hours after the expected work was done.</p>
+            <p>Every collection begins with an idea: stand apart, lead yourself, protect the hours that belong to you, and carry the city without turning it into a costume.</p>
+            <p><strong className="text-cream">Black Sheep</strong> centers the people who do not fit the brief. <strong className="text-cream">No Kings</strong> rejects borrowed authority. <strong className="text-cream">Night Mode</strong> belongs to the work made between midnight and dawn. <strong className="text-cream">NYC Forever</strong> carries the city that shaped the label.</p>
+            <p>Pieces are made to order through our production partner. That keeps the catalog flexible and means production begins after purchase.</p>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Link href="/shop" className="primary-action min-h-11 px-5 py-3 text-xs">Shop the catalog</Link>
+              <Link href="/shipping" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">How orders are made</Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

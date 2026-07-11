@@ -1,12 +1,14 @@
 import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
 import { ShopContent } from "@/components/shop/ShopContent";
 import type { Product, Collection } from "@/lib/utils/types";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const revalidate = 300;
 
 export const metadata = {
   title: "Shop",
   description: "Shop graphic tees, loud color, and made-to-order streetwear from After Hours Agenda.",
+  alternates: { canonical: "/shop" },
 };
 
 export default async function ShopPage() {
@@ -25,19 +27,7 @@ export default async function ShopPage() {
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
-          <div className="max-w-3xl">
-            <div className="mosaic-border" />
-            <div className="sign-panel-station">
-              <span className="sign-panel-station-text">Shop Everything</span>
-            </div>
-            <div className="mosaic-border" />
-          </div>
-          <p className="mt-6 max-w-xl font-body text-base font-bold leading-relaxed text-muted">
-            Full catalog, rough edges included. Filter by drop, switch views,
-            then pick your size without leaving the page.
-          </p>
-        </div>
+        <PageHeader eyebrow="Full catalog" title="Shop everything" description="Browse every active product, filter by collection or size, and review the final total before payment." />
         <ShopContent products={products} collections={collections} />
       </div>
     </div>

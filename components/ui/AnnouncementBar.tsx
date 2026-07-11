@@ -1,40 +1,10 @@
-"use client";
-
-import { useState, useEffect } from "react";
-
-const MESSAGES = [
-  "Free Shipping",
-  "Made to Order",
-  "Thirty-Day Returns",
-];
-
-const FULL_LINE = MESSAGES.join("  /  ");
-
 export function AnnouncementBar() {
-  const [index, setIndex] = useState(0);
-
-  // Cycle messages on mobile (instant swap, no fade)
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % MESSAGES.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
-
   return (
-    <div className="relative z-[60] bg-[#CCFF00] text-[#10100F] border-b-[3px] border-[#10100F]">
-      <div className="px-4 py-2 flex items-center justify-center">
-        {/* Desktop — all messages on one line */}
-        <p className="hidden sm:block font-body font-bold text-[12px] tracking-[0.12em] text-center uppercase">
-          {FULL_LINE}
-        </p>
-
-        {/* Mobile — cycle messages with instant swap */}
-        <p className="block sm:hidden font-body font-bold text-xs tracking-[0.1em] text-center uppercase">
-          {MESSAGES[index]}
-        </p>
-      </div>
-    </div>
+    <aside aria-label="Store announcement" className="fixed inset-x-0 top-0 z-[110] flex h-8 items-center justify-center border-b border-accent bg-accent text-void">
+      <p className="px-4 text-center font-mono text-[11px] font-bold uppercase tracking-[0.08em]">
+        Free shipping. Made to order in 2-5 business days.
+      </p>
+    </aside>
   );
 }
 

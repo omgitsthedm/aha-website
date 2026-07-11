@@ -70,15 +70,23 @@ export function getCommerceReadinessSnapshot() {
       "SQUARE_WEBHOOK_NOTIFICATION_URL is missing or invalid; Square webhook signatures cannot be verified safely."
     );
   }
-  if (getFulfillmentMode() === "auto") {
+  const fulfillmentMode = getFulfillmentMode();
+  const allowPrintfulConfirm = process.env.PRINTFUL_ALLOW_CONFIRM_ORDERS === "true";
+  const printfulLiveMode = process.env.PRINTFUL_LIVE_MODE === "true";
+  if (fulfillmentMode === "auto" && (!allowPrintfulConfirm || !printfulLiveMode)) {
     warnings.push(
-      "AHA_FULFILLMENT_MODE=auto is not wired to auto-confirm Printful orders yet; keep manual or dry-run until fulfillment is explicitly approved."
+      "AHA_FULFILLMENT_MODE=auto is selected, but one or both Printful confirmation flags are off; paid orders will remain drafts."
+    );
+  }
+  if (fulfillmentMode !== "auto" && allowPrintfulConfirm && printfulLiveMode) {
+    warnings.push(
+      "Printful confirmation flags are on, but AHA_FULFILLMENT_MODE is not auto; confirmation remains safely disabled."
     );
   }
 
   return {
     environment: getCommerceEnvironment(),
-    fulfillmentMode: getFulfillmentMode(),
+    fulfillmentMode,
     siteUrlConfigured: Boolean(siteUrl),
     squareWebhookUrlConfigured: Boolean(squareWebhookUrl),
     groups: {
@@ -103,4 +111,3 @@ export function getCommerceReadinessSnapshot() {
     warnings,
   };
 }
-

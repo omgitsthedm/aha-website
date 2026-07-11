@@ -1,6 +1,6 @@
 import { formatCents } from "@/lib/utils/money";
 
-export const FREE_SHIPPING_THRESHOLD_CENTS = 7500;
+export const FREE_SHIPPING_THRESHOLD_CENTS = 0;
 
 export const PRODUCTION_WINDOW = "2 to 5 business days";
 export const DELIVERY_WINDOW = "usually 5 to 10 business days after production";
@@ -20,11 +20,8 @@ export function formatFreeShippingDelta(totalCents: number): string {
 }
 
 export function getShippingLineCopy(totalCents: number): string {
-  if (totalCents >= FREE_SHIPPING_THRESHOLD_CENTS) {
-    return "Free standard shipping unlocked";
-  }
-
-  return `Free standard shipping at ${formatCents(FREE_SHIPPING_THRESHOLD_CENTS)}; exact rate shown before payment`;
+  void totalCents;
+  return "Free standard shipping";
 }
 
 export function getFulfillmentSummary(): string {

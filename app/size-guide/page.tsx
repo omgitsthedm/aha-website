@@ -1,61 +1,12 @@
-export const metadata = {
-  title: "Size Guide",
-  description: "Find your perfect fit with our size guide.",
-};
+import { PageHeader } from "@/components/ui/PageHeader";
+
+export const metadata = { title: "Size Guide", description: "General sizing reference for After Hours Agenda apparel.", alternates: { canonical: "/size-guide" } };
+
+const tables = [
+  { title: "Unisex T-shirts", rows: [["S", "34-36", "27"], ["M", "38-40", "28"], ["L", "42-44", "29"], ["XL", "46-48", "30"], ["2XL", "50-52", "31"]] },
+  { title: "Sweatshirts and hoodies", rows: [["S", "36-38", "26"], ["M", "40-42", "27"], ["L", "44-46", "28"], ["XL", "48-50", "29"], ["2XL", "52-54", "30"]] },
+];
 
 export default function SizeGuidePage() {
-  return (
-    <div className="pt-24 pb-16 px-6">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="font-display font-bold text-chapter text-center mb-4">SIZE GUIDE</h1>
-        <p className="text-center text-muted mb-12 max-w-md mx-auto">Our pieces run true to size. Want that oversized look? Go up one.</p>
-
-        <div className="space-y-8">
-          <div>
-            <h2 className="font-display font-bold text-lg mb-4">Unisex T-Shirts</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full font-mono text-sm">
-                <thead>
-                  <tr className="border-b border-border text-muted text-left">
-                    <th className="py-3 pr-4">Size</th>
-                    <th className="py-3 pr-4">Chest (in)</th>
-                    <th className="py-3 pr-4">Length (in)</th>
-                  </tr>
-                </thead>
-                <tbody className="text-cream/80">
-                  <tr className="border-b border-border/50"><td className="py-2.5 pr-4">S</td><td className="py-2.5 pr-4">34-36</td><td className="py-2.5">27</td></tr>
-                  <tr className="border-b border-border/50"><td className="py-2.5 pr-4">M</td><td className="py-2.5 pr-4">38-40</td><td className="py-2.5">28</td></tr>
-                  <tr className="border-b border-border/50"><td className="py-2.5 pr-4">L</td><td className="py-2.5 pr-4">42-44</td><td className="py-2.5">29</td></tr>
-                  <tr className="border-b border-border/50"><td className="py-2.5 pr-4">XL</td><td className="py-2.5 pr-4">46-48</td><td className="py-2.5">30</td></tr>
-                  <tr><td className="py-2.5 pr-4">2XL</td><td className="py-2.5 pr-4">50-52</td><td className="py-2.5">31</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="font-display font-bold text-lg mb-4">Sweatshirts & Hoodies</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full font-mono text-sm">
-                <thead>
-                  <tr className="border-b border-border text-muted text-left">
-                    <th className="py-3 pr-4">Size</th>
-                    <th className="py-3 pr-4">Chest (in)</th>
-                    <th className="py-3 pr-4">Length (in)</th>
-                  </tr>
-                </thead>
-                <tbody className="text-cream/80">
-                  <tr className="border-b border-border/50"><td className="py-2.5 pr-4">S</td><td className="py-2.5 pr-4">36-38</td><td className="py-2.5">26</td></tr>
-                  <tr className="border-b border-border/50"><td className="py-2.5 pr-4">M</td><td className="py-2.5 pr-4">40-42</td><td className="py-2.5">27</td></tr>
-                  <tr className="border-b border-border/50"><td className="py-2.5 pr-4">L</td><td className="py-2.5 pr-4">44-46</td><td className="py-2.5">28</td></tr>
-                  <tr className="border-b border-border/50"><td className="py-2.5 pr-4">XL</td><td className="py-2.5 pr-4">48-50</td><td className="py-2.5">29</td></tr>
-                  <tr><td className="py-2.5 pr-4">2XL</td><td className="py-2.5 pr-4">52-54</td><td className="py-2.5">30</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><PageHeader eyebrow="General reference" title="Size guide" description="Product-specific fit notes take priority. Measurements are in inches and can vary slightly by garment blank." /><div className="grid gap-10 md:grid-cols-2">{tables.map((table) => <section key={table.title}><h2 className="mb-4 font-display text-xl font-black uppercase">{table.title}</h2><div className="overflow-x-auto border-t border-border/40"><table className="w-full min-w-[22rem] text-left text-sm"><thead className="text-xs uppercase tracking-[0.06em] text-muted"><tr className="border-b border-border/40"><th className="py-3 pr-4">Size</th><th className="py-3 pr-4">Chest</th><th className="py-3">Length</th></tr></thead><tbody>{table.rows.map(([size, chest, length]) => <tr key={size} className="border-b border-border/40"><th className="py-3 pr-4 font-bold text-cream">{size}</th><td className="py-3 pr-4 text-muted">{chest}</td><td className="py-3 text-muted">{length}</td></tr>)}</tbody></table></div></section>)}</div></div></div>;
 }

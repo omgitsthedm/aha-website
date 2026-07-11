@@ -1,7 +1,7 @@
 export type CommerceEnvironment = "production" | "sandbox";
 export type FulfillmentMode = "manual" | "dry-run" | "auto";
 
-export const DEFAULT_SITE_URL = "https://www.afterhoursagenda.com";
+export const DEFAULT_SITE_URL = "https://afterhoursagenda.com";
 
 const SQUARE_BASE_URLS: Record<CommerceEnvironment, string> = {
   production: "https://connect.squareup.com/v2",

@@ -1,47 +1,18 @@
-import {
-  DELIVERY_WINDOW,
-  FREE_SHIPPING_THRESHOLD_CENTS,
-  PRODUCTION_WINDOW,
-} from "@/lib/commerce/policies";
-import { formatCents } from "@/lib/utils/money";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { DELIVERY_WINDOW, PRODUCTION_WINDOW } from "@/lib/commerce/policies";
 
-export const metadata = {
-  title: "Shipping",
-  description: "Shipping information for After Hours Agenda orders.",
-};
+export const metadata = { title: "Shipping", description: "Production and shipping information for After Hours Agenda orders.", alternates: { canonical: "/shipping" } };
 
 export default function ShippingPage() {
   return (
-    <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="misprint font-display text-[clamp(4rem,10vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] text-center mb-8">SHIPPING</h1>
-        <div className="space-y-6 font-body text-cream/80 leading-relaxed">
-          <div className="zine-block p-6">
-            <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">Made to Order</h2>
-            <p className="font-bold">Every piece is crafted after you order it. No warehouses, no sitting on shelves, just freshly made gear shipped straight to you.</p>
-          </div>
-          <div className="zine-block p-6">
-            <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">Processing Time</h2>
-            <p className="font-bold">Orders typically take <strong className="text-cream">{PRODUCTION_WINDOW}</strong> to print and prepare for shipment. During high-demand drops, this may extend to 5-7 business days.</p>
-          </div>
-          <div className="zine-block p-6">
-            <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">Shipping Times</h2>
-            <p className="mb-4 font-bold">
-              Most deliveries arrive {DELIVERY_WINDOW}. Exact shipping methods
-              and rates are confirmed before payment in Square.
-            </p>
-            <ul className="space-y-2 mt-2">
-              <li className="flex justify-between"><span>US Standard</span><span className="font-mono text-sm text-muted">5-8 business days</span></li>
-              <li className="flex justify-between"><span>US Express</span><span className="font-mono text-sm text-muted">2-4 business days</span></li>
-              <li className="flex justify-between"><span>International</span><span className="font-mono text-sm text-muted">8-16 business days</span></li>
-            </ul>
-          </div>
-          <div className="zine-block p-6">
-            <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">Free Shipping</h2>
-            <p className="font-bold">Orders over <strong className="text-cream">{formatCents(FREE_SHIPPING_THRESHOLD_CENTS)}</strong> ship free within the US. International shipping rates are calculated at checkout.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl">
+      <PageHeader eyebrow="Made-to-order timeline" title="Shipping" description="Standard shipping is free on every order. Production happens first, then the carrier delivery window begins." />
+      <dl className="border-t border-border/40">
+        <div className="grid gap-3 border-b border-border/40 py-7 md:grid-cols-[12rem_1fr]"><dt className="font-display text-xl font-black uppercase">Production</dt><dd className="text-sm leading-relaxed text-muted">Most orders are printed and prepared in <strong className="text-cream">{PRODUCTION_WINDOW}</strong>. Production can take longer during unusually high demand.</dd></div>
+        <div className="grid gap-3 border-b border-border/40 py-7 md:grid-cols-[12rem_1fr]"><dt className="font-display text-xl font-black uppercase">Delivery</dt><dd className="text-sm leading-relaxed text-muted">Delivery is <strong className="text-cream">{DELIVERY_WINDOW}</strong>. The carrier and destination determine the exact timing.</dd></div>
+        <div className="grid gap-3 border-b border-border/40 py-7 md:grid-cols-[12rem_1fr]"><dt className="font-display text-xl font-black uppercase">Tracking</dt><dd className="text-sm leading-relaxed text-muted">Tracking is sent to the checkout email after the package ships. Contact support with the order number if the tracking link does not arrive.</dd></div>
+        <div className="grid gap-3 border-b border-border/40 py-7 md:grid-cols-[12rem_1fr]"><dt className="font-display text-xl font-black uppercase">At checkout</dt><dd className="text-sm leading-relaxed text-muted">The final order total, free standard shipping line, and estimated tax are shown before payment.</dd></div>
+      </dl>
+    </div></div>
   );
 }

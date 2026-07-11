@@ -5,7 +5,9 @@ import {
   normalizeSquareWebhookEnvironment,
   verifySquareWebhookSignature,
 } from "@/lib/square/webhooks";
-import { recordWebhookEvent, applySquareEvent } from "@/lib/commerce/webhooks";
+import {
+  recordWebhookEvent, applySquareEvent, markWebhookProcessed, markWebhookFailed,
+} from "@/lib/commerce/webhooks";
 
 export const runtime = "nodejs";
 
@@ -56,13 +58,19 @@ export async function POST(request: Request) {
 
   // Store raw + dedupe, then reconcile order status (best-effort; respond 2xx fast regardless).
   const dedupeKey = event.event_id || createHash("sha256").update(rawBody).digest("hex");
+  let eventRecordId: number | null = null;
   try {
-    const { isNew } = await recordWebhookEvent({
+    const recorded = await recordWebhookEvent({
       provider: "square", eventId: event.event_id, eventType: event.type,
       signatureValid: true, rawPayload: event, dedupeKey,
     });
-    if (isNew) await applySquareEvent(event);
+    eventRecordId = recorded.eventRecordId;
+    if (recorded.isNew) {
+      await applySquareEvent(event);
+      await markWebhookProcessed(eventRecordId);
+    }
   } catch (err) {
+    await markWebhookFailed(eventRecordId, err).catch(() => {});
     console.error("Square webhook processing failed:", err);
   }
 
@@ -89,4 +97,3 @@ export function GET() {
     { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex" } }
   );
 }
-

@@ -1,11 +1,11 @@
 import { squareRequest } from "./client";
 
-interface LineItem {
+export interface LineItem {
   catalogObjectId: string;
   quantity: string;
 }
 
-interface CreateOrderRequest {
+export interface CreateOrderRequest {
   lineItems: LineItem[];
   shippingAddress?: {
     addressLine1: string;
@@ -19,6 +19,60 @@ interface CreateOrderRequest {
   };
 }
 
+export interface SquareOrderInput {
+  location_id: string | undefined;
+  pricing_options: { auto_apply_taxes: true };
+  line_items: Array<{ catalog_object_id: string; quantity: string }>;
+  fulfillments: Array<{
+    type: "SHIPMENT";
+    state: "PROPOSED";
+    shipment_details: {
+      recipient: {
+        display_name: string;
+        address: {
+          address_line_1: string;
+          address_line_2?: string;
+          locality: string;
+          administrative_district_level_1: string;
+          postal_code: string;
+          country: string;
+        };
+      };
+    };
+  }>;
+}
+
+/** One trusted order shape is shared by quote calculation and final order creation. */
+export function buildSquareOrder(request: CreateOrderRequest): SquareOrderInput {
+  return {
+    location_id: process.env.SQUARE_LOCATION_ID,
+    pricing_options: { auto_apply_taxes: true },
+    line_items: request.lineItems.map((item) => ({
+      catalog_object_id: item.catalogObjectId,
+      quantity: item.quantity,
+    })),
+    fulfillments: request.shippingAddress
+      ? [{
+          type: "SHIPMENT",
+          state: "PROPOSED",
+          shipment_details: {
+            recipient: {
+              display_name: `${request.shippingAddress.firstName} ${request.shippingAddress.lastName}`,
+              address: {
+                address_line_1: request.shippingAddress.addressLine1,
+                address_line_2: request.shippingAddress.addressLine2,
+                locality: request.shippingAddress.locality,
+                administrative_district_level_1: request.shippingAddress.administrativeDistrictLevel1,
+                postal_code: request.shippingAddress.postalCode,
+                country: request.shippingAddress.country,
+              },
+            },
+          },
+        }]
+      : [],
+  };
+}
+
 export async function createOrder(request: CreateOrderRequest) {
   const idempotencyKey = crypto.randomUUID();
 
@@ -27,43 +81,30 @@ export async function createOrder(request: CreateOrderRequest) {
     body: {
       idempotency_key: idempotencyKey,
       order: {
-        location_id: process.env.SQUARE_LOCATION_ID,
-        line_items: request.lineItems.map((item) => ({
-          catalog_object_id: item.catalogObjectId,
-          quantity: item.quantity,
-        })),
-        fulfillments: request.shippingAddress
-          ? [
-              {
-                type: "SHIPMENT",
-                state: "PROPOSED",
-                shipment_details: {
-                  recipient: {
-                    display_name: `${request.shippingAddress.firstName} ${request.shippingAddress.lastName}`,
-                    address: {
-                      address_line_1: request.shippingAddress.addressLine1,
-                      address_line_2: request.shippingAddress.addressLine2,
-                      locality: request.shippingAddress.locality,
-                      administrative_district_level_1: request.shippingAddress.administrativeDistrictLevel1,
-                      postal_code: request.shippingAddress.postalCode,
-                      country: request.shippingAddress.country,
-                    },
-                  },
-                },
-              },
-            ]
-          : [],
+        ...buildSquareOrder(request),
       },
     },
   });
 }
 
+interface SquareMoney {
+  amount?: number;
+  currency?: string;
+}
+
+export interface SquarePricedOrderData {
+  id?: string;
+  total_money?: SquareMoney;
+  total_tax_money?: SquareMoney;
+  net_amount_due_money?: SquareMoney;
+}
+
 interface SquareOrderResponse {
   order: {
     id: string;
-    total_money?: { amount?: number; currency?: string };
-    total_tax_money?: { amount?: number };
-    net_amount_due_money?: { amount?: number };
+    total_money?: SquareMoney;
+    total_tax_money?: SquareMoney;
+    net_amount_due_money?: SquareMoney;
     line_items?: Array<{ base_price_money?: { amount?: number }; quantity?: string }>;
   };
 }
@@ -74,6 +115,32 @@ export interface PricedOrder {
   tax: number; // cents
   total: number; // cents (Square-authoritative, incl tax)
   currency: string;
+}
+
+export type QuotedOrder = Omit<PricedOrder, "squareOrderId">;
+
+export function parseSquareOrderTotals(order: SquarePricedOrderData): QuotedOrder {
+  const total = order.total_money?.amount ?? 0;
+  const tax = order.total_tax_money?.amount ?? 0;
+  return {
+    subtotal: Math.max(0, total - tax),
+    tax,
+    total,
+    currency: order.total_money?.currency ?? "USD",
+  };
+}
+
+/** Calculate the final tax-inclusive amount without creating a persistent Square order. */
+export async function calculatePricedSquareOrder(
+  request: CreateOrderRequest
+): Promise<QuotedOrder> {
+  const res = (await squareRequest("/orders/calculate", {
+    method: "POST",
+    revalidate: 0,
+    body: { order: buildSquareOrder(request) },
+  })) as SquareOrderResponse;
+
+  return parseSquareOrderTotals(res.order);
 }
 
 /**
@@ -91,45 +158,15 @@ export async function createPricedSquareOrder(
     body: {
       idempotency_key: idempotencyKey,
       order: {
-        location_id: process.env.SQUARE_LOCATION_ID,
-        pricing_options: { auto_apply_taxes: true },
-        line_items: request.lineItems.map((item) => ({
-          catalog_object_id: item.catalogObjectId,
-          quantity: item.quantity,
-        })),
-        fulfillments: request.shippingAddress
-          ? [
-              {
-                type: "SHIPMENT",
-                state: "PROPOSED",
-                shipment_details: {
-                  recipient: {
-                    display_name: `${request.shippingAddress.firstName} ${request.shippingAddress.lastName}`,
-                    address: {
-                      address_line_1: request.shippingAddress.addressLine1,
-                      address_line_2: request.shippingAddress.addressLine2,
-                      locality: request.shippingAddress.locality,
-                      administrative_district_level_1: request.shippingAddress.administrativeDistrictLevel1,
-                      postal_code: request.shippingAddress.postalCode,
-                      country: request.shippingAddress.country,
-                    },
-                  },
-                },
-              },
-            ]
-          : [],
+        ...buildSquareOrder(request),
       },
     },
   })) as SquareOrderResponse;
 
   const order = res.order;
-  const total = order.total_money?.amount ?? 0;
-  const tax = order.total_tax_money?.amount ?? 0;
+  const totals = parseSquareOrderTotals(order);
   return {
     squareOrderId: order.id,
-    subtotal: Math.max(0, total - tax),
-    tax,
-    total,
-    currency: order.total_money?.currency ?? "USD",
+    ...totals,
   };
 }

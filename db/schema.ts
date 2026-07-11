@@ -138,9 +138,11 @@ export const payments = pgTable("payments", {
 export const fulfillments = pgTable("fulfillments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
-  printfulOrderId: text("printful_order_id"), status: text("status").notNull().default("not_started"),
+  providerStoreId: integer("provider_store_id"),
+  printfulOrderId: text("printful_order_id").unique(), status: text("status").notNull().default("not_started"),
+  lastError: text("last_error"),
   createdAt: createdAt(), updatedAt: updatedAt(),
-});
+}, (t) => ({ uniqOrderStore: unique("uniq_fulfillment_order_store").on(t.orderId, t.providerStoreId) }));
 export const shipments = pgTable("shipments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
@@ -171,7 +173,8 @@ export const webhookEvents = pgTable("webhook_events", {
   provider: text("provider").notNull(), eventId: text("event_id"), eventType: text("event_type"),
   signature: text("signature"), signatureValid: boolean("signature_valid").notNull().default(false),
   rawPayload: jsonb("raw_payload").notNull(), processingStatus: text("processing_status").notNull().default("received"),
-  dedupeKey: text("dedupe_key").notNull(), processedAt: timestamp("processed_at", { withTimezone: true }), createdAt: createdAt(),
+  dedupeKey: text("dedupe_key").notNull(), retryCount: integer("retry_count").notNull().default(0),
+  lastError: text("last_error"), processedAt: timestamp("processed_at", { withTimezone: true }), createdAt: createdAt(),
 }, (t) => ({ uniqEvent: unique("uniq_webhook").on(t.provider, t.dedupeKey) }));
 export const auditLog = pgTable("audit_log", {
   id: bigserial("id", { mode: "number" }).primaryKey(),

@@ -1,88 +1,27 @@
-"use client";
-
-import { useRef } from "react";
 import Link from "next/link";
 import type { Collection } from "@/lib/utils/types";
 import { RouteBadge } from "@/components/ui/RouteBadge";
+import { COLLECTION_CODES } from "@/lib/utils/collection-codes";
 
-import { SUBWAY_LINES } from "@/lib/utils/subway-lines";
-import { gsap, useGSAP } from "@/lib/gsap";
-
-interface CollectionsProps {
-  collections: Collection[];
-}
-
-export function Collections({ collections }: CollectionsProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      if (!sectionRef.current) return;
-
-      // Each collection row slides in from the left with stagger
-      const rows = sectionRef.current.querySelectorAll("[data-row]");
-      gsap.from(rows, {
-        x: -60,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.12,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          once: true,
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
-
-  if (collections.length === 0) return null;
-
-  // Only show collections that have a subway line mapping
-  const lined = collections.filter((c) => c.slug in SUBWAY_LINES);
-
+export function Collections({ collections }: { collections: Collection[] }) {
+  const visible = collections.filter((collection) => collection.slug in COLLECTION_CODES);
+  if (visible.length === 0) return null;
   return (
-    <section ref={sectionRef} className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-10">
-          <div className="mosaic-border" />
-          <div className="sign-panel-station">
-            <span className="sign-panel-station-text">Drop Index</span>
-          </div>
-          <div className="mosaic-border" />
+    <section className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 max-w-2xl border-t-2 border-accent pt-5">
+          <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">Shop by collection</h2>
+          <p className="mt-4 font-mono text-sm leading-relaxed text-muted">Start with the idea, then find the piece.</p>
         </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-        {lined.map((col, i) => {
-          const line = SUBWAY_LINES[col.slug];
-          const lineColor = line?.color || "#A7A9AC";
-
-          return (
-            <div key={col.id} data-row className={i % 2 === 0 ? "rotate-[-0.5deg]" : "rotate-[0.5deg]"}>
-              <Link
-                href={`/collections/${col.slug}`}
-                className="group zine-block flex min-h-[132px] items-center gap-5 px-5 py-5 transition-transform duration-200 hover:-translate-y-1"
-                style={{
-                  boxShadow: `8px 8px 0 ${lineColor}`,
-                }}
-              >
-                <RouteBadge slug={col.slug} size="lg" />
-                <div className="flex-1 min-w-0">
-                  <span className="font-display text-2xl font-black uppercase leading-none tracking-[-0.05em] text-cream transition-colors duration-300 group-hover:text-[#CCFF00]">
-                    {col.name}
-                  </span>
-                  <span className="mt-2 block font-body text-sm font-bold leading-snug text-muted">
-                    {col.description}
-                  </span>
-                </div>
-                <span className="zine-sticker hidden bg-[#E9E1D4] md:inline-flex">
-                  Shop
-                </span>
-              </Link>
-            </div>
-          );
-        })}
+        <div className="grid gap-px border border-border/40 bg-border/40 md:grid-cols-2">
+          {visible.map((collection) => (
+            <Link key={collection.id} href={`/collections/${collection.slug}`} className="group bg-void p-5 transition-colors hover:bg-charcoal md:p-7">
+              <RouteBadge slug={collection.slug} size="sm" />
+              <h3 className="mt-5 font-display text-2xl font-black uppercase leading-none tracking-[-0.04em] text-cream group-hover:text-accent">{collection.name}</h3>
+              <p className="mt-3 max-w-xl font-mono text-sm leading-relaxed text-muted">{collection.description}</p>
+              <span className="mt-5 inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase text-accent underline underline-offset-4">Shop {collection.name}</span>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

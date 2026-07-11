@@ -1,36 +1,18 @@
+import { PageHeader } from "@/components/ui/PageHeader";
 import { RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 
-export const metadata = {
-  title: "Returns",
-  description: "Return policy for After Hours Agenda orders.",
-};
+export const metadata = { title: "Returns", description: "Return policy for After Hours Agenda orders.", alternates: { canonical: "/returns" } };
 
 export default function ReturnsPage() {
   return (
-    <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="misprint font-display text-[clamp(4rem,10vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.08em] text-center mb-8">RETURNS</h1>
-        <div className="space-y-6 font-body text-cream/80 leading-relaxed">
-          <div className="zine-block p-6">
-            <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">30-Day Return Policy</h2>
-            <p className="font-bold">Not feeling it? No problem. We accept returns within <strong className="text-cream">{RETURNS_WINDOW}</strong> of delivery. Items must be unworn, unwashed, and in original condition with tags attached.</p>
-            <p className="mt-3 font-bold">{RETURNS_SUMMARY}</p>
-          </div>
-          <div className="zine-block p-6">
-            <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">How to Return</h2>
-            <ol className="list-decimal list-inside space-y-2 mt-2">
-              <li>Email us at <span className="text-cream">hello@afterhoursagenda.com</span> with your order number</li>
-              <li>We&apos;ll send you a return shipping label</li>
-              <li>Ship the item back within 7 days</li>
-              <li>Refund processed within 5-7 business days of receiving the item</li>
-            </ol>
-          </div>
-          <div className="zine-block p-6">
-            <h2 className="font-display text-3xl font-black uppercase leading-none tracking-[-0.05em] mb-3">Exchanges</h2>
-            <p className="font-bold">Wrong size? No stress. We&apos;ll swap it for free. Same process: email us and we&apos;ll take care of it.</p>
-          </div>
-        </div>
+    <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl">
+      <PageHeader eyebrow="Policy" title="Returns" description={RETURNS_SUMMARY} />
+      <div className="grid gap-px border border-border/40 bg-border/40 md:grid-cols-3">
+        <section className="bg-void p-6"><p className="text-xs font-bold uppercase tracking-[0.08em] text-accent">01 / Contact</p><h2 className="mt-3 font-display text-xl font-black uppercase">Start by email</h2><p className="mt-3 text-sm leading-relaxed text-muted">Email hello@afterhoursagenda.com within {RETURNS_WINDOW} of delivery. Include the order number and reason for return.</p></section>
+        <section className="bg-void p-6"><p className="text-xs font-bold uppercase tracking-[0.08em] text-accent">02 / Review</p><h2 className="mt-3 font-display text-xl font-black uppercase">Keep it unworn</h2><p className="mt-3 text-sm leading-relaxed text-muted">The item must be unworn, unwashed, and returned in its original condition. We will confirm instructions by email.</p></section>
+        <section className="bg-void p-6"><p className="text-xs font-bold uppercase tracking-[0.08em] text-accent">03 / Resolution</p><h2 className="mt-3 font-display text-xl font-black uppercase">Refund review</h2><p className="mt-3 text-sm leading-relaxed text-muted">Returned items are inspected before a refund is approved. Made-to-order production fees may be non-refundable after printing begins.</p></section>
       </div>
-    </div>
+      <p className="mt-6 border-l-2 border-accent pl-4 text-sm leading-relaxed text-muted">Need a different size? Contact us before returning the item. Replacement availability depends on the active catalog and production status.</p>
+    </div></div>
   );
 }

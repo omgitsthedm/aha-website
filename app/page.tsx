@@ -10,6 +10,7 @@ import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
 import type { Product, Collection } from "@/lib/utils/types";
 
 export const revalidate = 300; // ISR: 5 minutes
+export const metadata = { alternates: { canonical: "/" } };
 
 export default async function HomePage() {
   let products: Product[] = [];
@@ -25,29 +26,25 @@ export default async function HomePage() {
     console.error("Failed to fetch catalog:", error);
   }
 
-  // Most wanted: first 6 products (we'll refine this later)
-  const mostWanted = products.slice(0, 6);
-  // Latest drop: products from "New Arrivals" collection, or last 4
+  // Editorial catalog selection. No popularity ranking is implied.
+  const catalogEdit = products.slice(0, 6);
+  // Prefer products explicitly assigned to the New Arrivals collection.
   const newArrivalsId = "FAIJ7SE5DJP25N26ND3L76SU";
   const latestDrop = products
     .filter((p) => p.collectionIds.includes(newArrivalsId))
     .slice(0, 4);
-  const featured = latestDrop.length > 0 ? latestDrop : products.slice(-4);
+  const featured = latestDrop;
 
   return (
     <>
-      <Entrance />
+      <Entrance hasNewArrivals={latestDrop.length > 0} />
       <LatestDrop products={featured} />
-      <div className="platform-edge" />
       <ThePromise />
-      <div className="platform-edge" />
-      <MostWanted products={mostWanted} />
+      <MostWanted products={catalogEdit} />
       <EditorialGallery />
       <Agenda />
       <Collections collections={collections} />
-      <div className="platform-edge" />
       <GetOnTheList />
-      <div className="platform-edge" />
     </>
   );
 }

@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint --max-warnings=0 app components lib scripts tests",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
@@ -16,20 +16,21 @@
     "margin-check": "tsx scripts/margin-check.ts",
     "validate:all": "npm run validate:products && npm run validate:square-map && npm run validate:printful-v2-map && npm run margin-check",
     "create-product": "node scripts/create-product.mjs",
+    "sync:printful-costs": "tsx scripts/sync-printful-costs.ts",
+    "enforce:margin-policy": "tsx scripts/enforce-margin-policy.ts",
     "db:generate": "drizzle-kit generate",
     "db:apply": "netlify database migrations apply",
     "verify:commerce-readiness": "node ops/commerce-readiness.mjs",
     "verify:commerce-readiness:netlify": "node ops/commerce-readiness.mjs --netlify --context production",
+    "verify:commerce-capabilities:netlify": "node ops/commerce-capabilities.mjs",
     "verify:netlify-site": "bash ops/netlify-target-guard.sh site",
     "verify:netlify-live": "bash ops/netlify-target-guard.sh live"
   },
   "dependencies": {
-    "@gsap/react": "^2.1.2",
     "@neondatabase/serverless": "^0.10.4",
     "@netlify/database": "^1.1.0",
     "drizzle-orm": "^1.0.0-beta.22",
-    "gsap": "^3.14.2",
-    "next": "^14.2.35",
+    "next": "^15.5.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -42,14 +43,15 @@
     "autoprefixer": "^10.4.24",
     "drizzle-kit": "^1.0.0-beta.22",
     "eslint": "^8.57.1",
-    "eslint-config-next": "^14.2.35",
-    "postcss": "^8.5.6",
+    "eslint-config-next": "^15.5.20",
+    "postcss": "^8.5.10",
     "tailwindcss": "^3.4.19",
     "tsx": "^4.19.2",
     "typescript": "^5.9.3",
     "vitest": "^2.1.8"
   },
   "overrides": {
-    "glob": "10.5.0"
+    "glob": "10.5.0",
+    "postcss": "$postcss"
   }
 }

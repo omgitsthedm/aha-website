@@ -9,12 +9,13 @@ import type { Product, Collection } from "@/lib/utils/types";
 export const revalidate = 300;
 
 // Pages are generated on-demand and cached via ISR.
-// No generateStaticParams — avoids hammering Square API at build time.
+// No generateStaticParams. This avoids hammering Square API at build time.
 export const dynamicParams = true;
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
-    const product = await getProduct(params.slug);
+    const { slug } = await params;
+    const product = await getProduct(slug);
     if (!product) return { title: "Product Not Found" };
 
     const description =
@@ -25,6 +26,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     return {
       title: product.name,
       description,
+      alternates: { canonical: `/product/${product.slug}` },
       openGraph: {
         title: `${product.name} | After Hours Agenda`,
         description,
@@ -44,14 +46,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   let product: Product | null = null;
   let products: Product[] = [];
   let collections: Collection[] = [];
 
   try {
     [product, products, collections] = await Promise.all([
-      getProduct(params.slug),
+      getProduct(slug),
       getAllProducts(),
       getAllCollections(),
     ]);
@@ -71,7 +74,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
     )
     .slice(0, 4);
 
-  // Find collection info for accent color
+  // Find collection context for navigation and related discovery.
   const collection = collections.find((c) =>
     product!.collectionIds.includes(c.id)
   );

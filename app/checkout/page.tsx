@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default function CheckoutPage() {
-  // Public Web Payments config resolved server-side (no secrets — app id + location only).
+  // Public Web Payments config resolved server-side. This is app and location metadata only.
   const squareConfig = getSquareWebPaymentsConfig();
   return <CheckoutForm squareConfig={squareConfig} />;
 }

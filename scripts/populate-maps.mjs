@@ -1,7 +1,7 @@
 // Auto-populates data/{product-manifest,square-map,printful-v2-map,size-guides}.json from the
 // LIVE Square catalog + Printful v2 sync-products. Read-only against both APIs.
-// Join: normalized product NAME + upper-cased SIZE (catalog_variant_id is a shared blank id, not
-// per-design, so it can't be the key). Printful sync_variant_id carries the store's configured art.
+// Join: Printful sync_variant.external_id is the exact Square variation id. No product-name or
+// size-string guessing is allowed. Printful sync_variant_id carries the store's configured art.
 //
 // Run:  ( set -a; eval "$(netlify env:list --plain 2>/dev/null)"; set +a; node scripts/populate-maps.mjs )
 // or pass tokens via env. Tokens are never written to output. See MASTER-BUILD-INSTRUCTION §24.
@@ -22,9 +22,6 @@ const DRY = process.argv.includes("--dry");
 
 const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-// Strip Printful garment/style/color suffixes to recover the clean brand name that Square uses.
-const GARMENT = /\s*[-–]?\s*\b(white|black|navy|heather|premium|classic|unisex|men'?s|women'?s|short sleeve|long sleeve|staple|organic|eco|recycled|t-?shirt|tee|shirt|hoodie|sweatshirt|sweater|crewneck|pullover|zip|bubble-free stickers?|kiss-cut stickers?|stickers?|mug|hat|beanie|tote bag|tote|socks?|pin)\b.*$/i;
-const normName = (s) => String(s).toLowerCase().replace(GARMENT, "").replace(/[^a-z0-9]+/g, " ").trim();
 const parseVariant = (name) => { // "Product / Color / Size" | "Product / Size"
   const parts = String(name).split("/").map((p) => p.trim()).filter(Boolean);
   if (parts.length >= 3) return { color: parts[parts.length - 2], size: parts[parts.length - 1] };
@@ -63,9 +60,6 @@ async function square(path) {
   if (!res.ok) throw new Error(`Square ${path} ${res.status}`);
   return res.json();
 }
-// Both Printful stores: the Square-integrated store + the native (API) store used for CLI-created products.
-const STORES = Array.from(new Set([PF_STORE, process.env.PRINTFUL_NATIVE_STORE_ID || "697873"].filter(Boolean)));
-
 async function printful(path, storeId = PF_STORE) {
   for (let attempt = 0; attempt < 5; attempt++) {
     const res = await fetch(`https://api.printful.com/v2${path}`, {
@@ -79,9 +73,11 @@ async function printful(path, storeId = PF_STORE) {
 }
 
 async function main() {
-  // 1) Square: all items + variations, indexed by normalized name -> size -> {ids, price}
+  // 1) Square: all items + variations. Printful's external_id is the exact Square variation id,
+  // so mapping never depends on product-name or size-string guesses.
   console.log("→ pulling Square catalog…");
-  const squareByName = new Map(); // normName -> { itemName, objectId, sizes: Map(SIZE -> {variationId, price}) }
+  const squareByVariationId = new Map();
+  const squareItems = new Map();
   let cursor = "", sqVariations = 0;
   do {
     const q = `/catalog/list?types=ITEM${cursor ? `&cursor=${cursor}` : ""}`;
@@ -89,24 +85,29 @@ async function main() {
     for (const obj of d.objects || []) {
       const item = obj.item_data || {};
       if (/^(billable hour|discount)$/i.test(item.name || "")) continue; // default Square service items
-      const key = normName(item.name);
-      const entry = squareByName.get(key) || { itemName: item.name, objectId: obj.id, sizes: new Map() };
+      const entry = { itemName: item.name, objectId: obj.id };
+      squareItems.set(obj.id, entry);
       for (const v of item.variations || []) {
         const vd = v.item_variation_data || {};
-        const size = (vd.name || "OS").trim().toUpperCase();
-        entry.sizes.set(size, { variationId: v.id, price: (vd.price_money || {}).amount ?? null });
+        squareByVariationId.set(v.id, {
+          ...entry,
+          variationId: v.id,
+          variationName: vd.name || "OS",
+          price: (vd.price_money || {}).amount ?? null,
+        });
         sqVariations++;
       }
-      squareByName.set(key, entry);
     }
     cursor = d.cursor || "";
   } while (cursor);
-  console.log(`  Square items: ${squareByName.size} (${sqVariations} variations)`);
+  console.log(`  Square items: ${squareItems.size} (${sqVariations} variations)`);
 
   // 2) Printful: all sync-products + their sync-variants
   console.log("→ pulling Printful sync-products…");
-  const products = new Map(); // productName -> { name, variants: [...] }
-  for (const storeId of STORES) {
+  const products = new Map(); // Square item id -> { name, variants: Map(Square variation id -> data) }
+  // The current production token is scoped to the configured Square-integrated store. Passing an
+  // unrelated store id to v2 still returned the same product set, which previously duplicated data.
+  for (const storeId of [PF_STORE]) {
   let offset = 0, page;
   do {
     page = await printful(`/sync-products?limit=100&offset=${offset}`, storeId);
@@ -114,27 +115,28 @@ async function main() {
       const variants = await printful(`/sync-products/${p.id}/sync-variants`, storeId);
       const list = (variants.data || []).filter((v) => !v.is_ignored && v.catalog_variant_id);
       if (!list.length) continue;
-      // Match this Printful product to a Square item by normalized name (exact or prefix).
-      const pfKey = normName(p.name);
-      let sq = squareByName.get(pfKey);
-      if (!sq) { for (const [k, v] of squareByName) { if (pfKey.startsWith(k) || k.startsWith(pfKey)) { sq = v; break; } } }
-      const entry = products.get(p.name) || { name: sq?.itemName || p.name, printfulProductId: p.id, squareObjectId: sq?.objectId, variants: [] };
       for (const v of list) {
+        const sq = squareByVariationId.get(v.external_id);
+        const productKey = sq?.objectId || `printful-${storeId}-${p.id}`;
+        const entry = products.get(productKey) || {
+          key: productKey,
+          name: sq?.itemName || p.name,
+          printfulProductId: p.id,
+          squareObjectId: sq?.objectId,
+          variants: new Map(),
+        };
         const { color, size } = parseVariant(v.name);
         const sizeKey = (size || "OS").toUpperCase();
-        const sqSize = sq?.sizes.get(sizeKey);
-        entry.variants.push({
+        entry.variants.set(sq?.variationId || `${storeId}:${v.id}`, {
           catId: v.catalog_variant_id, syncVariantId: v.id, printfulStoreId: Number(storeId), size: sizeKey, color,
-          price: sqSize?.price ?? Math.round(Number(v.retail_price || 0) * 100),
-          squareObjectId: sq?.objectId, squareVariationId: sqSize?.variationId,
+          price: sq?.price ?? Math.round(Number(v.retail_price || 0) * 100),
+          squareObjectId: sq?.objectId, squareVariationId: sq?.variationId,
           placements: (v.placements || []).map((pl) => ({
             placement: pl.placement, technique: pl.technique,
-            fileUrl: (pl.layers || pl.files || []).map((l) => l.url).find(Boolean),
-            fileId: (pl.layers || pl.files || []).map((l) => l.file_id || l.id).find(Boolean),
           })),
         });
+        products.set(productKey, entry);
       }
-      products.set(p.name, entry);
     }
     offset += 100;
     await sleep(300);
@@ -145,19 +147,36 @@ async function main() {
   // 3) Compose manifest + maps
   const manifest = [], squareMap = {}, printfulMap = {}, sizeGuides = {};
   let matched = 0, unmatchedVariants = 0;
-  for (const p of products.values()) {
+  const productRows = Array.from(products.values()).map((p) => ({ ...p, variants: Array.from(p.variants.values()) }));
+  const slugGroups = new Map();
+  for (const p of productRows) {
+    const base = slugify(p.name);
+    const group = slugGroups.get(base) || [];
+    group.push(p);
+    slugGroups.set(base, group);
+  }
+  for (const group of slugGroups.values()) group.sort((a, b) => String(a.key).localeCompare(String(b.key)));
+
+  for (const p of productRows) {
     const type = typeFrom(p.name, p.variants.map((v) => v.size));
-    const slug = slugify(p.name);
+    const baseSlug = slugify(p.name);
+    const siblings = slugGroups.get(baseSlug);
+    const siblingIndex = siblings.indexOf(p);
+    const slug = siblingIndex === 0 ? baseSlug : `${baseSlug}-${slugify(String(p.key)).slice(-6)}`;
     const sgId = `sg-${type}`;
     sizeGuides[sgId] ||= { id: sgId, productType: type, fit: fitFor(type), measurements: [], note: "Product-specific measurements pending." };
     const variants = p.variants.map((v, i) => {
-      const vid = `${slug}-${slugify(v.color ? v.color + "-" + v.size : v.size) || i}`;
+      const optionKey = slugify(v.color ? `${v.color}-${v.size}` : v.size) || String(i);
+      const vid = `${slug}-${optionKey}-${v.catId || slugify(String(v.squareVariationId)).slice(-6)}`;
       // Fulfillment via sync_variant (store's configured art); catalog files come back empty from the API.
       const fulfillable = Boolean(v.syncVariantId);
       const mapped = Boolean(v.squareVariationId && v.catId && fulfillable);
       if (mapped) matched++; else unmatchedVariants++;
       squareMap[vid] = { squareCatalogObjectId: v.squareObjectId, squareVariationId: v.squareVariationId, squareLocationId: SQUARE_LOCATION };
-      printfulMap[vid] = { printfulCatalogVariantId: v.catId, printfulSyncVariantId: v.syncVariantId, printfulStoreId: v.printfulStoreId, printfulPlacements: v.placements, printfulRegionAvailability: ["north_america"], printfulSizeGuideReference: sgId };
+      const uniquePlacements = Array.from(new Map(v.placements.map((placement) => [
+        `${placement.placement}:${placement.technique}`, placement,
+      ])).values());
+      printfulMap[vid] = { printfulCatalogVariantId: v.catId, printfulSyncVariantId: v.syncVariantId, printfulStoreId: v.printfulStoreId, printfulPlacements: uniquePlacements, printfulRegionAvailability: ["north_america"], printfulSizeGuideReference: sgId };
       return {
         ahaVariantId: vid, ahaProductId: slug, sku: `${slug}-${v.catId}`, size: v.size || "OS",
         color: v.color || undefined,

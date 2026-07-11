@@ -1,128 +1,31 @@
-"use client";
-
-import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/utils/types";
-
-import { gsap, useGSAP } from "@/lib/gsap";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
-interface MostWantedProps {
-  products: Product[];
-}
-
-export function MostWanted({ products }: MostWantedProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      if (!sectionRef.current) return;
-
-      // Sign panel slides up as a unit
-      const panel = sectionRef.current.querySelector("[data-sign-panel]");
-      if (panel) {
-        gsap.from(panel, {
-          y: 20,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: panel,
-            start: "top 85%",
-            once: true,
-          },
-        });
-      }
-
-      // Product cards slide up with stagger
-      const cards = sectionRef.current.querySelectorAll("[data-card]");
-      gsap.from(cards, {
-        y: 60,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current.querySelector("[data-grid]"),
-          start: "top 85%",
-          once: true,
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
-
+export function MostWanted({ products }: { products: Product[] }) {
   if (products.length === 0) return null;
-
   return (
-    <section ref={sectionRef} className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
-      <div className="max-w-7xl mx-auto">
-        <div data-sign-panel className="mb-14">
-          <div className="mosaic-border" />
-          <div className="sign-panel-station">
-            <span className="sign-panel-station-text">Most Wanted</span>
-            <Link
-              href="/shop"
-              className="hidden min-h-11 items-center border-[3px] border-[#E9E1D4] bg-[#00FFFF] px-4 py-2 font-body text-xs font-bold uppercase tracking-[0.08em] text-[#10100F] shadow-[5px_5px_0_#FF006E] transition-transform hover:-translate-y-0.5 md:inline-flex"
-            >
-              View All
-            </Link>
+    <section className="relative z-[2] px-4 py-16 md:px-6 md:py-24">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 flex flex-col gap-4 border-t-2 border-accent pt-5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">The catalog edit</h2>
+            <p className="mt-3 font-mono text-sm text-muted">Six pieces selected from the current catalog.</p>
           </div>
-          <div className="mosaic-border" />
+          <Link href="/shop" className="inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase text-accent underline underline-offset-4">Shop all products</Link>
         </div>
 
-        <div data-grid className="grid grid-cols-2 gap-5 md:grid-cols-6 md:gap-7">
-          {products.slice(0, 6).map((product, i) => {
-            const isPrintful = isPrintfulImage(product.images[0]);
-            const spanClass =
-              i === 0 || i === 5 ? "md:col-span-3" : "md:col-span-2";
-
-            return (
-              <div key={product.id} data-card className={`product-card-hover ${spanClass}`}>
-                <Link href={`/product/${product.slug}`} className="group block">
-                  <div className="subway-poster aspect-[3/4] bg-surface">
-                    {product.images[0] ? (
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        fill
-                        unoptimized={isPrintful}
-                        className={`${
-                          isPrintful
-                          ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
-                          : "object-cover xerox-image"
-                      } transition-transform duration-700 group-hover:scale-[1.03]`}
-                        sizes="(max-width: 768px) 50vw, 33vw"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-surface" />
-                    )}
-
-                    {/* Poster info scrim */}
-                    <div className="subway-poster-scrim">
-                      <h3 className="font-display font-bold text-xs md:text-sm text-[#E8E4DE] uppercase tracking-[0.06em] truncate">
-                        {product.name}
-                      </h3>
-                      <p className="font-mono text-xs md:text-sm font-semibold text-[#FCCC0A] mt-1">
-                        {product.priceFormatted}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Mobile VIEW ALL */}
-        <div className="flex justify-center mt-16 md:hidden">
-          <Link
-            href="/shop"
-            className="metrocard-gradient inline-block px-8 py-3 font-body text-xs font-bold uppercase tracking-[0.15em] hover:brightness-110 transition-all"
-          >
-            View All
-          </Link>
+        <div className="grid border-t border-border/40 md:grid-cols-2">
+          {products.slice(0, 6).map((product) => (
+            <Link key={product.id} href={`/product/${product.slug}`} className="group grid min-h-28 grid-cols-[88px_1fr_auto] items-center gap-4 border-b border-border/40 py-4 md:odd:border-r md:odd:pr-5 md:even:pl-5">
+              <span className="relative block aspect-square overflow-hidden bg-surface">
+                {product.images[0] && <Image src={product.images[0]} alt="" fill className={isPrintfulImage(product.images[0]) ? "object-contain" : "object-cover"} sizes="88px" />}
+              </span>
+              <span className="font-mono text-sm font-bold leading-snug text-cream group-hover:text-accent">{product.name}</span>
+              <span className="font-mono text-sm tabular-nums text-muted">{product.priceFormatted}</span>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

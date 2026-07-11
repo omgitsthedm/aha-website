@@ -3,6 +3,7 @@ import { CartPageContent } from "@/components/cart/CartPageContent";
 export const metadata = {
   title: "Your Bag",
   description: "Review your shopping bag and proceed to checkout.",
+  robots: { index: false, follow: false },
 };
 
 export default function CartPage() {

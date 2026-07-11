@@ -8,16 +8,16 @@
       "note": "Product-specific measurements pending."
     },
     {
-      "id": "sg-hoodie",
-      "productType": "hoodie",
-      "fit": "Relaxed, midweight fleece — true to size.",
+      "id": "sg-accessory",
+      "productType": "accessory",
+      "fit": "One size.",
       "measurements": [],
       "note": "Product-specific measurements pending."
     },
     {
-      "id": "sg-accessory",
-      "productType": "accessory",
-      "fit": "One size.",
+      "id": "sg-hoodie",
+      "productType": "hoodie",
+      "fit": "Relaxed, midweight fleece — true to size.",
       "measurements": [],
       "note": "Product-specific measurements pending."
     },

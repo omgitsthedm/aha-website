@@ -8,6 +8,7 @@ function fullyMappedVariant(overrides: Partial<AhaVariant> = {}): AhaVariant {
     retailPrice: 4800, currency: "USD", status: "active", sortOrder: 0,
     squareCatalogObjectId: "SQ_OBJ", squareVariationId: "SQ_VAR",
     printfulCatalogVariantId: 4011, printfulSource: "catalog",
+    costEstimate: 2500,
     printfulRegionAvailability: ["north_america"],
     printfulPlacements: [{ placement: "front", technique: "dtg", fileUrl: "https://x/design.png" }],
     ...overrides,
@@ -59,5 +60,17 @@ describe("checkVariantPurchasable", () => {
     const v = fullyMappedVariant({ printfulSyncVariantId: 4616188601, printfulPlacements: [{ placement: "front", technique: "dtg" }] });
     const p = activeProduct({ variants: [v] });
     expect(checkVariantPurchasable(p, v)).toEqual({ ok: true, reasons: [] });
+  });
+
+  it("blocks sale without a verified fulfillment cost", () => {
+    const v = fullyMappedVariant({ costEstimate: undefined });
+    const p = activeProduct({ variants: [v] });
+    expect(checkVariantPurchasable(p, v).reasons).toContain("missing verified fulfillment cost");
+  });
+
+  it("blocks sale below the product-cost margin floor", () => {
+    const v = fullyMappedVariant({ retailPrice: 4000, costEstimate: 2800 });
+    const p = activeProduct({ variants: [v] });
+    expect(checkVariantPurchasable(p, v).reasons).toContain("product-cost margin below 35% floor");
   });
 });

@@ -1,6 +1,8 @@
 import { squareRequest } from "./client";
 import type { Product, Collection } from "@/lib/utils/types";
 import { mapSquareItemToProduct, mapSquareCategoryToCollection } from "@/lib/utils/mappers";
+import { loadProducts } from "@/lib/data/products";
+import { checkVariantPurchasable } from "@/lib/data/purchasable";
 
 interface SquareCatalogResponse {
   objects?: any[];
@@ -14,6 +16,29 @@ interface SquareSearchResponse {
   related_objects?: any[];
 }
 
+interface EligibleSquareItem {
+  slug: string;
+  variationIds: Set<string>;
+}
+
+/** Exact internal commerce registry used to keep unmapped or unprofitable Square rows off-sale. */
+export function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
+  const index = new Map<string, EligibleSquareItem>();
+  for (const product of loadProducts()) {
+    for (const variant of product.variants) {
+      if (!variant.squareCatalogObjectId || !variant.squareVariationId) continue;
+      if (!checkVariantPurchasable(product, variant).ok) continue;
+      const entry = index.get(variant.squareCatalogObjectId) ?? {
+        slug: product.slug,
+        variationIds: new Set<string>(),
+      };
+      entry.variationIds.add(variant.squareVariationId);
+      index.set(variant.squareCatalogObjectId, entry);
+    }
+  }
+  return index;
+}
+
 export async function getAllProducts(): Promise<Product[]> {
   let allItems: any[] = [];
   let allRelated: any[] = [];
@@ -23,7 +48,9 @@ export async function getAllProducts(): Promise<Product[]> {
     const body: Record<string, unknown> = {
       object_types: ["ITEM"],
       include_related_objects: true,
-      limit: 100,
+      // Square's full 100-item response exceeds Next's 2 MB data-cache entry limit. Smaller
+      // pages remain cacheable and prevent every route render from refetching the entire catalog.
+      limit: 40,
     };
     if (cursor) body.cursor = cursor;
 
@@ -45,6 +72,7 @@ export async function getAllProducts(): Promise<Product[]> {
     }
   }
 
+  const eligible = buildEligibleSquareIndex();
   return allItems
     .filter((item) => {
       if (item.is_deleted) return false;
@@ -61,9 +89,21 @@ export async function getAllProducts(): Promise<Product[]> {
         (v: any) => (v.item_variation_data?.price_money?.amount || 0) > 0
       );
       if (!hasPrice) return false;
-      return true;
+      return eligible.has(item.id);
     })
-    .map((item) => mapSquareItemToProduct(item, imageMap));
+    .map((item) => {
+      const registry = eligible.get(item.id)!;
+      const filtered = {
+        ...item,
+        item_data: {
+          ...item.item_data,
+          variations: (item.item_data?.variations || []).filter((variation: any) =>
+            registry.variationIds.has(variation.id)
+          ),
+        },
+      };
+      return mapSquareItemToProduct(filtered, imageMap, registry.slug);
+    });
 }
 
 export async function getProduct(slug: string): Promise<Product | null> {

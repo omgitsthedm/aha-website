@@ -12,7 +12,7 @@ for (const p of loadProducts()) {
     if (v.status !== "active") continue;
     const id = `${p.slug}/${v.sku}`;
     if (!(v.retailPrice > 0)) { errors.push(`[${id}] missing retail price`); continue; }
-    if (v.costEstimate == null) { missingCost++; continue; } // costs land in Phase 4 (Printful estimate) — warn, don't fail
+    if (v.costEstimate == null) { missingCost++; errors.push(`[${id}] missing verified fulfillment cost`); continue; }
     const margin = v.retailPrice - v.costEstimate;
     const ratio = margin / v.retailPrice;
     if (ratio < MIN_MARGIN_RATIO) {
@@ -24,7 +24,5 @@ if (errors.length) {
   console.error(`✗ margin-check: ${errors.length} issue(s):\n  - ${errors.join("\n  - ")}`);
   process.exit(1);
 }
-if (missingCost > 0) {
-  console.warn(`⚠ margin-check: ${missingCost} active variant(s) have no cost estimate yet (populated in Phase 4). Retail prices present.`);
-}
+if (missingCost > 0) console.error(`✗ margin-check: ${missingCost} active variant(s) have no verified cost estimate.`);
 console.log(`✓ margin-check: no active variant is below the ${(MIN_MARGIN_RATIO * 100).toFixed(0)}% margin floor`);

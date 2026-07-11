@@ -2,8 +2,9 @@
 // processing and deduped via webhook_events UNIQUE(provider, dedupe_key). Processing is best-effort
 // and idempotent; a webhook never creates fulfillment (that's the paid-order path) — it reconciles.
 import { db, isDbConfigured } from "@/lib/db/client";
-import { webhookEvents, orders, shipments, auditLog } from "@/db/schema";
+import { webhookEvents, orders, fulfillments, shipments, auditLog } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { syncOrderFulfillmentStatus } from "./fulfillment";
 
 type Json = Record<string, unknown>;
 const get = (o: unknown, ...path: string[]): unknown =>
@@ -13,14 +14,32 @@ const get = (o: unknown, ...path: string[]): unknown =>
 export async function recordWebhookEvent(input: {
   provider: string; eventId?: string | null; eventType?: string | null;
   signatureValid: boolean; rawPayload: unknown; dedupeKey: string;
-}): Promise<{ isNew: boolean }> {
-  if (!isDbConfigured()) return { isNew: true };
+}): Promise<{ isNew: boolean; eventRecordId: number | null }> {
+  if (!isDbConfigured()) return { isNew: true, eventRecordId: null };
   const inserted = await db().insert(webhookEvents).values({
     provider: input.provider, eventId: input.eventId ?? null, eventType: input.eventType ?? null,
     signatureValid: input.signatureValid, rawPayload: input.rawPayload as Json,
     dedupeKey: input.dedupeKey, processingStatus: "received",
   }).onConflictDoNothing().returning({ id: webhookEvents.id });
-  return { isNew: inserted.length > 0 };
+  return { isNew: inserted.length > 0, eventRecordId: inserted[0]?.id ?? null };
+}
+
+export async function markWebhookProcessed(eventRecordId: number | null): Promise<void> {
+  if (!eventRecordId || !isDbConfigured()) return;
+  await db().update(webhookEvents).set({
+    processingStatus: "processed", processedAt: new Date(), lastError: null,
+  }).where(eq(webhookEvents.id, eventRecordId));
+}
+
+export async function markWebhookFailed(eventRecordId: number | null, error: unknown): Promise<void> {
+  if (!eventRecordId || !isDbConfigured()) return;
+  const message = error instanceof Error ? error.message.slice(0, 500) : "Webhook processing failed";
+  const [row] = await db().select({ retryCount: webhookEvents.retryCount })
+    .from(webhookEvents).where(eq(webhookEvents.id, eventRecordId)).limit(1);
+  await db().update(webhookEvents).set({
+    processingStatus: "failed", retryCount: (row?.retryCount ?? 0) + 1,
+    lastError: message, processedAt: new Date(),
+  }).where(eq(webhookEvents.id, eventRecordId));
 }
 
 async function audit(orderId: number, action: string, newStatus: string, meta: Json): Promise<void> {
@@ -61,27 +80,53 @@ export async function applyPrintfulEvent(event: unknown): Promise<void> {
     get(event, "data", "order", "id") ?? get(event, "data", "shipment", "order_id") ?? ""
   );
   if (!printfulOrderId) return;
-  const [ord] = await db().select({ id: orders.id })
-    .from(orders).where(eq(orders.printfulOrderId, printfulOrderId)).limit(1);
-  if (!ord) return;
+  const [providerFulfillment] = await db().select({
+    id: fulfillments.id, orderId: fulfillments.orderId,
+  }).from(fulfillments).where(eq(fulfillments.printfulOrderId, printfulOrderId)).limit(1);
+  let orderId = providerFulfillment?.orderId ?? null;
+  if (!orderId) {
+    // Backward compatibility for orders created before per-store fulfillment rows existed.
+    const [legacyOrder] = await db().select({ id: orders.id })
+      .from(orders).where(eq(orders.printfulOrderId, printfulOrderId)).limit(1);
+    orderId = legacyOrder?.id ?? null;
+  }
+  if (!orderId) return;
 
   if (type === "package_shipped" || type === "shipment_sent") {
     const ship = get(event, "data", "shipment") as Json | undefined;
-    await db().update(orders)
-      .set({ fulfillmentStatus: "shipped", customerStatus: "Shipped", updatedAt: new Date() })
-      .where(eq(orders.id, ord.id));
+    if (providerFulfillment) {
+      await db().update(fulfillments).set({ status: "shipped", lastError: null, updatedAt: new Date() })
+        .where(eq(fulfillments.id, providerFulfillment.id));
+    }
     await db().insert(shipments).values({
-      orderId: ord.id, printfulShipmentId: String(ship?.id ?? ""),
+      orderId, printfulShipmentId: String(ship?.id ?? ""),
       carrier: String(ship?.carrier ?? "") || null, trackingNumber: String(ship?.tracking_number ?? "") || null,
       trackingUrl: String(ship?.tracking_url ?? "") || null, status: "shipped", shippedAt: new Date(),
       dataJson: ship ?? null,
     });
-    await audit(ord.id, "webhook:shipped", "shipped", { printfulOrderId });
+    const status = providerFulfillment ? await syncOrderFulfillmentStatus(orderId) : "shipped";
+    if (!providerFulfillment) {
+      await db().update(orders).set({ fulfillmentStatus: status, customerStatus: "Shipped", updatedAt: new Date() })
+        .where(eq(orders.id, orderId));
+    }
+    await audit(orderId, "webhook:shipped", status, { printfulOrderId });
   } else if (type === "order_failed" || type === "order_put_hold") {
-    await db().update(orders).set({ fulfillmentStatus: "manual_review", updatedAt: new Date() }).where(eq(orders.id, ord.id));
-    await audit(ord.id, "webhook:hold", "manual_review", { type, printfulOrderId });
+    if (providerFulfillment) {
+      await db().update(fulfillments).set({ status: "manual_review", lastError: type, updatedAt: new Date() })
+        .where(eq(fulfillments.id, providerFulfillment.id));
+      await syncOrderFulfillmentStatus(orderId);
+    } else {
+      await db().update(orders).set({ fulfillmentStatus: "manual_review", updatedAt: new Date() }).where(eq(orders.id, orderId));
+    }
+    await audit(orderId, "webhook:hold", "manual_review", { type, printfulOrderId });
   } else if (type === "order_canceled") {
-    await db().update(orders).set({ fulfillmentStatus: "canceled", customerStatus: "Canceled", updatedAt: new Date() }).where(eq(orders.id, ord.id));
-    await audit(ord.id, "webhook:canceled", "canceled", { printfulOrderId });
+    if (providerFulfillment) {
+      await db().update(fulfillments).set({ status: "canceled", lastError: null, updatedAt: new Date() })
+        .where(eq(fulfillments.id, providerFulfillment.id));
+      await syncOrderFulfillmentStatus(orderId);
+    } else {
+      await db().update(orders).set({ fulfillmentStatus: "canceled", customerStatus: "Canceled", updatedAt: new Date() }).where(eq(orders.id, orderId));
+    }
+    await audit(orderId, "webhook:canceled", "canceled", { printfulOrderId });
   }
 }

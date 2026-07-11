@@ -1,194 +1,68 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useCart } from "./CartProvider";
 import Image from "next/image";
 import Link from "next/link";
-import { WhiteBand } from "@/components/ui/WhiteBand";
+import { useCart } from "./CartProvider";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
-import {
-  TAX_LINE_COPY,
-  getFulfillmentSummary,
-  getShippingLineCopy,
-} from "@/lib/commerce/policies";
+import { formatCents } from "@/lib/utils/money";
+import { TAX_LINE_COPY, getFulfillmentSummary, getShippingLineCopy } from "@/lib/commerce/policies";
 
 export function CartDrawer() {
-  const { items, isOpen, toggleCart, removeItem, updateQuantity, totalFormatted, total } =
-    useCart();
+  const { items, isOpen, toggleCart, removeItem, updateQuantity, totalFormatted, total } = useCart();
   const [mounted, setMounted] = useState(false);
-  const shippingLine = getShippingLineCopy(total);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Close on Escape key
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        toggleCart();
-      }
-    },
-    [isOpen, toggleCart]
-  );
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
-
-  const drawer = (
-    <>
-      {/* Backdrop */}
-      <div
-        className={`fixed inset-0 z-[9999] bg-[#10100F]/78 backdrop-blur-sm transition-opacity duration-300 ${
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={toggleCart}
-      />
-
-      {/* Drawer */}
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="Shopping bag"
-        className={`fixed top-0 right-0 z-[9999] h-full w-full max-w-md border-l-[5px] border-[#E9E1D4] bg-[#10100F] transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-4xl font-black uppercase leading-none tracking-[-0.06em]">Your Bag</h2>
-              <button
-                onClick={toggleCart}
-                className="min-h-11 border-[3px] border-[#E9E1D4] px-3 font-body text-xs font-bold uppercase text-muted transition-colors hover:bg-[#E9E1D4] hover:text-[#10100F]"
-                aria-label="Close cart"
-              >
-                Close
-              </button>
-            </div>
-            <WhiteBand />
-          </div>
-
-          {/* Items */}
-          <div className="flex-1 overflow-y-auto px-6 py-4">
-            {items.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <p className="font-body font-medium text-sm text-muted mb-4">
-                  Your bag is empty. Start with the full catalog; we will keep
-                  your picks in this browser.
-                </p>
-                <Link
-                  href="/shop"
-                  onClick={toggleCart}
-                  className="metrocard-gradient px-5 py-3 font-body text-xs font-bold uppercase tracking-[0.1em]"
-                >
-                  Start Shopping
-                </Link>
-              </div>
-            ) : (
-              <ul className="space-y-4">
-                {items.map((item) => (
-                  <li
-                    key={item.variationId}
-                    className="zine-block flex gap-4 p-4"
-                  >
-                    {item.image && (
-                      <div className="relative w-20 h-20 bg-elevated overflow-hidden flex-shrink-0 border-[3px] border-[#E9E1D4]">
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          fill
-                          unoptimized={isPrintfulImage(item.image)}
-                          className={isPrintfulImage(item.image) ? "object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]" : "object-cover xerox-image"}
-                          sizes="80px"
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="truncate font-display text-lg font-black uppercase leading-none tracking-[-0.04em]">{item.name}</h3>
-                      <p className="text-xs text-muted mt-1 font-bold uppercase">{item.variationName}</p>
-                      <p className="font-mono text-sm mt-1 font-bold">{item.priceFormatted}</p>
-                      <div className="flex items-center gap-3 mt-2">
-                        <button
-                          onClick={() =>
-                            updateQuantity(item.variationId, item.quantity - 1)
-                          }
-                          className="w-11 h-11 flex items-center justify-center border-[3px] border-[#E9E1D4] font-mono text-sm font-bold text-muted hover:bg-[#E9E1D4] hover:text-[#10100F] transition-all duration-200"
-                          aria-label={`Decrease quantity of ${item.name}`}
-                        >
-                          &minus;
-                        </button>
-                        <span className="font-mono text-xs w-6 text-center" aria-live="polite">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() =>
-                            updateQuantity(item.variationId, item.quantity + 1)
-                          }
-                          className="w-11 h-11 flex items-center justify-center border-[3px] border-[#E9E1D4] font-mono text-sm font-bold text-muted hover:bg-[#E9E1D4] hover:text-[#10100F] transition-all duration-200"
-                          aria-label={`Increase quantity of ${item.name}`}
-                        >
-                          +
-                        </button>
-                        <button
-                          onClick={() => removeItem(item.variationId)}
-                          className="ml-auto font-body font-bold text-xs text-muted hover:text-[#FF006E] transition-colors uppercase underline underline-offset-4"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {/* Footer */}
-          {items.length > 0 && (
-            <div className="px-6 py-4 space-y-4">
-              <WhiteBand />
-              {/* Subtotal */}
-              <div className="flex justify-between items-center py-3">
-                <span className="font-body font-medium text-sm text-muted uppercase tracking-[0.1em]">
-                  Subtotal
-                </span>
-                <span className="font-mono text-lg font-bold text-cream tracking-wider">
-                  {totalFormatted}
-                </span>
-              </div>
-              <p className="text-xs text-muted font-body mb-2 font-bold">
-                Shipping estimate: {shippingLine}
-              </p>
-              <p className="text-xs text-muted font-body mb-4 font-bold">
-                Tax estimate: {TAX_LINE_COPY}
-              </p>
-              {/* Checkout button */}
-              <Link
-                href="/cart"
-                onClick={toggleCart}
-                className="metrocard-gradient block w-full py-3 font-body font-bold text-center text-sm tracking-wide transition-transform hover:-translate-y-1"
-              >
-                Review Bag
-              </Link>
-              {/* Trust line */}
-              <p className="font-body font-medium text-[11px] text-muted text-center pt-3 tracking-[0.1em]">
-                Secure Checkout / Free Shipping / Thirty-Day Returns
-              </p>
-              <p className="font-body text-[11px] text-muted text-center leading-relaxed">
-                {getFulfillmentSummary()}
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </>
-  );
+    if (!isOpen) return;
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusable = panelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+    focusable?.[0]?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { toggleCart(); return; }
+      if (event.key !== "Tab" || !focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", onKeyDown); previouslyFocused?.focus(); };
+  }, [isOpen, toggleCart]);
 
   if (!mounted || !isOpen) return null;
-  return createPortal(drawer, document.body);
+
+  return createPortal(
+    <div className="fixed inset-0 z-[9999]">
+      <button type="button" aria-label="Close shopping bag" className="absolute inset-0 h-full w-full cursor-default bg-void/80" onClick={toggleCart} />
+      <div ref={panelRef} role="dialog" aria-modal="true" aria-labelledby="bag-drawer-title" className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col border-l border-border/60 bg-void">
+        <header className="flex items-center justify-between border-b border-border/40 px-5 py-4">
+          <div><p className="text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Shopping bag</p><h2 id="bag-drawer-title" className="mt-1 font-display text-2xl font-black uppercase">Your bag</h2></div>
+          <button type="button" onClick={toggleCart} className="min-h-11 border border-border/60 px-3 text-xs font-bold uppercase hover:border-accent">Close</button>
+        </header>
+
+        <div className="flex-1 overflow-y-auto px-5">
+          {items.length === 0 ? (
+            <div className="flex h-full flex-col items-start justify-center"><h3 className="font-display text-2xl font-black uppercase">Nothing here yet</h3><p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">Items save in this browser until you remove them or complete checkout.</p><Link href="/shop" onClick={toggleCart} className="primary-action mt-6 min-h-11 px-5 py-3 text-xs">Open shop</Link></div>
+          ) : (
+            <ul className="divide-y divide-border/40">
+              {items.map((item) => (
+                <li key={item.variationId} className="grid grid-cols-[5rem_1fr] gap-4 py-5">
+                  <Link href={`/product/${item.slug || item.productId}`} onClick={toggleCart} className="relative aspect-square overflow-hidden border border-border/40 bg-surface">{item.image && <Image src={item.image} alt={item.name} fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="80px" />}</Link>
+                  <div className="min-w-0"><Link href={`/product/${item.slug || item.productId}`} onClick={toggleCart} className="block truncate font-display text-base font-black uppercase hover:text-accent">{item.name}</Link><p className="mt-1 text-xs font-bold uppercase text-muted">{item.variationName}</p><p className="mt-1 font-mono text-xs font-bold">{formatCents(item.price * item.quantity)}</p><div className="mt-3 flex items-center gap-2"><button type="button" onClick={() => updateQuantity(item.variationId, item.quantity - 1)} className="flex h-11 w-11 items-center justify-center border border-border/60 hover:border-accent" aria-label={`Decrease quantity of ${item.name}`}>&minus;</button><span className="w-6 text-center font-mono text-xs" aria-live="polite">{item.quantity}</span><button type="button" onClick={() => updateQuantity(item.variationId, item.quantity + 1)} className="flex h-11 w-11 items-center justify-center border border-border/60 hover:border-accent" aria-label={`Increase quantity of ${item.name}`}>+</button><button type="button" onClick={() => removeItem(item.variationId)} className="ml-auto min-h-11 text-xs font-bold uppercase text-muted underline underline-offset-4 hover:text-accent">Remove</button></div></div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {items.length > 0 && <footer className="border-t border-border/40 px-5 py-5"><div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Subtotal</span><strong className="font-mono text-lg">{totalFormatted}</strong></div><p className="mt-3 text-xs leading-relaxed text-muted">Shipping: {getShippingLineCopy(total)}. Tax: {TAX_LINE_COPY}.</p><Link href="/cart" onClick={toggleCart} className="primary-action mt-5 flex min-h-12 w-full items-center justify-center px-5 py-3 text-sm">Review bag</Link><p className="mt-3 text-center text-[11px] leading-relaxed text-muted">{getFulfillmentSummary()}</p></footer>}
+      </div>
+    </div>, document.body
+  );
 }

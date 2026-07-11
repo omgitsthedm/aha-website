@@ -64,7 +64,7 @@ Public/internal runtime:
 
 Known non-secret production values observed:
 
-- `NEXT_PUBLIC_SITE_URL=https://www.afterhoursagenda.com`
+- `NEXT_PUBLIC_SITE_URL=https://afterhoursagenda.com`
 - `SQUARE_ENVIRONMENT=production`
 - `AHA_FULFILLMENT_MODE=manual`
 - `SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square`
