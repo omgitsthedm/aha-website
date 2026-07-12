@@ -26,6 +26,8 @@ npm run verify:netlify-live        # live serves AHA content
 npm run verify:commerce-readiness:netlify
 ```
 
+Production operations: `/ops` (credential retrieval and runbook: `docs/commerce-operations.md`). Customer order status: `/track-order`.
+
 ## Structure
 ```
 app/            App Router pages + api routes (checkout, webhooks, commerce/readiness)

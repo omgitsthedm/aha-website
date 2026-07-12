@@ -92,6 +92,10 @@
 
 ## QA-PENDING
 
+- Complete one controlled live purchase with David entering payment details, then inspect the DB order/payment, Printful draft, provider costs, and webhook reconciliation before enabling automatic Printful confirmation.
+- Configure an AHA-owned transactional email provider/domain for order, production, exception, and tracking email.
+- Verify the new production operations dashboard, scheduled reconciliation function, customer order lookup, and both signed provider-test controls after the Git-backed release.
+
 - Deploy and verify the committed Square webhook URL alignment, then send a Square test notification. Rotate the signature key only if the signed test proves the current key is mismatched.
 - Add real Square Sandbox credentials scoped only to deploy previews/staging; production credentials are now production-only and secret where appropriate.
 - Create and approve a sandbox checkout test plan.

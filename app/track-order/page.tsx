@@ -1,0 +1,4 @@
+import { TrackOrderForm } from "@/components/order/TrackOrderForm";
+
+export const metadata = { title: "Track Your Order", description: "Check an After Hours Agenda order using its confirmation number and checkout email.", alternates: { canonical: "/track-order" } };
+export default function TrackOrderPage() { return <main className="px-4 pb-24 pt-28 md:px-6"><div className="mx-auto max-w-3xl border-t-2 border-accent pt-5"><p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">Order status</p><h1 className="mt-4 font-display text-[clamp(2.75rem,8vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">Track your order</h1><p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">Use the order number shown after checkout and the same email used for payment.</p><TrackOrderForm /></div></main>; }
