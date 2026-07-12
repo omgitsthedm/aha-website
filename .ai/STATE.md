@@ -16,7 +16,8 @@
 - Updated: 2026-07-11 22:00 MST
 - Updated By: Codex
 - Basis: Aside AI cutover handoff plus Codex verification from local Git, GitHub PR metadata, Netlify CLI/API, DNS resolver checks, and public HTTPS checks.
-- Current production HEAD: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
+- Current production source: `origin/main` (verify the deployed commit through the Netlify API before acting).
+- Verified commerce runtime baseline: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
 - Git HEAD at onboarding: `23018a0`
 
 ## Rules Version
@@ -44,8 +45,8 @@
 - Default Netlify URL: `https://afterhoursagenda.netlify.app/`
 - Live title verified by guard: `After Hours Agenda | Independent NYC Streetwear`
 - Host: Netlify for apex, `www`, and `.netlify.app`.
-- Current deployed commit: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
-- Latest verified production deploy: `6a531ed0c4b21f402bd3a30f`, ready, production, branch `main`.
+- Current deployed source: Git-backed `origin/main`.
+- Verified commerce runtime deploy: `6a531ed0c4b21f402bd3a30f`, ready, production, branch `main`; newer documentation-only deploys do not change runtime behavior.
 - Netlify site: `afterhoursagenda`
 - Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
@@ -176,7 +177,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Agent Directive
 
-Continue from clean, pushed `main` at `a27b28ca1c236e88ebd60ad62e8695447adafa41`. Production Square, Printful webhooks, Netlify Database, `/ops`, `/track-order`, and reconciliation are verified. Do not repeat provider setup. Next: configure transactional email, then have David personally enter payment details for one controlled production order. Inspect the Square payment, database records, and Printful draft before changing any fulfillment confirmation flag.
+Continue from clean, pushed `origin/main`; verify the current deploy SHA before acting. Production Square, Printful webhooks, Netlify Database, `/ops`, `/track-order`, and reconciliation are verified at commerce runtime baseline `a27b28c`. Do not repeat provider setup. Next: configure transactional email, then have David personally enter payment details for one controlled production order. Inspect the Square payment, database records, and Printful draft before changing any fulfillment confirmation flag.
 
 ## Emergency / Bypass Notes
 

@@ -24,14 +24,15 @@ This project is governed by `docs/MASTER-BUILD-INSTRUCTION.md` (the full ecommer
 ## Current Production Truth
 
 - Canonical branch: `main`
-- Current deployed commit: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
+- Current deployed source: Git-backed `origin/main`; verify the exact SHA through Netlify before release work.
+- Verified commerce runtime baseline: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
 - Netlify project: `afterhoursagenda`
 - Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
 - Default Netlify URL: `https://afterhoursagenda.netlify.app`
 - Primary custom URL: `https://afterhoursagenda.com`
 - `www` redirects to apex: `https://www.afterhoursagenda.com -> https://afterhoursagenda.com`
-- Latest verified production deploy id: `6a531ed0c4b21f402bd3a30f`
+- Verified commerce runtime deploy id: `6a531ed0c4b21f402bd3a30f`; newer documentation-only deploys do not change runtime behavior.
 - PRs #4-#6 shipped protected commerce operations, the managed database binding, and current Square webhook test reporting.
 - All required GitHub, Netlify, security, product-flow, checkout-flow, and performance checks passed.
 
