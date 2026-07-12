@@ -9,7 +9,13 @@ function netlifyEnv(name) {
     "env:get", name, "--site", TARGET_SITE_ID, "--context", "production",
   ], { encoding: "utf8" });
   if (result.status !== 0) throw new Error(`Could not read ${name} from Netlify.`);
-  return result.stdout.trim();
+  const value = result.stdout.trim();
+  if (/^\*{8,}.{1,8}$/.test(value)) {
+    throw new Error(
+      `${name} is an unreadable Netlify secret. Use the protected production /api/ops/provider-health check instead.`,
+    );
+  }
+  return value;
 }
 
 async function jsonRequest(url, init) {
