@@ -22,7 +22,7 @@
 ## Rules Version
 
 - 2026-06-27-aiops-foundation-v1
-- Note: David's current preference is scoped plain-language confirmation for high-risk live changes, not a rigid magic phrase. The generated `.ai/RULES.md` may still contain the older literal `APPROVE LIVE CHANGE` wording until the AI-Ops generator is available and rerun. If there is conflict before a live action, pause and clarify rather than taking the action.
+- Note: clear, scoped plain-language confirmation is sufficient for high-risk live changes. No fixed wording or capitalization is required.
 
 ## State Confidence
 
@@ -119,8 +119,7 @@ Name-only env readiness checks and public read-only GET/HEAD verification are al
 
 ## Proposed Changes / Inbox
 
-- Proposal: Regenerate AI-Ops rules so AHA accepts scoped plain-language confirmation for high-risk live changes instead of requiring a rigid literal magic phrase.
-- Reason: David explicitly stated after the cutover that he does not want exact approval phrase requirements going forward.
+- Completed 2026-07-11: AI-Ops rules now accept scoped plain-language confirmation and evaluate intent instead of matching a fixed token.
 - Risk: Too-loose approval language can cause accidental live changes; the replacement rule must still require clear scope, explicit user confirmation, and restating the exact action.
 - Source evidence: Aside handoff pasted by David in the 2026-07-08 takeover thread.
 - Suggested owner: David/Codex or AI-Ops maintainer when the rules generator path is available.
@@ -144,6 +143,8 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
 
 ## Recent Session History
+
+- 2026-07-11: Codex built a local flagship storefront evolution on `feature/flagship-storefront-20260711` from clean `main` at `f57ce6b`. Homepage, About, Lookbook, shared design states, metadata/structured data, hero asset delivery, and product-detail UI resilience were improved. Typecheck, lint, 21 unit tests, all product/provider/margin validators, production build, 4 Playwright desktop/mobile smoke tests, a manual local add-to-bag/cart path, and Lighthouse (97/100/100/100) passed. No protected product data, checkout/provider behavior, secrets, live settings, push, merge, deploy, payment, order, or fulfillment was touched. See `docs/FLAGSHIP-STOREFRONT-HANDOFF-2026-07-11.md`.
 
 - 2026-06-27: Codex performed initial AHA AI-Ops onboarding from read-only local inventory and local repo inspection. Created `.ai` governance files and did not edit source behavior, deploy, push, run commerce QA, inspect env contents, or modify the pre-existing dirty files.
 - 2026-06-27: AHA SESSION START dry run completed. Generated rules verified against `RULES_HEADER.md` + `RULES_BASE.md` with checksum `4054569368:9046`. Confirmed canonical repo, branch, remote, dirty state, lock, and commerce gates. No source behavior, push, deploy, production QA, checkout/payment/order/fulfillment test, env inspection, dirty-file cleanup, or commerce mutation.

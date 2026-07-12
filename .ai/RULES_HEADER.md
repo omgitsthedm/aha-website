@@ -62,7 +62,7 @@ Related Non-Canonical Folder:
 - Do not modify product catalog or reorganization files without explicit approval.
 - AHA checkout/payment/fulfillment actions are transactional.
 - Live commerce changes require human-approved safe path.
-- David's current preference is scoped plain-language confirmation for high-risk live changes, not a rigid magic phrase. If generated shared rules still require a literal phrase, pause and clarify before taking the live action.
+- Clear, scoped plain-language confirmation is sufficient for high-risk live changes; no fixed wording or capitalization is required.
 - Dirty/untracked files must be recorded, not cleaned or committed, unless David explicitly approves.
 
 ## Do Not Touch

@@ -33,14 +33,14 @@ export default async function HomePage() {
   const latestDrop = products
     .filter((p) => p.collectionIds.includes(newArrivalsId))
     .slice(0, 4);
-  const featured = latestDrop;
+  const featured = latestDrop.length > 0 ? latestDrop : products.slice(6, 11);
 
   return (
     <>
       <Entrance hasNewArrivals={latestDrop.length > 0} />
-      <LatestDrop products={featured} />
+      <LatestDrop products={featured} isNewArrivalEdit={latestDrop.length > 0} />
       <ThePromise />
-      <MostWanted products={catalogEdit} />
+      <MostWanted products={catalogEdit} totalProducts={products.length} />
       <EditorialGallery />
       <Agenda />
       <Collections collections={collections} />

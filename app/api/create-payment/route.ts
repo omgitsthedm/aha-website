@@ -137,7 +137,7 @@ export async function POST(request: Request) {
     await markOrderFailed(order.orderId, err instanceof Error ? err.message : "charge error").catch(() => {});
     console.error("Square payment failed:", err);
     return NextResponse.json(
-      { error: "We couldn't process the payment. Your card was not charged — try again or use another method." },
+      { error: "We couldn't process the payment. Your card was not charged. Try again or use another method." },
       { status: 402 }
     );
   }

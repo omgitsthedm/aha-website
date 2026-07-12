@@ -1,15 +1,19 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export function Agenda() {
   return (
-    <section className="relative z-[2] border-y border-border/40 bg-charcoal px-4 py-16 md:px-6 md:py-24">
-      <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-[180px_1fr] md:items-center">
-        <Image src="/brand/sheep-full.svg" alt="" width={180} height={180} className="h-32 w-32 opacity-90 md:h-44 md:w-44" aria-hidden="true" />
-        <div>
-          <h2 className="font-display text-[clamp(2.8rem,7vw,6rem)] font-black uppercase leading-[0.84] tracking-[-0.07em]">Life after the expected agenda</h2>
-          <p className="mt-6 max-w-3xl font-mono text-base leading-relaxed text-muted">
-            Built for late walks, basement shows, bad ideas, good books, and anyone who would rather be specific than polished. Every piece starts as a point of view, then gets made to order.
+    <section className="relative z-[2] overflow-hidden px-4 py-20 md:px-6 md:py-32">
+      <div className="mx-auto grid max-w-[1440px] gap-10 md:grid-cols-[0.7fr_1.3fr] md:items-center">
+        <div className="relative mx-auto aspect-square w-full max-w-sm border border-border/40 bg-cream p-8 md:mx-0">
+          <Image src="/brand/sheep-full.svg" alt="After Hours Agenda black sheep" fill className="object-contain p-8" sizes="384px" />
+        </div>
+        <div className="min-w-0">
+          <h2 className="break-words font-display text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">Follow nobody&apos;s schedule</h2>
+          <p className="mt-7 max-w-2xl font-mono text-base leading-relaxed text-muted">
+            After Hours Agenda began with a simple idea: the hours outside the plan belong to you. Every piece turns that idea into something you can wear.
           </p>
+          <Link href="/about" className="mt-7 inline-flex min-h-11 items-center border border-border/60 px-5 py-3 font-mono text-xs font-bold uppercase text-cream transition-colors hover:border-accent hover:text-accent">Read the story</Link>
         </div>
       </div>
     </section>
