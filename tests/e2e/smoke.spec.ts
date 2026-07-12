@@ -31,3 +31,18 @@ test("@security checkout ships an enforced Square-compatible CSP", async ({ page
   expect(csp).toContain("https://sandbox.web.squarecdn.com");
   expect(csp).toContain("https://pci-connect.squareup.com");
 });
+
+test("@operations customer order tracking fails closed without a match", async ({ page }) => {
+  await page.goto("/track-order");
+  await expect(page).toHaveTitle(/Track Your Order/i);
+  await page.getByLabel("Order number").fill("AHA-NOT-A-REAL-ORDER");
+  await page.getByLabel("Checkout email").fill("nobody@example.com");
+  await page.getByRole("button", { name: "Check order status" }).click();
+  await expect(page.locator("p[role='alert']")).toContainText(/No matching order|temporarily unavailable/);
+});
+
+test("@operations private commerce dashboard requires sign in", async ({ page }) => {
+  await page.goto("/ops");
+  await expect(page).toHaveURL(/\/ops\/login/);
+  await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
+});

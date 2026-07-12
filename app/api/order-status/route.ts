@@ -7,7 +7,8 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => ({})) as { orderNumber?: string; email?: string };
   const orderNumber = body.orderNumber?.trim().toUpperCase();
   const email = body.email?.trim().toLowerCase();
-  if (!orderNumber || !email || !isDbConfigured()) return NextResponse.json({ error: "Enter the order number and checkout email." }, { status: 400 });
+  if (!orderNumber || !email) return NextResponse.json({ error: "Enter the order number and checkout email." }, { status: 400 });
+  if (!isDbConfigured()) return NextResponse.json({ error: "Order status is temporarily unavailable. Contact support if you need help now." }, { status: 503 });
   const [order] = await db().select().from(orders).where(and(eq(orders.externalOrderNumber, orderNumber), eq(orders.email, email))).limit(1);
   if (!order) return NextResponse.json({ error: "No matching order was found. Check both entries or contact support." }, { status: 404 });
   const [items, tracking] = await Promise.all([
