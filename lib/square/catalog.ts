@@ -7,7 +7,7 @@ import { cache } from "react";
 import { buildPreviewCollections, buildPreviewProducts } from "@/lib/data/preview-catalog";
 
 function previewCatalogFallbackAllowed(): boolean {
-  return Boolean(process.env.CONTEXT && process.env.CONTEXT !== "production");
+  return process.env.AHA_PREVIEW_CATALOG === "true";
 }
 
 interface SquareCatalogResponse {
