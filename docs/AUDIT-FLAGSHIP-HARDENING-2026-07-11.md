@@ -93,6 +93,7 @@ Authorized follow-up began 2026-07-11 at 20:11 MST.
 - **Catalog pagination:** `/shop?page=N` now renders 24 products per crawlable page with unique titles/canonicals and accessible page navigation.
 - **Product storytelling:** customer-visible PDP copy and product schema now use unique product, garment, collection, fabric, policy, and shipping context rather than generic upstream Printful prose.
 - **Netlify deploy protection:** `prevent_non_git_prod_deploys` is enabled and verified through the site API.
+- **Published review:** draft PR #3 targets `main`; deploy preview `821966e` passed all eight desktop/mobile Playwright checks. GitHub did not start any Actions jobs because the account is locked for a billing issue, so required checks and the production merge remain blocked outside the repository.
 
 ## Validation checklist
 
