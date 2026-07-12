@@ -8,6 +8,7 @@ on:
 
 env:
   SQUARE_ENVIRONMENT: sandbox
+  AHA_PREVIEW_CATALOG: "true"
   PRINTFUL_ALLOW_CONFIRM_ORDERS: "false"
   PRINTFUL_LIVE_MODE: "false"
 
@@ -21,9 +22,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: "20", cache: "npm" }
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: npm run build
-      - run: npx playwright test --grep @product --pass-with-no-tests
+      - run: npx playwright test --grep '@product|@catalog' --pass-with-no-tests
 
   cart-flow:
     runs-on: ubuntu-latest
@@ -32,7 +33,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: "20", cache: "npm" }
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: npm run build
       - run: npx playwright test --grep @cart --pass-with-no-tests
 
@@ -43,6 +44,6 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: "20", cache: "npm" }
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: npm run build
       - run: npx playwright test --grep @checkout --pass-with-no-tests

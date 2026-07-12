@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 
-export const metadata = { title: "Returns", description: "Return policy for After Hours Agenda orders.", alternates: { canonical: "/returns" } };
+export const metadata = { title: "Returns and Refund Review", description: "Read the After Hours Agenda return process, eligibility conditions, timing, and refund review terms for unworn made-to-order apparel before purchasing.", alternates: { canonical: "/returns" } };
 
 export default function ReturnsPage() {
   return (

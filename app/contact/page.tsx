@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 
-export const metadata = { title: "Contact", description: "Contact After Hours Agenda for order, product, or accessibility support.", alternates: { canonical: "/contact" } };
+export const metadata = { title: "Customer and Order Support", description: "Contact After Hours Agenda for help with an order, product, fit, return, or accessibility issue. Include the order number, but never send card details.", alternates: { canonical: "/contact" } };
 
 export default function ContactPage() {
   return (

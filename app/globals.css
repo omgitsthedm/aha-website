@@ -141,6 +141,37 @@
   background-size: 48px 48px;
 }
 
+/* One orchestrated entrance establishes hierarchy without animating every section. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy-enter {
+    animation: aha-enter-copy 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-visual-enter {
+    animation: aha-enter-visual 650ms 80ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes aha-enter-copy {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+  }
+
+  @keyframes aha-enter-visual {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.985);
+    }
+  }
+}
+
+/* Skip layout and paint work for distant homepage sections until needed. */
+main > section:not(:first-child) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
 /* Primary and secondary action language */
 .primary-action {
   position: relative;

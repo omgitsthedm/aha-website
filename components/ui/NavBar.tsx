@@ -88,8 +88,15 @@ export function NavBar() {
         </div>
       </nav>
 
-      {menuOpen && (
-        <div id="mobile-nav-menu" ref={menuRef} role="dialog" aria-modal="true" aria-label="Navigation menu" className="fixed inset-0 z-[90] overflow-y-auto bg-void px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-28 lg:hidden">
+      <div
+        id="mobile-nav-menu"
+        ref={menuRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        hidden={!menuOpen}
+        className="fixed inset-0 z-[90] overflow-y-auto bg-void px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-28 lg:hidden"
+      >
           <div className="mx-auto max-w-xl">
             <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">Browse</p>
             <div className="grid border-t border-border/40">
@@ -109,8 +116,7 @@ export function NavBar() {
               ))}
             </div>
           </div>
-        </div>
-      )}
+      </div>
     </>
   );
 }

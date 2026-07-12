@@ -13,16 +13,16 @@
 
 ## Current Stamp
 
-- Updated: 2026-07-08 21:57 MST
+- Updated: 2026-07-11 20:46 MST
 - Updated By: Codex
 - Basis: Aside AI cutover handoff plus Codex verification from local Git, GitHub PR metadata, Netlify CLI/API, DNS resolver checks, and public HTTPS checks.
-- Current HEAD: `13c25e83f696b19c7d9230ec4766900cc5485451`
+- Current hardening HEAD: `821966e4292f638dfcecdeade94a01c9fe2635b4`
 - Git HEAD at onboarding: `23018a0`
 
 ## Rules Version
 
 - 2026-06-27-aiops-foundation-v1
-- Note: David's current preference is scoped plain-language confirmation for high-risk live changes, not a rigid magic phrase. The generated `.ai/RULES.md` may still contain the older literal `APPROVE LIVE CHANGE` wording until the AI-Ops generator is available and rerun. If there is conflict before a live action, pause and clarify rather than taking the action.
+- Note: clear, scoped plain-language confirmation is sufficient for high-risk live changes. No fixed wording or capitalization is required.
 
 ## State Confidence
 
@@ -30,6 +30,7 @@
 - High for PR #2 merge metadata verified through GitHub CLI.
 - High for Netlify site id, project metadata, build settings, GitHub linkage, custom domain, and latest deploy metadata verified through Netlify CLI/API.
 - High for production env var name readiness verified by `npm run verify:commerce-readiness:netlify`; values were not printed.
+- High for production-only Square credential scoping and Netlify non-Git production deploy protection verified 2026-07-11 through authenticated Netlify metadata without printing credential values.
 - High for `afterhoursagenda.com`, `www.afterhoursagenda.com`, and `afterhoursagenda.netlify.app` serving through Netlify by public HTTP checks.
 - High for public DNS resolver checks against `1.1.1.1`, `8.8.8.8`, and `9.9.9.9`.
 - Medium for Square/Printful webhook dashboard details supplied by Aside handoff; Codex did not inspect secret values or mutate dashboard state.
@@ -40,16 +41,16 @@
 - Primary live URL: `https://afterhoursagenda.com/`
 - `www` behavior: `https://www.afterhoursagenda.com/` returns Netlify 301 to `https://afterhoursagenda.com/`.
 - Default Netlify URL: `https://afterhoursagenda.netlify.app/`
-- Live title verified by guard/browser handoff: `After Hours Agenda | Blacklight Grunge Streetwear`
+- Live title verified by guard: `After Hours Agenda | Independent NYC Streetwear`
 - Host: Netlify for apex, `www`, and `.netlify.app`.
-- Current deployed commit: `13c25e83f696b19c7d9230ec4766900cc5485451`
-- Latest verified production deploy: `6a4f2851e4c1b9fb71f86a67`, ready, production, branch `main`, commit-backed.
+- Current deployed commit: `f57ce6b3c4e5700ea97d60ccfe57b15d6293f310`
+- Latest verified commit-backed production deploy: `6a518dd7f0be1e000823c1f0`, ready, production, branch `main`.
 - Netlify site: `afterhoursagenda`
 - Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
 - Netlify custom domain: `afterhoursagenda.com`
 - Netlify build settings: GitHub provider, repo `omgitsthedm/aha-website`, branch `main`, command `npm run build`, publish `.next`.
-- Netlify `prevent_non_git_prod_deploys`: still reports `false`.
+- Netlify `prevent_non_git_prod_deploys`: enabled and verified `true` on 2026-07-11.
 - Production QA status: public read-only checks passed; NO live checkout/payment/order/fulfillment mutation has been performed.
 
 ## Domain / DNS Truth
@@ -66,12 +67,14 @@
 
 ## Repo State
 
-- Branch: `main`
-- Status before documentation update: clean and aligned with `origin/main`.
+- Branch: `audit/flagship-hardening-20260711`
+- Status: clean and pushed; draft PR #3 is open at `https://github.com/omgitsthedm/aha-website/pull/3`.
+- Netlify deploy preview: `https://deploy-preview-3--afterhoursagenda.netlify.app` at `821966e`; all eight desktop/mobile Playwright checks pass.
+- Production merge is blocked because GitHub reports every Actions job was not started while the account is locked for a billing issue. Do not bypass or disable the checks.
 - PR #2 (`feature/uiux-doctrine-commerce-hardening`) was merged into `main` as `13c25e83f696b19c7d9230ec4766900cc5485451`.
 - Remote feature branch `feature/uiux-doctrine-commerce-hardening` was deleted after merge.
 - PR #1 (`feature/retro-grunge-block-overhaul`) was merged earlier as merge commit `55d63fc`.
-- Current task is documentation/state update for Claude Code takeover.
+- Current task is the flagship storefront technical audit and hardening pass documented in `docs/AUDIT-FLAGSHIP-HARDENING-2026-07-11.md`.
 
 ## Commerce Risk
 
@@ -89,8 +92,9 @@
 
 ## QA-PENDING
 
-- Confirm and align Square webhook URL versus `SQUARE_WEBHOOK_NOTIFICATION_URL`. Handoff says Square webhook URL is `https://afterhoursagenda.netlify.app/api/webhooks/square`; Netlify production currently reports non-secret `SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square`. Square signature verification requires an exact URL match.
-- Confirm whether Netlify can enable non-Git production deploy blocking for this site/account; API still reports `prevent_non_git_prod_deploys: false`.
+- Deploy and verify the committed Square webhook URL alignment, then send a Square test notification. Rotate the signature key only if the signed test proves the current key is mismatched.
+- Resolve the GitHub account billing lock, rerun PR #3 checks, and merge only after required checks pass.
+- Add real Square Sandbox credentials scoped only to deploy previews/staging; production credentials are now production-only and secret where appropriate.
 - Create and approve a sandbox checkout test plan.
 - Create and approve a live checkout safe path before any live payment/order test.
 - Add durable order/event storage before fulfillment automation.
@@ -119,14 +123,13 @@ Name-only env readiness checks and public read-only GET/HEAD verification are al
 
 ## Proposed Changes / Inbox
 
-- Proposal: Regenerate AI-Ops rules so AHA accepts scoped plain-language confirmation for high-risk live changes instead of requiring a rigid literal magic phrase.
-- Reason: David explicitly stated after the cutover that he does not want exact approval phrase requirements going forward.
+- Completed 2026-07-11: AI-Ops rules now accept scoped plain-language confirmation and evaluate intent instead of matching a fixed token.
 - Risk: Too-loose approval language can cause accidental live changes; the replacement rule must still require clear scope, explicit user confirmation, and restating the exact action.
 - Source evidence: Aside handoff pasted by David in the 2026-07-08 takeover thread.
 - Suggested owner: David/Codex or AI-Ops maintainer when the rules generator path is available.
 
 - Proposal: Preserve exact-site Netlify target guard even though Netlify is now Git-linked.
-- Reason: AHA already had a wrong-site production incident; `prevent_non_git_prod_deploys` still reports false.
+- Reason: AHA already had a wrong-site production incident; `prevent_non_git_prod_deploys` is now true, and the exact-site guard remains useful defense in depth.
 - Risk: Low; guard is non-mutating.
 - Source evidence: Netlify API and `npm run verify:netlify-site`.
 - Suggested owner: all agents.
@@ -136,14 +139,22 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 ## Next Steps Queue
 
 - Review `docs/claude-code-live-takeover.md` before further Claude Code work.
-- Confirm Square webhook URL/signature alignment.
-- Decide whether to update Square webhook URL to `https://www.afterhoursagenda.com/api/webhooks/square` or update Netlify `SQUARE_WEBHOOK_NOTIFICATION_URL` to the exact Square webhook URL.
+- Resolve the GitHub billing lock and rerun PR #3 checks.
+- Merge PR #3 after required checks pass, verify the Git-backed production deploy, then send a Square test notification to the aligned non-redirecting endpoint.
 - Run browser QA on `https://afterhoursagenda.com` desktop and mobile.
 - Draft sandbox checkout safe path.
 - Plan durable order/event storage and idempotency before fulfillment automation.
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
 
 ## Recent Session History
+
+- 2026-07-11: Codex pushed the full storefront/external-remediation branch and opened draft PR #3. Netlify production credentials are production-only, the Square access token is secret, non-Git production deploys are blocked, and preview/branch contexts use a credential-free internal catalog while checkout stays fail-closed. Netlify preview `821966e` passed all 8 desktop/mobile Playwright tests. GitHub Actions did not start because the account is locked for a billing issue, so production merge, deploy verification, and signed Square test notification remain blocked.
+
+- 2026-07-11: Codex audited the public production site and local flagship candidate, then fixed crawler-visible metadata placement, product offer structured data, mobile-navigation ARIA integrity, collection-filter accessible names, size-table semantics, image fallback sizing, request-local Square catalog deduplication, security headers, and page metadata. Post-fix local crawl: Structured Data 100, Accessibility 81, Core SEO 91; remaining error counts are local HTTP/production-sitemap artifacts. Typecheck, lint, 21 unit tests, catalog/provider/margin validators, production build, and 4 explicit-URL Playwright desktop/mobile tests passed. No live checkout, payment, order, webhook, fulfillment, provider configuration, secret value, product mapping, deploy, or production mutation occurred. See `docs/AUDIT-FLAGSHIP-HARDENING-2026-07-11.md`.
+
+- 2026-07-11: With David's scoped authorization, Codex enabled Netlify non-Git production deploy protection and moved Square production credentials from all-context exposure to production-only scope, marking the access token secret. Code now aligns the Square notification URL to the existing non-redirecting subscription, enforces a Square-compatible CSP, adds crawlable shop pagination, and replaces generic customer-visible provider copy. Production deploy and signed webhook test remain pending the Git-backed release; Sandbox credentials remain unavailable rather than being fabricated or copied from production.
+
+- 2026-07-11: Codex built a local flagship storefront evolution on `feature/flagship-storefront-20260711` from clean `main` at `f57ce6b`. Homepage, About, Lookbook, shared design states, metadata/structured data, hero asset delivery, and product-detail UI resilience were improved. Typecheck, lint, 21 unit tests, all product/provider/margin validators, production build, 4 Playwright desktop/mobile smoke tests, a manual local add-to-bag/cart path, and Lighthouse (97/100/100/100) passed. No protected product data, checkout/provider behavior, secrets, live settings, push, merge, deploy, payment, order, or fulfillment was touched. See `docs/FLAGSHIP-STOREFRONT-HANDOFF-2026-07-11.md`.
 
 - 2026-06-27: Codex performed initial AHA AI-Ops onboarding from read-only local inventory and local repo inspection. Created `.ai` governance files and did not edit source behavior, deploy, push, run commerce QA, inspect env contents, or modify the pre-existing dirty files.
 - 2026-06-27: AHA SESSION START dry run completed. Generated rules verified against `RULES_HEADER.md` + `RULES_BASE.md` with checksum `4054569368:9046`. Confirmed canonical repo, branch, remote, dirty state, lock, and commerce gates. No source behavior, push, deploy, production QA, checkout/payment/order/fulfillment test, env inspection, dirty-file cleanup, or commerce mutation.
@@ -164,7 +175,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Agent Directive
 
-Continue from `main` at `13c25e83f696b19c7d9230ec4766900cc5485451`. AHA is live on `https://afterhoursagenda.com`. Before any deploy or live config work, run `npm run verify:netlify-site`. Before relying on commerce backend state, run `npm run verify:commerce-readiness:netlify`. After deploy, run `npm run verify:netlify-live` and `LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live`. Do not run live checkout/payment/order/fulfillment tests, inspect env contents, modify product/inventory/customer/order/fulfillment data, change DNS, or enable fulfillment automation without clear scoped confirmation and a safe path.
+Continue from clean, pushed `audit/flagship-hardening-20260711`; review draft PR #3 and `docs/AUDIT-FLAGSHIP-HARDENING-2026-07-11.md`. AHA production remains on `f57ce6b3c4e5700ea97d60ccfe57b15d6293f310` at `https://afterhoursagenda.com`. First resolve the GitHub billing lock and rerun required checks; do not bypass them. After a green merge, run `npm run verify:netlify-live` and `LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live`, initialize the Square payment field on the approved HTTPS domain without charging, and send Square's test webhook notification. Do not run a live charge/order/fulfillment test, modify product/inventory/customer/order/fulfillment data, change DNS, or enable fulfillment automation without a separately verified safe path.
 
 ## Emergency / Bypass Notes
 

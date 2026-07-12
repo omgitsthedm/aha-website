@@ -3,6 +3,12 @@ import type { Product, Collection } from "@/lib/utils/types";
 import { mapSquareItemToProduct, mapSquareCategoryToCollection } from "@/lib/utils/mappers";
 import { loadProducts } from "@/lib/data/products";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
+import { cache } from "react";
+import { buildPreviewCollections, buildPreviewProducts } from "@/lib/data/preview-catalog";
+
+function previewCatalogFallbackAllowed(): boolean {
+  return process.env.AHA_PREVIEW_CATALOG === "true";
+}
 
 interface SquareCatalogResponse {
   objects?: any[];
@@ -39,7 +45,10 @@ export function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
   return index;
 }
 
-export async function getAllProducts(): Promise<Product[]> {
+export const getAllProducts = cache(async function getAllProducts(): Promise<Product[]> {
+  if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
+    return buildPreviewProducts();
+  }
   let allItems: any[] = [];
   let allRelated: any[] = [];
   let cursor: string | undefined;
@@ -104,14 +113,17 @@ export async function getAllProducts(): Promise<Product[]> {
       };
       return mapSquareItemToProduct(filtered, imageMap, registry.slug);
     });
-}
+});
 
 export async function getProduct(slug: string): Promise<Product | null> {
   const products = await getAllProducts();
   return products.find((p) => p.slug === slug) || null;
 }
 
-export async function getAllCollections(): Promise<Collection[]> {
+export const getAllCollections = cache(async function getAllCollections(): Promise<Collection[]> {
+  if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
+    return buildPreviewCollections();
+  }
   const res = await squareRequest<SquareCatalogResponse>(
     "/catalog/search",
     {
@@ -140,7 +152,7 @@ export async function getAllCollections(): Promise<Collection[]> {
   return res.objects
     .filter((obj: any) => !obj.is_deleted && collectionMeta[obj.id])
     .map((obj: any) => mapSquareCategoryToCollection(obj, collectionMeta[obj.id]));
-}
+});
 
 export async function getProductsByCollection(collectionId: string): Promise<Product[]> {
   const products = await getAllProducts();

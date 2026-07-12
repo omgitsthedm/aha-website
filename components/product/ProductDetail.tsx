@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Collection, Product } from "@/lib/utils/types";
@@ -17,6 +17,7 @@ interface ProductDetailProps {
   collection?: Collection;
   enrichment?: ProductEnrichment | null;
   stockBySize?: Record<string, boolean>;
+  storyDescription?: string;
 }
 
 const sanitizeHtml = (html: string): string => html
@@ -28,9 +29,12 @@ const sanitizeHtml = (html: string): string => html
   .replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, "")
   .replace(/\s+on\w+\s*=\s*\S+/gi, "")
   .replace(/(?:href|src)\s*=\s*["']javascript:[^"']*["']/gi, "")
-  .replace(/src\s*=\s*["']data:(?!image\/(?:png|jpe?g|gif|webp|svg\+xml))[^"']*["']/gi, "");
+  .replace(/src\s*=\s*["']data:(?!image\/(?:png|jpe?g|gif|webp|svg\+xml))[^"']*["']/gi, "")
+  .replace(/[—–]/g, "-");
 
-export function ProductDetail({ product, related, collection, enrichment, stockBySize }: ProductDetailProps) {
+const cleanDisplayText = (value: string): string => value.replace(/[—–]/g, "-");
+
+export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription }: ProductDetailProps) {
   const { addItem } = useCart();
   const sizeInStock = (size: string) => stockBySize ? stockBySize[size.toUpperCase()] !== false : true;
   const variationAvailable = (name: string) => {
@@ -41,6 +45,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   const [selectedVariation, setSelectedVariation] = useState(initialVariation?.id || product.variations[0]?.id || "");
   const [activeImage, setActiveImage] = useState(0);
   const [addedFeedback, setAddedFeedback] = useState(false);
+  const feedbackTimer = useRef<number | null>(null);
 
   const currentVariation = product.variations.find((variation) => variation.id === selectedVariation);
   const currentSize = (currentVariation?.name || "").toUpperCase();
@@ -65,15 +70,22 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
     }, related);
     trackCommerceEvent({ name: "add_to_cart", itemId: product.id, variantId: currentVariation.id, valueCents: currentVariation.price, currency: product.currency, quantity: 1 });
     setAddedFeedback(true);
-    window.setTimeout(() => setAddedFeedback(false), 1800);
+    if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
+    feedbackTimer.current = window.setTimeout(() => setAddedFeedback(false), 1800);
   };
 
-  const descriptionMarkup = product.description ? { __html: sanitizeHtml(product.description) } : null;
+  const descriptionMarkup = storyDescription || product.description
+    ? { __html: sanitizeHtml(storyDescription || product.description) }
+    : null;
   const activeImageSrc = product.images[activeImage];
 
   useEffect(() => {
     trackCommerceEvent({ name: "view_item", itemId: product.id, valueCents: product.price, currency: product.currency });
   }, [product.currency, product.id, product.price]);
+
+  useEffect(() => () => {
+    if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
+  }, []);
 
   return (
     <div className="px-4 pb-24 pt-28 md:px-6 md:pt-32">
@@ -135,7 +147,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Size</p>
-                    <p className="mt-1 text-xs leading-relaxed text-cream">{enrichment?.fitDescription || "Standard unisex fit. Choose your usual size."}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-cream">{enrichment?.fitDescription ? cleanDisplayText(enrichment.fitDescription) : "Standard unisex fit. Choose your usual size."}</p>
                   </div>
                   <Link href="/size-guide" className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Size guide</Link>
                 </div>
@@ -164,8 +176,8 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               <dl className="grid gap-5 text-sm leading-relaxed sm:grid-cols-2">
                 <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Production</dt><dd className="mt-1 text-cream">{getFulfillmentSummary()}</dd></div>
                 <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Returns</dt><dd className="mt-1 text-cream">{RETURNS_WINDOW} for unworn pieces. <Link href="/returns" className="text-accent underline underline-offset-4">Read policy</Link></dd></div>
-                <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Fabric</dt><dd className="mt-1 text-cream">{enrichment?.fabricDescription || "Printed to order."}</dd></div>
-                <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Care</dt><dd className="mt-1 text-cream">{enrichment?.careInstructions || "Machine wash cold, inside out. Do not iron the print."}</dd></div>
+                <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Fabric</dt><dd className="mt-1 text-cream">{enrichment?.fabricDescription ? cleanDisplayText(enrichment.fabricDescription) : "Printed to order."}</dd></div>
+                <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Care</dt><dd className="mt-1 text-cream">{enrichment?.careInstructions ? cleanDisplayText(enrichment.careInstructions) : "Machine wash cold, inside out. Do not iron the print."}</dd></div>
               </dl>
             </div>
 

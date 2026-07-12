@@ -11,19 +11,22 @@ import { trackCommerceEvent } from "@/lib/analytics/events";
 interface ShopContentProps {
   products: Product[];
   collections: Collection[];
+  initialPage?: number;
+  paginationPath?: string;
 }
 
 const APPAREL_SIZE_ORDER = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
 const PAGE_SIZE = 24;
 const variationSize = (name: string) => name.split("/").pop()?.trim().toUpperCase() || name.toUpperCase();
 
-export function ShopContent({ products, collections }: ShopContentProps) {
+export function ShopContent({ products, collections, initialPage = 1, paginationPath }: ShopContentProps) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeSize, setActiveSize] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "index">("grid");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   const collectionCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -50,7 +53,13 @@ export function ShopContent({ products, collections }: ShopContentProps) {
     if (sortBy === "name") return [...result].sort((a, b) => a.name.localeCompare(b.name));
     return result;
   }, [activeFilter, activeSize, products, searchTerm, sortBy]);
-  const visibleProducts = filtered.slice(0, visibleCount);
+  const hasActiveDiscovery = activeFilter !== "all" || activeSize !== "all" || searchTerm.trim().length > 0;
+  const usesCatalogPages = Boolean(paginationPath) && !hasActiveDiscovery && sortBy === "featured";
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, pageCount);
+  const visibleProducts = usesCatalogPages
+    ? filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
+    : filtered.slice(0, visibleCount);
 
   const resetDiscovery = () => {
     setActiveFilter("all");
@@ -58,7 +67,6 @@ export function ShopContent({ products, collections }: ShopContentProps) {
     setSearchTerm("");
   };
 
-  const hasActiveDiscovery = activeFilter !== "all" || activeSize !== "all" || searchTerm.trim().length > 0;
   const collectionFor = (product: Product) => collections.find((collection) => product.collectionIds.includes(collection.id));
   const control = "min-h-11 border border-border/60 bg-void px-3 py-2 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none";
   const toggle = "min-h-11 border px-3 text-xs font-bold uppercase tracking-[0.06em] transition-colors";
@@ -73,7 +81,12 @@ export function ShopContent({ products, collections }: ShopContentProps) {
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
+    setCurrentPage(1);
   }, [activeFilter, activeSize, searchTerm, sortBy, viewMode]);
+
+  useEffect(() => {
+    setCurrentPage(initialPage);
+  }, [initialPage]);
 
   return (
     <section aria-label="Product catalog">
@@ -98,7 +111,7 @@ export function ShopContent({ products, collections }: ShopContentProps) {
             <button type="button" onClick={() => setActiveFilter("all")} aria-pressed={activeFilter === "all"} className={`${toggle} ${activeFilter === "all" ? "border-accent bg-accent text-void" : "border-border/60 text-cream hover:border-accent"}`}>All <span aria-hidden="true">{products.length}</span></button>
             {collections.filter((collection) => collectionCounts.get(collection.id)).map((collection) => (
               <button key={collection.id} type="button" onClick={() => setActiveFilter(collection.id)} aria-pressed={activeFilter === collection.id} aria-label={`${collection.name}, ${collectionCounts.get(collection.id)} products`} className={`${toggle} inline-flex items-center gap-2 ${activeFilter === collection.id ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}>
-                <RouteBadge slug={collection.slug} size="sm" />
+                <RouteBadge slug={collection.slug} size="sm" decorative />
                 {collection.name} <span aria-hidden="true">{collectionCounts.get(collection.id)}</span>
               </button>
             ))}
@@ -171,7 +184,22 @@ export function ShopContent({ products, collections }: ShopContentProps) {
         </div>
       )}
 
-      {visibleCount < filtered.length && (
+      {usesCatalogPages && pageCount > 1 && (
+        <nav className="mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="Catalog pages">
+          {Array.from({ length: pageCount }, (_, index) => index + 1).map((page) => (
+            <Link
+              key={page}
+              href={`${paginationPath}?page=${page}`}
+              aria-current={page === safePage ? "page" : undefined}
+              className={`inline-flex min-h-11 min-w-11 items-center justify-center border px-3 text-xs font-bold ${page === safePage ? "border-accent bg-accent text-void" : "border-border/60 text-cream hover:border-accent"}`}
+            >
+              {page}
+            </Link>
+          ))}
+        </nav>
+      )}
+
+      {!usesCatalogPages && visibleCount < filtered.length && (
         <div className="mt-10 flex justify-center">
           <button type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)} className="min-h-12 border border-border/60 px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">
             Load more products
