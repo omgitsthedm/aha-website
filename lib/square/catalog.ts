@@ -10,6 +10,13 @@ function previewCatalogFallbackAllowed(): boolean {
   return process.env.AHA_PREVIEW_CATALOG === "true";
 }
 
+const LEGACY_COLLECTION_ID = "57JPU5ZDHXGWVPRQQZMWVR5Q";
+const LEGACY_PRODUCT_NAME = /black sheep|counting sheep|pink sheep|sheep min/i;
+
+function isCurrentStorefrontProduct(product: Product): boolean {
+  return !product.collectionIds.includes(LEGACY_COLLECTION_ID) && !LEGACY_PRODUCT_NAME.test(product.name);
+}
+
 interface SquareCatalogResponse {
   objects?: any[];
   cursor?: string;
@@ -47,7 +54,7 @@ export function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
 
 export const getAllProducts = cache(async function getAllProducts(): Promise<Product[]> {
   if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
-    return buildPreviewProducts();
+    return buildPreviewProducts().filter(isCurrentStorefrontProduct);
   }
   let allItems: any[] = [];
   let allRelated: any[] = [];
@@ -112,7 +119,8 @@ export const getAllProducts = cache(async function getAllProducts(): Promise<Pro
         },
       };
       return mapSquareItemToProduct(filtered, imageMap, registry.slug);
-    });
+    })
+    .filter(isCurrentStorefrontProduct);
 });
 
 export async function getProduct(slug: string): Promise<Product | null> {
@@ -139,13 +147,12 @@ export const getAllCollections = cache(async function getAllCollections(): Promi
 
   // Collection IDs and their metadata
   const collectionMeta: Record<string, { accent: string; description: string }> = {
-    "57JPU5ZDHXGWVPRQQZMWVR5Q": { accent: "mint", description: "The house mark and the point of view: left-facing, independent, and outside the line." },
     "JPSOS6BFOQPITXEJFYJWYIXZ": { accent: "cream", description: "Self-rule in print. Graphics for people who do not need a throne." },
-    "SZ6M4QZCTTSPNRKY5VS3JDAW": { accent: "blue", description: "Pieces for second shifts, late trains, loud rooms, and work that starts after dark." },
+    "SZ6M4QZCTTSPNRKY5VS3JDAW": { accent: "blue", description: "Products grouped in the current After Hours collection." },
     "OCWUVMJQMVGJZ6FT62K5HVP4": { accent: "cream", description: "City memory without the souvenir-shop treatment." },
     "BRNXSU4IF5U3AWAYYYP3TTHU": { accent: "sunrise", description: "Optimism with its eyes open. Wear the part that keeps going." },
     "ARX3DXVEX6CJOIBNNYKNX6MU": { accent: "sunrise", description: "Good nerve, bright color, and a reason to keep moving." },
-    "QGLIV54AJSOYXZOX5IBWQVPM": { accent: "cream", description: "The quieter side of AHA: repeat-wear layers and core shapes." },
+    "QGLIV54AJSOYXZOX5IBWQVPM": { accent: "cream", description: "Core products intended for repeat wear." },
     "FAIJ7SE5DJP25N26ND3L76SU": { accent: "mint", description: "The latest pieces to clear the press and enter the active catalog." },
   };
 

@@ -22,10 +22,6 @@ interface StoryTerritory {
 // useful editorial context without inventing materials, collaborators, scarcity, or product history.
 const STORY_TERRITORIES: StoryTerritory[] = [
   {
-    pattern: /black sheep|counting sheep|pink sheep|sheep min|royal/i,
-    line: () => "The black sheep is the house mark: left-facing, deliberate, and outside the line.",
-  },
-  {
     pattern: /no kings|enemy of the state|deny.*defend.*depose|fascist|don.t lick the boot|genocide|libert|revolution|start a riot/i,
     line: () => "A statement graphic about self-rule, resistance, and refusing the easy line.",
   },
@@ -47,7 +43,7 @@ const STORY_TERRITORIES: StoryTerritory[] = [
   },
   {
     pattern: /flower|garden|palms|waves|cut grass|haze|hot air/i,
-    line: () => "A natural motif pulled through AHA's louder, stranger graphic language.",
+    line: () => "A natural motif interpreted as a graphic for this product.",
   },
   {
     pattern: /retro|roaring 20s|eras to remember|classic|winter track/i,
@@ -83,7 +79,7 @@ export function buildProductStory(
   const type = TYPE_NAMES[productType] || "piece";
   const collectionLine = collection?.description
     ? ` In the ${clean(collection.name)} collection, it sits inside this idea: ${clean(collection.description)}`
-    : " It belongs to the wider After Hours Agenda design index: New York, music, books, politics, optimism, and life outside the expected schedule.";
+    : " It is part of the current After Hours Agenda product catalog.";
   const fabric = enrichment?.fabricDescription
     ? ` The ${type} uses ${clean(enrichment.fabricDescription).replace(/\.$/, "").toLowerCase()}.`
     : "";

@@ -6,7 +6,7 @@ export const metadata = { title: "FAQ", description: "Answers about After Hours 
 
 const faqs = [
   { q: "When will my order arrive?", a: `Production usually takes ${PRODUCTION_WINDOW}. Delivery is ${DELIVERY_WINDOW}. These windows run one after the other, and tracking is sent when the package leaves production.` },
-  { q: "Why are products made to order?", a: "AHA keeps a large design index without manufacturing speculative inventory. Production begins after payment, which reduces unused stock but means an item does not ship immediately." },
+  { q: "Why are products made to order?", a: "After Hours Agenda begins production after payment. This reduces unused stock but means an item does not ship immediately." },
   { q: "What does shipping cost?", a: "Standard shipping is free. The checkout quote confirms the final shipping line and estimated tax before payment." },
   { q: "How do I choose a size?", a: "Use the fit note and size guide on the product page. Product-specific fit information takes priority over general guidance." },
   { q: "What payment methods can I use?", a: "Card payments are processed securely by Square. Apple Pay or Google Pay appears when Square supports the wallet on your device and browser." },
@@ -17,7 +17,7 @@ const faqs = [
   { q: "What if my item arrives damaged or misprinted?", a: "Email clear photos of the item, packaging, and order number. Confirmed production defects, damage, or incorrect items are handled separately from change-of-mind returns." },
   { q: "How do I care for a piece?", a: "Machine wash cold, inside out, and use low heat. Do not iron directly over the print." },
   { q: "Will the color match my screen exactly?", a: "Screens, garment batches, and print methods can shift color slightly. Product photography is a guide; product-specific descriptions and the garment label remain the practical source of truth." },
-  { q: "Do you have customer reviews?", a: "AHA does not publish an on-site review system yet. We will not manufacture ratings or testimonials. Approved customer and campaign photography may appear when it is real and relevant." },
+  { q: "Do you have customer reviews?", a: "After Hours Agenda does not publish an on-site review system yet. Ratings and testimonials will not be added without a real collection and moderation process." },
 ];
 
 export default function FAQPage() {

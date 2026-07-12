@@ -1,70 +1,59 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { BRAND_TERRITORIES } from "@/lib/content/site-copy";
+import { DESIGN_SOURCES } from "@/lib/content/design-sources";
 
 export const metadata = {
-  title: "About the Independent NYC Label",
-  description: "The story and point of view behind After Hours Agenda: an independent New York graphic label, its left-facing black sheep, and the ideas that start after the schedule ends.",
+  title: "About",
+  description: "About After Hours Agenda and how its made-to-order storefront works.",
   alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
+  const source = DESIGN_SOURCES[1];
+
   return (
     <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32">
       <div className="mx-auto max-w-[1440px]">
-        <PageHeader eyebrow="Independent label / New York" title="The agenda starts after the plan" description="After Hours Agenda is a graphic label for the second shift: the work, music, reading, wandering, arguing, and making that begins when somebody else's schedule ends." />
+        <PageHeader title="After Hours Agenda" description="Graphic clothing and objects sold online and produced after an order is placed." />
 
-        <section aria-labelledby="origin-heading" className="grid border-y border-border/40 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="relative min-h-[28rem] border-b border-border/40 bg-cream lg:min-h-[42rem] lg:border-b-0 lg:border-r">
-            <Image src="/brand/sheep-full.svg" alt="After Hours Agenda black sheep mark" fill className="object-contain p-10 md:p-16" sizes="(max-width: 1024px) 100vw, 42vw" />
-          </div>
-          <div className="flex flex-col justify-center p-6 md:p-10 lg:p-14">
-            <h2 id="origin-heading" className="max-w-3xl font-display text-[clamp(2.6rem,6vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">The black sheep is not lost</h2>
-            <div className="mt-8 max-w-2xl space-y-6 text-sm leading-relaxed text-cream/85 md:text-base">
-              <p className="text-lg font-bold text-cream">It is the person who stopped following a schedule written by somebody else.</p>
-              <p>AHA has spent years turning the things that refuse to stay in one category—New York, books, music, politics, optimism, memory, and pop debris—into graphics you can wear.</p>
-              <p>The sheep faces left. It stands outside the line without turning away from the world. That is the whole point: independence without isolation.</p>
+        <section aria-labelledby="about-heading" className="grid border-y border-border/40 lg:grid-cols-[1.15fr_0.85fr]">
+          <Link href={`/product/${source.productSlug}`} data-design-source={source.sourceFile} className="group relative min-h-[30rem] overflow-hidden bg-accent lg:min-h-[44rem]">
+            <Image src={source.image} alt={source.alt} fill priority className="object-contain p-8 transition-transform duration-500 group-hover:scale-[1.025] md:p-14" sizes="(max-width: 1024px) 100vw, 58vw" />
+            <span className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 border-t border-void/30 bg-void/95 p-4">
+              <span className="font-display text-lg font-bold uppercase">{source.title}</span>
+              <span className="font-mono text-[11px] font-bold uppercase text-accent">View product</span>
+            </span>
+          </Link>
+          <div className="flex flex-col justify-center border-t border-border/40 p-6 md:p-10 lg:border-l lg:border-t-0 lg:p-14">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">The store</p>
+            <h2 id="about-heading" className="mt-5 max-w-3xl font-display text-[clamp(2.8rem,6vw,6rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">Built around the work</h2>
+            <div className="mt-8 max-w-xl space-y-5 font-mono text-sm leading-relaxed text-muted">
+              <p>Original graphics move from the project design library into clothing and objects.</p>
+              <p>Products are made to order. Production usually takes 2-5 business days before carrier transit begins.</p>
+              <p>Each product page shows current price, sizing, care, production, shipping, and return information.</p>
             </div>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Link href="/shop" className="primary-action min-h-11 px-5 py-3 text-xs">Shop all pieces</Link>
-              <Link href="/lookbook" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">See AHA in the city</Link>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link href="/shop" className="primary-action min-h-11 px-5 py-3 text-xs">Shop all products</Link>
+              <Link href="/lookbook" className="secondary-action min-h-11 px-5 py-3 text-xs">View design files</Link>
             </div>
           </div>
         </section>
 
-        <section aria-labelledby="ideas-heading" className="py-20 md:py-28">
-          <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">What belongs in the archive</p>
-          <h2 id="ideas-heading" className="max-w-4xl font-display text-[clamp(2.8rem,7vw,6.5rem)] font-black uppercase leading-[0.84] tracking-[-0.065em]">The subject changes. The point of view does not.</h2>
-          <div className="mt-10 grid gap-px border border-border/40 bg-border/40 md:grid-cols-2">
-            {BRAND_TERRITORIES.map(({ title, body }) => (
-              <div key={title} className="bg-void p-6 md:p-8">
-                <h3 className="font-display text-2xl font-black uppercase tracking-[-0.04em]">{title}</h3>
-                <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted">{body}</p>
+        <section aria-labelledby="orders-heading" className="grid gap-10 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
+          <h2 id="orders-heading" className="max-w-4xl font-display text-[clamp(2.8rem,7vw,6.5rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">Before you order</h2>
+          <dl className="border-t border-border/40">
+            {[
+              ["01 / Production", "Products are printed after purchase. The estimated production window is shown before checkout."],
+              ["02 / Shipping", "Standard shipping is included. Tracking is provided when the carrier receives the order."],
+              ["03 / Returns", "Review the return policy and product-specific sizing before purchasing."],
+            ].map(([title, body]) => (
+              <div key={title} className="grid gap-3 border-b border-border/40 py-6 md:grid-cols-[12rem_1fr]">
+                <dt className="font-display text-xl font-bold uppercase tracking-[-0.025em]">{title}</dt>
+                <dd className="max-w-lg font-mono text-sm leading-relaxed text-muted">{body}</dd>
               </div>
             ))}
-          </div>
-        </section>
-
-        <section aria-labelledby="made-heading" className="grid border-y border-border/40 bg-charcoal lg:grid-cols-[1fr_1fr]">
-          <div className="relative min-h-[28rem] border-b border-border/40 lg:border-b-0 lg:border-r">
-            <Image src="/brand/lifestyle/lifestyle-4.jpg" alt="After Hours Agenda clothing worn after dark" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
-          </div>
-          <div className="flex flex-col justify-center p-6 md:p-10 lg:p-14">
-            <h2 id="made-heading" className="font-display text-[clamp(2.5rem,5vw,4.75rem)] font-black uppercase leading-[0.87] tracking-[-0.055em]">The graphic comes first. The order comes second.</h2>
-            <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted md:text-base">AHA keeps an active design index instead of manufacturing piles of speculative inventory. A production partner prints each piece after it is ordered; production usually takes 2-5 business days before carrier transit begins.</p>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">Every product page shows the live price and size options alongside fit, fabric, care, production, shipping, and return guidance. Standard shipping is included, and unworn pieces have a 30-day return window.</p>
-            <Link href="/shipping" className="mt-7 inline-flex min-h-11 w-fit items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase hover:border-accent hover:text-accent">See the order timeline</Link>
-          </div>
-        </section>
-
-        <section aria-labelledby="for-heading" className="grid gap-8 py-20 md:grid-cols-[0.7fr_1.3fr] md:py-28">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">Who this is for</p>
-          <div>
-            <h2 id="for-heading" className="max-w-4xl font-display text-[clamp(2.7rem,6vw,5.75rem)] font-black uppercase leading-[0.84] tracking-[-0.065em]">Anybody with a second life after the first one clocks out</h2>
-            <p className="mt-7 max-w-2xl text-base leading-relaxed text-muted">The bartender writing a book. The designer finishing one more version. The reader on the last train. The organizer, the night walker, the record obsessive, the person making a plan nobody assigned. You do not need a title or a permission slip.</p>
-            <Link href="/shop" className="primary-action mt-7 min-h-11 px-5 py-3 text-xs">Find your piece</Link>
-          </div>
+          </dl>
         </section>
       </div>
     </div>

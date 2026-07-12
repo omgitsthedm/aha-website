@@ -6,7 +6,6 @@ import Link from "next/link";
 import type { Collection, Product } from "@/lib/utils/types";
 import type { ProductEnrichment } from "@/lib/data/enrichment";
 import { useCart } from "@/components/cart/CartProvider";
-import { RouteBadge } from "@/components/ui/RouteBadge";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { getFulfillmentSummary, RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 import { trackCommerceEvent } from "@/lib/analytics/events";
@@ -95,10 +94,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           {collection && (
             <>
               <span aria-hidden="true">/</span>
-              <Link href={`/collections/${collection.slug}`} className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-accent">
-                <RouteBadge slug={collection.slug} size="sm" />
-                {collection.name}
-              </Link>
+              <Link href={`/collections/${collection.slug}`} className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-accent">{collection.name}</Link>
             </>
           )}
           <span aria-hidden="true">/</span>
@@ -129,7 +125,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           </section>
 
           <section aria-labelledby="product-title" className="lg:pt-3">
-            {collection && <div className="mb-4"><RouteBadge slug={collection.slug} size="md" showName /></div>}
+            {collection && <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">{collection.name}</p>}
             <h1 id="product-title" className="max-w-2xl font-display text-[clamp(2.5rem,6vw,5.5rem)] font-black uppercase leading-[0.88] tracking-[-0.055em] text-cream">{product.name}</h1>
             <p className="mt-6 font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
             <p className="mt-3 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>

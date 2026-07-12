@@ -9,14 +9,8 @@ export function StorefrontJsonLd() {
         "@id": `${SITE_URL}/#store`,
         name: "After Hours Agenda",
         url: SITE_URL,
-        logo: `${SITE_URL}/brand/sheep-head.svg`,
-        image: `${SITE_URL}/brand/mosaic-hero.webp`,
-        description: "Independent New York streetwear and made-to-order graphic apparel.",
+        description: "Clothing and accessories sold online and made to order.",
         email: "info@afterhoursagenda.com",
-        sameAs: [
-          "https://instagram.com/afterhoursagenda",
-          "https://tiktok.com/@afterhoursagenda",
-        ],
       },
       {
         "@type": "WebSite",

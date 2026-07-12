@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans_Condensed } from "next/font/google";
 import "./globals.css";
 import { NavBar } from "@/components/ui/NavBar";
 import { AnnouncementBar } from "@/components/ui/AnnouncementBar";
@@ -7,7 +7,6 @@ import { Footer } from "@/components/ui/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { StorefrontJsonLd } from "@/components/seo/StorefrontJsonLd";
 
-// One type family for text and one system display face for emphasis.
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-ibm-plex",
@@ -15,13 +14,20 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
+const ibmPlexCondensed = IBM_Plex_Sans_Condensed({
+  subsets: ["latin"],
+  variable: "--font-ibm-plex-condensed",
+  display: "swap",
+  weight: ["500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: {
-    default: "After Hours Agenda | Independent NYC Streetwear",
+    default: "After Hours Agenda",
     template: "%s | After Hours Agenda",
   },
   description:
-    "Shop independent New York streetwear, graphic apparel, and made-to-order goods from After Hours Agenda, with free standard shipping and clear fit guidance.",
+    "Shop clothing and accessories from After Hours Agenda, with standard shipping included and clear fit guidance.",
   keywords: [
     "streetwear", "NYC", "fashion", "urban", "clothing", "after hours",
     "graphic tees", "independent fashion", "New York City", "streetwear brand",
@@ -30,18 +36,16 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com"
   ),
   openGraph: {
-    title: "After Hours Agenda | Independent NYC Streetwear",
-    description: "Independent New York streetwear, graphic apparel, and made-to-order goods with free standard shipping and honest product details.",
+    title: "After Hours Agenda",
+    description: "Shop clothing and accessories with standard shipping included and clear product details.",
     type: "website",
     locale: "en_US",
     siteName: "After Hours Agenda",
-    images: [{ url: "/brand/mosaic-hero.webp", width: 1536, height: 1024, alt: "After Hours Agenda black sheep mosaic" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "After Hours Agenda | Independent NYC Streetwear",
-    description: "Independent New York streetwear, graphic apparel, and made-to-order goods with free standard shipping and honest product details.",
-    images: ["/brand/mosaic-hero.webp"],
+    title: "After Hours Agenda",
+    description: "Shop clothing and accessories with standard shipping included and clear product details.",
   },
   robots: {
     index: true,
@@ -51,7 +55,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "dark",
-  themeColor: "#0f0f0e",
+  themeColor: "#080a09",
 };
 
 export default function RootLayout({
@@ -63,7 +67,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme={process.env.NEXT_PUBLIC_AHA_THEME || "newsstand"}
-      className={ibmPlexMono.variable}
+      className={`${ibmPlexMono.variable} ${ibmPlexCondensed.variable}`}
     >
       <head>
         {/* Preconnect to external image CDNs for faster LCP */}

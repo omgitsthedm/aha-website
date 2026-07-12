@@ -41,8 +41,7 @@ describe("buildProductStory", () => {
     );
   });
 
-  it("uses relevant, non-fabricated design territory for recurring AHA themes", () => {
-    expect(buildProductStory(product("Black Sheep Sweatshirt"))).toContain("house mark");
+  it("uses relevant, non-fabricated language for recurring product themes", () => {
     expect(buildProductStory(product("No Kings Tee"))).toContain("self-rule");
     expect(buildProductStory(product("Library Tote Bag"))).toContain("reader's graphic");
     expect(buildProductStory(product("Club TechNoir"))).toContain("sound, style");

@@ -2,10 +2,9 @@ import { Entrance } from "@/components/homepage/Entrance";
 import { LatestDrop } from "@/components/homepage/LatestDrop";
 import { ThePromise } from "@/components/homepage/ThePromise";
 import { MostWanted } from "@/components/homepage/MostWanted";
-import { EditorialGallery } from "@/components/homepage/EditorialGallery";
-import { Agenda } from "@/components/homepage/Agenda";
 import { Collections } from "@/components/homepage/Collections";
 import { GetOnTheList } from "@/components/homepage/GetOnTheList";
+import { DesignFiles } from "@/components/homepage/DesignFiles";
 import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
 import type { Product, Collection } from "@/lib/utils/types";
 
@@ -38,11 +37,10 @@ export default async function HomePage() {
   return (
     <>
       <Entrance hasNewArrivals={latestDrop.length > 0} />
+      <DesignFiles compact />
       <LatestDrop products={featured} isNewArrivalEdit={latestDrop.length > 0} />
       <ThePromise />
       <MostWanted products={catalogEdit} totalProducts={products.length} />
-      <EditorialGallery />
-      <Agenda />
       <Collections collections={collections} />
       <GetOnTheList />
     </>

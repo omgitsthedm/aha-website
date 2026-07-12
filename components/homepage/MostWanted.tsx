@@ -10,8 +10,8 @@ export function MostWanted({ products, totalProducts }: { products: Product[]; t
       <div className="mx-auto max-w-[1440px]">
         <div className="mb-8 max-w-3xl">
           <div>
-            <h2 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">The design index</h2>
-            <p className="mt-3 max-w-xl font-mono text-sm leading-relaxed text-muted">Six ways into the catalog: city memory, self-rule, books, sound, optimism, and the black sheep. Every product page carries the practical details too.</p>
+            <h2 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">Featured products</h2>
+            <p className="mt-3 max-w-xl font-mono text-sm leading-relaxed text-muted">A selection from the current catalog. Open any product for price, available sizes, fit, care, production, shipping, and return details.</p>
           </div>
         </div>
 

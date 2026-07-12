@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Collection, Product } from "@/lib/utils/types";
-import { RouteBadge } from "@/components/ui/RouteBadge";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 
@@ -111,7 +110,6 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
             <button type="button" onClick={() => setActiveFilter("all")} aria-pressed={activeFilter === "all"} className={`${toggle} ${activeFilter === "all" ? "border-accent bg-accent text-void" : "border-border/60 text-cream hover:border-accent"}`}>All <span aria-hidden="true">{products.length}</span></button>
             {collections.filter((collection) => collectionCounts.get(collection.id)).map((collection) => (
               <button key={collection.id} type="button" onClick={() => setActiveFilter(collection.id)} aria-pressed={activeFilter === collection.id} aria-label={`${collection.name}, ${collectionCounts.get(collection.id)} products`} className={`${toggle} inline-flex items-center gap-2 ${activeFilter === collection.id ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}>
-                <RouteBadge slug={collection.slug} size="sm" decorative />
                 {collection.name} <span aria-hidden="true">{collectionCounts.get(collection.id)}</span>
               </button>
             ))}
@@ -152,12 +150,11 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
             const collection = collectionFor(product);
             return (
               <Link key={product.id} href={`/product/${product.slug}`} className="group block focus-visible:outline-offset-4">
-                <div className="relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">
+                <div className="relative aspect-[3/4] overflow-hidden border-b border-border/40 bg-surface transition-colors group-hover:border-accent">
                   {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={isPrintfulImage(image) ? "object-contain transition-transform duration-300 group-hover:scale-[1.02]" : "object-cover transition-transform duration-300 group-hover:scale-[1.02]"} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                 </div>
-                <div className="border-b border-border/40 py-3">
-                  {collection && <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.08em] text-accent">{collection.name}</p>}
-                  <h2 className="line-clamp-2 font-display text-base font-black uppercase leading-tight text-cream">{product.name}</h2>
+                <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">
+                  <h2 className="line-clamp-2 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">{product.name}</h2>
                   <div className="mt-2 flex items-center justify-between gap-2 text-xs font-bold">
                     <span>{product.priceFormatted}</span>
                     <span className="text-muted">Made to order</span>

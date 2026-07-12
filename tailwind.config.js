@@ -16,7 +16,7 @@ module.exports = {
         danger: "rgb(var(--c-error) / <alpha-value>)",
       },
       fontFamily: {
-        display: ["'Arial Black'", "'Helvetica Neue'", "Arial", "sans-serif"],
+        display: ["var(--font-ibm-plex-condensed)", "'Arial Narrow'", "sans-serif"],
         body: ["var(--font-ibm-plex)", "'Courier New'", "Menlo", "monospace"],
         mono: ["var(--font-ibm-plex)", "'Courier New'", "Menlo", "monospace"],
       },
