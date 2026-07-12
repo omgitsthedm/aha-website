@@ -13,5 +13,9 @@ export async function POST() {
   if (!subscription?.id) return NextResponse.json({ error: "Enabled AHA Square subscription not found." }, { status: 409 });
   const response = await fetch(`https://connect.squareup.com/v2/webhooks/subscriptions/${subscription.id}/test`, { method: "POST", headers, body: JSON.stringify({ event_type: "payment.updated" }), cache: "no-store" });
   const result = await response.json();
-  return NextResponse.json({ ok: response.ok, deliveryStatus: result.subscription_test_result?.status_code || null, errors: result.errors || [] }, { status: response.ok ? 200 : 502 });
+  const deliveryStatus = result.status_code ?? result.subscription_test_result?.status_code ?? null;
+  return NextResponse.json(
+    { ok: response.ok && deliveryStatus >= 200 && deliveryStatus < 300, deliveryStatus, passesFilter: result.passes_filter ?? null, errors: result.errors || [] },
+    { status: response.ok && deliveryStatus >= 200 && deliveryStatus < 300 ? 200 : 502 },
+  );
 }
