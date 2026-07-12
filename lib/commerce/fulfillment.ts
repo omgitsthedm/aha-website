@@ -8,7 +8,9 @@ import { and, eq, isNull } from "drizzle-orm";
 import type { RevalidatedCart, OrderContact } from "./orders";
 import {
   aggregateFulfillmentStatus, groupItemsByPrintfulStore, isPrintfulConfirmationAllowed,
+  shouldRetryPrintfulConfirmation,
 } from "./fulfillment-state";
+import { dispatchOrderNotifications, enqueueOrderNotification } from "./notifications";
 
 function confirmAllowed(): boolean {
   return isPrintfulConfirmationAllowed({
@@ -51,6 +53,28 @@ async function markManualReview(orderId: number, reason: string): Promise<void> 
     entityType: "order", entityId: String(orderId), action: "fulfillment:manual_review",
     newStatus: "manual_review", source: "fulfillment", metadataJson: { reason },
   });
+  await enqueueOrderNotification(orderId, "fulfillment_attention", { reason });
+  await dispatchOrderNotifications(5, orderId).catch(() => {});
+}
+
+async function confirmPrintfulOrder(orderId: number, fulfillmentId: number, printfulOrderId: string, storeId: number): Promise<void> {
+  try {
+    await printfulRequest(`/orders/${printfulOrderId}/confirmation`, { method: "POST", storeId: String(storeId) });
+    await db().update(fulfillments).set({ status: "confirmed", lastError: null, updatedAt: new Date() })
+      .where(eq(fulfillments.id, fulfillmentId));
+    await db().insert(auditLog).values({
+      entityType: "order", entityId: String(orderId), action: "fulfillment:confirmed",
+      newStatus: "confirmed", source: "fulfillment", metadataJson: { printfulOrderId, storeId, confirmAllowed: true },
+    });
+    await enqueueOrderNotification(orderId, "order_in_production");
+    await dispatchOrderNotifications(5, orderId).catch(() => {});
+  } catch (error) {
+    const message = error instanceof Error ? error.message.slice(0, 500) : "Printful confirmation failed";
+    await db().update(fulfillments).set({ status: "confirmation_failed", lastError: message, updatedAt: new Date() })
+      .where(eq(fulfillments.id, fulfillmentId));
+    await markManualReview(orderId, message);
+    throw error;
+  }
 }
 
 /**
@@ -90,7 +114,14 @@ export async function startFulfillment(
       eq(fulfillments.providerStoreId, storeId)
     )).limit(1);
 
-    if (existing?.printfulOrderId) continue;
+    if (existing?.printfulOrderId) {
+      if (shouldRetryPrintfulConfirmation({
+        confirmationAllowed: confirmAllowed(), printfulOrderId: existing.printfulOrderId, status: existing.status,
+      })) {
+        await confirmPrintfulOrder(orderId, existing.id, existing.printfulOrderId, storeId);
+      }
+      continue;
+    }
     if (existing?.status === "draft_creating") {
       await markManualReview(orderId, `Printful store ${storeId} has an unresolved draft creation attempt`);
       continue;
@@ -105,6 +136,7 @@ export async function startFulfillment(
 
     if (!claimed[0]) continue; // another request claimed this order/store pair
 
+    let createdPrintfulOrderId = "";
     try {
       const res = await printfulRequest<PrintfulOrderResponse>("/orders", {
         method: "POST",
@@ -113,33 +145,32 @@ export async function startFulfillment(
       });
       const printfulOrderId = String(res?.data?.id ?? res?.id ?? "");
       if (!printfulOrderId) throw new Error(`Printful draft order (store ${storeId}) returned no id`);
+      createdPrintfulOrderId = printfulOrderId;
 
-      let status = "draft_created";
-      if (confirmAllowed()) {
-        await printfulRequest(`/orders/${printfulOrderId}/confirmation`, {
-          method: "POST", storeId: String(storeId),
-        });
-        status = "confirmed";
-      }
-
+      // Persist the remote id before confirmation so any confirmation failure can retry the same
+      // Printful order instead of creating a duplicate production order.
       await db().update(fulfillments).set({
-        printfulOrderId, status, lastError: null, updatedAt: new Date(),
+        printfulOrderId, status: "draft_created", lastError: null, updatedAt: new Date(),
       }).where(eq(fulfillments.id, claimed[0].id));
-
-      // Legacy single-id column remains a pointer to the first provider order only.
       await db().update(orders).set({ printfulOrderId, updatedAt: new Date() })
         .where(and(eq(orders.id, orderId), isNull(orders.printfulOrderId)));
       await db().insert(auditLog).values({
-        entityType: "order", entityId: String(orderId), action: `fulfillment:${status}`,
-        newStatus: status, source: "fulfillment",
-        metadataJson: { printfulOrderId, storeId, confirmAllowed: confirmAllowed() },
+        entityType: "order", entityId: String(orderId), action: "fulfillment:draft_created",
+        newStatus: "draft_created", source: "fulfillment", metadataJson: { printfulOrderId, storeId },
       });
+
+      if (confirmAllowed()) {
+        await confirmPrintfulOrder(orderId, claimed[0].id, printfulOrderId, storeId);
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message.slice(0, 500) : "Printful draft creation failed";
-      await db().update(fulfillments).set({
-        status: "manual_review", lastError: message, updatedAt: new Date(),
-      }).where(eq(fulfillments.id, claimed[0].id));
+      if (!createdPrintfulOrderId) {
+        await db().update(fulfillments).set({ status: "manual_review", lastError: message, updatedAt: new Date() })
+          .where(eq(fulfillments.id, claimed[0].id));
+      }
       await syncOrderFulfillmentStatus(orderId);
+      await enqueueOrderNotification(orderId, "fulfillment_attention", { reason: message });
+      await dispatchOrderNotifications(5, orderId).catch(() => {});
       throw error;
     }
   }

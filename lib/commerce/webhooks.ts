@@ -5,6 +5,7 @@ import { db, isDbConfigured } from "@/lib/db/client";
 import { webhookEvents, orders, fulfillments, shipments, auditLog } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { syncOrderFulfillmentStatus } from "./fulfillment";
+import { dispatchOrderNotifications, enqueueOrderNotification } from "./notifications";
 
 type Json = Record<string, unknown>;
 const get = (o: unknown, ...path: string[]): unknown =>
@@ -110,6 +111,11 @@ export async function applyPrintfulEvent(event: unknown): Promise<void> {
         .where(eq(orders.id, orderId));
     }
     await audit(orderId, "webhook:shipped", status, { printfulOrderId });
+    await enqueueOrderNotification(orderId, "order_shipped", {
+      shipmentId: String(ship?.id ?? ""), trackingUrl: String(ship?.tracking_url ?? ""),
+      carrier: String(ship?.carrier ?? ""), trackingNumber: String(ship?.tracking_number ?? ""),
+    });
+    await dispatchOrderNotifications(5, orderId).catch(() => {});
   } else if (type === "order_failed" || type === "order_put_hold") {
     if (providerFulfillment) {
       await db().update(fulfillments).set({ status: "manual_review", lastError: type, updatedAt: new Date() })
@@ -119,6 +125,8 @@ export async function applyPrintfulEvent(event: unknown): Promise<void> {
       await db().update(orders).set({ fulfillmentStatus: "manual_review", updatedAt: new Date() }).where(eq(orders.id, orderId));
     }
     await audit(orderId, "webhook:hold", "manual_review", { type, printfulOrderId });
+    await enqueueOrderNotification(orderId, "fulfillment_attention", { reason: type });
+    await dispatchOrderNotifications(5, orderId).catch(() => {});
   } else if (type === "order_canceled") {
     if (providerFulfillment) {
       await db().update(fulfillments).set({ status: "canceled", lastError: null, updatedAt: new Date() })

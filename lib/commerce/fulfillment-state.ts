@@ -18,6 +18,15 @@ export function isPrintfulConfirmationAllowed(input: {
   return input.fulfillmentMode === "auto" && input.allowConfirm === "true" && input.liveMode === "true";
 }
 
+export function shouldRetryPrintfulConfirmation(input: {
+  confirmationAllowed: boolean;
+  printfulOrderId?: string | null;
+  status: string;
+}): boolean {
+  return input.confirmationAllowed && Boolean(input.printfulOrderId) &&
+    ["draft_created", "confirmation_failed"].includes(input.status);
+}
+
 export function groupItemsByPrintfulStore(
   items: FulfillmentSourceItem[],
   defaultStore?: number
@@ -40,7 +49,7 @@ export function groupItemsByPrintfulStore(
 
 export function aggregateFulfillmentStatus(statuses: string[]): string {
   if (statuses.length === 0) return "not_started";
-  if (statuses.some((status) => ["manual_review", "failed", "on_hold"].includes(status))) {
+  if (statuses.some((status) => ["manual_review", "confirmation_failed", "failed", "on_hold"].includes(status))) {
     return "manual_review";
   }
   if (statuses.every((status) => status === "canceled")) return "canceled";

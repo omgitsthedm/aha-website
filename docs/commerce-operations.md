@@ -12,7 +12,7 @@
 1. Square calculates the tax-inclusive quote and processes the payment.
 2. AHA writes the order and payment to Netlify Database.
 3. AHA creates one Printful draft per owning store.
-4. Printful confirmation remains disabled unless all three production gates are enabled.
+4. Production confirmation requires all three gates: `AHA_FULFILLMENT_MODE=auto`, `PRINTFUL_ALLOW_CONFIRM_ORDERS=true`, and `PRINTFUL_LIVE_MODE=true`.
 5. Signed provider webhooks reconcile payment, fulfillment, and shipment state.
 6. The scheduled `reconcile-orders` function retries eligible paid orders every 15 minutes.
 
@@ -22,7 +22,7 @@ Customers use `/track-order` with the AHA order number and checkout email. The r
 
 ## Current confirmation policy
 
-Production is intentionally `manual`: Printful drafts are created after payment, but fulfillment is not confirmed automatically. Enable automatic confirmation only after one controlled live purchase proves Square payment, DB persistence, Printful draft cost/items/address, and webhook reconciliation.
+Production is automatic: only a verified completed Square payment can create a Printful order. The remote Printful order id is persisted before confirmation, so confirmation retries reuse the same order instead of creating duplicates. Preview and branch deploys remain dry-run with both confirmation flags off.
 
 ## Provider tests
 
@@ -30,4 +30,6 @@ The operations dashboard exposes signed webhook tests. These do not create a pay
 
 ## Known external dependency
 
-AHA-owned transactional email is not configured. Square can send its receipt, but branded order, production, and tracking email needs an email provider/domain credential before it can be implemented honestly.
+Branded order, production, exception, and tracking email uses Resend through a durable database outbox. Required production variables: `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `RESEND_REPLY_TO`, and `ORDER_SUPPORT_EMAIL`. Pending email is retried every five minutes and by the reconciliation job. Square receipts remain independent.
+
+After verifying the Resend domain and setting the production API key, sign in at `/ops` and use **Test order email**. It sends one branded system message to `ORDER_SUPPORT_EMAIL` without creating an order or charging a card.
