@@ -168,7 +168,7 @@ styles/          → Global styles
 - `/ops` is protected by a production-only session secret/password; `/track-order` requires exact order number plus checkout email.
 - Verified Square payments create and automatically confirm mapped Printful orders in production. The provider id is persisted before confirmation, and recoverable confirmation failures retry the same order.
 - Provider holds/manual-review orders are never auto-reconfirmed. Preview, staging, and branch deploys remain dry-run with confirmation off.
-- The durable Resend outbox and branded order/production/exception/tracking templates are live, but `RESEND_API_KEY` and domain verification remain incomplete. Do not claim email delivery until `/ops` email test returns success.
+- The durable Resend outbox and branded order/production/exception/tracking templates are live, and `RESEND_API_KEY` is stored as a production-only unreadable Netlify secret. Resend still rejects sends until `afterhoursagenda.com` is verified in Resend/Wix DNS. Do not claim email delivery until `/ops` email test returns success.
 - No real charge, customer order, or Printful fulfillment has been submitted by an agent.
 - For high-risk live changes, accept clear scoped plain-language confirmation and restate the exact action before doing it. No fixed wording or capitalization is required.
 

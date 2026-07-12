@@ -90,14 +90,14 @@
 - Current production fulfillment mode: `auto`
 - Webhook routes verify signatures, persist/dedupe events, and reconcile known order state.
 - A verified paid order creates a Printful order, persists its provider id, and confirms production automatically. Failed confirmation retries reuse the same provider order; provider holds stay in manual review.
-- A durable Resend outbox and branded order/production/exception/shipping templates are deployed. Sender/reply-to/support identity is configured; the account/domain API key is still missing.
+- A durable Resend outbox and branded order/production/exception/shipping templates are deployed. Sender/reply-to/support identity is configured, and the API key is stored as a production-only unreadable Netlify secret. Resend rejects sends until `afterhoursagenda.com` is verified in Resend/Wix DNS.
 - Production operations: `/ops` (Keychain-stored credential) and customer lookup at `/track-order`.
 - Netlify Database uses the managed `NETLIFY_DB_URL` runtime binding; production migrations are current.
 
 ## QA-PENDING
 
-- Create/verify the Resend account under `info@afterhoursagenda.com`, authenticate `afterhoursagenda.com`, and store `RESEND_API_KEY` as a production-only Netlify secret.
-- Use `/ops` → **Test order email** after the key is set; confirm receipt without creating an order.
+- Verify `afterhoursagenda.com` in Resend and add the exact Resend-provided records in Wix DNS; preserve all existing website and Google Workspace records.
+- Use `/ops` → **Test order email** after the domain is verified; confirm receipt without creating an order.
 - Observe the first real paid order through Square, database, Printful confirmation, outbox, and shipment webhook; do not submit a fabricated customer payment.
 - Add real Square Sandbox credentials scoped only to deploy previews/staging; production credentials are now production-only and secret where appropriate.
 - Create and approve a sandbox checkout test plan.
@@ -139,14 +139,14 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Steps Queue
 
-- Reauthenticate the account browser or Gmail connector, then create/verify Resend and add the production-only API key.
+- Open the Resend domain screen in a Chrome profile controllable by Codex, then add the exact Resend-provided records in Wix DNS and wait for verification.
 - Run the protected email test and confirm the message in `info@afterhoursagenda.com`.
 - Observe the first organic order end to end and inspect any exception in `/ops`.
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
 
 ## Recent Session History
 
-- 2026-07-11: David explicitly authorized live production fulfillment before marketing. PRs #8-#9 deployed automatic Printful confirmation after verified Square payment, duplicate-safe provider-id persistence, safe confirmation retries, a Netlify Database notification outbox, Resend templates, five-minute email dispatch, and `/ops` email testing/visibility. Production deploy `6a53251746f4ab0008ccf361` is ready at runtime commit `3f09693`; all three fulfillment gates are true, migration is current, provider tests returned 200, schedulers returned 204, and 12 live E2E tests passed. Orders/payments/fulfillments/shipments remain zero. Resend account/domain/API key remains blocked by unavailable account browser and Gmail reauthentication; sender identity is otherwise configured.
+- 2026-07-11: David explicitly authorized live production fulfillment before marketing. PRs #8-#9 deployed automatic Printful confirmation after verified Square payment, duplicate-safe provider-id persistence, safe confirmation retries, a Netlify Database notification outbox, Resend templates, five-minute email dispatch, and `/ops` email testing/visibility. All three fulfillment gates are true, migration is current, provider tests returned 200, schedulers returned 204, and 12 live E2E tests passed. Orders/payments/fulfillments/shipments remain zero. `RESEND_API_KEY` is now stored as a production-only unreadable Netlify secret and production deploy `6a533907146c6e206b6c59a5` is ready at commit `699c4ae`; the protected send reached Resend but returned 403 because `afterhoursagenda.com` is not verified. Wix DNS verification is the remaining email blocker.
 
 - 2026-07-11: Production commerce operations shipped through PRs #4-#6. Added protected `/ops`, guest `/track-order`, durable webhook/order operations, manual paid-order retry, and a 15-minute scheduled reconciliation function. Corrected Netlify Database to the managed `NETLIFY_DB_URL` binding, restored Square's existing subscription signature key as a production-only secret, and explicitly scoped the exact webhook notification URL. Official Square and signed Printful tests returned 200 and persisted signature-valid `processed` events; orders/payments/fulfillments/shipments remained zero. Automatic Printful confirmation remains OFF pending one user-entered paid checkout. Transactional email remains unconfigured.
 
@@ -179,7 +179,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Agent Directive
 
-Continue from clean, pushed `origin/main`; verify the current deploy SHA before acting. Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, and email outbox code are live. Do not turn confirmation back off unless responding to a verified production incident. Next: finish Resend account/domain verification, set the production-only API key, and run the protected email test. Do not fabricate a customer payment.
+Continue from clean, pushed `origin/main`; verify the current deploy SHA before acting. Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, and email outbox code are live. Do not turn confirmation back off unless responding to a verified production incident. The Resend key is installed; next add the exact Resend domain records in Wix DNS, wait for verification, and rerun the protected email test. Do not fabricate a customer payment.
 
 ## Emergency / Bypass Notes
 
