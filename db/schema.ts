@@ -182,6 +182,15 @@ export const auditLog = pgTable("audit_log", {
   oldStatus: text("old_status"), newStatus: text("new_status"), source: text("source"), actor: text("actor"),
   metadataJson: jsonb("metadata_json"), createdAt: createdAt(),
 });
+export const notificationOutbox = pgTable("notification_outbox", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  orderId: bigint("order_id", { mode: "number" }).notNull().references(() => orders.id, { onDelete: "cascade" }),
+  kind: text("kind").notNull(), recipient: text("recipient").notNull(),
+  dedupeKey: text("dedupe_key").notNull().unique(), payloadJson: jsonb("payload_json").notNull().default({}),
+  status: text("status").notNull().default("pending"), attempts: integer("attempts").notNull().default(0),
+  providerMessageId: text("provider_message_id"), lastError: text("last_error"),
+  sentAt: timestamp("sent_at", { withTimezone: true }), createdAt: createdAt(), updatedAt: updatedAt(),
+}, (t) => ({ byStatus: index("idx_notification_outbox_status").on(t.status, t.createdAt) }));
 export const syncRuns = pgTable("sync_runs", {
   id: bigserial("id", { mode: "number" }).primaryKey(), kind: text("kind").notNull(), status: text("status").notNull(),
   startedAt: timestamp("started_at", { withTimezone: true }).defaultNow().notNull(),

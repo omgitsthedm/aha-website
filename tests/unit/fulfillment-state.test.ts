@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   aggregateFulfillmentStatus, groupItemsByPrintfulStore, isPrintfulConfirmationAllowed,
+  shouldRetryPrintfulConfirmation,
 } from "@/lib/commerce/fulfillment-state";
 
 describe("multi-store fulfillment state", () => {
@@ -31,5 +32,12 @@ describe("multi-store fulfillment state", () => {
     expect(isPrintfulConfirmationAllowed({
       fulfillmentMode: "auto", allowConfirm: "true", liveMode: "true",
     })).toBe(true);
+  });
+
+  it("retries only an existing draft or failed confirmation, never a provider hold", () => {
+    expect(shouldRetryPrintfulConfirmation({ confirmationAllowed: true, printfulOrderId: "123", status: "draft_created" })).toBe(true);
+    expect(shouldRetryPrintfulConfirmation({ confirmationAllowed: true, printfulOrderId: "123", status: "confirmation_failed" })).toBe(true);
+    expect(shouldRetryPrintfulConfirmation({ confirmationAllowed: true, printfulOrderId: "123", status: "manual_review" })).toBe(false);
+    expect(shouldRetryPrintfulConfirmation({ confirmationAllowed: false, printfulOrderId: "123", status: "draft_created" })).toBe(false);
   });
 });

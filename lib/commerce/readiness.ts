@@ -36,10 +36,18 @@ export const NETLIFY_CUTOVER_ENV = [
   "AHA_READINESS_TOKEN",
 ] as const;
 
+export const EMAIL_CUTOVER_ENV = [
+  "RESEND_API_KEY",
+  "RESEND_FROM_EMAIL",
+  "RESEND_REPLY_TO",
+  "ORDER_SUPPORT_EMAIL",
+] as const;
+
 export const ALL_CUTOVER_ENV = [
   ...SQUARE_CUTOVER_ENV,
   ...PRINTFUL_CUTOVER_ENV,
   ...NETLIFY_CUTOVER_ENV,
+  ...EMAIL_CUTOVER_ENV,
 ] as const;
 
 function missingFrom(presence: Record<string, boolean>): string[] {
@@ -53,6 +61,7 @@ export function getCommerceReadinessSnapshot() {
   const square = getEnvPresence([...SQUARE_CUTOVER_ENV]);
   const printful = getEnvPresence([...PRINTFUL_CUTOVER_ENV]);
   const netlify = getEnvPresence([...NETLIFY_CUTOVER_ENV]);
+  const email = getEnvPresence([...EMAIL_CUTOVER_ENV]);
   const all = getEnvPresence([...ALL_CUTOVER_ENV]);
   const siteUrl = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
   const squareWebhookUrl = normalizeSiteUrl(
@@ -105,6 +114,10 @@ export function getCommerceReadinessSnapshot() {
       netlify: {
         configured: netlify,
         missing: missingFrom(netlify),
+      },
+      email: {
+        configured: email,
+        missing: missingFrom(email),
       },
     },
     missing: missingFrom(all),

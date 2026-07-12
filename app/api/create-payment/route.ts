@@ -7,6 +7,7 @@ import {
   type CheckoutLine, type OrderContact,
 } from "@/lib/commerce/orders";
 import { startFulfillment } from "@/lib/commerce/fulfillment";
+import { dispatchOrderNotifications, enqueueOrderNotification } from "@/lib/commerce/notifications";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,7 @@ function splitName(name?: string): { firstName: string; lastName: string } {
  * 2) create a Square Order so SQUARE computes price + location tax authoritatively
  * 3) persist the internal order with those totals
  * 4) charge via Payments API against the order id with a stable idempotency key
- * Fulfillment starts (Printful DRAFT, confirm gated) only after payment succeeds.
+ * Production fulfillment starts and confirms only after payment succeeds and all production gates are enabled.
  */
 export async function POST(request: Request) {
   let body: CreatePaymentBody;
@@ -151,6 +152,8 @@ export async function POST(request: Request) {
   //    here are logged for reconciliation, not surfaced as a failed payment.
   try {
     await markOrderPaid(order.orderId, payment.id, body.idempotencyKey, priced.total, priced.currency);
+    await enqueueOrderNotification(order.orderId, "order_confirmed");
+    await dispatchOrderNotifications(5, order.orderId).catch(() => {});
   } catch (err) {
     console.error(`RECONCILE: order ${order.externalOrderNumber} charged (payment ${payment.id}) but DB update failed:`, err);
   }

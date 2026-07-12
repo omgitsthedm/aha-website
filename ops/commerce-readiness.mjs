@@ -26,6 +26,12 @@ const REQUIRED = {
     "AHA_FULFILLMENT_MODE",
     "AHA_READINESS_TOKEN",
   ],
+  email: [
+    "RESEND_API_KEY",
+    "RESEND_FROM_EMAIL",
+    "RESEND_REPLY_TO",
+    "ORDER_SUPPORT_EMAIL",
+  ],
 };
 
 function flattenGroups(groups) {
@@ -118,6 +124,7 @@ function main() {
   printGroup("Square", presence, REQUIRED.square);
   printGroup("Printful", presence, REQUIRED.printful);
   printGroup("Netlify/runtime", presence, REQUIRED.netlify);
+  printGroup("Transactional email", presence, REQUIRED.email);
 
   const missing = requiredNames.filter((name) => !presence[name]);
   if (missing.length) {
