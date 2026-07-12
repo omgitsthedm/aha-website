@@ -3,8 +3,8 @@ import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata = {
-  title: "About",
-  description: "The point of view behind After Hours Agenda, an independent New York streetwear label.",
+  title: "About the Independent NYC Label",
+  description: "Meet After Hours Agenda, an independent New York streetwear label built around graphic apparel, the black sheep point of view, and life after dark.",
   alternates: { canonical: "/about" },
 };
 

@@ -25,7 +25,8 @@
 # tested; flip PRINTFUL_ALLOW_CONFIRM_ORDERS + PRINTFUL_LIVE_MODE to "true" only then.
 [context.production.environment]
   SQUARE_ENVIRONMENT = "production"
-  SQUARE_WEBHOOK_NOTIFICATION_URL = "https://www.afterhoursagenda.com/api/webhooks/square"
+  # Must exactly match Square's enabled production subscription for signature verification.
+  SQUARE_WEBHOOK_NOTIFICATION_URL = "https://afterhoursagenda.netlify.app/api/webhooks/square"
   AHA_FULFILLMENT_MODE = "manual"
   PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
   PRINTFUL_LIVE_MODE = "false"

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s | After Hours Agenda",
   },
   description:
-    "Independent New York streetwear, graphic apparel, and made-to-order goods from After Hours Agenda.",
+    "Shop independent New York streetwear, graphic apparel, and made-to-order goods from After Hours Agenda, with free standard shipping and clear fit guidance.",
   keywords: [
     "streetwear", "NYC", "fashion", "urban", "clothing", "after hours",
     "graphic tees", "independent fashion", "New York City", "streetwear brand",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   ),
   openGraph: {
     title: "After Hours Agenda | Independent NYC Streetwear",
-    description: "Independent New York streetwear and made-to-order graphic apparel.",
+    description: "Independent New York streetwear, graphic apparel, and made-to-order goods with free standard shipping and honest product details.",
     type: "website",
     locale: "en_US",
     siteName: "After Hours Agenda",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "After Hours Agenda | Independent NYC Streetwear",
-    description: "Independent New York streetwear and made-to-order graphic apparel.",
+    description: "Independent New York streetwear, graphic apparel, and made-to-order goods with free standard shipping and honest product details.",
     images: ["/brand/mosaic-hero.webp"],
   },
   robots: {

@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 export const revalidate = 300;
 export const metadata = {
   title: "Catalog Edit",
-  description: "An After Hours Agenda catalog edit of active made-to-order graphics.",
+  description: "Browse the After Hours Agenda catalog edit: a focused selection of active made-to-order graphic apparel from the independent New York streetwear label.",
   alternates: { canonical: "/best-sellers" },
 };
 

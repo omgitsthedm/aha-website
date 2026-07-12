@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 
-export const metadata = { title: "Terms of Service", description: "Terms of service for After Hours Agenda.", alternates: { canonical: "/terms" } };
+export const metadata = { title: "Storefront Terms of Service", description: "Read the After Hours Agenda terms for made-to-order products, pricing, Square payments, shipping, returns, intellectual property, site use, and support.", alternates: { canonical: "/terms" } };
 
 const sections = [
   ["Orders", "Products are made to order. An order is accepted when payment is approved and the storefront issues a confirmation. We may cancel and refund an order if a product, price, payment, or fulfillment error prevents completion."],

@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 export const revalidate = 300;
 export const metadata = {
   title: "New Arrivals",
-  description: "Products assigned to the New Arrivals collection at After Hours Agenda.",
+  description: "Shop new arrivals from After Hours Agenda: the latest active made-to-order graphic apparel from an independent New York streetwear label.",
   alternates: { canonical: "/new-arrivals" },
 };
 

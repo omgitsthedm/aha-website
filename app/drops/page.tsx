@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import type { Collection, Product } from "@/lib/utils/types";
 
 export const revalidate = 300;
-export const metadata = { title: "Drops", description: "The active After Hours Agenda drop and made-to-order catalog.", alternates: { canonical: "/drops" } };
+export const metadata = { title: "Current Streetwear Drop", description: "Browse the current After Hours Agenda drop and active made-to-order catalog, with clear pricing, product details, free standard shipping, and no fake scarcity.", alternates: { canonical: "/drops" } };
 
 export default async function DropsPage() {
   let products: Product[] = [];

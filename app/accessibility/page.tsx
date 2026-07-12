@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 
-export const metadata = { title: "Accessibility", description: "Accessibility statement and support contact for After Hours Agenda.", alternates: { canonical: "/accessibility" } };
+export const metadata = { title: "Storefront Accessibility", description: "Read the After Hours Agenda accessibility standard, WCAG 2.2 AA target, supported shopping flows, and contact route for reporting an access barrier.", alternates: { canonical: "/accessibility" } };
 
 export default function AccessibilityPage() {
   return (

@@ -5,6 +5,8 @@ import { ProductDetail } from "@/components/product/ProductDetail";
 import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
 import { notFound } from "next/navigation";
 import type { Product, Collection } from "@/lib/utils/types";
+import type { Metadata } from "next";
+import { buildProductStory } from "@/lib/content/product-copy";
 
 export const revalidate = 300;
 
@@ -12,30 +14,36 @@ export const revalidate = 300;
 // No generateStaticParams. This avoids hammering Square API at build time.
 export const dynamicParams = true;
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+const productMetaTitle = (name: string) => {
+  const stem = name.length < 22 ? `${name} Streetwear` : name;
+  const shortened = stem.length > 37 ? `${stem.slice(0, 36).trimEnd()}…` : stem;
+  return `${shortened} | After Hours Agenda`;
+};
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   try {
     const { slug } = await params;
     const product = await getProduct(slug);
     if (!product) return { title: "Product Not Found" };
 
-    const description =
-      product.description?.replace(/<[^>]*>/g, "").slice(0, 160) ||
-      `Shop ${product.name} from After Hours Agenda`;
+    const enrichment = getProductEnrichment(product.slug);
+    const description = buildProductStory(product, enrichment).slice(0, 158);
     const image = product.images[0];
+    const title = productMetaTitle(product.name);
 
     return {
-      title: product.name,
+      title: { absolute: title },
       description,
       alternates: { canonical: `/product/${product.slug}` },
       openGraph: {
-        title: `${product.name} | After Hours Agenda`,
+        title,
         description,
         type: "website",
         ...(image && { images: [{ url: image, alt: product.name }] }),
       },
       twitter: {
         card: "summary_large_image",
-        title: product.name,
+        title,
         description,
         ...(image && { images: [image] }),
       },
@@ -80,6 +88,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   );
 
   const enrichment = getProductEnrichment(product.slug);
+  const storyDescription = buildProductStory(product, enrichment, collection);
 
   // Live Printful stock per size (5-min fresh; fails open to in-stock).
   const stockBySize: Record<string, boolean> = {};
@@ -92,13 +101,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <ProductJsonLd product={product} />
+      <ProductJsonLd product={product} description={storyDescription} />
       <ProductDetail
         product={product}
         related={related}
         collection={collection}
         enrichment={enrichment}
         stockBySize={stockBySize}
+        storyDescription={storyDescription}
       />
     </>
   );

@@ -5,6 +5,7 @@ const BASE_URL =
 
 interface ProductJsonLdProps {
   product: Product;
+  description?: string;
 }
 
 /**
@@ -13,18 +14,14 @@ interface ProductJsonLdProps {
  * and serialized with JSON.stringify which safely escapes special characters,
  * preventing script injection in the JSON-LD output.
  */
-export function ProductJsonLd({ product }: ProductJsonLdProps) {
+export function ProductJsonLd({ product, description }: ProductJsonLdProps) {
   // Guard against products with no variations (would crash Math.min/max)
   if (product.variations.length === 0) return null;
 
   // Strip HTML tags from description (Square may include formatting)
-  const cleanDescription = product.description
+  const cleanDescription = (description || product.description)
     .replace(/<[^>]*>/g, "")
     .slice(0, 500);
-
-  const prices = product.variations.map((v) => v.price);
-  const lowPrice = (Math.min(...prices) / 100).toFixed(2);
-  const highPrice = (Math.max(...prices) / 100).toFixed(2);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -37,18 +34,18 @@ export function ProductJsonLd({ product }: ProductJsonLdProps) {
       "@type": "Brand",
       name: "After Hours Agenda",
     },
-    offers: {
-      "@type": "AggregateOffer",
+    offers: product.variations.map((variation) => ({
+      "@type": "Offer",
+      sku: variation.sku || variation.id,
+      price: (variation.price / 100).toFixed(2),
       priceCurrency: product.currency || "USD",
-      lowPrice,
-      highPrice,
-      offerCount: product.variations.length,
       availability: "https://schema.org/InStock",
+      url: `${BASE_URL}/product/${product.slug}`,
       seller: {
         "@type": "Organization",
         name: "After Hours Agenda",
       },
-    },
+    })),
   };
 
   // JSON.stringify safely escapes all special characters, preventing XSS

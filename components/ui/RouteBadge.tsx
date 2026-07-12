@@ -7,6 +7,7 @@ interface RouteBadgeProps {
   showName?: boolean;
   tone?: "default" | "inverse";
   className?: string;
+  decorative?: boolean;
 }
 
 const sizes = {
@@ -15,12 +16,12 @@ const sizes = {
   lg: "min-h-10 px-3 text-sm",
 };
 
-export function RouteBadge({ slug, code, size = "md", showName = false, tone = "default", className = "" }: RouteBadgeProps) {
+export function RouteBadge({ slug, code, size = "md", showName = false, tone = "default", className = "", decorative = false }: RouteBadgeProps) {
   const resolved = code || (slug ? getCollectionCode(slug) : DEFAULT_COLLECTION_CODE);
   const badgeTone = tone === "inverse" ? "border-void text-void" : "border-accent text-accent";
   const nameTone = tone === "inverse" ? "text-void" : "text-muted";
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
+    <span aria-hidden={decorative || undefined} className={`inline-flex items-center gap-2 ${className}`}>
       <span className={`${sizes[size]} ${badgeTone} inline-flex items-center border font-mono font-bold uppercase tracking-[0.06em]`}>
         {resolved.abbr}
       </span>

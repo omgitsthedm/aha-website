@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { PageHeader } from "@/components/ui/PageHeader";
 
-export const metadata = { title: "Lookbook", description: "After Hours Agenda campaign images and streetwear editorial.", alternates: { canonical: "/lookbook" } };
+export const metadata = { title: "NYC Streetwear Lookbook", description: "Explore After Hours Agenda campaign photography and streetwear editorial: graphic apparel, bold color, and independent New York energy after dark.", alternates: { canonical: "/lookbook" } };
 
 const images = [
   { src: "/brand/lifestyle/lifestyle-1.jpeg", alt: "After Hours Agenda campaign portrait", layout: "md:col-span-7 md:row-span-2" },

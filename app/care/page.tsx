@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 
-export const metadata = { title: "Care Instructions", description: "General care guidance for After Hours Agenda printed apparel.", alternates: { canonical: "/care" } };
+export const metadata = { title: "Graphic Apparel Care Instructions", description: "Keep After Hours Agenda printed apparel in shape with clear washing, drying, ironing, bleach, and dry-cleaning guidance for made-to-order garments.", alternates: { canonical: "/care" } };
 
 const care = [
   ["01", "Wash cold", "Machine wash with like colors. Cold water helps protect both print and fabric."],

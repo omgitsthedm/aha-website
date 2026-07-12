@@ -17,6 +17,7 @@ interface ProductDetailProps {
   collection?: Collection;
   enrichment?: ProductEnrichment | null;
   stockBySize?: Record<string, boolean>;
+  storyDescription?: string;
 }
 
 const sanitizeHtml = (html: string): string => html
@@ -33,7 +34,7 @@ const sanitizeHtml = (html: string): string => html
 
 const cleanDisplayText = (value: string): string => value.replace(/[—–]/g, "-");
 
-export function ProductDetail({ product, related, collection, enrichment, stockBySize }: ProductDetailProps) {
+export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription }: ProductDetailProps) {
   const { addItem } = useCart();
   const sizeInStock = (size: string) => stockBySize ? stockBySize[size.toUpperCase()] !== false : true;
   const variationAvailable = (name: string) => {
@@ -73,7 +74,9 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
     feedbackTimer.current = window.setTimeout(() => setAddedFeedback(false), 1800);
   };
 
-  const descriptionMarkup = product.description ? { __html: sanitizeHtml(product.description) } : null;
+  const descriptionMarkup = storyDescription || product.description
+    ? { __html: sanitizeHtml(storyDescription || product.description) }
+    : null;
   const activeImageSrc = product.images[activeImage];
 
   useEffect(() => {

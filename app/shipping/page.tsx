@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { DELIVERY_WINDOW, PRODUCTION_WINDOW } from "@/lib/commerce/policies";
 
-export const metadata = { title: "Shipping", description: "Production and shipping information for After Hours Agenda orders.", alternates: { canonical: "/shipping" } };
+export const metadata = { title: "Production and Free Shipping", description: "Review After Hours Agenda made-to-order production timing, free standard shipping, carrier delivery estimates, tracking, and the costs shown before payment.", alternates: { canonical: "/shipping" } };
 
 export default function ShippingPage() {
   return (

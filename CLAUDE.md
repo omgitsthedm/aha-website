@@ -25,20 +25,20 @@ This project is governed by `docs/MASTER-BUILD-INSTRUCTION.md` (the full ecommer
 
 ### Active local release candidate
 
-- Branch: `feature/flagship-storefront-20260711`
-- Scope: local storefront/editorial evolution only; no commerce-provider or production mutation.
-- Handoff: `docs/FLAGSHIP-STOREFRONT-HANDOFF-2026-07-11.md`
+- Branch: `audit/flagship-hardening-20260711`
+- Scope: local flagship audit and technical hardening; no commerce-provider or production mutation.
+- Handoff: `docs/AUDIT-FLAGSHIP-HARDENING-2026-07-11.md`
 - Release state: validated locally, not pushed, merged, previewed, or deployed.
 
 - Canonical branch: `main`
-- Current deployed commit: `13c25e83f696b19c7d9230ec4766900cc5485451`
+- Current deployed commit: `f57ce6b3c4e5700ea97d60ccfe57b15d6293f310`
 - Netlify project: `afterhoursagenda`
 - Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
 - Default Netlify URL: `https://afterhoursagenda.netlify.app`
 - Primary custom URL: `https://afterhoursagenda.com`
 - `www` redirects to apex: `https://www.afterhoursagenda.com -> https://afterhoursagenda.com`
-- Latest verified production deploy id: `6a4f2851e4c1b9fb71f86a67`
+- Latest verified commit-backed production deploy id: `6a518dd7f0be1e000823c1f0`
 - PR #2 merged the current storefront/backend readiness work into `main`.
 - GitHub Action `Claude Code Review` failed only because Claude account billing was locked per handoff; it was not a verified app/build failure.
 

@@ -16,10 +16,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const collections = await getAllCollections();
     const collection = collections.find((c) => c.slug === slug);
     if (!collection) return { title: "Collection Not Found" };
+    const isNewArrivals = collection.slug === "new-arrivals";
     return {
-      title: collection.name,
-      description: collection.description,
-      alternates: { canonical: `/collections/${collection.slug}` },
+      title: isNewArrivals ? "New Arrivals Collection" : `${collection.name} Collection`,
+      description: `${collection.description} Shop active, made-to-order graphic apparel from After Hours Agenda with clear fit, shipping, and return details.`.slice(0, 158),
+      alternates: { canonical: isNewArrivals ? "/new-arrivals" : `/collections/${collection.slug}` },
     };
   } catch (error) {
     console.error("Error generating collection metadata:", error);
