@@ -4,6 +4,11 @@ import { mapSquareItemToProduct, mapSquareCategoryToCollection } from "@/lib/uti
 import { loadProducts } from "@/lib/data/products";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import { cache } from "react";
+import { buildPreviewCollections, buildPreviewProducts } from "@/lib/data/preview-catalog";
+
+function previewCatalogFallbackAllowed(): boolean {
+  return Boolean(process.env.CONTEXT && process.env.CONTEXT !== "production");
+}
 
 interface SquareCatalogResponse {
   objects?: any[];
@@ -41,6 +46,9 @@ export function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
 }
 
 export const getAllProducts = cache(async function getAllProducts(): Promise<Product[]> {
+  if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
+    return buildPreviewProducts();
+  }
   let allItems: any[] = [];
   let allRelated: any[] = [];
   let cursor: string | undefined;
@@ -113,6 +121,9 @@ export async function getProduct(slug: string): Promise<Product | null> {
 }
 
 export const getAllCollections = cache(async function getAllCollections(): Promise<Collection[]> {
+  if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
+    return buildPreviewCollections();
+  }
   const res = await squareRequest<SquareCatalogResponse>(
     "/catalog/search",
     {

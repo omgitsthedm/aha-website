@@ -45,7 +45,7 @@ Post-fix category movement: Structured Data 34 → 100; Accessibility 51 → 81;
 - No code-level commerce readiness failure was found.
 - Exact Netlify target, live brand identity, and required environment-variable names passed their guards.
 - No live checkout, payment, webhook, refund, fulfillment, or test order was submitted.
-- The known Square webhook URL/signature-key configuration caveat remains an external provider task and is not changed by this branch.
+- The production Square webhook subscription and committed Netlify notification URL now use the same exact, non-redirecting endpoint. Signature delivery verification remains gated on the Git-backed production deploy.
 
 ### P1 — Search and structured data
 
@@ -79,7 +79,7 @@ Desktop and 390px mobile screenshots were inspected in a local production build.
 - **Local HTTPS and sitemap-domain errors:** expected when auditing `http://127.0.0.1:3010` against a production-domain sitemap.
 - **CAPTCHA missing:** the newsletter already uses a Netlify honeypot. Adding Turnstile would require provider setup and adds friction; rate/abuse evidence should justify that change.
 - **Thin policy/support pages:** word-count thresholds alone do not justify padding clear operational content to 300 words.
-- **CSP missing:** real defense-in-depth gap, but not safe to improvise around Square. Track as a separately tested checkout hardening task.
+- **CSP:** the branch now enforces a Square-compatible policy with regression coverage. Final secure-card initialization remains an HTTPS production-domain check because Square rejects localhost as an application origin.
 - **Product link orphan warnings:** the sitemap covers product routes; client-side catalog pagination means crawlers do not see all cards in the first shop response. Server-addressable pagination remains a future SEO enhancement.
 
 ## External remediation status
@@ -88,7 +88,7 @@ Authorized follow-up began 2026-07-11 at 20:11 MST.
 
 - **Square webhook URL:** Square has one enabled production subscription at `https://afterhoursagenda.netlify.app/api/webhooks/square`. The committed production notification URL now matches it exactly. Production verification waits for the Git-backed deploy; no key value was printed.
 - **Credential isolation:** the Square access token and application IDs were moved from all-context Netlify values to production-only values. The access token is now marked secret. Preview no longer inherits production access.
-- **Sandbox preview:** a matching Sandbox app ID, access token, and location ID could not be obtained because both authenticated browser-control bridges were unavailable. Preview checkout therefore remains fail-closed instead of reusing production credentials.
+- **Sandbox preview:** a matching Sandbox app ID, access token, and location ID could not be obtained because both authenticated browser-control bridges were unavailable. Preview checkout therefore remains fail-closed instead of reusing production credentials. Non-production builds render the validated, versioned internal catalog for visual/content QA; production never uses that fallback.
 - **CSP:** an enforced Square-compatible policy now covers production and Sandbox SDKs, PCI connections, wallet/SCA frames, image/font sources, framing denial, and object denial. Local header and regression checks pass; secure card initialization must be rechecked on the approved HTTPS production domain because Square rejects the localhost origin.
 - **Catalog pagination:** `/shop?page=N` now renders 24 products per crawlable page with unique titles/canonicals and accessible page navigation.
 - **Product storytelling:** customer-visible PDP copy and product schema now use unique product, garment, collection, fabric, policy, and shipping context rather than generic upstream Printful prose.
@@ -98,12 +98,12 @@ Authorized follow-up began 2026-07-11 at 20:11 MST.
 
 - [x] Typecheck
 - [x] Lint
-- [x] Unit tests (21 passed)
+- [x] Unit tests (26 passed)
 - [x] Product, Square-map, Printful-map, and margin validation
 - [x] Production build
 - [x] Playwright desktop/mobile smoke tests (4 passed against the explicit local AHA URL)
 - [x] Expanded Playwright pagination/CSP suite (8 passed against the explicit local AHA URL)
-- [x] Product-copy unit coverage (23 unit tests total)
+- [x] Product-copy and preview-catalog unit coverage (26 unit tests total)
 - [x] Post-fix local crawl
 - [x] Desktop and mobile browser QA, including mobile menu focus/open state
 - [x] Git diff and secret-safe review
