@@ -4,7 +4,7 @@
 
 - **Schema:** `db/schema.ts` (Drizzle) — the single source of truth.
 - **Migrations:** `netlify/database/migrations/` — Netlify **auto-applies pending migrations on every deploy**.
-- **Connection:** Netlify injects `NETLIFY_DATABASE_URL` at runtime (`lib/db/client.ts`). `DATABASE_URL` is a local/CI fallback.
+- **Connection:** Netlify injects the managed `NETLIFY_DB_URL` binding at runtime (`lib/db/client.ts`). `NETLIFY_DATABASE_URL` and `DATABASE_URL` remain local/legacy fallbacks.
 
 ## Provisioned
 Neon DB is provisioned (`netlify database init`). Free tier — free at AHA's volume. Deploy Previews get branched DBs so previews never touch production data.
