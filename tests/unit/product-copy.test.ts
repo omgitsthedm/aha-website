@@ -28,7 +28,8 @@ describe("buildProductStory", () => {
   it("replaces generic provider copy with specific brand and collection context", () => {
     const story = buildProductStory(product("Be You"), null, collection);
 
-    expect(story).toContain("Be You puts the graphic front and center");
+    expect(story).toContain("Optimism with its eyes open");
+    expect(story).toContain("Be You is printed to order");
     expect(story).toContain(collection.description);
     expect(story).toContain("free shipping");
     expect(story).not.toContain("comfortable, soft, lightweight");
@@ -38,5 +39,17 @@ describe("buildProductStory", () => {
     expect(buildProductStory(product("Be You"))).not.toBe(
       buildProductStory(product("Cities")),
     );
+  });
+
+  it("uses relevant, non-fabricated design territory for recurring AHA themes", () => {
+    expect(buildProductStory(product("Black Sheep Sweatshirt"))).toContain("house mark");
+    expect(buildProductStory(product("No Kings Tee"))).toContain("self-rule");
+    expect(buildProductStory(product("Library Tote Bag"))).toContain("reader's graphic");
+    expect(buildProductStory(product("Club TechNoir"))).toContain("sound, style");
+  });
+
+  it("does not manufacture scarcity, reviews, or unsupported material claims", () => {
+    const story = buildProductStory(product("Circle"));
+    expect(story).not.toMatch(/limited|selling fast|best seller|five stars|premium cotton/i);
   });
 });

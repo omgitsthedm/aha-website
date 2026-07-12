@@ -11,7 +11,7 @@ export function LatestDrop({ products, isNewArrivalEdit }: { products: Product[]
       <div className="mx-auto max-w-[1440px]">
         <div className="mb-9 max-w-3xl">
           <h2 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">{isNewArrivalEdit ? "New arrivals" : "Current rotation"}</h2>
-          <p className="mt-4 max-w-xl font-mono text-sm leading-relaxed text-muted">{isNewArrivalEdit ? "Fresh additions to the active catalog." : "Five pieces pulled forward from the full catalog."}</p>
+          <p className="mt-4 max-w-xl font-mono text-sm leading-relaxed text-muted">{isNewArrivalEdit ? "New graphics and new color entering the active rotation—without fake countdowns or manufactured scarcity." : "Five current pieces from the design index, selected as an editorial route into the full catalog."}</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-12 md:grid-rows-2 md:gap-5">

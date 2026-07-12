@@ -13,7 +13,7 @@ export function Collections({ collections }: { collections: Collection[] }) {
       <div className="mx-auto max-w-[1440px]">
         <div className="mb-8 max-w-2xl">
           <h2 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">Choose a point of view</h2>
-          <p className="mt-4 font-mono text-sm leading-relaxed text-muted">Collections organize the catalog by idea, not by trend.</p>
+          <p className="mt-4 font-mono text-sm leading-relaxed text-muted">Not seasons. Not algorithms. These are the ideas running through the design archive.</p>
         </div>
         <div className="grid gap-px border border-border/40 bg-border/40 lg:grid-cols-[1.15fr_0.85fr]">
           <Link href={`/collections/${spotlight.slug}`} className="group flex min-h-[26rem] flex-col justify-between bg-accent p-6 text-void md:p-10">

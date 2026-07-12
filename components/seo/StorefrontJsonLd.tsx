@@ -12,7 +12,7 @@ export function StorefrontJsonLd() {
         logo: `${SITE_URL}/brand/sheep-head.svg`,
         image: `${SITE_URL}/brand/mosaic-hero.webp`,
         description: "Independent New York streetwear and made-to-order graphic apparel.",
-        email: "hello@afterhoursagenda.com",
+        email: "info@afterhoursagenda.com",
         sameAs: [
           "https://instagram.com/afterhoursagenda",
           "https://tiktok.com/@afterhoursagenda",

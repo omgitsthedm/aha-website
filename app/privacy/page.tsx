@@ -1,15 +1,19 @@
 import { PageHeader } from "@/components/ui/PageHeader";
+import { SUPPORT_EMAIL } from "@/lib/content/site-copy";
 
 export const metadata = { title: "Storefront Privacy Policy", description: "Learn what information After Hours Agenda collects for checkout and support, how Square and Printful process order data, and how to request access or deletion.", alternates: { canonical: "/privacy" } };
 
 const sections = [
   ["Information we collect", "We collect information you provide during checkout or support, including your name, email address, shipping address, order details, and messages. Payment details are handled by Square rather than stored by this storefront."],
   ["How we use it", "We use information to quote, process, produce, ship, and support orders; send transactional updates; operate the storefront; prevent abuse; and improve the customer experience."],
-  ["Service providers", "Information is shared only when needed to operate the store, including with Square for payments and Printful for production and fulfillment. Their own privacy terms also apply."],
+  ["Service providers", "Information is shared when needed to operate the store: Square processes payment, Printful produces and ships orders, Netlify hosts the storefront and operational database, and Resend delivers transactional email. Each provider's own privacy terms also apply."],
+  ["Order records", "Order, payment-status, fulfillment, shipment, webhook, and support records may be retained to deliver service, prevent duplicate processing, resolve disputes, meet accounting obligations, and protect the store and its customers."],
   ["Marketing", "Newsletter email is collected only when you submit the signup form. You may unsubscribe from marketing messages using the link in an email or by contacting us."],
-  ["Your choices", "To ask about access, correction, or deletion of personal information, email hello@afterhoursagenda.com. Some order records may need to be retained for legal, fraud-prevention, or accounting reasons."],
+  ["Cookies and local storage", "The storefront may use browser storage to keep your bag available between visits and essential cookies to operate protected or transactional features. Payment providers may use their own necessary technologies during checkout."],
+  ["Your choices", `To ask about access, correction, or deletion of personal information, email ${SUPPORT_EMAIL}. Some order records may need to be retained for legal, fraud-prevention, dispute, or accounting reasons.`],
+  ["Security and limits", "We use service providers and technical controls intended to protect storefront data, but no online system can promise absolute security. Never send card details, passwords, or account credentials through support email."],
 ];
 
 export default function PrivacyPage() {
-  return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><article className="mx-auto max-w-4xl"><PageHeader eyebrow="Last updated July 10, 2026" title="Privacy policy" description="This policy explains the information used to operate the After Hours Agenda storefront and fulfill orders." /><div className="divide-y divide-border/40 border-y border-border/40">{sections.map(([title, body]) => <section key={title} className="grid gap-3 py-7 md:grid-cols-[13rem_1fr] md:gap-8"><h2 className="font-display text-lg font-black uppercase">{title}</h2><p className="text-sm leading-relaxed text-muted">{body}</p></section>)}</div></article></div>;
+  return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><article className="mx-auto max-w-4xl"><PageHeader eyebrow="Last updated July 12, 2026" title="Privacy policy" description="This policy explains the information used to run the storefront, process and fulfill orders, provide support, and send messages you request." /><div className="divide-y divide-border/40 border-y border-border/40">{sections.map(([title, body]) => <section key={title} className="grid gap-3 py-7 md:grid-cols-[13rem_1fr] md:gap-8"><h2 className="font-display text-lg font-black uppercase">{title}</h2><p className="text-sm leading-relaxed text-muted">{body}</p></section>)}</div></article></div>;
 }

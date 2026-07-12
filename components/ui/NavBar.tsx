@@ -9,7 +9,7 @@ import { COLLECTION_CODES } from "@/lib/utils/collection-codes";
 const PRIMARY_LINKS = [
   { label: "Shop", href: "/shop" },
   { label: "New", href: "/new-arrivals" },
-  { label: "Catalog Edit", href: "/best-sellers" },
+  { label: "Catalog Edit", href: "/catalog-edit" },
   { label: "Drops", href: "/drops" },
   { label: "Lookbook", href: "/lookbook" },
   { label: "About", href: "/about" },

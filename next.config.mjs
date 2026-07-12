@@ -42,6 +42,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/best-sellers",
+        destination: "/catalog-edit",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

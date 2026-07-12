@@ -3,12 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { COLLECTION_CODES } from "@/lib/utils/collection-codes";
+import { SUPPORT_EMAIL } from "@/lib/content/site-copy";
 
 const SUPPORT_LINKS = [
   { label: "Shipping", href: "/shipping" },
   { label: "Returns", href: "/returns" },
   { label: "Care", href: "/care" },
   { label: "Size Guide", href: "/size-guide" },
+  { label: "FAQ", href: "/faq" },
   { label: "Track Order", href: "/track-order" },
   { label: "Contact", href: "/contact" },
 ];
@@ -32,12 +34,12 @@ export function Footer() {
               <p className="font-display text-2xl font-black uppercase leading-none tracking-[-0.04em]">After Hours Agenda</p>
             </div>
             <p className="max-w-xl font-mono text-sm leading-relaxed text-muted">
-              Independent New York streetwear for life outside the expected schedule. Made to order, shipped free, and supported by real people.
+              An independent New York graphic label for the hours you keep for yourself. Printed after you order, shipped free, and supported by real people.
             </p>
             <div className="mt-6 flex flex-wrap gap-5 font-mono text-xs font-bold uppercase">
               <a href="https://instagram.com/afterhoursagenda" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-accent">Instagram</a>
               <a href="https://tiktok.com/@afterhoursagenda" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-accent">TikTok</a>
-              <a href="mailto:hello@afterhoursagenda.com" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-accent">Email</a>
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-accent">Email</a>
             </div>
           </div>
 

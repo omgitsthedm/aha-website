@@ -9,11 +9,12 @@ export function Agenda() {
           <Image src="/brand/sheep-full.svg" alt="After Hours Agenda black sheep" fill className="object-contain p-8" sizes="384px" />
         </div>
         <div className="min-w-0">
-          <h2 className="break-words font-display text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">Follow nobody&apos;s schedule</h2>
+          <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">The house point of view</p>
+          <h2 className="break-words font-display text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">The black sheep is not lost</h2>
           <p className="mt-7 max-w-2xl font-mono text-base leading-relaxed text-muted">
-            After Hours Agenda began with a simple idea: the hours outside the plan belong to you. Every piece turns that idea into something you can wear.
+            It is the person who stopped following a schedule written by somebody else. The mark faces left: outside the line, still looking at the world. Every AHA graphic starts from that point of view.
           </p>
-          <Link href="/about" className="mt-7 inline-flex min-h-11 items-center border border-border/60 px-5 py-3 font-mono text-xs font-bold uppercase text-cream transition-colors hover:border-accent hover:text-accent">Read the story</Link>
+          <Link href="/about" className="mt-7 inline-flex min-h-11 items-center border border-border/60 px-5 py-3 font-mono text-xs font-bold uppercase text-cream transition-colors hover:border-accent hover:text-accent">Read the AHA story</Link>
         </div>
       </div>
     </section>

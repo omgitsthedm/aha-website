@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import type { Collection, Product } from "@/lib/utils/types";
 
 export const revalidate = 300;
-export const metadata = { title: "Current Streetwear Drop", description: "Browse the current After Hours Agenda drop and active made-to-order catalog, with clear pricing, product details, free standard shipping, and no fake scarcity.", alternates: { canonical: "/drops" } };
+export const metadata = { title: "Current Drop Bulletin", description: "Read the current After Hours Agenda drop bulletin and shop the active release or design index with live pricing, sizing, and honest availability.", alternates: { canonical: "/drops" } };
 
 export default async function DropsPage() {
   let products: Product[] = [];
@@ -23,5 +23,5 @@ export default async function DropsPage() {
     console.error("Failed to load drops:", error);
   }
 
-  return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-7xl"><PageHeader eyebrow={usingNewArrivals ? "Current New Arrivals collection" : "Current active catalog"} title="The drop" description={usingNewArrivals ? "Every active piece currently assigned to New Arrivals." : "No populated New Arrivals collection is available, so this page shows the active catalog without implying limited stock or release timing."} /><div className="mb-10 flex flex-wrap gap-3"><Link href="#drop-grid" className="primary-action min-h-11 px-5 py-3 text-xs">Browse pieces</Link><Link href="/#newsletter" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">Get release updates</Link></div><div id="drop-grid"><ShopContent products={products} collections={collections} /></div></div></div>;
+  return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-7xl"><PageHeader eyebrow={usingNewArrivals ? "Drop bulletin / Now on the wall" : "Drop bulletin / Between releases"} title={usingNewArrivals ? "The current drop" : "The archive stays open"} description={usingNewArrivals ? "The newest active pieces in one place. Availability is shown as it exists—no manufactured countdowns, mystery quantities, or borrowed urgency." : "There is no separate release on the wall right now, so the active design index remains open. Join the dispatch for the next real release notice."} /><div className="mb-10 flex flex-wrap gap-3"><Link href="#drop-grid" className="primary-action min-h-11 px-5 py-3 text-xs">{usingNewArrivals ? "Shop the current drop" : "Browse the active archive"}</Link><Link href="/#newsletter" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">Get the next bulletin</Link></div><div id="drop-grid"><ShopContent products={products} collections={collections} /></div></div></div>;
 }

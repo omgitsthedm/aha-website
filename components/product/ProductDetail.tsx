@@ -132,7 +132,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             {collection && <div className="mb-4"><RouteBadge slug={collection.slug} size="md" showName /></div>}
             <h1 id="product-title" className="max-w-2xl font-display text-[clamp(2.5rem,6vw,5.5rem)] font-black uppercase leading-[0.88] tracking-[-0.055em] text-cream">{product.name}</h1>
             <p className="mt-6 font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
-            <p className="mt-3 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. {RETURNS_WINDOW} returns on unworn items.</p>
+            <p className="mt-3 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
 
             {enrichment?.colors && enrichment.colors.length > 0 && (
               <div className="mt-8 border-t border-border/40 pt-6">
@@ -185,12 +185,12 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               <li className="border-l-2 border-accent pl-3">Secure Square checkout</li>
               <li className="border-l-2 border-accent pl-3">Free shipping</li>
               <li className="border-l-2 border-accent pl-3">Made to order</li>
-              <li className="border-l-2 border-accent pl-3">{RETURNS_WINDOW} returns</li>
+              <li className="border-l-2 border-accent pl-3">Returns within {RETURNS_WINDOW}</li>
             </ul>
 
             {descriptionMarkup && (
               <div className="mt-10 border-t border-border/40 pt-7">
-                <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">About this piece</h2>
+                <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Design note</h2>
                 <div className="prose prose-invert prose-sm mt-4 max-w-none font-body leading-relaxed text-cream/85" dangerouslySetInnerHTML={descriptionMarkup} />
               </div>
             )}

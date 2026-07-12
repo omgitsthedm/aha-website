@@ -25,9 +25,9 @@ export default async function NewArrivalsPage() {
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 max-w-3xl">
-          <PageHeader eyebrow="Square catalog collection" title="New arrivals" description="Products appear here only when they are assigned to the New Arrivals collection." />
+          <PageHeader eyebrow="Fresh off the press" title="New arrivals" description="The latest pieces to enter the active AHA design index. No fake countdown and no promise that a piece is scarce when it is not." />
         </div>
-        {products.length === 0 && <p className="mb-8 border border-border/40 bg-surface p-5 text-sm leading-relaxed text-muted">No products are currently assigned to New Arrivals. The full catalog is still available in Shop.</p>}
+        {products.length === 0 && <p className="mb-8 border border-border/40 bg-surface p-5 text-sm leading-relaxed text-muted">Nothing new has cleared the press yet. The full design index is still open in Shop.</p>}
         <ShopContent products={products} collections={collections} />
       </div>
     </div>

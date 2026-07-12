@@ -96,6 +96,10 @@
 
 ## QA-PENDING
 
+- Review and publish local branch `content/full-site-editorial-20260712` when David explicitly approves the customer-facing content release. The branch changes copy, metadata, collection descriptions, the canonical Catalog Edit route, and public support email references; it does not change prices, mappings, checkout/payment behavior, provider settings, DNS, or production data.
+- After any approved production release, run exact-site and live guards, verify `/best-sellers` returns a permanent redirect to `/catalog-edit`, confirm the sitemap lists only `/catalog-edit`, and visually check the homepage, About, Catalog Edit, one PDP, FAQ, Shipping, Returns, Contact, Privacy, Terms, and Accessibility on mobile and desktop.
+- Resolve three duplicate active-title product pairs before claiming every PDP has unique canonical SEO content: `Be You`, `Cities`, and `Retro Golf Rope Cap`. This requires a product/catalog decision; the content pass intentionally did not redirect or deactivate purchasable catalog items.
+- Supply real model/fit/detail imagery, approved customer/community photography, and verified press/collaborator proof before adding those forms of content. Do not fabricate them.
 - Verify `afterhoursagenda.com` in Resend and add the exact Resend-provided records in Wix DNS; preserve all existing website and Google Workspace records.
 - Use `/ops` → **Test order email** after the domain is verified; confirm receipt without creating an order.
 - Observe the first real paid order through Square, database, Printful confirmation, outbox, and shipment webhook; do not submit a fabricated customer payment.
@@ -145,6 +149,8 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
 
 ## Recent Session History
+
+- 2026-07-12: Codex created local branch `content/full-site-editorial-20260712` for a full Black Sheep Newsstand content pass. Rewrote homepage, About, Lookbook, Shop/New/Drops/Catalog Edit, PDP editorial stories, FAQ, Shipping, Returns, Contact, Accessibility, Privacy, Terms, navigation/footer, metadata, collection descriptions, and public support identity. Added canonical `/catalog-edit` plus a permanent legacy `/best-sellers` redirect and removed the legacy URL from the sitemap. The protected product manifest, prices, provider mappings, checkout/payment behavior, live services, and production data were not changed. Typecheck, zero-warning lint, 33 unit tests, 100 active-product validation, Square/Printful mapping validation, 35% margin gate, production build, route checks, and mobile/desktop browser review passed. The branch is local and unpushed pending David's explicit publication approval. See `docs/AHA-FULL-SITE-CONTENT-PASS-2026-07-12.md`.
 
 - 2026-07-11: David explicitly authorized live production fulfillment before marketing. PRs #8-#9 deployed automatic Printful confirmation after verified Square payment, duplicate-safe provider-id persistence, safe confirmation retries, a Netlify Database notification outbox, Resend templates, five-minute email dispatch, and `/ops` email testing/visibility. All three fulfillment gates are true, migration is current, provider tests returned 200, schedulers returned 204, and 12 live E2E tests passed. Orders/payments/fulfillments/shipments remain zero. `RESEND_API_KEY` is now stored as a production-only unreadable Netlify secret and production deploy `6a533907146c6e206b6c59a5` is ready at commit `699c4ae`; the protected send reached Resend but returned 403 because `afterhoursagenda.com` is not verified. Wix DNS verification is the remaining email blocker.
 

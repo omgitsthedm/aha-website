@@ -13,8 +13,9 @@ export function EditorialGallery() {
     <section className="relative z-[2] border-y border-border/40 bg-charcoal px-4 py-16 md:px-6 md:py-28">
       <div className="mx-auto max-w-[1440px]">
         <div className="mb-9 max-w-3xl">
-          <h2 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">Seen after dark</h2>
-          <p className="mt-4 max-w-lg font-mono text-sm leading-relaxed text-muted">A campaign archive from the city, the train, the sidewalk, and the spaces in between.</p>
+          <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">Issue 001 / Outside hours</p>
+          <h2 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">The city between plans</h2>
+          <p className="mt-4 max-w-lg font-mono text-sm leading-relaxed text-muted">Four frames from the train, the sidewalk, the late walk, and the parts of New York that refuse to pose on schedule.</p>
         </div>
         <div className="grid gap-4 md:grid-cols-12 md:grid-rows-[22rem_22rem_28rem]">
           {photos.map((photo, index) => (
@@ -23,7 +24,7 @@ export function EditorialGallery() {
             </div>
           ))}
         </div>
-        <Link href="/lookbook" className="mt-8 inline-flex min-h-11 items-center border border-border/60 px-5 py-3 font-mono text-xs font-bold uppercase text-cream transition-colors hover:border-accent hover:text-accent">Open the lookbook</Link>
+        <Link href="/lookbook" className="mt-8 inline-flex min-h-11 items-center border border-border/60 px-5 py-3 font-mono text-xs font-bold uppercase text-cream transition-colors hover:border-accent hover:text-accent">See the full issue</Link>
       </div>
     </section>
   );
