@@ -168,7 +168,7 @@ styles/          → Global styles
 - No Printful fulfillment was triggered.
 - Webhook routes verify signatures and acknowledge/log events only. They do not create Printful orders or automate fulfillment.
 - Handoff says the Square production webhook was created at `https://afterhoursagenda.netlify.app/api/webhooks/square`, but Netlify production currently reports non-secret `SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square`. Square signature verification requires an exact URL match. Confirm and align before relying on Square webhooks.
-- David does not want rigid magic approval phrases going forward. For high-risk live changes, ask for clear scoped plain-language confirmation and restate the exact action before doing it. If generated `.ai/RULES.md` still conflicts, pause and clarify rather than taking live action.
+- For high-risk live changes, accept clear scoped plain-language confirmation and restate the exact action before doing it. No fixed wording or capitalization is required.
 
 ---
 

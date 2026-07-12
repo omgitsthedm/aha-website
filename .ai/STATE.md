@@ -22,7 +22,7 @@
 ## Rules Version
 
 - 2026-06-27-aiops-foundation-v1
-- Note: David's current preference is scoped plain-language confirmation for high-risk live changes, not a rigid magic phrase. The generated `.ai/RULES.md` may still contain the older literal `APPROVE LIVE CHANGE` wording until the AI-Ops generator is available and rerun. If there is conflict before a live action, pause and clarify rather than taking the action.
+- Note: clear, scoped plain-language confirmation is sufficient for high-risk live changes. No fixed wording or capitalization is required.
 
 ## State Confidence
 
@@ -119,8 +119,7 @@ Name-only env readiness checks and public read-only GET/HEAD verification are al
 
 ## Proposed Changes / Inbox
 
-- Proposal: Regenerate AI-Ops rules so AHA accepts scoped plain-language confirmation for high-risk live changes instead of requiring a rigid literal magic phrase.
-- Reason: David explicitly stated after the cutover that he does not want exact approval phrase requirements going forward.
+- Completed 2026-07-11: AI-Ops rules now accept scoped plain-language confirmation and evaluate intent instead of matching a fixed token.
 - Risk: Too-loose approval language can cause accidental live changes; the replacement rule must still require clear scope, explicit user confirmation, and restating the exact action.
 - Source evidence: Aside handoff pasted by David in the 2026-07-08 takeover thread.
 - Suggested owner: David/Codex or AI-Ops maintainer when the rules generator path is available.

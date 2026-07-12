@@ -6,7 +6,7 @@ Source Base: /Users/davidmarsh/AI-OPS/TEMPLATES/RULES_BASE.md
 Source Header: /Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website/aha-website/.ai/RULES_HEADER.md
 <!-- AI-OPS-GENERATED: edit RULES_HEADER.md or RULES_BASE.md, then rerun generate-rules. -->
 <!-- 2026-07-08: manually synced live URL and scoped plain-language approval preference because the generator path was not present locally. Regenerate when AI-Ops tooling is available. -->
-<!-- AI-OPS-CONTENT-CHECKSUM: stale-after-manual-sync -->
+<!-- AI-OPS-CONTENT-CHECKSUM: 2227185402:9259 -->
 
 <!-- AI-OPS-CONTENT-BEGIN -->
 ## Project Rules Header
@@ -75,7 +75,7 @@ Related Non-Canonical Folder:
 - Do not modify product catalog or reorganization files without explicit approval.
 - AHA checkout/payment/fulfillment actions are transactional.
 - Live commerce changes require human-approved safe path.
-- David's current preference is scoped plain-language confirmation for high-risk live changes, not a rigid magic phrase. If generated shared rules still require a literal phrase, pause and clarify before taking the live action.
+- Clear, scoped plain-language confirmation is sufficient for high-risk live changes; no fixed wording or capitalization is required.
 - Dirty/untracked files must be recorded, not cleaned or committed, unless David explicitly approves.
 
 ## Do Not Touch
@@ -134,7 +134,6 @@ Agents must recognize these exact commands:
 
 - `SESSION START`
 - `SESSION CLOSEOUT`
-- `APPROVE LIVE CHANGE`
 - `STOP`
 - `HALT`
 
@@ -193,9 +192,9 @@ In Emergency Mode:
 
 If a STOP or HALT conflicts with automation, human instruction wins.
 
-## APPROVE LIVE CHANGE Protocol
+## Live Change Confirmation Protocol
 
-Legacy `APPROVE LIVE CHANGE` wording is accepted, but David's current preference for AHA is clear scoped plain-language confirmation rather than a rigid magic phrase. Live transactional action still requires explicit confirmation unless the action is sandboxed, staged, explicitly David-run, or already protected by a project-specific approved safe path.
+Live transactional action requires clear, scoped plain-language confirmation unless it is sandboxed, staged, explicitly David-run, or already protected by a project-specific approved safe path. No fixed wording or capitalization is required.
 
 Approval must be scoped to a specific action. It does not authorize unrelated live changes.
 
@@ -259,7 +258,7 @@ Dangerous operations include:
 - running live transactional QA
 - changing production infrastructure
 
-For AHA, live danger requires clear scoped confirmation from David. The phrase `APPROVE LIVE CHANGE` is accepted but not required if the confirmation is otherwise unambiguous.
+For AHA, live danger requires unambiguous confirmation from David that identifies the intended action or scope. Agents must evaluate meaning, not match a token.
 
 No standing autonomy, Emergency Mode, or "do it all / don't ask" instruction elevates past this gate. Transactional production actions always require clear confirmation scoped to the single action.
 
