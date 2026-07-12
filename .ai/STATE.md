@@ -36,7 +36,7 @@
 - High for public DNS resolver checks against `1.1.1.1`, `8.8.8.8`, and `9.9.9.9`.
 - High for Square and Printful production webhook delivery: provider tests returned 200 and both signature-valid events persisted as `processed` in production Netlify Database.
 - High for the production database binding, two applied migrations, protected operations dashboard, guest order lookup, and scheduled reconciliation function.
-- Low/TBD only for a real paid checkout and resulting Printful draft because no live charge or customer order has been submitted.
+- Medium/TBD only for observing the first real paid order through Printful production; the live automation is enabled but no customer order exists yet.
 
 ## Current Live Truth
 
@@ -87,22 +87,22 @@
   - Square: `app/api/webhooks/square/route.ts`
   - Printful: `app/api/webhooks/printful/route.ts`
 - Readiness endpoint: `app/api/commerce/readiness/route.ts`
-- Current production fulfillment mode: `manual`
+- Current production fulfillment mode: `auto`
 - Webhook routes verify signatures, persist/dedupe events, and reconcile known order state.
-- Paid orders can create Printful drafts; a scheduled recovery job retries paid orders and stale draft claims. Automatic Printful confirmation remains deliberately OFF.
+- A verified paid order creates a Printful order, persists its provider id, and confirms production automatically. Failed confirmation retries reuse the same provider order; provider holds stay in manual review.
+- A durable Resend outbox and branded order/production/exception/shipping templates are deployed. Sender/reply-to/support identity is configured; the account/domain API key is still missing.
 - Production operations: `/ops` (Keychain-stored credential) and customer lookup at `/track-order`.
 - Netlify Database uses the managed `NETLIFY_DB_URL` runtime binding; production migrations are current.
 
 ## QA-PENDING
 
-- Complete one controlled live purchase with David entering payment details, then inspect the DB order/payment, Printful draft, provider costs, and webhook reconciliation before enabling automatic Printful confirmation.
-- Configure an AHA-owned transactional email provider/domain for order, production, exception, and tracking email.
-- Add an AHA-owned transactional email provider/domain for branded order, production, exception, and tracking messages. Square receipts remain available meanwhile.
-- Run one controlled live purchase with David entering payment details; inspect the persisted order/payment and Printful draft before enabling automatic Printful confirmation.
+- Create/verify the Resend account under `info@afterhoursagenda.com`, authenticate `afterhoursagenda.com`, and store `RESEND_API_KEY` as a production-only Netlify secret.
+- Use `/ops` → **Test order email** after the key is set; confirm receipt without creating an order.
+- Observe the first real paid order through Square, database, Printful confirmation, outbox, and shipment webhook; do not submit a fabricated customer payment.
 - Add real Square Sandbox credentials scoped only to deploy previews/staging; production credentials are now production-only and secret where appropriate.
 - Create and approve a sandbox checkout test plan.
 - Create and approve a live checkout safe path before any live payment/order test.
-- Keep `AHA_FULFILLMENT_MODE=manual`, `PRINTFUL_ALLOW_CONFIRM_ORDERS=false`, and `PRINTFUL_LIVE_MODE=false` until the controlled paid-order proof passes.
+- Production is intentionally `AHA_FULFILLMENT_MODE=auto`, `PRINTFUL_ALLOW_CONFIRM_ORDERS=true`, and `PRINTFUL_LIVE_MODE=true`; non-production contexts remain dry-run/off.
 - Confirm whether AHA needs `.ai/RELEASES.md` for product/drop history.
 - Production dependency audit still reports Next.js/PostCSS advisories; npm's available automated fix is a breaking upgrade to `next@16.2.10`, so handle as a separate framework migration with Netlify compatibility review.
 
@@ -139,12 +139,14 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Steps Queue
 
-- Configure transactional email credentials and sender-domain DNS.
-- Have David complete one controlled production checkout using his own payment entry.
-- Inspect the resulting Square payment, database rows, and Printful draft totals/address/files; only then consider enabling automatic Printful confirmation.
+- Reauthenticate the account browser or Gmail connector, then create/verify Resend and add the production-only API key.
+- Run the protected email test and confirm the message in `info@afterhoursagenda.com`.
+- Observe the first organic order end to end and inspect any exception in `/ops`.
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
 
 ## Recent Session History
+
+- 2026-07-11: David explicitly authorized live production fulfillment before marketing. PRs #8-#9 deployed automatic Printful confirmation after verified Square payment, duplicate-safe provider-id persistence, safe confirmation retries, a Netlify Database notification outbox, Resend templates, five-minute email dispatch, and `/ops` email testing/visibility. Production deploy `6a53251746f4ab0008ccf361` is ready at runtime commit `3f09693`; all three fulfillment gates are true, migration is current, provider tests returned 200, schedulers returned 204, and 12 live E2E tests passed. Orders/payments/fulfillments/shipments remain zero. Resend account/domain/API key remains blocked by unavailable account browser and Gmail reauthentication; sender identity is otherwise configured.
 
 - 2026-07-11: Production commerce operations shipped through PRs #4-#6. Added protected `/ops`, guest `/track-order`, durable webhook/order operations, manual paid-order retry, and a 15-minute scheduled reconciliation function. Corrected Netlify Database to the managed `NETLIFY_DB_URL` binding, restored Square's existing subscription signature key as a production-only secret, and explicitly scoped the exact webhook notification URL. Official Square and signed Printful tests returned 200 and persisted signature-valid `processed` events; orders/payments/fulfillments/shipments remained zero. Automatic Printful confirmation remains OFF pending one user-entered paid checkout. Transactional email remains unconfigured.
 
@@ -177,7 +179,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Agent Directive
 
-Continue from clean, pushed `origin/main`; verify the current deploy SHA before acting. Production Square, Printful webhooks, Netlify Database, `/ops`, `/track-order`, and reconciliation are verified at commerce runtime baseline `a27b28c`. Do not repeat provider setup. Next: configure transactional email, then have David personally enter payment details for one controlled production order. Inspect the Square payment, database records, and Printful draft before changing any fulfillment confirmation flag.
+Continue from clean, pushed `origin/main`; verify the current deploy SHA before acting. Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, and email outbox code are live. Do not turn confirmation back off unless responding to a verified production incident. Next: finish Resend account/domain verification, set the production-only API key, and run the protected email test. Do not fabricate a customer payment.
 
 ## Emergency / Bypass Notes
 
