@@ -23,24 +23,17 @@ This project is governed by `docs/MASTER-BUILD-INSTRUCTION.md` (the full ecommer
 
 ## Current Production Truth
 
-### Active local release candidate
-
-- Branch: `audit/flagship-hardening-20260711`
-- Scope: local flagship audit and technical hardening; no commerce-provider or production mutation.
-- Handoff: `docs/AUDIT-FLAGSHIP-HARDENING-2026-07-11.md`
-- Release state: validated locally, not pushed, merged, previewed, or deployed.
-
 - Canonical branch: `main`
-- Current deployed commit: `f57ce6b3c4e5700ea97d60ccfe57b15d6293f310`
+- Current deployed commit: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
 - Netlify project: `afterhoursagenda`
 - Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
 - Default Netlify URL: `https://afterhoursagenda.netlify.app`
 - Primary custom URL: `https://afterhoursagenda.com`
 - `www` redirects to apex: `https://www.afterhoursagenda.com -> https://afterhoursagenda.com`
-- Latest verified commit-backed production deploy id: `6a518dd7f0be1e000823c1f0`
-- PR #2 merged the current storefront/backend readiness work into `main`.
-- GitHub Action `Claude Code Review` failed only because Claude account billing was locked per handoff; it was not a verified app/build failure.
+- Latest verified production deploy id: `6a531ed0c4b21f402bd3a30f`
+- PRs #4-#6 shipped protected commerce operations, the managed database binding, and current Square webhook test reporting.
+- All required GitHub, Netlify, security, product-flow, checkout-flow, and performance checks passed.
 
 ---
 
@@ -161,7 +154,7 @@ styles/          → Global styles
 - After any production deploy, run `npm run verify:netlify-live` and confirm the live page contains After Hours Agenda content and no wrong-site content.
 - After custom-domain changes, run `LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live`.
 - Commerce env readiness must pass before relying on checkout/webhook behavior: `npm run verify:commerce-readiness:netlify`.
-- Known platform gap as of 2026-07-08 21:57 MST: Netlify is Git-linked, but API still reports `prevent_non_git_prod_deploys: false`. Keep exact site verification in place.
+- Netlify blocks non-Git production deploys. Keep exact-site verification in place as defense in depth.
 - `netlify.toml` is configured — don't modify without good reason.
 - Build command: `npm run build`
 - Publish directory: `.next`
@@ -170,11 +163,11 @@ styles/          → Global styles
 
 ### Current Commerce Caveats
 
-- No live checkout was run during the custom-domain cutover.
-- No Square order was created.
-- No Printful fulfillment was triggered.
-- Webhook routes verify signatures and acknowledge/log events only. They do not create Printful orders or automate fulfillment.
-- Handoff says the Square production webhook was created at `https://afterhoursagenda.netlify.app/api/webhooks/square`, but Netlify production currently reports non-secret `SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square`. Square signature verification requires an exact URL match. Confirm and align before relying on Square webhooks.
+- Production Square and Printful webhook tests return 200 and persist signature-valid, processed events in Netlify Database.
+- `/ops` is protected by a production-only session secret/password; `/track-order` requires exact order number plus checkout email.
+- Paid orders create Printful drafts and the scheduled reconciliation job retries recoverable failures. Automatic Printful confirmation remains OFF.
+- No real charge, customer order, or Printful fulfillment has been submitted. David must personally enter payment details for the controlled proof order.
+- Transactional email is not configured; do not claim branded order/tracking mail until a provider and sender domain are added.
 - For high-risk live changes, accept clear scoped plain-language confirmation and restate the exact action before doing it. No fixed wording or capitalization is required.
 
 ---

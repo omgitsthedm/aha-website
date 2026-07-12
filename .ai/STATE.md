@@ -13,10 +13,10 @@
 
 ## Current Stamp
 
-- Updated: 2026-07-11 21:14 MST
+- Updated: 2026-07-11 22:00 MST
 - Updated By: Codex
 - Basis: Aside AI cutover handoff plus Codex verification from local Git, GitHub PR metadata, Netlify CLI/API, DNS resolver checks, and public HTTPS checks.
-- Current production HEAD: `5a974d00541336d7c05e003712ea06dfa2b36bc7`
+- Current production HEAD: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
 - Git HEAD at onboarding: `23018a0`
 
 ## Rules Version
@@ -33,8 +33,9 @@
 - High for production-only Square credential scoping and Netlify non-Git production deploy protection verified 2026-07-11 through authenticated Netlify metadata without printing credential values.
 - High for `afterhoursagenda.com`, `www.afterhoursagenda.com`, and `afterhoursagenda.netlify.app` serving through Netlify by public HTTP checks.
 - High for public DNS resolver checks against `1.1.1.1`, `8.8.8.8`, and `9.9.9.9`.
-- Medium for Square/Printful webhook dashboard details supplied by Aside handoff; Codex did not inspect secret values or mutate dashboard state.
-- Low/TBD for live checkout/payment/order/fulfillment runtime behavior because no live checkout or fulfillment test has been run.
+- High for Square and Printful production webhook delivery: provider tests returned 200 and both signature-valid events persisted as `processed` in production Netlify Database.
+- High for the production database binding, two applied migrations, protected operations dashboard, guest order lookup, and scheduled reconciliation function.
+- Low/TBD only for a real paid checkout and resulting Printful draft because no live charge or customer order has been submitted.
 
 ## Current Live Truth
 
@@ -43,15 +44,15 @@
 - Default Netlify URL: `https://afterhoursagenda.netlify.app/`
 - Live title verified by guard: `After Hours Agenda | Independent NYC Streetwear`
 - Host: Netlify for apex, `www`, and `.netlify.app`.
-- Current deployed commit: `5a974d00541336d7c05e003712ea06dfa2b36bc7`
-- Latest verified commit-backed production deploy: `6a5313742afcc70008fba2c1`, ready, production, branch `main`.
+- Current deployed commit: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
+- Latest verified production deploy: `6a531ed0c4b21f402bd3a30f`, ready, production, branch `main`.
 - Netlify site: `afterhoursagenda`
 - Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
 - Netlify custom domain: `afterhoursagenda.com`
 - Netlify build settings: GitHub provider, repo `omgitsthedm/aha-website`, branch `main`, command `npm run build`, publish `.next`.
 - Netlify `prevent_non_git_prod_deploys`: enabled and verified `true` on 2026-07-11.
-- Production QA status: public read-only checks passed; NO live checkout/payment/order/fulfillment mutation has been performed.
+- Production QA status: public guards and 12 desktop/mobile E2E checks passed. Signed Square and Printful tests persisted safely; no live charge, customer order, or fulfillment was created.
 
 ## Domain / DNS Truth
 
@@ -68,8 +69,8 @@
 ## Repo State
 
 - Branch: `main`
-- Status: clean, pushed, and aligned with `origin/main`; PR #3 merged as `5a974d0` after every required check passed.
-- Production: `https://afterhoursagenda.com` passed all eight desktop/mobile Playwright checks, exact-site guard, commerce-readiness name checks, and both Netlify live guards.
+- Status: clean, pushed, and aligned with `origin/main`; commerce operations PRs #4-#6 merged after every required check passed.
+- Production: `https://afterhoursagenda.com` passed 12 desktop/mobile Playwright checks, exact-site guard, commerce-readiness checks, and both Netlify live guards.
 - GitHub billing is restored. Dependency Graph was enabled, and the repaired CI, E2E, Lighthouse, security, dependency-review, and review checks are green.
 - PR #2 (`feature/uiux-doctrine-commerce-hardening`) was merged into `main` as `13c25e83f696b19c7d9230ec4766900cc5485451`.
 - Remote feature branch `feature/uiux-doctrine-commerce-hardening` was deleted after merge.
@@ -86,25 +87,21 @@
   - Printful: `app/api/webhooks/printful/route.ts`
 - Readiness endpoint: `app/api/commerce/readiness/route.ts`
 - Current production fulfillment mode: `manual`
-- Webhook routes verify signatures and acknowledge/log events only.
-- Printful fulfillment automation is not implemented.
-- `.env.local` exists by filename only; contents were not inspected.
+- Webhook routes verify signatures, persist/dedupe events, and reconcile known order state.
+- Paid orders can create Printful drafts; a scheduled recovery job retries paid orders and stale draft claims. Automatic Printful confirmation remains deliberately OFF.
+- Production operations: `/ops` (Keychain-stored credential) and customer lookup at `/track-order`.
+- Netlify Database uses the managed `NETLIFY_DB_URL` runtime binding; production migrations are current.
 
 ## QA-PENDING
 
 - Complete one controlled live purchase with David entering payment details, then inspect the DB order/payment, Printful draft, provider costs, and webhook reconciliation before enabling automatic Printful confirmation.
 - Configure an AHA-owned transactional email provider/domain for order, production, exception, and tracking email.
-- Verify the new production operations dashboard, scheduled reconciliation function, customer order lookup, and both signed provider-test controls after the Git-backed release.
-
-- Deploy and verify the committed Square webhook URL alignment, then send a Square test notification. Rotate the signature key only if the signed test proves the current key is mismatched.
+- Add an AHA-owned transactional email provider/domain for branded order, production, exception, and tracking messages. Square receipts remain available meanwhile.
+- Run one controlled live purchase with David entering payment details; inspect the persisted order/payment and Printful draft before enabling automatic Printful confirmation.
 - Add real Square Sandbox credentials scoped only to deploy previews/staging; production credentials are now production-only and secret where appropriate.
 - Create and approve a sandbox checkout test plan.
 - Create and approve a live checkout safe path before any live payment/order test.
-- Add durable order/event storage before fulfillment automation.
-- Add idempotency keyed by Square webhook event/order/payment identifiers.
-- Map Square catalog/variation IDs to Printful variants.
-- Add Printful draft-order dry-run/manual-review flow.
-- Add shipment tracking/order status flow.
+- Keep `AHA_FULFILLMENT_MODE=manual`, `PRINTFUL_ALLOW_CONFIRM_ORDERS=false`, and `PRINTFUL_LIVE_MODE=false` until the controlled paid-order proof passes.
 - Confirm whether AHA needs `.ai/RELEASES.md` for product/drop history.
 - Production dependency audit still reports Next.js/PostCSS advisories; npm's available automated fix is a breaking upgrade to `next@16.2.10`, so handle as a separate framework migration with Netlify compatibility review.
 
@@ -141,14 +138,14 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Steps Queue
 
-- Review `docs/claude-code-live-takeover.md` before further Claude Code work.
-- Send a Square test notification to the aligned non-redirecting endpoint from the authenticated Developer Console. The API attempt could not authenticate because Netlify correctly redacts the secret token after it was marked secret; no notification was delivered and no key was rotated.
-- Run browser QA on `https://afterhoursagenda.com` desktop and mobile.
-- Draft sandbox checkout safe path.
-- Plan durable order/event storage and idempotency before fulfillment automation.
+- Configure transactional email credentials and sender-domain DNS.
+- Have David complete one controlled production checkout using his own payment entry.
+- Inspect the resulting Square payment, database rows, and Printful draft totals/address/files; only then consider enabling automatic Printful confirmation.
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
 
 ## Recent Session History
+
+- 2026-07-11: Production commerce operations shipped through PRs #4-#6. Added protected `/ops`, guest `/track-order`, durable webhook/order operations, manual paid-order retry, and a 15-minute scheduled reconciliation function. Corrected Netlify Database to the managed `NETLIFY_DB_URL` binding, restored Square's existing subscription signature key as a production-only secret, and explicitly scoped the exact webhook notification URL. Official Square and signed Printful tests returned 200 and persisted signature-valid `processed` events; orders/payments/fulfillments/shipments remained zero. Automatic Printful confirmation remains OFF pending one user-entered paid checkout. Transactional email remains unconfigured.
 
 - 2026-07-11: GitHub billing was restored. Codex enabled Dependency Graph, repaired CI browser/Lighthouse setup, and verified all PR checks green. PR #3 merged as `5a974d0`; GitHub post-merge CI/E2E/security passed, Netlify production deploy `6a5313742afcc70008fba2c1` is ready, exact-site/commerce/live guards passed, and all 8 live desktop/mobile Playwright checks passed. A Square API test notification attempt returned 401 because the now-secret Netlify token is intentionally non-readable; no event was delivered and no signature key was changed.
 
@@ -179,7 +176,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Agent Directive
 
-Continue from clean, pushed `main` at `5a974d00541336d7c05e003712ea06dfa2b36bc7`; review `docs/AUDIT-FLAGSHIP-HARDENING-2026-07-11.md`. AHA production is aligned at `https://afterhoursagenda.com`. The remaining provider check is a Square Developer Console test notification from the enabled production subscription; do not expose or replace the secret token merely to automate that check. Initialize the Square payment field on the approved HTTPS domain without charging. Do not run a live charge/order/fulfillment test, modify product/inventory/customer/order/fulfillment data, change DNS, or enable fulfillment automation without a separately verified safe path.
+Continue from clean, pushed `main` at `a27b28ca1c236e88ebd60ad62e8695447adafa41`. Production Square, Printful webhooks, Netlify Database, `/ops`, `/track-order`, and reconciliation are verified. Do not repeat provider setup. Next: configure transactional email, then have David personally enter payment details for one controlled production order. Inspect the Square payment, database records, and Printful draft before changing any fulfillment confirmation flag.
 
 ## Emergency / Bypass Notes
 
