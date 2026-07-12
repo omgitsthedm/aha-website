@@ -93,7 +93,8 @@ Authorized follow-up began 2026-07-11 at 20:11 MST.
 - **Catalog pagination:** `/shop?page=N` now renders 24 products per crawlable page with unique titles/canonicals and accessible page navigation.
 - **Product storytelling:** customer-visible PDP copy and product schema now use unique product, garment, collection, fabric, policy, and shipping context rather than generic upstream Printful prose.
 - **Netlify deploy protection:** `prevent_non_git_prod_deploys` is enabled and verified through the site API.
-- **Published review:** draft PR #3 targets `main`; deploy preview `821966e` passed all eight desktop/mobile Playwright checks. GitHub did not start any Actions jobs because the account is locked for a billing issue, so required checks and the production merge remain blocked outside the repository.
+- **Published release:** GitHub billing was restored, Dependency Graph was enabled, and CI browser/Lighthouse configuration was repaired. Every PR check passed; PR #3 merged as `5a974d0`, Netlify production deploy `6a5313742afcc70008fba2c1` is ready, and all eight live desktop/mobile Playwright checks pass at `https://afterhoursagenda.com`.
+- **Square delivery proof:** the deployed notification URL and production environment name checks pass. The automated Square test call returned 401 because Netlify correctly redacts the production access token after it was marked secret; no event was delivered and no key was rotated. Complete the non-transactional test from the authenticated Square Developer Console.
 
 ## Validation checklist
 
