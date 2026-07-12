@@ -13,23 +13,21 @@
   # values. Real secrets (SQUARE_ACCESS_TOKEN, PRINTFUL_API_TOKEN, webhook
   # signature keys) are NOT listed here and remain fully scanned.
   SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SQUARE_APP_ID,SQUARE_APPLICATION_ID,SQUARE_LOCATION_ID,PRINTFUL_STORE_ID"
-  # Printful v2 defaults. Live money-switches default OFF everywhere; only production may flip them
-  # (and only after the Sandbox/dry-run checkout+fulfillment flow passes). See MASTER-BUILD-INSTRUCTION §11/§25.
+  # Printful v2 defaults. Non-production contexts remain dry-run and never confirm orders.
   PRINTFUL_API_VERSION = "v2-beta"
   PRINTFUL_API_BASE_URL = "https://api.printful.com/v2"
   PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
   PRINTFUL_LIVE_MODE = "false"
 
 # ── Production (main) ────────────────────────────────────────────────────────
-# SQUARE is live here. Printful live-confirm stays FALSE until the end-to-end flow is
-# tested; flip PRINTFUL_ALLOW_CONFIRM_ORDERS + PRINTFUL_LIVE_MODE to "true" only then.
+# Production: a verified Square payment creates and confirms the mapped Printful order.
 [context.production.environment]
   SQUARE_ENVIRONMENT = "production"
   # Must exactly match Square's enabled production subscription for signature verification.
   SQUARE_WEBHOOK_NOTIFICATION_URL = "https://afterhoursagenda.netlify.app/api/webhooks/square"
-  AHA_FULFILLMENT_MODE = "manual"
-  PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
-  PRINTFUL_LIVE_MODE = "false"
+  AHA_FULFILLMENT_MODE = "auto"
+  PRINTFUL_ALLOW_CONFIRM_ORDERS = "true"
+  PRINTFUL_LIVE_MODE = "true"
 
 # ── Staging (persistent branch deploy) ───────────────────────────────────────
 [context."staging".environment]
