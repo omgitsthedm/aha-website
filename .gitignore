@@ -7,6 +7,7 @@
 /coverage
 /.playwright-cli/
 /output/
+/artifacts/
 
 # next.js
 /.next/
