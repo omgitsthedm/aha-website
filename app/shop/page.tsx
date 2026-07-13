@@ -33,7 +33,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
       <div className="max-w-7xl mx-auto">
-        <PageHeader eyebrow="Full catalog" title="Shop everything" description="Browse every active product, filter by collection or size, and review the final total before payment." />
+        <PageHeader title="Shop all products" description="Search by name, filter by collection or size, and open any product for fit, fabric, care, production, shipping, and return details." />
         <ShopContent products={products} collections={collections} initialPage={requestedPage} paginationPath="/shop" />
       </div>
     </div>

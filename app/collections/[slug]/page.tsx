@@ -1,7 +1,6 @@
 import { getAllCollections, getProductsByCollection } from "@/lib/square/catalog";
 import { ShopContent } from "@/components/shop/ShopContent";
-import { RouteBadge } from "@/components/ui/RouteBadge";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Product, Collection } from "@/lib/utils/types";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -30,6 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CollectionPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (slug === "black-sheep") redirect("/shop");
   let collections: Collection[] = [];
   let products: Product[] = [];
 
@@ -52,7 +52,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
       <div className="mx-auto max-w-7xl">
-        <PageHeader eyebrow={<span className="inline-flex items-center gap-3"><RouteBadge slug={slug} size="md" /> Collection</span>} title={collection.name} description={collection.description || "Browse every active piece in this collection."} />
+        <PageHeader eyebrow="Collection" title={collection.name} description={collection.description || "Browse every active piece in this collection."} />
         <ShopContent products={products} collections={collections} />
       </div>
     </div>

@@ -6,7 +6,6 @@ import Link from "next/link";
 import type { Collection, Product } from "@/lib/utils/types";
 import type { ProductEnrichment } from "@/lib/data/enrichment";
 import { useCart } from "@/components/cart/CartProvider";
-import { RouteBadge } from "@/components/ui/RouteBadge";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { getFulfillmentSummary, RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 import { trackCommerceEvent } from "@/lib/analytics/events";
@@ -95,10 +94,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           {collection && (
             <>
               <span aria-hidden="true">/</span>
-              <Link href={`/collections/${collection.slug}`} className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-accent">
-                <RouteBadge slug={collection.slug} size="sm" />
-                {collection.name}
-              </Link>
+              <Link href={`/collections/${collection.slug}`} className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-accent">{collection.name}</Link>
             </>
           )}
           <span aria-hidden="true">/</span>
@@ -109,7 +105,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           <section aria-label="Product images">
             <div className="relative aspect-square overflow-hidden border border-border/40 bg-surface md:aspect-[4/5]">
               {activeImageSrc ? (
-                <Image src={activeImageSrc} alt={product.name} fill className={isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} sizes="(max-width: 1024px) 100vw, 58vw" priority />
+                <Image src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase text-muted">Image unavailable</div>
               )}
@@ -129,10 +125,10 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           </section>
 
           <section aria-labelledby="product-title" className="lg:pt-3">
-            {collection && <div className="mb-4"><RouteBadge slug={collection.slug} size="md" showName /></div>}
-            <h1 id="product-title" className="max-w-2xl font-display text-[clamp(2.5rem,6vw,5.5rem)] font-black uppercase leading-[0.88] tracking-[-0.055em] text-cream">{product.name}</h1>
+            {collection && <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">{collection.name}</p>}
+            <h1 id="product-title" className="max-w-2xl font-display text-[clamp(2.5rem,6vw,5.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.05em] text-cream">{product.name}</h1>
             <p className="mt-6 font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
-            <p className="mt-3 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. {RETURNS_WINDOW} returns on unworn items.</p>
+            <p className="mt-3 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
 
             {enrichment?.colors && enrichment.colors.length > 0 && (
               <div className="mt-8 border-t border-border/40 pt-6">
@@ -169,7 +165,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               {!canBuy ? "Unavailable" : addedFeedback ? "Added to bag" : `Add to bag | ${currentVariation?.priceFormatted || product.priceFormatted}`}
             </button>
 
-            {!canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href="/contact" className="underline underline-offset-4">Ask about a restock</Link>.</p>}
+            {!canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation?.name || "" } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}
             <p className="mt-3 text-xs leading-relaxed text-muted">{RETURNS_SUMMARY}</p>
 
             <div className="mt-8 border-y border-border/40 py-5">
@@ -185,12 +181,12 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               <li className="border-l-2 border-accent pl-3">Secure Square checkout</li>
               <li className="border-l-2 border-accent pl-3">Free shipping</li>
               <li className="border-l-2 border-accent pl-3">Made to order</li>
-              <li className="border-l-2 border-accent pl-3">{RETURNS_WINDOW} returns</li>
+              <li className="border-l-2 border-accent pl-3">Returns within {RETURNS_WINDOW}</li>
             </ul>
 
             {descriptionMarkup && (
               <div className="mt-10 border-t border-border/40 pt-7">
-                <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">About this piece</h2>
+                <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Design note</h2>
                 <div className="prose prose-invert prose-sm mt-4 max-w-none font-body leading-relaxed text-cream/85" dangerouslySetInnerHTML={descriptionMarkup} />
               </div>
             )}

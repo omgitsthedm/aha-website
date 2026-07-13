@@ -1,11 +1,9 @@
 import { Entrance } from "@/components/homepage/Entrance";
 import { LatestDrop } from "@/components/homepage/LatestDrop";
 import { ThePromise } from "@/components/homepage/ThePromise";
-import { MostWanted } from "@/components/homepage/MostWanted";
-import { EditorialGallery } from "@/components/homepage/EditorialGallery";
-import { Agenda } from "@/components/homepage/Agenda";
 import { Collections } from "@/components/homepage/Collections";
 import { GetOnTheList } from "@/components/homepage/GetOnTheList";
+import { DesignFiles } from "@/components/homepage/DesignFiles";
 import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
 import type { Product, Collection } from "@/lib/utils/types";
 
@@ -26,8 +24,6 @@ export default async function HomePage() {
     console.error("Failed to fetch catalog:", error);
   }
 
-  // Editorial catalog selection. No popularity ranking is implied.
-  const catalogEdit = products.slice(0, 6);
   // Prefer products explicitly assigned to the New Arrivals collection.
   const newArrivalsId = "FAIJ7SE5DJP25N26ND3L76SU";
   const latestDrop = products
@@ -38,11 +34,9 @@ export default async function HomePage() {
   return (
     <>
       <Entrance hasNewArrivals={latestDrop.length > 0} />
-      <LatestDrop products={featured} isNewArrivalEdit={latestDrop.length > 0} />
       <ThePromise />
-      <MostWanted products={catalogEdit} totalProducts={products.length} />
-      <EditorialGallery />
-      <Agenda />
+      <DesignFiles compact />
+      <LatestDrop products={featured} isNewArrivalEdit={latestDrop.length > 0} />
       <Collections collections={collections} />
       <GetOnTheList />
     </>

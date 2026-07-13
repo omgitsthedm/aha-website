@@ -1,36 +1,40 @@
 import Image from "next/image";
 import Link from "next/link";
+import { DESIGN_SOURCES } from "@/lib/content/design-sources";
 
 export function Entrance({ hasNewArrivals }: { hasNewArrivals: boolean }) {
+  const hero = DESIGN_SOURCES[0];
+
   return (
-    <section className="relative z-[2] px-4 pb-12 pt-28 md:px-6 md:pb-20 md:pt-32">
-      <div className="mx-auto grid max-w-[1440px] gap-6 lg:min-h-[calc(100dvh-8rem)] lg:grid-cols-[0.82fr_1.18fr] lg:items-stretch">
-        <div className="hero-copy-enter flex min-w-0 flex-col justify-between border-t-2 border-accent py-6 lg:py-8">
+    <section className="relative z-[2] px-4 pb-12 pt-28 md:px-6 md:pb-20 md:pt-24">
+      <div className="mx-auto grid max-w-[1440px] gap-8 lg:min-h-[calc(100dvh-7rem)] lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch lg:gap-5">
+        <div className="hero-copy-enter flex min-w-0 flex-col justify-between border-t border-accent py-6 lg:py-8 lg:pr-12">
           <div>
-            <p className="mb-5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">Independent New York streetwear</p>
-            <h1 className="max-w-3xl break-words font-display text-[clamp(3.25rem,7.5vw,7.25rem)] font-black uppercase leading-[0.82] tracking-[-0.075em] text-cream">
-              Own your after hours
+            <h1 className="max-w-3xl font-display text-[clamp(3.7rem,7vw,7rem)] font-bold uppercase leading-[0.76] tracking-[-0.06em] text-cream">
+              <span className="hero-title-line block overflow-hidden"><span className="block whitespace-nowrap">After Hours</span></span>
+              <span className="hero-title-line block overflow-hidden"><span className="block">Agenda</span></span>
             </h1>
-            <p className="mt-6 max-w-lg font-mono text-base leading-relaxed text-muted">
-              Graphic apparel for long walks, loud rooms, and life outside the expected schedule.
+            <p className="hero-support-enter mt-7 max-w-md font-mono text-sm leading-relaxed text-muted md:text-base">
+              Original graphics, made wearable. Produced only when you order.
             </p>
           </div>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/shop" className="primary-action px-6 py-4 text-center text-sm">Shop all pieces</Link>
-            <Link href={hasNewArrivals ? "/new-arrivals" : "/best-sellers"} className="inline-flex min-h-12 items-center justify-center border border-border/60 px-6 py-3 font-mono text-sm font-bold uppercase text-cream transition-colors hover:border-accent hover:text-accent">
-              {hasNewArrivals ? "See new arrivals" : "See the catalog edit"}
-            </Link>
+          <div className="hero-actions-enter mt-10 flex flex-col gap-3 sm:flex-row lg:mt-16">
+            <Link href="/shop" className="primary-action px-6 py-4 text-center text-sm">Shop the collection</Link>
+            <Link href="/lookbook" className="secondary-action px-6 py-3 text-sm">See the design files</Link>
           </div>
+          {hasNewArrivals && <Link href="/new-arrivals" className="nav-link mt-6 inline-flex min-h-11 w-fit items-center font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted hover:text-cream">New arrivals are live</Link>}
         </div>
 
-        <div className="hero-visual-enter relative min-h-[440px] overflow-hidden border border-border/50 bg-surface md:min-h-[620px] lg:min-h-0">
-          <Image src="/brand/mosaic-hero.webp" alt="After Hours Agenda campaign in New York" fill priority className="object-cover" sizes="(max-width: 1024px) 100vw, 58vw" />
-          <div className="absolute inset-x-0 bottom-0 border-t border-border/50 bg-void/95 px-4 py-3 md:flex md:items-center md:justify-between md:gap-4">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-cream">Made to order. Free shipping.</p>
-            <p className="mt-1 font-mono text-[11px] text-muted md:mt-0">30-day returns on unworn pieces</p>
-          </div>
-        </div>
+        <figure className="hero-visual-enter min-w-0">
+          <Link href={`/product/${hero.productSlug}`} data-design-source={hero.sourceFile} className="group relative block min-h-[470px] overflow-hidden bg-accent md:min-h-[680px] lg:h-[calc(100%-4.25rem)]">
+            <Image src={hero.image} alt={hero.alt} fill priority className="hero-product-art object-contain p-7 md:p-12" sizes="(max-width: 1024px) 100vw, 55vw" />
+          </Link>
+          <figcaption className="grid min-h-[4.25rem] grid-cols-[1fr_auto] items-center gap-4 border-b border-border/50 py-4">
+            <Link href={`/product/${hero.productSlug}`} className="font-display text-xl font-bold uppercase tracking-[-0.03em] text-cream transition-colors hover:text-accent">{hero.title}</Link>
+            <span className="font-mono text-xs tabular-nums text-muted">Made to order</span>
+          </figcaption>
+        </figure>
       </div>
     </section>
   );

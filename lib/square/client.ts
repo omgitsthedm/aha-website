@@ -15,6 +15,50 @@ interface SquareRequestOptions {
 }
 
 /**
+ * Square catalog descriptions can occasionally contain raw control characters.
+ * Escape them only while inside JSON strings so one malformed description cannot
+ * make the entire catalog response unreadable.
+ */
+export function parseSquareJson<T>(text: string): T {
+  let inString = false;
+  let escaped = false;
+  let sanitized = "";
+
+  for (const character of text) {
+    if (!inString) {
+      sanitized += character;
+      if (character === '"') inString = true;
+      continue;
+    }
+
+    if (escaped) {
+      sanitized += character;
+      escaped = false;
+      continue;
+    }
+
+    if (character === "\\") {
+      sanitized += character;
+      escaped = true;
+      continue;
+    }
+
+    if (character === '"') {
+      sanitized += character;
+      inString = false;
+      continue;
+    }
+
+    const code = character.charCodeAt(0);
+    sanitized += code <= 0x1f
+      ? `\\u${code.toString(16).padStart(4, "0")}`
+      : character;
+  }
+
+  return JSON.parse(sanitized) as T;
+}
+
+/**
  * Retry with exponential backoff for rate-limited requests.
  * Square API allows 30 req/sec and returns 429 when exceeded.
  */
@@ -56,27 +100,51 @@ export async function squareRequest<T>(
   }
 
   const { method = "GET", body, revalidate = 300 } = options;
+  const url = `${getSquareBaseUrl()}${endpoint}`;
+  const requestInit: RequestInit & { next?: { revalidate: number } } = {
+    method,
+    headers: {
+      "Square-Version": process.env.SQUARE_API_VERSION || "2024-01-18",
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+    next: { revalidate },
+  };
 
   const res = await fetchWithRetry(
-    `${getSquareBaseUrl()}${endpoint}`,
-    {
-      method,
-      headers: {
-        "Square-Version": process.env.SQUARE_API_VERSION || "2024-01-18",
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: body ? JSON.stringify(body) : undefined,
-      next: { revalidate },
-    }
+    url,
+    requestInit,
   );
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
+    const errorText = await res.text();
+    const error = (() => {
+      try { return parseSquareJson<unknown>(errorText); }
+      catch { return {}; }
+    })();
     throw new Error(
       `Square API error ${res.status}: ${JSON.stringify(error)}`
     );
   }
 
-  return res.json();
+  const responseText = await res.text();
+  try {
+    return parseSquareJson<T>(responseText);
+  } catch (error) {
+    const safeToRetry = method === "GET" || endpoint.startsWith("/catalog/");
+    if (!safeToRetry) throw error;
+
+    const retry = await fetchWithRetry(url, {
+      ...requestInit,
+      headers: {
+        ...requestInit.headers,
+        "X-AHA-Cache-Retry": "1",
+      },
+    });
+    if (!retry.ok) {
+      throw new Error(`Square API retry error ${retry.status}.`);
+    }
+    return parseSquareJson<T>(await retry.text());
+  }
 }

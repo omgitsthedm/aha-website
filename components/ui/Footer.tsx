@@ -1,15 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { COLLECTION_CODES } from "@/lib/utils/collection-codes";
+import { SUPPORT_EMAIL } from "@/lib/content/site-copy";
 
 const SUPPORT_LINKS = [
   { label: "Shipping", href: "/shipping" },
   { label: "Returns", href: "/returns" },
   { label: "Care", href: "/care" },
   { label: "Size Guide", href: "/size-guide" },
+  { label: "FAQ", href: "/faq" },
   { label: "Track Order", href: "/track-order" },
+  { label: "Restock alert", href: "/restock" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -23,21 +24,14 @@ export function Footer() {
   return (
     <footer className="relative z-[2] border-t border-border/40 bg-void px-4 py-12 md:px-6 md:py-16">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-10 border-b border-border/40 pb-12 lg:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="grid gap-10 border-b border-border/40 pb-12 lg:grid-cols-[1.6fr_0.8fr_0.8fr]">
           <div>
-            <div className="mb-5 flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center border border-border/60 bg-cream">
-                <Image src="/brand/sheep-head.svg" alt="" width={28} height={28} aria-hidden="true" />
-              </span>
-              <p className="font-display text-2xl font-black uppercase leading-none tracking-[-0.04em]">After Hours Agenda</p>
-            </div>
-            <p className="max-w-xl font-mono text-sm leading-relaxed text-muted">
-              Independent New York streetwear for life outside the expected schedule. Made to order, shipped free, and supported by real people.
+            <p className="mb-5 max-w-2xl font-display text-[clamp(3rem,6vw,6.5rem)] font-bold uppercase leading-[0.78] tracking-[-0.055em]">After Hours Agenda</p>
+            <p className="max-w-lg font-mono text-sm leading-relaxed text-muted">
+              Graphic clothing and objects made when you order. Standard shipping is included.
             </p>
             <div className="mt-6 flex flex-wrap gap-5 font-mono text-xs font-bold uppercase">
-              <a href="https://instagram.com/afterhoursagenda" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-accent">Instagram</a>
-              <a href="https://tiktok.com/@afterhoursagenda" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-accent">TikTok</a>
-              <a href="mailto:hello@afterhoursagenda.com" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-accent">Email</a>
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-accent">Email</a>
             </div>
           </div>
 
@@ -49,9 +43,14 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">Collections</h2>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-3">
-              {Object.values(COLLECTION_CODES).map((collection) => <li key={collection.slug}><Link href={`/collections/${collection.slug}`} className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">{collection.name}</Link></li>)}
+            <h2 className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">Browse</h2>
+            <ul className="space-y-3">
+              <li><Link href="/shop" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">Shop</Link></li>
+              <li><Link href="/new-arrivals" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">New arrivals</Link></li>
+              <li><Link href="/drops" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">Releases</Link></li>
+              <li><Link href="/lookbook" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">Design files</Link></li>
+              <li><Link href="/newsletter" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">After Hours Dispatch</Link></li>
+              <li><Link href="/about" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">About</Link></li>
             </ul>
           </div>
         </div>

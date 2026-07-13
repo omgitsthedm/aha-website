@@ -1,27 +1,34 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllCollections, getAllProducts, getProductsByCollection } from "@/lib/square/catalog";
-import { ShopContent } from "@/components/shop/ShopContent";
 import { PageHeader } from "@/components/ui/PageHeader";
-import type { Collection, Product } from "@/lib/utils/types";
 
-export const revalidate = 300;
-export const metadata = { title: "Current Streetwear Drop", description: "Browse the current After Hours Agenda drop and active made-to-order catalog, with clear pricing, product details, free standard shipping, and no fake scarcity.", alternates: { canonical: "/drops" } };
+export const metadata: Metadata = {
+  title: "Releases",
+  description: "Open the current After Hours Agenda release, see what is next, or browse the documented release archive.",
+  alternates: { canonical: "/drops" },
+};
 
-export default async function DropsPage() {
-  let products: Product[] = [];
-  let collections: Collection[] = [];
-  let usingNewArrivals = false;
-  try {
-    collections = await getAllCollections();
-    const newArrivals = collections.find((collection) => /new arrivals?/i.test(collection.name));
-    if (newArrivals) {
-      products = await getProductsByCollection(newArrivals.id);
-      usingNewArrivals = products.length > 0;
-    }
-    if (!usingNewArrivals) products = await getAllProducts();
-  } catch (error) {
-    console.error("Failed to load drops:", error);
-  }
+const releaseRoutes = [
+  { href: "/drops/current", title: "Current release", body: "The active product edit with current prices, variants, fit, production, shipping, and return details.", action: "Shop current release" },
+  { href: "/coming-soon", title: "What is next", body: "Release status without an invented date, false countdown, or placeholder product promise.", action: "Read release status" },
+  { href: "/drops/archive", title: "Release archive", body: "Completed releases will be preserved with their original product edit and verified material.", action: "Open the archive" },
+] as const;
 
-  return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-7xl"><PageHeader eyebrow={usingNewArrivals ? "Current New Arrivals collection" : "Current active catalog"} title="The drop" description={usingNewArrivals ? "Every active piece currently assigned to New Arrivals." : "No populated New Arrivals collection is available, so this page shows the active catalog without implying limited stock or release timing."} /><div className="mb-10 flex flex-wrap gap-3"><Link href="#drop-grid" className="primary-action min-h-11 px-5 py-3 text-xs">Browse pieces</Link><Link href="/#newsletter" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">Get release updates</Link></div><div id="drop-grid"><ShopContent products={products} collections={collections} /></div></div></div>;
+export default function DropsPage() {
+  return (
+    <main className="px-4 pb-24 pt-28 md:px-6 md:pt-32">
+      <div className="mx-auto max-w-6xl">
+        <PageHeader eyebrow="Release desk" title="Products arrive when the work is ready" description="Shop what is active, see the state of the next release, or return to completed issues. Dates and scarcity appear only when they are real." />
+        <div className="grid gap-px border border-border/40 bg-border/40 md:grid-cols-3">
+          {releaseRoutes.map((route) => (
+            <Link key={route.href} href={route.href} className="group flex min-h-72 flex-col justify-between bg-void p-6 transition-colors hover:bg-surface">
+              <div><h2 className="font-display text-3xl font-bold uppercase tracking-[-0.035em] group-hover:text-accent">{route.title}</h2><p className="mt-4 text-sm leading-relaxed text-muted">{route.body}</p></div>
+              <span className="mt-8 font-mono text-xs font-bold uppercase tracking-[0.06em] text-accent">{route.action}</span>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-8"><Link href="/newsletter" className="secondary-action min-h-11 px-5 py-3 text-xs">Get release email</Link></div>
+      </div>
+    </main>
+  );
 }

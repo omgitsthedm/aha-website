@@ -113,6 +113,14 @@ styles/          → Global styles
 - Typography should be sharp and modern.
 - Whitespace is a design tool — use it generously.
 
+### Content System
+- Governing public concept: **Black Sheep Newsstand**. Editorial pages may feel like a city newsstand, flyer archive, drop bulletin, or campaign issue; commerce pages stay quiet and literal.
+- Canonical editorial vocabulary: **design index**, **active archive**, **drop bulletin**, **After Hours Dispatch**, and **Outside Hours**.
+- Canonical catalog-edit URL: `/catalog-edit`; `/best-sellers` is legacy-only and permanently redirects.
+- Public customer-support identity: `info@afterhoursagenda.com`.
+- PDP editorial copy is built in `lib/content/product-copy.ts` from the customer-facing title and verified enrichment facts. Never add invented materials, collaborators, scarcity, reviews, stock counts, or origin stories.
+- Current content pass and unresolved source-material gaps: `docs/AHA-FULL-SITE-CONTENT-PASS-2026-07-12.md`.
+
 ### Mobile First
 - Every page and component must look great on mobile **first**, then scale up to desktop.
 - Touch targets: minimum 44px.
@@ -168,7 +176,7 @@ styles/          → Global styles
 - `/ops` is protected by a production-only session secret/password; `/track-order` requires exact order number plus checkout email.
 - Verified Square payments create and automatically confirm mapped Printful orders in production. The provider id is persisted before confirmation, and recoverable confirmation failures retry the same order.
 - Provider holds/manual-review orders are never auto-reconfirmed. Preview, staging, and branch deploys remain dry-run with confirmation off.
-- The durable Resend outbox and branded order/production/exception/tracking templates are live, and `RESEND_API_KEY` is stored as a production-only unreadable Netlify secret. Resend still rejects sends until `afterhoursagenda.com` is verified in Resend/Wix DNS. Do not claim email delivery until `/ops` email test returns success.
+- The durable Resend outbox and branded order/production/exception/tracking templates are live, `RESEND_API_KEY` is stored as a production-only unreadable Netlify secret, the domain is verified, and a production delivery test reached `info@afterhoursagenda.com` without creating an order.
 - No real charge, customer order, or Printful fulfillment has been submitted by an agent.
 - For high-risk live changes, accept clear scoped plain-language confirmation and restate the exact action before doing it. No fixed wording or capitalization is required.
 

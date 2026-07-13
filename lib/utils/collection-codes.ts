@@ -5,7 +5,6 @@ export interface CollectionCode {
 }
 
 export const COLLECTION_CODES: Record<string, CollectionCode> = {
-  "black-sheep": { slug: "black-sheep", name: "Black Sheep", abbr: "BS" },
   "no-kings": { slug: "no-kings", name: "No Kings", abbr: "NK" },
   "night-mode": { slug: "night-mode", name: "Night Mode", abbr: "NM" },
   "nyc-forever": { slug: "nyc-forever", name: "NYC Forever", abbr: "NY" },

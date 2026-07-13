@@ -6,7 +6,9 @@ const BASE_URL = process.env.E2E_BASE_URL || `http://localhost:${PORT}`;
 
 export default defineConfig({
   testDir: "tests/e2e",
-  fullyParallel: true,
+  // These integration smokes share one production server and provider/database paths.
+  // Keep each browser project's flow ordered so navigation and hydration are deterministic.
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "line" : "list",

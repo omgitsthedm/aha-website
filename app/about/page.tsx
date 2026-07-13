@@ -1,64 +1,61 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { DESIGN_SOURCES } from "@/lib/content/design-sources";
 
 export const metadata = {
-  title: "About the Independent NYC Label",
-  description: "Meet After Hours Agenda, an independent New York streetwear label built around graphic apparel, the black sheep point of view, and life after dark.",
+  title: "About",
+  description: "About After Hours Agenda and how its made-to-order storefront works.",
   alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
+  const source = DESIGN_SOURCES[1];
+
   return (
     <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32">
       <div className="mx-auto max-w-[1440px]">
-        <PageHeader eyebrow="Independent label / New York" title="The agenda starts when the day ends" description="After Hours Agenda makes graphic clothing for people who keep a life outside the expected schedule." />
+        <PageHeader title="After Hours Agenda" description="Graphic clothing and objects sold online and produced after an order is placed." />
 
-        <section aria-labelledby="origin-heading" className="grid border-y border-border/40 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="relative min-h-[28rem] border-b border-border/40 bg-cream lg:min-h-[42rem] lg:border-b-0 lg:border-r">
-            <Image src="/brand/sheep-full.svg" alt="After Hours Agenda black sheep mark" fill className="object-contain p-10 md:p-16" sizes="(max-width: 1024px) 100vw, 42vw" />
-          </div>
-          <div className="flex flex-col justify-center p-6 md:p-10 lg:p-14">
-            <h2 id="origin-heading" className="max-w-3xl font-display text-[clamp(2.6rem,6vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">The black sheep is not lost</h2>
-            <div className="mt-8 max-w-2xl space-y-6 text-sm leading-relaxed text-cream/85 md:text-base">
-              <p className="text-lg font-bold text-cream">It is the person who stopped following a schedule written by somebody else.</p>
-              <p>The label began in New York with designs about independence, optimism, books, music, politics, memory, and the strange ideas that survive a late night.</p>
-              <p>The sheep faces left. It stands apart from the line without turning away from the world. That is the entire brief.</p>
+        <section aria-labelledby="about-heading" className="grid border-y border-border/40 lg:grid-cols-[1.15fr_0.85fr]">
+          <figure>
+            <Link href={`/product/${source.productSlug}`} data-design-source={source.sourceFile} className="group relative block min-h-[30rem] overflow-hidden bg-accent lg:min-h-[40rem]">
+              <Image src={source.image} alt={source.alt} fill priority className="product-art object-contain p-8 md:p-14" sizes="(max-width: 1024px) 100vw, 58vw" />
+            </Link>
+            <figcaption className="flex min-h-16 items-center justify-between gap-4 border-b border-border/40 py-4">
+              <Link href={`/product/${source.productSlug}`} className="font-display text-lg font-bold uppercase transition-colors hover:text-accent">{source.title}</Link>
+              <span className="font-mono text-xs text-muted">View product</span>
+            </figcaption>
+          </figure>
+          <div className="flex flex-col justify-center border-t border-border/40 p-6 md:p-10 lg:border-l lg:border-t-0 lg:p-14">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">The store</p>
+            <h2 id="about-heading" className="mt-5 max-w-3xl font-display text-[clamp(2.8rem,6vw,6rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">Built around the work</h2>
+            <div className="mt-8 max-w-xl space-y-5 font-mono text-sm leading-relaxed text-muted">
+              <p>Original graphics move from the project design library into clothing and objects.</p>
+              <p>Products are made to order. Production usually takes 2-5 business days before carrier transit begins.</p>
+              <p>Each product page shows current price, sizing, care, production, shipping, and return information.</p>
             </div>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Link href="/shop" className="primary-action min-h-11 px-5 py-3 text-xs">Shop all pieces</Link>
-              <Link href="/lookbook" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">See the label outside</Link>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link href="/shop" className="primary-action min-h-11 px-5 py-3 text-xs">Shop all products</Link>
+              <Link href="/lookbook" className="secondary-action min-h-11 px-5 py-3 text-xs">View design files</Link>
             </div>
           </div>
         </section>
 
-        <section aria-labelledby="ideas-heading" className="py-20 md:py-28">
-          <h2 id="ideas-heading" className="max-w-4xl font-display text-[clamp(2.8rem,7vw,6.5rem)] font-black uppercase leading-[0.84] tracking-[-0.065em]">Every collection begins with an idea</h2>
-          <div className="mt-10 grid gap-px border border-border/40 bg-border/40 md:grid-cols-2">
+        <section aria-labelledby="orders-heading" className="grid gap-10 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
+          <h2 id="orders-heading" className="max-w-4xl font-display text-[clamp(2.8rem,7vw,6.5rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">Before you order</h2>
+          <dl className="border-t border-border/40">
             {[
-              ["Black Sheep", "Stand apart without shrinking yourself."],
-              ["No Kings", "Lead yourself. Borrow no throne."],
-              ["Night Mode", "Protect the work made between midnight and dawn."],
-              ["NYC Forever", "Carry the city without turning it into a costume."],
-            ].map(([name, copy]) => (
-              <div key={name} className="bg-void p-6 md:p-8">
-                <h3 className="font-display text-2xl font-black uppercase tracking-[-0.04em]">{name}</h3>
-                <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted">{copy}</p>
+              ["Production", "Products are printed after purchase. The estimated production window is shown before checkout."],
+              ["Shipping", "Standard shipping is included. Tracking is provided when the carrier receives the order."],
+              ["Returns", "Review the return policy and product-specific sizing before purchasing."],
+            ].map(([title, body]) => (
+              <div key={title} className="grid gap-3 border-b border-border/40 py-6 md:grid-cols-[12rem_1fr]">
+                <dt className="font-display text-xl font-bold uppercase tracking-[-0.025em]">{title}</dt>
+                <dd className="max-w-lg font-mono text-sm leading-relaxed text-muted">{body}</dd>
               </div>
             ))}
-          </div>
-        </section>
-
-        <section aria-labelledby="made-heading" className="grid border-y border-border/40 bg-charcoal lg:grid-cols-[1fr_1fr]">
-          <div className="relative min-h-[28rem] border-b border-border/40 lg:border-b-0 lg:border-r">
-            <Image src="/brand/lifestyle/lifestyle-4.jpg" alt="After Hours Agenda clothing worn after dark" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
-          </div>
-          <div className="flex flex-col justify-center p-6 md:p-10 lg:p-14">
-            <h2 id="made-heading" className="font-display text-[clamp(2.5rem,5vw,4.75rem)] font-black uppercase leading-[0.87] tracking-[-0.055em]">Made when you choose it</h2>
-            <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted md:text-base">AHA pieces are made to order through a production partner. Production usually takes 2-5 business days, shipping is free, and unworn items have a 30-day return window.</p>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">The product page shows fit, fabric, care, size, price, and delivery expectations before you add anything to your bag.</p>
-            <Link href="/shipping" className="mt-7 inline-flex min-h-11 w-fit items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase hover:border-accent hover:text-accent">How orders move</Link>
-          </div>
+          </dl>
         </section>
       </div>
     </div>
