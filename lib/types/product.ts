@@ -27,6 +27,15 @@ export type ProductType =
   | "accessory"
   | "other";
 
+export type ProductCategory =
+  | "t-shirts"
+  | "hoodies-sweatshirts"
+  | "sweaters-knitwear"
+  | "outerwear"
+  | "accessories";
+
+export type ProductGender = "men" | "women" | "unisex";
+
 export type PrintTechnique =
   | "dtg"
   | "dtf"
@@ -97,6 +106,8 @@ export interface AhaProduct {
   shortDescription: string;
   fullDescription: string;
   productType: ProductType;
+  category: ProductCategory;
+  gender: ProductGender[];
   collectionIds: string[];
   dropId?: string;
   status: ProductStatus;

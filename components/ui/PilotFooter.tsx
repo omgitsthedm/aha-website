@@ -15,9 +15,17 @@ const legalLinks = [
   { label: "Accessibility", href: "/accessibility" },
 ];
 
+const shopLinks = [
+  { label: "Men", href: "/men" },
+  { label: "Women", href: "/women" },
+  { label: "Unisex", href: "/unisex" },
+  { label: "Accessories", href: "/accessories" },
+  { label: "New Arrivals", href: "/new-arrivals" },
+];
+
 const brandLinks = [
   { label: "About", href: "/about" },
-  { label: "Shop", href: "/shop" },
+  { label: "Lookbook", href: "/lookbook" },
   { label: "FAQ", href: "/faq" },
 ];
 
@@ -27,7 +35,7 @@ export function PilotFooter() {
       <div className="mx-auto grid max-w-[1280px] gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)_minmax(18rem,0.5fr)]">
         <div className="fold-surface p-6 sm:p-8">
           <p className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[0.9] tracking-[-0.05em]">After Hours Agenda</p>
-          <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">NYC streetwear made to order. A small live set is up now while the next collection is built. Questions? Email info@afterhoursagenda.com.</p>
+          <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">NYC streetwear made to order. Tees, hoodies, sweatshirts, and accessories built for the second shift. Questions? Email info@afterhoursagenda.com.</p>
           <a href="mailto:info@afterhoursagenda.com" className="secondary-action mt-6 px-5 py-3 text-xs">Email support</a>
 
           <div className="mt-8 border-t border-border/40 pt-6">
@@ -50,6 +58,18 @@ export function PilotFooter() {
         </div>
 
         <div className="grid grid-cols-2 gap-8 border-t border-accent pt-5 lg:grid-cols-1">
+          <nav aria-label="Shop">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Shop</p>
+            <ul className="mt-3 space-y-1">
+              {shopLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="inline-flex min-h-11 items-center text-sm text-muted underline decoration-border underline-offset-4 hover:text-cream">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
           <nav aria-label="Customer service">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Service</p>
             <ul className="mt-3 space-y-1">
@@ -62,6 +82,9 @@ export function PilotFooter() {
               ))}
             </ul>
           </nav>
+        </div>
+
+        <div className="space-y-8 border-t border-accent pt-5">
           <nav aria-label="Brand">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Brand</p>
             <ul className="mt-3 space-y-1">
@@ -74,9 +97,6 @@ export function PilotFooter() {
               ))}
             </ul>
           </nav>
-        </div>
-
-        <div className="border-t border-accent pt-5">
           <nav aria-label="Legal">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Legal</p>
             <ul className="mt-3 space-y-1">

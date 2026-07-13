@@ -11,6 +11,8 @@ export interface Product {
   collectionNames: string[];
   variations: ProductVariation[];
   categoryId?: string;
+  category?: string;
+  gender?: string[];
 }
 
 export interface ProductVariation {

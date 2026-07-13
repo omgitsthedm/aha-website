@@ -1,13 +1,15 @@
 import { getAllProducts } from "@/lib/square/catalog";
-import { PilotProductGrid } from "@/components/shop/PilotProductGrid";
+import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { CATEGORIES } from "@/lib/commerce/taxonomy";
 import type { Metadata } from "next";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Shop",
-  description: "Three After Hours Agenda hoodies, live while the new collection is built. Made to order, free shipping, and fulfilled through Printful after verified Square payment.",
+  title: "Shop All | After Hours Agenda",
+  description:
+    "Shop the full After Hours Agenda catalog. Men's, women's, and unisex tees, hoodies, sweatshirts, and accessories. Made to order in NYC.",
   alternates: { canonical: "/shop" },
 };
 
@@ -15,12 +17,12 @@ export default async function ShopPage() {
   const products = await getAllProducts();
 
   return (
-    <div className="px-4 pb-20 pt-28 sm:px-6 lg:pt-32">
-      <div className="mx-auto max-w-[1280px]">
+    <div className="px-4 pb-16 pt-28 sm:px-6 lg:pt-32">
+      <div className="mx-auto max-w-7xl">
         <PageHeader
-          eyebrow="Working assortment / 01"
-          title="Three hoodies"
-          description="A small live set for testing the complete storefront while the new collection is built. Made to order, free shipping, and fulfilled through Printful after verified Square payment."
+          eyebrow="Shop"
+          title="All Products"
+          description="The full catalog. Men's, women's, and unisex streetwear made to order and printed in NYC."
         />
 
         <div className="mb-10 grid gap-4 border-y border-border/40 py-5 sm:grid-cols-3">
@@ -47,7 +49,7 @@ export default async function ShopPage() {
           </div>
         </div>
 
-        <PilotProductGrid products={products} />
+        <CategoryShopContent products={products} categories={CATEGORIES} basePath="/shop" />
       </div>
     </div>
   );

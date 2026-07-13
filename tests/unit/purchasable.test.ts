@@ -19,6 +19,7 @@ function activeProduct(overrides: Partial<AhaProduct> = {}): AhaProduct {
   return {
     ahaProductId: "p1", slug: "black-tee", title: "Black Tee",
     shortDescription: "s", fullDescription: "f", productType: "tee",
+    category: "t-shirts", gender: ["men", "women", "unisex"],
     collectionIds: ["tees"], status: "active", retailPrice: 4800, currency: "USD",
     fitDescription: "true to size", fabricDescription: "100% cotton", printMethod: "DTG",
     careInstructions: "cold wash", productionNote: "made to order", shippingNote: "free shipping",

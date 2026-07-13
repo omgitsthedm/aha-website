@@ -3,10 +3,10 @@ import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import type { Collection, Product } from "@/lib/utils/types";
 
 const previewCollections: Collection[] = [
-  { id: "tees", slug: "tees", name: "Tees", description: "Graphic tees from the current catalog.", accent: "mint" },
-  { id: "hoodies", slug: "hoodies", name: "Hoodies", description: "Layer-ready hoodies from the current catalog.", accent: "blue" },
-  { id: "sweaters", slug: "sweaters", name: "Sweaters", description: "Sweaters and sweatshirts from the current catalog.", accent: "sunrise" },
-  { id: "accessorys", slug: "accessories", name: "Accessories", description: "Finishing pieces from the current catalog.", accent: "cream" },
+  { id: "t-shirts", slug: "t-shirts", name: "T-Shirts", description: "Graphic tees and staple shirts from the current catalog.", accent: "mint" },
+  { id: "hoodies-sweatshirts", slug: "hoodies-sweatshirts", name: "Hoodies & Sweatshirts", description: "Layer-ready hoodies and sweatshirts from the current catalog.", accent: "blue" },
+  { id: "sweaters-knitwear", slug: "sweaters-knitwear", name: "Sweaters & Knitwear", description: "Knit sweaters and premium crewnecks from the current catalog.", accent: "sunrise" },
+  { id: "accessories", slug: "accessories", name: "Accessories", description: "Hats, bags, stickers, pins, and finishing pieces from the current catalog.", accent: "cream" },
 ];
 
 export function buildPreviewCollections(): Collection[] {
@@ -51,11 +51,13 @@ export function buildPreviewProducts(): Product[] {
         priceFormatted: `$${(price / 100).toFixed(2)}`,
         currency: product.currency,
         images,
-        collectionIds: product.collectionIds,
-        collectionNames: product.collectionIds
-          .map((id) => previewCollections.find((collection) => collection.id === id)?.name)
-          .filter((name): name is string => Boolean(name)),
+        collectionIds: [product.category],
+        collectionNames: [previewCollections.find((collection) => collection.id === product.category)?.name].filter(
+          (name): name is string => Boolean(name),
+        ),
         variations,
+        category: product.category,
+        gender: product.gender,
       };
     })
     .filter((product) => product.variations.length > 0);

@@ -1,11 +1,10 @@
 import { squareRequest } from "./client";
 import type { Product, Collection } from "@/lib/utils/types";
 import { mapSquareItemToProduct, mapSquareCategoryToCollection } from "@/lib/utils/mappers";
-import { loadProducts } from "@/lib/data/products";
+import { loadProducts, loadProductMap } from "@/lib/data/products";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import { cache } from "react";
 import { buildPreviewCollections, buildPreviewProducts } from "@/lib/data/preview-catalog";
-import { applyPilotAssortment } from "@/lib/data/pilot-assortment";
 
 function previewCatalogFallbackAllowed(): boolean {
   return process.env.AHA_PREVIEW_CATALOG === "true";
@@ -55,7 +54,7 @@ export function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
 
 export const getAllProducts = cache(async function getAllProducts(): Promise<Product[]> {
   if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
-    return applyPilotAssortment(buildPreviewProducts().filter(isCurrentStorefrontProduct));
+    return buildPreviewProducts().filter(isCurrentStorefrontProduct);
   }
   let allItems: any[] = [];
   let allRelated: any[] = [];
@@ -123,7 +122,17 @@ export const getAllProducts = cache(async function getAllProducts(): Promise<Pro
     })
     .filter(isCurrentStorefrontProduct);
 
-  return applyPilotAssortment(products);
+  // Enrich Square-mapped products with AHA taxonomy from the internal manifest.
+  const productMap = loadProductMap();
+  return products.map((product) => {
+    const ahaProduct = productMap.get(product.slug);
+    if (!ahaProduct) return product;
+    return {
+      ...product,
+      category: ahaProduct.category,
+      gender: ahaProduct.gender,
+    };
+  });
 });
 
 export async function getProduct(slug: string): Promise<Product | null> {
