@@ -100,7 +100,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
           </div>
           <div className="flex flex-wrap gap-2 xl:pt-6" role="group" aria-label="Catalog view">
             {(["grid", "index"] as const).map((mode) => (
-              <button key={mode} type="button" onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode} className={`${toggle} ${viewMode === mode ? "border-accent bg-accent text-white" : "border-border/60 text-cream hover:border-accent"}`}>
+              <button key={mode} type="button" onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode} className={`${toggle} ${viewMode === mode ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}>
                 {mode}
               </button>
             ))}
@@ -110,7 +110,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
         <div className="mt-5">
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-muted">Collection</p>
           <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by collection">
-            <button type="button" onClick={() => setActiveFilter("all")} aria-pressed={activeFilter === "all"} className={`${toggle} ${activeFilter === "all" ? "border-accent bg-accent text-white" : "border-border/60 text-cream hover:border-accent"}`}>All <span aria-hidden="true">{products.length}</span></button>
+            <button type="button" onClick={() => setActiveFilter("all")} aria-pressed={activeFilter === "all"} className={`${toggle} ${activeFilter === "all" ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}>All <span aria-hidden="true">{products.length}</span></button>
             {collections.filter((collection) => collectionCounts.get(collection.id)).map((collection) => (
               <button key={collection.id} type="button" onClick={() => setActiveFilter(collection.id)} aria-pressed={activeFilter === collection.id} aria-label={`${collection.name}, ${collectionCounts.get(collection.id)} products`} className={`${toggle} inline-flex items-center gap-2 ${activeFilter === collection.id ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}>
                 {collection.name} <span aria-hidden="true">{collectionCounts.get(collection.id)}</span>
@@ -154,7 +154,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
             return (
               <div key={product.id} className="group paper-lift">
                 <Link href={`/product/${product.slug}`} className="block focus-visible:outline-offset-4">
-                  <div className="relative aspect-[3/4] overflow-hidden border-b border-border/40 bg-surface transition-colors group-hover:border-accent">
+                  <div className="fold-surface relative aspect-[3/4] overflow-hidden">
                     {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                   </div>
                   <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">
@@ -196,7 +196,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
               key={page}
               href={`${paginationPath}?page=${page}`}
               aria-current={page === safePage ? "page" : undefined}
-              className={`inline-flex min-h-11 min-w-11 items-center justify-center border px-3 text-xs font-bold ${page === safePage ? "border-accent bg-accent text-white" : "border-border/60 text-cream hover:border-accent"}`}
+              className={`inline-flex min-h-11 min-w-11 items-center justify-center border px-3 text-xs font-bold ${page === safePage ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
             >
               {page}
             </Link>

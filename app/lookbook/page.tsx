@@ -99,7 +99,7 @@ export default function LookbookPage() {
                 </Link>
               </div>
             </div>
-            <div className="relative aspect-video overflow-hidden border border-border/40">
+            <div className="fold-surface relative aspect-video overflow-hidden">
               <Image
                 src="/campaign/hero-lookbook.jpg"
                 alt="After Hours Agenda tees and sweatshirts, including the Black Sheep sweatshirt, arranged on a paper background"

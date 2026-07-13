@@ -66,7 +66,7 @@ export default function AboutPage() {
                 </Link>
               </div>
             </div>
-            <div className="relative aspect-video overflow-hidden border border-border/40">
+            <div className="fold-surface relative aspect-video overflow-hidden">
               <Image
                 src="/campaign/hero-home.jpg"
                 alt="After Hours Agenda garments laid out on paper: the Be You tee, Classic AHA hoodie, and Hope and Tomorrow sweatshirt"

@@ -33,7 +33,7 @@ export default async function UnisexPage() {
           title="Unisex"
           description="Core pieces in unisex sizing, printed to order. One cut, worn your way."
         />
-        <div className="relative mb-10 aspect-[21/9] overflow-hidden border border-border/40 md:aspect-[3/1]">
+        <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
           <Image
             src="/campaign/hero-unisex.jpg"
             alt="No Place Like New York sweatshirt and EMO But In Heels hoodie on a paper background"

@@ -27,7 +27,7 @@ export default async function AccessoriesPage() {
           title="Accessories"
           description="Hats, bags, stickers, pins, and the small details that finish the fit. Every piece made to order."
         />
-        <div className="relative mb-10 aspect-[21/9] overflow-hidden border border-border/40 md:aspect-[3/1]">
+        <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
           <Image
             src="/campaign/hero-accessories.jpg"
             alt="After Hours Agenda dad hats and pin sets on a paper background"

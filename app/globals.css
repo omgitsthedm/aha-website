@@ -12,11 +12,12 @@
   --aha-paper: #fafafa;
   --aha-paper-muted: #4a4a4a;
   --aha-line: #b0b0b0;
-  /* Action Rose — single semantic action color, the rosiest tone that holds
-     WCAG AA on paper white (4.55:1) and under white text (4.74:1). */
+  /* Rose fills (design-2 Accent Coral): buttons and selected states carry the
+     TRUE rose as a surface with ink text on top — 6.15:1, passes AA. */
+  --aha-rose: #ff6b6b;
+  /* Action Rose — rose TEXT and focus rings on paper white need this deeper
+     tone to hold WCAG AA (4.55:1). Never set small text in #FF6B6B on white. */
   --aha-accent: #ce3d56;
-  /* Crayon Coral — artwork and campaign surfaces only, never text on white. */
-  --aha-coral-art: #ff6b6b;
   --aha-sky: #87ceeb;
   --aha-sage: #a8d5ba;
   --aha-warm-crease: #f0c987;
@@ -31,6 +32,7 @@
   --c-content: 26 26 26;
   --c-muted: 74 74 74;
   --c-accent: 206 61 86;
+  --c-rose: 255 107 107;
   --c-success: 168 213 186;
   --c-warning: 240 201 135;
   --c-error: 206 61 86;
@@ -293,9 +295,9 @@ main > section:not(:first-child) {
   min-height: var(--aha-tap-min);
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--aha-accent);
-  background: var(--aha-accent);
-  color: var(--aha-surface);
+  border: 1px solid var(--aha-rose);
+  background: var(--aha-rose);
+  color: var(--aha-ink);
   font-family: var(--aha-font-mono);
   font-weight: 700;
   text-decoration: none;
@@ -314,8 +316,8 @@ main > section:not(:first-child) {
 }
 
 .primary-action:hover {
-  border-color: color-mix(in srgb, var(--aha-accent) 84%, black);
-  background: color-mix(in srgb, var(--aha-accent) 92%, black);
+  border-color: color-mix(in srgb, var(--aha-rose) 84%, black);
+  background: color-mix(in srgb, var(--aha-rose) 92%, black);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
   filter: none;
   transform: translateY(-1px);
@@ -497,15 +499,16 @@ textarea {
   justify-content: center;
   min-height: var(--aha-tap-min);
   padding: 0 1.5rem;
-  border: 1px solid var(--aha-accent);
-  background: var(--aha-accent);
-  color: var(--aha-surface);
+  border: 1px solid var(--aha-rose);
+  background: var(--aha-rose);
+  color: var(--aha-ink);
   font-family: var(--aha-font-mono);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
   transition:
     background-color var(--aha-motion-base) var(--aha-ease-out),
     border-color var(--aha-motion-base) var(--aha-ease-out),
@@ -513,8 +516,8 @@ textarea {
 }
 
 .btn-primary:hover {
-  border-color: color-mix(in srgb, var(--aha-accent) 80%, black);
-  background: color-mix(in srgb, var(--aha-accent) 90%, black);
+  border-color: color-mix(in srgb, var(--aha-rose) 80%, black);
+  background: color-mix(in srgb, var(--aha-rose) 90%, black);
 }
 
 .btn-primary:active {
@@ -608,4 +611,9 @@ textarea {
     transform: translateY(-4px);
     box-shadow: 0 12px 28px rgba(26, 26, 26, 0.1);
   }
+}
+
+/* Hand-cut corner for tinted panels that can't take the white fold-surface. */
+.corner-cut {
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
 }

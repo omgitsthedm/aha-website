@@ -176,7 +176,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                     const unavailable = !variationAvailable(variation.name);
                     const selected = variation.id === selectedVariation;
                     return (
-                      <button key={variation.id} type="button" onClick={() => { setSelectedVariation(variation.id); trackCommerceEvent({ name: "select_variant", itemId: product.id, variantId: variation.id, valueCents: variation.price, currency: product.currency }); }} disabled={unavailable} aria-pressed={selected} aria-label={unavailable ? `${variation.name}, unavailable` : variation.name} className={`relative min-h-11 min-w-12 border px-4 py-2 text-sm font-bold transition-colors ${selected ? "border-accent bg-accent text-white" : "border-border/60 text-cream hover:border-accent"} ${unavailable ? "cursor-not-allowed text-muted line-through opacity-50" : ""}`}>
+                      <button key={variation.id} type="button" onClick={() => { setSelectedVariation(variation.id); trackCommerceEvent({ name: "select_variant", itemId: product.id, variantId: variation.id, valueCents: variation.price, currency: product.currency }); }} disabled={unavailable} aria-pressed={selected} aria-label={unavailable ? `${variation.name}, unavailable` : variation.name} className={`relative min-h-11 min-w-12 border px-4 py-2 text-sm font-bold transition-colors ${selected ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"} ${unavailable ? "cursor-not-allowed text-muted line-through opacity-50" : ""}`}>
                         {variation.name}
                       </button>
                     );
@@ -194,7 +194,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 onClick={toggleWishlist}
                 aria-pressed={wishlisted}
                 aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                className={`inline-flex h-14 w-14 items-center justify-center border transition-colors ${wishlisted ? "border-accent bg-accent text-white" : "border-border/10 text-muted hover:border-accent hover:text-cream"}`}
+                className={`inline-flex h-14 w-14 items-center justify-center border transition-colors ${wishlisted ? "border-accent bg-rose text-cream" : "border-border/10 text-muted hover:border-accent hover:text-cream"}`}
               >
                 <svg className="h-5 w-5" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />

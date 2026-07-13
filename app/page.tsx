@@ -40,7 +40,7 @@ export default async function HomePage() {
               <Link href="/new-arrivals" className="btn-secondary">Shop new arrivals</Link>
             </div>
           </div>
-          <div className="relative aspect-video overflow-hidden border border-border/40">
+          <div className="fold-surface relative aspect-video overflow-hidden">
             <Image
               src="/campaign/hero-home.jpg"
               alt="Current After Hours Agenda garments laid out on paper: the Be You tee, Classic AHA hoodie, and Hope and Tomorrow sweatshirt"
@@ -67,7 +67,7 @@ export default async function HomePage() {
             <Link
               key={tile.href}
               href={tile.href}
-              className="group relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface image-hover-zoom"
+              className="fold-surface group relative aspect-[3/4] overflow-hidden image-hover-zoom"
             >
               <Image
                 src={tile.image}
@@ -98,7 +98,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-4">
             {featured.map((product, index) => (
               <Link key={product.id} href={`/product/${product.slug}`} className="group block focus-visible:outline-offset-4">
-                <div className="image-hover-zoom relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">
+                <div className="fold-surface image-hover-zoom relative aspect-[3/4] overflow-hidden">
                   <Image
                     src={product.images[0]}
                     alt={product.name}
@@ -121,7 +121,7 @@ export default async function HomePage() {
       </section>
 
       <section aria-labelledby="dispatch-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
-        <div className="relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">
+        <div className="corner-cut crease-rule relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-[#B03246]">Newsletter</p>
           <h2 id="dispatch-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">Join the second shift</h2>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">New releases and the occasional note from the shop. No spam, unsubscribe anytime.</p>

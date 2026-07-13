@@ -78,7 +78,7 @@ export default async function WomenPage({ params }: WomenPageProps) {
           }
         />
         {!category && (
-          <div className="relative mb-10 aspect-[21/9] overflow-hidden border border-border/40 md:aspect-[3/1]">
+          <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
             <Image
               src="/campaign/hero-women.jpg"
               alt="Hope and Tomorrow dusty rose sweatshirt and Haze lavender sweatshirt on a paper background"

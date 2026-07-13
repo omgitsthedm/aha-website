@@ -95,7 +95,7 @@ export function CategoryShopContent({
           </div>
           <div className="flex flex-wrap gap-2 xl:pt-6" role="group" aria-label="Catalog view">
             {(["grid", "index"] as const).map((mode) => (
-              <button key={mode} type="button" onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode} className={`${toggle} ${viewMode === mode ? "border-accent bg-accent text-white" : "border-border/60 text-cream hover:border-accent"}`}>
+              <button key={mode} type="button" onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode} className={`${toggle} ${viewMode === mode ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}>
                 {mode}
               </button>
             ))}
@@ -108,7 +108,7 @@ export function CategoryShopContent({
             <Link
               href={categoryHref("all")}
               aria-pressed={activeCategory === undefined}
-              className={`${toggle} ${activeCategory === undefined ? "border-accent bg-accent text-white" : "border-border/60 text-cream hover:border-accent"}`}
+              className={`${toggle} ${activeCategory === undefined ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
             >
               All <span aria-hidden="true">{products.length}</span>
             </Link>
@@ -164,7 +164,7 @@ export function CategoryShopContent({
             return (
               <div key={product.id} className="group paper-lift">
                 <Link href={`/product/${product.slug}`} className="block focus-visible:outline-offset-4">
-                  <div className="relative aspect-[3/4] overflow-hidden border-b border-border/40 bg-surface transition-colors group-hover:border-accent">
+                  <div className="fold-surface relative aspect-[3/4] overflow-hidden">
                     {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                   </div>
                   <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">

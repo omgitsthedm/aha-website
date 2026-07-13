@@ -11,6 +11,7 @@ module.exports = {
         cream: "rgb(var(--c-content) / <alpha-value>)",
         muted: "rgb(var(--c-muted) / <alpha-value>)",
         accent: "rgb(var(--c-accent) / <alpha-value>)",
+        rose: "rgb(var(--c-rose) / <alpha-value>)",
         success: "rgb(var(--c-success) / <alpha-value>)",
         warning: "rgb(var(--c-warning) / <alpha-value>)",
         danger: "rgb(var(--c-error) / <alpha-value>)",
