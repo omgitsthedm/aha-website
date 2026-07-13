@@ -18,3 +18,15 @@ export function getPurchasableSizesMap(products: Product[]): Record<string, stri
   }
   return map;
 }
+
+/** slug -> number of distinct sold colors (from the verified manifest). */
+export function getColorCountMap(products: Product[]): Record<string, number> {
+  const map: Record<string, number> = {};
+  for (const product of products) {
+    const enrichment = getProductEnrichment(product.slug);
+    if (enrichment && enrichment.colors.length > 0) {
+      map[product.slug] = enrichment.colors.length;
+    }
+  }
+  return map;
+}

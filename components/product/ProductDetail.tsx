@@ -19,6 +19,8 @@ interface ProductDetailProps {
   enrichment?: ProductEnrichment | null;
   stockBySize?: Record<string, boolean>;
   storyDescription?: string;
+  /** color name -> index in product.images showing that colorway */
+  colorImageIndex?: Record<string, number>;
 }
 
 const sanitizeHtml = (html: string): string => html
@@ -35,7 +37,7 @@ const sanitizeHtml = (html: string): string => html
 
 const cleanDisplayText = (value: string): string => value.replace(/[—–]/g, "-");
 
-export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription }: ProductDetailProps) {
+export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription, colorImageIndex }: ProductDetailProps) {
   const { addItem } = useCart();
   const sizeInStock = (size: string) => stockBySize ? stockBySize[extractVariationSize(size)] !== false : true;
   const variationAvailable = (name: string) => {
@@ -157,7 +159,27 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             {enrichment?.colors && enrichment.colors.length > 0 && (
               <div className="mt-8 border-t border-border/40 pt-6">
                 <p className="mb-3 text-xs font-bold uppercase tracking-[0.08em] text-muted">{enrichment.colors.length > 1 ? "Colors" : "Color"}</p>
-                <div className="flex flex-wrap gap-2">{enrichment.colors.map((color) => <span key={color} className="border border-border/60 px-3 py-2 text-sm text-cream">{color}</span>)}</div>
+                <div className="flex flex-wrap gap-2">
+                  {enrichment.colors.map((color) => {
+                    const imageIndex = colorImageIndex?.[color];
+                    const hasImage = typeof imageIndex === "number";
+                    const isShown = hasImage && imageIndex === activeImage;
+                    return hasImage ? (
+                      <button
+                        key={color}
+                        type="button"
+                        onClick={() => setActiveImage(imageIndex)}
+                        aria-pressed={isShown}
+                        aria-label={`Show ${color} colorway`}
+                        className={`min-h-11 border px-3 py-2 text-sm transition-colors ${isShown ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
+                      >
+                        {color}
+                      </button>
+                    ) : (
+                      <span key={color} className="inline-flex min-h-11 items-center border border-border/60 px-3 py-2 text-sm text-cream">{color}</span>
+                    );
+                  })}
+                </div>
               </div>
             )}
 

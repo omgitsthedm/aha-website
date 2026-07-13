@@ -92,6 +92,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     }
   }
 
+  // Map each sold color to the gallery image showing that colorway, matched
+  // by the color slug embedded in the local mockup filename.
+  const colorImageIndex: Record<string, number> = {};
+  if (enrichment) {
+    const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    const claimed = new Set<number>();
+    // Longest color names first so "True Navy" claims its image before "Navy".
+    const colorsByLength = [...enrichment.colors].sort((a, b) => b.length - a.length);
+    for (const color of colorsByLength) {
+      const needle = normalize(color);
+      if (!needle) continue;
+      const index = product.images.findIndex(
+        (image, i) => !claimed.has(i) && image.startsWith("/products/") && normalize(image).includes(needle)
+      );
+      if (index >= 0) {
+        colorImageIndex[color] = index;
+        claimed.add(index);
+      }
+    }
+  }
+
   return (
     <>
       <ProductJsonLd product={product} description={storyDescription} />
@@ -101,6 +122,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         enrichment={enrichment}
         stockBySize={stockBySize}
         storyDescription={storyDescription}
+        colorImageIndex={colorImageIndex}
       />
     </>
   );

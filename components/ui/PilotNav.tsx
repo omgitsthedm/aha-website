@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
+import { SearchOverlay, type SearchIndexItem } from "@/components/ui/SearchOverlay";
 
 const genderLinks = [
   {
@@ -51,11 +52,23 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function PilotNav() {
+export function PilotNav({ searchIndex = [] }: { searchIndex?: SearchIndexItem[] }) {
   const { totalItems, setCartOpen } = useCart();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMobileSection, setOpenMobileSection] = useState<string | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault();
+        setSearchOpen((prev) => !prev);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   return (
     <header className="fixed inset-x-0 top-0 z-[100] border-b border-border/10 bg-void">
@@ -138,12 +151,23 @@ export function PilotNav() {
 
           <button
             type="button"
+            onClick={() => setSearchOpen(true)}
+            className="inline-flex h-14 items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted transition-colors hover:text-cream"
+            aria-label="Search products"
+          >
+            Search
+          </button>
+
+          <button
+            type="button"
             onClick={() => setCartOpen(true)}
             className="inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-cream transition-colors hover:text-accent"
             aria-label={`Open bag${totalItems ? `, ${totalItems} item${totalItems === 1 ? "" : "s"}` : ""}`}
           >
             Bag{totalItems ? ` ${totalItems}` : ""}
           </button>
+
+          <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} index={searchIndex} />
 
           <button
             type="button"

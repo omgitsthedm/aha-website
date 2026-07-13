@@ -15,13 +15,15 @@ interface ShopContentProps {
   paginationPath?: string;
   /** slug -> server-verified purchasable sizes for quick add */
   purchasableSizes?: Record<string, string[]>;
+  /** slug -> distinct sold color count */
+  colorCounts?: Record<string, number>;
 }
 
 const APPAREL_SIZE_ORDER = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
 const PAGE_SIZE = 24;
 const variationSize = (name: string) => name.split("/").pop()?.trim().toUpperCase() || name.toUpperCase();
 
-export function ShopContent({ products, collections, initialPage = 1, paginationPath, purchasableSizes }: ShopContentProps) {
+export function ShopContent({ products, collections, initialPage = 1, paginationPath, purchasableSizes, colorCounts }: ShopContentProps) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeSize, setActiveSize] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -155,13 +157,14 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
               <div key={product.id} className="group paper-lift">
                 <Link href={`/product/${product.slug}`} className="block focus-visible:outline-offset-4">
                   <div className="fold-surface relative aspect-[3/4] overflow-hidden">
-                    {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
+                    {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
+                    {product.images[1] && <Image src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
                   </div>
                   <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">
                     <h2 className="line-clamp-2 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">{product.name}</h2>
                     <div className="mt-2 flex items-center justify-between gap-2 text-xs font-bold">
                       <span>{product.priceFormatted}</span>
-                      <span className="text-muted">Made to order</span>
+                      <span className="text-muted">{colorCounts?.[product.slug] && colorCounts[product.slug] > 1 ? `${colorCounts[product.slug]} colors` : "Made to order"}</span>
                     </div>
                   </div>
                 </Link>

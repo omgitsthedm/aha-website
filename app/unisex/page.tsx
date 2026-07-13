@@ -1,5 +1,5 @@
 import { getAllProducts } from "@/lib/square/catalog";
-import { getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
+import { getColorCountMap, getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
@@ -44,7 +44,7 @@ export default async function UnisexPage() {
           />
         </div>
         <CategoryShopContent
-          products={products} purchasableSizes={getPurchasableSizesMap(products)}
+          products={products} purchasableSizes={getPurchasableSizesMap(products)} colorCounts={getColorCountMap(products)}
           gender="unisex"
           categories={categories}
           basePath="/unisex"

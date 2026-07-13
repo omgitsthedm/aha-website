@@ -1,5 +1,5 @@
 import { getAllCollections, getAllProducts, getProductsByCollection } from "@/lib/square/catalog";
-import { getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
+import { getColorCountMap, getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { ShopContent } from "@/components/shop/ShopContent";
 import type { Product, Collection } from "@/lib/utils/types";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -44,7 +44,7 @@ export default async function NewArrivalsPage() {
             }
           />
         </div>
-        <ShopContent products={products} purchasableSizes={getPurchasableSizesMap(products)} collections={collections} />
+        <ShopContent products={products} purchasableSizes={getPurchasableSizesMap(products)} colorCounts={getColorCountMap(products)} collections={collections} />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { getAllProducts } from "@/lib/square/catalog";
-import { getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
+import { getColorCountMap, getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { filterProductsByCategory, CATEGORIES } from "@/lib/commerce/taxonomy";
@@ -38,7 +38,7 @@ export default async function AccessoriesPage() {
           />
         </div>
         <CategoryShopContent
-          products={products} purchasableSizes={getPurchasableSizesMap(products)}
+          products={products} purchasableSizes={getPurchasableSizesMap(products)} colorCounts={getColorCountMap(products)}
           activeCategory="accessories"
           categories={CATEGORIES}
           basePath="/accessories"
