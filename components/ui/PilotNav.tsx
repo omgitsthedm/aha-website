@@ -54,32 +54,32 @@ export function PilotNav() {
   const [openMobileSection, setOpenMobileSection] = useState<string | null>(null);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] border-b border-border/60 bg-void/95 backdrop-blur-sm after:absolute after:bottom-[-1px] after:left-0 after:h-px after:w-1/3 after:bg-accent after:content-['']">
-      <nav aria-label="Primary navigation" className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="inline-flex min-h-11 items-center font-display text-base font-bold uppercase tracking-[-0.03em] text-cream hover:text-accent focus-visible:outline-offset-4">
+    <header className="fixed inset-x-0 top-0 z-[100] border-b border-border/10 bg-void">
+      <nav aria-label="Primary navigation" className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="inline-flex h-14 items-center font-display text-sm font-bold uppercase tracking-[-0.02em] text-cream hover:text-accent focus-visible:outline-offset-4">
           After Hours Agenda
         </Link>
 
-        <div className="flex items-center gap-1 sm:gap-3">
-          <div className="hidden items-center gap-1 lg:flex">
+        <div className="flex items-center">
+          <div className="hidden items-center lg:flex">
             {genderLinks.map((gender) => (
               <div key={gender.label} className="group relative">
                 <Link
                   href={gender.href}
-                  className={`nav-link inline-flex min-h-11 items-center px-3 font-mono text-xs font-bold uppercase tracking-[0.06em] transition-colors ${
+                  className={`inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
                     isActive(pathname, gender.href) ? "text-cream" : "text-muted hover:text-cream"
                   }`}
                 >
                   {gender.label}
                 </Link>
-                <div className="absolute left-0 top-full hidden min-w-[16rem] border-b border-x border-border/60 bg-void/98 px-4 py-3 shadow-lg group-hover:block">
-                  <ul className="space-y-1">
+                <div className="invisible absolute left-0 top-full min-w-[18rem] border border-border/10 bg-void px-2 py-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                  <ul className="space-y-0.5">
                     {gender.subLinks.map((link) => (
                       <li key={link.href}>
                         <Link
                           href={link.href}
-                          className={`inline-flex min-h-10 w-full items-center font-mono text-xs font-bold uppercase tracking-[0.06em] transition-colors ${
-                            isActive(pathname, link.href) ? "text-accent" : "text-muted hover:text-cream"
+                          className={`inline-flex h-10 w-full items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
+                            isActive(pathname, link.href) ? "text-accent" : "text-muted hover:bg-charcoal hover:text-cream"
                           }`}
                         >
                           {link.label}
@@ -95,7 +95,7 @@ export function PilotNav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`nav-link inline-flex min-h-11 items-center px-3 font-mono text-xs font-bold uppercase tracking-[0.06em] transition-colors ${
+                className={`inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
                   isActive(pathname, link.href) ? "text-cream" : "text-muted hover:text-cream"
                 }`}
               >
@@ -103,13 +103,13 @@ export function PilotNav() {
               </Link>
             ))}
 
-            <span className="mx-2 h-4 w-px bg-border/60" aria-hidden="true" />
+            <span className="mx-2 h-4 w-px bg-border/10" aria-hidden="true" />
 
             {utilityLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`nav-link inline-flex min-h-11 items-center px-3 font-mono text-xs font-bold uppercase tracking-[0.06em] transition-colors ${
+                className={`inline-flex h-14 items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
                   isActive(pathname, link.href) ? "text-cream" : "text-muted hover:text-cream"
                 }`}
               >
@@ -121,7 +121,7 @@ export function PilotNav() {
           <button
             type="button"
             onClick={() => setCartOpen(true)}
-            className="primary-action min-h-11 px-4 font-mono text-xs font-bold uppercase tracking-[0.06em]"
+            className="inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-cream transition-colors hover:text-accent"
             aria-label={`Open bag${totalItems ? `, ${totalItems} item${totalItems === 1 ? "" : "s"}` : ""}`}
           >
             Bag{totalItems ? ` ${totalItems}` : ""}
@@ -130,7 +130,7 @@ export function PilotNav() {
           <button
             type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center font-mono text-xs font-bold uppercase tracking-[0.06em] text-muted hover:text-cream lg:hidden"
+            className="inline-flex h-14 items-center justify-center px-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted transition-colors hover:text-cream lg:hidden"
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -143,64 +143,66 @@ export function PilotNav() {
       <div
         id="mobile-menu"
         data-open={mobileOpen}
-        className={`absolute left-0 right-0 top-full max-h-[80dvh] overflow-y-auto border-b border-border/60 bg-void/98 px-4 py-5 shadow-lg lg:hidden ${mobileOpen ? "block" : "hidden"}`}
+        className={`absolute inset-x-0 top-14 border-b border-border/10 bg-void shadow-xl lg:hidden ${mobileOpen ? "block" : "hidden"}`}
       >
-        <ul className="space-y-1">
-          {genderLinks.map((gender) => (
-            <li key={gender.label}>
-              <button
-                type="button"
-                onClick={() => setOpenMobileSection(openMobileSection === gender.label ? null : gender.label)}
-                className="inline-flex min-h-11 w-full items-center justify-between font-mono text-xs font-bold uppercase tracking-[0.06em] text-cream"
-                aria-expanded={openMobileSection === gender.label}
-              >
-                {gender.label}
-                <span aria-hidden="true">{openMobileSection === gender.label ? "−" : "+"}</span>
-              </button>
-              {openMobileSection === gender.label && (
-                <ul className="ml-3 space-y-1 border-l border-border/40 pl-3">
-                  {gender.subLinks.map((link) => (
-                    <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        onClick={() => setMobileOpen(false)}
-                        className="inline-flex min-h-10 w-full items-center font-mono text-xs font-bold uppercase tracking-[0.06em] text-muted hover:text-accent"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
+        <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6">
+          <ul className="space-y-1">
+            {genderLinks.map((gender) => (
+              <li key={gender.label}>
+                <button
+                  type="button"
+                  onClick={() => setOpenMobileSection(openMobileSection === gender.label ? null : gender.label)}
+                  className="inline-flex h-12 w-full items-center justify-between font-mono text-xs font-bold uppercase tracking-[0.08em] text-cream"
+                  aria-expanded={openMobileSection === gender.label}
+                >
+                  {gender.label}
+                  <span aria-hidden="true">{openMobileSection === gender.label ? "−" : "+"}</span>
+                </button>
+                {openMobileSection === gender.label && (
+                  <ul className="ml-3 space-y-0.5 border-l border-border/10 pl-3">
+                    {gender.subLinks.map((link) => (
+                      <li key={link.href}>
+                        <Link
+                          href={link.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="inline-flex h-10 w-full items-center font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted hover:text-accent"
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
 
-          {topLinks.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="inline-flex min-h-11 w-full items-center font-mono text-xs font-bold uppercase tracking-[0.06em] text-muted hover:text-accent"
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
+            {topLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex h-12 w-full items-center font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted hover:text-accent"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
 
-          <li className="border-t border-border/40 pt-2" aria-hidden="true" />
+            <li className="border-t border-border/10 pt-2" aria-hidden="true" />
 
-          {utilityLinks.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="inline-flex min-h-11 w-full items-center font-mono text-xs font-bold uppercase tracking-[0.06em] text-muted hover:text-accent"
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
+            {utilityLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex h-12 w-full items-center font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted hover:text-accent"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </header>
   );
