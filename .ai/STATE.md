@@ -13,10 +13,10 @@
 
 ## Current Stamp
 
-- Updated: 2026-07-12 21:16 MST
+- Updated: 2026-07-12 21:42 MST
 - Updated By: Codex
-- Basis: Codex verification from local Git, GitHub PR #15 checks, Netlify CLI/API, production environment readiness, public HTTPS, and desktop/mobile browser QA.
-- Current production source: Git-backed `origin/main`; the three-hoodie Origami storefront merge commit is `711200d882cd9870fb8414f6168aa0bdd137c603`.
+- Basis: Codex verification from local Git, GitHub PR #16 checks, Netlify CLI/API, exact-site live guard, public HTTPS, and computed-style mobile browser QA.
+- Current production source: Git-backed `origin/main`; the white-paper and rose Origami correction merge commit is `eeda9178833950ae7566ef1f47118204e10b13bd`.
 - Verified commerce runtime baseline: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
 - Git HEAD at onboarding: `23018a0`
 
@@ -46,14 +46,14 @@
 - Live title verified by guard: `After Hours Agenda`
 - Host: Netlify for apex, `www`, and `.netlify.app`.
 - Current deployed source: Git-backed `origin/main`.
-- Verified three-hoodie pilot deploy: `6a546616565ca0000853f8a5`, ready, production, branch `main`, commit `711200d882cd9870fb8414f6168aa0bdd137c603`.
+- Verified white-paper and rose pilot deploy: `6a546b8d9cd818000727c79b`, ready, production, branch `main`, commit `eeda9178833950ae7566ef1f47118204e10b13bd`.
 - Netlify site: `afterhoursagenda`
 - Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
 - Netlify custom domain: `afterhoursagenda.com`
 - Netlify build settings: GitHub provider, repo `omgitsthedm/aha-website`, branch `main`, command `npm run build`, publish `.next`.
 - Netlify `prevent_non_git_prod_deploys`: enabled and verified `true` on 2026-07-11.
-- Production QA status: PR #15 passed all GitHub and Netlify checks; exact-site, commerce-readiness, and live guards passed; home, shop, three product routes, bag, checkout, and support routes returned 200. Desktop/mobile browser review passed. The live Square card iframe mounted; no charge, customer order, or fulfillment was created. Square's hosted iframe currently reports non-blocking CSP errors for its own Cash Sans font request; the site CSP already allows the current hostname.
+- Production QA status: PR #16 passed all GitHub and Netlify checks; exact-site and live guards passed. Typecheck, lint, 39 unit tests, all catalog/provider/margin validators, production build, and 10 end-to-end checks passed. Live mobile computed styles confirmed Paper White `#FAFAFA` on `html` and `body`, Accent Coral `#FF6B6B` on the `Agenda` title and bag CTA, no horizontal overflow, and zero browser-console errors. The commerce path was unchanged and no charge, customer order, or fulfillment was created.
 
 ## Domain / DNS Truth
 
@@ -70,8 +70,8 @@
 ## Repo State
 
 - Branch: `main`
-- Status: three-hoodie Origami storefront pilot is merged and live at `711200d882cd9870fb8414f6168aa0bdd137c603`; no commerce provider records or production data were changed.
-- Production: `https://afterhoursagenda.com` exposes only Branded Unisex Hoodie, Classic - Black Unisex Hoodie, and Colors Unisex Hoodie. Home, shop, product, bag, checkout, service, and legal surfaces use the canonical system in `docs/AHA-DESIGN-SYSTEM.md`.
+- Status: three-hoodie Origami storefront pilot is merged and live with its white-paper and rose correction at `eeda9178833950ae7566ef1f47118204e10b13bd`; no commerce provider records or production data were changed.
+- Production: `https://afterhoursagenda.com` exposes only Branded Unisex Hoodie, Classic - Black Unisex Hoodie, and Colors Unisex Hoodie. Home, shop, product, bag, checkout, service, and legal surfaces use the canonical light Origami system in `docs/AHA-DESIGN-SYSTEM.md`, derived from `/Users/davidmarsh/Downloads/design-2.md`.
 - GitHub billing is restored. Dependency Graph was enabled, and the repaired CI, E2E, Lighthouse, security, dependency-review, and review checks are green.
 - PR #2 (`feature/uiux-doctrine-commerce-hardening`) was merged into `main` as `13c25e83f696b19c7d9230ec4766900cc5485451`.
 - Remote feature branch `feature/uiux-doctrine-commerce-hardening` was deleted after merge.
@@ -145,6 +145,8 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Recent Session History
 
+- 2026-07-12: David identified that the first Origami implementation had incorrectly inverted the palette and introduced a black refracted field. Codex corrected every customer-facing surface to the intended Paper White `#FAFAFA` ground, Ink Black `#1A1A1A` text, Accent Coral/rose `#FF6B6B` interactions, and restrained sky/sage paper facets. PR #16 passed all GitHub and Netlify checks and was squash-merged as `eeda9178833950ae7566ef1f47118204e10b13bd`; production deploy `6a546b8d9cd818000727c79b` is ready at `https://afterhoursagenda.com`. Live mobile computed-style QA confirmed the white canvas, rose title and bag CTA, no horizontal overflow, and zero console errors. The commerce path was unchanged; no payment, order, or fulfillment was created.
+
 - 2026-07-12: David rejected the PR #12 public content direction because it exposed historical products, random collections, design files, and invented editorial language during a full brand reset. Codex created `agent/reset-public-brand-surface` to preserve the production backend while replacing the customer-facing site with a name-only `After Hours Agenda` hold. The branch removes shared storefront navigation/footer/cart UI, redirects historical shopping and marketing routes to `/`, limits the sitemap to the root, pauses indexing, retires the rejected content vocabulary in project instructions, and keeps `/ops`, `/track-order`, APIs, Square, Printful, Resend, Netlify Database, webhooks, and production data untouched. Local typecheck, zero-warning lint, 35 unit tests, catalog/provider/margin validation, production build, 8 desktop/mobile E2E checks, route redirect checks, and visual review passed. Deployment remains pending the protected GitHub/Netlify release path.
 
 - 2026-07-12: David explicitly approved publication of the complete AHA relaunch branch. Codex committed the remaining 43 intended paths as `7bca6a6`, opened PR #12, waited for all 19 required checks to pass, and squash-merged to `main` as `f98aab586ce2ee9377c05de7d17740e0449c06e1`. Netlify Git production deploy `6a5446329dca9b00088b2be7` published the exact merge commit. Exact-site, production env-name readiness, live guards, 13 route checks, Square/Printful `auto` mode checks, and desktop/mobile Playwright CLI review passed with zero console errors. No payment, customer order, refund, fulfillment, or form submission was created.
@@ -186,7 +188,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Agent Directive
 
-Keep the customer-facing site in the name-only hold until David approves the new brand kit, product assortment, information architecture, imagery, copy, and marketing system. Preserve Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, Resend domain verification, and email delivery. Do not restore the rejected PR #12 content direction or fabricate a customer payment.
+Continue the relaunch from the live three-hoodie pilot and the white-paper/rose Origami system in `docs/AHA-DESIGN-SYSTEM.md`. Treat the current products as working examples, not the final launch assortment. Do not restore historical products, random collections, design-file language, or the rejected PR #12 content direction. Preserve Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, Resend domain verification, and email delivery. Do not fabricate a customer payment.
 
 ## Emergency / Bypass Notes
 
