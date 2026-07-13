@@ -32,7 +32,7 @@ export default async function HomePage() {
               After Hours Agenda
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-              Made-to-order streetwear for the second shift. Tees, hoodies, sweatshirts, and accessories in unisex fits.
+              Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories — printed to order, one at a time.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/men" className="btn-primary px-7">Shop Men</Link>
@@ -123,7 +123,7 @@ export default async function HomePage() {
       <section aria-labelledby="dispatch-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="corner-cut crease-rule relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-[#B03246]">Newsletter</p>
-          <h2 id="dispatch-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">Join the second shift</h2>
+          <h2 id="dispatch-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">Get the next release first</h2>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">New releases and the occasional note from the shop. No spam, unsubscribe anytime.</p>
           <form name="newsletter" method="POST" data-netlify="true" className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row" action="/newsletter">
             <input type="hidden" name="form-name" value="newsletter" />
@@ -162,10 +162,10 @@ export default async function HomePage() {
           </div>
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The agenda</p>
-            <h2 id="manifesto-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[0.92] tracking-[-0.04em] text-cream">Built for the second shift</h2>
+            <h2 id="manifesto-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[0.92] tracking-[-0.04em] text-cream">Made after hours. Worn all day.</h2>
             <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted md:text-base">
-              <p>After Hours Agenda is an independent NYC label for people who keep working after the day job ends. Every piece is made to order and printed on demand — nothing sits in a warehouse waiting to be discounted.</p>
-              <p>Our fits are unisex, our graphics are loud, and every promise on this site is one we can keep. Browse the full catalog and find yours.</p>
+              <p>After Hours Agenda is an independent New York label — the name is literal. Designs get drawn when the day quiets down, then printed one at a time when you order. Nothing sits in a warehouse waiting to be discounted.</p>
+              <p>The graphics run loud, quiet, funny, and defiant. The cuts are unisex and worn a hundred different ways. Nobody here needs permission to belong — that&apos;s the whole point.</p>
             </div>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/about" className="btn-primary">Read the story</Link>

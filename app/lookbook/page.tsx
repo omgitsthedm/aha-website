@@ -196,7 +196,7 @@ export default function LookbookPage() {
             id="newsletter-heading"
             className="mt-4 font-display text-[clamp(2rem,6vw,4rem)] font-bold leading-[0.92] tracking-[-0.04em] text-cream"
           >
-            Join the second shift
+            Get the next release first
           </h2>
           <p className="mt-5 text-base leading-relaxed text-muted md:text-lg">
             New releases and the occasional note from the shop. No spam.

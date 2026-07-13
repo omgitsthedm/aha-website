@@ -35,7 +35,7 @@ export function PilotFooter() {
       <div className="mx-auto grid max-w-[1280px] gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)_minmax(18rem,0.5fr)]">
         <div className="fold-surface p-6 sm:p-8">
           <p className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[0.9] tracking-[-0.05em]">After Hours Agenda</p>
-          <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">NYC streetwear made to order. Tees, hoodies, sweatshirts, and accessories built for the second shift. Questions? Email info@afterhoursagenda.com.</p>
+          <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories, printed to order. Questions? Email info@afterhoursagenda.com.</p>
           <a href="mailto:info@afterhoursagenda.com" className="btn-secondary mt-6">Email support</a>
 
           <div className="mt-8 border-t border-border/40 pt-6">

@@ -26,14 +26,14 @@ export const metadata: Metadata = {
     template: "%s | After Hours Agenda",
   },
   description:
-    "After Hours Agenda — NYC streetwear made to order. Hoodies, tees, and pieces built for the second shift. Free shipping. Secure Square checkout.",
+    "After Hours Agenda — expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. Free shipping. Secure Square checkout.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com"
   ),
   openGraph: {
     title: "After Hours Agenda | NYC Streetwear",
     description:
-      "NYC streetwear made to order. Hoodies, tees, and pieces built for the second shift. Free shipping. Secure Square checkout.",
+      "Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. Free shipping. Secure Square checkout.",
     type: "website",
     locale: "en_US",
     siteName: "After Hours Agenda",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "After Hours Agenda | NYC Streetwear",
     description:
-      "NYC streetwear made to order. Hoodies, tees, and pieces built for the second shift. Free shipping. Secure Square checkout.",
+      "Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. Free shipping. Secure Square checkout.",
   },
   robots: {
     index: true,

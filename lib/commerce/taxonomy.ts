@@ -27,17 +27,17 @@ export const GENDERS: GenderMeta[] = [
   {
     slug: "men",
     name: "Men",
-    description: "Streetwear built for the second shift.",
+    description: "Everyday tees, hoodies, and heavyweight staples in unisex cuts.",
   },
   {
     slug: "women",
     name: "Women",
-    description: "Streetwear built for the second shift.",
+    description: "Expressive tees, soft-tone sweatshirts, and everyday staples in unisex cuts.",
   },
   {
     slug: "unisex",
     name: "Unisex",
-    description: "Made for every body. Core pieces sized to share.",
+    description: "One cut, worn your way. The unisex core of the label.",
   },
 ];
 

@@ -30,7 +30,7 @@ const values = [
 const steps = [
   {
     title: "Design",
-    body: "Graphics are drawn and refined in New York, after hours. If it wouldn't be worn after a double shift, it doesn't get made.",
+    body: "Graphics are drawn and refined in New York, after hours. If it wouldn't get worn on a real day, it doesn't get made.",
   },
   {
     title: "Print",
@@ -54,7 +54,7 @@ export default function AboutPage() {
                 About the label
               </p>
               <h1 className="mt-5 max-w-4xl font-display text-[clamp(2.75rem,9vw,6.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.055em]">
-                Built for the second shift
+                Made after hours
               </h1>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
                 After Hours Agenda is an independent New York label. Every piece
@@ -212,8 +212,8 @@ export default function AboutPage() {
               <div className="mt-6 max-w-lg space-y-5 text-sm leading-relaxed text-muted md:text-base">
                 <p>
                   No open floor plan, no all-hands meetings, no investor slide
-                  decks. Just one rule: if it wouldn&apos;t be worn after a
-                  double shift, it doesn&apos;t get made.
+                  decks. Just one rule: if it wouldn&apos;t get worn on a real
+                  day, it doesn&apos;t get made.
                 </p>
                 <p>
                   Questions about a product, an order, or the label? Email{" "}
@@ -248,7 +248,7 @@ export default function AboutPage() {
                 id="newsletter-heading"
                 className="mt-4 font-display text-[clamp(2rem,6vw,4rem)] font-bold leading-[0.92] tracking-[-0.04em]"
               >
-                Join the second shift
+                Get the next release first
               </h2>
               <p className="mt-5 text-base leading-relaxed text-muted md:text-lg">
                 New releases and the occasional note from the shop.
