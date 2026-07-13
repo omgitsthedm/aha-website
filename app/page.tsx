@@ -143,14 +143,22 @@ export default async function HomePage() {
 
       <section aria-labelledby="manifesto-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
-          <div className="relative aspect-[4/5] overflow-hidden bg-charcoal lg:aspect-auto lg:min-h-[30rem]">
-            <Image
-              src="/campaign/hero-unisex.jpg"
-              alt="After Hours Agenda streetwear"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
+          <div>
+            <div className="relative aspect-[4/5] overflow-hidden bg-charcoal lg:aspect-auto lg:min-h-[30rem]">
+              <Image
+                src="/campaign/hero-unisex.jpg"
+                alt="No Place Like New York sweatshirt and EMO But In Heels hoodie on a paper background"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+            <p className="mt-3 text-xs leading-relaxed text-muted">
+              Pictured:{" "}
+              <Link href="/product/no-place-like-new-york-charcoal-unisex-premium-sweatshirt" className="font-bold text-accent underline underline-offset-4 hover:text-cream">No Place Like New York sweatshirt</Link>
+              {" and "}
+              <Link href="/product/emo-but-in-heels-dark-grey-unisex-hoodie" className="font-bold text-accent underline underline-offset-4 hover:text-cream">EMO But In Heels hoodie</Link>
+            </p>
           </div>
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The agenda</p>
@@ -160,8 +168,8 @@ export default async function HomePage() {
               <p>Our fits are unisex, our graphics are loud, and every promise on this site is one we can keep. Browse the full catalog and find yours.</p>
             </div>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/shop" className="btn-primary">Shop all products</Link>
-              <Link href="/unisex" className="btn-secondary">Shop unisex</Link>
+              <Link href="/about" className="btn-primary">Read the story</Link>
+              <Link href="/lookbook" className="btn-secondary">View the lookbook</Link>
             </div>
           </div>
         </div>

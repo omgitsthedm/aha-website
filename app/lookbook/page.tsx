@@ -5,49 +5,68 @@ import Image from "next/image";
 export const metadata: Metadata = {
   title: "Lookbook | After Hours Agenda",
   description:
-    "Outside Hours — an editorial lookbook from After Hours Agenda. NYC streetwear made for the second shift: men, women, unisex, and accessories shot after dark.",
+    "The current After Hours Agenda lineup, laid out flat: tees, hoodies, sweatshirts, and accessories — every piece shoppable and printed to order.",
   alternates: { canonical: "/lookbook" },
 };
 
+// Every look shows real garment mockups of live products; the product list
+// under each image is the exact set pictured.
 const editorialLooks = [
   {
-    href: "/shop",
     image: "/campaign/hero-home.jpg",
-    eyebrow: "Drop 001",
-    title: "The opening statement",
-    note: "Oversized tees and heavyweight hoodies shot on Canal after midnight. Fit: relaxed. Fabric: 240gsm cotton.",
+    eyebrow: "The lineup",
+    title: "Start here",
+    note: "Three ways into the label: loud color, clean logo, soft warmth.",
+    products: [
+      { label: "Be You tee", href: "/product/be-you" },
+      { label: "Classic AHA hoodie", href: "/product/classic-black-unisex-hoodie" },
+      { label: "Hope & Tomorrow sweatshirt", href: "/product/hope-tomorrow-pink-unisex-premium-sweatshirt" },
+    ],
     aspect: "aspect-[4/5]",
   },
   {
-    href: "/shop",
     image: "/campaign/hero-men.jpg",
-    eyebrow: "Men's",
-    title: "Boxy cuts, clean type",
-    note: "No logos bigger than the idea. Key pieces: black hoodie, classic tee, straight-leg sweatpants.",
+    eyebrow: "Heavyweights",
+    title: "Statement hoodies",
+    note: "Premium pullover hoodies with graphics that carry the conversation.",
+    products: [
+      { label: "Enemy of the State hoodie", href: "/product/enemy-of-the-state-unisex-hoodie" },
+      { label: "Japanese Garden Puzzle hoodie", href: "/product/japanese-garden-puzzle-charcoal-unisex-hoodie" },
+    ],
     aspect: "aspect-[3/4]",
   },
   {
-    href: "/shop",
     image: "/campaign/hero-women.jpg",
-    eyebrow: "Women's",
-    title: "Cropped, tailored, unbothered",
-    note: "Form-forward silhouettes with room to move. Key pieces: fitted tee, oversized crew, cropped hoodie.",
+    eyebrow: "Soft tones",
+    title: "Color you can live in",
+    note: "Dusty rose and lavender premium sweatshirts, printed to order.",
+    products: [
+      { label: "Hope & Tomorrow sweatshirt", href: "/product/hope-tomorrow-pink-unisex-premium-sweatshirt" },
+      { label: "Haze sweatshirt", href: "/product/haze-lavender-unisex-premium-sweatshirt" },
+    ],
     aspect: "aspect-[4/3]",
   },
   {
-    href: "/unisex",
     image: "/campaign/hero-unisex.jpg",
     eyebrow: "Unisex",
-    title: "Built for every body",
-    note: "Core palette: black, cement, and sky. Genderless fits designed to live in, not pose in.",
+    title: "One cut, worn your way",
+    note: "The unisex core: heavyweight fleece built for long nights.",
+    products: [
+      { label: "No Place Like New York sweatshirt", href: "/product/no-place-like-new-york-charcoal-unisex-premium-sweatshirt" },
+      { label: "EMO But In Heels hoodie", href: "/product/emo-but-in-heels-dark-grey-unisex-hoodie" },
+    ],
     aspect: "aspect-square",
   },
   {
-    href: "/shop",
     image: "/campaign/hero-accessories.jpg",
     eyebrow: "Accessories",
     title: "The finishing move",
-    note: "Beanies, caps, and everyday carry. Small pieces, heavy presence.",
+    note: "Embroidered dad hats and pin sets. Small pieces, heavy presence.",
+    products: [
+      { label: "Dad hat", href: "/product/dad-hat" },
+      { label: "Retro dad hat", href: "/product/retro-dad-hat" },
+      { label: "Pin set #1", href: "/product/set-1-of-pin-buttons" },
+    ],
     aspect: "aspect-[3/4]",
   },
 ];
@@ -55,56 +74,63 @@ const editorialLooks = [
 export default function LookbookPage() {
   return (
     <main className="bg-void">
-      {/* 1. Full-bleed hero */}
-      <section className="relative min-h-[70vh] md:min-h-[80vh]">
-        <Image
-          src="/campaign/hero-lookbook.jpg"
-          alt="After Hours Agenda lookbook campaign"
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70" />
-        <div className="relative flex min-h-[70vh] flex-col justify-center px-4 pt-28 pb-16 md:min-h-[80vh] md:pt-32 md:pb-20">
-          <div className="mx-auto max-w-4xl text-center">
-            <p className="hero-copy-enter font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">
-              Lookbook
-            </p>
-            <h1 className="hero-title-line mt-5 font-display text-[clamp(3rem,10vw,7rem)] font-bold leading-[0.86] tracking-[-0.055em] text-white">
-              Outside Hours
-            </h1>
-            <p className="hero-support-enter mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
-              Made-to-order streetwear for the second shift. A visual index of the pieces we build after the day job ends.
-            </p>
-            <div className="hero-actions-enter mt-8 flex flex-wrap justify-center gap-4">
-              <Link href="/shop" className="btn-primary min-h-12 px-7">
-                Shop the collection
-              </Link>
-              <Link href="/unisex" className="btn-secondary min-h-12 px-7 text-white/90 hover:text-accent">
-                Shop unisex
-              </Link>
+      {/* 1. Hero */}
+      <section className="px-4 pt-28 sm:px-6 md:pt-36">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
+            <div>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">
+                Lookbook
+              </p>
+              <h1 className="mt-5 font-display text-[clamp(2.75rem,9vw,6.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.055em] text-cream">
+                The current lineup
+              </h1>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
+                Every piece we make right now, laid out flat. Each look below is
+                built from live products — tap through and order the exact
+                garment pictured.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link href="/shop" className="btn-primary min-h-12 px-7">
+                  Shop all products
+                </Link>
+                <Link href="/unisex" className="btn-secondary min-h-12 px-7">
+                  Shop unisex
+                </Link>
+              </div>
+            </div>
+            <div className="relative aspect-video overflow-hidden border border-border/40">
+              <Image
+                src="/campaign/hero-lookbook.jpg"
+                alt="After Hours Agenda tees and sweatshirts, including the Black Sheep sweatshirt, arranged on a paper background"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 60vw"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Editorial intro */}
+      {/* 2. Honest framing */}
       <section className="px-4 py-16 sm:px-6 md:py-24">
-        <div className="container-narrow mx-auto text-center">
+        <div className="mx-auto max-w-3xl text-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">
-            Editorial
+            How to read this
           </p>
           <p className="mt-5 text-lg leading-relaxed text-muted md:text-xl">
-            This is not a catalog. It is a mood board for the hours between clocking out and showing up again. Every image was shot in the city we call home, using the same pieces you can order — no sample-only styling, no borrowed sets.
+            These are the real garments, shown flat and unretouched — the same
+            production images we check against every order. Campaign
+            photography with people in it comes later; the clothes come first.
           </p>
         </div>
       </section>
 
-      {/* 3. Masonry lookbook grid */}
+      {/* 3. Looks grid */}
       <section aria-labelledby="looks-heading" className="px-4 pb-16 sm:px-6 md:pb-24">
         <div className="mx-auto max-w-[1280px]">
-          <div className="mb-10 border-b border-border/10 pb-5 md:mb-14">
+          <div className="mb-10 border-b border-border/40 pb-5 md:mb-14">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">
               The looks
             </p>
@@ -112,35 +138,45 @@ export default function LookbookPage() {
               id="looks-heading"
               className="mt-2 font-display text-[clamp(2rem,5vw,4rem)] font-bold leading-none tracking-[-0.045em] text-cream"
             >
-              Outside Hours
+              Shop the lineup
             </h2>
           </div>
 
           <div className="columns-1 gap-4 space-y-4 md:columns-2 lg:columns-3">
             {editorialLooks.map((look) => (
               <article key={look.image} className="break-inside-avoid">
-                <Link href={look.href} className="group block">
-                  <div className={`image-hover-zoom relative ${look.aspect}`}>
-                    <Image
-                      src={look.image}
-                      alt={`${look.eyebrow} — ${look.title}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                  </div>
-                  <div className="mt-4 border-t border-border/10 pt-3">
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">
-                      {look.eyebrow}
-                    </p>
-                    <h3 className="mt-1 font-display text-lg font-bold leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">
-                      {look.title}
-                    </h3>
-                    <p className="mt-1 text-sm leading-relaxed text-muted">
-                      {look.note}
-                    </p>
-                  </div>
-                </Link>
+                <div className={`image-hover-zoom relative ${look.aspect} overflow-hidden border border-border/40`}>
+                  <Image
+                    src={look.image}
+                    alt={`${look.eyebrow} — ${look.title}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                </div>
+                <div className="mt-4 border-t border-border/40 pt-3">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">
+                    {look.eyebrow}
+                  </p>
+                  <h3 className="mt-1 font-display text-lg font-bold leading-[0.95] tracking-[-0.025em] text-cream">
+                    {look.title}
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted">
+                    {look.note}
+                  </p>
+                  <ul className="mt-3 space-y-1">
+                    {look.products.map((product) => (
+                      <li key={product.href}>
+                        <Link
+                          href={product.href}
+                          className="inline-flex min-h-9 items-center text-sm font-bold text-accent underline underline-offset-4 hover:text-cream"
+                        >
+                          {product.label} →
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </article>
             ))}
           </div>
@@ -149,28 +185,28 @@ export default function LookbookPage() {
 
       {/* 4. Newsletter CTA */}
       <section
-        aria-labelledby="dispatch-heading"
-        className="border-t border-border/10 bg-void px-4 py-16 md:py-24"
+        aria-labelledby="newsletter-heading"
+        className="border-t border-border/40 bg-void px-4 py-16 md:py-24"
       >
         <div className="mx-auto max-w-3xl text-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">
-            After Hours Dispatch
+            Newsletter
           </p>
           <h2
-            id="dispatch-heading"
+            id="newsletter-heading"
             className="mt-4 font-display text-[clamp(2rem,6vw,4rem)] font-bold leading-[0.92] tracking-[-0.04em] text-cream"
           >
-            Join The Dispatch
+            Join the second shift
           </h2>
           <p className="mt-5 text-base leading-relaxed text-muted md:text-lg">
-            Early access to drops, restock alerts, and lookbook exclusives. No spam.
+            New releases and the occasional note from the shop. No spam.
           </p>
           <form
             name="newsletter"
             method="POST"
             data-netlify="true"
             action="/newsletter"
-            className="mt-8 flex max-w-md flex-col gap-3 sm:mx-auto sm:flex-row sm:items-start"
+            className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row sm:items-start"
           >
             <input type="hidden" name="form-name" value="newsletter" />
             <label htmlFor="lookbook-email" className="sr-only">
@@ -182,7 +218,7 @@ export default function LookbookPage() {
               type="email"
               required
               placeholder="you@email.com"
-              className="min-h-12 flex-1 border border-border/10 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
+              className="min-h-12 flex-1 border border-border/40 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
             />
             <button type="submit" className="btn-primary min-h-12 px-6">
               Subscribe

@@ -6,12 +6,8 @@ const resetPublicRoutes = [
   "/collections/:path*",
   "/drops",
   "/drops/:path*",
-  "/lookbook",
   "/lookbook/:path*",
   "/coming-soon",
-  "/newsletter",
-  "/restock",
-  "/about",
   "/product-feed.xml",
 ];
 
