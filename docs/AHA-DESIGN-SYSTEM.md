@@ -27,7 +27,7 @@ This document adapts the supplied Origami Geométrico direction to a production 
 | Warm Crease | `#F0C987` |
 | Steel Grey | `#4A4A4A` |
 
-Ink Black is the storefront ground. Paper White is primary text. Coral owns actions and focus. Sky, sage, and warm crease are supporting fold planes, never competing CTAs.
+Paper White is the storefront ground. Ink Black is primary text. Accent Coral is the rose interaction color for buttons, links, labels, active states, and focus. Sky, sage, and warm crease are supporting paper-fold planes, never competing CTAs. Large black refracted backgrounds are not part of the storefront system.
 
 ## Type
 

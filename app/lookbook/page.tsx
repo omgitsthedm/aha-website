@@ -14,7 +14,7 @@ export default function LookbookPage() {
       <div className="px-4 md:px-6">
         <div className="mx-auto max-w-[1440px]">
           <PageHeader eyebrow="Outside Hours" title="Design issues" description="Product artwork, previews, and future campaign material organized as a visual index. Every published issue uses verified store assets and links back to the product." />
-          <Link href="/lookbook/design-files" className="mt-7 inline-flex min-h-11 items-center border border-accent px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] text-accent hover:bg-accent hover:text-void">Open Issue 001 / Design files</Link>
+          <Link href="/lookbook/design-files" className="mt-7 inline-flex min-h-11 items-center border border-accent px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] text-accent hover:bg-accent hover:text-cream">Open Issue 001 / Design files</Link>
         </div>
       </div>
       <DesignFiles compact />
