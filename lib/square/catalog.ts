@@ -11,10 +11,12 @@ function previewCatalogFallbackAllowed(): boolean {
 }
 
 const LEGACY_COLLECTION_ID = "57JPU5ZDHXGWVPRQQZMWVR5Q";
-const LEGACY_PRODUCT_NAME = /black sheep|counting sheep|pink sheep|sheep min/i;
+// Sheep-name filter removed 2026-07-13 with David's approval: the Black
+// Sheep / Sheep Min products are active, mapped, margin-passing, and have
+// verified mockups. The legacy collection filter stays.
 
 function isCurrentStorefrontProduct(product: Product): boolean {
-  return !product.collectionIds.includes(LEGACY_COLLECTION_ID) && !LEGACY_PRODUCT_NAME.test(product.name);
+  return !product.collectionIds.includes(LEGACY_COLLECTION_ID);
 }
 
 interface SquareCatalogResponse {
