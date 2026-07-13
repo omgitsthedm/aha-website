@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Unisex Streetwear | After Hours Agenda",
+  title: "Unisex Streetwear",
   description:
     "Made for every body. Core unisex tees, hoodies, sweatshirts, and accessories from After Hours Agenda. Made to order in NYC.",
   alternates: { canonical: "/unisex" },

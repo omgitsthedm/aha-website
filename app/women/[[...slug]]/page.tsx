@@ -32,8 +32,8 @@ export async function generateMetadata({ params }: WomenPageProps): Promise<Meta
   }
 
   const title = category
-    ? `${category.name} for Women | After Hours Agenda`
-    : `${gender.name}'s Streetwear | After Hours Agenda`;
+    ? `${category.name} for Women`
+    : `${gender.name}'s Streetwear`;
   const description = category
     ? `${category.description} Shop made-to-order ${category.name.toLowerCase()} for women.`
     : `${gender.description} Shop women's tees, hoodies, sweatshirts, and accessories.`;

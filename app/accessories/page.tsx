@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Accessories | After Hours Agenda",
+  title: "Accessories",
   description:
     "Hats, beanies, bags, stickers, pins, and finishing pieces from After Hours Agenda. Made to order in NYC.",
   alternates: { canonical: "/accessories" },
