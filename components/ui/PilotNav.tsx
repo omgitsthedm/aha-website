@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
@@ -9,6 +10,8 @@ const genderLinks = [
   {
     label: "Men",
     href: "/men",
+    image: "/campaign/hero-men.jpg",
+    cta: { label: "Shop Men", href: "/men" },
     subLinks: [
       { label: "Shop All", href: "/men" },
       { label: "T-Shirts", href: "/men/t-shirts" },
@@ -20,6 +23,8 @@ const genderLinks = [
   {
     label: "Women",
     href: "/women",
+    image: "/campaign/hero-women.jpg",
+    cta: { label: "Shop Women", href: "/women" },
     subLinks: [
       { label: "Shop All", href: "/women" },
       { label: "T-Shirts", href: "/women/t-shirts" },
@@ -72,21 +77,35 @@ export function PilotNav() {
                 >
                   {gender.label}
                 </Link>
-                <div className="invisible absolute left-0 top-full min-w-[14rem] border border-border/10 bg-void px-2 py-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                  <ul className="space-y-0.5">
-                    {gender.subLinks.map((link) => (
-                      <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          className={`inline-flex h-10 w-full items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
-                            isActive(pathname, link.href) ? "text-accent" : "text-muted hover:bg-charcoal hover:text-cream"
-                          }`}
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="invisible absolute left-0 top-full min-w-[24rem] border border-border/10 bg-void opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                  <div className="grid grid-cols-[1fr_10rem]">
+                    <ul className="space-y-0.5 px-2 py-2">
+                      {gender.subLinks.map((link) => (
+                        <li key={link.href}>
+                          <Link
+                            href={link.href}
+                            className={`inline-flex h-10 w-full items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
+                              isActive(pathname, link.href) ? "text-accent" : "text-muted hover:bg-charcoal hover:text-cream"
+                            }`}
+                          >
+                            {link.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link href={gender.cta.href} className="group/image relative block overflow-hidden">
+                      <Image
+                        src={gender.image}
+                        alt={gender.cta.label}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover/image:scale-105"
+                        sizes="10rem"
+                      />
+                      <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void/90 to-transparent p-3 pt-10">
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-cream underline underline-offset-4">{gender.cta.label}</span>
+                      </span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}

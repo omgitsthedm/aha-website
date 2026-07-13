@@ -485,3 +485,109 @@ textarea {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* Premium fashion-brand utilities */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--aha-tap-min);
+  padding: 0 1.5rem;
+  border: 1px solid var(--aha-accent);
+  background: var(--aha-accent);
+  color: var(--aha-ink);
+  font-family: var(--aha-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background-color var(--aha-motion-base) var(--aha-ease-out),
+    border-color var(--aha-motion-base) var(--aha-ease-out),
+    transform var(--aha-motion-fast) var(--aha-ease-out);
+}
+
+.btn-primary:hover {
+  border-color: color-mix(in srgb, var(--aha-accent) 80%, black);
+  background: color-mix(in srgb, var(--aha-accent) 90%, black);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--aha-tap-min);
+  padding: 0 1.5rem;
+  border: 1px solid var(--aha-line);
+  background: transparent;
+  color: var(--aha-ink);
+  font-family: var(--aha-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    border-color var(--aha-motion-base) var(--aha-ease-out),
+    color var(--aha-motion-base) var(--aha-ease-out),
+    background-color var(--aha-motion-base) var(--aha-ease-out);
+}
+
+.btn-secondary:hover {
+  border-color: var(--aha-accent);
+  color: var(--aha-accent);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--aha-tap-min);
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--aha-ink);
+  font-family: var(--aha-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.btn-ghost:hover {
+  color: var(--aha-accent);
+}
+
+.text-editorial {
+  font-family: var(--aha-font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.container-narrow {
+  max-width: 42rem;
+}
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--aha-line), transparent);
+  opacity: 0.4;
+}
+
+.image-hover-zoom {
+  overflow: hidden;
+}
+
+.image-hover-zoom img {
+  transition: transform var(--aha-motion-slow) var(--aha-ease-out);
+}
+
+.image-hover-zoom:hover img {
+  transform: scale(1.05);
+}

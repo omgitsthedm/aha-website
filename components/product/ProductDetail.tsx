@@ -10,6 +10,7 @@ import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { getFulfillmentSummary, RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { extractVariationSize } from "@/lib/utils/variation";
+import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 
 interface ProductDetailProps {
   product: Product;
@@ -46,7 +47,26 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   const [selectedVariation, setSelectedVariation] = useState(initialVariation?.id || product.variations[0]?.id || "");
   const [activeImage, setActiveImage] = useState(0);
   const [addedFeedback, setAddedFeedback] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
+  const [wishlisted, setWishlisted] = useState(false);
   const feedbackTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem("aha-wishlist") : null;
+    if (saved) {
+      const list = JSON.parse(saved) as string[];
+      setWishlisted(list.includes(product.slug));
+    }
+  }, [product.slug]);
+
+  const toggleWishlist = () => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem("aha-wishlist") : null;
+    const list = saved ? (JSON.parse(saved) as string[]) : [];
+    const next = wishlisted ? list.filter((s) => s !== product.slug) : [...list, product.slug];
+    localStorage.setItem("aha-wishlist", JSON.stringify(next));
+    setWishlisted(!wishlisted);
+    trackCommerceEvent({ name: wishlisted ? "remove_from_wishlist" : "add_to_wishlist", itemId: product.id });
+  };
 
   const currentVariation = product.variations.find((variation) => variation.id === selectedVariation);
   const currentSize = extractVariationSize(currentVariation?.name || "");
@@ -129,8 +149,19 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           <section aria-labelledby="product-title" className="lg:pt-3">
             {collection && <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">{collection.name}</p>}
             <h1 id="product-title" className="max-w-2xl font-display text-[clamp(2.5rem,6vw,5.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.05em] text-cream">{product.name}</h1>
-            <p className="mt-6 font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
-            <p className="mt-3 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <p className="font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
+              <div className="flex items-center gap-1" aria-label="No reviews yet">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="h-4 w-4 text-border/60" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+                <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.06em] text-muted">Be the first to review</span>
+              </div>
+            </div>
+            <p className="mt-4 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.06em] text-accent">Model is 5&apos;10&quot; and wears size M</p>
 
             {enrichment?.colors && enrichment.colors.length > 0 && (
               <div className="mt-8 border-t border-border/40 pt-6">
@@ -147,7 +178,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                     <p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Size</p>
                     <p className="mt-1 text-xs leading-relaxed text-cream">{enrichment?.fitDescription ? cleanDisplayText(enrichment.fitDescription) : "Standard unisex fit. Choose your usual size."}</p>
                   </div>
-                  <Link href="/size-guide" className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Size guide</Link>
+                  <button type="button" onClick={() => setSizeGuideOpen(true)} className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Size guide</button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {product.variations.map((variation) => {
@@ -163,9 +194,22 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               </fieldset>
             )}
 
-            <button type="button" onClick={handleAddToCart} disabled={!canBuy} aria-live="polite" className={`primary-action mt-8 min-h-14 w-full px-5 py-4 text-sm ${canBuy ? "" : "cursor-not-allowed opacity-50"}`}>
-              {!canBuy ? "Unavailable" : addedFeedback ? "Added to bag" : `Add to bag | ${currentVariation?.priceFormatted || product.priceFormatted}`}
-            </button>
+            <div className="mt-8 flex gap-3">
+              <button type="button" onClick={handleAddToCart} disabled={!canBuy} aria-live="polite" className={`btn-primary flex-1 ${canBuy ? "" : "cursor-not-allowed opacity-50"}`}>
+                {!canBuy ? "Unavailable" : addedFeedback ? "Added to bag" : `Add to bag — ${currentVariation?.priceFormatted || product.priceFormatted}`}
+              </button>
+              <button
+                type="button"
+                onClick={toggleWishlist}
+                aria-pressed={wishlisted}
+                aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                className={`inline-flex h-14 w-14 items-center justify-center border transition-colors ${wishlisted ? "border-accent bg-accent text-cream" : "border-border/10 text-muted hover:border-accent hover:text-cream"}`}
+              >
+                <svg className="h-5 w-5" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </button>
+            </div>
 
             {!canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation?.name || "" } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}
             <p className="mt-3 text-xs leading-relaxed text-muted">{RETURNS_SUMMARY}</p>
@@ -194,6 +238,13 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             )}
           </section>
         </div>
+
+      <SizeGuideModal
+        isOpen={sizeGuideOpen}
+        onClose={() => setSizeGuideOpen(false)}
+        fitDescription={enrichment?.fitDescription}
+        careInstructions={enrichment?.careInstructions}
+      />
 
         {related.length > 0 && (
           <section aria-labelledby="related-title" className="mt-24 border-t border-border/40 pt-10">

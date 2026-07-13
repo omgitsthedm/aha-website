@@ -7,7 +7,9 @@ export type CommerceEventName =
   | "view_cart"
   | "begin_checkout"
   | "search"
-  | "search_no_results";
+  | "search_no_results"
+  | "add_to_wishlist"
+  | "remove_from_wishlist";
 
 export interface CommerceEvent {
   name: CommerceEventName;

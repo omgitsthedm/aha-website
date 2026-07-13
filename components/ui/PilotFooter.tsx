@@ -36,11 +36,11 @@ export function PilotFooter() {
         <div className="fold-surface p-6 sm:p-8">
           <p className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[0.9] tracking-[-0.05em]">After Hours Agenda</p>
           <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">NYC streetwear made to order. Tees, hoodies, sweatshirts, and accessories built for the second shift. Questions? Email info@afterhoursagenda.com.</p>
-          <a href="mailto:info@afterhoursagenda.com" className="secondary-action mt-6 px-5 py-3 text-xs">Email support</a>
+          <a href="mailto:info@afterhoursagenda.com" className="btn-secondary mt-6">Email support</a>
 
           <div className="mt-8 border-t border-border/40 pt-6">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">After Hours Dispatch</p>
-            <p className="mt-2 max-w-sm text-sm text-muted">Get drop notes and restock alerts. No spam.</p>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Join The Dispatch</p>
+            <p className="mt-2 max-w-sm text-sm text-muted">Early access to drops, lookbooks, and 10% off your first order.</p>
             <form name="newsletter" method="POST" data-netlify="true" className="mt-4 flex max-w-sm flex-col gap-3 sm:flex-row" action="/newsletter">
               <input type="hidden" name="form-name" value="newsletter" />
               <label htmlFor="footer-email" className="sr-only">Email address</label>
@@ -52,7 +52,7 @@ export function PilotFooter() {
                 placeholder="you@email.com"
                 className="min-h-11 flex-1 border border-border/60 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
               />
-              <button type="submit" className="primary-action min-h-11 px-5 text-xs">Subscribe</button>
+              <button type="submit" className="btn-primary">Subscribe</button>
             </form>
           </div>
         </div>
