@@ -5,31 +5,35 @@
 :root {
   color-scheme: dark;
 
-  --aha-ink: #080a09;
-  --aha-ink-soft: #0e110f;
-  --aha-surface: #181d19;
-  --aha-surface-raised: #222923;
-  --aha-paper: #f4f7f0;
-  --aha-paper-muted: #a7afa5;
-  --aha-line: #4d574f;
-  --aha-accent: #d5ff3f;
-  --aha-success: #77c991;
-  --aha-warning: #e9b85a;
+  --aha-ink: #1a1a1a;
+  --aha-ink-soft: #242424;
+  --aha-surface: #303030;
+  --aha-surface-raised: #3a3a3a;
+  --aha-paper: #fafafa;
+  --aha-paper-muted: #b0b0b0;
+  --aha-line: #4a4a4a;
+  --aha-accent: #ff6b6b;
+  --aha-sky: #87ceeb;
+  --aha-sage: #a8d5ba;
+  --aha-warm-crease: #f0c987;
+  --aha-success: #a8d5ba;
+  --aha-warning: #f0c987;
   --aha-error: #ff6b6b;
 
   /* Semantic Tailwind channels */
-  --c-bg: 8 10 9;
-  --c-charcoal: 14 17 15;
-  --c-surface: 24 29 25;
-  --c-content: 244 247 240;
-  --c-muted: 167 175 165;
-  --c-accent: 213 255 63;
-  --c-success: 119 201 145;
-  --c-warning: 233 184 90;
+  --c-bg: 26 26 26;
+  --c-charcoal: 36 36 36;
+  --c-surface: 48 48 48;
+  --c-content: 250 250 250;
+  --c-muted: 176 176 176;
+  --c-accent: 255 107 107;
+  --c-success: 168 213 186;
+  --c-warning: 240 201 135;
   --c-error: 255 107 107;
 
-  --aha-font-display: var(--font-ibm-plex-condensed), 'Arial Narrow', sans-serif;
-  --aha-font-mono: var(--font-ibm-plex), 'Courier New', monospace;
+  --aha-font-display: var(--font-poppins), Arial, sans-serif;
+  --aha-font-body: var(--font-poppins), Arial, sans-serif;
+  --aha-font-mono: var(--font-jetbrains-mono), Menlo, monospace;
   --aha-motion-fast: 140ms;
   --aha-motion-base: 260ms;
   --aha-motion-slow: 640ms;
@@ -47,7 +51,7 @@
   html {
     background: var(--aha-ink);
     color: var(--aha-paper);
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 
   body {
@@ -55,7 +59,7 @@
     overflow-x: hidden;
     background: var(--aha-ink);
     color: var(--aha-paper);
-    font-family: var(--aha-font-mono);
+    font-family: var(--aha-font-body);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -121,23 +125,61 @@
   isolation: isolate;
 }
 
-.aha-page::before {
+.aha-page::before,
+.origami-shell::before {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
   content: '';
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
+  opacity: 0.16;
+  background:
+    linear-gradient(150deg, transparent 0 46%, rgba(135, 206, 235, 0.16) 46.2% 46.7%, transparent 47%),
+    linear-gradient(30deg, transparent 0 67%, rgba(168, 213, 186, 0.12) 67.2% 67.7%, transparent 68%),
+    linear-gradient(90deg, transparent 0 82%, rgba(255, 107, 107, 0.12) 82.2% 82.7%, transparent 83%);
+  background-size: 32rem 32rem, 38rem 38rem, 44rem 44rem;
+}
+
+.origami-shell {
+  position: relative;
+  isolation: isolate;
 }
 
 .registration-grid {
   background: var(--aha-ink);
   background-image:
-    linear-gradient(rgba(213, 255, 63, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(213, 255, 63, 0.018) 1px, transparent 1px);
+    linear-gradient(rgba(250, 250, 250, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(250, 250, 250, 0.025) 1px, transparent 1px);
   background-size: 64px 64px;
+}
+
+.fold-surface {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid color-mix(in srgb, var(--aha-line) 80%, transparent);
+  background:
+    linear-gradient(142deg, rgba(250, 250, 250, 0.055) 0 49.5%, transparent 50%),
+    linear-gradient(38deg, rgba(135, 206, 235, 0.055) 0 33%, transparent 33.5%),
+    var(--aha-surface);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+
+.fold-surface::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  content: '';
+  background: linear-gradient(225deg, var(--aha-ink) 0 48%, var(--aha-sky) 50% 100%);
+}
+
+.crease-rule {
+  border-top: 1px solid var(--aha-accent);
+  background-image: linear-gradient(135deg, transparent 0 49%, rgba(255, 107, 107, 0.14) 50% 50.5%, transparent 51%);
+  background-size: 3rem 3rem;
 }
 
 /* One orchestrated entrance establishes hierarchy without animating every section. */
@@ -259,6 +301,7 @@ main > section:not(:first-child) {
     background-color var(--aha-motion-base) var(--aha-ease-out),
     border-color var(--aha-motion-base) var(--aha-ease-out),
     transform var(--aha-motion-fast) var(--aha-ease-out);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
 }
 
 .primary-action::after {
@@ -266,10 +309,11 @@ main > section:not(:first-child) {
 }
 
 .primary-action:hover {
-  border-color: var(--aha-paper);
-  background: var(--aha-paper);
-  box-shadow: none;
+  border-color: color-mix(in srgb, var(--aha-accent) 84%, black);
+  background: color-mix(in srgb, var(--aha-accent) 92%, black);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
   filter: none;
+  transform: translateY(-1px);
 }
 
 .primary-action:active {
@@ -296,6 +340,7 @@ main > section:not(:first-child) {
     border-color var(--aha-motion-base) var(--aha-ease-out),
     color var(--aha-motion-base) var(--aha-ease-out),
     transform var(--aha-motion-fast) var(--aha-ease-out);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
 }
 
 .secondary-action:hover {
@@ -348,6 +393,32 @@ main > section:not(:first-child) {
 
 .group:hover .product-art {
   transform: scale(1.035);
+}
+
+input,
+select,
+textarea {
+  border-radius: 0;
+}
+
+.cart-panel-enter,
+.cart-dialog-enter {
+  background-image:
+    linear-gradient(145deg, rgba(135, 206, 235, 0.055) 0 32%, transparent 32.5%),
+    linear-gradient(35deg, rgba(168, 213, 186, 0.045) 0 26%, transparent 26.5%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fold-enter {
+    animation: aha-fold-enter 420ms var(--aha-ease-out) both;
+  }
+
+  @keyframes aha-fold-enter {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
 }
 
 .design-tile:nth-child(3) {

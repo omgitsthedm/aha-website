@@ -9,6 +9,7 @@ import { useCart } from "@/components/cart/CartProvider";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { getFulfillmentSummary, RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 import { trackCommerceEvent } from "@/lib/analytics/events";
+import { extractVariationSize } from "@/lib/utils/variation";
 
 interface ProductDetailProps {
   product: Product;
@@ -35,10 +36,11 @@ const cleanDisplayText = (value: string): string => value.replace(/[—–]/g, "
 
 export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription }: ProductDetailProps) {
   const { addItem } = useCart();
-  const sizeInStock = (size: string) => stockBySize ? stockBySize[size.toUpperCase()] !== false : true;
+  const sizeInStock = (size: string) => stockBySize ? stockBySize[extractVariationSize(size)] !== false : true;
   const variationAvailable = (name: string) => {
-    const mapped = enrichment ? enrichment.purchasableBySize[name.toUpperCase()]?.ok === true : true;
-    return mapped && sizeInStock(name);
+    const size = extractVariationSize(name);
+    const mapped = enrichment ? enrichment.purchasableBySize[size]?.ok === true : true;
+    return mapped && sizeInStock(size);
   };
   const initialVariation = product.variations.find((variation) => variationAvailable(variation.name));
   const [selectedVariation, setSelectedVariation] = useState(initialVariation?.id || product.variations[0]?.id || "");
@@ -47,7 +49,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   const feedbackTimer = useRef<number | null>(null);
 
   const currentVariation = product.variations.find((variation) => variation.id === selectedVariation);
-  const currentSize = (currentVariation?.name || "").toUpperCase();
+  const currentSize = extractVariationSize(currentVariation?.name || "");
   const currentInStock = sizeInStock(currentSize);
   const purchasable = enrichment
     ? (enrichment.purchasableBySize[currentSize] ?? { ok: false, reasons: ["size unavailable"] })
@@ -103,7 +105,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-16">
           <section aria-label="Product images">
-            <div className="relative aspect-square overflow-hidden border border-border/40 bg-surface md:aspect-[4/5]">
+            <div className="fold-surface relative aspect-square overflow-hidden md:aspect-[4/5]">
               {activeImageSrc ? (
                 <Image src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority />
               ) : (
@@ -186,7 +188,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
             {descriptionMarkup && (
               <div className="mt-10 border-t border-border/40 pt-7">
-                <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Design note</h2>
+                <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Product details</h2>
                 <div className="prose prose-invert prose-sm mt-4 max-w-none font-body leading-relaxed text-cream/85" dangerouslySetInnerHTML={descriptionMarkup} />
               </div>
             )}

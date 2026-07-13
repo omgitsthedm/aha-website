@@ -1,10 +1,10 @@
-import { getAllProducts, getProduct, getAllCollections } from "@/lib/square/catalog";
+import { getAllProducts, getProduct } from "@/lib/square/catalog";
 import { getProductEnrichment } from "@/lib/data/enrichment";
 import { getStockByCatId } from "@/lib/data/stock";
 import { ProductDetail } from "@/components/product/ProductDetail";
 import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
 import { notFound } from "next/navigation";
-import type { Product, Collection } from "@/lib/utils/types";
+import type { Product } from "@/lib/utils/types";
 import type { Metadata } from "next";
 import { buildProductStory } from "@/lib/content/product-copy";
 
@@ -58,13 +58,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   let product: Product | null = null;
   let products: Product[] = [];
-  let collections: Collection[] = [];
 
   try {
-    [product, products, collections] = await Promise.all([
+    [product, products] = await Promise.all([
       getProduct(slug),
       getAllProducts(),
-      getAllCollections(),
     ]);
   } catch (error) {
     console.error("Error loading product:", error);
@@ -82,13 +80,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     )
     .slice(0, 4);
 
-  // Find collection context for navigation and related discovery.
-  const collection = collections.find((c) =>
-    product!.collectionIds.includes(c.id)
-  );
-
   const enrichment = getProductEnrichment(product.slug);
-  const storyDescription = buildProductStory(product, enrichment, collection);
+  const storyDescription = buildProductStory(product, enrichment);
 
   // Live Printful stock per size (5-min fresh; fails open to in-stock).
   const stockBySize: Record<string, boolean> = {};
@@ -105,7 +98,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <ProductDetail
         product={product}
         related={related}
-        collection={collection}
         enrichment={enrichment}
         stockBySize={stockBySize}
         storyDescription={storyDescription}

@@ -1,6 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#080a09"/>
-  <text x="16" y="9.5" fill="#d5ff3f" font-family="Arial Narrow, sans-serif" font-size="5" font-weight="700" text-anchor="middle">AFTER</text>
-  <text x="16" y="16.5" fill="#d5ff3f" font-family="Arial Narrow, sans-serif" font-size="5" font-weight="700" text-anchor="middle">HOURS</text>
-  <text x="16" y="23.5" fill="#d5ff3f" font-family="Arial Narrow, sans-serif" font-size="5" font-weight="700" text-anchor="middle">AGENDA</text>
+  <rect width="32" height="32" fill="#1A1A1A"/>
+  <path d="M0 0h22L0 22z" fill="#87CEEB"/>
+  <path d="M32 32H10l22-22z" fill="#A8D5BA"/>
+  <path d="M0 32V21L11 32z" fill="#F0C987"/>
+  <path d="M32 0v11L21 0z" fill="#FF6B6B"/>
+  <text x="16" y="18.5" fill="#FAFAFA" font-family="Arial, sans-serif" font-size="7" font-weight="700" text-anchor="middle">AHA</text>
 </svg>

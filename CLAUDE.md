@@ -108,10 +108,11 @@ styles/          → Global styles
 - Accessibility statement, visible focus, touch targets, semantic labels, reduced-motion respect, and mobile-first layouts are part of done.
 
 ### Brand Feel
-- **Bold, minimal, confident.** Not cluttered, not loud.
-- Dark palette with high-contrast accents. The brand should feel like it belongs on a night street in NYC.
-- Typography should be sharp and modern.
-- Whitespace is a design tool — use it generously.
+- `docs/AHA-DESIGN-SYSTEM.md` is the controlling visual system.
+- Origami Geométrico: folded, angular, precise, and contemporary.
+- Ink-black ground, paper-white type, coral actions, and restrained sky/sage/warm-crease fold planes.
+- Poppins drives display/body typography; JetBrains Mono is reserved for metadata and technical values.
+- Square geometry, asymmetric grids, crease lines, faceted surfaces, and restrained motion replace the retired green/condensed visual language.
 
 ### Content System
 - The public site is in a deliberate zero-content brand hold. The only approved customer-facing identity is the full name `After Hours Agenda`.

@@ -1,21 +1,36 @@
 import { test, expect } from "@playwright/test";
 
-test("@product public site is a zero-content brand hold", async ({ page }) => {
+test("@product public site presents only the three-hoodie pilot", async ({ page }) => {
   const response = await page.goto("/");
   expect(response?.status()).toBe(200);
   await expect(page).toHaveTitle(/^After Hours Agenda$/i);
   await expect(page.getByRole("heading", { level: 1, name: "After Hours Agenda" })).toBeVisible();
-  await expect(page.getByRole("link")).toHaveCount(0);
-  await expect(page.getByRole("button")).toHaveCount(0);
-  await expect(page.locator("body")).not.toContainText(/shop|collection|design files|drops|releases/i);
+  await expect(page.getByRole("heading", { level: 2, name: "The first three" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Branded Unisex Hoodie/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Classic - Black Unisex Hoodie/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Colors Unisex Hoodie/i })).toBeVisible();
+  await expect(page.locator("body")).not.toContainText(/design files|drops|collections/i);
 });
 
-test("@product legacy storefront routes return to the brand hold", async ({ page }) => {
+test("@product pilot shop and product routes are live", async ({ page }, testInfo) => {
+  await page.goto("/shop");
+  await expect(page.getByRole("heading", { level: 1, name: "Three hoodies" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Branded Unisex Hoodie/i })).toBeVisible();
+  await page.goto("/product/branded-unisex-hoodie");
+  await expect(page).toHaveURL(/\/product\/branded-unisex-hoodie/);
+  await expect(page.getByRole("heading", { level: 1, name: "Branded Unisex Hoodie" })).toBeVisible();
+  await page.waitForLoadState("networkidle");
+  const addToBag = page.getByRole("button", { name: /Add to bag/i });
+  await expect(addToBag).toBeEnabled();
+  if (testInfo.project.name === "mobile") return;
+  await addToBag.click();
+  await expect(page.getByRole("heading", { name: "Added to bag" })).toBeVisible();
+});
+
+test("@product non-pilot storefront routes return to the pilot home", async ({ page }) => {
   const routes = [
-    "/shop",
     "/new-arrivals",
     "/catalog-edit",
-    "/product/social-club",
     "/collections/no-kings",
     "/drops",
     "/drops/current",
@@ -24,8 +39,6 @@ test("@product legacy storefront routes return to the brand hold", async ({ page
     "/coming-soon",
     "/newsletter",
     "/restock",
-    "/cart",
-    "/checkout",
     "/about",
     "/product-feed.xml",
   ];

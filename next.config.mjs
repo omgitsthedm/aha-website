@@ -1,11 +1,9 @@
 const isDevelopment = process.env.NODE_ENV === "development";
 
 const resetPublicRoutes = [
-  "/shop",
   "/new-arrivals",
   "/best-sellers",
   "/catalog-edit",
-  "/product/:path*",
   "/collections/:path*",
   "/drops",
   "/drops/:path*",
@@ -14,8 +12,6 @@ const resetPublicRoutes = [
   "/coming-soon",
   "/newsletter",
   "/restock",
-  "/cart",
-  "/checkout",
   "/about",
   "/product-feed.xml",
 ];
@@ -29,7 +25,7 @@ const contentSecurityPolicy = [
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""} https://web.squarecdn.com https://sandbox.web.squarecdn.com`,
   "style-src 'self' 'unsafe-inline' https://web.squarecdn.com https://sandbox.web.squarecdn.com",
   "img-src 'self' data: blob: https://items-images-production.s3.us-west-2.amazonaws.com https://images.squarespace-cdn.com https://*.printful.com https://*.squarecdn.com",
-  "font-src 'self' data: https://square-fonts-production-f.squarecdn.com https://d1g145x70srn7h.cloudfront.net",
+  "font-src 'self' data: https://cash-f.squarecdn.com https://square-fonts-production-f.squarecdn.com https://d1g145x70srn7h.cloudfront.net",
   "connect-src 'self' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://pci-connect.squareup.com https://pci-connect.squareupsandbox.com https://*.ingest.sentry.io",
   "frame-src 'self' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://*.squarecdn.com https://pay.google.com https://appleid.apple.com https://*.cardinalcommerce.com",
   "worker-src 'self' blob:",

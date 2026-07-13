@@ -5,6 +5,7 @@ import { loadProducts } from "@/lib/data/products";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import { cache } from "react";
 import { buildPreviewCollections, buildPreviewProducts } from "@/lib/data/preview-catalog";
+import { applyPilotAssortment } from "@/lib/data/pilot-assortment";
 
 function previewCatalogFallbackAllowed(): boolean {
   return process.env.AHA_PREVIEW_CATALOG === "true";
@@ -54,7 +55,7 @@ export function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
 
 export const getAllProducts = cache(async function getAllProducts(): Promise<Product[]> {
   if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
-    return buildPreviewProducts().filter(isCurrentStorefrontProduct);
+    return applyPilotAssortment(buildPreviewProducts().filter(isCurrentStorefrontProduct));
   }
   let allItems: any[] = [];
   let allRelated: any[] = [];
@@ -89,7 +90,7 @@ export const getAllProducts = cache(async function getAllProducts(): Promise<Pro
   }
 
   const eligible = buildEligibleSquareIndex();
-  return allItems
+  const products = allItems
     .filter((item) => {
       if (item.is_deleted) return false;
       // Filter out service items (Billable Hour, Discount, etc.)
@@ -121,6 +122,8 @@ export const getAllProducts = cache(async function getAllProducts(): Promise<Pro
       return mapSquareItemToProduct(filtered, imageMap, registry.slug);
     })
     .filter(isCurrentStorefrontProduct);
+
+  return applyPilotAssortment(products);
 });
 
 export async function getProduct(slug: string): Promise<Product | null> {
