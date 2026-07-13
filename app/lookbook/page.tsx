@@ -1,9 +1,10 @@
+import Link from "next/link";
 import { DesignFiles } from "@/components/homepage/DesignFiles";
 import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata = {
-  title: "Design files",
-  description: "Product artwork and previews connected to the After Hours Agenda design library.",
+  title: "Outside Hours - Design Issues",
+  description: "Browse After Hours Agenda design issues and product artwork connected directly to active product pages.",
   alternates: { canonical: "/lookbook" },
 };
 
@@ -12,10 +13,11 @@ export default function LookbookPage() {
     <div className="pb-20 pt-28 md:pt-32">
       <div className="px-4 md:px-6">
         <div className="mx-auto max-w-[1440px]">
-          <PageHeader title="Design files" description="A working view of product artwork maintained in the project library on the Desktop." />
+          <PageHeader eyebrow="Outside Hours" title="Design issues" description="Product artwork, previews, and future campaign material organized as a visual index. Every published issue uses verified store assets and links back to the product." />
+          <Link href="/lookbook/design-files" className="mt-7 inline-flex min-h-11 items-center border border-accent px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] text-accent hover:bg-accent hover:text-void">Open Issue 001 / Design files</Link>
         </div>
       </div>
-      <DesignFiles />
+      <DesignFiles compact />
     </div>
   );
 }

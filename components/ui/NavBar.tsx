@@ -7,7 +7,8 @@ import { COLLECTION_CODES } from "@/lib/utils/collection-codes";
 
 const PRIMARY_LINKS = [
   { label: "Shop", href: "/shop" },
-  { label: "New", href: "/new-arrivals" },
+  { label: "New arrivals", href: "/new-arrivals" },
+  { label: "Releases", href: "/drops" },
   { label: "Design files", href: "/lookbook" },
   { label: "About", href: "/about" },
 ];
@@ -65,7 +66,7 @@ export function NavBar() {
 
           <div className="hidden items-center gap-5 lg:flex">
             {PRIMARY_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase tracking-[0.06em] text-muted transition-colors hover:text-cream">
+              <Link key={link.href} href={link.href} className="nav-link inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase tracking-[0.06em] text-muted transition-colors hover:text-cream">
                 {link.label}
               </Link>
             ))}
@@ -88,17 +89,18 @@ export function NavBar() {
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
-        hidden={!menuOpen}
-        className="fixed inset-0 z-[90] overflow-y-auto bg-void px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-28 lg:hidden"
+        aria-hidden={!menuOpen}
+        data-open={menuOpen}
+        className="mobile-menu fixed inset-0 z-[90] overflow-y-auto bg-void px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-28 lg:hidden"
       >
           <div className="mx-auto max-w-xl">
-            <Link href="/" onClick={closeMenu} className="mb-8 block border-b border-accent pb-5 font-display text-2xl font-bold uppercase leading-none tracking-[-0.035em] text-cream">
+            <Link href="/" prefetch={false} onClick={closeMenu} className="mb-8 block border-b border-accent pb-5 font-display text-2xl font-bold uppercase leading-none tracking-[-0.035em] text-cream">
               After Hours Agenda
             </Link>
             <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">Browse</p>
             <div className="grid border-t border-border/40">
               {PRIMARY_LINKS.map((link) => (
-                <Link key={link.href} href={link.href} onClick={closeMenu} className="flex min-h-14 items-center border-b border-border/40 font-display text-2xl font-black uppercase text-cream transition-colors hover:text-accent">
+                <Link key={link.href} href={link.href} prefetch={false} onClick={closeMenu} className="flex min-h-14 items-center border-b border-border/40 font-display text-2xl font-black uppercase text-cream transition-colors hover:text-accent">
                   {link.label}
                 </Link>
               ))}
@@ -107,9 +109,8 @@ export function NavBar() {
             <p className="mb-3 mt-8 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted">Collections</p>
             <div className="grid border-t border-border/40">
               {COLLECTIONS.map((collection) => (
-                <Link key={collection.slug} href={`/collections/${collection.slug}`} onClick={closeMenu} className="flex min-h-12 items-center justify-between border-b border-border/40 py-3 font-mono text-xs font-bold uppercase text-cream transition-colors hover:text-accent">
+                <Link key={collection.slug} href={`/collections/${collection.slug}`} prefetch={false} onClick={closeMenu} className="flex min-h-12 items-center border-b border-border/40 py-3 font-mono text-xs font-bold uppercase text-cream transition-[color,transform] duration-200 hover:translate-x-1 hover:text-accent">
                   {collection.name}
-                  <span aria-hidden="true">↗</span>
                 </Link>
               ))}
             </div>

@@ -18,13 +18,15 @@ export default function AboutPage() {
         <PageHeader title="After Hours Agenda" description="Graphic clothing and objects sold online and produced after an order is placed." />
 
         <section aria-labelledby="about-heading" className="grid border-y border-border/40 lg:grid-cols-[1.15fr_0.85fr]">
-          <Link href={`/product/${source.productSlug}`} data-design-source={source.sourceFile} className="group relative min-h-[30rem] overflow-hidden bg-accent lg:min-h-[44rem]">
-            <Image src={source.image} alt={source.alt} fill priority className="object-contain p-8 transition-transform duration-500 group-hover:scale-[1.025] md:p-14" sizes="(max-width: 1024px) 100vw, 58vw" />
-            <span className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 border-t border-void/30 bg-void/95 p-4">
-              <span className="font-display text-lg font-bold uppercase">{source.title}</span>
-              <span className="font-mono text-[11px] font-bold uppercase text-accent">View product</span>
-            </span>
-          </Link>
+          <figure>
+            <Link href={`/product/${source.productSlug}`} data-design-source={source.sourceFile} className="group relative block min-h-[30rem] overflow-hidden bg-accent lg:min-h-[40rem]">
+              <Image src={source.image} alt={source.alt} fill priority className="product-art object-contain p-8 md:p-14" sizes="(max-width: 1024px) 100vw, 58vw" />
+            </Link>
+            <figcaption className="flex min-h-16 items-center justify-between gap-4 border-b border-border/40 py-4">
+              <Link href={`/product/${source.productSlug}`} className="font-display text-lg font-bold uppercase transition-colors hover:text-accent">{source.title}</Link>
+              <span className="font-mono text-xs text-muted">View product</span>
+            </figcaption>
+          </figure>
           <div className="flex flex-col justify-center border-t border-border/40 p-6 md:p-10 lg:border-l lg:border-t-0 lg:p-14">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">The store</p>
             <h2 id="about-heading" className="mt-5 max-w-3xl font-display text-[clamp(2.8rem,6vw,6rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">Built around the work</h2>
@@ -44,9 +46,9 @@ export default function AboutPage() {
           <h2 id="orders-heading" className="max-w-4xl font-display text-[clamp(2.8rem,7vw,6.5rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">Before you order</h2>
           <dl className="border-t border-border/40">
             {[
-              ["01 / Production", "Products are printed after purchase. The estimated production window is shown before checkout."],
-              ["02 / Shipping", "Standard shipping is included. Tracking is provided when the carrier receives the order."],
-              ["03 / Returns", "Review the return policy and product-specific sizing before purchasing."],
+              ["Production", "Products are printed after purchase. The estimated production window is shown before checkout."],
+              ["Shipping", "Standard shipping is included. Tracking is provided when the carrier receives the order."],
+              ["Returns", "Review the return policy and product-specific sizing before purchasing."],
             ].map(([title, body]) => (
               <div key={title} className="grid gap-3 border-b border-border/40 py-6 md:grid-cols-[12rem_1fr]">
                 <dt className="font-display text-xl font-bold uppercase tracking-[-0.025em]">{title}</dt>

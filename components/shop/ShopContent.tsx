@@ -67,8 +67,8 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
   };
 
   const collectionFor = (product: Product) => collections.find((collection) => product.collectionIds.includes(collection.id));
-  const control = "min-h-11 border border-border/60 bg-void px-3 py-2 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none";
-  const toggle = "min-h-11 border px-3 text-xs font-bold uppercase tracking-[0.06em] transition-colors";
+  const control = "min-h-11 border border-border/60 bg-void px-3 py-2 text-sm text-cream placeholder:text-muted transition-colors duration-200 focus:border-accent focus:outline-none";
+  const toggle = "min-h-11 border px-3 text-xs font-bold uppercase tracking-[0.06em] transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.98]";
 
   useEffect(() => {
     if (searchTerm.trim().length < 2) return;
@@ -151,7 +151,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
             return (
               <Link key={product.id} href={`/product/${product.slug}`} className="group block focus-visible:outline-offset-4">
                 <div className="relative aspect-[3/4] overflow-hidden border-b border-border/40 bg-surface transition-colors group-hover:border-accent">
-                  {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={isPrintfulImage(image) ? "object-contain transition-transform duration-300 group-hover:scale-[1.02]" : "object-cover transition-transform duration-300 group-hover:scale-[1.02]"} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
+                  {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                 </div>
                 <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">
                   <h2 className="line-clamp-2 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">{product.name}</h2>

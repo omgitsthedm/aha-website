@@ -105,7 +105,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           <section aria-label="Product images">
             <div className="relative aspect-square overflow-hidden border border-border/40 bg-surface md:aspect-[4/5]">
               {activeImageSrc ? (
-                <Image src={activeImageSrc} alt={product.name} fill className={isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} sizes="(max-width: 1024px) 100vw, 58vw" priority />
+                <Image src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase text-muted">Image unavailable</div>
               )}
@@ -126,7 +126,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
           <section aria-labelledby="product-title" className="lg:pt-3">
             {collection && <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">{collection.name}</p>}
-            <h1 id="product-title" className="max-w-2xl font-display text-[clamp(2.5rem,6vw,5.5rem)] font-black uppercase leading-[0.88] tracking-[-0.055em] text-cream">{product.name}</h1>
+            <h1 id="product-title" className="max-w-2xl font-display text-[clamp(2.5rem,6vw,5.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.05em] text-cream">{product.name}</h1>
             <p className="mt-6 font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
             <p className="mt-3 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
 
@@ -165,7 +165,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               {!canBuy ? "Unavailable" : addedFeedback ? "Added to bag" : `Add to bag | ${currentVariation?.priceFormatted || product.priceFormatted}`}
             </button>
 
-            {!canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href="/contact" className="underline underline-offset-4">Ask about a restock</Link>.</p>}
+            {!canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation?.name || "" } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}
             <p className="mt-3 text-xs leading-relaxed text-muted">{RETURNS_SUMMARY}</p>
 
             <div className="mt-8 border-y border-border/40 py-5">

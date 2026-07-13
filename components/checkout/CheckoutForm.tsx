@@ -350,14 +350,14 @@ export function CheckoutForm({ squareConfig }: Props) {
 
             <form onSubmit={pay} noValidate>
             <fieldset className="mb-9 border-t border-border/40 pt-6" disabled={status === "paying"}>
-              <legend className="mb-4 font-display text-xl font-black uppercase tracking-[-0.03em] text-cream">01 / Contact</legend>
+              <legend className="mb-4 font-display text-xl font-bold uppercase tracking-[-0.03em] text-cream">Contact</legend>
               <label className={labelC} htmlFor="email">Email (for your receipt)</label>
               <input id="email" type="email" autoComplete="email" required className={field}
                 value={contact.email} onChange={(e) => setContact({ ...contact, email: e.target.value })} placeholder="you@email.com" />
             </fieldset>
 
             <fieldset className="mb-9 border-t border-border/40 pt-6" disabled={status === "paying"}>
-              <legend className="mb-4 font-display text-xl font-black uppercase tracking-[-0.03em] text-cream">02 / Ship to</legend>
+              <legend className="mb-4 font-display text-xl font-bold uppercase tracking-[-0.03em] text-cream">Shipping address</legend>
               <div className="grid gap-4">
                 <div>
                   <label className={labelC} htmlFor="name">Full name</label>
@@ -402,7 +402,7 @@ export function CheckoutForm({ squareConfig }: Props) {
             </fieldset>
 
             <fieldset className="border-t border-border/40 pt-6" disabled={status === "paying"}>
-              <legend className="mb-4 font-display text-xl font-black uppercase tracking-[-0.03em] text-cream">03 / Payment</legend>
+              <legend className="mb-4 font-display text-xl font-bold uppercase tracking-[-0.03em] text-cream">Payment</legend>
 
               {/* Express wallets (shown only when the device/browser + Square support them) */}
               {(applePayReady || googlePayReady) && (

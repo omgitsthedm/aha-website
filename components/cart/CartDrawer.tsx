@@ -39,10 +39,10 @@ export function CartDrawer() {
 
   return createPortal(
     <div className="fixed inset-0 z-[9999]">
-      <button type="button" aria-label="Close shopping bag" className="absolute inset-0 h-full w-full cursor-default bg-void/80" onClick={toggleCart} />
-      <div ref={panelRef} role="dialog" aria-modal="true" aria-labelledby="bag-drawer-title" className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col border-l border-border/60 bg-void">
+      <button type="button" aria-label="Close shopping bag" className="cart-backdrop-enter absolute inset-0 h-full w-full cursor-default bg-void/80" onClick={toggleCart} />
+      <div ref={panelRef} role="dialog" aria-modal="true" aria-labelledby="bag-drawer-title" className="cart-panel-enter absolute right-0 top-0 flex h-full w-full max-w-md flex-col border-l border-border/60 bg-void">
         <header className="flex items-center justify-between border-b border-border/40 px-5 py-4">
-          <div><p className="text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Shopping bag</p><h2 id="bag-drawer-title" className="mt-1 font-display text-2xl font-black uppercase">Your bag</h2></div>
+          <div><p className="text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Shopping bag</p><h2 id="bag-drawer-title" className="mt-1 font-display text-2xl font-bold uppercase">Your bag</h2></div>
           <button type="button" onClick={toggleCart} className="min-h-11 border border-border/60 px-3 text-xs font-bold uppercase hover:border-accent">Close</button>
         </header>
 

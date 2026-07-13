@@ -27,10 +27,10 @@ export function GetOnTheList() {
 
   return (
     <section id="newsletter" className="relative z-[2] scroll-mt-28 px-4 py-16 md:px-6 md:py-24">
-      <div className="mx-auto grid max-w-5xl gap-8 border-t-2 border-accent pt-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
+      <div className="reveal-block mx-auto grid max-w-5xl gap-8 border-t border-accent pt-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
         <div>
-          <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">Email updates</h2>
-          <p className="mt-4 max-w-md font-mono text-sm leading-relaxed text-muted">Receive product and availability updates from After Hours Agenda.</p>
+          <h2 className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">What comes next</h2>
+          <p className="mt-4 max-w-md font-mono text-sm leading-relaxed text-muted">Product releases, restocks, and design notes by email.</p>
         </div>
 
         {status === "success" ? (
@@ -46,7 +46,7 @@ export function GetOnTheList() {
             <div className="flex flex-col gap-3 sm:flex-row">
               <input id="newsletter-email" name="email" type="email" required autoComplete="email" placeholder="name@example.com" aria-describedby={status === "error" ? "newsletter-error" : "newsletter-help"} className="min-h-12 flex-1 border border-border/60 bg-void px-4 py-3 font-mono text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none" />
               <button type="submit" disabled={status === "submitting"} className="primary-action min-h-12 px-6 py-3 text-sm">
-                {status === "submitting" ? "Joining…" : "Join email list"}
+                {status === "submitting" ? "Joining..." : "Get email updates"}
               </button>
             </div>
             <p id="newsletter-help" className="mt-3 font-mono text-xs leading-relaxed text-muted">We use this address only for After Hours Agenda email updates. Leave anytime from the unsubscribe link in a message.</p>

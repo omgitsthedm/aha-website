@@ -13,7 +13,7 @@
 
 ## Current Stamp
 
-- Updated: 2026-07-11 22:00 MST
+- Updated: 2026-07-12 17:45 MST
 - Updated By: Codex
 - Basis: Aside AI cutover handoff plus Codex verification from local Git, GitHub PR metadata, Netlify CLI/API, DNS resolver checks, and public HTTPS checks.
 - Current production source: `origin/main` (verify the deployed commit through the Netlify API before acting).
@@ -57,10 +57,10 @@
 
 ## Domain / DNS Truth
 
-- Authoritative DNS provider reported by handoff: Wix DNS
+- Authoritative DNS provider: Cloudflare Free DNS/CDN
 - Nameservers:
-  - `ns8.wixdns.net`
-  - `ns9.wixdns.net`
+  - `gemma.ns.cloudflare.com`
+  - `kai.ns.cloudflare.com`
 - Apex A record: `afterhoursagenda.com -> 75.2.60.5`
 - `www` CNAME: `www.afterhoursagenda.com -> afterhoursagenda.netlify.app`
 - Google Workspace MX records were preserved per handoff.
@@ -69,8 +69,8 @@
 
 ## Repo State
 
-- Branch: `main`
-- Status: clean, pushed, and aligned with `origin/main`; commerce operations PRs #4-#6 merged after every required check passed.
+- Branch: `content/full-site-editorial-20260712`
+- Status: branch pushed through `78cfa07`; additional page-system and UX work is currently uncommitted. Production remains on Git-backed `origin/main`.
 - Production: `https://afterhoursagenda.com` passed 12 desktop/mobile Playwright checks, exact-site guard, commerce-readiness checks, and both Netlify live guards.
 - GitHub billing is restored. Dependency Graph was enabled, and the repaired CI, E2E, Lighthouse, security, dependency-review, and review checks are green.
 - PR #2 (`feature/uiux-doctrine-commerce-hardening`) was merged into `main` as `13c25e83f696b19c7d9230ec4766900cc5485451`.
@@ -90,7 +90,7 @@
 - Current production fulfillment mode: `auto`
 - Webhook routes verify signatures, persist/dedupe events, and reconcile known order state.
 - A verified paid order creates a Printful order, persists its provider id, and confirms production automatically. Failed confirmation retries reuse the same provider order; provider holds stay in manual review.
-- A durable Resend outbox and branded order/production/exception/shipping templates are deployed. Sender/reply-to/support identity is configured, and the API key is stored as a production-only unreadable Netlify secret. Resend rejects sends until `afterhoursagenda.com` is verified in Resend/Wix DNS.
+- A durable Resend outbox and branded order/production/exception/shipping templates are deployed. Sender/reply-to/support identity is configured, the domain is verified, and a real production test from `orders@afterhoursagenda.com` to `info@afterhoursagenda.com` was delivered without creating an order.
 - Production operations: `/ops` (Keychain-stored credential) and customer lookup at `/track-order`.
 - Netlify Database uses the managed `NETLIFY_DB_URL` runtime binding; production migrations are current.
 
@@ -100,8 +100,6 @@
 - After any approved production release, run exact-site and live guards, verify `/best-sellers` returns a permanent redirect to `/catalog-edit`, confirm the sitemap lists only `/catalog-edit`, and visually check the homepage, About, Catalog Edit, one PDP, FAQ, Shipping, Returns, Contact, Privacy, Terms, and Accessibility on mobile and desktop.
 - Resolve three duplicate active-title product pairs before claiming every PDP has unique canonical SEO content: `Be You`, `Cities`, and `Retro Golf Rope Cap`. This requires a product/catalog decision; the content pass intentionally did not redirect or deactivate purchasable catalog items.
 - Supply real model/fit/detail imagery, approved customer/community photography, and verified press/collaborator proof before adding those forms of content. Do not fabricate them.
-- Verify `afterhoursagenda.com` in Resend and add the exact Resend-provided records in Wix DNS; preserve all existing website and Google Workspace records.
-- Use `/ops` → **Test order email** after the domain is verified; confirm receipt without creating an order.
 - Observe the first real paid order through Square, database, Printful confirmation, outbox, and shipment webhook; do not submit a fabricated customer payment.
 - Add real Square Sandbox credentials scoped only to deploy previews/staging; production credentials are now production-only and secret where appropriate.
 - Create and approve a sandbox checkout test plan.
@@ -143,12 +141,12 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Steps Queue
 
-- Open the Resend domain screen in a Chrome profile controllable by Codex, then add the exact Resend-provided records in Wix DNS and wait for verification.
-- Run the protected email test and confirm the message in `info@afterhoursagenda.com`.
 - Observe the first organic order end to end and inspect any exception in `/ops`.
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
 
 ## Recent Session History
+
+- 2026-07-12: Codex completed the customer-facing page architecture on `content/full-site-editorial-20260712`. Added `/drops/current`, `/drops/archive`, `/coming-soon`, `/lookbook/design-files`, `/newsletter`, and `/restock`; connected them through Drops, Lookbook, PDP unavailable states, navigation, footer, sitemap, and Netlify form detection. Added explicit no-fake-history/no-fake-countdown states, separate restock consent, and development-only CSP support for Next hydration while leaving production CSP strict. Typecheck, zero-warning lint, 35 unit tests, 97 active-product validation, Square/Printful mapping validation, 35% margin gate, a 44-route production build, 12 Playwright E2E checks, and mobile/desktop visual review passed. No prices, mappings, checkout/payment/fulfillment behavior, secrets, live data, push, merge, or deploy were changed.
 
 - 2026-07-12: Codex created local branch `content/full-site-editorial-20260712` for a full Black Sheep Newsstand content pass. Rewrote homepage, About, Lookbook, Shop/New/Drops/Catalog Edit, PDP editorial stories, FAQ, Shipping, Returns, Contact, Accessibility, Privacy, Terms, navigation/footer, metadata, collection descriptions, and public support identity. Added canonical `/catalog-edit` plus a permanent legacy `/best-sellers` redirect and removed the legacy URL from the sitemap. The protected product manifest, prices, provider mappings, checkout/payment behavior, live services, and production data were not changed. Typecheck, zero-warning lint, 33 unit tests, 100 active-product validation, Square/Printful mapping validation, 35% margin gate, production build, route checks, and mobile/desktop browser review passed. The branch is local and unpushed pending David's explicit publication approval. See `docs/AHA-FULL-SITE-CONTENT-PASS-2026-07-12.md`.
 
@@ -185,7 +183,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Agent Directive
 
-Continue from clean, pushed `origin/main`; verify the current deploy SHA before acting. Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, and email outbox code are live. Do not turn confirmation back off unless responding to a verified production incident. The Resend key is installed; next add the exact Resend domain records in Wix DNS, wait for verification, and rerun the protected email test. Do not fabricate a customer payment.
+Continue from `content/full-site-editorial-20260712`; preserve the current dirty page-system work and verify it before committing. Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, Resend domain verification, and email delivery are live. Do not turn confirmation back off unless responding to a verified production incident. Do not fabricate a customer payment.
 
 ## Emergency / Bypass Notes
 

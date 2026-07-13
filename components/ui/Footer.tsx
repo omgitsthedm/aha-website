@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { COLLECTION_CODES } from "@/lib/utils/collection-codes";
 import { SUPPORT_EMAIL } from "@/lib/content/site-copy";
 
 const SUPPORT_LINKS = [
@@ -11,6 +10,7 @@ const SUPPORT_LINKS = [
   { label: "Size Guide", href: "/size-guide" },
   { label: "FAQ", href: "/faq" },
   { label: "Track Order", href: "/track-order" },
+  { label: "Restock alert", href: "/restock" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -47,8 +47,10 @@ export function Footer() {
             <ul className="space-y-3">
               <li><Link href="/shop" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">Shop</Link></li>
               <li><Link href="/new-arrivals" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">New arrivals</Link></li>
+              <li><Link href="/drops" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">Releases</Link></li>
               <li><Link href="/lookbook" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">Design files</Link></li>
-              {Object.values(COLLECTION_CODES).map((collection) => <li key={collection.slug}><Link href={`/collections/${collection.slug}`} className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">{collection.name}</Link></li>)}
+              <li><Link href="/newsletter" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">After Hours Dispatch</Link></li>
+              <li><Link href="/about" className="inline-flex min-h-11 items-center font-mono text-xs text-muted underline underline-offset-4 hover:text-cream">About</Link></li>
             </ul>
           </div>
         </div>
