@@ -12,13 +12,16 @@
   --aha-paper: #fafafa;
   --aha-paper-muted: #4a4a4a;
   --aha-line: #b0b0b0;
-  --aha-accent: #ff6b6b;
+  /* Action Coral — single semantic action color (AA on paper white). */
+  --aha-accent: #c83f4d;
+  /* Crayon Coral — artwork and campaign surfaces only, never text on white. */
+  --aha-coral-art: #ff6b6b;
   --aha-sky: #87ceeb;
   --aha-sage: #a8d5ba;
   --aha-warm-crease: #f0c987;
   --aha-success: #a8d5ba;
   --aha-warning: #f0c987;
-  --aha-error: #ff6b6b;
+  --aha-error: #c83f4d;
 
   /* Semantic Tailwind channels */
   --c-bg: 250 250 250;
@@ -26,10 +29,10 @@
   --c-surface: 255 255 255;
   --c-content: 26 26 26;
   --c-muted: 74 74 74;
-  --c-accent: 255 107 107;
+  --c-accent: 200 63 77;
   --c-success: 168 213 186;
   --c-warning: 240 201 135;
-  --c-error: 255 107 107;
+  --c-error: 200 63 77;
 
   --aha-font-display: var(--font-poppins), Arial, sans-serif;
   --aha-font-body: var(--font-poppins), Arial, sans-serif;
@@ -84,7 +87,7 @@
 
   ::selection {
     background: var(--aha-accent);
-    color: var(--aha-ink);
+    color: var(--aha-surface);
   }
 
   *:focus-visible {
@@ -291,7 +294,7 @@ main > section:not(:first-child) {
   justify-content: center;
   border: 1px solid var(--aha-accent);
   background: var(--aha-accent);
-  color: var(--aha-ink);
+  color: var(--aha-surface);
   font-family: var(--aha-font-mono);
   font-weight: 700;
   text-decoration: none;
@@ -495,7 +498,7 @@ textarea {
   padding: 0 1.5rem;
   border: 1px solid var(--aha-accent);
   background: var(--aha-accent);
-  color: var(--aha-ink);
+  color: var(--aha-surface);
   font-family: var(--aha-font-mono);
   font-size: 11px;
   font-weight: 700;

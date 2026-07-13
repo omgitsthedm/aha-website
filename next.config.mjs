@@ -1,7 +1,6 @@
 const isDevelopment = process.env.NODE_ENV === "development";
 
 const resetPublicRoutes = [
-  "/new-arrivals",
   "/best-sellers",
   "/catalog-edit",
   "/collections/:path*",

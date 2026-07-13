@@ -40,12 +40,12 @@ export default async function HomePage() {
             After Hours Agenda
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
-            Made-to-order streetwear for the second shift. Tees, hoodies, sweatshirts, and accessories for men, women, and every body.
+            Made-to-order streetwear for the second shift. Tees, hoodies, sweatshirts, and accessories in unisex fits.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link href="/men" className="btn-primary px-7">Shop Men</Link>
             <Link href="/women" className="btn-primary px-7">Shop Women</Link>
-            <Link href="/about" className="btn-secondary border-white/30 text-white hover:border-accent hover:text-accent">Read the Agenda</Link>
+            <Link href="/new-arrivals" className="btn-secondary border-white/30 text-white hover:border-accent hover:text-accent">Shop new arrivals</Link>
           </div>
         </div>
       </section>
@@ -119,9 +119,9 @@ export default async function HomePage() {
 
       <section aria-labelledby="dispatch-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The Dispatch</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Newsletter</p>
           <h2 id="dispatch-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">Join the second shift</h2>
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">Get first access to drops, lookbooks, and a one-time 10% off code.</p>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">New releases and the occasional note from the shop. No spam, unsubscribe anytime.</p>
           <form name="newsletter" method="POST" data-netlify="true" className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row" action="/newsletter">
             <input type="hidden" name="form-name" value="newsletter" />
             <label htmlFor="home-email" className="sr-only">Email address</label>
@@ -153,12 +153,12 @@ export default async function HomePage() {
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The agenda</p>
             <h2 id="manifesto-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[0.92] tracking-[-0.04em] text-cream">Built for the second shift</h2>
             <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted md:text-base">
-              <p>After Hours Agenda is an independent NYC label for people who keep working after the day job ends. Every piece is made to order and printed on demand, which means less waste and no unsold stock.</p>
-              <p>We design for every body. Our fits are unisex, our graphics are loud, and our process is responsible. Browse the full catalog or read the story.</p>
+              <p>After Hours Agenda is an independent NYC label for people who keep working after the day job ends. Every piece is made to order and printed on demand — nothing sits in a warehouse waiting to be discounted.</p>
+              <p>Our fits are unisex, our graphics are loud, and every promise on this site is one we can keep. Browse the full catalog and find yours.</p>
             </div>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/about" className="btn-primary">Read the story</Link>
-              <Link href="/lookbook" className="btn-secondary">View lookbook</Link>
+              <Link href="/shop" className="btn-primary">Shop all products</Link>
+              <Link href="/unisex" className="btn-secondary">Shop unisex</Link>
             </div>
           </div>
         </div>

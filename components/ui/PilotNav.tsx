@@ -39,7 +39,6 @@ const topLinks = [
   { label: "Unisex", href: "/unisex" },
   { label: "Accessories", href: "/accessories" },
   { label: "New Arrivals", href: "/new-arrivals" },
-  { label: "Sale", href: "/sale" },
 ];
 
 const utilityLinks = [

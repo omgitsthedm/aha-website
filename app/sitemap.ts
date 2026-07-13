@@ -1,8 +1,12 @@
 import type { MetadataRoute } from "next";
+import { getAllProducts } from "@/lib/square/catalog";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com";
 
+// Only routes that resolve to a real, canonical page belong here.
+// Routes that currently redirect to "/" (about, lookbook, newsletter, restock)
+// are added back when their pages go live.
 const publicPages: Array<{ path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }> = [
   { path: "/", priority: 1, changeFrequency: "monthly" },
   { path: "/shop", priority: 0.9, changeFrequency: "weekly" },
@@ -19,7 +23,6 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
   { path: "/unisex", priority: 0.9, changeFrequency: "weekly" },
   { path: "/accessories", priority: 0.8, changeFrequency: "weekly" },
   { path: "/new-arrivals", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/about", priority: 0.7, changeFrequency: "monthly" },
   { path: "/faq", priority: 0.6, changeFrequency: "monthly" },
   { path: "/shipping", priority: 0.6, changeFrequency: "monthly" },
   { path: "/returns", priority: 0.6, changeFrequency: "monthly" },
@@ -27,20 +30,32 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
   { path: "/size-guide", priority: 0.6, changeFrequency: "monthly" },
   { path: "/track-order", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/newsletter", priority: 0.5, changeFrequency: "monthly" },
-  { path: "/restock", priority: 0.5, changeFrequency: "monthly" },
-  { path: "/lookbook", priority: 0.5, changeFrequency: "monthly" },
   { path: "/privacy", priority: 0.4, changeFrequency: "yearly" },
   { path: "/terms", priority: 0.4, changeFrequency: "yearly" },
   { path: "/accessibility", priority: 0.4, changeFrequency: "yearly" },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-  return publicPages.map((page) => ({
+  const staticEntries: MetadataRoute.Sitemap = publicPages.map((page) => ({
     url: `${BASE_URL}${page.path}`,
     lastModified: now,
     changeFrequency: page.changeFrequency,
     priority: page.priority,
   }));
+
+  let productEntries: MetadataRoute.Sitemap = [];
+  try {
+    const products = await getAllProducts();
+    productEntries = products.map((product) => ({
+      url: `${BASE_URL}/product/${product.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
+  } catch (error) {
+    console.error("Sitemap: failed to load products, emitting static pages only:", error);
+  }
+
+  return [...staticEntries, ...productEntries];
 }

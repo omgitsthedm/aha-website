@@ -151,17 +151,8 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             <h1 id="product-title" className="max-w-2xl font-display text-[clamp(2.5rem,6vw,5.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.05em] text-cream">{product.name}</h1>
             <div className="mt-4 flex flex-wrap items-center gap-4">
               <p className="font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
-              <div className="flex items-center gap-1" aria-label="No reviews yet">
-                {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="h-4 w-4 text-border/60" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-                <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.06em] text-muted">Be the first to review</span>
-              </div>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
-            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.06em] text-accent">Model is 5&apos;10&quot; and wears size M</p>
 
             {enrichment?.colors && enrichment.colors.length > 0 && (
               <div className="mt-8 border-t border-border/40 pt-6">
@@ -185,7 +176,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                     const unavailable = !variationAvailable(variation.name);
                     const selected = variation.id === selectedVariation;
                     return (
-                      <button key={variation.id} type="button" onClick={() => { setSelectedVariation(variation.id); trackCommerceEvent({ name: "select_variant", itemId: product.id, variantId: variation.id, valueCents: variation.price, currency: product.currency }); }} disabled={unavailable} aria-pressed={selected} aria-label={unavailable ? `${variation.name}, unavailable` : variation.name} className={`relative min-h-11 min-w-12 border px-4 py-2 text-sm font-bold transition-colors ${selected ? "border-accent bg-accent text-cream" : "border-border/60 text-cream hover:border-accent"} ${unavailable ? "cursor-not-allowed text-muted line-through opacity-50" : ""}`}>
+                      <button key={variation.id} type="button" onClick={() => { setSelectedVariation(variation.id); trackCommerceEvent({ name: "select_variant", itemId: product.id, variantId: variation.id, valueCents: variation.price, currency: product.currency }); }} disabled={unavailable} aria-pressed={selected} aria-label={unavailable ? `${variation.name}, unavailable` : variation.name} className={`relative min-h-11 min-w-12 border px-4 py-2 text-sm font-bold transition-colors ${selected ? "border-accent bg-accent text-white" : "border-border/60 text-cream hover:border-accent"} ${unavailable ? "cursor-not-allowed text-muted line-through opacity-50" : ""}`}>
                         {variation.name}
                       </button>
                     );
@@ -203,7 +194,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 onClick={toggleWishlist}
                 aria-pressed={wishlisted}
                 aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                className={`inline-flex h-14 w-14 items-center justify-center border transition-colors ${wishlisted ? "border-accent bg-accent text-cream" : "border-border/10 text-muted hover:border-accent hover:text-cream"}`}
+                className={`inline-flex h-14 w-14 items-center justify-center border transition-colors ${wishlisted ? "border-accent bg-accent text-white" : "border-border/10 text-muted hover:border-accent hover:text-cream"}`}
               >
                 <svg className="h-5 w-5" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />

@@ -39,8 +39,8 @@ export function PilotFooter() {
           <a href="mailto:info@afterhoursagenda.com" className="btn-secondary mt-6">Email support</a>
 
           <div className="mt-8 border-t border-border/40 pt-6">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Join The Dispatch</p>
-            <p className="mt-2 max-w-sm text-sm text-muted">Early access to drops, lookbooks, and 10% off your first order.</p>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Newsletter</p>
+            <p className="mt-2 max-w-sm text-sm text-muted">New releases and the occasional note from the shop. No spam, unsubscribe anytime.</p>
             <form name="newsletter" method="POST" data-netlify="true" className="mt-4 flex max-w-sm flex-col gap-3 sm:flex-row" action="/newsletter">
               <input type="hidden" name="form-name" value="newsletter" />
               <label htmlFor="footer-email" className="sr-only">Email address</label>

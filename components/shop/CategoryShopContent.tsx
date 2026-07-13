@@ -91,7 +91,7 @@ export function CategoryShopContent({
           </div>
           <div className="flex flex-wrap gap-2 xl:pt-6" role="group" aria-label="Catalog view">
             {(["grid", "index"] as const).map((mode) => (
-              <button key={mode} type="button" onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode} className={`${toggle} ${viewMode === mode ? "border-accent bg-accent text-cream" : "border-border/60 text-cream hover:border-accent"}`}>
+              <button key={mode} type="button" onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode} className={`${toggle} ${viewMode === mode ? "border-accent bg-accent text-white" : "border-border/60 text-cream hover:border-accent"}`}>
                 {mode}
               </button>
             ))}
@@ -104,7 +104,7 @@ export function CategoryShopContent({
             <Link
               href={categoryHref("all")}
               aria-pressed={activeCategory === undefined}
-              className={`${toggle} ${activeCategory === undefined ? "border-accent bg-accent text-cream" : "border-border/60 text-cream hover:border-accent"}`}
+              className={`${toggle} ${activeCategory === undefined ? "border-accent bg-accent text-white" : "border-border/60 text-cream hover:border-accent"}`}
             >
               All <span aria-hidden="true">{products.length}</span>
             </Link>

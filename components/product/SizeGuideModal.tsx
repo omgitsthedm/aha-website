@@ -39,10 +39,6 @@ export function SizeGuideModal({ isOpen, onClose, fitDescription, careInstructio
             <p className="text-cream">{fitDescription || "Standard unisex fit. Choose your usual size."}</p>
           </div>
           <div>
-            <p className="mb-1 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent">Model</p>
-            <p className="text-cream">Model is 5&apos;10&quot; and wears size M.</p>
-          </div>
-          <div>
             <p className="mb-1 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent">Care</p>
             <p className="text-cream">{careInstructions || "Machine wash cold, inside out. Tumble dry low. Do not iron the print."}</p>
           </div>

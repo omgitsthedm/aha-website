@@ -13,7 +13,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Unisex Streetwear",
   description:
-    "Made for every body. Core unisex tees, hoodies, sweatshirts, and accessories from After Hours Agenda. Made to order in NYC.",
+    "Core unisex tees, hoodies, sweatshirts, and accessories from After Hours Agenda. Every piece printed to order.",
   alternates: { canonical: "/unisex" },
 };
 
@@ -29,7 +29,7 @@ export default async function UnisexPage() {
         <PageHeader
           eyebrow="Unisex"
           title="Unisex"
-          description="Made for every body. Core pieces sized to share, printed to order, and shipped from NYC."
+          description="Core pieces in unisex sizing, printed to order. One cut, worn your way."
         />
         <CategoryShopContent
           products={products}
