@@ -13,10 +13,10 @@
 
 ## Current Stamp
 
-- Updated: 2026-07-12 19:35 MST
+- Updated: 2026-07-12 21:16 MST
 - Updated By: Codex
-- Basis: Aside AI cutover handoff plus Codex verification from local Git, GitHub PR metadata, Netlify CLI/API, DNS resolver checks, and public HTTPS checks.
-- Current production source: Git-backed `origin/main`; the relaunch runtime merge commit is `f98aab586ce2ee9377c05de7d17740e0449c06e1` (verify the newest deploy through the Netlify API before acting).
+- Basis: Codex verification from local Git, GitHub PR #15 checks, Netlify CLI/API, production environment readiness, public HTTPS, and desktop/mobile browser QA.
+- Current production source: Git-backed `origin/main`; the three-hoodie Origami storefront merge commit is `711200d882cd9870fb8414f6168aa0bdd137c603`.
 - Verified commerce runtime baseline: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
 - Git HEAD at onboarding: `23018a0`
 
@@ -46,14 +46,14 @@
 - Live title verified by guard: `After Hours Agenda`
 - Host: Netlify for apex, `www`, and `.netlify.app`.
 - Current deployed source: Git-backed `origin/main`.
-- Verified relaunch runtime deploy: `6a5446329dca9b00088b2be7`, ready, production, branch `main`, commit `f98aab586ce2ee9377c05de7d17740e0449c06e1`; newer documentation-only deploys do not change runtime behavior.
+- Verified three-hoodie pilot deploy: `6a546616565ca0000853f8a5`, ready, production, branch `main`, commit `711200d882cd9870fb8414f6168aa0bdd137c603`.
 - Netlify site: `afterhoursagenda`
 - Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
 - Netlify custom domain: `afterhoursagenda.com`
 - Netlify build settings: GitHub provider, repo `omgitsthedm/aha-website`, branch `main`, command `npm run build`, publish `.next`.
 - Netlify `prevent_non_git_prod_deploys`: enabled and verified `true` on 2026-07-11.
-- Production QA status: PR #12 passed 19 required GitHub/Netlify checks; exact-site, commerce-readiness, and live guards passed; core and new public routes returned 200; desktop/mobile browser review passed with zero console errors. Signed Square and Printful tests remain persisted safely; no live charge, customer order, or fulfillment was created.
+- Production QA status: PR #15 passed all GitHub and Netlify checks; exact-site, commerce-readiness, and live guards passed; home, shop, three product routes, bag, checkout, and support routes returned 200. Desktop/mobile browser review passed. The live Square card iframe mounted; no charge, customer order, or fulfillment was created. Square's hosted iframe currently reports non-blocking CSP errors for its own Cash Sans font request; the site CSP already allows the current hostname.
 
 ## Domain / DNS Truth
 
@@ -69,9 +69,9 @@
 
 ## Repo State
 
-- Branch: `agent/reset-public-brand-surface`
-- Status: public-surface reset in progress from clean `main` at `7507feab2b17d78b3366a14fe5d0dd1915b1b9b9`; no commerce backend or production data changes.
-- Production: `https://afterhoursagenda.com` passed exact-site, commerce-readiness, and live guards; 13 core/new routes returned 200; desktop/mobile Playwright CLI review showed all reveal sections visible in the viewport and zero console errors.
+- Branch: `main`
+- Status: three-hoodie Origami storefront pilot is merged and live at `711200d882cd9870fb8414f6168aa0bdd137c603`; no commerce provider records or production data were changed.
+- Production: `https://afterhoursagenda.com` exposes only Branded Unisex Hoodie, Classic - Black Unisex Hoodie, and Colors Unisex Hoodie. Home, shop, product, bag, checkout, service, and legal surfaces use the canonical system in `docs/AHA-DESIGN-SYSTEM.md`.
 - GitHub billing is restored. Dependency Graph was enabled, and the repaired CI, E2E, Lighthouse, security, dependency-review, and review checks are green.
 - PR #2 (`feature/uiux-doctrine-commerce-hardening`) was merged into `main` as `13c25e83f696b19c7d9230ec4766900cc5485451`.
 - Remote feature branch `feature/uiux-doctrine-commerce-hardening` was deleted after merge.
@@ -96,9 +96,9 @@
 
 ## QA-PENDING
 
-- The PR #12 public content direction was rejected. The customer-facing site must remain a zero-content name-only hold until David approves the new brand kit, information architecture, product assortment, imagery, copy, and marketing system.
-- Historical catalog data remains connected to the backend but must not be treated as launch assortment or current marketing content.
-- Define the new brand kit and launch assortment before restoring shop, product, collection, drop, lookbook, newsletter, restock, cart, or checkout routes.
+- The three-hoodie pilot is intentionally temporary. Historical catalog data remains connected to the backend but is filtered out of every public product lookup and must not be treated as the launch assortment.
+- Continue building the new collection, imagery, and marketing copy inside the Origami system documented in `docs/AHA-DESIGN-SYSTEM.md`.
+- Replace the pilot allowlist in `lib/data/pilot-assortment.ts` only when launch products are approved and validated across Square and Printful.
 - Observe the first real paid order through Square, database, Printful confirmation, outbox, and shipment webhook; do not submit a fabricated customer payment.
 - Add real Square Sandbox credentials scoped only to deploy previews/staging; production credentials are now production-only and secret where appropriate.
 - Create and approve a sandbox checkout test plan.
