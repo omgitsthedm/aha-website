@@ -10,6 +10,7 @@ on:
 # email/SMS, or use production secrets. Sandbox / mocked payloads only. (§12)
 env:
   SQUARE_ENVIRONMENT: sandbox
+  AHA_PREVIEW_CATALOG: "true"
   PRINTFUL_ALLOW_CONFIRM_ORDERS: "false"
   PRINTFUL_LIVE_MODE: "false"
 
