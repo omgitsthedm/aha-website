@@ -143,7 +143,7 @@ export function PilotNav() {
       <div
         id="mobile-menu"
         data-open={mobileOpen}
-        className="mobile-menu absolute left-0 right-0 top-full max-h-[80dvh] overflow-y-auto border-b border-border/60 bg-void/98 px-4 py-5 shadow-lg lg:hidden"
+        className={`absolute left-0 right-0 top-full max-h-[80dvh] overflow-y-auto border-b border-border/60 bg-void/98 px-4 py-5 shadow-lg lg:hidden ${mobileOpen ? "block" : "hidden"}`}
       >
         <ul className="space-y-1">
           {genderLinks.map((gender) => (
