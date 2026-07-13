@@ -1,11 +1,17 @@
 import { test, expect } from "@playwright/test";
 
-test("@product public site presents only the three-hoodie pilot", async ({ page }) => {
+test("@product public site presents only the three-hoodie pilot", async ({ page }, testInfo) => {
   const response = await page.goto("/");
   expect(response?.status()).toBe(200);
   await expect(page).toHaveTitle(/^After Hours Agenda$/i);
   await expect(page.getByRole("heading", { level: 1, name: "After Hours Agenda" })).toBeVisible();
   await expect(page.getByRole("heading", { level: 2, name: "The first three" })).toBeVisible();
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute("content", "#fafafa");
+  if (testInfo.project.name === "chromium") {
+    await expect(page.locator("html")).toHaveCSS("background-color", "rgb(250, 250, 250)");
+    await expect(page.getByRole("heading", { level: 1 }).locator("span")).toHaveCSS("color", "rgb(255, 107, 107)");
+    await expect(page.getByRole("button", { name: "Open bag" })).toHaveCSS("background-color", "rgb(255, 107, 107)");
+  }
   await expect(page.getByRole("link", { name: /Branded Unisex Hoodie/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /Classic - Black Unisex Hoodie/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /Colors Unisex Hoodie/i })).toBeVisible();

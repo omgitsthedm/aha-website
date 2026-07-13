@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   --aha-ink: #1a1a1a;
-  --aha-ink-soft: #242424;
-  --aha-surface: #303030;
-  --aha-surface-raised: #3a3a3a;
+  --aha-ink-soft: #4a4a4a;
+  --aha-surface: #ffffff;
+  --aha-surface-raised: #f1f1f1;
   --aha-paper: #fafafa;
-  --aha-paper-muted: #b0b0b0;
-  --aha-line: #4a4a4a;
+  --aha-paper-muted: #4a4a4a;
+  --aha-line: #b0b0b0;
   --aha-accent: #ff6b6b;
   --aha-sky: #87ceeb;
   --aha-sage: #a8d5ba;
@@ -21,11 +21,11 @@
   --aha-error: #ff6b6b;
 
   /* Semantic Tailwind channels */
-  --c-bg: 26 26 26;
-  --c-charcoal: 36 36 36;
-  --c-surface: 48 48 48;
-  --c-content: 250 250 250;
-  --c-muted: 176 176 176;
+  --c-bg: 250 250 250;
+  --c-charcoal: 241 241 241;
+  --c-surface: 255 255 255;
+  --c-content: 26 26 26;
+  --c-muted: 74 74 74;
   --c-accent: 255 107 107;
   --c-success: 168 213 186;
   --c-warning: 240 201 135;
@@ -49,16 +49,16 @@
   }
 
   html {
-    background: var(--aha-ink);
-    color: var(--aha-paper);
+    background: var(--aha-paper);
+    color: var(--aha-ink);
     scroll-behavior: auto;
   }
 
   body {
     min-height: 100dvh;
     overflow-x: hidden;
-    background: var(--aha-ink);
-    color: var(--aha-paper);
+    background: var(--aha-paper);
+    color: var(--aha-ink);
     font-family: var(--aha-font-body);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -101,11 +101,11 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--aha-ink-soft);
+    background: var(--aha-paper);
   }
 
   ::-webkit-scrollbar-thumb {
-    border: 2px solid var(--aha-ink-soft);
+    border: 2px solid var(--aha-paper);
     background: var(--aha-line);
   }
 
@@ -132,12 +132,13 @@
   z-index: -1;
   pointer-events: none;
   content: '';
-  opacity: 0.16;
+  opacity: 1;
   background:
-    linear-gradient(150deg, transparent 0 46%, rgba(135, 206, 235, 0.16) 46.2% 46.7%, transparent 47%),
-    linear-gradient(30deg, transparent 0 67%, rgba(168, 213, 186, 0.12) 67.2% 67.7%, transparent 68%),
-    linear-gradient(90deg, transparent 0 82%, rgba(255, 107, 107, 0.12) 82.2% 82.7%, transparent 83%);
-  background-size: 32rem 32rem, 38rem 38rem, 44rem 44rem;
+    linear-gradient(145deg, rgba(135, 206, 235, 0.13) 0 10rem, transparent 10.1rem),
+    linear-gradient(215deg, rgba(168, 213, 186, 0.14) 0 8rem, transparent 8.1rem),
+    linear-gradient(325deg, rgba(255, 107, 107, 0.08) 0 7rem, transparent 7.1rem);
+  background-position: left top, right top, right bottom;
+  background-repeat: no-repeat;
 }
 
 .origami-shell {
@@ -146,22 +147,22 @@
 }
 
 .registration-grid {
-  background: var(--aha-ink);
+  background: var(--aha-paper);
   background-image:
-    linear-gradient(rgba(250, 250, 250, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(250, 250, 250, 0.025) 1px, transparent 1px);
+    linear-gradient(rgba(26, 26, 26, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 26, 26, 0.035) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
 .fold-surface {
   position: relative;
   isolation: isolate;
-  border: 1px solid color-mix(in srgb, var(--aha-line) 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--aha-line) 72%, transparent);
   background:
-    linear-gradient(142deg, rgba(250, 250, 250, 0.055) 0 49.5%, transparent 50%),
-    linear-gradient(38deg, rgba(135, 206, 235, 0.055) 0 33%, transparent 33.5%),
+    linear-gradient(142deg, rgba(135, 206, 235, 0.13) 0 22%, transparent 22.4%),
+    linear-gradient(38deg, rgba(168, 213, 186, 0.1) 0 17%, transparent 17.4%),
     var(--aha-surface);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 2px 12px rgba(26, 26, 26, 0.06);
   clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
 }
 
@@ -173,7 +174,7 @@
   height: 16px;
   pointer-events: none;
   content: '';
-  background: linear-gradient(225deg, var(--aha-ink) 0 48%, var(--aha-sky) 50% 100%);
+  background: linear-gradient(225deg, var(--aha-paper) 0 48%, var(--aha-sky) 50% 100%);
 }
 
 .crease-rule {
@@ -332,7 +333,8 @@ main > section:not(:first-child) {
   align-items: center;
   justify-content: center;
   border: 1px solid var(--aha-line);
-  color: var(--aha-paper);
+  background: var(--aha-paper);
+  color: var(--aha-ink);
   font-family: var(--aha-font-mono);
   font-weight: 700;
   text-transform: uppercase;
@@ -404,8 +406,8 @@ textarea {
 .cart-panel-enter,
 .cart-dialog-enter {
   background-image:
-    linear-gradient(145deg, rgba(135, 206, 235, 0.055) 0 32%, transparent 32.5%),
-    linear-gradient(35deg, rgba(168, 213, 186, 0.045) 0 26%, transparent 26.5%);
+    linear-gradient(145deg, rgba(135, 206, 235, 0.11) 0 24%, transparent 24.5%),
+    linear-gradient(35deg, rgba(168, 213, 186, 0.09) 0 18%, transparent 18.5%);
 }
 
 @media (prefers-reduced-motion: no-preference) {

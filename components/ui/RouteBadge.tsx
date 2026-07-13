@@ -18,8 +18,8 @@ const sizes = {
 
 export function RouteBadge({ slug, code, size = "md", showName = false, tone = "default", className = "", decorative = false }: RouteBadgeProps) {
   const resolved = code || (slug ? getCollectionCode(slug) : DEFAULT_COLLECTION_CODE);
-  const badgeTone = tone === "inverse" ? "border-void text-void" : "border-accent text-accent";
-  const nameTone = tone === "inverse" ? "text-void" : "text-muted";
+  const badgeTone = tone === "inverse" ? "border-void text-cream" : "border-accent text-accent";
+  const nameTone = tone === "inverse" ? "text-cream" : "text-muted";
   return (
     <span aria-hidden={decorative || undefined} className={`inline-flex items-center gap-2 ${className}`}>
       <span className={`${sizes[size]} ${badgeTone} inline-flex items-center border font-mono font-bold uppercase tracking-[0.06em]`}>

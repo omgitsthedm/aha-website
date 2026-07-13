@@ -19,7 +19,7 @@ export default async function HomePage() {
         <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">Working assortment / 01</p>
         <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-end">
           <h1 className="max-w-[11ch] font-display text-[clamp(3.5rem,9vw,7rem)] font-bold leading-[0.86] tracking-[-0.055em] text-cream">
-            After Hours Agenda
+            After Hours <span className="text-accent">Agenda</span>
           </h1>
           <div className="border-l-2 border-accent pl-5">
             <p className="text-sm leading-relaxed text-muted">Three hoodies are live while the new collection takes shape. Made to order, free shipping, secure Square checkout.</p>

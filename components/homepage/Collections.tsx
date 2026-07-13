@@ -14,7 +14,7 @@ export function Collections({ collections }: { collections: Collection[] }) {
         <p className="mt-5 max-w-lg font-mono text-sm leading-relaxed text-muted">Shop by the idea behind the product.</p>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
-          <Link href={`/collections/${spotlight.slug}`} className="collection-spotlight group flex min-h-[30rem] flex-col justify-end overflow-hidden bg-accent p-6 text-void md:p-10">
+          <Link href={`/collections/${spotlight.slug}`} className="collection-spotlight group flex min-h-[30rem] flex-col justify-end overflow-hidden bg-accent p-6 text-cream md:p-10">
             <h3 className="max-w-3xl font-display text-[clamp(4rem,9vw,9rem)] font-bold uppercase leading-[0.74] tracking-[-0.065em]">{spotlight.name}</h3>
             <p className="mt-6 max-w-lg font-mono text-sm font-bold leading-relaxed">{spotlight.description}</p>
             <span className="mt-7 font-mono text-xs font-bold uppercase tracking-[0.08em]">Shop {spotlight.name}</span>

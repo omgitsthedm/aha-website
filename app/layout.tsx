@@ -47,8 +47,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: "dark",
-  themeColor: "#1a1a1a",
+  colorScheme: "light",
+  themeColor: "#fafafa",
 };
 
 export default function RootLayout({
@@ -64,7 +64,7 @@ export default function RootLayout({
     >
       <body className="origami-shell font-body text-cream antialiased">
         <CartProvider>
-          <a href="#main-content" className="fixed left-3 top-3 z-[500] -translate-y-24 bg-accent px-4 py-3 font-mono text-xs font-bold text-void transition-transform focus:translate-y-0">Skip to content</a>
+          <a href="#main-content" className="fixed left-3 top-3 z-[500] -translate-y-24 bg-accent px-4 py-3 font-mono text-xs font-bold text-cream transition-transform focus:translate-y-0">Skip to content</a>
           <PilotNav />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
           <PilotFooter />

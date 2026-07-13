@@ -154,7 +154,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                     const unavailable = !variationAvailable(variation.name);
                     const selected = variation.id === selectedVariation;
                     return (
-                      <button key={variation.id} type="button" onClick={() => { setSelectedVariation(variation.id); trackCommerceEvent({ name: "select_variant", itemId: product.id, variantId: variation.id, valueCents: variation.price, currency: product.currency }); }} disabled={unavailable} aria-pressed={selected} aria-label={unavailable ? `${variation.name}, unavailable` : variation.name} className={`relative min-h-11 min-w-12 border px-4 py-2 text-sm font-bold transition-colors ${selected ? "border-accent bg-accent text-void" : "border-border/60 text-cream hover:border-accent"} ${unavailable ? "cursor-not-allowed text-muted line-through opacity-50" : ""}`}>
+                      <button key={variation.id} type="button" onClick={() => { setSelectedVariation(variation.id); trackCommerceEvent({ name: "select_variant", itemId: product.id, variantId: variation.id, valueCents: variation.price, currency: product.currency }); }} disabled={unavailable} aria-pressed={selected} aria-label={unavailable ? `${variation.name}, unavailable` : variation.name} className={`relative min-h-11 min-w-12 border px-4 py-2 text-sm font-bold transition-colors ${selected ? "border-accent bg-accent text-cream" : "border-border/60 text-cream hover:border-accent"} ${unavailable ? "cursor-not-allowed text-muted line-through opacity-50" : ""}`}>
                         {variation.name}
                       </button>
                     );
@@ -189,7 +189,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             {descriptionMarkup && (
               <div className="mt-10 border-t border-border/40 pt-7">
                 <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Product details</h2>
-                <div className="prose prose-invert prose-sm mt-4 max-w-none font-body leading-relaxed text-cream/85" dangerouslySetInnerHTML={descriptionMarkup} />
+                <div className="prose prose-sm mt-4 max-w-none font-body leading-relaxed text-cream/85" dangerouslySetInnerHTML={descriptionMarkup} />
               </div>
             )}
           </section>

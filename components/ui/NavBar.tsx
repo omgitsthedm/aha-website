@@ -73,7 +73,7 @@ export function NavBar() {
           </div>
 
           <div className="flex items-center gap-2">
-            <button onClick={() => setCartOpen(true)} className="relative min-h-11 bg-accent px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-void transition-colors hover:bg-cream" aria-label={`Open bag${totalItems ? `, ${totalItems} item${totalItems === 1 ? "" : "s"}` : ""}`}>
+            <button onClick={() => setCartOpen(true)} className="relative min-h-11 bg-accent px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-cream transition-colors hover:bg-cream" aria-label={`Open bag${totalItems ? `, ${totalItems} item${totalItems === 1 ? "" : "s"}` : ""}`}>
               Bag{totalItems > 0 ? ` (${totalItems})` : ""}
             </button>
             <button ref={menuButtonRef} onClick={() => setMenuOpen((open) => !open)} className="flex h-11 min-w-11 items-center justify-center border border-border/60 px-3 font-mono text-xs font-bold uppercase text-cream lg:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-nav-menu">
