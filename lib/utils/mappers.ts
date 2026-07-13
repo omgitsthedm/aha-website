@@ -1,5 +1,6 @@
 import type { Product, ProductVariation, Collection } from "./types";
 import { getPrintfulImage } from "./printful-images";
+import { getMockupImages } from "./mockup-images";
 
 function slugify(text: string): string {
   return text
@@ -40,16 +41,21 @@ export function mapSquareItemToProduct(
   const firstVariation = variations[0];
   const price = firstVariation?.price || 0;
 
-  // Build image URLs: local Printful PNG first, then Square CDN images
+  // Build image URLs: verified garment mockups first, then the local
+  // Printful print-art PNG, then Square CDN images.
   const imageIds: string[] = itemData.image_ids || [];
   const squareImages = imageIds
     .map((id: string) => imageMap.get(id))
     .filter(Boolean) as string[];
 
+  const slug = slugOverride || slugify(itemData.name || item.id);
+  const mockupImages = getMockupImages(slug);
   const printfulImage = getPrintfulImage(itemData.name || "");
-  const images = printfulImage
-    ? [printfulImage, ...squareImages]
-    : squareImages;
+  const images = mockupImages.length > 0
+    ? [...mockupImages, ...squareImages]
+    : printfulImage
+      ? [printfulImage, ...squareImages]
+      : squareImages;
 
   // Get collection IDs from categories
   const collectionIds: string[] = (itemData.categories || []).map(
@@ -58,7 +64,7 @@ export function mapSquareItemToProduct(
 
   return {
     id: item.id,
-    slug: slugOverride || slugify(itemData.name || item.id),
+    slug,
     name: itemData.name || "Untitled",
     description: itemData.description_html || itemData.description || "",
     price,

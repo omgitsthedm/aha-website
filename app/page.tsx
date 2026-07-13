@@ -24,28 +24,31 @@ export default async function HomePage() {
 
   return (
     <div className="pb-20 pt-14 lg:pb-28">
-      <section className="relative flex min-h-[80vh] items-center justify-center overflow-hidden">
-        <Image
-          src="/campaign/hero-home.jpg"
-          alt="After Hours Agenda campaign"
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-void/60 via-void/40 to-void/80" />
-        <div className="relative z-10 mx-auto max-w-[1280px] px-4 py-20 text-center sm:px-6">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">NYC Streetwear</p>
-          <h1 className="mx-auto mt-6 max-w-4xl font-display text-[clamp(3rem,12vw,8rem)] font-bold leading-[0.85] tracking-[-0.055em] text-white">
-            After Hours Agenda
-          </h1>
-          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
-            Made-to-order streetwear for the second shift. Tees, hoodies, sweatshirts, and accessories in unisex fits.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link href="/men" className="btn-primary px-7">Shop Men</Link>
-            <Link href="/women" className="btn-primary px-7">Shop Women</Link>
-            <Link href="/new-arrivals" className="btn-secondary border-white/30 text-white hover:border-accent hover:text-accent">Shop new arrivals</Link>
+      <section aria-labelledby="hero-heading" className="mx-auto max-w-[1440px] px-4 pt-10 sm:px-6 lg:pt-16">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
+          <div>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">NYC Streetwear · Made to order</p>
+            <h1 id="hero-heading" className="mt-5 font-display text-[clamp(2.75rem,8vw,5.5rem)] font-bold leading-[0.88] tracking-[-0.05em] text-cream">
+              After Hours Agenda
+            </h1>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-muted md:text-lg">
+              Made-to-order streetwear for the second shift. Tees, hoodies, sweatshirts, and accessories in unisex fits.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link href="/men" className="btn-primary px-7">Shop Men</Link>
+              <Link href="/women" className="btn-primary px-7">Shop Women</Link>
+              <Link href="/new-arrivals" className="btn-secondary">Shop new arrivals</Link>
+            </div>
+          </div>
+          <div className="relative aspect-video overflow-hidden border border-border/40">
+            <Image
+              src="/campaign/hero-home.jpg"
+              alt="Current After Hours Agenda garments laid out on paper: the Be You tee, Classic AHA hoodie, and Hope and Tomorrow sweatshirt"
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 60vw"
+            />
           </div>
         </div>
       </section>
@@ -73,9 +76,9 @@ export default async function HomePage() {
                 className="object-cover"
                 sizes="(max-width: 768px) 50vw, 25vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-void/80 via-void/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-void via-void/30 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
-                <p className="font-display text-xl font-bold uppercase tracking-[-0.02em] text-white md:text-2xl">{tile.label}</p>
+                <p className="font-display text-xl font-bold uppercase tracking-[-0.02em] text-cream md:text-2xl">{tile.label}</p>
                 <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent opacity-0 transition-opacity group-hover:opacity-100">Shop now →</p>
               </div>
             </Link>
