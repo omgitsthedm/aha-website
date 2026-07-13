@@ -1,44 +1,18 @@
-import { Entrance } from "@/components/homepage/Entrance";
-import { LatestDrop } from "@/components/homepage/LatestDrop";
-import { ThePromise } from "@/components/homepage/ThePromise";
-import { Collections } from "@/components/homepage/Collections";
-import { GetOnTheList } from "@/components/homepage/GetOnTheList";
-import { DesignFiles } from "@/components/homepage/DesignFiles";
-import { getAllProducts, getAllCollections } from "@/lib/square/catalog";
-import type { Product, Collection } from "@/lib/utils/types";
+import type { Metadata } from "next";
 
-export const revalidate = 300; // ISR: 5 minutes
-export const metadata = { alternates: { canonical: "/" } };
+export const metadata: Metadata = {
+  title: "After Hours Agenda",
+  description: "After Hours Agenda",
+  alternates: { canonical: "/" },
+  robots: { index: false, follow: false },
+};
 
-export default async function HomePage() {
-  let products: Product[] = [];
-  let collections: Collection[] = [];
-
-  try {
-    [products, collections] = await Promise.all([
-      getAllProducts(),
-      getAllCollections(),
-    ]);
-  } catch (error) {
-    // Fallback: render with empty data, site still looks good
-    console.error("Failed to fetch catalog:", error);
-  }
-
-  // Prefer products explicitly assigned to the New Arrivals collection.
-  const newArrivalsId = "FAIJ7SE5DJP25N26ND3L76SU";
-  const latestDrop = products
-    .filter((p) => p.collectionIds.includes(newArrivalsId))
-    .slice(0, 4);
-  const featured = latestDrop.length > 0 ? latestDrop : products.slice(6, 11);
-
+export default function HomePage() {
   return (
-    <>
-      <Entrance hasNewArrivals={latestDrop.length > 0} />
-      <ThePromise />
-      <DesignFiles compact />
-      <LatestDrop products={featured} isNewArrivalEdit={latestDrop.length > 0} />
-      <Collections collections={collections} />
-      <GetOnTheList />
-    </>
+    <section className="flex min-h-[100dvh] items-end px-5 pb-6 pt-24 sm:px-8 sm:pb-8 lg:px-12 lg:pb-10">
+      <h1 className="max-w-[12ch] font-display text-[clamp(4rem,15vw,13rem)] font-bold uppercase leading-[0.72] tracking-[-0.07em] text-cream">
+        After Hours Agenda
+      </h1>
+    </section>
   );
 }

@@ -13,7 +13,7 @@
 
 ## Current Stamp
 
-- Updated: 2026-07-12 19:02 MST
+- Updated: 2026-07-12 19:35 MST
 - Updated By: Codex
 - Basis: Aside AI cutover handoff plus Codex verification from local Git, GitHub PR metadata, Netlify CLI/API, DNS resolver checks, and public HTTPS checks.
 - Current production source: Git-backed `origin/main`; the relaunch runtime merge commit is `f98aab586ce2ee9377c05de7d17740e0449c06e1` (verify the newest deploy through the Netlify API before acting).
@@ -69,8 +69,8 @@
 
 ## Repo State
 
-- Branch: `main`
-- Status: PR #12 merged as `f98aab586ce2ee9377c05de7d17740e0449c06e1`; local, GitHub, and Netlify production are aligned.
+- Branch: `agent/reset-public-brand-surface`
+- Status: public-surface reset in progress from clean `main` at `7507feab2b17d78b3366a14fe5d0dd1915b1b9b9`; no commerce backend or production data changes.
 - Production: `https://afterhoursagenda.com` passed exact-site, commerce-readiness, and live guards; 13 core/new routes returned 200; desktop/mobile Playwright CLI review showed all reveal sections visible in the viewport and zero console errors.
 - GitHub billing is restored. Dependency Graph was enabled, and the repaired CI, E2E, Lighthouse, security, dependency-review, and review checks are green.
 - PR #2 (`feature/uiux-doctrine-commerce-hardening`) was merged into `main` as `13c25e83f696b19c7d9230ec4766900cc5485451`.
@@ -96,9 +96,9 @@
 
 ## QA-PENDING
 
-- The full-site relaunch content and page architecture shipped through PR #12. Future content work should build from `main`, not the deleted feature branch.
-- Resolve three duplicate active-title product pairs before claiming every PDP has unique canonical SEO content: `Be You`, `Cities`, and `Retro Golf Rope Cap`. This requires a product/catalog decision; the content pass intentionally did not redirect or deactivate purchasable catalog items.
-- Supply real model/fit/detail imagery, approved customer/community photography, and verified press/collaborator proof before adding those forms of content. Do not fabricate them.
+- The PR #12 public content direction was rejected. The customer-facing site must remain a zero-content name-only hold until David approves the new brand kit, information architecture, product assortment, imagery, copy, and marketing system.
+- Historical catalog data remains connected to the backend but must not be treated as launch assortment or current marketing content.
+- Define the new brand kit and launch assortment before restoring shop, product, collection, drop, lookbook, newsletter, restock, cart, or checkout routes.
 - Observe the first real paid order through Square, database, Printful confirmation, outbox, and shipment webhook; do not submit a fabricated customer payment.
 - Add real Square Sandbox credentials scoped only to deploy previews/staging; production credentials are now production-only and secret where appropriate.
 - Create and approve a sandbox checkout test plan.
@@ -145,6 +145,8 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Recent Session History
 
+- 2026-07-12: David rejected the PR #12 public content direction because it exposed historical products, random collections, design files, and invented editorial language during a full brand reset. Codex created `agent/reset-public-brand-surface` to preserve the production backend while replacing the customer-facing site with a name-only `After Hours Agenda` hold. The branch removes shared storefront navigation/footer/cart UI, redirects historical shopping and marketing routes to `/`, limits the sitemap to the root, pauses indexing, retires the rejected content vocabulary in project instructions, and keeps `/ops`, `/track-order`, APIs, Square, Printful, Resend, Netlify Database, webhooks, and production data untouched. Local typecheck, zero-warning lint, 35 unit tests, catalog/provider/margin validation, production build, 8 desktop/mobile E2E checks, route redirect checks, and visual review passed. Deployment remains pending the protected GitHub/Netlify release path.
+
 - 2026-07-12: David explicitly approved publication of the complete AHA relaunch branch. Codex committed the remaining 43 intended paths as `7bca6a6`, opened PR #12, waited for all 19 required checks to pass, and squash-merged to `main` as `f98aab586ce2ee9377c05de7d17740e0449c06e1`. Netlify Git production deploy `6a5446329dca9b00088b2be7` published the exact merge commit. Exact-site, production env-name readiness, live guards, 13 route checks, Square/Printful `auto` mode checks, and desktop/mobile Playwright CLI review passed with zero console errors. No payment, customer order, refund, fulfillment, or form submission was created.
 
 - 2026-07-12: Codex completed the customer-facing page architecture on `content/full-site-editorial-20260712`. Added `/drops/current`, `/drops/archive`, `/coming-soon`, `/lookbook/design-files`, `/newsletter`, and `/restock`; connected them through Drops, Lookbook, PDP unavailable states, navigation, footer, sitemap, and Netlify form detection. Added explicit no-fake-history/no-fake-countdown states, separate restock consent, and development-only CSP support for Next hydration while leaving production CSP strict. Typecheck, zero-warning lint, 35 unit tests, 97 active-product validation, Square/Printful mapping validation, 35% margin gate, a 44-route production build, 12 Playwright E2E checks, and mobile/desktop visual review passed. No prices, mappings, checkout/payment/fulfillment behavior, secrets, live data, push, merge, or deploy were changed.
@@ -184,7 +186,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Agent Directive
 
-Continue from clean `main` at or after `f98aab586ce2ee9377c05de7d17740e0449c06e1`. Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, Resend domain verification, and email delivery are live. Do not turn confirmation back off unless responding to a verified production incident. Do not fabricate a customer payment.
+Keep the customer-facing site in the name-only hold until David approves the new brand kit, product assortment, information architecture, imagery, copy, and marketing system. Preserve Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, Resend domain verification, and email delivery. Do not restore the rejected PR #12 content direction or fabricate a customer payment.
 
 ## Emergency / Bypass Notes
 
