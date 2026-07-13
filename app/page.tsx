@@ -122,7 +122,7 @@ export default async function HomePage() {
 
       <section aria-labelledby="dispatch-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Newsletter</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-[#B03246]">Newsletter</p>
           <h2 id="dispatch-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">Join the second shift</h2>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">New releases and the occasional note from the shop. No spam, unsubscribe anytime.</p>
           <form name="newsletter" method="POST" data-netlify="true" className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row" action="/newsletter">
