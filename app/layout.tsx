@@ -21,28 +21,31 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: "After Hours Agenda",
+    default: "After Hours Agenda | NYC Streetwear",
     template: "%s | After Hours Agenda",
   },
-  description: "After Hours Agenda",
+  description:
+    "After Hours Agenda — NYC streetwear made to order. Hoodies, tees, and pieces built for the second shift. Free shipping. Secure Square checkout.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com"
   ),
   openGraph: {
-    title: "After Hours Agenda",
-    description: "After Hours Agenda",
+    title: "After Hours Agenda | NYC Streetwear",
+    description:
+      "NYC streetwear made to order. Hoodies, tees, and pieces built for the second shift. Free shipping. Secure Square checkout.",
     type: "website",
     locale: "en_US",
     siteName: "After Hours Agenda",
   },
   twitter: {
-    card: "summary",
-    title: "After Hours Agenda",
-    description: "After Hours Agenda",
+    card: "summary_large_image",
+    title: "After Hours Agenda | NYC Streetwear",
+    description:
+      "NYC streetwear made to order. Hoodies, tees, and pieces built for the second shift. Free shipping. Secure Square checkout.",
   },
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
   },
 };
 

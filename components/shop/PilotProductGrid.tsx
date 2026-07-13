@@ -9,7 +9,14 @@ export function PilotProductGrid({ products, headingLevel = 2 }: { products: Pro
   return (
     <div className="grid gap-y-12 md:grid-cols-12 md:gap-x-6 md:gap-y-16">
       {products.map((product, index) => (
-        <Link key={product.id} href={`/product/${product.slug}`} className={`fold-enter group block focus-visible:outline-offset-4 ${index === 0 ? "md:col-span-7" : index === 1 ? "md:col-span-5 md:mt-20" : "md:col-span-6 md:col-start-7"}`} style={{ animationDelay: `${index * 80}ms` }}>
+        <Link
+          key={product.id}
+          href={`/product/${product.slug}`}
+          className={`fold-enter group block focus-visible:outline-offset-4 ${
+            index === 0 ? "md:col-span-7" : index === 1 ? "md:col-span-5 md:mt-20" : "md:col-span-6 md:col-start-7"
+          }`}
+          style={{ animationDelay: `${index * 80}ms` }}
+        >
           <div className={`fold-surface relative overflow-hidden ${index === 0 ? "aspect-[5/6]" : "aspect-[4/5]"}`}>
             <Image
               src={product.images[0]}
@@ -32,6 +39,9 @@ export function PilotProductGrid({ products, headingLevel = 2 }: { products: Pro
             </div>
             <p className="font-mono text-sm font-bold text-cream">{product.priceFormatted}</p>
           </div>
+          <p className="mt-3 font-mono text-[10px] font-bold uppercase tracking-[0.06em] text-muted group-hover:text-accent">
+            View product →
+          </p>
         </Link>
       ))}
     </div>
