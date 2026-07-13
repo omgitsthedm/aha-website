@@ -13,10 +13,10 @@
 
 ## Current Stamp
 
-- Updated: 2026-07-12 17:45 MST
+- Updated: 2026-07-12 19:02 MST
 - Updated By: Codex
 - Basis: Aside AI cutover handoff plus Codex verification from local Git, GitHub PR metadata, Netlify CLI/API, DNS resolver checks, and public HTTPS checks.
-- Current production source: `origin/main` (verify the deployed commit through the Netlify API before acting).
+- Current production source: Git-backed `origin/main`; the relaunch runtime merge commit is `f98aab586ce2ee9377c05de7d17740e0449c06e1` (verify the newest deploy through the Netlify API before acting).
 - Verified commerce runtime baseline: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
 - Git HEAD at onboarding: `23018a0`
 
@@ -43,17 +43,17 @@
 - Primary live URL: `https://afterhoursagenda.com/`
 - `www` behavior: `https://www.afterhoursagenda.com/` returns Netlify 301 to `https://afterhoursagenda.com/`.
 - Default Netlify URL: `https://afterhoursagenda.netlify.app/`
-- Live title verified by guard: `After Hours Agenda | Independent NYC Streetwear`
+- Live title verified by guard: `After Hours Agenda`
 - Host: Netlify for apex, `www`, and `.netlify.app`.
 - Current deployed source: Git-backed `origin/main`.
-- Verified commerce runtime deploy: `6a531ed0c4b21f402bd3a30f`, ready, production, branch `main`; newer documentation-only deploys do not change runtime behavior.
+- Verified relaunch runtime deploy: `6a5446329dca9b00088b2be7`, ready, production, branch `main`, commit `f98aab586ce2ee9377c05de7d17740e0449c06e1`; newer documentation-only deploys do not change runtime behavior.
 - Netlify site: `afterhoursagenda`
 - Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - Netlify admin: `https://app.netlify.com/projects/afterhoursagenda`
 - Netlify custom domain: `afterhoursagenda.com`
 - Netlify build settings: GitHub provider, repo `omgitsthedm/aha-website`, branch `main`, command `npm run build`, publish `.next`.
 - Netlify `prevent_non_git_prod_deploys`: enabled and verified `true` on 2026-07-11.
-- Production QA status: public guards and 12 desktop/mobile E2E checks passed. Signed Square and Printful tests persisted safely; no live charge, customer order, or fulfillment was created.
+- Production QA status: PR #12 passed 19 required GitHub/Netlify checks; exact-site, commerce-readiness, and live guards passed; core and new public routes returned 200; desktop/mobile browser review passed with zero console errors. Signed Square and Printful tests remain persisted safely; no live charge, customer order, or fulfillment was created.
 
 ## Domain / DNS Truth
 
@@ -69,9 +69,9 @@
 
 ## Repo State
 
-- Branch: `content/full-site-editorial-20260712`
-- Status: branch pushed through `78cfa07`; additional page-system and UX work is currently uncommitted. Production remains on Git-backed `origin/main`.
-- Production: `https://afterhoursagenda.com` passed 12 desktop/mobile Playwright checks, exact-site guard, commerce-readiness checks, and both Netlify live guards.
+- Branch: `main`
+- Status: PR #12 merged as `f98aab586ce2ee9377c05de7d17740e0449c06e1`; local, GitHub, and Netlify production are aligned.
+- Production: `https://afterhoursagenda.com` passed exact-site, commerce-readiness, and live guards; 13 core/new routes returned 200; desktop/mobile Playwright CLI review showed all reveal sections visible in the viewport and zero console errors.
 - GitHub billing is restored. Dependency Graph was enabled, and the repaired CI, E2E, Lighthouse, security, dependency-review, and review checks are green.
 - PR #2 (`feature/uiux-doctrine-commerce-hardening`) was merged into `main` as `13c25e83f696b19c7d9230ec4766900cc5485451`.
 - Remote feature branch `feature/uiux-doctrine-commerce-hardening` was deleted after merge.
@@ -96,8 +96,7 @@
 
 ## QA-PENDING
 
-- Review and publish local branch `content/full-site-editorial-20260712` when David explicitly approves the customer-facing content release. The branch changes copy, metadata, collection descriptions, the canonical Catalog Edit route, and public support email references; it does not change prices, mappings, checkout/payment behavior, provider settings, DNS, or production data.
-- After any approved production release, run exact-site and live guards, verify `/best-sellers` returns a permanent redirect to `/catalog-edit`, confirm the sitemap lists only `/catalog-edit`, and visually check the homepage, About, Catalog Edit, one PDP, FAQ, Shipping, Returns, Contact, Privacy, Terms, and Accessibility on mobile and desktop.
+- The full-site relaunch content and page architecture shipped through PR #12. Future content work should build from `main`, not the deleted feature branch.
 - Resolve three duplicate active-title product pairs before claiming every PDP has unique canonical SEO content: `Be You`, `Cities`, and `Retro Golf Rope Cap`. This requires a product/catalog decision; the content pass intentionally did not redirect or deactivate purchasable catalog items.
 - Supply real model/fit/detail imagery, approved customer/community photography, and verified press/collaborator proof before adding those forms of content. Do not fabricate them.
 - Observe the first real paid order through Square, database, Printful confirmation, outbox, and shipment webhook; do not submit a fabricated customer payment.
@@ -146,6 +145,8 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Recent Session History
 
+- 2026-07-12: David explicitly approved publication of the complete AHA relaunch branch. Codex committed the remaining 43 intended paths as `7bca6a6`, opened PR #12, waited for all 19 required checks to pass, and squash-merged to `main` as `f98aab586ce2ee9377c05de7d17740e0449c06e1`. Netlify Git production deploy `6a5446329dca9b00088b2be7` published the exact merge commit. Exact-site, production env-name readiness, live guards, 13 route checks, Square/Printful `auto` mode checks, and desktop/mobile Playwright CLI review passed with zero console errors. No payment, customer order, refund, fulfillment, or form submission was created.
+
 - 2026-07-12: Codex completed the customer-facing page architecture on `content/full-site-editorial-20260712`. Added `/drops/current`, `/drops/archive`, `/coming-soon`, `/lookbook/design-files`, `/newsletter`, and `/restock`; connected them through Drops, Lookbook, PDP unavailable states, navigation, footer, sitemap, and Netlify form detection. Added explicit no-fake-history/no-fake-countdown states, separate restock consent, and development-only CSP support for Next hydration while leaving production CSP strict. Typecheck, zero-warning lint, 35 unit tests, 97 active-product validation, Square/Printful mapping validation, 35% margin gate, a 44-route production build, 12 Playwright E2E checks, and mobile/desktop visual review passed. No prices, mappings, checkout/payment/fulfillment behavior, secrets, live data, push, merge, or deploy were changed.
 
 - 2026-07-12: Codex created local branch `content/full-site-editorial-20260712` for a full Black Sheep Newsstand content pass. Rewrote homepage, About, Lookbook, Shop/New/Drops/Catalog Edit, PDP editorial stories, FAQ, Shipping, Returns, Contact, Accessibility, Privacy, Terms, navigation/footer, metadata, collection descriptions, and public support identity. Added canonical `/catalog-edit` plus a permanent legacy `/best-sellers` redirect and removed the legacy URL from the sitemap. The protected product manifest, prices, provider mappings, checkout/payment behavior, live services, and production data were not changed. Typecheck, zero-warning lint, 33 unit tests, 100 active-product validation, Square/Printful mapping validation, 35% margin gate, production build, route checks, and mobile/desktop browser review passed. The branch is local and unpushed pending David's explicit publication approval. See `docs/AHA-FULL-SITE-CONTENT-PASS-2026-07-12.md`.
@@ -183,7 +184,7 @@ Use this section for proposed rule changes before promoting them into `.ai/RULES
 
 ## Next Agent Directive
 
-Continue from `content/full-site-editorial-20260712`; preserve the current dirty page-system work and verify it before committing. Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, Resend domain verification, and email delivery are live. Do not turn confirmation back off unless responding to a verified production incident. Do not fabricate a customer payment.
+Continue from clean `main` at or after `f98aab586ce2ee9377c05de7d17740e0449c06e1`. Square, Netlify Database, automatic Printful confirmation, `/ops`, `/track-order`, webhook reconciliation, Resend domain verification, and email delivery are live. Do not turn confirmation back off unless responding to a verified production incident. Do not fabricate a customer payment.
 
 ## Emergency / Bypass Notes
 
