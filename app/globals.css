@@ -12,8 +12,9 @@
   --aha-paper: #fafafa;
   --aha-paper-muted: #4a4a4a;
   --aha-line: #b0b0b0;
-  /* Action Coral — single semantic action color (AA on paper white). */
-  --aha-accent: #c83f4d;
+  /* Action Rose — single semantic action color, the rosiest tone that holds
+     WCAG AA on paper white (4.55:1) and under white text (4.74:1). */
+  --aha-accent: #ce3d56;
   /* Crayon Coral — artwork and campaign surfaces only, never text on white. */
   --aha-coral-art: #ff6b6b;
   --aha-sky: #87ceeb;
@@ -21,7 +22,7 @@
   --aha-warm-crease: #f0c987;
   --aha-success: #a8d5ba;
   --aha-warning: #f0c987;
-  --aha-error: #c83f4d;
+  --aha-error: #ce3d56;
 
   /* Semantic Tailwind channels */
   --c-bg: 250 250 250;
@@ -29,10 +30,10 @@
   --c-surface: 255 255 255;
   --c-content: 26 26 26;
   --c-muted: 74 74 74;
-  --c-accent: 200 63 77;
+  --c-accent: 206 61 86;
   --c-success: 168 213 186;
   --c-warning: 240 201 135;
-  --c-error: 200 63 77;
+  --c-error: 206 61 86;
 
   --aha-font-display: var(--font-poppins), Arial, sans-serif;
   --aha-font-body: var(--font-poppins), Arial, sans-serif;
