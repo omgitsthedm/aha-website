@@ -4,7 +4,7 @@ import Image from "next/image";
 import { getAllProducts } from "@/lib/square/catalog";
 
 export const metadata: Metadata = {
-  title: "NYC Streetwear",
+  title: "After Hours Agenda | NYC Streetwear",
   description:
     "NYC streetwear made to order. Men's, women's, and unisex tees, hoodies, sweatshirts, and accessories. Free shipping. Secure Square checkout.",
   alternates: { canonical: "/" },
