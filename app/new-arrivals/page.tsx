@@ -1,4 +1,5 @@
-import { getAllCollections, getProductsByCollection } from "@/lib/square/catalog";
+import { getAllCollections, getAllProducts, getProductsByCollection } from "@/lib/square/catalog";
+import { getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { ShopContent } from "@/components/shop/ShopContent";
 import type { Product, Collection } from "@/lib/utils/types";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -13,10 +14,19 @@ export const metadata = {
 export default async function NewArrivalsPage() {
   let products: Product[] = [];
   let collections: Collection[] = [];
+  let isCuratedList = false;
   try {
     [collections] = await Promise.all([getAllCollections()]);
     const na = collections.find((c) => /new arrivals?/i.test(c.name));
-    products = na ? await getProductsByCollection(na.id) : [];
+    const curated = na ? await getProductsByCollection(na.id) : [];
+    if (curated.length > 0) {
+      products = curated;
+      isCuratedList = true;
+    } else {
+      // No curated new-arrivals collection: show the full catalog honestly
+      // labeled rather than an empty page.
+      products = await getAllProducts();
+    }
   } catch (error) {
     console.error("Failed to load new arrivals:", error);
   }
@@ -25,10 +35,16 @@ export default async function NewArrivalsPage() {
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 max-w-3xl">
-          <PageHeader title="New arrivals" description="Recently added products from the current After Hours Agenda catalog." />
+          <PageHeader
+            title="New arrivals"
+            description={
+              isCuratedList
+                ? "Recently added products from the current After Hours Agenda catalog."
+                : "Nothing is flagged as new this week, so here is the full current catalog — every piece printed to order."
+            }
+          />
         </div>
-        {products.length === 0 && <p className="mb-8 border border-border/40 bg-surface p-5 text-sm leading-relaxed text-muted">There are no products listed as new arrivals right now. Browse the full catalog in Shop.</p>}
-        <ShopContent products={products} collections={collections} />
+        <ShopContent products={products} purchasableSizes={getPurchasableSizesMap(products)} collections={collections} />
       </div>
     </div>
   );

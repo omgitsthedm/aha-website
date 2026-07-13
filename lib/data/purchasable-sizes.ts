@@ -1,0 +1,20 @@
+import { getProductEnrichment } from "@/lib/data/enrichment";
+import type { Product } from "@/lib/utils/types";
+
+/**
+ * Server-side helper for listing pages: slug -> upper-cased sizes that pass
+ * the same enrichment purchasable gate the product page enforces. Products
+ * without an enrichment record are omitted (quick add then falls back to the
+ * live Square variations).
+ */
+export function getPurchasableSizesMap(products: Product[]): Record<string, string[]> {
+  const map: Record<string, string[]> = {};
+  for (const product of products) {
+    const enrichment = getProductEnrichment(product.slug);
+    if (!enrichment) continue;
+    map[product.slug] = Object.entries(enrichment.purchasableBySize)
+      .filter(([, result]) => result.ok)
+      .map(([size]) => size.toUpperCase());
+  }
+  return map;
+}

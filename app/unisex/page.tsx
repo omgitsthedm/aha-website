@@ -1,4 +1,5 @@
 import { getAllProducts } from "@/lib/square/catalog";
+import { getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
@@ -7,6 +8,7 @@ import {
   CATEGORIES,
 } from "@/lib/commerce/taxonomy";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const revalidate = 300;
 
@@ -31,8 +33,18 @@ export default async function UnisexPage() {
           title="Unisex"
           description="Core pieces in unisex sizing, printed to order. One cut, worn your way."
         />
+        <div className="relative mb-10 aspect-[21/9] overflow-hidden border border-border/40 md:aspect-[3/1]">
+          <Image
+            src="/campaign/hero-unisex.jpg"
+            alt="No Place Like New York sweatshirt and EMO But In Heels hoodie on a paper background"
+            fill
+            priority
+            className="object-cover"
+            sizes="(max-width: 1280px) 100vw, 1280px"
+          />
+        </div>
         <CategoryShopContent
-          products={products}
+          products={products} purchasableSizes={getPurchasableSizesMap(products)}
           gender="unisex"
           categories={categories}
           basePath="/unisex"

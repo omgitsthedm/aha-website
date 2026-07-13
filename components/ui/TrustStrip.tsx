@@ -1,6 +1,6 @@
 export function TrustStrip() {
   const items = [
-    { label: "Made in NYC", description: "Designed & printed here" },
+    { label: "Designed in NYC", description: "After hours, literally" },
     { label: "Free shipping", description: "On every order" },
     { label: "Made to order", description: "No dead stock" },
     { label: "30-day returns", description: "Hassle-free" },

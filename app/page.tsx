@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 };
 
 const categoryTiles = [
-  { label: "Men", href: "/men", image: "/campaign/hero-men.jpg" },
-  { label: "Women", href: "/women", image: "/campaign/hero-women.jpg" },
-  { label: "Unisex", href: "/unisex", image: "/campaign/hero-unisex.jpg" },
-  { label: "Accessories", href: "/accessories", image: "/campaign/hero-accessories.jpg" },
+  { label: "Men", href: "/men", image: "/products/enemy-of-the-state-unisex-hoodie/01-black-unisex-premium-hoodie-front.webp" },
+  { label: "Women", href: "/women", image: "/products/hope-tomorrow-pink-unisex-premium-sweatshirt/01-dusty-rose-unisex-premium-sweatshirt-front.webp" },
+  { label: "Unisex", href: "/unisex", image: "/products/no-place-like-new-york-charcoal-unisex-premium-sweatshirt/01-charcoal-heather-unisex-premium-sweatshirt-front-and-back.webp" },
+  { label: "Accessories", href: "/accessories", image: "/products/dad-hat/01-classic-dad-hat-black-front.webp" },
 ];
 
 export default async function HomePage() {
@@ -67,16 +67,16 @@ export default async function HomePage() {
             <Link
               key={tile.href}
               href={tile.href}
-              className="group relative aspect-[3/4] overflow-hidden image-hover-zoom"
+              className="group relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface image-hover-zoom"
             >
               <Image
                 src={tile.image}
                 alt={`${tile.label} category`}
                 fill
-                className="object-cover"
+                className="object-contain p-6"
                 sizes="(max-width: 768px) 50vw, 25vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-void via-void/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-void via-void/10 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
                 <p className="font-display text-xl font-bold uppercase tracking-[-0.02em] text-cream md:text-2xl">{tile.label}</p>
                 <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent opacity-0 transition-opacity group-hover:opacity-100">Shop now →</p>
@@ -98,7 +98,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-4">
             {featured.map((product, index) => (
               <Link key={product.id} href={`/product/${product.slug}`} className="group block focus-visible:outline-offset-4">
-                <div className="image-hover-zoom relative aspect-[3/4] overflow-hidden bg-charcoal">
+                <div className="image-hover-zoom relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">
                   <Image
                     src={product.images[0]}
                     alt={product.name}

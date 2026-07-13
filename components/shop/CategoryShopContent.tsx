@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { QuickAdd } from "@/components/shop/QuickAdd";
 import Link from "next/link";
 import type { Product } from "@/lib/utils/types";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
@@ -15,6 +16,8 @@ interface CategoryShopContentProps {
   activeCategory?: CategorySlug;
   categories?: CategoryMeta[];
   basePath: string;
+  /** slug -> server-verified purchasable sizes for quick add */
+  purchasableSizes?: Record<string, string[]>;
 }
 
 const APPAREL_SIZE_ORDER = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
@@ -27,6 +30,7 @@ export function CategoryShopContent({
   activeCategory,
   categories = CATEGORIES,
   basePath,
+  purchasableSizes,
 }: CategoryShopContentProps) {
   const [activeSize, setActiveSize] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -158,18 +162,23 @@ export function CategoryShopContent({
           {visibleProducts.map((product, index) => {
             const image = product.images[0];
             return (
-              <Link key={product.id} href={`/product/${product.slug}`} className="group block focus-visible:outline-offset-4">
-                <div className="relative aspect-[3/4] overflow-hidden border-b border-border/40 bg-surface transition-colors group-hover:border-accent">
-                  {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
-                </div>
-                <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">
-                  <h2 className="line-clamp-2 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">{product.name}</h2>
-                  <div className="mt-2 flex items-center justify-between gap-2 text-xs font-bold">
-                    <span>{product.priceFormatted}</span>
-                    <span className="text-muted">Made to order</span>
+              <div key={product.id} className="group paper-lift">
+                <Link href={`/product/${product.slug}`} className="block focus-visible:outline-offset-4">
+                  <div className="relative aspect-[3/4] overflow-hidden border-b border-border/40 bg-surface transition-colors group-hover:border-accent">
+                    {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                   </div>
+                  <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">
+                    <h2 className="line-clamp-2 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">{product.name}</h2>
+                    <div className="mt-2 flex items-center justify-between gap-2 text-xs font-bold">
+                      <span>{product.priceFormatted}</span>
+                      <span className="text-muted">Made to order</span>
+                    </div>
+                  </div>
+                </Link>
+                <div className="mt-2">
+                  <QuickAdd product={product} purchasableSizes={purchasableSizes?.[product.slug]} />
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>

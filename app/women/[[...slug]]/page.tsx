@@ -1,4 +1,5 @@
 import { getAllProducts } from "@/lib/square/catalog";
+import { getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
@@ -10,6 +11,7 @@ import {
   CATEGORIES,
 } from "@/lib/commerce/taxonomy";
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export const revalidate = 300;
@@ -72,11 +74,23 @@ export default async function WomenPage({ params }: WomenPageProps) {
           description={
             category
               ? category.description
-              : "Streetwear made for the second shift. Every piece is made to order and printed in NYC."
+              : "Soft-tone sweatshirts, expressive tees, and staples, merchandised for her. Unisex cuts, printed to order."
           }
         />
+        {!category && (
+          <div className="relative mb-10 aspect-[21/9] overflow-hidden border border-border/40 md:aspect-[3/1]">
+            <Image
+              src="/campaign/hero-women.jpg"
+              alt="Hope and Tomorrow dusty rose sweatshirt and Haze lavender sweatshirt on a paper background"
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 1280px) 100vw, 1280px"
+            />
+          </div>
+        )}
         <CategoryShopContent
-          products={displayProducts}
+          products={displayProducts} purchasableSizes={getPurchasableSizesMap(displayProducts)}
           gender={GENDER}
           activeCategory={category?.slug}
           categories={categoryOptions}
