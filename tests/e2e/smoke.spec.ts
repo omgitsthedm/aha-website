@@ -1,57 +1,51 @@
 import { test, expect } from "@playwright/test";
 
-// @product — homepage + shop smoke. Cart/checkout specs (@cart/@checkout) land in Phase 2-3.
-test("@product homepage renders AHA brand and a shop path", async ({ page }) => {
-  await page.goto("/");
-  await expect(page).toHaveTitle(/After Hours Agenda/i);
-  // A route to browse product must be reachable from home.
-  const shopLink = page.getByRole("link", { name: /shop|new arrivals|drops/i }).first();
-  await expect(shopLink).toBeVisible();
+test("@product public site is a zero-content brand hold", async ({ page }) => {
+  const response = await page.goto("/");
+  expect(response?.status()).toBe(200);
+  await expect(page).toHaveTitle(/^After Hours Agenda$/i);
+  await expect(page.getByRole("heading", { level: 1, name: "After Hours Agenda" })).toBeVisible();
+  await expect(page.getByRole("link")).toHaveCount(0);
+  await expect(page.getByRole("button")).toHaveCount(0);
+  await expect(page.locator("body")).not.toContainText(/shop|collection|design files|drops|releases/i);
 });
 
-test("@product shop page loads", async ({ page }) => {
-  const res = await page.goto("/shop");
-  expect(res?.status()).toBeLessThan(400);
-});
-
-test("@content relaunch routes render complete customer paths", async ({ page }) => {
+test("@product legacy storefront routes return to the brand hold", async ({ page }) => {
   const routes = [
-    ["/drops", /Products arrive when the work is ready/i],
-    ["/drops/current", /Current release|No separate release/i],
-    ["/drops/archive", /Release archive/i],
-    ["/coming-soon", /When it is ready/i],
-    ["/lookbook", /Design issues/i],
-    ["/lookbook/design-files", /Design files/i],
-    ["/newsletter", /The useful email/i],
-    ["/restock?product=Social%20Club&size=XL", /Ask for the one/i],
-  ] as const;
+    "/shop",
+    "/new-arrivals",
+    "/catalog-edit",
+    "/product/social-club",
+    "/collections/no-kings",
+    "/drops",
+    "/drops/current",
+    "/lookbook",
+    "/lookbook/design-files",
+    "/coming-soon",
+    "/newsletter",
+    "/restock",
+    "/cart",
+    "/checkout",
+    "/about",
+    "/product-feed.xml",
+  ];
 
-  for (const [route, heading] of routes) {
-    const response = await page.goto(route);
-    expect(response?.status(), route).toBeLessThan(400);
-    await expect(page.getByRole("heading", { level: 1, name: heading }), route).toBeVisible();
+  for (const route of routes) {
+    await page.goto(route);
+    await expect(page, route).toHaveURL(/\/$/);
+    await expect(
+      page.getByRole("heading", { level: 1, name: "After Hours Agenda" }),
+      route,
+    ).toBeVisible();
   }
-
-  await expect(page.getByLabel("Product name")).toHaveValue("Social Club");
-  await expect(page.getByLabel("Size or variant")).toHaveValue("XL");
 });
 
-test("@catalog shop pagination is crawlable and bounded", async ({ page }) => {
-  const response = await page.goto("/shop?page=2");
-  expect(response?.status()).toBeLessThan(400);
-  await expect(page).toHaveTitle(/Page 2.*After Hours Agenda/i);
-  await expect(page.locator('a[href^="/product/"]')).toHaveCount(24);
-  await expect(page.getByRole("navigation", { name: "Catalog pages" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "2", exact: true })).toHaveAttribute("aria-current", "page");
-});
-
-test("@security checkout ships an enforced Square-compatible CSP", async ({ page }) => {
-  const response = await page.goto("/checkout");
+test("@security holding page keeps the production security policy", async ({ page }) => {
+  const response = await page.goto("/");
   const csp = response?.headers()["content-security-policy"] || "";
   expect(csp).toContain("object-src 'none'");
+  expect(csp).toContain("frame-ancestors 'none'");
   expect(csp).toContain("https://web.squarecdn.com");
-  expect(csp).toContain("https://sandbox.web.squarecdn.com");
-  expect(csp).toContain("https://pci-connect.squareup.com");
 });
 
 test("@operations customer order tracking fails closed without a match", async ({ page }, testInfo) => {

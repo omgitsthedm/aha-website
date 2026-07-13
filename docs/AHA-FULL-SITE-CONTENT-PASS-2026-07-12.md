@@ -1,5 +1,7 @@
 # AHA Full-Site Content Pass — July 12, 2026
 
+> **Superseded July 12, 2026.** This document records a rejected historical direction. Do not restore its public concepts, collections, editorial vocabulary, or route architecture. The public site is intentionally reset to the name `After Hours Agenda` while the brand and marketing system are rebuilt from zero.
+
 ## Objective
 
 Make the complete customer-facing site read like one established independent New York label: direct, specific, human, slightly irreverent, and precise whenever money, delivery, returns, privacy, or access are involved.

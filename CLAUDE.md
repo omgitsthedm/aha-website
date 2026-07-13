@@ -114,12 +114,13 @@ styles/          → Global styles
 - Whitespace is a design tool — use it generously.
 
 ### Content System
-- Governing public concept: **Black Sheep Newsstand**. Editorial pages may feel like a city newsstand, flyer archive, drop bulletin, or campaign issue; commerce pages stay quiet and literal.
-- Canonical editorial vocabulary: **design index**, **active archive**, **drop bulletin**, **After Hours Dispatch**, and **Outside Hours**.
-- Canonical catalog-edit URL: `/catalog-edit`; `/best-sellers` is legacy-only and permanently redirects.
+- The public site is in a deliberate zero-content brand hold. The only approved customer-facing identity is the full name `After Hours Agenda`.
+- Do not expose historical products, collections, drops, lookbooks, design files, campaign concepts, slogans, or editorial vocabulary until David approves the new brand and marketing system.
+- `Black Sheep Newsstand`, `design index`, `active archive`, `drop bulletin`, `After Hours Dispatch`, and `Outside Hours` are retired concepts. Do not restore them from historical docs.
+- The commerce backend, protected operations, order tracking, and provider integrations remain intact while the public storefront is rebuilt.
 - Public customer-support identity: `info@afterhoursagenda.com`.
 - PDP editorial copy is built in `lib/content/product-copy.ts` from the customer-facing title and verified enrichment facts. Never add invented materials, collaborators, scarcity, reviews, stock counts, or origin stories.
-- Current content pass and unresolved source-material gaps: `docs/AHA-FULL-SITE-CONTENT-PASS-2026-07-12.md`.
+- The July 12 full-site content pass is historical and superseded: `docs/AHA-FULL-SITE-CONTENT-PASS-2026-07-12.md`.
 
 ### Mobile First
 - Every page and component must look great on mobile **first**, then scale up to desktop.

@@ -1,5 +1,25 @@
 const isDevelopment = process.env.NODE_ENV === "development";
 
+const resetPublicRoutes = [
+  "/shop",
+  "/new-arrivals",
+  "/best-sellers",
+  "/catalog-edit",
+  "/product/:path*",
+  "/collections/:path*",
+  "/drops",
+  "/drops/:path*",
+  "/lookbook",
+  "/lookbook/:path*",
+  "/coming-soon",
+  "/newsletter",
+  "/restock",
+  "/cart",
+  "/checkout",
+  "/about",
+  "/product-feed.xml",
+];
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -45,13 +65,11 @@ const nextConfig = {
     ],
   },
   async redirects() {
-    return [
-      {
-        source: "/best-sellers",
-        destination: "/catalog-edit",
-        permanent: true,
-      },
-    ];
+    return resetPublicRoutes.map((source) => ({
+      source,
+      destination: "/",
+      permanent: false,
+    }));
   },
   async headers() {
     return [
