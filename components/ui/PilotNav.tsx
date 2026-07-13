@@ -72,7 +72,7 @@ export function PilotNav() {
                 >
                   {gender.label}
                 </Link>
-                <div className="invisible absolute left-0 top-full min-w-[18rem] border border-border/10 bg-void px-2 py-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                <div className="invisible absolute left-0 top-full min-w-[14rem] border border-border/10 bg-void px-2 py-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
                   <ul className="space-y-0.5">
                     {gender.subLinks.map((link) => (
                       <li key={link.href}>
