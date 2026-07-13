@@ -11,7 +11,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Accessories",
   description:
-    "Hats, beanies, bags, stickers, pins, and finishing pieces from After Hours Agenda. Made to order in NYC.",
+    "Hats, beanies, bags, stickers, pins, and finishing pieces from After Hours Agenda. Printed to order.",
   alternates: { canonical: "/accessories" },
 };
 

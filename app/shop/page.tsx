@@ -10,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Shop All",
   description:
-    "Shop the full After Hours Agenda catalog. Men's, women's, and unisex tees, hoodies, sweatshirts, and accessories. Made to order in NYC.",
+    "Shop the full After Hours Agenda catalog. Men's, women's, and unisex tees, hoodies, sweatshirts, and accessories, printed to order.",
   alternates: { canonical: "/shop" },
 };
 
@@ -23,7 +23,7 @@ export default async function ShopPage() {
         <PageHeader
           eyebrow="Shop"
           title="All Products"
-          description="The full catalog. Men's, women's, and unisex streetwear made to order and printed in NYC."
+          description="The full catalog. Men's, women's, and unisex streetwear, designed in NYC and printed to order."
         />
 
         <div className="mb-10 grid gap-4 border-y border-border/40 py-5 sm:grid-cols-3">
