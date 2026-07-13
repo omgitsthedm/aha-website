@@ -11,11 +11,23 @@ function previewCatalogFallbackAllowed(): boolean {
 }
 
 const LEGACY_COLLECTION_ID = "57JPU5ZDHXGWVPRQQZMWVR5Q";
-// Sheep-name filter removed 2026-07-13 with David's approval: the Black
-// Sheep / Sheep Min products are active, mapped, margin-passing, and have
-// verified mockups. The legacy collection filter stays.
+
+// David-approved 2026-07-13: these Black Sheep / Sheep Min products are
+// active, mapped, margin-passing, and have verified mockups. They surface
+// even though Square still files them in the legacy collection. Everything
+// else in that collection stays hidden.
+const APPROVED_LEGACY_SLUGS = new Set([
+  "sheep-min-grey-unisex-hoodie",
+  "sheep-min-black-unisex-hoodie",
+  "sheep-min-maroon-unisex-hoodie",
+  "sheep-min-dark-tan-unisex-hoodie",
+  "black-sheep-bone-unisex-premium-sweatshirt",
+  "black-sheep-mint-unisex-premium-sweatshirt",
+  "black-sheep-can-cooler",
+]);
 
 function isCurrentStorefrontProduct(product: Product): boolean {
+  if (APPROVED_LEGACY_SLUGS.has(product.slug)) return true;
   return !product.collectionIds.includes(LEGACY_COLLECTION_ID);
 }
 
