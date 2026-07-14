@@ -17,11 +17,11 @@ const contentSecurityPolicy = [
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'self'",
-  `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""} https://web.squarecdn.com https://sandbox.web.squarecdn.com`,
+  `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""} https://web.squarecdn.com https://sandbox.web.squarecdn.com https://www.googletagmanager.com`,
   "style-src 'self' 'unsafe-inline' https://web.squarecdn.com https://sandbox.web.squarecdn.com",
-  "img-src 'self' data: blob: https://items-images-production.s3.us-west-2.amazonaws.com https://images.squarespace-cdn.com https://*.printful.com https://*.squarecdn.com",
+  "img-src 'self' data: blob: https://items-images-production.s3.us-west-2.amazonaws.com https://images.squarespace-cdn.com https://*.printful.com https://*.squarecdn.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com",
   "font-src 'self' data: https://cash-f.squarecdn.com https://square-fonts-production-f.squarecdn.com https://d1g145x70srn7h.cloudfront.net",
-  "connect-src 'self' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://pci-connect.squareup.com https://pci-connect.squareupsandbox.com https://*.ingest.sentry.io",
+  "connect-src 'self' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://pci-connect.squareup.com https://pci-connect.squareupsandbox.com https://*.ingest.sentry.io https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com",
   "frame-src 'self' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://*.squarecdn.com https://pay.google.com https://appleid.apple.com https://*.cardinalcommerce.com",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
@@ -34,6 +34,9 @@ const nextConfig = {
   // streaming response otherwise places dynamic metadata after <body>.
   htmlLimitedBots: /.*/,
   images: {
+    // Serve AVIF (≈20-30% smaller than WebP) where supported, WebP otherwise.
+    // Visually identical; first-request encode is cached by the Next runtime.
+    formats: ["image/avif", "image/webp"],
     // Avoid a 3840px default fallback for crawlers and browsers without srcset.
     deviceSizes: [320, 420, 640, 750, 828, 1080, 1200, 1600, 1920],
     imageSizes: [32, 48, 64, 96, 128, 256, 384],

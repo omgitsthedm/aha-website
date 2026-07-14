@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { getFulfillmentMode, getCommerceEnvironment } from "@/lib/commerce/runtime";
+import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
 import {
   normalizeSquareWebhookEnvironment,
   verifySquareWebhookSignature,
@@ -72,6 +73,7 @@ export async function POST(request: Request) {
   } catch (err) {
     await markWebhookFailed(eventRecordId, err).catch(() => {});
     console.error("Square webhook processing failed:", err);
+    void reportCheckoutError({ route: "webhooks/square", stage: "process", err });
   }
 
   return NextResponse.json(

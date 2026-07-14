@@ -9,6 +9,7 @@ import {
 } from "@/lib/commerce/orders";
 import { startFulfillment } from "@/lib/commerce/fulfillment";
 import { dispatchOrderNotifications, enqueueOrderNotification } from "@/lib/commerce/notifications";
+import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
 
 export const dynamic = "force-dynamic";
 
@@ -94,6 +95,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("Square order pricing failed:", err);
+    void reportCheckoutError({ route: "create-payment", stage: "square-pricing", err });
     return NextResponse.json({ error: "We couldn't price your order. Please try again." }, { status: 409 });
   }
 
@@ -115,6 +117,7 @@ export async function POST(request: Request) {
     order = await createOrder(cart, body.contact, priced);
   } catch (err) {
     console.error("createOrder failed:", err);
+    void reportCheckoutError({ route: "create-payment", stage: "createOrder", err });
     return NextResponse.json({ error: "Could not start the order. Please try again." }, { status: 500 });
   }
 
@@ -160,11 +163,14 @@ export async function POST(request: Request) {
     await dispatchOrderNotifications(5, order.orderId).catch(() => {});
   } catch (err) {
     console.error(`RECONCILE: order ${order.externalOrderNumber} charged (payment ${payment.id}) but DB update failed:`, err);
+    // Awaited (not void): this path returns 200, so flush the alert before the function freezes.
+    await reportCheckoutError({ route: "create-payment", stage: "reconcile-db", err, orderNumber: order.externalOrderNumber, severity: "critical" });
   }
   try {
     await startFulfillment(order.orderId, cart, body.contact);
   } catch (err) {
     console.error(`FULFILLMENT: order ${order.externalOrderNumber} paid but draft creation failed (will retry):`, err);
+    await reportCheckoutError({ route: "create-payment", stage: "fulfillment", err, orderNumber: order.externalOrderNumber, severity: "critical" });
   }
 
   return NextResponse.json({

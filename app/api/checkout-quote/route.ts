@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidateCart, type CheckoutLine, type OrderContact } from "@/lib/commerce/orders";
 import { calculatePricedSquareOrder } from "@/lib/square/orders";
 import { getSquareLocationId } from "@/lib/commerce/runtime";
+import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, quote }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("Square checkout quote failed:", error);
+    void reportCheckoutError({ route: "checkout-quote", stage: "quote", err: error });
     return NextResponse.json({
       code: "QUOTE_UNAVAILABLE",
       error: "We couldn't calculate the final tax-inclusive total. Checkout is paused so you are never charged a surprise amount.",

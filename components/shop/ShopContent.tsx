@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { QuickAdd } from "@/components/shop/QuickAdd";
+import { ColorSwatches } from "@/components/shop/ColorSwatches";
 import Link from "next/link";
 import type { Collection, Product } from "@/lib/utils/types";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
@@ -17,13 +18,14 @@ interface ShopContentProps {
   purchasableSizes?: Record<string, string[]>;
   /** slug -> distinct sold color count */
   colorCounts?: Record<string, number>;
+  colorNames?: Record<string, string[]>;
 }
 
 const APPAREL_SIZE_ORDER = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
 const PAGE_SIZE = 24;
 const variationSize = (name: string) => name.split("/").pop()?.trim().toUpperCase() || name.toUpperCase();
 
-export function ShopContent({ products, collections, initialPage = 1, paginationPath, purchasableSizes, colorCounts }: ShopContentProps) {
+export function ShopContent({ products, collections, initialPage = 1, paginationPath, purchasableSizes, colorCounts, colorNames }: ShopContentProps) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeSize, setActiveSize] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -164,7 +166,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
                     <h2 className="line-clamp-2 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">{product.name}</h2>
                     <div className="mt-2 flex items-center justify-between gap-2 text-xs font-bold">
                       <span>{product.priceFormatted}</span>
-                      <span className="text-muted">{colorCounts?.[product.slug] && colorCounts[product.slug] > 1 ? `${colorCounts[product.slug]} colors` : "Made to order"}</span>
+                      <ColorSwatches colors={colorNames?.[product.slug] ?? []} fallback={<span className="text-muted">{colorCounts?.[product.slug] && colorCounts[product.slug] > 1 ? `${colorCounts[product.slug]} colors` : "Made to order"}</span>} />
                     </div>
                   </div>
                 </Link>

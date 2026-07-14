@@ -6,6 +6,7 @@ import { PilotNav } from "@/components/ui/PilotNav";
 import { PilotFooter } from "@/components/ui/PilotFooter";
 import { getAllProducts } from "@/lib/square/catalog";
 import { PlatformLayer } from "@/components/ui/PlatformLayer";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -100,6 +101,7 @@ export default async function RootLayout({
         <CartProvider>
           <a href="#main-content" className="fixed left-3 top-3 z-[500] -translate-y-24 bg-rose px-4 py-3 font-mono text-xs font-bold text-cream transition-transform focus:translate-y-0">Skip to content</a>
           <PlatformLayer />
+          <GoogleAnalytics />
           <PilotNav searchIndex={searchIndex} />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
           <PilotFooter />

@@ -30,3 +30,15 @@ export function getColorCountMap(products: Product[]): Record<string, number> {
   }
   return map;
 }
+
+/** slug -> distinct sold color names (for rendering swatch dots on cards). */
+export function getColorNamesMap(products: Product[]): Record<string, string[]> {
+  const map: Record<string, string[]> = {};
+  for (const product of products) {
+    const enrichment = getProductEnrichment(product.slug);
+    if (enrichment && enrichment.colors.length > 0) {
+      map[product.slug] = enrichment.colors;
+    }
+  }
+  return map;
+}

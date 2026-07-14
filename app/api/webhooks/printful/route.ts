@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { getFulfillmentMode } from "@/lib/commerce/runtime";
 import { verifyPrintfulWebhookSignature } from "@/lib/printful/webhooks";
+import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
 import {
   recordWebhookEvent, applyPrintfulEvent, markWebhookProcessed, markWebhookFailed,
 } from "@/lib/commerce/webhooks";
@@ -58,6 +59,7 @@ export async function POST(request: Request) {
   } catch (err) {
     await markWebhookFailed(eventRecordId, err).catch(() => {});
     console.error("Printful webhook processing failed:", err);
+    void reportCheckoutError({ route: "webhooks/printful", stage: "process", err });
   }
 
   return NextResponse.json(
