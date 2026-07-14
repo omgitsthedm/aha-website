@@ -57,7 +57,7 @@ export default async function HomePage() {
         <TrustStrip />
       </div>
 
-      <section aria-labelledby="categories-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      <section aria-labelledby="categories-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 text-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Shop by category</p>
           <h2 id="categories-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">The collection</h2>
@@ -86,7 +86,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="featured-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      <section aria-labelledby="featured-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Featured</p>
@@ -95,7 +95,7 @@ export default async function HomePage() {
           <Link href="/unisex" className="hidden font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent underline underline-offset-4 hover:text-cream md:block">Shop everything</Link>
         </div>
         {featured.length > 0 ? (
-          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-4">
+          <div className="stagger-grid grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-4">
             {featured.map((product, index) => (
               <Link key={product.id} href={`/product/${product.slug}`} className="group block focus-visible:outline-offset-4">
                 <div className="fold-surface image-hover-zoom relative aspect-[3/4] overflow-hidden">
@@ -116,11 +116,18 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted">Check back soon for new drops.</p>
+          <div className="fold-surface px-6 py-14 text-center">
+            <h3 className="font-display text-2xl font-black uppercase tracking-[-0.02em]">The next release is in production</h3>
+            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">Nothing is featured right now. Browse the full catalog, or get an email when new pieces land.</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href="/shop" className="btn-primary px-6">Shop the catalog</Link>
+              <Link href="/newsletter" className="btn-secondary">Get the release email</Link>
+            </div>
+          </div>
         )}
       </section>
 
-      <section aria-labelledby="dispatch-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      <section aria-labelledby="dispatch-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="corner-cut crease-rule relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-[#B03246]">Newsletter</p>
           <h2 id="dispatch-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">Get the next release first</h2>
@@ -134,14 +141,14 @@ export default async function HomePage() {
               type="email"
               required
               placeholder="you@email.com"
-              className="h-12 flex-1 border border-border/10 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
+              className="h-12 flex-1 border border-border/60 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
             />
             <button type="submit" className="btn-primary">Subscribe</button>
           </form>
         </div>
       </section>
 
-      <section aria-labelledby="manifesto-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      <section aria-labelledby="manifesto-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
           <div>
             <div className="relative aspect-[4/5] overflow-hidden bg-charcoal lg:aspect-auto lg:min-h-[30rem]">

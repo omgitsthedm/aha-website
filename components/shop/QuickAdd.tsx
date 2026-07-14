@@ -81,7 +81,7 @@ export function QuickAdd({ product, purchasableSizes }: QuickAddProps) {
               key={variation.id}
               type="button"
               onClick={() => add(variation.id)}
-              className="min-h-11 min-w-11 border border-border/60 px-2.5 text-xs font-bold text-cream transition-colors hover:border-accent hover:bg-accent hover:text-white"
+              className="min-h-11 min-w-11 border border-border/60 px-2.5 text-xs font-bold text-cream transition-colors hover:border-accent hover:bg-rose"
             >
               {extractVariationSize(variation.name) || variation.name}
             </button>

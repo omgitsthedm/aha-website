@@ -71,7 +71,7 @@ export function PilotNav({ searchIndex = [] }: { searchIndex?: SearchIndexItem[]
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] border-b border-border/10 bg-void">
+    <header className="fixed inset-x-0 top-0 z-[100] border-b border-border/40 bg-void">
       <nav aria-label="Primary navigation" className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-6">
         <Link href="/" className="inline-flex h-14 items-center font-display text-sm font-bold uppercase tracking-[-0.02em] text-cream hover:text-accent focus-visible:outline-offset-4">
           After Hours Agenda
@@ -89,7 +89,7 @@ export function PilotNav({ searchIndex = [] }: { searchIndex?: SearchIndexItem[]
                 >
                   {gender.label}
                 </Link>
-                <div className="invisible absolute left-0 top-full min-w-[24rem] border border-border/10 bg-void opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                <div className="invisible absolute left-0 top-full min-w-[24rem] border border-border/40 bg-void opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
                   <div className="grid grid-cols-[1fr_10rem]">
                     <ul className="space-y-0.5 px-2 py-2">
                       {gender.subLinks.map((link) => (
@@ -185,7 +185,7 @@ export function PilotNav({ searchIndex = [] }: { searchIndex?: SearchIndexItem[]
       <div
         id="mobile-menu"
         data-open={mobileOpen}
-        className={`absolute inset-x-0 top-14 border-b border-border/10 bg-void shadow-xl lg:hidden ${mobileOpen ? "block" : "hidden"}`}
+        className={`absolute inset-x-0 top-14 border-b border-border/40 bg-void shadow-xl lg:hidden ${mobileOpen ? "block" : "hidden"}`}
       >
         <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6">
           <ul className="space-y-1">
@@ -201,7 +201,7 @@ export function PilotNav({ searchIndex = [] }: { searchIndex?: SearchIndexItem[]
                   <span aria-hidden="true">{openMobileSection === gender.label ? "−" : "+"}</span>
                 </button>
                 {openMobileSection === gender.label && (
-                  <ul className="ml-3 space-y-0.5 border-l border-border/10 pl-3">
+                  <ul className="ml-3 space-y-0.5 border-l border-border/40 pl-3">
                     {gender.subLinks.map((link) => (
                       <li key={link.href}>
                         <Link
@@ -230,7 +230,7 @@ export function PilotNav({ searchIndex = [] }: { searchIndex?: SearchIndexItem[]
               </li>
             ))}
 
-            <li className="border-t border-border/10 pt-2" aria-hidden="true" />
+            <li className="border-t border-border/40 pt-2" aria-hidden="true" />
 
             {utilityLinks.map((link) => (
               <li key={link.href}>
