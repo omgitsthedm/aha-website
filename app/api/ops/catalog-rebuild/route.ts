@@ -6,9 +6,14 @@
 // action=delete   → batch-delete those Square items (storefront drops them
 //                   until the factory rebuild recreates them — step 2 runs
 //                   scripts/rebuild-sheep-products.mjs)
+// action=attach   → attach mockup images to an EXISTING item (step 3: the
+//                   rebuild creates items imageless, and the storefront
+//                   hides items with no Square image). Body:
+//                   { itemId, name, imageUrls: [] }
 //
 // Item ids come from data/sheep-rebuild-snapshot.json (committed print DNA).
 // Guarded by OPS_MAINTENANCE_KEY; 404 when unset. Remove after use.
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -22,6 +27,49 @@ export async function POST(request: Request) {
   if (request.headers.get("x-maintenance-key") !== key) return new NextResponse("Not found", { status: 404 });
 
   const action = new URL(request.url).searchParams.get("action") || "inspect";
+
+  if (action === "attach") {
+    const body = await request.json().catch(() => ({})) as { itemId?: string; name?: string; imageUrls?: string[] };
+    if (!body.itemId || !Array.isArray(body.imageUrls) || body.imageUrls.length === 0) {
+      return NextResponse.json({ ok: false, error: "itemId and imageUrls required" }, { status: 400 });
+    }
+    const token = process.env.SQUARE_ACCESS_TOKEN;
+    const base = process.env.SQUARE_ENVIRONMENT === "sandbox"
+      ? "https://connect.squareupsandbox.com"
+      : "https://connect.squareup.com";
+    const imageIds: string[] = [];
+    const imageErrors: string[] = [];
+    for (const [index, url] of body.imageUrls.entries()) {
+      try {
+        const imageResponse = await fetch(url);
+        if (!imageResponse.ok) throw new Error(`fetch ${imageResponse.status}`);
+        const blob = await imageResponse.blob();
+        const form = new FormData();
+        form.append("request", JSON.stringify({
+          idempotency_key: randomUUID(),
+          object_id: body.itemId,
+          is_primary: index === 0,
+          image: { type: "IMAGE", id: "#image", image_data: { name: `${body.name || body.itemId} ${index + 1}` } },
+        }));
+        form.append("image_file", blob, `image-${index + 1}.jpg`);
+        const imgRes = await fetch(`${base}/v2/catalog/images`, {
+          method: "POST",
+          headers: {
+            "Square-Version": process.env.SQUARE_API_VERSION || "2024-01-18",
+            Authorization: `Bearer ${token}`,
+          },
+          body: form,
+        });
+        const imgJson = (await imgRes.json()) as { image?: { id?: string } };
+        if (!imgRes.ok || !imgJson.image?.id) throw new Error(`upload ${imgRes.status}`);
+        imageIds.push(imgJson.image.id);
+      } catch (error) {
+        imageErrors.push(`${url}: ${error instanceof Error ? error.message : "failed"}`);
+      }
+    }
+    return NextResponse.json({ ok: imageErrors.length === 0, action, itemId: body.itemId, imageIds, imageErrors });
+  }
+
   const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data/sheep-rebuild-snapshot.json"), "utf8")) as Record<string, { squareItemId?: string | null; title: string }>;
 
   const targets = Object.entries(snapshot)
