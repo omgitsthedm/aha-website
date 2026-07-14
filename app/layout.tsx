@@ -37,12 +37,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "After Hours Agenda",
+    images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: "After Hours Agenda — script logo and the black sheep" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "After Hours Agenda | NYC Streetwear",
     description:
       "Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. Free shipping. Secure Square checkout.",
+    images: ["/brand/og-image.png"],
   },
   robots: {
     index: true,
