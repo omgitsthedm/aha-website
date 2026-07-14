@@ -30,6 +30,7 @@ export interface RevalidatedItem {
   printfulCatalogVariantId?: number;
   printfulSyncVariantId?: number;
   printfulStoreId?: number;
+  printfulPlacements?: AhaVariant["printfulPlacements"];
 }
 export interface RevalidatedCart {
   items: RevalidatedItem[];
@@ -76,6 +77,7 @@ export function revalidateCart(lines: CheckoutLine[]): RevalidatedCart {
       printfulCatalogVariantId: variant.printfulCatalogVariantId,
       printfulSyncVariantId: variant.printfulSyncVariantId,
       printfulStoreId: variant.printfulStoreId,
+      printfulPlacements: variant.printfulPlacements,
     });
   }
   return { items, subtotal, currency };
@@ -125,7 +127,9 @@ export async function createOrder(
       titleSnapshot: it.title, sizeSnapshot: it.size, colorSnapshot: it.color ?? null,
       quantity: it.quantity, unitPrice: it.unitPrice, lineTotal: it.lineTotal,
       squareVariationId: it.squareVariationId, printfulCatalogVariantId: it.printfulCatalogVariantId ?? null,
-      printfulFileSnapshotJson: { printfulSyncVariantId: it.printfulSyncVariantId },
+      printfulFileSnapshotJson: it.printfulSyncVariantId
+        ? { printfulSyncVariantId: it.printfulSyncVariantId }
+        : { printfulPlacements: it.printfulPlacements ?? [] },
     }))
   );
 

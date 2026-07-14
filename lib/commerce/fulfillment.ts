@@ -89,7 +89,7 @@ export async function startFulfillment(
   const defaultStore = Number(process.env.PRINTFUL_STORE_ID) || undefined;
   const byStore = groupItemsByPrintfulStore(cart.items, defaultStore);
   if (byStore.size === 0) {
-    await markManualReview(orderId, "No cart item has a Printful sync-variant/store mapping");
+    await markManualReview(orderId, "No cart item has a Printful fulfillment path (sync variant or catalog placements with hosted art)");
     return;
   }
 

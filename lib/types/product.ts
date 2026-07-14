@@ -56,6 +56,8 @@ export interface PrintfulPlacement {
   /** Stable, versioned production-file URL OR a Printful file id (one required). */
   fileUrl?: string;
   fileId?: number;
+  /** Print position in inches (width/height/top/left) for catalog-source fulfillment. */
+  position?: { width: number; height: number; top: number; left: number };
   /** Where the original design source lives (internal reference, not shipped). */
   sourcePath?: string;
   /** Approval / print-test state before a variant may go live. */

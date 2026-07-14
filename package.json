@@ -24,7 +24,8 @@
     "verify:commerce-readiness:netlify": "node ops/commerce-readiness.mjs --netlify --context production",
     "verify:commerce-capabilities:netlify": "node ops/commerce-capabilities.mjs",
     "verify:netlify-site": "bash ops/netlify-target-guard.sh site",
-    "verify:netlify-live": "bash ops/netlify-target-guard.sh live"
+    "verify:netlify-live": "bash ops/netlify-target-guard.sh live",
+    "product-factory": "node scripts/product-factory.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
