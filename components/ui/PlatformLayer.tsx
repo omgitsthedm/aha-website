@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
+import { InAppBrowserNudge } from "./InAppBrowserNudge";
+import { InstallPrompt } from "./InstallPrompt";
+// Side-effect import: starts buffering `beforeinstallprompt` at first paint,
+// before InstallPrompt mounts, so no install opportunity is missed.
+import "@/lib/platform/pwaInstall";
 
 /**
  * Platform experience layer, all progressive enhancement:
  * - registers the minimal service worker (offline fallback + push handlers)
  * - injects Speculation Rules so Chromium prerenders likely next pages
  *   (never cart/checkout/api — money pages always render fresh)
+ * - surfaces the in-app-browser escape nudge (Instagram/TikTok/etc.) and the
+ *   per-platform install hint (iOS Add-to-Home-Screen / Android native prompt)
  */
 export function PlatformLayer() {
   useEffect(() => {
@@ -39,5 +46,10 @@ export function PlatformLayer() {
     }
   }, []);
 
-  return null;
+  return (
+    <>
+      <InAppBrowserNudge />
+      <InstallPrompt />
+    </>
+  );
 }

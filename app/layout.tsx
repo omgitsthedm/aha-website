@@ -51,6 +51,14 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  // Installed-app polish: standalone window that matches the paper-white ground
+  // (status bar stays legible dark-on-light). The home-screen icon itself comes
+  // from the file conventions app/icon.svg + app/apple-icon.png.
+  appleWebApp: {
+    capable: true,
+    title: "After Hours Agenda",
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
