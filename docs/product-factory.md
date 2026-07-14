@@ -42,6 +42,22 @@ Omit `retailPrice` for auto pricing (35% floor + $1, whole dollar).
 `--price-map` (resurrect) prices individual sizes; every size is checked
 against its own 35% floor.
 
+## Techniques — one spec covers all of them
+
+The factory derives technique, placement, and required product options from
+the blank itself (`--spec` needs only the design + garment id):
+
+| Technique | What happens | Proven |
+|---|---|---|
+| dtg / dtf | hosted art per placement, position in inches | 2026-07-13 |
+| **embroidery** | plain PNG accepted; Printful **auto-digitizes** at order time (+$2.95 one-time per design) and auto-matches thread colors; layer options (e.g. `3d_puff`) pass through `spec.layerOptions` | 2026-07-14, draft order verified |
+| cut-sew (totes) | `stitch_color` auto-filled (spec.stitchColor, default black) and sent on every order | 2026-07-14 |
+| sublimation / uv / stickers | same placements shape; technique from the blank | 2026-07-14 |
+
+`spec.story` (required for new products) is the authored truth of the design —
+it flows to the manifest, the Square item (`description_html`), and the PDP,
+replacing the generated template copy.
+
 ## What the factory does
 
 1. **Art gates** — URL must be publicly reachable; PNG must be ≥1200px longest
@@ -105,6 +121,24 @@ Run it after changing any print art.
 `PRINTFUL_API_TOKEN` (never in code), `PRINTFUL_STORE_ID` (default 14298228),
 `OPS_MAINTENANCE_KEY` (gitignored `.env.local`; guards the production Square
 endpoints), `SITE_URL` (default https://afterhoursagenda.com).
+
+## Provider signals (v2 webhooks)
+
+`catalog_price_changed` (global) and `catalog_stock_updated` (our blanks,
+5-minute freshness) are registered to `/api/webhooks/printful`; events are
+stored in `webhook_events` and audit-logged (`webhook:catalog_*`) for the
+margin/liveness rails. After adding products with a NEW blank, re-register the
+watched list (see scripts/register or the runbook in git history).
+
+## Square heavy-lifters
+
+- Items are created with `description_html` (the story) and a find-or-create
+  **CATEGORY** per productType.
+- Every paid order links a find-or-create **Square Customer** — the Square
+  dashboard is the CRM (best-effort; never blocks payment).
+- Old Printful **sync products can be DELETEd via API** even on this platform
+  store (only create/edit is blocked). File Library entries have no delete
+  endpoint — dashboard only, cosmetic.
 
 ## Safety rails
 

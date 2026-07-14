@@ -32,7 +32,7 @@ const ART_PLAN = {
   "counting-sheep-tote-bag-regular": { default: "pattern" },
   "counting-sheep-tote-bag-large-with-pocket": { default: "pattern", pocket: "pattern" },
   "counting-sheep-crossbody-bag": { front: "pattern", back: "pattern", label_inside: "label" },
-  // socks are embroidery — Printful must digitize; rebuild manually reviewed:
+  // socks are embroidery — replaced by black-sheep-embroidered-crew-socks (factory spec):
   // "black-sheep-black-grey-or-white-comfy-socks": { embroidery_outside_left: "solo" },
 };
 
