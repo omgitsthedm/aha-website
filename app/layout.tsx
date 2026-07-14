@@ -6,6 +6,7 @@ import { PilotNav } from "@/components/ui/PilotNav";
 import { PilotFooter } from "@/components/ui/PilotFooter";
 import { PlatformLayer } from "@/components/ui/PlatformLayer";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { StorefrontJsonLd } from "@/components/seo/StorefrontJsonLd";
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -86,6 +87,7 @@ export default function RootLayout({
           <a href="#main-content" className="fixed left-3 top-3 z-[500] -translate-y-24 bg-rose px-4 py-3 font-mono text-xs font-bold text-cream transition-transform focus:translate-y-0">Skip to content</a>
           <PlatformLayer />
           <GoogleAnalytics />
+          <StorefrontJsonLd />
           <PilotNav />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
           <PilotFooter />

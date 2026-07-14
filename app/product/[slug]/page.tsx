@@ -6,7 +6,7 @@ import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
 import { notFound } from "next/navigation";
 import type { Product } from "@/lib/utils/types";
 import type { Metadata } from "next";
-import { buildProductStory } from "@/lib/content/product-copy";
+import { buildProductStory, isAuthoredSquareDescription } from "@/lib/content/product-copy";
 import { loadProducts } from "@/lib/data/products";
 
 export const revalidate = 300;
@@ -39,7 +39,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     if (!product) return { title: "Product Not Found" };
 
     const enrichment = getProductEnrichment(product.slug);
-    const description = buildProductStory(product, enrichment).slice(0, 158);
+    const rawDescription = isAuthoredSquareDescription(product.description)
+      ? product.description!.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
+      : buildProductStory(product, enrichment);
+    const description = rawDescription.slice(0, 158);
     const image = product.images[0];
     const title = productMetaTitle(product.name);
 
@@ -100,7 +103,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     )
     .slice(0, 4);
 
-  const storyDescription = buildProductStory(product, enrichment);
+  // Prefer the human-authored Square description (the brand's actual copy) and
+  // only fall back to the generated story when Square has nothing real. This
+  // surfaces the per-product storytelling that was previously suppressed.
+  const storyDescription = isAuthoredSquareDescription(product.description)
+    ? product.description!
+    : buildProductStory(product, enrichment);
+  // JSON-LD needs plain text, not the authored HTML markup.
+  const plainDescription = storyDescription.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 
   // Live Printful stock per size (5-min fresh; fails open to in-stock).
   const stockBySize: Record<string, boolean> = {};
@@ -132,9 +142,24 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     }
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com";
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Shop", item: `${siteUrl}/shop` },
+      { "@type": "ListItem", position: 3, name: product.name, item: `${siteUrl}/product/${product.slug}` },
+    ],
+  };
+
   return (
     <>
-      <ProductJsonLd product={product} description={storyDescription} />
+      <ProductJsonLd product={product} description={plainDescription} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c") }}
+      />
       <ProductDetail
         product={product}
         related={related}

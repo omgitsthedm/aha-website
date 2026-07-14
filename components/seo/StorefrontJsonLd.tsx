@@ -11,6 +11,11 @@ export function StorefrontJsonLd() {
         url: SITE_URL,
         description: "Clothing and accessories sold online and made to order.",
         email: "info@afterhoursagenda.com",
+        logo: `${SITE_URL}/brand/icons/icon-512.png`,
+        sameAs: [
+          "https://www.instagram.com/afterhoursagenda",
+          "https://www.tiktok.com/@afterhoursagenda",
+        ],
       },
       {
         "@type": "WebSite",

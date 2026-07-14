@@ -37,7 +37,17 @@ export function PilotFooter() {
         <div className="fold-surface p-6 sm:p-8">
           <div className="flex flex-wrap items-end gap-6"><SheepMark className="w-20 text-cream" title="After Hours Agenda black sheep" /><p className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold uppercase leading-[0.9] tracking-[-0.05em]">After Hours Agenda</p></div>
           <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories, printed to order. Questions? Email info@afterhoursagenda.com.</p>
-          <a href="mailto:info@afterhoursagenda.com" className="btn-secondary mt-6">Email support</a>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <a href="mailto:info@afterhoursagenda.com" className="btn-secondary">Email support</a>
+            <a href="https://www.instagram.com/afterhoursagenda" target="_blank" rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-2 border border-border/60 px-4 text-xs font-bold uppercase tracking-wide text-cream transition-colors hover:border-accent hover:text-accent">
+              Instagram
+            </a>
+            <a href="https://www.tiktok.com/@afterhoursagenda" target="_blank" rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-2 border border-border/60 px-4 text-xs font-bold uppercase tracking-wide text-cream transition-colors hover:border-accent hover:text-accent">
+              TikTok
+            </a>
+          </div>
 
           <div className="mt-8 border-t border-border/40 pt-6">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Newsletter</p>

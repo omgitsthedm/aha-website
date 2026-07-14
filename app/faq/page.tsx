@@ -20,9 +20,23 @@ const faqs = [
   { q: "Do you have customer reviews?", a: "After Hours Agenda does not publish an on-site review system yet. Ratings and testimonials will not be added without a real collection and moderation process." },
 ];
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+
 export default function FAQPage() {
   return (
     <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c") }}
+      />
       <div className="mx-auto max-w-4xl">
         <PageHeader eyebrow="Order help / Straight answers" title="Before you email" description={<>Production, payment, fit, tracking, and returns are covered here. If your question is specific to an order, <Link href="/contact" className="text-accent underline underline-offset-4">contact support</Link>.</>} />
         <div className="border-t border-border/40">

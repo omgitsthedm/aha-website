@@ -15,6 +15,23 @@ function getAuthoredStory(slug: string): string | null {
   return null;
 }
 
+/**
+ * True when the Square `product.description` is real, human-authored copy worth
+ * showing verbatim (e.g. "No crowns. No thrones. No permission needed…") rather
+ * than empty/boilerplate. When authored, the PDP should render IT — not the
+ * auto-generated fallback story — so the brand's own words reach the shopper.
+ */
+export function isAuthoredSquareDescription(desc?: string | null): boolean {
+  if (!desc) return false;
+  const text = desc.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  if (text.length < 60) return false;
+  // Reject the generic auto-templated boilerplate.
+  if (/\bby After Hours Agenda\.\s*Printed to order\.?\s*$/i.test(text)) return false;
+  if (/printed to order as a graphic/i.test(text) && text.length < 200) return false;
+  // Authored copy carries real markup or is a substantial multi-sentence story.
+  return /<(p|strong|ul|li|br|em)\b/i.test(desc) || text.length >= 140;
+}
+
 const TYPE_NAMES: Record<string, string> = {
   accessory: "accessory",
   hat: "headwear piece",
