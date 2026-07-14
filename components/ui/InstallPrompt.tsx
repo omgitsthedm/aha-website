@@ -6,7 +6,9 @@ import { usePlatform } from "@/lib/platform/usePlatform";
 import { canPromptInstall, subscribeInstall, promptInstall } from "@/lib/platform/pwaInstall";
 
 const SEEN_KEY = "aha:install-hint-seen";
-const HIDDEN_ROUTES = ["/cart", "/checkout", "/ops", "/track-order"];
+// Never compete with a primary bottom CTA: product pages have a sticky mobile
+// add-to-bag bar, and cart/checkout/track have their own actions.
+const HIDDEN_ROUTES = ["/cart", "/checkout", "/ops", "/track-order", "/product"];
 
 /**
  * Offers installation the right way per platform:
