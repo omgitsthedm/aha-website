@@ -67,30 +67,40 @@ for (const [slug, mockPlacement] of Object.entries(MOCKUP_PLAN)) {
   console.log(`\n${slug} → item ${itemId}, catalog product ${productId}, ${variantIds.length} variant(s), ${mockPlacement}/${placementSpec.technique}`);
   if (!LIVE) continue;
 
+  // One task per variant: mixed variants can disagree on available mockup
+  // styles (can cooler regular vs slim). Cut-sew products require the
+  // stitch_color option.
+  const productOptions = placementSpec.technique === "cut-sew"
+    ? [{ name: "stitch_color", value: "black" }]
+    : undefined;
   let mockups = [];
-  try {
-    const task = await pf("/mockup-tasks", "POST", {
-      format: "jpg",
-      products: [{
-        source: "catalog",
-        catalog_product_id: productId,
-        catalog_variant_ids: variantIds.slice(0, 4),
-        placements: [{ placement: mockPlacement, technique: placementSpec.technique, layers: [{ type: "file", url: placementSpec.fileUrl }] }],
-      }],
-    });
-    const taskIds = (task.data || []).map((t) => t.id).filter(Boolean);
-    for (let i = 0; i < 20 && taskIds.length; i++) {
-      await sleep(3000);
-      const res = await pf(`/mockup-tasks?id=${taskIds.join(",")}`);
-      const all = res.data || [];
-      if (all.every((t) => t.status === "completed" || t.status === "failed")) {
-        mockups = all.flatMap((t) => (t.catalog_variant_mockups || []).flatMap((m) =>
-          (m.mockups || []).map((mm) => mm.mockup_url)));
-        break;
+  for (const variantId of variantIds.slice(0, 4)) {
+    try {
+      const task = await pf("/mockup-tasks", "POST", {
+        format: "jpg",
+        products: [{
+          source: "catalog",
+          catalog_product_id: productId,
+          catalog_variant_ids: [variantId],
+          placements: [{ placement: mockPlacement, technique: placementSpec.technique, layers: [{ type: "file", url: placementSpec.fileUrl }] }],
+          ...(productOptions ? { product_options: productOptions } : {}),
+        }],
+      });
+      const taskIds = (task.data || []).map((t) => t.id).filter(Boolean);
+      for (let i = 0; i < 20 && taskIds.length; i++) {
+        await sleep(3000);
+        const res = await pf(`/mockup-tasks?id=${taskIds.join(",")}`);
+        const all = res.data || [];
+        if (all.every((t) => t.status === "completed" || t.status === "failed")) {
+          mockups.push(...all.flatMap((t) => (t.catalog_variant_mockups || []).flatMap((m) =>
+            (m.mockups || []).map((mm) => mm.mockup_url))));
+          break;
+        }
       }
+      if (mockups.length >= 2) break; // primary + one alt is plenty
+    } catch (error) {
+      console.warn(`  ⚠ mockups failed for variant ${variantId}: ${error.message.slice(0, 200)}`);
     }
-  } catch (error) {
-    console.warn(`  ⚠ mockups failed: ${error.message}`);
   }
   const urls = [...new Set(mockups)].slice(0, 4);
   if (urls.length === 0) { console.warn(`  ⚠ no mockups — item stays hidden`); continue; }
