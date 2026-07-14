@@ -5691,7 +5691,7 @@
       "collectionIds": [
         "sweaters"
       ],
-      "status": "active",
+      "status": "draft",
       "retailPrice": 4150,
       "currency": "USD",
       "fitDescription": "Relaxed fit, midweight \u2014 true to size.",

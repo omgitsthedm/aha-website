@@ -80,8 +80,8 @@ export default async function MenPage({ params }: MenPageProps) {
         {!category && (
           <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
             <Image
-              src="/campaign/hero-men.jpg"
-              alt="Enemy of the State hoodie and Japanese Garden Puzzle hoodie on a paper background"
+              src="/campaign/hero-men-onmodel.webp"
+              alt="The Classic AHA hoodie in black, worn"
               fill
               priority
               className="object-cover"

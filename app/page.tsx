@@ -43,8 +43,8 @@ export default async function HomePage() {
           </div>
           <div className="fold-surface relative aspect-video overflow-hidden">
             <Image
-              src="/campaign/hero-home.jpg"
-              alt="Current After Hours Agenda garments laid out on paper: the Be You tee, Classic AHA hoodie, and Hope and Tomorrow sweatshirt"
+              src="/campaign/hero-home-onmodel.webp"
+              alt="The Black Sheep sweatshirt worn with a trench coat, photographed on a model"
               fill
               priority
               className="object-cover"
@@ -174,8 +174,8 @@ export default async function HomePage() {
           <div>
             <div className="relative aspect-[4/5] overflow-hidden bg-charcoal lg:aspect-auto lg:min-h-[30rem]">
               <Image
-                src="/campaign/hero-unisex.jpg"
-                alt="No Place Like New York sweatshirt and EMO But In Heels hoodie on a paper background"
+                src="/campaign/hero-unisex-onmodel.webp"
+                alt="The No Place Like New York sweatshirt in charcoal, worn"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -184,8 +184,6 @@ export default async function HomePage() {
             <p className="mt-3 text-xs leading-relaxed text-muted">
               Pictured:{" "}
               <Link href="/product/no-place-like-new-york-charcoal-unisex-premium-sweatshirt" className="font-bold text-accent underline underline-offset-4 hover:text-cream">No Place Like New York sweatshirt</Link>
-              {" and "}
-              <Link href="/product/emo-but-in-heels-dark-grey-unisex-hoodie" className="font-bold text-accent underline underline-offset-4 hover:text-cream">EMO But In Heels hoodie</Link>
             </p>
           </div>
           <div>

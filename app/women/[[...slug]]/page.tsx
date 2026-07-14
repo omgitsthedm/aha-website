@@ -80,8 +80,8 @@ export default async function WomenPage({ params }: WomenPageProps) {
         {!category && (
           <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
             <Image
-              src="/campaign/hero-women.jpg"
-              alt="Hope and Tomorrow dusty rose sweatshirt and Haze lavender sweatshirt on a paper background"
+              src="/campaign/hero-women-onmodel.webp"
+              alt="The Hope and Tomorrow sweatshirt in dusty rose, worn"
               fill
               priority
               className="object-cover"

@@ -35,8 +35,8 @@ export default async function UnisexPage() {
         />
         <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
           <Image
-            src="/campaign/hero-unisex.jpg"
-            alt="No Place Like New York sweatshirt and EMO But In Heels hoodie on a paper background"
+            src="/campaign/hero-unisex-onmodel.webp"
+            alt="The No Place Like New York sweatshirt in charcoal, worn"
             fill
             priority
             className="object-cover"

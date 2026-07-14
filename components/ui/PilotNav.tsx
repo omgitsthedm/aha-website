@@ -11,7 +11,7 @@ const genderLinks = [
   {
     label: "Men",
     href: "/men",
-    image: "/campaign/hero-men.jpg",
+    image: "/campaign/hero-men-onmodel.webp",
     cta: { label: "Shop Men", href: "/men" },
     subLinks: [
       { label: "Shop All", href: "/men" },
@@ -24,7 +24,7 @@ const genderLinks = [
   {
     label: "Women",
     href: "/women",
-    image: "/campaign/hero-women.jpg",
+    image: "/campaign/hero-women-onmodel.webp",
     cta: { label: "Shop Women", href: "/women" },
     subLinks: [
       { label: "Shop All", href: "/women" },
