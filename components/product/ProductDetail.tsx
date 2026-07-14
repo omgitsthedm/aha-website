@@ -11,6 +11,7 @@ import { getFulfillmentSummary, RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/co
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { hapticTap } from "@/lib/utils/haptics";
 import { extractVariationSize } from "@/lib/utils/variation";
+import { swatchHex } from "@/lib/data/color-swatches";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 
 interface ProductDetailProps {
@@ -134,7 +135,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   }, []);
 
   return (
-    <div className="px-4 pb-24 pt-28 md:px-6 md:pt-32">
+    <div className="px-4 pb-32 pt-28 md:px-6 md:pt-32 lg:pb-24">
       <div className="mx-auto max-w-7xl">
         <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-2 text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
           <Link href="/shop" className="min-h-11 py-3 transition-colors hover:text-accent">Shop</Link>
@@ -187,6 +188,10 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                     const imageIndex = colorImageIndex?.[color];
                     const hasImage = typeof imageIndex === "number";
                     const isShown = hasImage && imageIndex === activeImage;
+                    const hex = swatchHex(color);
+                    const dot = hex ? (
+                      <span aria-hidden="true" className="h-3.5 w-3.5 shrink-0 rounded-full border border-border/40" style={{ backgroundColor: hex }} />
+                    ) : null;
                     return hasImage ? (
                       <button
                         key={color}
@@ -194,12 +199,13 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                         onClick={() => setActiveImage(imageIndex)}
                         aria-pressed={isShown}
                         aria-label={`Show ${color} colorway`}
-                        className={`min-h-11 border px-3 py-2 text-sm transition-colors ${isShown ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
+                        className={`inline-flex min-h-11 items-center gap-2 border px-3 py-2 text-sm transition-colors ${isShown ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
                       >
+                        {dot}
                         {color}
                       </button>
                     ) : (
-                      <span key={color} className="inline-flex min-h-11 items-center border border-border/60 px-3 py-2 text-sm text-cream">{color}</span>
+                      <span key={color} className="inline-flex min-h-11 items-center gap-2 border border-border/60 px-3 py-2 text-sm text-cream">{dot}{color}</span>
                     );
                   })}
                 </div>
@@ -207,7 +213,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             )}
 
             {product.variations.length > 1 && (
-              <fieldset className="mt-8 border-t border-border/40 pt-6">
+              <fieldset id="size-selector" className="mt-8 scroll-mt-28 border-t border-border/40 pt-6">
                 <legend className="sr-only">Choose a size</legend>
                 <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
                   <div>
@@ -314,6 +320,31 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             </div>
           </section>
         )}
+      </div>
+
+      {/* Sticky mobile buy bar — the inline Add-to-bag can sit far below the fold
+          on phones. Adds a persistent price + action without touching desktop. */}
+      <div className="safe-bottom safe-x fixed inset-x-0 bottom-0 z-[80] border-t border-border/60 bg-void/95 backdrop-blur-sm lg:hidden">
+        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">{product.name}</p>
+            <p className="font-display text-lg font-black leading-none text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
+          </div>
+          <button
+            type="button"
+            onClick={
+              canBuy
+                ? handleAddToCart
+                : () => document.getElementById("size-selector")?.scrollIntoView({ behavior: "smooth", block: "center" })
+            }
+            className={`btn-primary whitespace-nowrap ${!canBuy && (currentInStock === false) ? "cursor-not-allowed opacity-50" : ""}`}
+            disabled={!canBuy && currentInStock === false && Boolean(currentVariation)}
+          >
+            {canBuy
+              ? addedFeedback ? "Added ✓" : "Add to bag"
+              : currentVariation ? "Unavailable" : "Select size"}
+          </button>
+        </div>
       </div>
     </div>
   );
