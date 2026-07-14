@@ -161,7 +161,7 @@ export function CategoryShopContent({
       </div>
 
       {viewMode === "grid" && filtered.length > 0 && (
-        <div className="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4">
+        <div className="stagger-grid grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4">
           {visibleProducts.map((product, index) => {
             const image = product.images[0];
             return (
@@ -209,7 +209,7 @@ export function CategoryShopContent({
       )}
 
       {filtered.length === 0 && (
-        <div className="border border-border/40 bg-surface px-5 py-16 text-center">
+        <div className="fold-surface px-5 py-16 text-center">
           <h2 className="font-display text-2xl font-black uppercase">No matches</h2>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">Try another product name, size, or category.</p>
           <button type="button" onClick={resetDiscovery} className="primary-action mt-6 min-h-11 px-6 py-3 text-xs">Clear filters</button>

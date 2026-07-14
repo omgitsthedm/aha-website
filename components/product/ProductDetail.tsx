@@ -216,7 +216,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 onClick={toggleWishlist}
                 aria-pressed={wishlisted}
                 aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                className={`inline-flex h-14 w-14 items-center justify-center border transition-colors ${wishlisted ? "border-accent bg-rose text-cream" : "border-border/10 text-muted hover:border-accent hover:text-cream"}`}
+                className={`inline-flex h-14 w-14 items-center justify-center border transition-colors ${wishlisted ? "border-accent bg-rose text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}
               >
                 <svg className="h-5 w-5" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -260,7 +260,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
       />
 
         {related.length > 0 && (
-          <section aria-labelledby="related-title" className="mt-24 border-t border-border/40 pt-10">
+          <section aria-labelledby="related-title" className="reveal-block mt-24 border-t border-border/40 pt-10">
             <div className="mb-7 flex items-end justify-between gap-4">
               <h2 id="related-title" className="font-display text-[clamp(2rem,5vw,4rem)] font-black uppercase leading-none tracking-[-0.05em]">Related pieces</h2>
               <Link href="/shop" className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Shop all</Link>
@@ -269,12 +269,12 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               {related.map((item) => {
                 const image = item.images[0];
                 return (
-                  <Link key={item.id} href={`/product/${item.slug}`} className="group block">
-                    <div className="relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">
-                      {image ? <Image src={image} alt={item.name} fill className={isPrintfulImage(image) ? "object-contain transition-transform duration-300 group-hover:scale-[1.02]" : "object-cover transition-transform duration-300 group-hover:scale-[1.02]"} sizes="(max-width: 768px) 50vw, 25vw" /> : null}
+                  <Link key={item.id} href={`/product/${item.slug}`} className="group paper-lift block focus-visible:outline-offset-4">
+                    <div className="fold-surface relative aspect-[3/4] overflow-hidden">
+                      {image ? <Image src={image} alt={item.name} fill className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 768px) 50vw, 25vw" /> : null}
                     </div>
-                    <h3 className="mt-3 font-display text-sm font-black uppercase leading-tight">{item.name}</h3>
-                    <p className="mt-1 text-xs font-bold text-muted">{item.priceFormatted}</p>
+                    <h3 className="mt-3 font-display text-sm font-black uppercase leading-tight group-hover:text-accent">{item.name}</h3>
+                    <p className="mt-1 font-mono text-xs font-bold text-muted">{item.priceFormatted}</p>
                   </Link>
                 );
               })}
