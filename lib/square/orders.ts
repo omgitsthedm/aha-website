@@ -7,6 +7,8 @@ export interface LineItem {
 
 export interface CreateOrderRequest {
   lineItems: LineItem[];
+  /** Square Customer id — links the order to the CRM profile (best-effort). */
+  customerId?: string;
   shippingAddress?: {
     addressLine1: string;
     addressLine2?: string;
@@ -21,6 +23,7 @@ export interface CreateOrderRequest {
 
 export interface SquareOrderInput {
   location_id: string | undefined;
+  customer_id?: string;
   pricing_options: { auto_apply_taxes: true };
   line_items: Array<{ catalog_object_id: string; quantity: string }>;
   fulfillments: Array<{
@@ -46,6 +49,7 @@ export interface SquareOrderInput {
 export function buildSquareOrder(request: CreateOrderRequest): SquareOrderInput {
   return {
     location_id: process.env.SQUARE_LOCATION_ID,
+    ...(request.customerId ? { customer_id: request.customerId } : {}),
     pricing_options: { auto_apply_taxes: true },
     line_items: request.lineItems.map((item) => ({
       catalog_object_id: item.catalogObjectId,

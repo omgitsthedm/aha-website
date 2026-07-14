@@ -26852,6 +26852,114 @@
    "costEstimate": 2525,
    "costCurrency": "USD",
    "costVerifiedAt": "2026-07-12T09:04:12.751Z"
+  },
+  "black-sheep-embroidered-crew-socks-black-l-xl-12675": {
+   "printfulCatalogVariantId": 12675,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "embroidery_outside_left",
+     "technique": "embroidery",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-accessory",
+   "costEstimate": 2290,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-14T06:55:08.288Z"
+  },
+  "black-sheep-embroidered-crew-socks-black-s-m-12674": {
+   "printfulCatalogVariantId": 12674,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "embroidery_outside_left",
+     "technique": "embroidery",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-accessory",
+   "costEstimate": 2290,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-14T06:55:08.288Z"
+  },
+  "black-sheep-embroidered-crew-socks-heather-grey-l-xl-12677": {
+   "printfulCatalogVariantId": 12677,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "embroidery_outside_left",
+     "technique": "embroidery",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-accessory",
+   "costEstimate": 2290,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-14T06:55:08.288Z"
+  },
+  "black-sheep-embroidered-crew-socks-heather-grey-s-m-12676": {
+   "printfulCatalogVariantId": 12676,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "embroidery_outside_left",
+     "technique": "embroidery",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-accessory",
+   "costEstimate": 2290,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-14T06:55:08.288Z"
+  },
+  "black-sheep-embroidered-crew-socks-white-l-xl-12679": {
+   "printfulCatalogVariantId": 12679,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "embroidery_outside_left",
+     "technique": "embroidery",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-accessory",
+   "costEstimate": 2290,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-14T06:55:08.288Z"
+  },
+  "black-sheep-embroidered-crew-socks-white-s-m-12678": {
+   "printfulCatalogVariantId": 12678,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "embroidery_outside_left",
+     "technique": "embroidery",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-accessory",
+   "costEstimate": 2290,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-14T06:55:08.288Z"
   }
  }
 }

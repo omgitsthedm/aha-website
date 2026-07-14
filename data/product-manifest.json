@@ -18316,6 +18316,108 @@
         "women",
         "unisex"
       ]
+    },
+    {
+      "ahaProductId": "black-sheep-embroidered-crew-socks",
+      "slug": "black-sheep-embroidered-crew-socks",
+      "title": "Black Sheep Embroidered Crew Socks",
+      "shortDescription": "Black Sheep Embroidered Crew Socks",
+      "fullDescription": "The black sheep is the After Hours Agenda mascot: the one that wanders off from the flock and comes back with better stories. Stitched small on the outside of the ankle, it stays quiet until someone catches it - which is exactly the point.",
+      "storySource": "authored",
+      "productType": "accessory",
+      "collectionIds": [
+        "accessories"
+      ],
+      "status": "active",
+      "retailPrice": 3700,
+      "currency": "USD",
+      "fitDescription": "Standard unisex fit \u2014 true to size.",
+      "fabricDescription": "Ribbed knit crew sock - 77% polyester, 17% cotton, 3% elastane, 3% rubber. Cushioned sole.",
+      "printMethod": "Embroidery (auto-digitized)",
+      "careInstructions": "Machine wash cold, inside out. Tumble dry low. Do not iron the embroidery.",
+      "productionNote": "Made to order and printed just for you. Production takes 2\u20135 business days before shipping.",
+      "shippingNote": "Free shipping on every order. Delivery includes production time plus carrier transit.",
+      "returnsNote": "Exchanges and returns on unworn items within 30 days. Misprints and defects are always on us.",
+      "sizeGuideId": "sg-accessory",
+      "featuredImage": "/products/black-sheep-embroidered-crew-socks.webp",
+      "galleryImages": [],
+      "seoTitle": "Black Sheep Embroidered Crew Socks \u2014 After Hours Agenda",
+      "seoDescription": "Black Sheep Embroidered Crew Socks. NYC streetwear, printed to order. Free shipping.",
+      "variants": [
+        {
+          "ahaVariantId": "black-sheep-embroidered-crew-socks-black-l-xl-12675",
+          "ahaProductId": "black-sheep-embroidered-crew-socks",
+          "sku": "black-sheep-embroidered-crew-socks-12675",
+          "size": "L/XL",
+          "color": "Black",
+          "retailPrice": 3700,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 0
+        },
+        {
+          "ahaVariantId": "black-sheep-embroidered-crew-socks-black-s-m-12674",
+          "ahaProductId": "black-sheep-embroidered-crew-socks",
+          "sku": "black-sheep-embroidered-crew-socks-12674",
+          "size": "S/M",
+          "color": "Black",
+          "retailPrice": 3700,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 1
+        },
+        {
+          "ahaVariantId": "black-sheep-embroidered-crew-socks-heather-grey-l-xl-12677",
+          "ahaProductId": "black-sheep-embroidered-crew-socks",
+          "sku": "black-sheep-embroidered-crew-socks-12677",
+          "size": "L/XL",
+          "color": "Heather Grey",
+          "retailPrice": 3700,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 2
+        },
+        {
+          "ahaVariantId": "black-sheep-embroidered-crew-socks-heather-grey-s-m-12676",
+          "ahaProductId": "black-sheep-embroidered-crew-socks",
+          "sku": "black-sheep-embroidered-crew-socks-12676",
+          "size": "S/M",
+          "color": "Heather Grey",
+          "retailPrice": 3700,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 3
+        },
+        {
+          "ahaVariantId": "black-sheep-embroidered-crew-socks-white-l-xl-12679",
+          "ahaProductId": "black-sheep-embroidered-crew-socks",
+          "sku": "black-sheep-embroidered-crew-socks-12679",
+          "size": "L/XL",
+          "color": "White",
+          "retailPrice": 3700,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 4
+        },
+        {
+          "ahaVariantId": "black-sheep-embroidered-crew-socks-white-s-m-12678",
+          "ahaProductId": "black-sheep-embroidered-crew-socks",
+          "sku": "black-sheep-embroidered-crew-socks-12678",
+          "size": "S/M",
+          "color": "White",
+          "retailPrice": 3700,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 5
+        }
+      ],
+      "ogImage": "/products/black-sheep-embroidered-crew-socks.webp"
     }
   ]
 }

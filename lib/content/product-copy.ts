@@ -1,5 +1,19 @@
 import type { Product, Collection } from "@/lib/utils/types";
 import type { ProductEnrichment } from "@/lib/data/enrichment";
+import { loadProductMap } from "@/lib/data/products";
+
+/** fullDescription from the manifest, only when explicitly authored (factory spec.story). */
+function getAuthoredStory(slug: string): string | null {
+  try {
+    const manifest = loadProductMap().get(slug) as { storySource?: string; fullDescription?: string } | undefined;
+    if (manifest?.storySource === "authored" && manifest.fullDescription) {
+      return manifest.fullDescription.replace(/[—–]/g, "-");
+    }
+  } catch {
+    // manifest unavailable — fall back to the generated story
+  }
+  return null;
+}
 
 const TYPE_NAMES: Record<string, string> = {
   accessory: "accessory",
@@ -75,6 +89,10 @@ export function buildProductStory(
   enrichment?: ProductEnrichment | null,
   collection?: Collection,
 ): string {
+  // An authored story (written at design time, factory spec.story) is the
+  // truth of the design — it always beats the generated template.
+  const authored = getAuthoredStory(product.slug);
+  if (authored) return authored;
   const productType = enrichment?.productType || "";
   const type = TYPE_NAMES[productType] || "piece";
   const collectionLine = collection?.description

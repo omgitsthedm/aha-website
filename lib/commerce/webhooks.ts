@@ -74,10 +74,23 @@ export async function applySquareEvent(event: unknown): Promise<void> {
   }
 }
 
-/** Printful: reconcile fulfillment + shipment status. */
+/** Printful: reconcile fulfillment + shipment status; record catalog signals. */
 export async function applyPrintfulEvent(event: unknown): Promise<void> {
   if (!isDbConfigured()) return;
   const type = String(get(event, "type") || "");
+
+  // Catalog signals (v2 webhooks): blank prices and stock move under us in
+  // real time. The raw payload is already stored in webhook_events; an audit
+  // row makes them visible on /ops and greppable for the margin/liveness rails.
+  if (type === "catalog_price_changed" || type === "catalog_stock_updated") {
+    await db().insert(auditLog).values({
+      entityType: "provider", entityId: "printful",
+      action: `webhook:${type}`, newStatus: type === "catalog_price_changed" ? "price_changed" : "stock_updated",
+      source: "webhook", metadataJson: (get(event, "data") ?? {}) as Record<string, unknown>,
+    });
+    return;
+  }
+
   const printfulOrderId = String(
     get(event, "data", "order", "id") ?? get(event, "data", "shipment", "order_id") ?? ""
   );

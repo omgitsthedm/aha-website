@@ -20,10 +20,38 @@ interface CreateVariationSpec {
 interface CreateItemBody {
   name: string;
   description?: string;
+  /** Rich story shown in Square dashboards/receipts; plain description remains the fallback. */
+  descriptionHtml?: string;
+  /** Category name; found or created as a Square CATEGORY and linked to the item. */
+  categoryName?: string;
   variations: CreateVariationSpec[];
   imageUrls?: string[];
   allowDuplicateName?: boolean;
   dryRun?: boolean;
+}
+
+/** Find-or-create a Square CATEGORY by name; returns its id. */
+async function ensureCategory(name: string): Promise<string | null> {
+  try {
+    const found = await squareRequest<{ objects?: SquareObject[] }>("/catalog/search", {
+      method: "POST",
+      body: { object_types: ["CATEGORY"], query: { exact_query: { attribute_name: "name", attribute_value: name } } },
+      revalidate: 0,
+    });
+    const hit = (found.objects || []).find((o) => !("is_deleted" in o && o.is_deleted));
+    if (hit) return hit.id;
+    const created = await squareRequest<{ catalog_object?: SquareObject }>("/catalog/object", {
+      method: "POST",
+      body: {
+        idempotency_key: randomUUID(),
+        object: { type: "CATEGORY", id: "#category", category_data: { name } },
+      },
+      revalidate: 0,
+    });
+    return created.catalog_object?.id ?? null;
+  } catch {
+    return null; // category is enrichment, never a reason to fail creation
+  }
 }
 
 interface SquareObject {
@@ -72,6 +100,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, dryRun: true, wouldCreate: { name: body.name, variations: body.variations.length, images: body.imageUrls?.length ?? 0 } });
   }
 
+  const categoryId = body.categoryName ? await ensureCategory(body.categoryName) : null;
+
   // Create item + variations in one upsert.
   const itemTempId = "#item";
   const upsert = await squareRequest<{ catalog_object?: SquareObject; id_mappings?: { client_object_id: string; object_id: string }[] }>(
@@ -86,6 +116,8 @@ export async function POST(request: Request) {
           item_data: {
             name: body.name,
             description: body.description,
+            ...(body.descriptionHtml ? { description_html: body.descriptionHtml } : {}),
+            ...(categoryId ? { categories: [{ id: categoryId }], reporting_category: { id: categoryId } } : {}),
             variations: body.variations.map((v, i) => ({
               type: "ITEM_VARIATION",
               id: `#variation${i}`,

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { squareRequest } from "@/lib/square/client";
 import { createPricedSquareOrder } from "@/lib/square/orders";
+import { findOrCreateCustomer } from "@/lib/square/customers";
 import { getSquareLocationId } from "@/lib/commerce/runtime";
 import {
   revalidateCart, createOrder, markOrderPaid, markOrderFailed, findPaidOrderByIdempotencyKey,
@@ -78,9 +79,12 @@ export async function POST(request: Request) {
   // 2) Square prices the order (price + location tax). Shipping address drives destination tax.
   const addr = body.contact.shippingAddress as Record<string, string> | undefined;
   const { firstName, lastName } = splitName(body.contact.shippingName);
+  // CRM: link the order to a Square Customer profile. Best-effort — never blocks payment.
+  const customerId = await findOrCreateCustomer(body.contact.email, body.contact.shippingName).catch(() => null);
   let priced;
   try {
     priced = await createPricedSquareOrder({
+      ...(customerId ? { customerId } : {}),
       lineItems: cart.items.map((it) => ({ catalogObjectId: it.squareVariationId, quantity: String(it.quantity) })),
       shippingAddress: addr ? {
         addressLine1: addr.address1, locality: addr.city,

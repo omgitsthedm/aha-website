@@ -28,6 +28,14 @@ export async function POST(request: Request) {
 
   const action = new URL(request.url).searchParams.get("action") || "inspect";
 
+  // READ-ONLY: fetch any catalog object (item + variations) for map repair.
+  if (action === "object") {
+    const body = await request.json().catch(() => ({})) as { objectId?: string };
+    if (!body.objectId) return NextResponse.json({ ok: false, error: "objectId required" }, { status: 400 });
+    const res = await squareRequest<{ object?: unknown }>(`/catalog/object/${body.objectId}`, { revalidate: 0 });
+    return NextResponse.json({ ok: true, object: res.object ?? null });
+  }
+
   if (action === "attach") {
     const body = await request.json().catch(() => ({})) as { itemId?: string; name?: string; imageUrls?: string[] };
     if (!body.itemId || !Array.isArray(body.imageUrls) || body.imageUrls.length === 0) {

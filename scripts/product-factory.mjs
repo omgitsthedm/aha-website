@@ -95,7 +95,7 @@ async function assertArtReachable(url, { mockupOnly = false } = {}) {
   return {};
 }
 
-async function generateMockups(catalogProductId, variantIds, artUrl, placement) {
+async function generateMockups(catalogProductId, variantIds, artUrl, placement, technique = "dtg") {
   try {
     const task = await pf("/mockup-tasks", "POST", {
       format: "jpg",
@@ -103,7 +103,7 @@ async function generateMockups(catalogProductId, variantIds, artUrl, placement) 
         source: "catalog",
         catalog_product_id: catalogProductId,
         catalog_variant_ids: variantIds.slice(0, 8),
-        placements: [{ placement, technique: "dtg", layers: [{ type: "file", url: artUrl }] }],
+        placements: [{ placement, technique, layers: [{ type: "file", url: artUrl }] }],
       }],
     });
     const taskIds = (task.data || []).map((t) => t.id).filter(Boolean);
@@ -230,18 +230,52 @@ async function main() {
       (!wantSizes || wantSizes.includes(String(v.size).toUpperCase()))
     );
     if (!chosen.length) throw new Error("No catalog variants match the requested colors/sizes");
-    const placement = spec.placement || "front";
-    const technique = spec.technique || "dtg";
-    const validPlacement = (productData.placements || []).some((pl) => pl.placement === placement && pl.technique === technique);
-    if (!validPlacement) throw new Error(`Placement ${placement}/${technique} not offered for ${productData.name}. Offered: ${(productData.placements || []).map((pl) => `${pl.placement}/${pl.technique}`).join(", ")}`);
+
+    // ── Blank intelligence: derive technique/placement/options from the blank
+    //    itself so ANY product type (dtg, embroidery, sublimation, cut-sew,
+    //    stickers, uv) works from the same simple spec. ──
+    const blankTechniques = (productData.techniques || []).map((t) => t.key);
+    const defaultTechnique = (productData.techniques || []).find((t) => t.is_default)?.key || blankTechniques[0] || "dtg";
+    const technique = spec.technique || defaultTechnique;
+    if (blankTechniques.length && !blankTechniques.includes(technique)) {
+      throw new Error(`Technique ${technique} not offered for ${productData.name}. Offered: ${blankTechniques.join(", ")}`);
+    }
+    const offered = productData.placements || [];
+    const placement = spec.placement
+      || offered.find((pl) => (pl.technique ?? technique) === technique && /^(front|default)/.test(pl.placement))?.placement
+      || offered[0]?.placement
+      || "front";
+    const validPlacement = offered.some((pl) => pl.placement === placement);
+    if (!validPlacement) throw new Error(`Placement ${placement} not offered for ${productData.name}. Offered: ${offered.map((pl) => pl.placement).join(", ")}`);
+
+    // Required product options (e.g. cut-sew stitch_color) are auto-filled with
+    // the spec's value or a sensible default, and recorded for every order.
+    let productOptions = spec.productOptions || null;
+    if (!productOptions) {
+      const optionDefs = (productData.product_options || []).filter((o) => o.required || o.name === "stitch_color");
+      if (optionDefs.some((o) => o.name === "stitch_color") || technique === "cut-sew") {
+        productOptions = [{ name: "stitch_color", value: spec.stitchColor || "black" }];
+      }
+    }
+    // Layer options (e.g. 3d_puff on embroidered hats) pass straight through.
+    const layerOptions = spec.layerOptions || null;
+
+    if (spec.story && String(spec.story).trim().length < 40) {
+      throw new Error("spec.story is too short — write the real story of the design (2+ sentences).");
+    }
 
     plan = {
       kind: "new", spec,
       garmentName: productData.name,
       artUrl: spec.artUrl,
+      productOptions,
       variants: chosen.map((v) => ({
         catalogVariantId: v.id, color: v.color, size: String(v.size).toUpperCase(),
-        placements: [{ placement, technique, fileUrl: spec.artUrl, ...(spec.position ? { position: spec.position } : {}) }],
+        placements: [{
+          placement, technique, fileUrl: spec.artUrl,
+          ...(spec.position ? { position: spec.position } : {}),
+          ...(layerOptions ? { layerOptions } : {}),
+        }],
       })),
     };
   }
@@ -280,7 +314,7 @@ async function main() {
   // ── Mockups (Printful CDN URLs, publicly fetchable for Square upload) ──
   let mockups = [];
   if (plan.kind === "new") {
-    mockups = await generateMockups(plan.spec.garmentCatalogProductId, plan.variants.map((v) => v.catalogVariantId), plan.artUrl, plan.variants[0].placements[0].placement);
+    mockups = await generateMockups(plan.spec.garmentCatalogProductId, plan.variants.map((v) => v.catalogVariantId), plan.artUrl, plan.variants[0].placements[0].placement, plan.variants[0].placements[0].technique);
     console.log(`  mockups generated: ${mockups.length}`);
   }
   const imageUrls = mockups.slice(0, 4).map((m) => m.url);
@@ -290,7 +324,15 @@ async function main() {
   const sizes = plan.kind === "resurrect"
     ? plan.variants.map((v) => ({ name: String(v.manifestVariant.size), priceCents: priceFor(v), sku: v.manifestVariant.sku }))
     : plan.variants.map((v) => ({ name: v.color && plan.variants.some((x) => x.color !== v.color) ? `${v.color} / ${v.size}` : v.size, priceCents: priceFor(v), sku: `${slug}-${v.catalogVariantId}` }));
-  const square = await createSquareItem({ name: title, description: `${title} by After Hours Agenda. Printed to order.`, variations: sizes, imageUrls });
+  const story = plan.kind === "new" ? plan.spec.story : plan.product?.fullDescription;
+  const description = story || `${title} by After Hours Agenda. Printed to order.`;
+  const square = await createSquareItem({
+    name: title,
+    description,
+    descriptionHtml: story ? `<p>${story}</p><p>Printed to order in 2–5 business days. Free shipping.</p>` : undefined,
+    categoryName: plan.kind === "new" ? (plan.spec.categoryName || plan.spec.productType || "tee") : plan.product?.productType,
+    variations: sizes, imageUrls,
+  });
   console.log(`  square item: ${square.itemId} (${Object.keys(square.variationIds).length} variations)`);
   if (square.imageErrors?.length) console.warn("  ⚠ image issues:", square.imageErrors);
 
@@ -322,11 +364,17 @@ async function main() {
     const variants = plan.variants.map((v, i) => {
       const optionKey = slugify(v.color ? `${v.color}-${v.size}` : v.size) || String(i);
       const vid = `${slug}-${optionKey}-${v.catalogVariantId}`;
-      const nameKey = Object.keys(square.variationIds).find((k) => k.toUpperCase().includes(v.size)) || v.size;
-      squareMapDoc.map[vid] = { squareCatalogObjectId: square.itemId, squareVariationId: square.variationIds[nameKey], squareLocationId: "FGKRPYEXNV482" };
+      // exact variation-name match (mirrors how the Square variations were named)
+      const expectedName = v.color && plan.variants.some((x) => x.color !== v.color) ? `${v.color} / ${v.size}` : v.size;
+      const squareVariationId = square.variationIds[expectedName]
+        ?? square.variationIds[Object.keys(square.variationIds).find((k) => k.toUpperCase() === expectedName.toUpperCase()) ?? ""];
+      if (!squareVariationId) throw new Error(`No Square variation named "${expectedName}"`);
+      squareMapDoc.map[vid] = { squareCatalogObjectId: square.itemId, squareVariationId, squareLocationId: "FGKRPYEXNV482" };
       pfMapDoc.map[vid] = {
         printfulCatalogVariantId: v.catalogVariantId, printfulStoreId: Number(PF_STORE),
-        printfulPlacements: v.placements, printfulRegionAvailability: ["north_america"],
+        printfulPlacements: v.placements.map(({ layerOptions, ...pl }) => pl),
+        ...(plan.productOptions ? { printfulProductOptions: plan.productOptions } : {}),
+        printfulRegionAvailability: ["north_america"],
         printfulSizeGuideReference: `sg-${spec.productType || "tee"}`,
         costEstimate: v.cost, costCurrency: "USD", costVerifiedAt: now,
       };
@@ -336,13 +384,21 @@ async function main() {
         printfulSource: "catalog", sortOrder: i,
       };
     });
+    const technique = plan.variants[0]?.placements[0]?.technique || "dtg";
+    const PRINT_METHOD = {
+      dtg: "DTG/DTF", embroidery: "Embroidery (auto-digitized)", "cut-sew": "All-over cut & sew",
+      sublimation: "Sublimation", uv: "UV print", digital: "Digital print", knitwear: "Knitted",
+    };
     products.push({
-      ahaProductId: slug, slug, title, shortDescription: title,
-      fullDescription: `${title} by After Hours Agenda. Printed to order.`,
+      ahaProductId: slug, slug, title, shortDescription: spec.shortDescription || title,
+      fullDescription: spec.story || `${title} by After Hours Agenda. Printed to order.`,
+      ...(spec.story ? { storySource: "authored" } : {}),
       productType: spec.productType || "tee", collectionIds: spec.collectionIds || ["tees"],
       status: "active", retailPrice: priceCents, currency: "USD",
-      fitDescription: "Standard unisex fit — true to size.", fabricDescription: spec.fabricDescription || "",
-      printMethod: "DTG/DTF",
+      fitDescription: spec.fitDescription || "Standard unisex fit — true to size.",
+      fabricDescription: spec.fabricDescription || "See size guide for materials.",
+      ogImage: "/brand/og-image.png",
+      printMethod: PRINT_METHOD[technique] || technique,
       careInstructions: "Machine wash cold, inside out. Tumble dry low. Do not iron the print. Do not dry clean.",
       productionNote: "Made to order and printed just for you. Production takes 2–5 business days before shipping.",
       shippingNote: "Free shipping on every order. Delivery includes production time plus carrier transit.",
