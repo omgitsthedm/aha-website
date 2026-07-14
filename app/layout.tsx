@@ -4,7 +4,6 @@ import "./globals.css";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { PilotNav } from "@/components/ui/PilotNav";
 import { PilotFooter } from "@/components/ui/PilotFooter";
-import { getAllProducts } from "@/lib/square/catalog";
 import { PlatformLayer } from "@/components/ui/PlatformLayer";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
@@ -12,7 +11,7 @@ const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"], // 500/600 are unused site-wide
 });
 
 const poppins = Poppins({
@@ -71,26 +70,11 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Lightweight index for the header search overlay. getAllProducts is
-  // request-cached, so pages that also fetch the catalog pay no extra call.
-  let searchIndex: { name: string; slug: string; priceFormatted: string; image: string }[] = [];
-  try {
-    const products = await getAllProducts();
-    searchIndex = products.map((p) => ({
-      name: p.name,
-      slug: p.slug,
-      priceFormatted: p.priceFormatted,
-      image: p.images[0] || "",
-    }));
-  } catch {
-    // Search degrades to empty results; shopping is unaffected.
-  }
-
   return (
     <html
       lang="en"
@@ -102,7 +86,7 @@ export default async function RootLayout({
           <a href="#main-content" className="fixed left-3 top-3 z-[500] -translate-y-24 bg-rose px-4 py-3 font-mono text-xs font-bold text-cream transition-transform focus:translate-y-0">Skip to content</a>
           <PlatformLayer />
           <GoogleAnalytics />
-          <PilotNav searchIndex={searchIndex} />
+          <PilotNav />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
           <PilotFooter />
         </CartProvider>

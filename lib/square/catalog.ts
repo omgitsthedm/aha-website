@@ -4,6 +4,7 @@ import { mapSquareItemToProduct, mapSquareCategoryToCollection } from "@/lib/uti
 import { loadProducts, loadProductMap } from "@/lib/data/products";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { buildPreviewCollections, buildPreviewProducts } from "@/lib/data/preview-catalog";
 
 function previewCatalogFallbackAllowed(): boolean {
@@ -89,11 +90,15 @@ export function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
   return index;
 }
 
-export const getAllProducts = cache(async function getAllProducts(): Promise<Product[]> {
-  if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
-    return buildPreviewProducts().filter(isCurrentStorefrontProduct);
-  }
-  let allItems: any[] = [];
+// The Square catalog fetch is a POST (`/catalog/search`), which Next's fetch
+// data-cache never stores — so the `revalidate` hint on the fetch is a no-op and
+// every uncached render re-paginated the whole catalog (the bulk of PDP TTFB).
+// unstable_cache memoizes the *return value* across requests for 300s, matching
+// the ISR staleness already in effect. Prices stay display-only; the charge is
+// always re-priced live at /api/create-payment, so this adds no pricing risk.
+const fetchAllProductsCached = unstable_cache(
+  async function fetchAllProductsFromSquare(): Promise<Product[]> {
+    let allItems: any[] = [];
   let allRelated: any[] = [];
   let cursor: string | undefined;
 
@@ -161,15 +166,25 @@ export const getAllProducts = cache(async function getAllProducts(): Promise<Pro
 
   // Enrich Square-mapped products with AHA taxonomy from the internal manifest.
   const productMap = loadProductMap();
-  return products.map((product) => {
-    const ahaProduct = productMap.get(product.slug);
-    if (!ahaProduct) return product;
-    return {
-      ...product,
-      category: ahaProduct.category,
-      gender: ahaProduct.gender,
-    };
-  });
+    return products.map((product) => {
+      const ahaProduct = productMap.get(product.slug);
+      if (!ahaProduct) return product;
+      return {
+        ...product,
+        category: ahaProduct.category,
+        gender: ahaProduct.gender,
+      };
+    });
+  },
+  ["square-catalog-all-products"],
+  { revalidate: 300, tags: ["square-catalog"] }
+);
+
+export const getAllProducts = cache(async function getAllProducts(): Promise<Product[]> {
+  if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
+    return buildPreviewProducts().filter(isCurrentStorefrontProduct);
+  }
+  return fetchAllProductsCached();
 });
 
 export async function getProduct(slug: string): Promise<Product | null> {

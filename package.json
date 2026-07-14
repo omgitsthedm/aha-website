@@ -2,6 +2,13 @@
   "name": "aha-website",
   "version": "1.0.0",
   "private": true,
+  "browserslist": [
+    "last 2 years",
+    "not dead",
+    "not op_mini all",
+    "iOS >= 15",
+    "Safari >= 15"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",

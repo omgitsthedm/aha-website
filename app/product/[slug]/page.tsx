@@ -7,12 +7,24 @@ import { notFound } from "next/navigation";
 import type { Product } from "@/lib/utils/types";
 import type { Metadata } from "next";
 import { buildProductStory } from "@/lib/content/product-copy";
+import { loadProducts } from "@/lib/data/products";
 
 export const revalidate = 300;
-
-// Pages are generated on-demand and cached via ISR.
-// No generateStaticParams. This avoids hammering Square API at build time.
 export const dynamicParams = true;
+
+// Prebuild every known PDP from the LOCAL manifest (no Square calls at build) so
+// product pages are served from the ISR cache instead of a cold on-demand render
+// (which re-paginated the whole Square catalog — the ~1.8s TTFB). Prices still
+// refresh every 300s via `revalidate`, and the charge is re-priced live, so this
+// changes nothing about how orders are priced. Unknown slugs still render on
+// demand thanks to `dynamicParams`.
+export function generateStaticParams() {
+  try {
+    return loadProducts().map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
+}
 
 const productMetaTitle = (name: string) => {
   const stem = name.length < 22 ? `${name} Streetwear` : name;
@@ -59,6 +71,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   let product: Product | null = null;
   let products: Product[] = [];
 
+  // Enrichment is synchronous local-manifest data keyed by slug — start the live
+  // Printful stock fetch in parallel with the Square catalog fetch instead of
+  // waterfalling after it (removes one serial network hop from PDP TTFB).
+  const enrichment = getProductEnrichment(slug);
+  const stockPromise = enrichment
+    ? getStockByCatId(Object.values(enrichment.catIdBySize)).catch(() => ({} as Record<number, boolean>))
+    : Promise.resolve({} as Record<number, boolean>);
+
   try {
     [product, products] = await Promise.all([
       getProduct(slug),
@@ -80,13 +100,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     )
     .slice(0, 4);
 
-  const enrichment = getProductEnrichment(product.slug);
   const storyDescription = buildProductStory(product, enrichment);
 
   // Live Printful stock per size (5-min fresh; fails open to in-stock).
   const stockBySize: Record<string, boolean> = {};
   if (enrichment) {
-    const stock = await getStockByCatId(Object.values(enrichment.catIdBySize));
+    const stock = await stockPromise;
     for (const [size, catId] of Object.entries(enrichment.catIdBySize)) {
       stockBySize[size] = stock[catId] ?? true;
     }

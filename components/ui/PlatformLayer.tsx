@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { InAppBrowserNudge } from "./InAppBrowserNudge";
-import { InstallPrompt } from "./InstallPrompt";
+import dynamic from "next/dynamic";
+// Both are progressive-enhancement, event/state-gated, and render null until they
+// decide to show — so defer them off the initial bundle (no SSR output anyway).
+const InAppBrowserNudge = dynamic(() => import("./InAppBrowserNudge").then((m) => m.InAppBrowserNudge), { ssr: false });
+const InstallPrompt = dynamic(() => import("./InstallPrompt").then((m) => m.InstallPrompt), { ssr: false });
 // Side-effect import: starts buffering `beforeinstallprompt` at first paint,
 // before InstallPrompt mounts, so no install opportunity is missed.
 import "@/lib/platform/pwaInstall";

@@ -60,6 +60,8 @@ export function CheckoutForm({ squareConfig }: Props) {
   const router = useRouter();
 
   const [sdkReady, setSdkReady] = useState(false);
+  const [sdkFailed, setSdkFailed] = useState(false); // SDK slow/failed to load — offer a reload
+  const [slowPay, setSlowPay] = useState(false); // charge is taking a while (slow connection)
   const [status, setStatus] = useState<"idle" | "paying" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [quote, setQuote] = useState<CheckoutQuote | null>(null);
@@ -104,6 +106,28 @@ export function CheckoutForm({ squareConfig }: Props) {
     if (window.Square) initSquare();
   }, [initSquare]);
 
+  // Watchdog: on a slow/blocked connection the Square SDK script can stall. If
+  // the secure card field still isn't ready after 10s, surface a reload path
+  // instead of a permanently disabled button.
+  useEffect(() => {
+    if (sdkReady) { setSdkFailed(false); return; }
+    const t = window.setTimeout(() => { if (!sdkReady) setSdkFailed(true); }, 10_000);
+    return () => window.clearTimeout(t);
+  }, [sdkReady]);
+
+  // Restore a previously-typed address so a mid-checkout connection drop or
+  // reload doesn't wipe the form. Card data is NEVER stored (Square holds it).
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("aha-checkout-contact");
+      if (saved) setContact((prev) => ({ ...prev, ...JSON.parse(saved) }));
+    } catch { /* private mode / bad JSON — start fresh */ }
+  }, []);
+
+  useEffect(() => {
+    try { localStorage.setItem("aha-checkout-contact", JSON.stringify(contact)); } catch { /* ignore */ }
+  }, [contact]);
+
   useEffect(() => {
     if (items.length > 0) {
       trackCommerceEvent({ name: "begin_checkout", valueCents: total, currency: "USD", quantity: items.reduce((sum, item) => sum + item.quantity, 0) });
@@ -114,30 +138,64 @@ export function CheckoutForm({ squareConfig }: Props) {
     if (getAddressError(contact)) return null;
     setQuoteStatus("loading");
     setQuoteError(null);
+    const body = JSON.stringify({
+      lines: items.map((item) => ({ squareVariationId: item.variationId, quantity: item.quantity })),
+      contact: {
+        shippingName: contact.shippingName,
+        shippingAddress: {
+          address1: contact.address1, city: contact.city, state: contact.state,
+          zip: contact.zip, country: contact.country,
+        },
+      },
+    });
+
+    // One fetch with a 10s timeout. The quote is fully idempotent (no charge),
+    // so it is safe to retry once on a pure network failure / timeout.
+    const attempt = async (): Promise<CheckoutQuote> => {
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), 10_000);
+      try {
+        const response = await fetch("/api/checkout-quote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body,
+          signal: controller.signal,
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          // A real business error (bad address, repriced, unavailable) — not retryable.
+          const err = new Error(data.error || "Final pricing is unavailable.");
+          (err as Error & { fatal?: boolean }).fatal = true;
+          throw err;
+        }
+        return data.quote as CheckoutQuote;
+      } finally {
+        window.clearTimeout(timer);
+      }
+    };
+
     try {
-      const response = await fetch("/api/checkout-quote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          lines: items.map((item) => ({ squareVariationId: item.variationId, quantity: item.quantity })),
-          contact: {
-            shippingName: contact.shippingName,
-            shippingAddress: {
-              address1: contact.address1, city: contact.city, state: contact.state,
-              zip: contact.zip, country: contact.country,
-            },
-          },
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok || !data.ok) throw new Error(data.error || "Final pricing is unavailable.");
-      setQuote(data.quote);
+      let data: CheckoutQuote;
+      try {
+        data = await attempt();
+      } catch (first) {
+        // Retry once ONLY on a transient network/timeout failure, never on a business error.
+        if ((first as Error & { fatal?: boolean }).fatal) throw first;
+        await new Promise((r) => window.setTimeout(r, 800));
+        data = await attempt();
+      }
+      setQuote(data);
       setQuoteStatus("ready");
-      return data.quote as CheckoutQuote;
+      return data;
     } catch (quoteFailure) {
       setQuote(null);
       setQuoteStatus("error");
-      setQuoteError(quoteFailure instanceof Error ? quoteFailure.message : "Final pricing is unavailable.");
+      const isFatal = (quoteFailure as Error & { fatal?: boolean }).fatal;
+      setQuoteError(
+        isFatal
+          ? (quoteFailure instanceof Error ? quoteFailure.message : "Final pricing is unavailable.")
+          : "Couldn't reach us to confirm your total — check your connection and retry."
+      );
       return null;
     }
   }, [items, contact]);
@@ -200,6 +258,10 @@ export function CheckoutForm({ squareConfig }: Props) {
   ) => {
     setStatus("paying");
     setError(null);
+    setSlowPay(false);
+    // Reassure (don't abort) if the charge is slow — the request must run to
+    // completion so we never leave a payment in an unknown state.
+    const slowTimer = window.setTimeout(() => setSlowPay(true), 8_000);
     try {
       const res = await fetch("/api/create-payment", {
         method: "POST",
@@ -230,10 +292,13 @@ export function CheckoutForm({ squareConfig }: Props) {
         // Only a definitive payment decline consumes this payment attempt. Quote/cart validation
         // never reached the Payments API, so keep the stable key.
         if (res.status === 402) idempotencyKeyRef.current = crypto.randomUUID();
+        window.clearTimeout(slowTimer);
+        setSlowPay(false);
         setStatus("error");
         setError(data.error || "We couldn't complete the payment. Your card was not charged.");
         return;
       }
+      window.clearTimeout(slowTimer);
       sessionStorage.setItem("aha-last-order", JSON.stringify({
         orderNumber: data.orderNumber,
         receiptUrl: typeof data.receiptUrl === "string" ? data.receiptUrl : null,
@@ -255,9 +320,12 @@ export function CheckoutForm({ squareConfig }: Props) {
         },
       }));
       clearCart();
+      try { localStorage.removeItem("aha-checkout-contact"); } catch { /* ignore */ }
       router.push(`/order-confirmed?order=${encodeURIComponent(data.orderNumber)}`);
     } catch {
       // Keep the key after an unknown network outcome so a retry is deduped server-side.
+      window.clearTimeout(slowTimer);
+      setSlowPay(false);
       setStatus("error");
       setError("Connection dropped. Tap Pay again. The retry uses the same payment key to prevent a duplicate charge.");
     }
@@ -426,8 +494,17 @@ export function CheckoutForm({ squareConfig }: Props) {
 
               {/* Square Web Payments SDK mounts the secure card field here */}
               <div id="aha-card" className="min-h-[56px] border border-border/60 bg-void p-3" />
-              {!sdkReady && !error && (
+              {!sdkReady && !sdkFailed && !error && (
                 <p className="mt-2 font-body text-xs font-bold text-muted" aria-live="polite">Loading secure card field…</p>
+              )}
+              {!sdkReady && sdkFailed && (
+                <div className="mt-2" aria-live="polite">
+                  <p className="font-body text-xs font-bold text-danger">The secure card field is slow to load — likely your connection.</p>
+                  <button type="button" onClick={() => window.location.reload()}
+                    className="mt-2 min-h-11 border border-border/60 px-3 text-[11px] font-bold uppercase tracking-wide text-cream hover:border-accent hover:text-accent">
+                    Reload to retry
+                  </button>
+                </div>
               )}
             </fieldset>
 
@@ -437,14 +514,24 @@ export function CheckoutForm({ squareConfig }: Props) {
               </p>
             )}
             {quoteError && (
-              <p role="alert" className="mt-4 border border-danger bg-surface px-4 py-3 text-sm font-bold text-danger">
-                {quoteError}
-              </p>
+              <div role="alert" className="mt-4 border border-danger bg-surface px-4 py-3">
+                <p className="text-sm font-bold text-danger">{quoteError}</p>
+                <button type="button" onClick={() => { void loadQuote(); }}
+                  className="mt-2 min-h-11 border border-border/60 px-3 text-[11px] font-bold uppercase tracking-wide text-cream hover:border-accent hover:text-accent">
+                  Retry final total
+                </button>
+              </div>
             )}
 
             {error && (
               <p role="alert" aria-live="assertive" className="mt-4 border border-danger bg-surface px-4 py-3 text-sm font-bold text-danger">
                 {error}
+              </p>
+            )}
+
+            {slowPay && status === "paying" && (
+              <p aria-live="polite" className="mt-4 border border-border/60 bg-surface px-4 py-3 text-sm font-bold text-cream">
+                Still working — your connection looks slow. Please don&rsquo;t close this tab or tap Pay again; we&rsquo;ll confirm as soon as it goes through.
               </p>
             )}
 
@@ -455,9 +542,9 @@ export function CheckoutForm({ squareConfig }: Props) {
             >
               <span className="relative z-10">
                 {status === "paying"
-                  ? "Processing…"
+                  ? (slowPay ? "Still working…" : "Processing…")
                   : !sdkReady
-                    ? "Card payment unavailable"
+                    ? (sdkFailed ? "Card field unavailable — reload above" : "Loading secure card…")
                     : quote
                       ? `Pay ${money(quote.total)}`
                       : "Enter shipping address for final total"}

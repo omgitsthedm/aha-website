@@ -8,9 +8,11 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import dynamic from "next/dynamic";
 import type { CartItem, Product } from "@/lib/utils/types";
-import { CartDrawer } from "./CartDrawer";
-import { AddToCartModal } from "./AddToCartModal";
+// Only shown on open/add — keep them out of the initial bundle on every page.
+const CartDrawer = dynamic(() => import("./CartDrawer").then((m) => m.CartDrawer), { ssr: false });
+const AddToCartModal = dynamic(() => import("./AddToCartModal").then((m) => m.AddToCartModal), { ssr: false });
 
 interface CartContextType {
   items: CartItem[];

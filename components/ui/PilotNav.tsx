@@ -3,9 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
-import { SearchOverlay, type SearchIndexItem } from "@/components/ui/SearchOverlay";
+import { type SearchIndexItem } from "@/components/ui/SearchOverlay";
+
+// Portal overlay that only renders when opened — load it on demand.
+const SearchOverlay = dynamic(() => import("@/components/ui/SearchOverlay").then((m) => m.SearchOverlay), { ssr: false });
 
 const genderLinks = [
   {
@@ -52,12 +56,25 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function PilotNav({ searchIndex = [] }: { searchIndex?: SearchIndexItem[] }) {
+export function PilotNav() {
   const { totalItems, setCartOpen } = useCart();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMobileSection, setOpenMobileSection] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  // Search index is fetched lazily the first time search opens, so it no longer
+  // blocks (or bloats) every page render.
+  const [searchIndex, setSearchIndex] = useState<SearchIndexItem[]>([]);
+
+  useEffect(() => {
+    if (!searchOpen || searchIndex.length > 0) return;
+    let active = true;
+    fetch("/api/search-index")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => { if (active && Array.isArray(data)) setSearchIndex(data); })
+      .catch(() => { /* search degrades to empty; shopping unaffected */ });
+    return () => { active = false; };
+  }, [searchOpen, searchIndex.length]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
