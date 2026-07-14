@@ -14492,10 +14492,12 @@
      "technique": "phone-case",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Pattern_Tile.png",
      "position": {
-      "width": 14.1308,
-      "height": 14.1308,
-      "top": -2.271,
-      "left": 0
+      "width": 9.5888,
+      "height": 9.5888,
+      "top": 0,
+      "left": 2.271,
+      "areaWidth": 14.1308,
+      "areaHeight": 9.5888
      }
     },
     {
@@ -14503,21 +14505,12 @@
      "technique": "phone-case",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Pattern_Tile.png",
      "position": {
-      "width": 14.1308,
-      "height": 14.1308,
-      "top": -2.271,
-      "left": 0
-     }
-    },
-    {
-     "placement": "label_inside",
-     "technique": "phone-case",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
-     "position": {
-      "width": 8.4465,
-      "height": 5.6464,
-      "top": -0.8178,
-      "left": -0.7233
+      "width": 9.5888,
+      "height": 9.5888,
+      "top": 0,
+      "left": 2.271,
+      "areaWidth": 14.1308,
+      "areaHeight": 9.5888
      }
     }
    ],
@@ -14800,21 +14793,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -14835,21 +14832,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -14870,21 +14871,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -14905,21 +14910,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -14940,21 +14949,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -14975,21 +14988,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -16788,10 +16805,12 @@
      "technique": "cut-sew",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Pattern_Tile.png",
      "position": {
-      "width": 21.3529,
+      "width": 16.5,
       "height": 16.5,
       "top": 0,
-      "left": -2.1765
+      "left": 0.25,
+      "areaWidth": 17,
+      "areaHeight": 16.5
      }
     }
    ],
@@ -16801,7 +16820,13 @@
    "printfulSizeGuideReference": "sg-accessory",
    "costEstimate": 1725,
    "costCurrency": "USD",
-   "costVerifiedAt": "2026-07-14T05:53:32.959Z"
+   "costVerifiedAt": "2026-07-14T05:53:32.959Z",
+   "printfulProductOptions": [
+    {
+     "name": "stitch_color",
+     "value": "black"
+    }
+   ]
   },
   "just-trying-my-best-xs-4865": {
    "printfulCatalogVariantId": 4865,
@@ -17538,10 +17563,12 @@
      "technique": "sublimation",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Pattern_Tile.png",
      "position": {
-      "width": 7.0288,
-      "height": 7.0531,
-      "top": -0.1029,
-      "left": -1.7212
+      "width": 4.2,
+      "height": 4.2,
+      "top": 0.8933,
+      "left": 0,
+      "areaWidth": 4.2,
+      "areaHeight": 5.0933
      }
     },
     {
@@ -17549,10 +17576,12 @@
      "technique": "sublimation",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Pattern_Tile.png",
      "position": {
-      "width": 7.0357,
-      "height": 7.0596,
-      "top": -0.1101,
-      "left": -1.7247
+      "width": 4.2,
+      "height": 4.2,
+      "top": 0.8933,
+      "left": 0,
+      "areaWidth": 4.2,
+      "areaHeight": 5.0933
      }
     }
    ],
@@ -17573,10 +17602,12 @@
      "technique": "sublimation",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Pattern_Tile.png",
      "position": {
-      "width": 7.0288,
-      "height": 7.0531,
-      "top": -0.1029,
-      "left": -1.7212
+      "width": 4.2,
+      "height": 4.2,
+      "top": 0.8933,
+      "left": 0,
+      "areaWidth": 4.2,
+      "areaHeight": 5.0933
      }
     },
     {
@@ -17584,10 +17615,12 @@
      "technique": "sublimation",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Pattern_Tile.png",
      "position": {
-      "width": 7.0357,
-      "height": 7.0596,
-      "top": -0.1101,
-      "left": -1.7247
+      "width": 4.2,
+      "height": 4.2,
+      "top": 0.8933,
+      "left": 0,
+      "areaWidth": 4.2,
+      "areaHeight": 5.0933
      }
     }
    ],
@@ -22544,21 +22577,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 16.8762,
-      "height": 16.8541,
-      "top": 0.5198,
-      "left": -0.9825
+      "width": 15,
+      "height": 11.7679,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 15,
+      "areaHeight": 18
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -22579,21 +22616,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 16.8762,
-      "height": 16.8541,
-      "top": 0.5198,
-      "left": -0.9825
+      "width": 15,
+      "height": 11.7679,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 15,
+      "areaHeight": 18
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -22614,21 +22655,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 16.8762,
-      "height": 16.8541,
-      "top": 0.5198,
-      "left": -0.9825
+      "width": 15,
+      "height": 11.7679,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 15,
+      "areaHeight": 18
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -22649,21 +22694,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 16.8762,
-      "height": 16.8541,
-      "top": 0.5198,
-      "left": -0.9825
+      "width": 15,
+      "height": 11.7679,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 15,
+      "areaHeight": 18
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -22684,21 +22733,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 16.8762,
-      "height": 16.8541,
-      "top": 0.5198,
-      "left": -0.9825
+      "width": 15,
+      "height": 11.7679,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 15,
+      "areaHeight": 18
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -22719,21 +22772,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 16.8762,
-      "height": 16.8541,
-      "top": 0.5198,
-      "left": -0.9825
+      "width": 15,
+      "height": 11.7679,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 15,
+      "areaHeight": 18
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -24612,10 +24669,12 @@
      "technique": "cut-sew",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Pattern_Tile.png",
      "position": {
-      "width": 26.3361,
-      "height": 20.3587,
-      "top": -1.8684,
-      "left": -2.6681
+      "width": 21,
+      "height": 21,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 21,
+      "areaHeight": 37
      }
     },
     {
@@ -24624,9 +24683,11 @@
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Pattern_Tile.png",
      "position": {
       "width": 10,
-      "height": 7.7273,
-      "top": 9.7725,
-      "left": 0
+      "height": 10,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 10,
+      "areaHeight": 17.5
      }
     }
    ],
@@ -24636,7 +24697,13 @@
    "printfulSizeGuideReference": "sg-accessory",
    "costEstimate": 2595,
    "costCurrency": "USD",
-   "costVerifiedAt": "2026-07-14T05:53:32.959Z"
+   "costVerifiedAt": "2026-07-14T05:53:32.959Z",
+   "printfulProductOptions": [
+    {
+     "name": "stitch_color",
+     "value": "black"
+    }
+   ]
   },
   "circle-xs-4865": {
    "printfulCatalogVariantId": 4865,
@@ -26121,21 +26188,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -26156,21 +26227,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -26191,21 +26266,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -26226,21 +26305,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -26261,21 +26344,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],
@@ -26296,21 +26383,25 @@
      "technique": "dtg",
      "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
      "position": {
-      "width": 15.7395,
-      "height": 15.7299,
-      "top": 0.1358,
-      "left": -1.867
+      "width": 12,
+      "height": 9.4143,
+      "top": 1,
+      "left": 0,
+      "areaWidth": 12,
+      "areaHeight": 16
      }
     },
     {
      "placement": "label_inside",
      "technique": "dtg",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Inside.png",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Label_Strip.png",
      "position": {
-      "width": 2.467,
-      "height": 0.9342,
-      "top": 0,
-      "left": 0.0004
+      "width": 2.5,
+      "height": 0.9398,
+      "top": 0.0002,
+      "left": 0,
+      "areaWidth": 2.5,
+      "areaHeight": 0.94
      }
     }
    ],

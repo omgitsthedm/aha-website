@@ -56,8 +56,10 @@ export interface PrintfulPlacement {
   /** Stable, versioned production-file URL OR a Printful file id (one required). */
   fileUrl?: string;
   fileId?: number;
-  /** Print position in inches (width/height/top/left) for catalog-source fulfillment. */
-  position?: { width: number; height: number; top: number; left: number };
+  /** Print position in inches for catalog-source fulfillment. areaWidth/areaHeight
+   *  record the blank's print-area size so the v1 order API (pixel-based, 150dpi)
+   *  can express the same box. */
+  position?: { width: number; height: number; top: number; left: number; areaWidth?: number; areaHeight?: number };
   /** Where the original design source lives (internal reference, not shipped). */
   sourcePath?: string;
   /** Approval / print-test state before a variant may go live. */
@@ -91,6 +93,8 @@ export interface AhaVariant {
   printfulSource: "catalog" | "sync_variant";
   printfulRegionAvailability?: string[];
   printfulPlacements?: PrintfulPlacement[];
+  /** Required product options for ordering (e.g. cut-sew stitch_color). */
+  printfulProductOptions?: { name: string; value: string | boolean | number }[];
   printfulTechnique?: PrintTechnique;
   printfulSizeGuideReference?: string;
 

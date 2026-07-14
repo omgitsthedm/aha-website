@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  aggregateFulfillmentStatus, groupItemsByPrintfulStore, isPrintfulConfirmationAllowed,
+  aggregateFulfillmentStatus, buildStoreOrderRequest, groupItemsByPrintfulStore,
+  groupSourceItemsByPrintfulStore, isPrintfulConfirmationAllowed,
   shouldRetryPrintfulConfirmation,
 } from "@/lib/commerce/fulfillment-state";
 
@@ -95,5 +96,75 @@ describe("catalog-source fulfillment (blank + hosted art)", () => {
     ], 14298228);
     const item = groups.get(14298228)![0] as Extract<import("@/lib/commerce/fulfillment-state").PrintfulOrderItem, { source: "catalog" }>;
     expect(item.placements[0].layers[0]).toEqual({ type: "file", url: "https://x/y.png" });
+  });
+});
+
+describe("buildStoreOrderRequest (v1/v2 API routing)", () => {
+  const recipient = { name: "T", address1: "1 St", city: "NYC", country_code: "US", zip: "10001" };
+  const catalogItem = {
+    printfulStoreId: 14298228, printfulCatalogVariantId: 20357, quantity: 1,
+    printfulPlacements: [{
+      placement: "front_large", technique: "dtg",
+      fileUrl: "https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png",
+      position: { width: 15, height: 11.7679, top: 1, left: 0, areaWidth: 15, areaHeight: 18 },
+    }],
+  };
+  const syncItem = { printfulStoreId: 14298228, printfulSyncVariantId: 4616188601, quantity: 2 };
+
+  it("routes catalog-only batches to v2 with the placements shape (area fields stripped)", () => {
+    const req = buildStoreOrderRequest([catalogItem], recipient)!;
+    expect(req.apiVersion).toBe("v2");
+    const items = req.body.order_items as Array<Record<string, unknown>>;
+    expect(items).toHaveLength(1);
+    const placement = (items[0].placements as Array<{ layers: Array<{ position?: Record<string, number> }> }>)[0];
+    expect(placement.layers[0].position).toEqual({ width: 15, height: 11.7679, top: 1, left: 0 });
+  });
+
+  it("routes any batch containing a sync item to v1, converting catalog items to files", () => {
+    const req = buildStoreOrderRequest([syncItem, catalogItem], recipient)!;
+    expect(req.apiVersion).toBe("v1");
+    const items = req.body.items as Array<Record<string, unknown>>;
+    expect(items[0]).toEqual({ sync_variant_id: 4616188601, quantity: 2 });
+    const files = items[1].files as Array<Record<string, unknown>>;
+    expect(items[1].variant_id).toBe(20357);
+    expect(files[0].type).toBe("front_large");
+    // inches -> pixels at 150dpi, area carried through
+    expect(files[0].position).toEqual({ area_width: 2250, area_height: 2700, width: 2250, height: 1765, top: 150, left: 0 });
+  });
+
+  it("carries product options: v2 product_options / v1 item options", () => {
+    const tote = {
+      printfulStoreId: 14298228, printfulCatalogVariantId: 10457, quantity: 1,
+      printfulProductOptions: [{ name: "stitch_color", value: "black" }],
+      printfulPlacements: [{ placement: "default", technique: "cut-sew", fileUrl: "https://x/tile.png" }],
+    };
+    const v2 = buildStoreOrderRequest([tote], recipient)!;
+    expect((v2.body.order_items as Array<Record<string, unknown>>)[0].product_options)
+      .toEqual([{ name: "stitch_color", value: "black" }]);
+    const v1 = buildStoreOrderRequest([syncItem, tote], recipient)!;
+    expect((v1.body.items as Array<Record<string, unknown>>)[1].options)
+      .toEqual([{ id: "stitch_color", value: "black" }]);
+  });
+
+  it("omits v1 position when the stored position has no area dimensions", () => {
+    const noArea = {
+      printfulStoreId: 14298228, printfulCatalogVariantId: 1, quantity: 1,
+      printfulPlacements: [{ placement: "front", technique: "dtg", fileUrl: "https://x/a.png", position: { width: 12, height: 9, top: 1, left: 0 } }],
+    };
+    const req = buildStoreOrderRequest([syncItem, noArea], recipient)!;
+    const files = (req.body.items as Array<Record<string, unknown>>)[1].files as Array<Record<string, unknown>>;
+    expect(files[0].position).toBeUndefined();
+  });
+
+  it("returns null when nothing in the batch is fulfillable", () => {
+    expect(buildStoreOrderRequest([{ printfulStoreId: 14298228, quantity: 1 }], recipient)).toBeNull();
+  });
+
+  it("groups source items per store keeping only fulfillable ones", () => {
+    const groups = groupSourceItemsByPrintfulStore([
+      syncItem, catalogItem,
+      { printfulStoreId: 14298228, printfulCatalogVariantId: 2, quantity: 1 }, // no placements
+    ], 14298228);
+    expect(groups.get(14298228)).toHaveLength(2);
   });
 });

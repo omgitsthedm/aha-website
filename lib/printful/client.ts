@@ -1,9 +1,12 @@
 const PRINTFUL_BASE_URL = "https://api.printful.com/v2";
+const PRINTFUL_V1_BASE_URL = "https://api.printful.com";
 
 interface PrintfulRequestOptions {
   method?: string;
   body?: Record<string, unknown>;
   storeId?: string;
+  /** v2 (default) or v1 — sync-variant orders are v1-only as of 2026-07. */
+  apiVersion?: "v1" | "v2";
 }
 
 // Simple rate limiter — Printful allows 120 req/min
@@ -34,7 +37,7 @@ export async function printfulRequest<T>(
 
   await waitForRateLimit();
 
-  const { method = "GET", body, storeId } = options;
+  const { method = "GET", body, storeId, apiVersion = "v2" } = options;
   const store = storeId || process.env.PRINTFUL_STORE_ID;
   const token = process.env.PRINTFUL_API_TOKEN;
 
@@ -53,7 +56,8 @@ export async function printfulRequest<T>(
     headers["X-PF-Store-Id"] = store;
   }
 
-  const res = await fetch(`${PRINTFUL_BASE_URL}${endpoint}`, {
+  const baseUrl = apiVersion === "v1" ? PRINTFUL_V1_BASE_URL : PRINTFUL_BASE_URL;
+  const res = await fetch(`${baseUrl}${endpoint}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,

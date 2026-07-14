@@ -64,11 +64,12 @@ async function printArea(productId, placement) {
   const key = `${productId}:${placement}`;
   if (areaCache.has(key)) return areaCache.get(key);
   const res = await pf(`/catalog-products/${productId}/mockup-styles?placements=${placement}`);
-  // multiple styles can report different areas; the largest is the true area
+  // styles report different areas (alternate mockup crops); the SMALLEST is
+  // the safe print area — the larger ones overflow on some variants.
   let best = null;
   for (const g of res.data || []) {
     if (g.placement !== placement || !g.print_area_width) continue;
-    if (!best || g.print_area_width * g.print_area_height > best.w * best.h) {
+    if (!best || g.print_area_width * g.print_area_height < best.w * best.h) {
       best = { w: g.print_area_width, h: g.print_area_height };
     }
   }
@@ -78,14 +79,15 @@ async function printArea(productId, placement) {
 
 const round = (n) => Math.round(n * 10000) / 10000;
 
-/** Largest ratio-true box inside the area; horizontally centered, near the top. */
+/** Largest ratio-true box inside the area; horizontally centered, near the top.
+ *  areaWidth/areaHeight ride along so v1 orders can express the same box. */
 function fitPosition(area, ratio) {
   let width = area.w;
   let height = width / ratio;
   if (height > area.h) { height = area.h; width = height * ratio; }
   const left = round((area.w - width) / 2);
   const top = round(Math.min(1, area.h - height));
-  return { width: round(width), height: round(height), top, left };
+  return { width: round(width), height: round(height), top, left, areaWidth: round(area.w), areaHeight: round(area.h) };
 }
 
 for (const slug of SLUGS) {
@@ -100,6 +102,14 @@ for (const slug of SLUGS) {
     if (!productId) {
       const detail = await pf(`/catalog-variants/${entry.printfulCatalogVariantId}`);
       productId = detail.data?.catalog_product_id;
+    }
+    // the crossbody blank rejects label_inside on catalog orders — drop it
+    if (slug === "counting-sheep-crossbody-bag") {
+      entry.printfulPlacements = entry.printfulPlacements.filter((pl) => pl.placement !== "label_inside");
+    }
+    // cut-sew blanks require a stitch colour on every order
+    if (slug.startsWith("counting-sheep-tote-bag")) {
+      entry.printfulProductOptions = [{ name: "stitch_color", value: "black" }];
     }
     for (const pl of entry.printfulPlacements) {
       if (pl.placement === "label_inside") pl.fileUrl = LABEL_STRIP;
@@ -119,12 +129,12 @@ for (const slug of SLUGS) {
     const entry = first;
     const placements = entry.printfulPlacements.map((pl) => ({
       placement: pl.placement, technique: pl.technique,
-      layers: [{ type: "file", url: pl.fileUrl, ...(pl.position ? { position: pl.position } : {}) }],
+      layers: [{ type: "file", url: pl.fileUrl, ...(pl.position ? { position: { width: pl.position.width, height: pl.position.height, top: pl.position.top, left: pl.position.left } } : {}) }],
     }));
     try {
       const draft = await pf("/orders", "POST", {
         recipient: { name: "Draft Verification", address1: "19749 Dearborn St", city: "Chatsworth", state_code: "CA", country_code: "US", zip: "91311" },
-        order_items: [{ source: "catalog", catalog_variant_id: entry.printfulCatalogVariantId, quantity: 1, placements }],
+        order_items: [{ source: "catalog", catalog_variant_id: entry.printfulCatalogVariantId, quantity: 1, placements, ...(entry.printfulProductOptions ? { product_options: entry.printfulProductOptions } : {}) }],
       });
       const id = draft.data?.id;
       console.log(`  ✓ draft ${id} accepted`);

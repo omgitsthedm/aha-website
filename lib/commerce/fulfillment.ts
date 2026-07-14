@@ -7,8 +7,8 @@ import { orders, fulfillments, auditLog } from "@/db/schema";
 import { and, eq, isNull } from "drizzle-orm";
 import type { RevalidatedCart, OrderContact } from "./orders";
 import {
-  aggregateFulfillmentStatus, groupItemsByPrintfulStore, isPrintfulConfirmationAllowed,
-  shouldRetryPrintfulConfirmation,
+  aggregateFulfillmentStatus, buildStoreOrderRequest, groupSourceItemsByPrintfulStore,
+  isPrintfulConfirmationAllowed, shouldRetryPrintfulConfirmation,
 } from "./fulfillment-state";
 import { dispatchOrderNotifications, enqueueOrderNotification } from "./notifications";
 
@@ -20,7 +20,7 @@ function confirmAllowed(): boolean {
   });
 }
 
-interface PrintfulOrderResponse { data?: { id?: number | string }; id?: number | string }
+interface PrintfulOrderResponse { data?: { id?: number | string }; result?: { id?: number | string }; id?: number | string }
 
 function customerStatus(status: string): string {
   switch (status) {
@@ -59,7 +59,9 @@ async function markManualReview(orderId: number, reason: string): Promise<void> 
 
 async function confirmPrintfulOrder(orderId: number, fulfillmentId: number, printfulOrderId: string, storeId: number): Promise<void> {
   try {
-    await printfulRequest(`/orders/${printfulOrderId}/confirmation`, { method: "POST", storeId: String(storeId) });
+    // v1 confirm — order ids share one space across API versions, and v1 is the
+    // only version that can confirm sync-fulfilled orders (v2 dropped sync 2026-07).
+    await printfulRequest(`/orders/${printfulOrderId}/confirm`, { method: "POST", storeId: String(storeId), apiVersion: "v1" });
     await db().update(fulfillments).set({ status: "confirmed", lastError: null, updatedAt: new Date() })
       .where(eq(fulfillments.id, fulfillmentId));
     await db().insert(auditLog).values({
@@ -87,7 +89,7 @@ export async function startFulfillment(
   if (!isDbConfigured()) return;
 
   const defaultStore = Number(process.env.PRINTFUL_STORE_ID) || undefined;
-  const byStore = groupItemsByPrintfulStore(cart.items, defaultStore);
+  const byStore = groupSourceItemsByPrintfulStore(cart.items, defaultStore);
   if (byStore.size === 0) {
     await markManualReview(orderId, "No cart item has a Printful fulfillment path (sync variant or catalog placements with hosted art)");
     return;
@@ -138,12 +140,15 @@ export async function startFulfillment(
 
     let createdPrintfulOrderId = "";
     try {
+      const request = buildStoreOrderRequest(items, recipient);
+      if (!request) throw new Error(`No fulfillable Printful items for store ${storeId}`);
       const res = await printfulRequest<PrintfulOrderResponse>("/orders", {
         method: "POST",
         storeId: String(storeId),
-        body: { recipient, order_items: items },
+        apiVersion: request.apiVersion,
+        body: request.body,
       });
-      const printfulOrderId = String(res?.data?.id ?? res?.id ?? "");
+      const printfulOrderId = String(res?.data?.id ?? res?.result?.id ?? res?.id ?? "");
       if (!printfulOrderId) throw new Error(`Printful draft order (store ${storeId}) returned no id`);
       createdPrintfulOrderId = printfulOrderId;
 

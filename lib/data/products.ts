@@ -24,6 +24,7 @@ interface PrintfulMapEntry {
   printfulStoreId?: number;
   printfulRegionAvailability?: string[];
   printfulPlacements?: AhaVariant["printfulPlacements"];
+  printfulProductOptions?: AhaVariant["printfulProductOptions"];
   printfulTechnique?: AhaVariant["printfulTechnique"];
   printfulSizeGuideReference?: string;
   costEstimate?: number;
