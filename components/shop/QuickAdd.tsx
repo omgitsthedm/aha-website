@@ -5,6 +5,7 @@ import { useCart } from "@/components/cart/CartProvider";
 import type { Product } from "@/lib/utils/types";
 import { extractVariationSize } from "@/lib/utils/variation";
 import { trackCommerceEvent } from "@/lib/analytics/events";
+import { hapticTap } from "@/lib/utils/haptics";
 
 interface QuickAddProps {
   product: Product;
@@ -66,6 +67,7 @@ export function QuickAdd({ product, purchasableSizes }: QuickAddProps) {
       image: product.images[0] || "",
     });
     trackCommerceEvent({ name: "add_to_cart", itemId: product.id, variantId: variation.id, valueCents: variation.price, currency: product.currency, quantity: 1 });
+    hapticTap();
     setOpen(false);
     setAdded(true);
     if (timer.current) window.clearTimeout(timer.current);

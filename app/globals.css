@@ -617,3 +617,65 @@ textarea {
 .corner-cut {
   clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
 }
+
+/* ---------------------------------------------------------------------------
+   Platform layer (Wave 19)
+   ------------------------------------------------------------------------ */
+
+/* Safe areas: with viewport-fit=cover the page draws under the iPhone notch
+   and home indicator, so chrome surfaces pad by the device insets. */
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-x {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Cross-document view transitions: a soft page-to-page crossfade in browsers
+   that support it (Chrome 126+, Safari 18.2+). Pure CSS — zero JS cost. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+/* Forced colors (Windows High Contrast): clip-path buttons lose their fill,
+   so restore visible borders and let the system palette win. */
+@media (forced-colors: active) {
+  .btn-primary,
+  .btn-secondary {
+    border: 2px solid ButtonText;
+    clip-path: none;
+  }
+  .fold-surface,
+  .corner-cut {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* Print: order confirmations and tracking pages become clean receipts. */
+@media print {
+  header,
+  footer,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  main {
+    padding-top: 0 !important;
+  }
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+}

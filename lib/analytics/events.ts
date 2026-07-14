@@ -9,7 +9,8 @@ export type CommerceEventName =
   | "search"
   | "search_no_results"
   | "add_to_wishlist"
-  | "remove_from_wishlist";
+  | "remove_from_wishlist"
+  | "share";
 
 export interface CommerceEvent {
   name: CommerceEventName;

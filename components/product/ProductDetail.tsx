@@ -9,6 +9,7 @@ import { useCart } from "@/components/cart/CartProvider";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { getFulfillmentSummary, RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 import { trackCommerceEvent } from "@/lib/analytics/events";
+import { hapticTap } from "@/lib/utils/haptics";
 import { extractVariationSize } from "@/lib/utils/variation";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 
@@ -92,9 +93,25 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
       image: product.images[0] || "",
     }, related);
     trackCommerceEvent({ name: "add_to_cart", itemId: product.id, variantId: currentVariation.id, valueCents: currentVariation.price, currency: product.currency, quantity: 1 });
+    hapticTap();
     setAddedFeedback(true);
     if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
     feedbackTimer.current = window.setTimeout(() => setAddedFeedback(false), 1800);
+  };
+
+
+  const handleShare = async () => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: product.name, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+      }
+      trackCommerceEvent({ name: "share", itemId: product.id });
+    } catch {
+      /* user dismissed the sheet */
+    }
   };
 
   const descriptionMarkup = storyDescription || product.description
@@ -220,6 +237,16 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               >
                 <svg className="h-5 w-5" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={handleShare}
+                aria-label={`Share ${product.name}`}
+                className="inline-flex h-14 w-14 items-center justify-center border border-border/10 text-muted transition-colors hover:border-accent hover:text-cream"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
                 </svg>
               </button>
             </div>

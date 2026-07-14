@@ -5,6 +5,7 @@ import { CartProvider } from "@/components/cart/CartProvider";
 import { PilotNav } from "@/components/ui/PilotNav";
 import { PilotFooter } from "@/components/ui/PilotFooter";
 import { getAllProducts } from "@/lib/square/catalog";
+import { PlatformLayer } from "@/components/ui/PlatformLayer";
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -54,7 +55,11 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "light",
-  themeColor: "#fafafa",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FAFAFA" },
+    { media: "(prefers-color-scheme: dark)", color: "#1A1A1A" },
+  ],
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({
@@ -86,6 +91,7 @@ export default async function RootLayout({
       <body className="origami-shell font-body text-cream antialiased">
         <CartProvider>
           <a href="#main-content" className="fixed left-3 top-3 z-[500] -translate-y-24 bg-rose px-4 py-3 font-mono text-xs font-bold text-cream transition-transform focus:translate-y-0">Skip to content</a>
+          <PlatformLayer />
           <PilotNav searchIndex={searchIndex} />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
           <PilotFooter />

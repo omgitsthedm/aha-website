@@ -64,6 +64,15 @@ export function PilotNav({ searchIndex = [] }: { searchIndex?: SearchIndexItem[]
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
         event.preventDefault();
         setSearchOpen((prev) => !prev);
+        return;
+      }
+      if (event.key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        const target = event.target as HTMLElement | null;
+        const typing = target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
+        if (!typing) {
+          event.preventDefault();
+          setSearchOpen(true);
+        }
       }
     };
     document.addEventListener("keydown", onKeyDown);
@@ -71,7 +80,7 @@ export function PilotNav({ searchIndex = [] }: { searchIndex?: SearchIndexItem[]
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] border-b border-border/10 bg-void">
+    <header className="safe-top safe-x fixed inset-x-0 top-0 z-[100] border-b border-border/10 bg-void">
       <nav aria-label="Primary navigation" className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-6">
         <Link href="/" className="inline-flex h-14 items-center font-display text-sm font-bold uppercase tracking-[-0.02em] text-cream hover:text-accent focus-visible:outline-offset-4">
           After Hours Agenda
