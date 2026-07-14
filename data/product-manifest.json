@@ -2025,8 +2025,8 @@
       "collectionIds": [
         "accessorys"
       ],
-      "status": "draft",
-      "retailPrice": 2400,
+      "status": "active",
+      "retailPrice": 3700,
       "currency": "USD",
       "fitDescription": "One size.",
       "fabricDescription": "Printed to order on premium stock.",
@@ -2049,9 +2049,9 @@
           "ahaProductId": "pink-sheep-comfy-socks",
           "sku": "pink-sheep-comfy-socks-12678",
           "size": "PINK SHEEP COMFY SOCKS",
-          "retailPrice": 2400,
+          "retailPrice": 3700,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 0
         }
@@ -8619,8 +8619,8 @@
       "collectionIds": [
         "accessorys"
       ],
-      "status": "draft",
-      "retailPrice": 2200,
+      "status": "active",
+      "retailPrice": 3800,
       "currency": "USD",
       "fitDescription": "One size.",
       "fabricDescription": "Printed to order on premium stock.",
@@ -8643,9 +8643,9 @@
           "ahaProductId": "books-and-regrets-tote-bag",
           "sku": "books-and-regrets-tote-bag-10457",
           "size": "BLACK",
-          "retailPrice": 2200,
+          "retailPrice": 3800,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 0
         },
@@ -8654,9 +8654,9 @@
           "ahaProductId": "books-and-regrets-tote-bag",
           "sku": "books-and-regrets-tote-bag-10458",
           "size": "OYSTER",
-          "retailPrice": 2200,
+          "retailPrice": 3800,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 1
         }
@@ -9460,8 +9460,8 @@
       "collectionIds": [
         "accessorys"
       ],
-      "status": "draft",
-      "retailPrice": 800,
+      "status": "active",
+      "retailPrice": 1100,
       "currency": "USD",
       "fitDescription": "One size.",
       "fabricDescription": "Printed to order on premium stock.",
@@ -9484,9 +9484,9 @@
           "ahaProductId": "punk-doodle-sticker-sheet",
           "sku": "punk-doodle-sticker-sheet-12917",
           "size": "PUNK DOODLE STICKER SHEET",
-          "retailPrice": 800,
+          "retailPrice": 1100,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 0
         }
@@ -13497,8 +13497,8 @@
       "collectionIds": [
         "accessorys"
       ],
-      "status": "draft",
-      "retailPrice": 500,
+      "status": "active",
+      "retailPrice": 600,
       "currency": "USD",
       "fitDescription": "One size.",
       "fabricDescription": "Printed to order on premium stock.",
@@ -13521,9 +13521,9 @@
           "ahaProductId": "dont-fuck-fascists-stickers",
           "sku": "dont-fuck-fascists-stickers-10163",
           "size": "3″×3″",
-          "retailPrice": 500,
+          "retailPrice": 600,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 0
         },
@@ -13532,9 +13532,9 @@
           "ahaProductId": "dont-fuck-fascists-stickers",
           "sku": "dont-fuck-fascists-stickers-10164",
           "size": "4″×4″",
-          "retailPrice": 500,
+          "retailPrice": 600,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 1
         },
@@ -13543,9 +13543,9 @@
           "ahaProductId": "dont-fuck-fascists-stickers",
           "sku": "dont-fuck-fascists-stickers-10165",
           "size": "5.5″×5.5″",
-          "retailPrice": 500,
+          "retailPrice": 600,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 2
         },
@@ -13554,9 +13554,9 @@
           "ahaProductId": "dont-fuck-fascists-stickers",
           "sku": "dont-fuck-fascists-stickers-16362",
           "size": "15″×3.75″",
-          "retailPrice": 600,
+          "retailPrice": 1100,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 3
         }
@@ -14770,8 +14770,8 @@
       "collectionIds": [
         "accessorys"
       ],
-      "status": "draft",
-      "retailPrice": 2200,
+      "status": "active",
+      "retailPrice": 3800,
       "currency": "USD",
       "fitDescription": "One size.",
       "fabricDescription": "Printed to order on premium stock.",
@@ -14794,9 +14794,9 @@
           "ahaProductId": "loose-receipts-tote-bag",
           "sku": "loose-receipts-tote-bag-10457",
           "size": "BLACK",
-          "retailPrice": 2200,
+          "retailPrice": 3800,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 0
         },
@@ -14805,9 +14805,9 @@
           "ahaProductId": "loose-receipts-tote-bag",
           "sku": "loose-receipts-tote-bag-10458",
           "size": "OYSTER",
-          "retailPrice": 2200,
+          "retailPrice": 3800,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 1
         }
@@ -16575,8 +16575,8 @@
       "collectionIds": [
         "tees"
       ],
-      "status": "draft",
-      "retailPrice": 3600,
+      "status": "active",
+      "retailPrice": 3400,
       "currency": "USD",
       "fitDescription": "Standard unisex fit — true to size.",
       "fabricDescription": "Ringspun cotton.",
@@ -16599,9 +16599,9 @@
           "ahaProductId": "club-technoir-unisex-short-sleeve-t-shirt",
           "sku": "club-technoir-unisex-short-sleeve-t-shirt-4865",
           "size": "CLUB TECHNOIR - UNISEX SHORT SLEEVE T-SHIRT",
-          "retailPrice": 3600,
+          "retailPrice": 3400,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 0
         }

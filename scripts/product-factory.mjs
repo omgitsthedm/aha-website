@@ -75,7 +75,7 @@ function saveData({ manifestDoc, squareMapDoc, pfMapDoc }) {
   writeFileSync("data/printful-v2-map.json", `${JSON.stringify(pfMapDoc, null, 1)}\n`);
 }
 
-async function assertArtReachable(url) {
+async function assertArtReachable(url, { mockupOnly = false } = {}) {
   const res = await fetch(url, { method: "GET" });
   if (!res.ok) throw new Error(`Art URL not reachable (${res.status}): ${url} — deploy the art first.`);
   const buf = Buffer.from(await res.arrayBuffer());
@@ -84,8 +84,12 @@ async function assertArtReachable(url) {
     const width = buf.readUInt32BE(16);
     const height = buf.readUInt32BE(20);
     const longest = Math.max(width, height);
-    if (longest < 1200) throw new Error(`Art is ${width}x${height}px — too small to print (need ≥1800px longest side; hard floor 1200px).`);
-    if (longest < 1800) console.warn(`⚠ Art is ${width}x${height}px — below the 1800px guidance; print quality may suffer.`);
+    // mockupOnly: printing uses the files already stored on the Printful sync
+    // product; this art only renders web mockups, so resolution can't hurt print.
+    if (!mockupOnly) {
+      if (longest < 1200) throw new Error(`Art is ${width}x${height}px — too small to print (need ≥1800px longest side; hard floor 1200px).`);
+      if (longest < 1800) console.warn(`⚠ Art is ${width}x${height}px — below the 1800px guidance; print quality may suffer.`);
+    }
     return { width, height };
   }
   return {};
@@ -188,7 +192,9 @@ async function main() {
     if (!syncVariants.length) throw new Error(`No Printful sync product named "${product.title}"`);
 
     const artUrl = opt("art") || `${SITE}/printful-assets/${product.title.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "")}.png`;
-    await assertArtReachable(artUrl);
+    // The living sync product carries the original print files, so orders go
+    // out sync-fulfilled; this art is only for web mockups.
+    await assertArtReachable(artUrl, { mockupOnly: true });
 
     const bySize = new Map();
     for (const sv of syncVariants) {
@@ -205,7 +211,7 @@ async function main() {
           fileUrl: artUrl,
           position: pl.layers?.[0]?.position,
         }));
-        return { manifestVariant: v, catalogVariantId: sv.catalog_variant_id, placements };
+        return { manifestVariant: v, catalogVariantId: sv.catalog_variant_id, syncVariantId: sv.id, placements };
       }),
     };
   } else {
@@ -254,15 +260,20 @@ async function main() {
   const priceCents = plan.kind === "resurrect"
     ? plan.priceCents
     : (plan.spec.retailPrice && plan.spec.retailPrice !== "auto" ? plan.spec.retailPrice : floor);
-  if (priceCents < Math.ceil(maxCost / 0.65)) {
-    throw new Error(`Price ${priceCents} is below the 35% margin floor ${Math.ceil(maxCost / 0.65)} (max cost ${maxCost}).`);
+  // Optional per-size prices: --price-map '{"3″×3″":600,"15″×3.75″":1100}'
+  const priceMap = opt("price-map") ? JSON.parse(opt("price-map")) : {};
+  const priceFor = (v) => priceMap[String(v.manifestVariant?.size ?? v.size)] ?? priceCents;
+  for (const v of plan.variants) {
+    const p = priceFor(v);
+    const vFloor = Math.ceil(v.cost / 0.65);
+    if (p < vFloor) throw new Error(`Price ${p} for ${v.manifestVariant?.size ?? v.size} is below its 35% floor ${vFloor} (cost ${v.cost}).`);
   }
 
   const title = plan.kind === "resurrect" ? plan.product.title : plan.spec.name;
   const slug = plan.kind === "resurrect" ? plan.product.slug : slugify(plan.spec.name);
   console.log(`\n${LIVE ? "LIVE" : "DRY RUN"} — ${title} (${slug})`);
   console.log(`  variants: ${plan.variants.length} | max cost: $${(maxCost / 100).toFixed(2)} | price: $${(priceCents / 100).toFixed(2)} (floor $${(floor / 100).toFixed(2)})`);
-  for (const v of plan.variants.slice(0, 4)) console.log(`  - cat ${v.catalogVariantId} ${v.size || ""} ${v.color || ""} placements=${v.placements.map((p) => p.placement).join("+")}`);
+  for (const v of plan.variants.slice(0, 4)) console.log(`  - cat ${v.catalogVariantId} ${v.manifestVariant?.size ?? v.size ?? ""} ${v.color || ""} cost $${(v.cost / 100).toFixed(2)} price $${(priceFor(v) / 100).toFixed(2)} placements=${v.placements.map((p) => p.placement).join("+")}`);
 
   if (!LIVE) { console.log("\nDry run complete. Re-run with --live to create."); return; }
 
@@ -277,8 +288,8 @@ async function main() {
 
   // ── Square item ──
   const sizes = plan.kind === "resurrect"
-    ? plan.variants.map((v) => ({ name: String(v.manifestVariant.size), priceCents, sku: v.manifestVariant.sku }))
-    : plan.variants.map((v) => ({ name: v.color && plan.variants.some((x) => x.color !== v.color) ? `${v.color} / ${v.size}` : v.size, priceCents, sku: `${slug}-${v.catalogVariantId}` }));
+    ? plan.variants.map((v) => ({ name: String(v.manifestVariant.size), priceCents: priceFor(v), sku: v.manifestVariant.sku }))
+    : plan.variants.map((v) => ({ name: v.color && plan.variants.some((x) => x.color !== v.color) ? `${v.color} / ${v.size}` : v.size, priceCents: priceFor(v), sku: `${slug}-${v.catalogVariantId}` }));
   const square = await createSquareItem({ name: title, description: `${title} by After Hours Agenda. Printed to order.`, variations: sizes, imageUrls });
   console.log(`  square item: ${square.itemId} (${Object.keys(square.variationIds).length} variations)`);
   if (square.imageErrors?.length) console.warn("  ⚠ image issues:", square.imageErrors);
@@ -287,16 +298,17 @@ async function main() {
   const now = new Date().toISOString();
   if (plan.kind === "resurrect") {
     const product = plan.product;
-    product.retailPrice = priceCents;
+    product.retailPrice = Math.min(...plan.variants.map(priceFor));
     for (const v of plan.variants) {
       const mv = v.manifestVariant;
-      mv.retailPrice = priceCents;
+      mv.retailPrice = priceFor(v);
       mv.status = "active";
       const sqVarId = square.variationIds[String(mv.size)] || square.variationIds[Object.keys(square.variationIds).find((k) => k.toUpperCase().includes(String(mv.size).toUpperCase())) ?? ""];
       if (!sqVarId) throw new Error(`No Square variation id for size ${mv.size}`);
       squareMapDoc.map[mv.ahaVariantId] = { squareCatalogObjectId: square.itemId, squareVariationId: sqVarId, squareLocationId: "FGKRPYEXNV482" };
       pfMapDoc.map[mv.ahaVariantId] = {
         printfulCatalogVariantId: v.catalogVariantId,
+        ...(v.syncVariantId ? { printfulSyncVariantId: v.syncVariantId } : {}),
         printfulStoreId: Number(PF_STORE),
         printfulPlacements: v.placements,
         printfulRegionAvailability: ["north_america"],
