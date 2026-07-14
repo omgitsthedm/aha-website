@@ -13,6 +13,7 @@ import { hapticTap } from "@/lib/utils/haptics";
 import { extractVariationSize } from "@/lib/utils/variation";
 import { swatchHex } from "@/lib/data/color-swatches";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
+import { ImageLightbox } from "@/components/product/ImageLightbox";
 
 interface ProductDetailProps {
   product: Product;
@@ -50,6 +51,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   const initialVariation = product.variations.find((variation) => variationAvailable(variation.name));
   const [selectedVariation, setSelectedVariation] = useState(initialVariation?.id || product.variations[0]?.id || "");
   const [activeImage, setActiveImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [addedFeedback, setAddedFeedback] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
@@ -153,7 +155,10 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           <section aria-label="Product images">
             <div className="fold-surface relative aspect-square overflow-hidden md:aspect-[4/5]">
               {activeImageSrc ? (
-                <Image src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority />
+                <>
+                  <Image src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority />
+                  <button type="button" onClick={() => setLightboxOpen(true)} aria-label="Zoom image" className="absolute inset-0 cursor-zoom-in" />
+                </>
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase text-muted">Image unavailable</div>
               )}
@@ -169,7 +174,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               </div>
             )}
 
-            {activeImageSrc && <a href={activeImageSrc} target="_blank" rel="noopener noreferrer" className="mt-3 hidden min-h-11 items-center text-xs font-bold uppercase text-muted underline underline-offset-4 hover:text-cream md:inline-flex">Open full image</a>}
+            {activeImageSrc && <button type="button" onClick={() => setLightboxOpen(true)} className="mt-3 inline-flex min-h-11 items-center text-xs font-bold uppercase text-muted underline underline-offset-4 hover:text-cream">Zoom &amp; view full</button>}
           </section>
 
           <section aria-labelledby="product-title" className="lg:pt-3">
@@ -296,6 +301,15 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
         onClose={() => setSizeGuideOpen(false)}
         fitDescription={enrichment?.fitDescription}
         careInstructions={enrichment?.careInstructions}
+      />
+
+      <ImageLightbox
+        images={product.images}
+        index={activeImage}
+        alt={product.name}
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        onIndexChange={setActiveImage}
       />
 
         {related.length > 0 && (
