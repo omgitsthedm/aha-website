@@ -1,4 +1,12 @@
 {
+ "dont-fuck-fascists-shirt": [
+  "/products/dont-fuck-fascists-shirt/01-black-mens-fitted-t-shirt-front.webp",
+  "/products/dont-fuck-fascists-shirt/02-midnight-navy-mens-fitted-t-shirt-front.webp",
+  "/products/dont-fuck-fascists-shirt/03-royal-blue-mens-fitted-t-shirt-front.webp"
+ ],
+ "link-s-lawn-service-white-unisex-short-sleeve-t-shirt": [
+  "/products/link-s-lawn-service-white-unisex-short-sleeve-t-shirt/01-white-mens-fitted-t-shirt-back.webp"
+ ],
  "branded-black-bubble-free-stickers": [
   "/products/branded-black-bubble-free-stickers/01-kiss-cut-stickers-white-3x3-default.webp",
   "/products/branded-black-bubble-free-stickers/02-kiss-cut-stickers-white-4x4-default.webp",
@@ -24,6 +32,13 @@
   "/products/enemy-of-the-state-unisex-sweatshirt/03-charcoal-heather-unisex-premium-sweatshirt-front.webp",
   "/products/enemy-of-the-state-unisex-sweatshirt/04-navy-blazer-unisex-premium-sweatshirt-front.webp",
   "/products/enemy-of-the-state-unisex-sweatshirt/05-team-royal-unisex-premium-sweatshirt-front.webp"
+ ],
+ "dont-fuck-fascists-sweatshirt": [
+  "/products/dont-fuck-fascists-sweatshirt/01-black-unisex-premium-sweatshirt-front.webp",
+  "/products/dont-fuck-fascists-sweatshirt/02-vintage-black-unisex-premium-sweatshirt-front.webp",
+  "/products/dont-fuck-fascists-sweatshirt/03-charcoal-heather-unisex-premium-sweatshirt-front.webp",
+  "/products/dont-fuck-fascists-sweatshirt/04-navy-blazer-unisex-premium-sweatshirt-front.webp",
+  "/products/dont-fuck-fascists-sweatshirt/05-team-royal-unisex-premium-sweatshirt-front.webp"
  ],
  "unisex-crush-it-comfort-colors": [
   "/products/unisex-crush-it-comfort-colors/01-black-unisex-garment-dyed-heavyweight-t-shirt-front-and-back.webp",
@@ -55,6 +70,10 @@
   "/products/deny-defend-depose/02-midnight-navy-mens-fitted-t-shirt-front.webp",
   "/products/deny-defend-depose/03-red-mens-fitted-t-shirt-front.webp"
  ],
+ "zebra-unisex-knitted-cardigan": [
+  "/products/zebra-unisex-knitted-cardigan/01-knitted-cardigan-custom-m-left-front-2.webp",
+  "/products/zebra-unisex-knitted-cardigan/02-knitted-cardigan-custom-m-left-front.webp"
+ ],
  "fuck-walter": [
   "/products/fuck-walter/01-black-mens-fitted-t-shirt-front.webp"
  ],
@@ -71,6 +90,10 @@
  ],
  "lipstick": [
   "/products/lipstick/01-black-mens-fitted-t-shirt-front.webp"
+ ],
+ "royal-black-unisex-hoodie": [
+  "/products/royal-black-unisex-hoodie/01-cotton-heritage-m2580-i-unisex-premium-pullover-hoodie-black.webp",
+  "/products/royal-black-unisex-hoodie/02-cotton-heritage-m2580-i-unisex-premium-pullover-hoodie-black.webp"
  ],
  "sheep-min-black-unisex-hoodie": [
   "/products/sheep-min-black-unisex-hoodie/01-cotton-heritage-m2580-i-unisex-premium-pullover-hoodie-black.webp"
@@ -114,12 +137,18 @@
   "/products/unisex-aftermath-comfort-colors/02-ice-blue-unisex-garment-dyed-heavyweight-t-shirt-front-and-b.webp",
   "/products/unisex-aftermath-comfort-colors/03-pepper-unisex-garment-dyed-heavyweight-t-shirt-front-and-bac.webp"
  ],
+ "avenue-b-new-york-grey-unisex-hoodie": [
+  "/products/avenue-b-new-york-grey-unisex-hoodie/01-cotton-heritage-m2580-i-unisex-premium-pullover-hoodie-charc.webp"
+ ],
  "deny-defend-depose-unisex-sweatshirt": [
   "/products/deny-defend-depose-unisex-sweatshirt/01-black-unisex-premium-sweatshirt-front.webp",
   "/products/deny-defend-depose-unisex-sweatshirt/02-vintage-black-unisex-premium-sweatshirt-front.webp",
   "/products/deny-defend-depose-unisex-sweatshirt/03-charcoal-heather-unisex-premium-sweatshirt-front.webp",
   "/products/deny-defend-depose-unisex-sweatshirt/04-navy-blazer-unisex-premium-sweatshirt-front.webp",
   "/products/deny-defend-depose-unisex-sweatshirt/05-team-royal-unisex-premium-sweatshirt-front.webp"
+ ],
+ "super-bros-black-short-sleeve-t-shirt": [
+  "/products/super-bros-black-short-sleeve-t-shirt/01-black-mens-fitted-t-shirt-back.webp"
  ],
  "unisex-where-s-waldo-comfort-colors": [
   "/products/unisex-where-s-waldo-comfort-colors/01-ivory-unisex-garment-dyed-heavyweight-t-shirt-front-and-back.webp",
@@ -165,6 +194,11 @@
  "club-technoir-black-unisex-short-sleeve-t-shirt": [
   "/products/club-technoir-black-unisex-short-sleeve-t-shirt/01-black-mens-fitted-t-shirt-front.webp"
  ],
+ "black-sheep-black-grey-or-white-comfy-socks": [
+  "/products/black-sheep-black-grey-or-white-comfy-socks/01-black-embroidered-crew-socks-left.webp",
+  "/products/black-sheep-black-grey-or-white-comfy-socks/02-heather-grey-embroidered-crew-socks-left.webp",
+  "/products/black-sheep-black-grey-or-white-comfy-socks/03-white-embroidered-crew-socks-left.webp"
+ ],
  "retro-black-unisex-short-sleeve-t-shirt": [
   "/products/retro-black-unisex-short-sleeve-t-shirt/01-black-mens-fitted-t-shirt-front.webp"
  ],
@@ -186,6 +220,9 @@
   "/products/retro-dad-hat/04-classic-dad-hat-pink-front.webp",
   "/products/retro-dad-hat/05-classic-dad-hat-white-front.webp"
  ],
+ "hope-and-tomorrow-dark-grey-cuffed-beanie": [
+  "/products/hope-and-tomorrow-dark-grey-cuffed-beanie/01-dark-grey-cuffed-beanie-front.webp"
+ ],
  "set-2-of-pin-buttons": [
   "/products/set-2-of-pin-buttons/01-white-1-25-set-of-pin-buttons-front.webp",
   "/products/set-2-of-pin-buttons/02-white-2-25-set-of-pin-buttons-front.webp"
@@ -201,6 +238,9 @@
  "hot-air": [
   "/products/hot-air/01-white-mens-fitted-t-shirt-front.webp"
  ],
+ "keano": [
+  "/products/keano/01-black-mens-fitted-t-shirt-back.webp"
+ ],
  "number-7": [
   "/products/number-7/01-white-mens-fitted-t-shirt-front.webp"
  ],
@@ -208,6 +248,13 @@
   "/products/unisex-dont-fuck-fascists-comfort-colors/01-black-unisex-garment-dyed-heavyweight-t-shirt-front-and-back.webp",
   "/products/unisex-dont-fuck-fascists-comfort-colors/02-navy-unisex-garment-dyed-heavyweight-t-shirt-front-and-back.webp",
   "/products/unisex-dont-fuck-fascists-comfort-colors/03-pepper-unisex-garment-dyed-heavyweight-t-shirt-front-and-bac.webp"
+ ],
+ "dont-fuck-fascists-unisex-hoodie": [
+  "/products/dont-fuck-fascists-unisex-hoodie/01-black-unisex-premium-hoodie-front.webp",
+  "/products/dont-fuck-fascists-unisex-hoodie/02-vintage-black-unisex-premium-hoodie-front.webp",
+  "/products/dont-fuck-fascists-unisex-hoodie/03-charcoal-heather-unisex-premium-hoodie-front.webp",
+  "/products/dont-fuck-fascists-unisex-hoodie/04-maroon-unisex-premium-hoodie-front.webp",
+  "/products/dont-fuck-fascists-unisex-hoodie/05-navy-blazer-unisex-premium-hoodie-front.webp"
  ],
  "revolution": [
   "/products/revolution/01-black-mens-fitted-t-shirt-front.webp"
@@ -239,6 +286,9 @@
  "classic-black-unisex-hoodie": [
   "/products/classic-black-unisex-hoodie/01-cotton-heritage-m2580-i-unisex-premium-pullover-hoodie-black.webp"
  ],
+ "dots-unisex-knitted-crewneck-sweater": [
+  "/products/dots-unisex-knitted-crewneck-sweater/01-classic-fit-knitted-crew-neck-sweater-custom-m-left-front.webp"
+ ],
  "winter-track-relay-unisex-classic-tee": [
   "/products/winter-track-relay-unisex-classic-tee/01-red-unisex-classic-tee-front.webp"
  ],
@@ -255,6 +305,9 @@
  ],
  "cover-story": [
   "/products/cover-story/01-black-mens-fitted-t-shirt-front.webp"
+ ],
+ "counting-sheep-tote-bag-regular": [
+  "/products/counting-sheep-tote-bag-regular/01-all-over-print-tote-bag-black-15x15-front.webp"
  ],
  "just-trying-my-best": [
   "/products/just-trying-my-best/01-black-mens-fitted-t-shirt-front.webp"
@@ -290,6 +343,9 @@
   "/products/do-it-for-al-orange/01-black-unisex-premium-hoodie-front.webp",
   "/products/do-it-for-al-orange/02-purple-unisex-premium-hoodie-front.webp"
  ],
+ "nys-ecto-black-short-sleeve-t-shirt": [
+  "/products/nys-ecto-black-short-sleeve-t-shirt/01-black-mens-fitted-t-shirt-back.webp"
+ ],
  "eras-to-remember-black-unisex-premium-sweatshirt": [
   "/products/eras-to-remember-black-unisex-premium-sweatshirt/01-black-unisex-premium-sweatshirt-back.webp"
  ],
@@ -305,8 +361,14 @@
  "japanese-garden-puzzle-charcoal-unisex-hoodie": [
   "/products/japanese-garden-puzzle-charcoal-unisex-hoodie/01-cotton-heritage-m2580-i-unisex-premium-pullover-hoodie-charc.webp"
  ],
+ "yellow-reversible-bucket-hat": [
+  "/products/yellow-reversible-bucket-hat/01-all-over-print-reversible-bucket-hat-white-front-outside.webp"
+ ],
  "dropout": [
   "/products/dropout/01-black-mens-fitted-t-shirt-front.webp"
+ ],
+ "nys-ecto-black-unisex-hoodie": [
+  "/products/nys-ecto-black-unisex-hoodie/01-cotton-heritage-m2580-i-unisex-premium-pullover-hoodie-black.webp"
  ],
  "do-it-for-al-purple-shirt": [
   "/products/do-it-for-al-purple-shirt/01-black-mens-fitted-t-shirt-front.webp"
@@ -342,8 +404,15 @@
  "emo-but-in-heels-white-unisex-premium-sweatshirt": [
   "/products/emo-but-in-heels-white-unisex-premium-sweatshirt/01-white-unisex-premium-sweatshirt-front-and-back.webp"
  ],
+ "library-tote-bag": [
+  "/products/library-tote-bag/01-eco-tote-bag-black-back.webp",
+  "/products/library-tote-bag/02-eco-tote-bag-oyster-back.webp"
+ ],
  "colors": [
   "/products/colors/01-black-mens-fitted-t-shirt-front.webp"
+ ],
+ "hope-and-tomorrow-red-cuffed-beanie": [
+  "/products/hope-and-tomorrow-red-cuffed-beanie/01-red-cuffed-beanie-front.webp"
  ],
  "retro-colors-unisex-hoodie": [
   "/products/retro-colors-unisex-hoodie/01-black-unisex-premium-hoodie-front.webp",
@@ -371,6 +440,9 @@
   "/products/unisex-enemy-of-the-state-comfort-colors/01-black-unisex-garment-dyed-heavyweight-t-shirt-front-and-back.webp",
   "/products/unisex-enemy-of-the-state-comfort-colors/02-flo-blue-unisex-garment-dyed-heavyweight-t-shirt-front-and-b.webp",
   "/products/unisex-enemy-of-the-state-comfort-colors/03-pepper-unisex-garment-dyed-heavyweight-t-shirt-front-and-bac.webp"
+ ],
+ "counting-sheep-tote-bag-large-with-pocket": [
+  "/products/counting-sheep-tote-bag-large-with-pocket/01-all-over-print-large-tote-bag-w-pocket-black-back.webp"
  ],
  "circle": [
   "/products/circle/01-black-mens-fitted-t-shirt-front.webp"

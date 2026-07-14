@@ -24,6 +24,27 @@ const APPROVED_LEGACY_SLUGS = new Set([
   "black-sheep-bone-unisex-premium-sweatshirt",
   "black-sheep-mint-unisex-premium-sweatshirt",
   "black-sheep-can-cooler",
+  // 2026-07-13 batch two — repriced to margin floor and activated with
+  // David's "use suggested" approval:
+  "zebra-unisex-knitted-cardigan",
+  "dots-unisex-knitted-crewneck-sweater",
+  "royal-black-unisex-hoodie",
+  "nys-ecto-black-unisex-hoodie",
+  "avenue-b-new-york-grey-unisex-hoodie",
+  "dont-fuck-fascists-unisex-hoodie",
+  "super-bros-black-short-sleeve-t-shirt",
+  "keano",
+  "nys-ecto-black-short-sleeve-t-shirt",
+  "link-s-lawn-service-white-unisex-short-sleeve-t-shirt",
+  "dont-fuck-fascists-sweatshirt",
+  "yellow-reversible-bucket-hat",
+  "counting-sheep-tote-bag-large-with-pocket",
+  "dont-fuck-fascists-shirt",
+  "library-tote-bag",
+  "black-sheep-black-grey-or-white-comfy-socks",
+  "counting-sheep-tote-bag-regular",
+  "hope-and-tomorrow-dark-grey-cuffed-beanie",
+  "hope-and-tomorrow-red-cuffed-beanie",
 ]);
 
 function isCurrentStorefrontProduct(product: Product): boolean {
