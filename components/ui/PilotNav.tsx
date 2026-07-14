@@ -115,13 +115,14 @@ export function PilotNav() {
                 >
                   {gender.label}
                 </Link>
-                <div className="invisible absolute left-0 top-full min-w-[24rem] border border-border/10 bg-void opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                <div className="invisible absolute left-0 top-full min-w-[24rem] border border-border/10 bg-void opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                   <div className="grid grid-cols-[1fr_10rem]">
                     <ul className="space-y-0.5 px-2 py-2">
                       {gender.subLinks.map((link) => (
                         <li key={link.href}>
                           <Link
                             href={link.href}
+                            aria-label={`${gender.label}: ${link.label}`}
                             className={`inline-flex h-10 w-full items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
                               isActive(pathname, link.href) ? "text-accent" : "text-muted hover:bg-charcoal hover:text-cream"
                             }`}

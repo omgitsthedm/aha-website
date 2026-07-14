@@ -130,8 +130,8 @@ export async function createOrder(
       quantity: it.quantity, unitPrice: it.unitPrice, lineTotal: it.lineTotal,
       squareVariationId: it.squareVariationId, printfulCatalogVariantId: it.printfulCatalogVariantId ?? null,
       printfulFileSnapshotJson: it.printfulSyncVariantId
-        ? { printfulSyncVariantId: it.printfulSyncVariantId }
-        : { printfulPlacements: it.printfulPlacements ?? [], printfulProductOptions: it.printfulProductOptions ?? [] },
+        ? { printfulSyncVariantId: it.printfulSyncVariantId, printfulStoreId: it.printfulStoreId }
+        : { printfulPlacements: it.printfulPlacements ?? [], printfulProductOptions: it.printfulProductOptions ?? [], printfulStoreId: it.printfulStoreId },
     }))
   );
 

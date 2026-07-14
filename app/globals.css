@@ -33,8 +33,10 @@
   --c-muted: 74 74 74;
   --c-accent: 206 61 86;
   --c-rose: 255 107 107;
-  --c-success: 168 213 186;
-  --c-warning: 240 201 135;
+  /* Darkened for text legibility on the paper ground (WCAG AA). The former pale
+     values (#A8D5BA / #F0C987) failed at ~1.5:1 on status/confirmation copy. */
+  --c-success: 22 101 52;   /* #166534 — ~6:1 on paper */
+  --c-warning: 138 90 0;    /* #8A5A00 — ~5:1 on paper */
   --c-error: 206 61 86;
 
   --aha-font-display: var(--font-poppins), Arial, sans-serif;
@@ -90,6 +92,17 @@
   select,
   textarea {
     font-size: max(16px, 1em);
+  }
+
+  /* Many field classes use Tailwind `focus:outline-none` (which wins on
+     specificity), leaving keyboard users only a faint border shift. Restore a
+     clear focus ring for keyboard focus (WCAG 2.4.7). !important beats the
+     utility's `:focus` rule; pointer focus is unaffected via :focus-visible. */
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid rgb(var(--c-accent)) !important;
+    outline-offset: 2px !important;
   }
 
   button:disabled {
@@ -643,6 +656,60 @@ textarea {
 .safe-x {
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Authored PDP story copy (Square description HTML). The global reset strips
+   block margins + list markers and there is no typography plugin, so restore
+   readable rhythm scoped to this container only. */
+.product-story > * + * {
+  margin-top: 0.85em;
+}
+.product-story p {
+  line-height: 1.65;
+}
+.product-story strong,
+.product-story b {
+  font-weight: 700;
+  color: rgb(var(--c-content));
+}
+.product-story ul,
+.product-story ol {
+  margin-top: 0.75em;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+.product-story ul {
+  list-style: disc;
+}
+.product-story ol {
+  list-style: decimal;
+}
+.product-story li {
+  padding-left: 0.25rem;
+}
+.product-story h2,
+.product-story h3,
+.product-story h4 {
+  font-family: var(--aha-font-display, inherit);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-top: 1.25em;
+}
+.product-story h2 { font-size: 1.35rem; }
+.product-story h3 { font-size: 1.15rem; }
+.product-story h4 { font-size: 1rem; }
+.product-story a {
+  color: rgb(var(--c-accent));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.product-story em,
+.product-story i {
+  font-style: italic;
 }
 
 /* Installed web app: behave like a native shell. Kill the rubber-band /

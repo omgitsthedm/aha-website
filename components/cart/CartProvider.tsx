@@ -6,6 +6,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 import dynamic from "next/dynamic";
@@ -59,9 +60,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Validate that parsed data is an array of cart items
+        // Validate shape: keep only well-formed items so schema drift or tampering
+        // can never render a $NaN total. Drop anything without a finite numeric
+        // price/quantity and a variation id.
         if (Array.isArray(parsed)) {
-          setItems(parsed);
+          const clean = parsed.filter(
+            (i) =>
+              i && typeof i.variationId === "string" &&
+              Number.isFinite(i.price) && Number.isFinite(i.quantity) && i.quantity > 0
+          );
+          if (clean.length) setItems(clean);
         }
       } catch (err) {
         console.warn("Failed to parse cart from localStorage:", err);
@@ -128,33 +136,41 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setIsOpen(true);
   }, []);
 
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalFormatted = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(total / 100);
+  // Memoized so useCart() consumers (incl. site-wide PilotNav) don't re-render on
+  // every unrelated provider state change. Callbacks are already useCallback-stable.
+  const value = useMemo(() => {
+    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+    const totalFormatted = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(total / 100);
+    return {
+      items,
+      addItem,
+      removeItem,
+      updateQuantity,
+      clearCart,
+      isOpen,
+      toggleCart,
+      setCartOpen,
+      total,
+      totalItems,
+      totalFormatted,
+      isModalOpen,
+      lastAddedItem,
+      modalRelated,
+      closeModal,
+      openCartFromModal,
+    };
+  }, [
+    items, addItem, removeItem, updateQuantity, clearCart, isOpen, toggleCart,
+    setCartOpen, isModalOpen, lastAddedItem, modalRelated, closeModal, openCartFromModal,
+  ]);
 
   return (
     <CartContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-        isOpen,
-        toggleCart,
-        setCartOpen,
-        total,
-        totalItems,
-        totalFormatted,
-        isModalOpen,
-        lastAddedItem,
-        modalRelated,
-        closeModal,
-        openCartFromModal,
-      }}
+      value={value}
     >
       {children}
       <CartDrawer />

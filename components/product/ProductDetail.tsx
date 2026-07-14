@@ -54,17 +54,23 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   const [wishlisted, setWishlisted] = useState(false);
   const feedbackTimer = useRef<number | null>(null);
 
-  useEffect(() => {
-    const saved = typeof window !== "undefined" ? localStorage.getItem("aha-wishlist") : null;
-    if (saved) {
-      const list = JSON.parse(saved) as string[];
-      setWishlisted(list.includes(product.slug));
+  const readWishlist = (): string[] => {
+    try {
+      const saved = typeof window !== "undefined" ? localStorage.getItem("aha-wishlist") : null;
+      const list = saved ? JSON.parse(saved) : [];
+      return Array.isArray(list) ? list.filter((s): s is string => typeof s === "string") : [];
+    } catch {
+      return []; // corrupted storage — start clean, never throw into render/handler
     }
+  };
+
+  useEffect(() => {
+    setWishlisted(readWishlist().includes(product.slug));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.slug]);
 
   const toggleWishlist = () => {
-    const saved = typeof window !== "undefined" ? localStorage.getItem("aha-wishlist") : null;
-    const list = saved ? (JSON.parse(saved) as string[]) : [];
+    const list = readWishlist();
     const next = wishlisted ? list.filter((s) => s !== product.slug) : [...list, product.slug];
     localStorage.setItem("aha-wishlist", JSON.stringify(next));
     setWishlisted(!wishlisted);
@@ -167,7 +173,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
           <section aria-labelledby="product-title" className="lg:pt-3">
             {collection && <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">{collection.name}</p>}
-            <h1 id="product-title" className="max-w-2xl font-display text-[clamp(2.5rem,6vw,5.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.05em] text-cream">{product.name}</h1>
+            <h1 id="product-title" className="max-w-2xl font-display text-[clamp(1.85rem,5.5vw,5.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-cream sm:leading-[0.86]">{product.name}</h1>
             <div className="mt-4 flex flex-wrap items-center gap-4">
               <p className="font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
             </div>
@@ -273,7 +279,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             {descriptionMarkup && (
               <div className="mt-10 border-t border-border/40 pt-7">
                 <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Product details</h2>
-                <div className="prose prose-sm mt-4 max-w-none font-body leading-relaxed text-cream/85" dangerouslySetInnerHTML={descriptionMarkup} />
+                <div className="product-story mt-4 font-body leading-relaxed text-cream/85" dangerouslySetInnerHTML={descriptionMarkup} />
               </div>
             )}
           </section>
