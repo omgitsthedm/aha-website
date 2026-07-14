@@ -23,6 +23,9 @@ const cents = (value: string | undefined): number => Math.round(Number(value || 
 const PRINTFUL_PRICE_TECHNIQUE: Record<string, string> = {
   sticker: "digital",
   knitting: "knitwear",
+  // Sync-product payloads label UV-printed accessories (crossbody bags)
+  // with the legacy "phone-case" technique; the price API calls it "uv".
+  "phone-case": "uv",
 };
 const priceTechnique = (technique: string | undefined): string | undefined =>
   technique ? (PRINTFUL_PRICE_TECHNIQUE[technique] ?? technique) : undefined;

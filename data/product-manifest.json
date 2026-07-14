@@ -2567,8 +2567,8 @@
       "collectionIds": [
         "accessorys"
       ],
-      "status": "draft",
-      "retailPrice": 3200,
+      "status": "active",
+      "retailPrice": 3800,
       "currency": "USD",
       "fitDescription": "One size.",
       "fabricDescription": "Printed to order on premium stock.",
@@ -2591,9 +2591,9 @@
           "ahaProductId": "aha-wall-crossbody-bag",
           "sku": "aha-wall-crossbody-bag-16708",
           "size": "AHA WALL - CROSSBODY BAG",
-          "retailPrice": 3200,
+          "retailPrice": 3800,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 0
         }
@@ -10002,8 +10002,8 @@
       "collectionIds": [
         "accessorys"
       ],
-      "status": "draft",
-      "retailPrice": 3200,
+      "status": "active",
+      "retailPrice": 3800,
       "currency": "USD",
       "fitDescription": "One size.",
       "fabricDescription": "Printed to order on premium stock.",
@@ -10026,9 +10026,9 @@
           "ahaProductId": "counting-sheep-crossbody-bag",
           "sku": "counting-sheep-crossbody-bag-16708",
           "size": "COUNTING SHEEP - CROSSBODY BAG",
-          "retailPrice": 3200,
+          "retailPrice": 3800,
           "currency": "USD",
-          "status": "manual_review",
+          "status": "active",
           "printfulSource": "catalog",
           "sortOrder": 0
         }

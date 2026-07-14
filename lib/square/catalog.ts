@@ -45,6 +45,8 @@ const APPROVED_LEGACY_SLUGS = new Set([
   "counting-sheep-tote-bag-regular",
   "hope-and-tomorrow-dark-grey-cuffed-beanie",
   "hope-and-tomorrow-red-cuffed-beanie",
+  "aha-wall-crossbody-bag",
+  "counting-sheep-crossbody-bag",
 ]);
 
 function isCurrentStorefrontProduct(product: Product): boolean {
