@@ -403,7 +403,7 @@
         "accessorys"
       ],
       "status": "active",
-      "retailPrice": 400,
+      "retailPrice": 600,
       "currency": "USD",
       "fitDescription": "One size.",
       "fabricDescription": "Printed to order on premium stock.",
@@ -2810,7 +2810,7 @@
           "color": "Red",
           "retailPrice": 4000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 14
         },
@@ -3131,7 +3131,7 @@
       "collectionIds": [
         "tees"
       ],
-      "status": "active",
+      "status": "draft",
       "retailPrice": 6000,
       "currency": "USD",
       "fitDescription": "Standard unisex fit \u2014 true to size.",
@@ -3157,7 +3157,7 @@
           "size": "XS",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 0
         },
@@ -3168,7 +3168,7 @@
           "size": "S",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 1
         },
@@ -3179,7 +3179,7 @@
           "size": "M",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 2
         },
@@ -3190,7 +3190,7 @@
           "size": "L",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 3
         },
@@ -3201,7 +3201,7 @@
           "size": "XL",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 4
         },
@@ -3212,7 +3212,7 @@
           "size": "2XL",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 5
         }
@@ -4748,7 +4748,7 @@
         "accessorys"
       ],
       "status": "active",
-      "retailPrice": 400,
+      "retailPrice": 600,
       "currency": "USD",
       "fitDescription": "One size.",
       "fabricDescription": "Printed to order on premium stock.",
@@ -14475,7 +14475,7 @@
       "collectionIds": [
         "tees"
       ],
-      "status": "active",
+      "status": "draft",
       "retailPrice": 6000,
       "currency": "USD",
       "fitDescription": "Standard unisex fit \u2014 true to size.",
@@ -14502,7 +14502,7 @@
           "color": "Charcoal Black Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 0
         },
@@ -14514,7 +14514,7 @@
           "color": "Charcoal Black Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 1
         },
@@ -14526,7 +14526,7 @@
           "color": "Charcoal Black Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 2
         },
@@ -14538,7 +14538,7 @@
           "color": "Charcoal Black Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 3
         },
@@ -14550,7 +14550,7 @@
           "color": "Charcoal Black Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 4
         },
@@ -14562,7 +14562,7 @@
           "color": "Charcoal Black Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 5
         },
@@ -14574,7 +14574,7 @@
           "color": "Grey Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 6
         },
@@ -14586,7 +14586,7 @@
           "color": "Grey Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 7
         },
@@ -14598,7 +14598,7 @@
           "color": "Grey Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 8
         },
@@ -14610,7 +14610,7 @@
           "color": "Grey Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 9
         },
@@ -14622,7 +14622,7 @@
           "color": "Grey Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 10
         },
@@ -14634,7 +14634,7 @@
           "color": "Grey Triblend",
           "retailPrice": 6000,
           "currency": "USD",
-          "status": "active",
+          "status": "manual_review",
           "printfulSource": "catalog",
           "sortOrder": 11
         }

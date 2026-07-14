@@ -25,7 +25,8 @@
     "verify:commerce-capabilities:netlify": "node ops/commerce-capabilities.mjs",
     "verify:netlify-site": "bash ops/netlify-target-guard.sh site",
     "verify:netlify-live": "bash ops/netlify-target-guard.sh live",
-    "product-factory": "node scripts/product-factory.mjs"
+    "product-factory": "node scripts/product-factory.mjs",
+    "audit:provider-liveness": "node scripts/audit-provider-liveness.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
