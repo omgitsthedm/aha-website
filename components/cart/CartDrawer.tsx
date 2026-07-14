@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useCart } from "./CartProvider";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { formatCents } from "@/lib/utils/money";
+import { SheepMark } from "@/components/ui/SheepMark";
 import { TAX_LINE_COPY, getFulfillmentSummary, getShippingLineCopy } from "@/lib/commerce/policies";
 
 export function CartDrawer() {
@@ -48,7 +49,7 @@ export function CartDrawer() {
 
         <div className="flex-1 overflow-y-auto px-5">
           {items.length === 0 ? (
-            <div className="flex h-full flex-col items-start justify-center"><h3 className="font-display text-2xl font-black uppercase">Nothing here yet</h3><p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">Items save in this browser until you remove them or complete checkout.</p><Link href="/shop" onClick={toggleCart} className="primary-action mt-6 min-h-11 px-5 py-3 text-xs">Open shop</Link></div>
+            <div className="flex h-full flex-col items-start justify-center"><SheepMark className="mb-5 w-24 text-cream" /><h3 className="font-display text-2xl font-black uppercase">Nothing here yet</h3><p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">Items save in this browser until you remove them or complete checkout.</p><Link href="/shop" onClick={toggleCart} className="primary-action mt-6 min-h-11 px-5 py-3 text-xs">Open shop</Link></div>
           ) : (
             <ul className="divide-y divide-border/40">
               {items.map((item) => (

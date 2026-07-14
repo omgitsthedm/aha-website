@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllProducts } from "@/lib/square/catalog";
 import { TrustStrip } from "@/components/ui/TrustStrip";
+import { SheepMark } from "@/components/ui/SheepMark";
 
 export const metadata: Metadata = {
   title: "After Hours Agenda | NYC Streetwear",
@@ -28,7 +29,7 @@ export default async function HomePage() {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
           <div>
             <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">NYC Streetwear · Made to order</p>
-            <h1 id="hero-heading" className="mt-5 font-display text-[clamp(2.75rem,8vw,5.5rem)] font-bold leading-[0.88] tracking-[-0.05em] text-cream">
+            <h1 id="hero-heading" className="mt-5 font-display text-[clamp(2.75rem,8vw,5.5rem)] font-bold uppercase leading-[0.88] tracking-[-0.05em] text-cream">
               After Hours Agenda
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted md:text-lg">
@@ -60,7 +61,7 @@ export default async function HomePage() {
       <section aria-labelledby="categories-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 text-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Shop by category</p>
-          <h2 id="categories-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">The collection</h2>
+          <h2 id="categories-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">The collection</h2>
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
           {categoryTiles.map((tile) => (
@@ -90,7 +91,7 @@ export default async function HomePage() {
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Featured</p>
-            <h2 id="featured-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">Right now</h2>
+            <h2 id="featured-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">Right now</h2>
           </div>
           <Link href="/unisex" className="hidden font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent underline underline-offset-4 hover:text-cream md:block">Shop everything</Link>
         </div>
@@ -120,10 +121,37 @@ export default async function HomePage() {
         )}
       </section>
 
+      <section aria-labelledby="worn-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+        <div className="mb-8 flex items-end justify-between gap-6">
+          <div>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The Black Sheep</p>
+            <h2 id="worn-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">Worn, not just shown</h2>
+          </div>
+          <SheepMark className="hidden w-16 text-cream md:block" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Link href="/product/black-sheep-mint-unisex-premium-sweatshirt" className="fold-surface group relative aspect-[4/5] overflow-hidden image-hover-zoom">
+            <Image src="/brand/photography/sheep-sweatshirt-agave--mens-front.jpg" alt="The Black Sheep sweatshirt in agave, worn" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/20 to-transparent p-5">
+              <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream group-hover:text-accent">Black Sheep Sweatshirt — Agave</p>
+              <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Shop it →</p>
+            </div>
+          </Link>
+          <Link href="/product/black-sheep-bone-unisex-premium-sweatshirt" className="fold-surface group relative aspect-[4/5] overflow-hidden image-hover-zoom">
+            <Image src="/brand/photography/sheep-sweatshirt-bone--womens-front.jpg" alt="The Black Sheep sweatshirt in bone, worn" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/20 to-transparent p-5">
+              <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream group-hover:text-accent">Black Sheep Sweatshirt — Bone</p>
+              <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Shop it →</p>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       <section aria-labelledby="dispatch-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="corner-cut crease-rule relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">
+          <SheepMark className="mx-auto mb-4 w-16 text-cream" />
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-[#B03246]">Newsletter</p>
-          <h2 id="dispatch-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-none tracking-[-0.045em] text-cream">Get the next release first</h2>
+          <h2 id="dispatch-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">Get the next release first</h2>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">New releases and the occasional note from the shop. No spam, unsubscribe anytime.</p>
           <form name="newsletter" method="POST" data-netlify="true" className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row" action="/newsletter">
             <input type="hidden" name="form-name" value="newsletter" />
@@ -162,7 +190,7 @@ export default async function HomePage() {
           </div>
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The agenda</p>
-            <h2 id="manifesto-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[0.92] tracking-[-0.04em] text-cream">Made after hours. Worn all day.</h2>
+            <h2 id="manifesto-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-[0.92] tracking-[-0.04em] text-cream">Made after hours. Worn all day.</h2>
             <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted md:text-base">
               <p>After Hours Agenda is an independent New York label — the name is literal. Designs get drawn when the day quiets down, then printed one at a time when you order. Nothing sits in a warehouse waiting to be discounted.</p>
               <p>The graphics run loud, quiet, funny, and defiant. The cuts are unisex and worn a hundred different ways. Nobody here needs permission to belong — that&apos;s the whole point.</p>

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { trackCommerceEvent } from "@/lib/analytics/events";
+import { SheepMark } from "@/components/ui/SheepMark";
 
 export interface SearchIndexItem {
   name: string;
@@ -121,6 +122,7 @@ export function SearchOverlay({ open, onClose, index }: SearchOverlayProps) {
                 </ul>
               ) : (
                 <div className="py-6 text-center">
+                  <SheepMark className="mx-auto mb-4 w-16 text-muted" />
                   <p className="text-sm text-muted">Nothing matches “{query}”.</p>
                   <Link href="/shop" onClick={onClose} className="mt-3 inline-flex min-h-11 items-center text-xs font-bold uppercase text-accent underline underline-offset-4">Browse the full catalog</Link>
                 </div>

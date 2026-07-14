@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SheepMark } from "@/components/ui/SheepMark";
 
 const serviceLinks = [
   { label: "Shipping", href: "/shipping" },
@@ -34,7 +35,7 @@ export function PilotFooter() {
     <footer className="relative border-t border-border/60 bg-void px-4 py-12 sm:px-6 lg:py-16">
       <div className="mx-auto grid max-w-[1280px] gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)_minmax(18rem,0.5fr)]">
         <div className="fold-surface p-6 sm:p-8">
-          <p className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[0.9] tracking-[-0.05em]">After Hours Agenda</p>
+          <div className="flex flex-wrap items-end gap-6"><SheepMark className="w-20 text-cream" title="After Hours Agenda black sheep" /><p className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold uppercase leading-[0.9] tracking-[-0.05em]">After Hours Agenda</p></div>
           <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories, printed to order. Questions? Email info@afterhoursagenda.com.</p>
           <a href="mailto:info@afterhoursagenda.com" className="btn-secondary mt-6">Email support</a>
 
