@@ -14,6 +14,8 @@ import { extractVariationSize } from "@/lib/utils/variation";
 import { swatchHex } from "@/lib/data/color-swatches";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 import { ImageLightbox } from "@/components/product/ImageLightbox";
+import { ProductReviews } from "@/components/product/ProductReviews";
+import type { ReviewSummary } from "@/lib/commerce/reviews";
 
 interface ProductDetailProps {
   product: Product;
@@ -24,6 +26,7 @@ interface ProductDetailProps {
   storyDescription?: string;
   /** color name -> index in product.images showing that colorway */
   colorImageIndex?: Record<string, number>;
+  reviews?: ReviewSummary;
 }
 
 const sanitizeHtml = (html: string): string => html
@@ -40,7 +43,7 @@ const sanitizeHtml = (html: string): string => html
 
 const cleanDisplayText = (value: string): string => value.replace(/[—–]/g, "-");
 
-export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription, colorImageIndex }: ProductDetailProps) {
+export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription, colorImageIndex, reviews }: ProductDetailProps) {
   const { addItem } = useCart();
   const sizeInStock = (size: string) => stockBySize ? stockBySize[extractVariationSize(size)] !== false : true;
   const variationAvailable = (name: string) => {
@@ -334,6 +337,8 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             </div>
           </section>
         )}
+
+        <ProductReviews productSlug={product.slug} initial={reviews ?? { items: [], count: 0, average: 0 }} />
       </div>
 
       {/* Sticky mobile buy bar — the inline Add-to-bag can sit far below the fold

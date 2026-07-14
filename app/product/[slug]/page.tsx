@@ -8,6 +8,7 @@ import type { Product } from "@/lib/utils/types";
 import type { Metadata } from "next";
 import { buildProductStory, isAuthoredSquareDescription } from "@/lib/content/product-copy";
 import { loadProducts } from "@/lib/data/products";
+import { getProductReviews } from "@/lib/commerce/reviews";
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -81,6 +82,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const stockPromise = enrichment
     ? getStockByCatId(Object.values(enrichment.catIdBySize)).catch(() => ({} as Record<number, boolean>))
     : Promise.resolve({} as Record<number, boolean>);
+  const reviewsPromise = getProductReviews(slug);
 
   try {
     [product, products] = await Promise.all([
@@ -106,6 +108,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   // Prefer the human-authored Square description (the brand's actual copy) and
   // only fall back to the generated story when Square has nothing real. This
   // surfaces the per-product storytelling that was previously suppressed.
+  const reviews = await reviewsPromise;
   const storyDescription = isAuthoredSquareDescription(product.description)
     ? product.description!
     : buildProductStory(product, enrichment);
@@ -155,7 +158,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <ProductJsonLd product={product} description={plainDescription} />
+      <ProductJsonLd product={product} description={plainDescription} reviews={reviews} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c") }}
@@ -167,6 +170,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         stockBySize={stockBySize}
         storyDescription={storyDescription}
         colorImageIndex={colorImageIndex}
+        reviews={reviews}
       />
     </>
   );

@@ -220,3 +220,24 @@ export const pushSubscriptions = pgTable("push_subscriptions", {
   byOrderEndpoint: unique("uq_push_subscriptions_order_endpoint").on(t.orderId, t.endpoint),
   byOrder: index("idx_push_subscriptions_order").on(t.orderId),
 }));
+
+// Product reviews. Submitted from the PDP; start as "pending" and only show once
+// "approved" via ops moderation (no fake or auto-published ratings — honesty law).
+// email is contact-only (never displayed). orderNumber, when matched to a real
+// paid order, marks the review a verified purchase.
+export const reviews = pgTable("reviews", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  productSlug: text("product_slug").notNull(),
+  rating: integer("rating").notNull(), // 1–5
+  title: text("title"),
+  body: text("body").notNull(),
+  authorName: text("author_name").notNull(),
+  email: text("email"), // contact only, not displayed
+  orderNumber: text("order_number"),
+  verified: boolean("verified").notNull().default(false),
+  status: text("status").notNull().default("pending"), // pending | approved | rejected
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+}, (t) => ({
+  bySlugStatus: index("idx_reviews_slug_status").on(t.productSlug, t.status),
+}));

@@ -1,4 +1,5 @@
 import type { Product } from "@/lib/utils/types";
+import type { ReviewSummary } from "@/lib/commerce/reviews";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com";
@@ -6,6 +7,7 @@ const BASE_URL =
 interface ProductJsonLdProps {
   product: Product;
   description?: string;
+  reviews?: ReviewSummary;
 }
 
 /**
@@ -14,7 +16,7 @@ interface ProductJsonLdProps {
  * and serialized with JSON.stringify which safely escapes special characters,
  * preventing script injection in the JSON-LD output.
  */
-export function ProductJsonLd({ product, description }: ProductJsonLdProps) {
+export function ProductJsonLd({ product, description, reviews }: ProductJsonLdProps) {
   // Guard against products with no variations (would crash Math.min/max)
   if (product.variations.length === 0) return null;
 
@@ -46,6 +48,16 @@ export function ProductJsonLd({ product, description }: ProductJsonLdProps) {
         name: "After Hours Agenda",
       },
     })),
+    // Only emit AggregateRating from REAL approved reviews (never fabricated).
+    ...(reviews && reviews.count > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: reviews.average.toFixed(1),
+            reviewCount: reviews.count,
+          },
+        }
+      : {}),
   };
 
   // JSON.stringify safely escapes all special characters, preventing XSS
