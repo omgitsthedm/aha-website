@@ -1,0 +1,866 @@
+{
+ "black-sheep-black-grey-or-white-comfy-socks": {
+  "title": "Black Sheep - Black, Grey, or White Comfy Socks",
+  "printfulSyncProductId": 405614584,
+  "squareItemId": "FVGCBRSOBUOACTYS7KBIX3FB",
+  "retailPrice": 3700,
+  "status": "active",
+  "variants": [
+   {
+    "name": "Black Sheep - Black, Grey, or White Comfy Socks / Black / S/M",
+    "syncVariantId": 5086436678,
+    "catalogVariantId": 12674,
+    "externalId": "NVURW32LLDQI55ZAHLAGE5AC",
+    "placements": [
+     {
+      "placement": "embroidery_outside_left",
+      "technique": "embroidery",
+      "position": {
+       "width": 1.18,
+       "height": 1.18,
+       "top": 0.39,
+       "left": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Black, Grey, or White Comfy Socks / Black / L/XL",
+    "syncVariantId": 5086436679,
+    "catalogVariantId": 12675,
+    "externalId": "ZTUPYECIBFF54DVYGQ2LJ7ZQ",
+    "placements": [
+     {
+      "placement": "embroidery_outside_left",
+      "technique": "embroidery",
+      "position": {
+       "width": 1.18,
+       "height": 1.18,
+       "top": 0.39,
+       "left": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Black, Grey, or White Comfy Socks / Heather Grey / S/M",
+    "syncVariantId": 5086436680,
+    "catalogVariantId": 12676,
+    "externalId": "RU3TJ2BCUX77Z7SIUSONBUQU",
+    "placements": [
+     {
+      "placement": "embroidery_outside_left",
+      "technique": "embroidery",
+      "position": {
+       "width": 1.18,
+       "height": 1.18,
+       "top": 0.39,
+       "left": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Black, Grey, or White Comfy Socks / Heather Grey / L/XL",
+    "syncVariantId": 5086436681,
+    "catalogVariantId": 12677,
+    "externalId": "RGJERDRKFO7DLJ565QJHYD3X",
+    "placements": [
+     {
+      "placement": "embroidery_outside_left",
+      "technique": "embroidery",
+      "position": {
+       "width": 1.18,
+       "height": 1.18,
+       "top": 0.39,
+       "left": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Black, Grey, or White Comfy Socks / White / S/M",
+    "syncVariantId": 5086436682,
+    "catalogVariantId": 12678,
+    "externalId": "3UPO2HNSMSHHAEWZ3X7RX5S7",
+    "placements": [
+     {
+      "placement": "embroidery_outside_left",
+      "technique": "embroidery",
+      "position": {
+       "width": 1.18,
+       "height": 1.18,
+       "top": 0.39,
+       "left": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Black, Grey, or White Comfy Socks / White / L/XL",
+    "syncVariantId": 5086436683,
+    "catalogVariantId": 12679,
+    "externalId": "PCVROOLEXILJCZWSFAFKOWEM",
+    "placements": [
+     {
+      "placement": "embroidery_outside_left",
+      "technique": "embroidery",
+      "position": {
+       "width": 1.18,
+       "height": 1.18,
+       "top": 0.39,
+       "left": 0.0
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "counting-sheep-crossbody-bag": {
+  "title": "Counting Sheep - Crossbody Bag",
+  "printfulSyncProductId": 405601868,
+  "squareItemId": "LBR54FECNTFXMCANYU46KKGG",
+  "retailPrice": 3800,
+  "status": "active",
+  "variants": [
+   {
+    "name": "Counting Sheep - Crossbody Bag",
+    "syncVariantId": 5086379415,
+    "catalogVariantId": 16708,
+    "externalId": "SYHXOD7MO63VRWX4WH72NMBO",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "phone-case",
+      "position": {
+       "width": 14.1308,
+       "height": 14.1308,
+       "top": -2.271,
+       "left": 0.0
+      }
+     },
+     {
+      "placement": "back",
+      "technique": "phone-case",
+      "position": {
+       "width": 14.1308,
+       "height": 14.1308,
+       "top": -2.271,
+       "left": 0.0
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "phone-case",
+      "position": {
+       "width": 8.4465,
+       "height": 5.6464,
+       "top": -0.8178,
+       "left": -0.7233
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "black-sheep-bone-unisex-premium-sweatshirt": {
+  "title": "Black Sheep - Bone Unisex Premium Sweatshirt",
+  "printfulSyncProductId": 405602124,
+  "squareItemId": "MFSJPDCBPOMWXVT73JT5ZI5C",
+  "retailPrice": 5000,
+  "status": "active",
+  "variants": [
+   {
+    "name": "Black Sheep - Bone Unisex Premium Sweatshirt / S",
+    "syncVariantId": 5086381554,
+    "catalogVariantId": 20357,
+    "externalId": "PURWTTW2LNOOSDBOWWPRBMA2",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Bone Unisex Premium Sweatshirt / M",
+    "syncVariantId": 5086381555,
+    "catalogVariantId": 20356,
+    "externalId": "UE327UOT7PCCKK4TNNATUS2G",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Bone Unisex Premium Sweatshirt / L",
+    "syncVariantId": 5086381556,
+    "catalogVariantId": 20355,
+    "externalId": "ITT6UM7QCM7R2UHCKMNKB6NA",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Bone Unisex Premium Sweatshirt / XL",
+    "syncVariantId": 5086381557,
+    "catalogVariantId": 20354,
+    "externalId": "KLUSM7L5A6FPWDKMT4I7DBWN",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Bone Unisex Premium Sweatshirt / 2XL",
+    "syncVariantId": 5086381558,
+    "catalogVariantId": 20353,
+    "externalId": "SVIZADNP7SKLQRCVXL6DB67P",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Bone Unisex Premium Sweatshirt / 3XL",
+    "syncVariantId": 5086381559,
+    "catalogVariantId": 20352,
+    "externalId": "6WZDALWSHSF53UOH7C6MSTXM",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "counting-sheep-tote-bag-regular": {
+  "title": "Counting Sheep Tote Bag (Regular)",
+  "printfulSyncProductId": 405894788,
+  "squareItemId": "NJT4R2YINL5XP4RASKBCVZLO",
+  "retailPrice": 2800,
+  "status": "active",
+  "variants": [
+   {
+    "name": "Counting Sheep Tote Bag (Regular)",
+    "syncVariantId": 5087799492,
+    "catalogVariantId": 4533,
+    "externalId": "QQUMRADAISQF22JB3TNQZFHB",
+    "placements": [
+     {
+      "placement": "default",
+      "technique": "cut-sew",
+      "position": {
+       "width": 21.3529,
+       "height": 16.5,
+       "top": 0.0,
+       "left": -2.1765
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "black-sheep-can-cooler": {
+  "title": "Black Sheep Can Cooler",
+  "printfulSyncProductId": 405614002,
+  "squareItemId": "OOTALKBKLFHOZNJALRHA52V2",
+  "retailPrice": 600,
+  "status": "active",
+  "variants": [
+   {
+    "name": "Black Sheep Can Cooler / Regular 12 oz",
+    "syncVariantId": 5086434393,
+    "catalogVariantId": 19461,
+    "externalId": "RDWHTX4VWWYBVQS3PVKKR462",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "sublimation",
+      "position": {
+       "width": 7.0288,
+       "height": 7.0531,
+       "top": -0.1029,
+       "left": -1.7212
+      }
+     },
+     {
+      "placement": "front",
+      "technique": "sublimation",
+      "position": {
+       "width": 5.0933,
+       "height": 5.0933,
+       "top": 0.0,
+       "left": -0.4467
+      }
+     },
+     {
+      "placement": "back",
+      "technique": "sublimation",
+      "position": {
+       "width": 7.0357,
+       "height": 7.0596,
+       "top": -0.1101,
+       "left": -1.7247
+      }
+     },
+     {
+      "placement": "back",
+      "technique": "sublimation",
+      "position": {
+       "width": 5.0997,
+       "height": 5.0933,
+       "top": 0.0,
+       "left": -0.4473
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep Can Cooler / Slim 12 oz",
+    "syncVariantId": 5086434394,
+    "catalogVariantId": 19462,
+    "externalId": "23ABZBE6A5ZPULEIWLRC4HFR",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "sublimation",
+      "position": {
+       "width": 7.0288,
+       "height": 7.0531,
+       "top": -0.1029,
+       "left": -1.7212
+      }
+     },
+     {
+      "placement": "front",
+      "technique": "sublimation",
+      "position": {
+       "width": 5.0933,
+       "height": 5.0933,
+       "top": 0.0,
+       "left": -0.4467
+      }
+     },
+     {
+      "placement": "back",
+      "technique": "sublimation",
+      "position": {
+       "width": 7.0357,
+       "height": 7.0596,
+       "top": -0.1101,
+       "left": -1.7247
+      }
+     },
+     {
+      "placement": "back",
+      "technique": "sublimation",
+      "position": {
+       "width": 5.0997,
+       "height": 5.0933,
+       "top": 0.0,
+       "left": -0.4473
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "black-sheep-unisex-premium-sweatshirt": {
+  "title": "Black Sheep - Unisex Premium Sweatshirt",
+  "printfulSyncProductId": 403863099,
+  "squareItemId": null,
+  "retailPrice": 4400,
+  "status": "draft",
+  "variants": [
+   {
+    "name": "Black Sheep - Unisex Premium Sweatshirt / S",
+    "syncVariantId": 5070449364,
+    "catalogVariantId": 20357,
+    "externalId": "HG5WBTG54A4TGMXDMTSTJX3N",
+    "placements": [
+     {
+      "placement": "front_large",
+      "technique": "dtg",
+      "position": {
+       "width": 16.8762,
+       "height": 16.8541,
+       "top": 0.5198,
+       "left": -0.9825
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Unisex Premium Sweatshirt / M",
+    "syncVariantId": 5070449365,
+    "catalogVariantId": 20356,
+    "externalId": "UCF4TDRCJASV7SG3KFN2XGMV",
+    "placements": [
+     {
+      "placement": "front_large",
+      "technique": "dtg",
+      "position": {
+       "width": 16.8762,
+       "height": 16.8541,
+       "top": 0.5198,
+       "left": -0.9825
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Unisex Premium Sweatshirt / L",
+    "syncVariantId": 5070449367,
+    "catalogVariantId": 20355,
+    "externalId": "GZZHLVAKIF3GJ4KIE737C732",
+    "placements": [
+     {
+      "placement": "front_large",
+      "technique": "dtg",
+      "position": {
+       "width": 16.8762,
+       "height": 16.8541,
+       "top": 0.5198,
+       "left": -0.9825
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Unisex Premium Sweatshirt / XL",
+    "syncVariantId": 5070449369,
+    "catalogVariantId": 20354,
+    "externalId": "YCDDCZV3SLGMUFT5QE37Y7ST",
+    "placements": [
+     {
+      "placement": "front_large",
+      "technique": "dtg",
+      "position": {
+       "width": 16.8762,
+       "height": 16.8541,
+       "top": 0.5198,
+       "left": -0.9825
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Unisex Premium Sweatshirt / 2XL",
+    "syncVariantId": 5070449371,
+    "catalogVariantId": 20353,
+    "externalId": "INDHQ5WJBC36NVAAMYTXMPTN",
+    "placements": [
+     {
+      "placement": "front_large",
+      "technique": "dtg",
+      "position": {
+       "width": 16.8762,
+       "height": 16.8541,
+       "top": 0.5198,
+       "left": -0.9825
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Unisex Premium Sweatshirt / 3XL",
+    "syncVariantId": 5070449372,
+    "catalogVariantId": 20352,
+    "externalId": "2HKUIRXGBCO2XM7XBFRKPUUA",
+    "placements": [
+     {
+      "placement": "front_large",
+      "technique": "dtg",
+      "position": {
+       "width": 16.8762,
+       "height": 16.8541,
+       "top": 0.5198,
+       "left": -0.9825
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "counting-sheep-tote-bag-large-with-pocket": {
+  "title": "Counting Sheep Tote Bag (Large With Pocket)",
+  "printfulSyncProductId": 405896861,
+  "squareItemId": "XJXJVXTDOBCZVWELTFQX34EQ",
+  "retailPrice": 4100,
+  "status": "active",
+  "variants": [
+   {
+    "name": "Counting Sheep Tote Bag (Large With Pocket)",
+    "syncVariantId": 5087820066,
+    "catalogVariantId": 9039,
+    "externalId": "7GS2DOKNCFFODJYVJ6SKNVOI",
+    "placements": [
+     {
+      "placement": "default",
+      "technique": "cut-sew",
+      "position": {
+       "width": 26.3361,
+       "height": 20.3587,
+       "top": -1.8684,
+       "left": -2.6681
+      }
+     },
+     {
+      "placement": "pocket",
+      "technique": "cut-sew",
+      "position": {
+       "width": 10.0,
+       "height": 7.7273,
+       "top": 9.7725,
+       "left": 0.0
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "black-sheep-mint-unisex-premium-sweatshirt": {
+  "title": "Black Sheep - Mint Unisex Premium Sweatshirt",
+  "printfulSyncProductId": 405602083,
+  "squareItemId": "ZEOIPI6XEMV253NOSQVMYIWX",
+  "retailPrice": 5000,
+  "status": "active",
+  "variants": [
+   {
+    "name": "Black Sheep - Mint Unisex Premium Sweatshirt / S",
+    "syncVariantId": 5086381293,
+    "catalogVariantId": 13950,
+    "externalId": "K7ZHJWOPG26LJG2V7UHJU7LM",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Mint Unisex Premium Sweatshirt / M",
+    "syncVariantId": 5086381294,
+    "catalogVariantId": 13951,
+    "externalId": "W6GXEDVLZRP2VN6WR5BZC2ZP",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Mint Unisex Premium Sweatshirt / L",
+    "syncVariantId": 5086381295,
+    "catalogVariantId": 13952,
+    "externalId": "MTH25RFALLZ2YXXJ7XYZPNMD",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Mint Unisex Premium Sweatshirt / XL",
+    "syncVariantId": 5086381296,
+    "catalogVariantId": 13953,
+    "externalId": "32PSHL6HGX4GVRTTVXIAH4NL",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Mint Unisex Premium Sweatshirt / 2XL",
+    "syncVariantId": 5086381297,
+    "catalogVariantId": 13954,
+    "externalId": "3CL6DZTLWFYKT6JDUBCAQ564",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   },
+   {
+    "name": "Black Sheep - Mint Unisex Premium Sweatshirt / 3XL",
+    "syncVariantId": 5086381298,
+    "catalogVariantId": 13955,
+    "externalId": "I6FB74HUT2AB7YRE2GNCKKWD",
+    "placements": [
+     {
+      "placement": "front",
+      "technique": "dtg",
+      "position": {
+       "width": 15.7395,
+       "height": 15.7299,
+       "top": 0.1358,
+       "left": -1.867
+      }
+     },
+     {
+      "placement": "label_inside",
+      "technique": "dtg",
+      "position": {
+       "width": 2.467,
+       "height": 0.9342,
+       "top": 0.0,
+       "left": 0.0004
+      }
+     }
+    ]
+   }
+  ]
+ }
+}
