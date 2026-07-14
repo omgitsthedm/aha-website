@@ -58,7 +58,7 @@ export default async function HomePage() {
         <TrustStrip />
       </div>
 
-      <section aria-labelledby="categories-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      <section aria-labelledby="categories-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 text-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Shop by category</p>
           <h2 id="categories-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">The collection</h2>
@@ -87,7 +87,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="featured-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      <section aria-labelledby="featured-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Featured</p>
@@ -121,7 +121,7 @@ export default async function HomePage() {
         )}
       </section>
 
-      <section aria-labelledby="worn-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      <section aria-labelledby="worn-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The Black Sheep</p>
