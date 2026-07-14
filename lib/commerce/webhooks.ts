@@ -6,6 +6,7 @@ import { webhookEvents, orders, fulfillments, shipments, auditLog } from "@/db/s
 import { eq } from "drizzle-orm";
 import { syncOrderFulfillmentStatus } from "./fulfillment";
 import { dispatchOrderNotifications, enqueueOrderNotification } from "./notifications";
+import { sendOrderShippedPush } from "@/lib/push/webpush";
 
 type Json = Record<string, unknown>;
 const get = (o: unknown, ...path: string[]): unknown =>
@@ -116,6 +117,18 @@ export async function applyPrintfulEvent(event: unknown): Promise<void> {
       carrier: String(ship?.carrier ?? ""), trackingNumber: String(ship?.tracking_number ?? ""),
     });
     await dispatchOrderNotifications(5, orderId).catch(() => {});
+    try {
+      const [o] = await db().select({ orderNumber: orders.externalOrderNumber })
+        .from(orders).where(eq(orders.id, orderId)).limit(1);
+      if (o) {
+        await sendOrderShippedPush(orderId, {
+          orderNumber: o.orderNumber,
+          trackingUrl: String(ship?.tracking_url ?? "") || undefined,
+        });
+      }
+    } catch {
+      // Push is best-effort; the shipped email is the guaranteed channel.
+    }
   } else if (type === "order_failed" || type === "order_put_hold") {
     if (providerFulfillment) {
       await db().update(fulfillments).set({ status: "manual_review", lastError: type, updatedAt: new Date() })

@@ -203,3 +203,20 @@ const snapshotTable = (name: string) => pgTable(name, {
 export const inventorySnapshots = snapshotTable("inventory_snapshots");
 export const priceSnapshots = snapshotTable("price_snapshots");
 export const productFeedSnapshots = snapshotTable("product_feed_snapshots");
+
+// Web Push: one row per (order, browser endpoint). Created from the
+// track-order page after the shopper proves order number + email; consumed
+// once when the shipped webhook fires. Endpoint URLs are capability URLs —
+// treat like PII, delete on 404/410 from the push service.
+export const pushSubscriptions = pgTable("push_subscriptions", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  orderId: bigint("order_id", { mode: "number" }).notNull().references(() => orders.id, { onDelete: "cascade" }),
+  endpoint: text("endpoint").notNull(),
+  p256dh: text("p256dh").notNull(),
+  auth: text("auth").notNull(),
+  notifiedAt: timestamp("notified_at", { withTimezone: true }),
+  createdAt: createdAt(),
+}, (t) => ({
+  byOrderEndpoint: unique("uq_push_subscriptions_order_endpoint").on(t.orderId, t.endpoint),
+  byOrder: index("idx_push_subscriptions_order").on(t.orderId),
+}));
