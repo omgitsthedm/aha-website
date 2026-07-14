@@ -67,6 +67,10 @@ export function CheckoutForm({ squareConfig }: Props) {
   const [quote, setQuote] = useState<CheckoutQuote | null>(null);
   const [quoteStatus, setQuoteStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [quoteError, setQuoteError] = useState<string | null>(null);
+  const [promoCode, setPromoCode] = useState("");        // input value
+  const [appliedPromo, setAppliedPromo] = useState("");  // code actually sent to the server
+  const [promoInfo, setPromoInfo] = useState<{ label: string; percentage: string } | null>(null);
+  const [promoInvalid, setPromoInvalid] = useState(false);
   const [contact, setContact] = useState({
     email: "", shippingName: "", address1: "", city: "", state: "", zip: "", country: "US",
   });
@@ -140,6 +144,7 @@ export function CheckoutForm({ squareConfig }: Props) {
     setQuoteError(null);
     const body = JSON.stringify({
       lines: items.map((item) => ({ squareVariationId: item.variationId, quantity: item.quantity })),
+      promoCode: appliedPromo || undefined,
       contact: {
         shippingName: contact.shippingName,
         shippingAddress: {
@@ -149,9 +154,11 @@ export function CheckoutForm({ squareConfig }: Props) {
       },
     });
 
+    type QuoteResponse = { quote: CheckoutQuote; promo?: { label: string; percentage: string } | null; promoInvalid?: boolean };
+
     // One fetch with a 10s timeout. The quote is fully idempotent (no charge),
     // so it is safe to retry once on a pure network failure / timeout.
-    const attempt = async (): Promise<CheckoutQuote> => {
+    const attempt = async (): Promise<QuoteResponse> => {
       const controller = new AbortController();
       const timer = window.setTimeout(() => controller.abort(), 10_000);
       try {
@@ -168,14 +175,14 @@ export function CheckoutForm({ squareConfig }: Props) {
           (err as Error & { fatal?: boolean }).fatal = true;
           throw err;
         }
-        return data.quote as CheckoutQuote;
+        return data as QuoteResponse;
       } finally {
         window.clearTimeout(timer);
       }
     };
 
     try {
-      let data: CheckoutQuote;
+      let data: QuoteResponse;
       try {
         data = await attempt();
       } catch (first) {
@@ -184,9 +191,11 @@ export function CheckoutForm({ squareConfig }: Props) {
         await new Promise((r) => window.setTimeout(r, 800));
         data = await attempt();
       }
-      setQuote(data);
+      setQuote(data.quote);
+      setPromoInfo(data.promo ?? null);
+      setPromoInvalid(Boolean(data.promoInvalid));
       setQuoteStatus("ready");
-      return data;
+      return data.quote;
     } catch (quoteFailure) {
       setQuote(null);
       setQuoteStatus("error");
@@ -198,7 +207,7 @@ export function CheckoutForm({ squareConfig }: Props) {
       );
       return null;
     }
-  }, [items, contact]);
+  }, [items, contact, appliedPromo]);
 
   useEffect(() => {
     setQuote(null);
@@ -271,6 +280,7 @@ export function CheckoutForm({ squareConfig }: Props) {
           idempotencyKey: idempotencyKeyRef.current,
           quotedTotal: reviewedQuote.total,
           quotedCurrency: reviewedQuote.currency,
+          promoCode: appliedPromo || undefined,
           verificationToken,
           lines: items.map((i) => ({ squareVariationId: i.variationId, quantity: i.quantity })),
           contact: {
@@ -567,8 +577,27 @@ export function CheckoutForm({ squareConfig }: Props) {
                 </li>
               ))}
             </ul>
+
+            <div className="mt-4 border-t border-border/40 pt-4">
+              <label htmlFor="promo" className="text-[11px] font-bold uppercase tracking-[0.08em] text-muted">Promo code</label>
+              <div className="mt-2 flex gap-2">
+                <input id="promo" value={promoCode} autoComplete="off"
+                  onChange={(e) => { setPromoCode(e.target.value); setPromoInvalid(false); }}
+                  placeholder="Enter code"
+                  className="min-h-11 flex-1 border border-border/60 bg-void px-3 text-sm uppercase text-cream placeholder:normal-case placeholder:text-muted" />
+                <button type="button" onClick={() => setAppliedPromo(promoCode.trim())}
+                  disabled={!promoCode.trim() || quoteStatus === "loading" || promoCode.trim().toUpperCase() === appliedPromo.toUpperCase()}
+                  className="btn-secondary min-h-11 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50">Apply</button>
+              </div>
+              {promoInfo && <p className="mt-2 text-xs font-bold text-success">{promoInfo.label} applied — {promoInfo.percentage}% off.</p>}
+              {promoInvalid && <p className="mt-2 text-xs font-bold text-warning">That code isn&rsquo;t valid.</p>}
+            </div>
+
             <div className="mt-5 space-y-2 border-t border-border/40 pt-4 text-sm font-bold">
-              <div className="flex justify-between text-muted"><span>Subtotal</span><span>{money(quote?.subtotal ?? total)}</span></div>
+              <div className="flex justify-between text-muted"><span>Subtotal</span><span>{money(total)}</span></div>
+              {promoInfo && quote && total - quote.subtotal > 0 && (
+                <div className="flex justify-between text-success"><span>{promoInfo.label} ({promoInfo.percentage}% off)</span><span>-{money(total - quote.subtotal)}</span></div>
+              )}
               <div className="flex justify-between text-muted"><span>Shipping</span><span className="text-success">Free</span></div>
               <div className="flex justify-between text-muted">
                 <span>Tax</span>

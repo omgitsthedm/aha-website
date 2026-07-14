@@ -10,6 +10,7 @@ import {
 import { startFulfillment } from "@/lib/commerce/fulfillment";
 import { dispatchOrderNotifications, enqueueOrderNotification } from "@/lib/commerce/notifications";
 import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
+import { resolveDiscount } from "@/lib/commerce/discounts";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ interface CreatePaymentBody {
   quotedCurrency: string;
   lines: CheckoutLine[];
   contact: OrderContact;
+  promoCode?: string; // resolved server-side; only affects price via the same guard as the quote
 }
 
 interface SquarePaymentResponse {
@@ -87,6 +89,9 @@ export async function POST(request: Request) {
     priced = await createPricedSquareOrder({
       ...(customerId ? { customerId } : {}),
       lineItems: cart.items.map((it) => ({ catalogObjectId: it.squareVariationId, quantity: String(it.quantity) })),
+      // Resolved server-side; identical resolution to the quote keeps the
+      // QUOTE_CHANGED guard exact (same code → same discounted total).
+      discount: resolveDiscount(body.promoCode),
       shippingAddress: addr ? {
         addressLine1: addr.address1, locality: addr.city,
         administrativeDistrictLevel1: addr.state, postalCode: addr.zip, country: addr.country,

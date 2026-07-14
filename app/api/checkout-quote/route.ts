@@ -3,12 +3,14 @@ import { revalidateCart, type CheckoutLine, type OrderContact } from "@/lib/comm
 import { calculatePricedSquareOrder } from "@/lib/square/orders";
 import { getSquareLocationId } from "@/lib/commerce/runtime";
 import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
+import { resolveDiscount } from "@/lib/commerce/discounts";
 
 export const dynamic = "force-dynamic";
 
 interface QuoteBody {
   lines: CheckoutLine[];
   contact: OrderContact;
+  promoCode?: string;
 }
 
 function splitName(name?: string): { firstName: string; lastName: string } {
@@ -42,12 +44,14 @@ export async function POST(request: Request) {
   }
 
   const { firstName, lastName } = splitName(body.contact.shippingName);
+  const discount = resolveDiscount(body.promoCode);
   try {
     const quote = await calculatePricedSquareOrder({
       lineItems: cart.items.map((item) => ({
         catalogObjectId: item.squareVariationId,
         quantity: String(item.quantity),
       })),
+      discount,
       shippingAddress: {
         addressLine1: address.address1,
         locality: address.city,
@@ -58,7 +62,15 @@ export async function POST(request: Request) {
         lastName,
       },
     });
-    return NextResponse.json({ ok: true, quote }, { headers: { "Cache-Control": "no-store" } });
+    return NextResponse.json(
+      {
+        ok: true,
+        quote,
+        promo: discount ? { label: discount.name, percentage: discount.percentage } : null,
+        promoInvalid: Boolean(body.promoCode?.trim()) && !discount,
+      },
+      { headers: { "Cache-Control": "no-store" } }
+    );
   } catch (error) {
     console.error("Square checkout quote failed:", error);
     void reportCheckoutError({ route: "checkout-quote", stage: "quote", err: error });

@@ -1,4 +1,5 @@
 import { squareRequest } from "./client";
+import type { OrderDiscount } from "@/lib/commerce/discounts";
 
 export interface LineItem {
   catalogObjectId: string;
@@ -7,6 +8,8 @@ export interface LineItem {
 
 export interface CreateOrderRequest {
   lineItems: LineItem[];
+  /** Server-resolved promo discount (never client-supplied amounts). */
+  discount?: OrderDiscount | null;
   /** Square Customer id — links the order to the CRM profile (best-effort). */
   customerId?: string;
   shippingAddress?: {
@@ -26,6 +29,7 @@ export interface SquareOrderInput {
   customer_id?: string;
   pricing_options: { auto_apply_taxes: true };
   line_items: Array<{ catalog_object_id: string; quantity: string }>;
+  discounts?: Array<{ name: string; percentage: string; scope: "ORDER" }>;
   fulfillments: Array<{
     type: "SHIPMENT";
     state: "PROPOSED";
@@ -55,6 +59,11 @@ export function buildSquareOrder(request: CreateOrderRequest): SquareOrderInput 
       catalog_object_id: item.catalogObjectId,
       quantity: item.quantity,
     })),
+    // Order-level percentage discount. Square recomputes total_money (and tax on
+    // the discounted subtotal), so the parsed totals stay authoritative.
+    ...(request.discount
+      ? { discounts: [{ name: request.discount.name, percentage: request.discount.percentage, scope: "ORDER" as const }] }
+      : {}),
     fulfillments: request.shippingAddress
       ? [{
           type: "SHIPMENT",
