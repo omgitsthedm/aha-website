@@ -1,6 +1,6 @@
 # SOURCE_OF_TRUTH.md - After Hours Agenda
 
-Last verified: 2026-07-08 21:57 MST by Codex from local Git, GitHub, Netlify CLI/API, DNS, and public HTTPS checks.
+Last verified: 2026-07-14 by Claude from local Git, Netlify API, and public HTTPS checks.
 
 GitHub `main` is canonical. The production Netlify project must serve builds from this repo only. Local clones and manual deploy artifacts are disposable.
 
@@ -8,7 +8,7 @@ GitHub `main` is canonical. The production Netlify project must serve builds fro
 
 - GitHub repo: `https://github.com/omgitsthedm/aha-website.git`
 - Canonical branch: `main`
-- Current deployed commit: `13c25e83f696b19c7d9230ec4766900cc5485451`
+- Current deployed commit: `3f46c061bdcdecddb2361ba1296feaafd695f653` (pending this commit; verify via Netlify API)
 - Source PR: PR #2, `Prepare AHA Netlify commerce backend for cutover`, merged 2026-07-09 04:19:25 UTC.
 - Host: Netlify
 - Netlify project name: `afterhoursagenda`

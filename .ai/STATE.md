@@ -196,3 +196,10 @@ Continue the relaunch from the live three-hoodie pilot and the white-paper/rose 
 - 2026-07-08: Custom domain cutover completed by Aside AI. That cutover does not authorize future live checkout, Square order, Printful fulfillment, DNS, or deploy mutations without a new scoped confirmation.
 - Bypass/YOLO mode is only an execution accelerator for approved local setup and read-only verification.
 - Emergency mode requires stopping forward work, preserving evidence, and using the smallest reversible action.
+
+## 2026-07-14 — current truth
+- 122 buyable products; homepage/nav/category heroes use real-model photography (`/campaign/*-onmodel.webp`).
+- Platform wave live: PWA install, offline page, web push ship-alerts, haptics, share, safe areas.
+- Fulfillment: v1/v2 routing per batch (v2 dropped sync orders); embroidery auto-digitizes; product options threaded.
+- Analytics gap: `trackCommerceEvent` pushes to dataLayer but NO GA4/GTM script is loaded — funnel events go nowhere until a measurement id is provided.
+- Deployed commit: 3f46c06 lineage; verify live via Netlify API before release work.

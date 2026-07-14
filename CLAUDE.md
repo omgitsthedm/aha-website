@@ -15,7 +15,7 @@ These instructions are **always relevant** to any task in this repository.
 This project is governed by `docs/MASTER-BUILD-INSTRUCTION.md` (the full ecommerce build spec) and `docs/MASTER-UIUX-HANDOFF-v2.md` (the universal LiFi UI/UX/product doctrine — the controlling doc; read it before building). Both installed 2026-07-08.
 
 - **Primary archetype:** D2 — E-Commerce / DTC Store. **Secondary:** D1 — Marketing / Brand Site.
-- **Stack:** Netlify hosting/runtime · GitHub code/actions/release control · Square payments · Printful **API v2 beta** fulfillment. (Current repo: Next.js 14 App Router — adapt the spec's structure to it, don't impose Astro/`src/`.)
+- **Stack:** Netlify hosting/runtime · GitHub code/actions/release control · Square payments · Printful **API v2 beta** fulfillment. (Current repo: Next.js 15 App Router — adapt the spec's structure to it, don't impose Astro/`src/`.)
 - **Critical rules:** Useful>beautiful · Clear>clever · Fast>flashy · Accessible by default · Honest persuasion only · No fake urgency/scarcity/reviews · No hidden costs · No forced account before checkout · No unmapped products purchasable · No client-side Square/Printful secrets · No Printful fulfillment before Square payment success · No Printful live confirmation outside production flags (`PRINTFUL_ALLOW_CONFIRM_ORDERS=true` + `PRINTFUL_LIVE_MODE=true`) · Square SDK loads only on checkout/payment · Printful v2 beta is the required fulfillment target · AHA owns the storefront product layer because v2 has no sync products/templates.
 - **Every work session must end with:** what changed · files touched · tests run · risks · remaining gaps · next recommended step.
 
@@ -39,7 +39,7 @@ This project is governed by `docs/MASTER-BUILD-INSTRUCTION.md` (the full ecommer
 ---
 
 ## Tech Stack
-- **Next.js 14** (App Router) with **TypeScript**
+- **Next.js 15** (App Router) with **TypeScript**
 - **Tailwind CSS** for styling
 - **GSAP** for animations
 - **Square API** for payments and order management
@@ -109,16 +109,15 @@ styles/          → Global styles
 
 ### Brand Feel
 - `docs/AHA-DESIGN-SYSTEM.md` is the controlling visual system.
-- Origami Geométrico: folded, angular, precise, and contemporary.
-- Ink-black ground, paper-white type, coral actions, and restrained sky/sage/warm-crease fold planes.
+- Origami Geométrico: folded, angular, precise, and contemporary — on a LIGHT ground.
+- Paper-white/off-white ground (#FAFAFA), ink type (#1A1A1A), rose actions (fill #FF6B6B + ink text; rose TEXT uses #CE3D56 for contrast), restrained fold planes. The ink-black era is retired.
 - Poppins drives display/body typography; JetBrains Mono is reserved for metadata and technical values.
 - Square geometry, asymmetric grids, crease lines, faceted surfaces, and restrained motion replace the retired green/condensed visual language.
 
 ### Content System
-- The public site is in a deliberate zero-content brand hold. The only approved customer-facing identity is the full name `After Hours Agenda`.
-- Do not expose historical products, collections, drops, lookbooks, design files, campaign concepts, slogans, or editorial vocabulary until David approves the new brand and marketing system.
+- The zero-content brand hold is OVER (July 2026): the storefront carries the full catalog, the clean Black Sheep mark, brand photography, About, and Lookbook. The customer-facing identity remains the full name `After Hours Agenda` (the AHA abbreviation is still internal-only).
 - `Black Sheep Newsstand`, `design index`, `active archive`, `drop bulletin`, `After Hours Dispatch`, and `Outside Hours` are retired concepts. Do not restore them from historical docs.
-- The commerce backend, protected operations, order tracking, and provider integrations remain intact while the public storefront is rebuilt.
+- Never niche the customer in copy: "after-hours" describes the maker, never prescribes the wearer.
 - Public customer-support identity: `info@afterhoursagenda.com`.
 - PDP editorial copy is built in `lib/content/product-copy.ts` from the customer-facing title and verified enrichment facts. Never add invented materials, collaborators, scarcity, reviews, stock counts, or origin stories.
 - The July 12 full-site content pass is historical and superseded: `docs/AHA-FULL-SITE-CONTENT-PASS-2026-07-12.md`.
@@ -197,6 +196,11 @@ styles/          → Global styles
 10. Sitemap and robots.txt are generating correctly.
 
 ---
+
+## Product Factory + Fulfillment Routing (July 2026)
+- New products ship via `scripts/product-factory.mjs` — read `docs/product-factory.md` FIRST. Any technique (dtg, embroidery auto-digitized, cut-sew, sublimation, uv, stickers) from one spec + design file.
+- ⚠️ Printful v2 orders no longer accept sync items: `lib/commerce/fulfillment-state.ts#buildStoreOrderRequest` routes catalog-only batches → v2, any-sync batches → v1. Never bypass it.
+- Storefront hides Square items with no image. Ops writes go through the key-guarded `/api/ops/*` endpoints (production is the only place Square credentials live).
 
 ## Required Completion Report
 When you finish any task, output:

@@ -30,7 +30,7 @@ export default async function HomePage() {
           <div>
             <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">NYC Streetwear · Made to order</p>
             <h1 id="hero-heading" className="mt-5 font-display text-[clamp(2.75rem,8vw,5.5rem)] font-bold uppercase leading-[0.88] tracking-[-0.05em] text-cream">
-              After Hours Agenda
+              After Hours <span className="text-accent">Agenda</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted md:text-lg">
               Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories — printed to order, one at a time.
