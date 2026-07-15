@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { usePlatform } from "@/lib/platform/usePlatform";
 import { canPromptInstall, subscribeInstall, promptInstall } from "@/lib/platform/pwaInstall";
+import { useConsent } from "@/lib/consent/consent";
 
 const SEEN_KEY = "aha:install-hint-seen";
 // Never compete with a primary bottom CTA: product pages have a sticky mobile
@@ -23,6 +24,7 @@ const HIDDEN_ROUTES = ["/cart", "/checkout", "/ops", "/track-order", "/product"]
 export function InstallPrompt() {
   const platform = usePlatform();
   const pathname = usePathname();
+  const { consent } = useConsent();
   const [ready, setReady] = useState(false); // native prompt buffered
   const [visible, setVisible] = useState(false);
   const [seen, setSeen] = useState(true);
@@ -48,6 +50,7 @@ export function InstallPrompt() {
     return () => clearTimeout(t);
   }, []);
 
+  if (consent === null) return null; // let the cookie banner resolve first
   if (!platform || seen || !visible) return null;
   if (platform.isStandalone || platform.inApp !== null) return null;
   if (pathname && HIDDEN_ROUTES.some((r) => pathname.startsWith(r))) return null;
