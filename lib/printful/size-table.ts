@@ -75,7 +75,15 @@ export async function debugSizeTable(catalogVariantId: number): Promise<Record<s
       out.sizesDataType = Array.isArray(rawData) ? `array(${rawData.length})` : typeof rawData;
       const sample = Array.isArray(rawData) ? rawData[0] : rawData;
       out.sizesSampleKeys = sample && typeof sample === "object" ? Object.keys(sample as object) : sample;
-      out.sizesSnippet = JSON.stringify(raw).slice(0, 500);
+      const tables = (rawData as { size_tables?: Array<Record<string, unknown>> })?.size_tables;
+      out.tables = Array.isArray(tables)
+        ? tables.map((t) => ({
+            type: t.type,
+            unit: t.unit,
+            measCount: Array.isArray(t.measurements) ? (t.measurements as unknown[]).length : 0,
+            firstMeas: Array.isArray(t.measurements) ? (t.measurements as unknown[])[0] : null,
+          }))
+        : null;
     }
   } catch (e) {
     out.error = e instanceof Error ? e.message : String(e);
