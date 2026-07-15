@@ -663,6 +663,18 @@ textarea {
    text-shadow / drop-shadow (not animated SVG blur), so it stays smooth on
    mobile. --neon defaults to brand rose; the flicker is opacity-only (cheap).
    ------------------------------------------------------------------------ */
+/* Infinite brand marquee — GPU translate, reduced-motion safe. Two identical
+   copies; -50% lands exactly at copy 2 for a seamless loop. */
+.marquee { overflow: hidden; }
+.marquee-track { will-change: transform; }
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track { animation: aha-marquee 34s linear infinite; }
+}
+@keyframes aha-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 /* Photographed neon on the paper wall: realism from a thick GLASS TUBE + a
    lighter lit CORE + a faint colored haze + a plexiglass gloss sheen. Layers are
    stacked copies of the same SVG, so gaps (tube breaks / supports) align.
