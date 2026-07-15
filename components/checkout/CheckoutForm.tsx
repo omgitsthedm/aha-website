@@ -325,14 +325,17 @@ export function CheckoutForm({ squareConfig }: Props) {
           const googlePay = await paymentsRef.current!.googlePay(request);
           if (!cancelled) { googlePayRef.current = googlePay; setGooglePayReady(true); }
         } catch { /* Google Pay unavailable on this device */ }
+        // BNPL / Cash App attempts only when enabled (avoids console noise +
+        // wasted init on every checkout until they're turned on in Square).
+        const bnplOn = process.env.NEXT_PUBLIC_BNPL_ENABLED === "true";
         try {
-          if (paymentsRef.current!.afterpayClearpay) {
+          if (bnplOn && paymentsRef.current!.afterpayClearpay) {
             const afterpay = await paymentsRef.current!.afterpayClearpay(request);
             if (!cancelled) { afterpayRef.current = afterpay; setAfterpayReady(true); }
           }
         } catch { /* Afterpay unavailable / not enabled in Square */ }
         try {
-          if (paymentsRef.current!.cashAppPay) {
+          if (bnplOn && paymentsRef.current!.cashAppPay) {
             // Cash App Pay needs its own request instance + a redirect target.
             const cashReq = paymentsRef.current!.paymentRequest({
               countryCode: contact.country, currencyCode: quote.currency,

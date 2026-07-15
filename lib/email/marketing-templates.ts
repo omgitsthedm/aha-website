@@ -38,6 +38,14 @@ export function renderWelcomeEmail(data: { shopUrl: string; unsubscribeUrl: stri
   return { subject, html, text };
 }
 
+export function renderWinbackEmail(data: { shopUrl: string; unsubscribeUrl: string }): { subject: string; html: string; text: string } {
+  const subject = "Something new, drawn after hours";
+  const body = `<p style="color:#B0B0B0;line-height:1.6">It's been a minute. We've kept drawing after the day goes quiet — new graphics, same made-to-order, printed one at a time in New York.</p><p style="color:#B0B0B0;line-height:1.6">Come see what's new. Nothing sits in a warehouse waiting to be discounted — but the fits still stack.</p><p style="margin:32px 0"><a href="${escapeHtml(data.shopUrl)}" style="background:#FF6B6B;color:#1A1A1A;padding:16px 24px;text-decoration:none;font-weight:700">See what's new</a></p>`;
+  const html = shell("Come back", "We've been busy after hours", body, data.unsubscribeUrl);
+  const text = ["AFTER HOURS AGENDA", "It's been a minute — new graphics, same made-to-order, printed one at a time in NY.", `See what's new: ${data.shopUrl}`, `Unsubscribe: ${data.unsubscribeUrl}`, MAILING_ADDRESS].join("\n\n");
+  return { subject, html, text };
+}
+
 export function renderReviewRequestEmail(data: {
   orderNumber: string; items: Array<{ title: string; slug?: string | null }>; reviewUrl: string; unsubscribeUrl: string;
 }): { subject: string; html: string; text: string } {
