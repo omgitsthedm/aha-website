@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Script from "next/script";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
@@ -43,6 +44,17 @@ declare global {
 
 const money = (cents: number) => `$${(cents / 100).toFixed(2)}`;
 const STATE_REQUIRED = new Set(["US", "CA", "AU"]);
+
+// The "boarding pass" itinerary — like a plane ticket, it turns a form into a
+// journey, building anticipation and answering "when do I get it?" before the
+// shopper has to ask. Reinforces the made-to-order brand story at the moment of
+// highest intent.
+const JOURNEY_STEPS = [
+  { label: "Order placed", detail: "Confirmed instantly, receipt to your inbox." },
+  { label: "Printed in New York", detail: "Made to order just for you — 2 to 5 business days." },
+  { label: "Shipped free", detail: "Tracking lands the moment it leaves the shop." },
+  { label: "Yours to wear", detail: "Made after hours. Worn all day." },
+];
 
 function getAddressError(contact: ShippingContact): string | null {
   if (!contact.shippingName) return "Enter the name for shipping.";
@@ -452,10 +464,13 @@ export function CheckoutForm({ squareConfig }: Props) {
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-14">
           {/* Form */}
           <div>
-            <p className="mb-3 border-t-2 border-accent pt-5 text-xs font-bold uppercase tracking-[0.1em] text-accent">Secure Square payment</p>
-            <h1 className="mb-10 font-display text-[clamp(2.75rem,7vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em] text-cream">
+            <p className="mb-3 border-t-2 border-accent pt-5 text-xs font-bold uppercase tracking-[0.1em] text-accent">Almost yours</p>
+            <h1 className="mb-3 font-display text-[clamp(2.75rem,7vw,5.5rem)] font-black uppercase leading-[0.86] tracking-[-0.06em] text-cream">
               Checkout
             </h1>
+            <p className="mb-10 max-w-md text-sm leading-relaxed text-muted">
+              A few details and it&rsquo;s on its way — printed one at a time, just for you. <span className="font-bold text-cream">Secure Square checkout.</span>
+            </p>
 
             <form onSubmit={pay} noValidate>
             <fieldset className="mb-9 border-t border-border/40 pt-6" disabled={status === "paying"}>
@@ -599,6 +614,16 @@ export function CheckoutForm({ squareConfig }: Props) {
 
           {/* Order summary */}
           <aside className="h-fit border-t-2 border-accent pt-5 lg:sticky lg:top-28">
+            {/* Envision it: a lifestyle moment at the point of highest intent —
+                the shopper pictures themselves wearing it, not filling a form. */}
+            <div className="relative mb-6 aspect-[16/10] overflow-hidden">
+              <Image src="/campaign/lifestyle/band.webp" alt="After Hours Agenda, worn on the streets of New York" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 360px" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-4">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF8DA1]">You&rsquo;re almost wearing it</p>
+                <p className="mt-1 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.03em] text-white">Made after hours. Worn all day.</p>
+              </div>
+            </div>
             <h2 className="mb-4 font-display text-2xl font-black uppercase leading-none tracking-[-0.04em] text-cream">Order</h2>
             <ul className="space-y-3">
               {items.map((i) => (
@@ -636,9 +661,22 @@ export function CheckoutForm({ squareConfig }: Props) {
               </div>
               <div className="mt-3 flex justify-between border-t border-border/40 pt-3 text-lg text-cream"><span>Total</span><span>{quote ? money(quote.total) : "Pending"}</span></div>
             </div>
-            <p className="mt-4 font-body text-[11px] font-bold leading-relaxed text-muted">
-              Made to order. Delivery includes production time plus carrier transit.
-            </p>
+            {/* The itinerary — like a plane ticket, it makes the wait feel like a
+                journey and reinforces the made-to-order story at peak intent. */}
+            <div className="mt-7 border-t border-border/40 pt-5">
+              <p className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">Your order&rsquo;s journey</p>
+              <ol aria-label="What happens after you pay">
+                {JOURNEY_STEPS.map((step, i) => (
+                  <li key={step.label} className="flex gap-3 pb-4 last:pb-0">
+                    <span aria-hidden="true" className="mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent font-mono text-[10px] font-bold text-accent">{i + 1}</span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold uppercase tracking-[0.05em] text-cream">{step.label}</p>
+                      <p className="mt-0.5 text-[11px] leading-snug text-muted">{step.detail}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </aside>
         </div>
       </div>
