@@ -8,6 +8,7 @@ const serviceLinks = [
   { label: "Care", href: "/care" },
   { label: "Size guide", href: "/size-guide" },
   { label: "Track order", href: "/track-order" },
+  { label: "Wishlist", href: "/wishlist" },
   { label: "Contact", href: "/contact" },
 ];
 
