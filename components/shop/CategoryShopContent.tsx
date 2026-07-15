@@ -114,7 +114,7 @@ export function CategoryShopContent({
           <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
             <Link
               href={categoryHref("all")}
-              aria-pressed={activeCategory === undefined}
+              aria-current={activeCategory === undefined ? "page" : undefined}
               className={`${toggle} ${activeCategory === undefined ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
             >
               All <span aria-hidden="true">{products.length}</span>
@@ -126,7 +126,7 @@ export function CategoryShopContent({
                 <Link
                   key={category.slug}
                   href={categoryHref(category.slug)}
-                  aria-pressed={activeCategory === category.slug}
+                  aria-current={activeCategory === category.slug ? "page" : undefined}
                   aria-label={`${category.name}, ${count} products`}
                   className={`${toggle} inline-flex items-center gap-2 ${activeCategory === category.slug ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}
                 >
