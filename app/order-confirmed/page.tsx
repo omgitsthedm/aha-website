@@ -2,13 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import { DELIVERY_WINDOW, PRODUCTION_WINDOW } from "@/lib/commerce/policies";
+
+interface OrderItem {
+  name: string; variationName: string; quantity: number; lineTotal: number;
+  // Present on orders placed after the reorder feature shipped.
+  productId?: string; slug?: string; variationId?: string; price?: number; priceFormatted?: string; image?: string;
+}
 
 interface OrderSummary {
   orderNumber: string;
   receiptUrl: string | null;
-  items: Array<{ name: string; variationName: string; quantity: number; lineTotal: number }>;
+  items: OrderItem[];
   subtotal?: number;
   discount?: number;
   total: number;
@@ -18,9 +25,32 @@ interface OrderSummary {
 }
 
 export default function OrderConfirmedPage() {
-  const { clearCart } = useCart();
+  const { clearCart, addItem } = useCart();
+  const router = useRouter();
   const [summary, setSummary] = useState<OrderSummary | null>(null);
   const [loaded, setLoaded] = useState(false);
+
+  // "Order again" — re-adds the same pieces to the bag and jumps to it. Useful
+  // for gifts and repeats. Only shown when the stored order carries the fields.
+  const reorderable = Boolean(summary?.items.some((i) => i.variationId && i.slug));
+  const reorder = () => {
+    if (!summary) return;
+    summary.items.forEach((item) => {
+      if (!item.variationId || !item.slug) return;
+      addItem({
+        productId: item.productId || item.slug,
+        slug: item.slug,
+        variationId: item.variationId,
+        name: item.name,
+        variationName: item.variationName,
+        price: item.price ?? Math.round(item.lineTotal / Math.max(1, item.quantity)),
+        priceFormatted: item.priceFormatted || "",
+        quantity: item.quantity,
+        image: item.image || "",
+      }, undefined, { silent: true });
+    });
+    router.push("/cart");
+  };
 
   useEffect(() => {
     const orderNumber = new URLSearchParams(window.location.search).get("order");
@@ -57,7 +87,7 @@ export default function OrderConfirmedPage() {
 
       {!summary && loaded && <section className="mt-10 border border-border/40 bg-surface p-5"><h2 className="font-display text-xl font-black uppercase">Your bag is safe</h2><p className="mt-3 text-sm leading-relaxed text-muted">The bag was not cleared because this page could not verify a matching completed checkout. Check email or contact support before paying again.</p></section>}
 
-      <div className="mt-10 flex flex-wrap gap-3"><Link href="/shop" className="primary-action min-h-11 px-5 py-3 text-xs">Continue shopping</Link><Link href="/shipping" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">Shipping details</Link></div>
+      <div className="mt-10 flex flex-wrap gap-3">{reorderable && <button type="button" onClick={reorder} className="primary-action min-h-11 px-5 py-3 text-xs">Order again</button>}<Link href="/shop" className={`${reorderable ? "inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent" : "primary-action min-h-11 px-5 py-3 text-xs"}`}>Continue shopping</Link><Link href="/shipping" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">Shipping details</Link></div>
     </div></div>
   );
 }

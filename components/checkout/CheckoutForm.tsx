@@ -380,6 +380,13 @@ export function CheckoutForm({ squareConfig }: Props) {
           variationName: item.variationName,
           quantity: item.quantity,
           lineTotal: item.price * item.quantity,
+          // Reorder fields (used only by the confirmation page's "Order again").
+          productId: item.productId,
+          slug: item.slug,
+          variationId: item.variationId,
+          price: item.price,
+          priceFormatted: item.priceFormatted,
+          image: item.image,
         })),
         subtotal: total, // gross pre-discount
         discount: Math.max(0, total - reviewedQuote.subtotal),
