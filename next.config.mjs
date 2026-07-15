@@ -1,7 +1,7 @@
 const isDevelopment = process.env.NODE_ENV === "development";
 
 const resetPublicRoutes = [
-  "/best-sellers",
+  // /best-sellers handled separately below → /shop (shopping intent, not home).
   "/catalog-edit",
   "/collections/:path*",
   "/drops",
