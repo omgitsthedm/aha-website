@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { dispatchAbandonedCarts } from "@/lib/commerce/abandoned-cart";
+import { dispatchReviewRequests } from "@/lib/commerce/review-request";
 
 export const dynamic = "force-dynamic";
 
@@ -15,8 +16,11 @@ function authorized(req: Request): boolean {
 
 async function run(req: Request) {
   if (!authorized(req)) return new NextResponse("Not found", { status: 404 });
-  const abandoned = await dispatchAbandonedCarts();
-  return NextResponse.json({ ok: true, abandoned });
+  const [abandoned, reviews] = await Promise.all([
+    dispatchAbandonedCarts().catch((e) => ({ error: String(e) })),
+    dispatchReviewRequests().catch((e) => ({ error: String(e) })),
+  ]);
+  return NextResponse.json({ ok: true, abandoned, reviews });
 }
 
 export async function POST(req: Request) { return run(req); }

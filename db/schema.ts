@@ -180,6 +180,13 @@ export const abandonedCarts = pgTable("abandoned_carts", {
   unsubscribed: boolean("unsubscribed").notNull().default(false),
   createdAt: createdAt(), updatedAt: updatedAt(),
 }, (t) => ({ byNotified: index("idx_abandoned_notified").on(t.notifiedAt) }));
+// One post-purchase review request per order (dedupe). Row inserted only on an
+// actual send, so a dry-run never blocks the real send once enabled.
+export const reviewRequestLog = pgTable("review_request_log", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  orderId: bigint("order_id", { mode: "number" }).notNull().references(() => orders.id, { onDelete: "cascade" }).unique(),
+  sentAt: timestamp("sent_at", { withTimezone: true }).defaultNow().notNull(),
+});
 
 // ── Webhooks / audit / ops ───────────────────────────────────────────────────
 export const webhookEvents = pgTable("webhook_events", {

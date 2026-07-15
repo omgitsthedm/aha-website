@@ -29,3 +29,22 @@ export function renderAbandonedCartEmail(data: {
   const text = ["AFTER HOURS AGENDA", "You left something in your bag — still here whenever you're ready.", ...data.items.map((i) => `${i.quantity}x ${i.title}${i.size ? ` / ${i.size}` : ""} — ${money(i.lineTotal, data.currency)}`), `Subtotal: ${money(data.subtotal, data.currency)}`, `Finish checking out: ${data.recoverUrl}`, `Unsubscribe: ${data.unsubscribeUrl}`, MAILING_ADDRESS].join("\n\n");
   return { subject, html, text };
 }
+
+export function renderWelcomeEmail(data: { shopUrl: string; unsubscribeUrl: string }): { subject: string; html: string; text: string } {
+  const subject = "Welcome to After Hours Agenda";
+  const body = `<p style="color:#B0B0B0;line-height:1.6">You're on the list. After Hours Agenda is independent streetwear from New York — the name is literal. Designs get drawn when the day quiets down, then printed one at a time when you order. Nothing sits in a warehouse waiting to be discounted.</p><p style="color:#B0B0B0;line-height:1.6">You'll hear from us when a new release drops — and not much otherwise.</p><p style="margin:32px 0"><a href="${escapeHtml(data.shopUrl)}" style="background:#FF6B6B;color:#1A1A1A;padding:16px 24px;text-decoration:none;font-weight:700">Start with the new arrivals</a></p>`;
+  const html = shell("The list", "Welcome to the after hours", body, data.unsubscribeUrl);
+  const text = ["AFTER HOURS AGENDA", "You're on the list. Independent NYC streetwear, printed one at a time when you order.", "You'll hear from us when a new release drops — and not much otherwise.", `Shop new arrivals: ${data.shopUrl}`, `Unsubscribe: ${data.unsubscribeUrl}`, MAILING_ADDRESS].join("\n\n");
+  return { subject, html, text };
+}
+
+export function renderReviewRequestEmail(data: {
+  orderNumber: string; items: Array<{ title: string; slug?: string | null }>; reviewUrl: string; unsubscribeUrl: string;
+}): { subject: string; html: string; text: string } {
+  const subject = "How's it wearing?";
+  const list = data.items.map((i) => `<li style="margin:6px 0">${escapeHtml(i.title)}</li>`).join("");
+  const body = `<p style="color:#B0B0B0;line-height:1.6">Your order (${escapeHtml(data.orderNumber)}) should be with you by now. If it's earned a spot in the rotation, a few words help the next person decide — and it means a lot to a small shop.</p><ul style="color:#FAFAFA;padding-left:18px">${list}</ul><p style="margin:32px 0"><a href="${escapeHtml(data.reviewUrl)}" style="background:#FF6B6B;color:#1A1A1A;padding:16px 24px;text-decoration:none;font-weight:700">Leave a review</a></p>`;
+  const html = shell("Worn, not just shown", "How's it wearing?", body, data.unsubscribeUrl);
+  const text = ["AFTER HOURS AGENDA", `Your order ${data.orderNumber} should be with you by now.`, "If it earned a spot in the rotation, a few words help the next person decide.", ...data.items.map((i) => `- ${i.title}`), `Leave a review: ${data.reviewUrl}`, `Unsubscribe: ${data.unsubscribeUrl}`, MAILING_ADDRESS].join("\n\n");
+  return { subject, html, text };
+}

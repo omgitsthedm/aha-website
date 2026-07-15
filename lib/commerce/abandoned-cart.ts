@@ -45,13 +45,26 @@ export async function markCartRecovered(email: string): Promise<void> {
   } catch { /* best-effort */ }
 }
 
+/** Global suppression: upsert so unsubscribe is recorded even for someone who
+ * never had an abandoned cart (e.g. unsubscribing from a review email). This
+ * row doubles as the suppression list for all lifecycle email. */
 export async function unsubscribeEmail(email: string): Promise<void> {
   if (!isDbConfigured()) return;
+  const e = email.trim().toLowerCase();
   try {
-    await db().update(abandonedCarts)
-      .set({ unsubscribed: true, updatedAt: new Date() })
-      .where(eq(abandonedCarts.email, email.trim().toLowerCase()));
+    await db().insert(abandonedCarts)
+      .values({ email: e, itemsJson: [], subtotal: 0, unsubscribed: true })
+      .onConflictDoUpdate({ target: abandonedCarts.email, set: { unsubscribed: true, updatedAt: new Date() } });
   } catch { /* best-effort */ }
+}
+
+export async function isEmailSuppressed(email: string): Promise<boolean> {
+  if (!isDbConfigured()) return false;
+  try {
+    const [row] = await db().select({ u: abandonedCarts.unsubscribed })
+      .from(abandonedCarts).where(eq(abandonedCarts.email, email.trim().toLowerCase())).limit(1);
+    return Boolean(row?.u);
+  } catch { return false; }
 }
 
 interface DispatchResult { configured: boolean; enabled: boolean; candidates: number; sent: number; suppressed: number; dryRun: number }

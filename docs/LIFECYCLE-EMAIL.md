@@ -46,6 +46,15 @@ unsubscribed. One-click unsubscribe + physical address are included (CAN-SPAM).
 4. When happy, set `LIFECYCLE_EMAIL_ENABLED=true`. Recovery emails now go live.
 5. To pause anytime: set it back to `false` (or unset).
 
+## Now included (same gate + scheduler + sender)
+- **Welcome series** — Netlify Forms `submission-created` → `/api/newsletter/welcome`
+  records the subscriber and sends one welcome (gated). Fires on the newsletter form.
+- **Post-purchase review-request** — `lib/commerce/review-request.ts`, run by the
+  hourly cron. One email per order, 7+ days after it ships, deep-linked to the
+  product's review form. Deduped via `review_request_log`; honors unsubscribe.
+
+All three flows dry-run until `LIFECYCLE_EMAIL_ENABLED=true`. Unsubscribe is a
+global suppression list (any lifecycle email honors it).
+
 ## Follow-ups (same infra)
-Welcome series, post-purchase review-request, and win-back all reuse this
-scheduler + gate + marketing sender — fast adds on this foundation.
+Win-back (lapsed buyers) and one-tap reorder — small adds on this foundation.
