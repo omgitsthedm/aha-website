@@ -10,7 +10,7 @@ import {
 import { startFulfillment } from "@/lib/commerce/fulfillment";
 import { dispatchOrderNotifications, enqueueOrderNotification } from "@/lib/commerce/notifications";
 import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
-import { resolveDiscount } from "@/lib/commerce/discounts";
+import { resolveEffectiveDiscount } from "@/lib/commerce/discounts";
 
 export const dynamic = "force-dynamic";
 
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
       lineItems: cart.items.map((it) => ({ catalogObjectId: it.squareVariationId, quantity: String(it.quantity) })),
       // Resolved server-side; identical resolution to the quote keeps the
       // QUOTE_CHANGED guard exact (same code + same cart → same discounted total).
-      discount: resolveDiscount(body.promoCode, {
+      discount: resolveEffectiveDiscount(body.promoCode, {
         items: cart.items.map((i) => ({ unitPrice: i.unitPrice, quantity: i.quantity })),
         currency: cart.currency,
       }),

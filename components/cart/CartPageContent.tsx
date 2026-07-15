@@ -12,6 +12,10 @@ import { trackCommerceEvent } from "@/lib/analytics/events";
 
 interface RecItem { name: string; slug: string; priceFormatted: string; image: string }
 
+// Automatic bundle offer (display only — the server enforces the real discount).
+const BUNDLE_MIN = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_MIN_QTY || "0", 10);
+const BUNDLE_PCT = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_PERCENT || "0", 10);
+
 export function CartPageContent() {
   const { items, addItem, removeItem, updateQuantity, totalFormatted, totalItems, total } = useCart();
   const [recs, setRecs] = useState<RecItem[]>([]);
@@ -124,6 +128,11 @@ export function CartPageContent() {
             <div className="flex justify-between gap-4"><dt className="text-muted">Tax</dt><dd className="max-w-[12rem] text-right text-xs">{TAX_LINE_COPY}</dd></div>
           </dl>
           <div className="flex items-center justify-between py-5"><span className="text-xs font-bold uppercase tracking-[0.08em]">Cart subtotal</span><strong className="font-mono text-lg">{totalFormatted}</strong></div>
+          {BUNDLE_MIN >= 2 && BUNDLE_PCT > 0 && (
+            totalItems >= BUNDLE_MIN
+              ? <p className="mb-4 border border-success/50 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-success">Bundle unlocked — {BUNDLE_PCT}% off applied at checkout.</p>
+              : <p className="mb-4 border border-border/40 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-muted">Add {BUNDLE_MIN - totalItems} more to save {BUNDLE_PCT}%.</p>
+          )}
           <Link href="/checkout" className="primary-action flex min-h-14 w-full items-center justify-center px-5 py-4 text-sm">Continue to checkout</Link>
           <p className="mt-4 text-xs leading-relaxed text-muted">{WALLET_CHECKOUT_COPY}</p>
           <p className="mt-3 text-xs leading-relaxed text-muted">{getFulfillmentSummary()}</p>

@@ -3,7 +3,7 @@ import { revalidateCart, type CheckoutLine, type OrderContact } from "@/lib/comm
 import { calculatePricedSquareOrder } from "@/lib/square/orders";
 import { getSquareLocationId } from "@/lib/commerce/runtime";
 import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
-import { resolveDiscount } from "@/lib/commerce/discounts";
+import { resolveDiscount, resolveEffectiveDiscount } from "@/lib/commerce/discounts";
 
 export const dynamic = "force-dynamic";
 
@@ -44,10 +44,12 @@ export async function POST(request: Request) {
   }
 
   const { firstName, lastName } = splitName(body.contact.shippingName);
-  const discount = resolveDiscount(body.promoCode, {
+  const cartForDiscount = {
     items: cart.items.map((i) => ({ unitPrice: i.unitPrice, quantity: i.quantity })),
     currency: cart.currency,
-  });
+  };
+  const codeDiscount = resolveDiscount(body.promoCode, cartForDiscount);
+  const discount = resolveEffectiveDiscount(body.promoCode, cartForDiscount);
   try {
     const quote = await calculatePricedSquareOrder({
       lineItems: cart.items.map((item) => ({
@@ -70,7 +72,7 @@ export async function POST(request: Request) {
         ok: true,
         quote,
         promo: discount ? { label: discount.name, percentage: discount.percentage ?? null } : null,
-        promoInvalid: Boolean(body.promoCode?.trim()) && !discount,
+        promoInvalid: Boolean(body.promoCode?.trim()) && !codeDiscount,
       },
       { headers: { "Cache-Control": "no-store" } }
     );
