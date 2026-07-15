@@ -704,9 +704,12 @@ textarea {
    comes from a thick GLASS TUBE (saturated rose) + a lighter lit CORE running
    down it + a faint colored haze + a plexiglass gloss sheen. Layers are stacked
    copies of the same SVG, so gaps (tube breaks / supports) align. */
+/* Shared neon color, set on the whole sign so the sheep AND the text match. */
+.neon-sign {
+  --neon: 206 45 82;        /* deep rose glass tube */
+  --neon-hot: 255 233 240;  /* near-white lit core */
+}
 .neon2 {
-  --neon: 197 42 74;        /* deep rose glass tube */
-  --neon-hot: 255 176 196;  /* lit core */
   position: relative;
   display: grid;
   place-items: center;
@@ -714,29 +717,31 @@ textarea {
 .neon2 > * { grid-area: 1 / 1; } /* stack all layers */
 .neon2-haze {
   color: rgb(var(--neon));
-  filter: blur(7px);
-  opacity: 0.45;
+  filter: blur(9px);
+  opacity: 0.5;
 }
 .neon2-tube {
   color: rgb(var(--neon));
-  filter: drop-shadow(0 1px 1px rgb(var(--neon) / 0.35)) drop-shadow(0 0 3px rgb(var(--neon) / 0.5));
+  filter: drop-shadow(0 1px 1px rgb(var(--neon) / 0.4)) drop-shadow(0 0 4px rgb(var(--neon) / 0.55));
 }
 .neon2-core {
-  color: rgb(var(--neon-hot));
-  filter: drop-shadow(0 0 2px rgb(var(--neon-hot) / 0.9));
+  color: rgb(var(--neon-hot)); /* thin near-white lit line inside the rose tube */
+  filter: drop-shadow(0 0 3px rgb(255 120 160 / 0.9)) drop-shadow(0 0 1px #fff);
 }
-/* plexiglass gloss: a diagonal specular sweep across the whole sign */
+/* plexiglass gloss: a diagonal specular sweep + a soft top light, as if behind glass */
 .neon2-gloss {
   position: absolute;
-  inset: 0;
+  inset: -6%;
   pointer-events: none;
-  background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.5) 47%, rgba(255, 255, 255, 0.08) 52%, transparent 60%);
+  background:
+    linear-gradient(118deg, transparent 40%, rgba(255, 255, 255, 0.65) 47%, rgba(255, 255, 255, 0.1) 51%, transparent 58%),
+    radial-gradient(80% 55% at 50% 0%, rgba(255, 255, 255, 0.4), transparent 70%);
   mix-blend-mode: screen;
 }
 .neon2-text {
   color: rgb(var(--neon));
-  text-shadow: 0 0 1px rgb(var(--neon-hot)), 0 1px 0 rgb(var(--neon) / 0.35), 0 0 10px rgb(var(--neon) / 0.35);
-  -webkit-text-stroke: 1px rgb(var(--neon) / 0.35);
+  text-shadow: 0 0 2px rgb(var(--neon-hot)), 0 1px 0 rgb(var(--neon) / 0.4), 0 0 12px rgb(var(--neon) / 0.4);
+  -webkit-text-stroke: 1.5px rgb(var(--neon) / 0.5);
 }
 
 @keyframes neon-flicker {

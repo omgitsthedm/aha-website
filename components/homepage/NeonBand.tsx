@@ -11,7 +11,7 @@ const DASH = "600 34"; // periodic small breaks — reads as tube breaks / mount
  */
 export function NeonBand() {
   return (
-    <section aria-labelledby="neon-heading" className="relative overflow-hidden bg-void px-4 py-20 sm:py-28">
+    <section aria-labelledby="neon-heading" className="neon-sign relative overflow-hidden bg-void px-4 py-20 sm:py-28">
       <div className="neon-flicker mx-auto flex max-w-2xl flex-col items-center text-center">
         <p className="neon2-text font-mono text-[10px] font-bold uppercase tracking-[0.35em]">After hours, the sign comes on</p>
 
