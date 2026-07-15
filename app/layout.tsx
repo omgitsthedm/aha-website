@@ -8,6 +8,7 @@ import { PlatformLayer } from "@/components/ui/PlatformLayer";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { SocialPixels } from "@/components/analytics/SocialPixels";
 import { StorefrontJsonLd } from "@/components/seo/StorefrontJsonLd";
+import { CookieConsent } from "@/components/consent/CookieConsent";
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -93,6 +94,7 @@ export default function RootLayout({
           <PilotNav />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
           <PilotFooter />
+          <CookieConsent />
         </CartProvider>
       </body>
     </html>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SheepMark } from "@/components/ui/SheepMark";
+import { ConsentSettingsLink } from "@/components/consent/ConsentSettingsLink";
 
 const serviceLinks = [
   { label: "Shipping", href: "/shipping" },
@@ -122,6 +123,7 @@ export function PilotFooter() {
                   </Link>
                 </li>
               ))}
+              <li><ConsentSettingsLink /></li>
             </ul>
           </nav>
         </div>

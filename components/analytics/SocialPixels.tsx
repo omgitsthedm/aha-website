@@ -1,4 +1,7 @@
+"use client";
+
 import Script from "next/script";
+import { useConsent } from "@/lib/consent/consent";
 
 /**
  * Meta (Facebook/Instagram) + TikTok pixels for shopping tags, catalog matching,
@@ -10,6 +13,8 @@ import Script from "next/script";
  *   NEXT_PUBLIC_TIKTOK_PIXEL_ID e.g. CabcdEfgh...
  */
 export function SocialPixels() {
+  const { consent } = useConsent();
+  if (consent !== "granted") return null; // opt-in: no tracking until accepted
   const meta = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
   const tiktok = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID?.trim();
   if (!meta && !tiktok) return null;

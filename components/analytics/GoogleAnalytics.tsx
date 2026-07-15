@@ -1,4 +1,7 @@
+"use client";
+
 import Script from "next/script";
+import { useConsent } from "@/lib/consent/consent";
 
 /**
  * Lights up analytics the moment a measurement id is set in the environment —
@@ -15,6 +18,8 @@ import Script from "next/script";
  * Add Google Consent Mode here if EU compliance is later required.
  */
 export function GoogleAnalytics() {
+  const { consent } = useConsent();
+  if (consent !== "granted") return null; // opt-in: no tracking until accepted
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID?.trim();
   const gaId = process.env.NEXT_PUBLIC_GA4_ID?.trim();
 
