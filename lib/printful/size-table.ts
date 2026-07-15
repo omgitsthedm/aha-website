@@ -69,10 +69,13 @@ export async function debugSizeTable(catalogVariantId: number): Promise<Record<s
     out.catalog_product_id = data?.catalog_product_id ?? null;
     const productId = data?.catalog_product_id;
     if (typeof productId === "number") {
-      const guide = await getSizeGuide(productId);
-      out.guidePresent = Boolean(guide);
-      out.measurementsCount = guide?.measurements?.length ?? 0;
-      out.unit = guide?.unit ?? null;
+      const raw = await printfulRequest<Record<string, unknown>>(`/catalog-products/${productId}/sizes`);
+      out.sizesTopKeys = raw && typeof raw === "object" ? Object.keys(raw) : typeof raw;
+      const rawData = (raw as { data?: unknown }).data;
+      out.sizesDataType = Array.isArray(rawData) ? `array(${rawData.length})` : typeof rawData;
+      const sample = Array.isArray(rawData) ? rawData[0] : rawData;
+      out.sizesSampleKeys = sample && typeof sample === "object" ? Object.keys(sample as object) : sample;
+      out.sizesSnippet = JSON.stringify(raw).slice(0, 500);
     }
   } catch (e) {
     out.error = e instanceof Error ? e.message : String(e);
