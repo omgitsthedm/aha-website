@@ -20,6 +20,12 @@
 - Verified commerce runtime baseline: `a27b28ca1c236e88ebd60ad62e8695447adafa41`
 - Git HEAD at onboarding: `23018a0`
 
+## Browser Chrome / Theme Color (2026-07-15, `adc31b0`, LIVE)
+
+- The browser title/tab bar, PWA header, iOS status-bar tint, and social-embed strip carry the brand **rose**, not the paper ground. Values: `theme-color` = `#FF6B6B` (light) / `#CE3D56` (dark); manifest `theme_color` = `#FF6B6B`; `msapplication-TileColor`/`navbutton-color` = `#FF6B6B`.
+- Files: `app/layout.tsx` (`viewport.themeColor` pair + `metadata.other` tile metas), `app/manifest.ts` (`theme_color`). Page/splash ground stays paper `#FAFAFA` (`background_color` and `colorScheme: light` unchanged).
+- Verified live across chromium + webkit × iPhone/iPad/desktop × light/dark (Playwright). Do not "fix" the rose chrome back to paper — it is intentional brand-forward chrome.
+
 ## Rules Version
 
 - 2026-06-27-aiops-foundation-v1
