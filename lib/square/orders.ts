@@ -29,7 +29,10 @@ export interface SquareOrderInput {
   customer_id?: string;
   pricing_options: { auto_apply_taxes: true };
   line_items: Array<{ catalog_object_id: string; quantity: string }>;
-  discounts?: Array<{ name: string; percentage: string; scope: "ORDER" }>;
+  discounts?: Array<
+    | { name: string; percentage: string; scope: "ORDER" }
+    | { name: string; amount_money: { amount: number; currency: string }; scope: "ORDER" }
+  >;
   fulfillments: Array<{
     type: "SHIPMENT";
     state: "PROPOSED";
@@ -59,10 +62,17 @@ export function buildSquareOrder(request: CreateOrderRequest): SquareOrderInput 
       catalog_object_id: item.catalogObjectId,
       quantity: item.quantity,
     })),
-    // Order-level percentage discount. Square recomputes total_money (and tax on
-    // the discounted subtotal), so the parsed totals stay authoritative.
+    // Order-level discount (percentage or fixed amount for BOGO). Square
+    // recomputes total_money (and tax on the discounted subtotal), so the parsed
+    // totals stay authoritative.
     ...(request.discount
-      ? { discounts: [{ name: request.discount.name, percentage: request.discount.percentage, scope: "ORDER" as const }] }
+      ? {
+          discounts: [
+            request.discount.amountMoney
+              ? { name: request.discount.name, amount_money: request.discount.amountMoney, scope: "ORDER" as const }
+              : { name: request.discount.name, percentage: request.discount.percentage!, scope: "ORDER" as const },
+          ],
+        }
       : {}),
     fulfillments: request.shippingAddress
       ? [{

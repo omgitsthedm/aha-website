@@ -90,8 +90,11 @@ export async function POST(request: Request) {
       ...(customerId ? { customerId } : {}),
       lineItems: cart.items.map((it) => ({ catalogObjectId: it.squareVariationId, quantity: String(it.quantity) })),
       // Resolved server-side; identical resolution to the quote keeps the
-      // QUOTE_CHANGED guard exact (same code → same discounted total).
-      discount: resolveDiscount(body.promoCode),
+      // QUOTE_CHANGED guard exact (same code + same cart → same discounted total).
+      discount: resolveDiscount(body.promoCode, {
+        items: cart.items.map((i) => ({ unitPrice: i.unitPrice, quantity: i.quantity })),
+        currency: cart.currency,
+      }),
       shippingAddress: addr ? {
         addressLine1: addr.address1, locality: addr.city,
         administrativeDistrictLevel1: addr.state, postalCode: addr.zip, country: addr.country,

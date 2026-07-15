@@ -69,7 +69,7 @@ export function CheckoutForm({ squareConfig }: Props) {
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [promoCode, setPromoCode] = useState("");        // input value
   const [appliedPromo, setAppliedPromo] = useState("");  // code actually sent to the server
-  const [promoInfo, setPromoInfo] = useState<{ label: string; percentage: string } | null>(null);
+  const [promoInfo, setPromoInfo] = useState<{ label: string; percentage: string | null } | null>(null);
   const [promoInvalid, setPromoInvalid] = useState(false);
   const [contact, setContact] = useState({
     email: "", shippingName: "", address1: "", city: "", state: "", zip: "", country: "US",
@@ -154,7 +154,7 @@ export function CheckoutForm({ squareConfig }: Props) {
       },
     });
 
-    type QuoteResponse = { quote: CheckoutQuote; promo?: { label: string; percentage: string } | null; promoInvalid?: boolean };
+    type QuoteResponse = { quote: CheckoutQuote; promo?: { label: string; percentage: string | null } | null; promoInvalid?: boolean };
 
     // One fetch with a 10s timeout. The quote is fully idempotent (no charge),
     // so it is safe to retry once on a pure network failure / timeout.
@@ -589,14 +589,14 @@ export function CheckoutForm({ squareConfig }: Props) {
                   disabled={!promoCode.trim() || quoteStatus === "loading" || promoCode.trim().toUpperCase() === appliedPromo.toUpperCase()}
                   className="btn-secondary min-h-11 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50">Apply</button>
               </div>
-              {promoInfo && <p className="mt-2 text-xs font-bold text-success">{promoInfo.label} applied — {promoInfo.percentage}% off.</p>}
+              {promoInfo && <p className="mt-2 text-xs font-bold text-success">{promoInfo.label} applied{promoInfo.percentage ? ` — ${promoInfo.percentage}% off` : ""}.</p>}
               {promoInvalid && <p className="mt-2 text-xs font-bold text-warning">That code isn&rsquo;t valid.</p>}
             </div>
 
             <div className="mt-5 space-y-2 border-t border-border/40 pt-4 text-sm font-bold">
               <div className="flex justify-between text-muted"><span>Subtotal</span><span>{money(total)}</span></div>
               {promoInfo && quote && total - quote.subtotal > 0 && (
-                <div className="flex justify-between text-success"><span>{promoInfo.label} ({promoInfo.percentage}% off)</span><span>-{money(total - quote.subtotal)}</span></div>
+                <div className="flex justify-between text-success"><span>{promoInfo.label}{promoInfo.percentage ? ` (${promoInfo.percentage}% off)` : ""}</span><span>-{money(total - quote.subtotal)}</span></div>
               )}
               <div className="flex justify-between text-muted"><span>Shipping</span><span className="text-success">Free</span></div>
               <div className="flex justify-between text-muted">
