@@ -16,10 +16,10 @@ export const metadata: Metadata = {
 };
 
 const categoryTiles = [
-  { label: "Men", href: "/men", image: "/products/enemy-of-the-state-unisex-hoodie/01-black-unisex-premium-hoodie-front.webp" },
-  { label: "Women", href: "/women", image: "/products/hope-tomorrow-pink-unisex-premium-sweatshirt/01-dusty-rose-unisex-premium-sweatshirt-front.webp" },
-  { label: "Unisex", href: "/unisex", image: "/products/no-place-like-new-york-charcoal-unisex-premium-sweatshirt/01-charcoal-heather-unisex-premium-sweatshirt-front-and-back.webp" },
-  { label: "Accessories", href: "/accessories", image: "/products/dad-hat/01-classic-dad-hat-black-front.webp" },
+  { label: "Men", href: "/men", image: "/campaign/lifestyle/men.webp" },
+  { label: "Women", href: "/women", image: "/campaign/lifestyle/women.webp" },
+  { label: "Unisex", href: "/unisex", image: "/campaign/lifestyle/unisex.webp" },
+  { label: "Accessories", href: "/accessories", image: "/campaign/lifestyle/accessories.webp" },
 ];
 
 export default async function HomePage() {
@@ -83,15 +83,15 @@ export default async function HomePage() {
             >
               <Image
                 src={tile.image}
-                alt={`${tile.label} category`}
+                alt={`${tile.label} — After Hours Agenda, worn in New York`}
                 fill
-                className="object-contain p-6"
+                className="object-cover"
                 sizes="(max-width: 768px) 50vw, 25vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-void via-void/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
-                <p className="font-display text-xl font-bold uppercase tracking-[-0.02em] text-cream md:text-2xl">{tile.label}</p>
-                <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent opacity-0 transition-opacity group-hover:opacity-100">Shop now →</p>
+                <p className="font-display text-xl font-bold uppercase tracking-[-0.02em] text-white md:text-2xl">{tile.label}</p>
+                <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-[#FF8DA1] opacity-0 transition-opacity group-hover:opacity-100">Shop now →</p>
               </div>
             </Link>
           ))}
@@ -130,6 +130,26 @@ export default async function HomePage() {
         ) : (
           <p className="text-sm text-muted">Check back soon for new drops.</p>
         )}
+      </section>
+
+      <section aria-labelledby="street-heading" className="mt-20 lg:mt-28">
+        <div className="reveal-item image-hover-zoom group relative h-[70vh] min-h-[26rem] w-full overflow-hidden">
+          <Image
+            src="/campaign/lifestyle/band.webp"
+            alt="Three friends in After Hours Agenda streetwear crossing a New York City street at golden hour"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/20" />
+          <div className="absolute inset-0 flex flex-col items-center justify-end pb-12 text-center sm:pb-16">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF8DA1]">On the street · New York</p>
+            <h2 id="street-heading" className="mt-3 max-w-3xl px-4 font-display text-[clamp(1.75rem,5vw,3.5rem)] font-bold uppercase leading-[0.92] tracking-[-0.04em] text-white">
+              However you wear it, wear it like you mean it
+            </h2>
+            <Link href="/new-arrivals" className="btn-primary mt-6">Shop the new arrivals</Link>
+          </div>
+        </div>
       </section>
 
       {spotlight && <FeaturedGraphic product={spotlight} eyebrow="Featured graphic" story={spotlightStory} />}
