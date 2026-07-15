@@ -8,7 +8,8 @@ const resetPublicRoutes = [
   "/drops/:path*",
   "/lookbook/:path+",
   "/coming-soon",
-  "/product-feed.xml",
+  // NOTE: /product-feed.xml is intentionally NOT reset — it serves the Google
+  // Shopping / Meta / TikTok product feed for multi-channel distribution.
 ];
 
 const contentSecurityPolicy = [

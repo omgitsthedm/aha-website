@@ -47,6 +47,10 @@ export function PilotFooter() {
               className="inline-flex min-h-11 items-center gap-2 border border-border/60 px-4 text-xs font-bold uppercase tracking-wide text-cream transition-colors hover:border-accent hover:text-accent">
               TikTok
             </a>
+            <a href="https://www.facebook.com/afterhoursagenda" target="_blank" rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-2 border border-border/60 px-4 text-xs font-bold uppercase tracking-wide text-cream transition-colors hover:border-accent hover:text-accent">
+              Facebook
+            </a>
           </div>
 
           <div className="mt-8 border-t border-border/40 pt-6">

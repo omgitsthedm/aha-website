@@ -15,6 +15,7 @@ export function StorefrontJsonLd() {
         sameAs: [
           "https://www.instagram.com/afterhoursagenda",
           "https://www.tiktok.com/@afterhoursagenda",
+          "https://www.facebook.com/afterhoursagenda",
         ],
       },
       {
