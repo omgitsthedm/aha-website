@@ -318,6 +318,8 @@ export function CheckoutForm({ squareConfig }: Props) {
           quantity: item.quantity,
           lineTotal: item.price * item.quantity,
         })),
+        subtotal: total, // gross pre-discount
+        discount: Math.max(0, total - reviewedQuote.subtotal),
         total: reviewedQuote.total,
         currency: reviewedQuote.currency,
         shippingName: contact.shippingName,

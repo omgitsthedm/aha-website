@@ -31,7 +31,7 @@ export async function dispatchOrderNotifications(limit = 10, onlyOrderId?: numbe
     const payload = (item.payloadJson || {}) as Payload;
     const rendered = renderOrderEmail({
       kind: item.kind as OrderEmailKind, orderNumber: order.externalOrderNumber,
-      customerName: order.shippingName, totalAmount: order.totalAmount, currency: order.currency,
+      customerName: order.shippingName, subtotalAmount: order.subtotalAmount, discountAmount: order.discountAmount, totalAmount: order.totalAmount, currency: order.currency,
       items: items.map((line) => ({ title: line.titleSnapshot, size: line.sizeSnapshot, color: line.colorSnapshot, quantity: line.quantity, lineTotal: line.lineTotal })),
       trackingUrl: payload.trackingUrl, carrier: payload.carrier, trackingNumber: payload.trackingNumber,
     });

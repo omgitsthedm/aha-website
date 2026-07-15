@@ -107,7 +107,9 @@ export async function createOrder(
   if (!isDbConfigured()) throw new Error("Order store unavailable.");
   const external = orderNumber();
   const shipping = 0; // free shipping (brand policy)
-  const subtotal = pricing?.subtotal ?? cart.subtotal;
+  const grossSubtotal = cart.subtotal; // pre-discount line-item total
+  const netSubtotal = pricing?.subtotal ?? cart.subtotal; // Square's post-discount subtotal
+  const discountAmount = Math.max(0, grossSubtotal - netSubtotal); // itemized promo savings
   const tax = pricing?.tax ?? 0;
   const total = pricing?.total ?? cart.subtotal + shipping;
   const currency = pricing?.currency ?? cart.currency;
@@ -118,7 +120,10 @@ export async function createOrder(
       externalOrderNumber: external, email: contact.email, phone: contact.phone,
       shippingName: contact.shippingName, shippingAddressJson: contact.shippingAddress ?? null,
       squareOrderId: pricing?.squareOrderId ?? null,
-      currency, subtotalAmount: subtotal, shippingAmount: shipping, taxAmount: tax,
+      // Store the GROSS subtotal + the discount separately so records reconcile
+      // with Square (gross − discount + tax = total). Square holds the discount
+      // name/code; we keep the amount.
+      currency, subtotalAmount: grossSubtotal, discountAmount, shippingAmount: shipping, taxAmount: tax,
       totalAmount: total, paymentStatus: "created", fulfillmentStatus: "not_started",
     })
     .returning({ id: orders.id });

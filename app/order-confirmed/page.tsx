@@ -9,6 +9,8 @@ interface OrderSummary {
   orderNumber: string;
   receiptUrl: string | null;
   items: Array<{ name: string; variationName: string; quantity: number; lineTotal: number }>;
+  subtotal?: number;
+  discount?: number;
   total: number;
   currency: string;
   shippingName: string;
@@ -43,7 +45,7 @@ export default function OrderConfirmedPage() {
         <section aria-labelledby="order-summary-title" className="mt-10 border-y border-border/40 py-7">
           <div className="flex flex-wrap items-end justify-between gap-5"><div><p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Status</p><h2 id="order-summary-title" className="mt-1 font-display text-2xl font-black uppercase text-success">Order received</h2></div><div className="text-right"><p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Amount paid</p><p className="mt-1 font-mono text-xl font-bold">{money(summary.total, summary.currency)}</p></div></div>
           <div className="mt-7 grid gap-8 md:grid-cols-2">
-            <div><h3 className="text-xs font-bold uppercase tracking-[0.08em] text-accent">Items</h3><ul className="mt-3 divide-y divide-border/40">{summary.items.map((item, index) => <li key={`${item.name}-${item.variationName}-${index}`} className="flex justify-between gap-4 py-3 text-sm"><span>{item.name}<span className="block text-xs text-muted">{item.variationName} x {item.quantity}</span></span><span className="font-mono font-bold">{money(item.lineTotal, summary.currency)}</span></li>)}</ul></div>
+            <div><h3 className="text-xs font-bold uppercase tracking-[0.08em] text-accent">Items</h3><ul className="mt-3 divide-y divide-border/40">{summary.items.map((item, index) => <li key={`${item.name}-${item.variationName}-${index}`} className="flex justify-between gap-4 py-3 text-sm"><span>{item.name}<span className="block text-xs text-muted">{item.variationName} x {item.quantity}</span></span><span className="font-mono font-bold">{money(item.lineTotal, summary.currency)}</span></li>)}</ul>{summary.discount && summary.discount > 0 ? <div className="mt-3 space-y-1 border-t border-border/40 pt-3 text-sm"><div className="flex justify-between text-muted"><span>Subtotal</span><span className="font-mono">{money(summary.subtotal ?? summary.total + summary.discount, summary.currency)}</span></div><div className="flex justify-between text-success"><span>Discount</span><span className="font-mono">-{money(summary.discount, summary.currency)}</span></div><div className="flex justify-between font-bold text-cream"><span>Paid</span><span className="font-mono">{money(summary.total, summary.currency)}</span></div></div> : null}</div>
             <div><h3 className="text-xs font-bold uppercase tracking-[0.08em] text-accent">Shipping to</h3><address className="mt-3 not-italic text-sm leading-relaxed text-cream">{summary.shippingName}<br />{summary.shippingAddress.address1}<br />{summary.shippingAddress.city}, {summary.shippingAddress.state} {summary.shippingAddress.zip}<br />{summary.shippingAddress.country}</address></div>
           </div>
         </section>
