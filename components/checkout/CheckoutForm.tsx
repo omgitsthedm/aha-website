@@ -12,6 +12,12 @@ import { trackCommerceEvent } from "@/lib/analytics/events";
 type TokenResult = { status: string; token: string };
 type SquareCard = { attach: (selector: string) => Promise<void>; tokenize: () => Promise<TokenResult> };
 type SquareWallet = { attach?: (selector: string, opts?: unknown) => Promise<void>; tokenize: () => Promise<TokenResult> };
+// Cash App Pay is event-based (tokenizes via an 'ontokenization' event, not a
+// direct tokenize() call), so it has its own shape.
+type SquareCashAppPay = {
+  attach: (selector: string, opts?: unknown) => Promise<void>;
+  addEventListener: (type: string, cb: (ev: { detail?: { tokenResult?: TokenResult } }) => void) => void;
+};
 type SquarePaymentRequest = unknown;
 type VerificationResult = { token?: string };
 type SquarePaymentsApi = {
@@ -19,6 +25,8 @@ type SquarePaymentsApi = {
   paymentRequest: (req: unknown) => SquarePaymentRequest;
   applePay: (req: SquarePaymentRequest) => Promise<SquareWallet>;
   googlePay: (req: SquarePaymentRequest) => Promise<SquareWallet>;
+  afterpayClearpay?: (req: SquarePaymentRequest) => Promise<SquareWallet>;
+  cashAppPay?: (req: SquarePaymentRequest, opts: unknown) => Promise<SquareCashAppPay>;
   verifyBuyer?: (token: string, details: unknown) => Promise<VerificationResult>;
 };
 interface CheckoutQuote {
@@ -91,8 +99,15 @@ export function CheckoutForm({ squareConfig }: Props) {
   const cardRef = useRef<SquareCard | null>(null);
   const applePayRef = useRef<SquareWallet | null>(null);
   const googlePayRef = useRef<SquareWallet | null>(null);
+  const afterpayRef = useRef<SquareWallet | null>(null);
+  const cashAppRef = useRef<SquareCashAppPay | null>(null);
+  // Always points at the current-quote charge fn, so Cash App Pay's one-time
+  // event listener never fires a charge with a stale total.
+  const submitTokenRef = useRef<(token: string) => void>(() => {});
   const [applePayReady, setApplePayReady] = useState(false);
   const [googlePayReady, setGooglePayReady] = useState(false);
+  const [afterpayReady, setAfterpayReady] = useState(false);
+  const [cashAppReady, setCashAppReady] = useState(false);
   // Stable idempotency key for this checkout attempt. Kept the same across network retries so a
   // lost-response-after-charge is deduped server-side; rotated only after a definitive decline.
   const idempotencyKeyRef = useRef<string>("");
@@ -276,8 +291,12 @@ export function CheckoutForm({ squareConfig }: Props) {
     setQuote(null);
     setApplePayReady(false);
     setGooglePayReady(false);
+    setAfterpayReady(false);
+    setCashAppReady(false);
     applePayRef.current = null;
     googlePayRef.current = null;
+    afterpayRef.current = null;
+    cashAppRef.current = null;
     if (getAddressError(contact)) {
       setQuoteStatus("idle");
       setQuoteError(null);
@@ -306,6 +325,29 @@ export function CheckoutForm({ squareConfig }: Props) {
           const googlePay = await paymentsRef.current!.googlePay(request);
           if (!cancelled) { googlePayRef.current = googlePay; setGooglePayReady(true); }
         } catch { /* Google Pay unavailable on this device */ }
+        try {
+          if (paymentsRef.current!.afterpayClearpay) {
+            const afterpay = await paymentsRef.current!.afterpayClearpay(request);
+            if (!cancelled) { afterpayRef.current = afterpay; setAfterpayReady(true); }
+          }
+        } catch { /* Afterpay unavailable / not enabled in Square */ }
+        try {
+          if (paymentsRef.current!.cashAppPay) {
+            // Cash App Pay needs its own request instance + a redirect target.
+            const cashReq = paymentsRef.current!.paymentRequest({
+              countryCode: contact.country, currencyCode: quote.currency,
+              total: { amount: (quote.total / 100).toFixed(2), label: "After Hours Agenda" },
+            });
+            const cashAppPay = await paymentsRef.current!.cashAppPay(cashReq, {
+              redirectURL: window.location.href, referenceId: idempotencyKeyRef.current || "aha-checkout",
+            });
+            cashAppPay.addEventListener("ontokenization", (ev) => {
+              const tr = ev?.detail?.tokenResult;
+              if (tr?.status === "OK" && tr.token) submitTokenRef.current(tr.token);
+            });
+            if (!cancelled) { cashAppRef.current = cashAppPay; setCashAppReady(true); }
+          }
+        } catch { /* Cash App Pay unavailable / not enabled in Square */ }
       } catch { /* paymentRequest unavailable */ }
     };
     void initWallets();
@@ -318,6 +360,11 @@ export function CheckoutForm({ squareConfig }: Props) {
       buttonColor: "white", buttonType: "long", buttonSizeMode: "fill",
     }).catch(() => setGooglePayReady(false));
   }, [googlePayReady]);
+
+  useEffect(() => {
+    if (!cashAppReady || !cashAppRef.current?.attach) return;
+    void cashAppRef.current.attach("#aha-cashapp", { shape: "semiround", width: "full" }).catch(() => setCashAppReady(false));
+  }, [cashAppReady]);
 
   const validate = (): string | null => {
     if (!contact.email || !/.+@.+\..+/.test(contact.email)) return "Enter a valid email for your receipt.";
@@ -411,6 +458,12 @@ export function CheckoutForm({ squareConfig }: Props) {
       setStatus("error");
       setError("Connection dropped. Tap Pay again. The retry uses the same payment key to prevent a duplicate charge.");
     }
+  };
+
+  // Keep the Cash App Pay event handler charging against the CURRENT quote.
+  submitTokenRef.current = (token: string) => {
+    if (validate() || !quote || quoteStatus !== "ready") return;
+    void submitWithToken(token, quote);
   };
 
   const pay = async (e?: React.FormEvent) => {
@@ -558,7 +611,7 @@ export function CheckoutForm({ squareConfig }: Props) {
               <legend className="mb-4 font-display text-xl font-bold uppercase tracking-[-0.03em] text-cream">Payment</legend>
 
               {/* Express wallets (shown only when the device/browser + Square support them) */}
-              {(applePayReady || googlePayReady) && (
+              {(applePayReady || googlePayReady || afterpayReady || cashAppReady) && (
                 <div className="mb-5">
                   <p className="mb-2 font-body text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Express checkout</p>
                   <div className="space-y-2">
@@ -569,6 +622,14 @@ export function CheckoutForm({ squareConfig }: Props) {
                     {googlePayReady && (
                       <div id="aha-gpay" onClick={() => payWallet(googlePayRef.current)}
                         className="min-h-12 cursor-pointer overflow-hidden" />
+                    )}
+                    {/* Cash App Pay renders its own branded button here (event-based). */}
+                    {cashAppReady && <div id="aha-cashapp" className="min-h-12 overflow-hidden" />}
+                    {afterpayReady && (
+                      <button type="button" onClick={() => payWallet(afterpayRef.current)} aria-label="Pay with Afterpay — 4 interest-free payments"
+                        className="min-h-12 w-full bg-[#B2FCE4] text-sm font-bold uppercase tracking-[0.04em] text-black">
+                        Pay in 4 with Afterpay
+                      </button>
                     )}
                   </div>
                   <div className="my-4 flex items-center gap-3 font-body text-[11px] font-bold uppercase tracking-[0.12em] text-muted">
