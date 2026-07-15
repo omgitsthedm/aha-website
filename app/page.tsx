@@ -42,10 +42,10 @@ export default async function HomePage() {
               <Link href="/new-arrivals" className="btn-secondary">Shop new arrivals</Link>
             </div>
           </div>
-          <div className="neon-sign flex flex-col items-center justify-center py-6">
-            <div className="neon-flicker flex flex-col items-center">
-              <NeonSheep className="h-[min(58vw,400px)] w-[min(58vw,400px)]" />
-              <p className="neon2-text mt-1 font-mono text-sm font-bold uppercase tracking-[0.35em]">Est. 2011</p>
+          <div className="neon-sign flex items-center justify-center">
+            <div className="neon-flicker flex w-full max-w-[460px] flex-col items-center">
+              <NeonSheep className="aspect-[1866/1464] w-full" />
+              <p className="neon2-text mt-3 font-mono text-sm font-bold uppercase tracking-[0.35em]">Est. 2011</p>
             </div>
           </div>
         </div>
