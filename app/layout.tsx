@@ -9,6 +9,7 @@ import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { SocialPixels } from "@/components/analytics/SocialPixels";
 import { StorefrontJsonLd } from "@/components/seo/StorefrontJsonLd";
 import { CookieConsent } from "@/components/consent/CookieConsent";
+import { FeedbackWidget } from "@/components/feedback/FeedbackWidget";
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -95,6 +96,7 @@ export default function RootLayout({
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
           <PilotFooter />
           <CookieConsent />
+          <FeedbackWidget />
         </CartProvider>
       </body>
     </html>
