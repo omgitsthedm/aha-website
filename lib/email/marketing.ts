@@ -34,7 +34,8 @@ export function verifyEmailToken(email: string, token: string): boolean {
 }
 
 export function siteOrigin(): string {
-  return (process.env.SITE_URL || process.env.URL || "https://afterhoursagenda.com").replace(/\/$/, "");
+  // Prefer the explicit canonical; Netlify's URL/req.url can be a deploy URL.
+  return (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || process.env.URL || "https://afterhoursagenda.com").replace(/\/$/, "");
 }
 
 export function unsubscribeUrl(email: string): string {
