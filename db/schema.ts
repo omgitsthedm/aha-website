@@ -166,6 +166,20 @@ export const smsSubscribers = pgTable("sms_subscribers", {
   id: bigserial("id", { mode: "number" }).primaryKey(), phone: text("phone").notNull().unique(),
   consent: boolean("consent").notNull().default(true), source: text("source"), createdAt: createdAt(),
 });
+// One open in-progress checkout per email. Written non-blocking from /checkout
+// when an email + items exist; a scheduled dispatch sends ONE recovery email
+// after a delay if no order followed. recoveredAt/notifiedAt gate re-sends.
+export const abandonedCarts = pgTable("abandoned_carts", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  email: text("email").notNull().unique(),
+  itemsJson: jsonb("items_json").notNull().default([]),
+  subtotal: cents("subtotal").notNull().default(0),
+  currency: text("currency").notNull().default("USD"),
+  notifiedAt: timestamp("notified_at", { withTimezone: true }),
+  recoveredAt: timestamp("recovered_at", { withTimezone: true }),
+  unsubscribed: boolean("unsubscribed").notNull().default(false),
+  createdAt: createdAt(), updatedAt: updatedAt(),
+}, (t) => ({ byNotified: index("idx_abandoned_notified").on(t.notifiedAt) }));
 
 // ── Webhooks / audit / ops ───────────────────────────────────────────────────
 export const webhookEvents = pgTable("webhook_events", {

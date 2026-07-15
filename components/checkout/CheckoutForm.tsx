@@ -179,6 +179,28 @@ export function CheckoutForm({ squareConfig }: Props) {
     }
   }, [items, total]);
 
+  // Best-effort abandoned-cart capture: once a valid email + items exist, save a
+  // snapshot so a recovery email can go out later if they don't finish. Fully
+  // fire-and-forget (keepalive survives them leaving) — never blocks checkout.
+  useEffect(() => {
+    const email = contact.email.trim();
+    if (!/.+@.+\..+/.test(email) || items.length === 0) return;
+    const timer = window.setTimeout(() => {
+      fetch("/api/checkout/capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          email,
+          subtotal: total,
+          currency: "USD",
+          items: items.map((i) => ({ title: i.name, size: i.variationName, quantity: i.quantity, lineTotal: i.price * i.quantity, slug: i.slug })),
+        }),
+      }).catch(() => { /* capture is best-effort */ });
+    }, 1200);
+    return () => window.clearTimeout(timer);
+  }, [contact.email, items, total]);
+
   const loadQuote = useCallback(async () => {
     if (getAddressError(contact)) return null;
     setQuoteStatus("loading");
