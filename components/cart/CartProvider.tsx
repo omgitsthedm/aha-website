@@ -17,7 +17,7 @@ const AddToCartModal = dynamic(() => import("./AddToCartModal").then((m) => m.Ad
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (item: CartItem, relatedProducts?: Product[]) => void;
+  addItem: (item: CartItem, relatedProducts?: Product[], opts?: { silent?: boolean }) => void;
   removeItem: (variationId: string) => void;
   updateQuantity: (variationId: string, quantity: number) => void;
   clearCart: () => void;
@@ -87,7 +87,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const MAX_QUANTITY_PER_ITEM = 20;
 
-  const addItem = useCallback((item: CartItem, relatedProducts?: Product[]) => {
+  const addItem = useCallback((item: CartItem, relatedProducts?: Product[], opts?: { silent?: boolean }) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.variationId === item.variationId);
       if (existing) {
@@ -99,7 +99,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...item, quantity: Math.min(item.quantity, MAX_QUANTITY_PER_ITEM) }];
     });
-    // Show confirmation modal instead of opening cart drawer
+    // Buy-it-now (silent) skips the confirmation modal so the shopper goes
+    // straight to checkout with no wall. Normal add shows the cross-sell modal.
+    if (opts?.silent) return;
     setLastAddedItem(item);
     setModalRelated(relatedProducts || []);
     setIsModalOpen(true);

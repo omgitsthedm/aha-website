@@ -132,6 +132,35 @@ export function CheckoutForm({ squareConfig }: Props) {
     try { localStorage.setItem("aha-checkout-contact", JSON.stringify(contact)); } catch { /* ignore */ }
   }, [contact]);
 
+  // Keyless ZIP → city/state autofill: one friction cut Shopify gets from
+  // address autocomplete. Fills ONLY empty fields, is fully non-blocking, and
+  // never touches the charge — a failure (offline / 404 / CSP) silently no-ops
+  // and manual entry is unaffected. Full-street autocomplete (Google Places)
+  // is a follow-up gated on an API key.
+  useEffect(() => {
+    const zip = contact.zip.trim();
+    const country = contact.country.toLowerCase();
+    if (zip.length < 4) return;
+    const controller = new AbortController();
+    const timer = window.setTimeout(async () => {
+      try {
+        const res = await fetch(`https://api.zippopotam.us/${country}/${encodeURIComponent(zip)}`, { signal: controller.signal });
+        if (!res.ok) return;
+        const data = await res.json();
+        const place = Array.isArray(data?.places) ? data.places[0] : null;
+        if (!place) return;
+        const city = place["place name"];
+        const state = place["state abbreviation"] || place["state"];
+        setContact((prev) => ({
+          ...prev,
+          city: prev.city.trim() ? prev.city : (city || prev.city),
+          state: prev.state.trim() ? prev.state : (state || prev.state),
+        }));
+      } catch { /* offline / 404 / CSP — silently skip */ }
+    }, 500);
+    return () => { window.clearTimeout(timer); controller.abort(); };
+  }, [contact.zip, contact.country]);
+
   useEffect(() => {
     if (items.length > 0) {
       trackCommerceEvent({ name: "begin_checkout", valueCents: total, currency: "USD", quantity: items.reduce((sum, item) => sum + item.quantity, 0) });

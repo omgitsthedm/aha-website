@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Collection, Product } from "@/lib/utils/types";
 import type { ProductEnrichment } from "@/lib/data/enrichment";
 import { useCart } from "@/components/cart/CartProvider";
@@ -45,6 +46,7 @@ const cleanDisplayText = (value: string): string => value.replace(/[—–]/g, "
 
 export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription, colorImageIndex, reviews }: ProductDetailProps) {
   const { addItem } = useCart();
+  const router = useRouter();
   const sizeInStock = (size: string) => stockBySize ? stockBySize[extractVariationSize(size)] !== false : true;
   const variationAvailable = (name: string) => {
     const size = extractVariationSize(name);
@@ -109,6 +111,27 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
     setAddedFeedback(true);
     if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
     feedbackTimer.current = window.setTimeout(() => setAddedFeedback(false), 1800);
+  };
+
+  // Buy it now: add silently (no cross-sell modal) and go straight to the
+  // one-page checkout — the shortest find→buy→done path. Never charges here;
+  // the sacred payment step still happens on /checkout.
+  const handleBuyNow = () => {
+    if (!currentVariation || !canBuy) return;
+    addItem({
+      productId: product.id,
+      slug: product.slug,
+      variationId: currentVariation.id,
+      name: product.name,
+      variationName: currentVariation.name,
+      price: currentVariation.price,
+      priceFormatted: currentVariation.priceFormatted,
+      quantity: 1,
+      image: product.images[0] || "",
+    }, undefined, { silent: true });
+    trackCommerceEvent({ name: "add_to_cart", itemId: product.id, variantId: currentVariation.id, valueCents: currentVariation.price, currency: product.currency, quantity: 1 });
+    hapticTap();
+    router.push("/checkout");
   };
 
 
@@ -270,6 +293,12 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 </svg>
               </button>
             </div>
+
+            {canBuy && (
+              <button type="button" onClick={handleBuyNow} className="btn-secondary mt-3 w-full justify-center">
+                Buy it now
+              </button>
+            )}
 
             {!canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation?.name || "" } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}
             <p className="mt-3 text-xs leading-relaxed text-muted">{RETURNS_SUMMARY}</p>

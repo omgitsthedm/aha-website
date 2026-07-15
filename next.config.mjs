@@ -22,7 +22,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline' https://web.squarecdn.com https://sandbox.web.squarecdn.com",
   "img-src 'self' data: blob: https://items-images-production.s3.us-west-2.amazonaws.com https://images.squarespace-cdn.com https://*.printful.com https://*.squarecdn.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.facebook.com https://analytics.tiktok.com",
   "font-src 'self' data: https://cash-f.squarecdn.com https://square-fonts-production-f.squarecdn.com https://d1g145x70srn7h.cloudfront.net",
-  "connect-src 'self' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://pci-connect.squareup.com https://pci-connect.squareupsandbox.com https://*.ingest.sentry.io https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com https://analytics.tiktok.com https://*.tiktok.com",
+  "connect-src 'self' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://pci-connect.squareup.com https://pci-connect.squareupsandbox.com https://*.ingest.sentry.io https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com https://analytics.tiktok.com https://*.tiktok.com https://api.zippopotam.us",
   "frame-src 'self' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://*.squarecdn.com https://pay.google.com https://appleid.apple.com https://*.cardinalcommerce.com",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
