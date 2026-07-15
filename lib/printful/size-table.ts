@@ -57,3 +57,25 @@ export function getSizeTable(catalogVariantId: number): Promise<SizeTable | null
     { revalidate: 86_400, tags: ["printful-size-table"] }
   )();
 }
+
+/** TEMP self-diagnosis: surfaces which step failed. Remove after the mapping is fixed. */
+export async function debugSizeTable(catalogVariantId: number): Promise<Record<string, unknown>> {
+  const out: Record<string, unknown> = { catalogVariantId };
+  try {
+    const variant = await printfulRequest<Record<string, unknown>>(`/catalog-variants/${catalogVariantId}`);
+    out.variantKeys = variant && typeof variant === "object" ? Object.keys(variant) : typeof variant;
+    const data = (variant as { data?: Record<string, unknown> }).data;
+    out.dataKeys = data ? Object.keys(data) : null;
+    out.catalog_product_id = data?.catalog_product_id ?? null;
+    const productId = data?.catalog_product_id;
+    if (typeof productId === "number") {
+      const guide = await getSizeGuide(productId);
+      out.guidePresent = Boolean(guide);
+      out.measurementsCount = guide?.measurements?.length ?? 0;
+      out.unit = guide?.unit ?? null;
+    }
+  } catch (e) {
+    out.error = e instanceof Error ? e.message : String(e);
+  }
+  return out;
+}
