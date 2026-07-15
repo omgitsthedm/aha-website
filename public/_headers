@@ -1,0 +1,10 @@
+# Netlify honors this for static public/ files (next.config headers() does NOT
+# apply to them under the Netlify Next runtime — /brand returned max-age=0).
+/products/*
+  Cache-Control: public, max-age=31536000, immutable
+/brand/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/campaign/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
