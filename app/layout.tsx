@@ -55,21 +55,27 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  // Installed-app polish: standalone window that matches the paper-white ground
-  // (status bar stays legible dark-on-light). The home-screen icon itself comes
+  // Installed-app polish: standalone window with the brand-rose chrome
+  // (status bar stays legible dark-on-rose). The home-screen icon itself comes
   // from the file conventions app/icon.svg + app/apple-icon.png.
   appleWebApp: {
     capable: true,
     title: "After Hours Agenda",
     statusBarStyle: "default",
   },
+  other: {
+    "msapplication-TileColor": "#FF6B6B",
+    "msapplication-navbutton-color": "#FF6B6B",
+  },
 };
 
 export const viewport: Viewport = {
   colorScheme: "light",
+  // Browser chrome carries the brand rose (Safari 15+ tab bar, Chrome/Edge,
+  // Android PWA header, Discord embed strip). Page ground stays paper #FAFAFA.
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAFAFA" },
-    { media: "(prefers-color-scheme: dark)", color: "#1A1A1A" },
+    { media: "(prefers-color-scheme: light)", color: "#FF6B6B" },
+    { media: "(prefers-color-scheme: dark)", color: "#CE3D56" },
   ],
   viewportFit: "cover",
 };
