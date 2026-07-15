@@ -13,8 +13,48 @@ import { trackCommerceEvent } from "@/lib/analytics/events";
 interface RecItem { name: string; slug: string; priceFormatted: string; image: string }
 
 export function CartPageContent() {
-  const { items, removeItem, updateQuantity, totalFormatted, totalItems, total } = useCart();
+  const { items, addItem, removeItem, updateQuantity, totalFormatted, totalItems, total } = useCart();
   const [recs, setRecs] = useState<RecItem[]>([]);
+  const [restored, setRestored] = useState(false);
+
+  // Cross-device restore: a token-verified recovery link rebuilds the saved bag
+  // here, on any device. Read-only fetch; merges into whatever's already in the bag.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("recover") !== "1") return;
+    const clean = () => window.history.replaceState({}, "", "/cart");
+    const e = params.get("e");
+    const t = params.get("t");
+    if (!e || !t) { clean(); return; }
+    const controller = new AbortController();
+    fetch(`/api/checkout/restore?e=${encodeURIComponent(e)}&t=${encodeURIComponent(t)}`, { signal: controller.signal })
+      .then((r) => (r.ok ? r.json() : { items: [] }))
+      .then((data: { items?: Array<Record<string, unknown>> }) => {
+        let added = 0;
+        for (const l of Array.isArray(data?.items) ? data.items : []) {
+          const variationId = typeof l.variationId === "string" ? l.variationId : "";
+          const slug = typeof l.slug === "string" ? l.slug : "";
+          if (!variationId || !slug) continue;
+          const quantity = Math.max(1, Math.round(Number(l.quantity) || 1));
+          addItem({
+            productId: (typeof l.productId === "string" && l.productId) || slug,
+            slug,
+            variationId,
+            name: String(l.title ?? ""),
+            variationName: typeof l.size === "string" ? l.size : "",
+            price: Number.isFinite(Number(l.price)) ? Number(l.price) : Math.round((Number(l.lineTotal) || 0) / quantity),
+            priceFormatted: typeof l.priceFormatted === "string" ? l.priceFormatted : "",
+            quantity,
+            image: typeof l.image === "string" ? l.image : "",
+          }, undefined, { silent: true });
+          added += 1;
+        }
+        if (added > 0) setRestored(true);
+        clean();
+      })
+      .catch(() => clean());
+    return () => controller.abort();
+  }, [addItem]);
 
   useEffect(() => {
     if (items.length > 0) trackCommerceEvent({ name: "view_cart", valueCents: total, currency: "USD", quantity: totalItems });
@@ -42,6 +82,7 @@ export function CartPageContent() {
   return (
     <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-6xl">
       <PageHeader eyebrow={`${totalItems} ${totalItems === 1 ? "item" : "items"}`} title="Your bag" description="Review sizes and quantities before moving to the secure Square payment step." />
+      {restored && <p role="status" className="mb-6 border border-accent/60 bg-surface px-4 py-3 text-sm font-bold text-cream">We brought your bag back — pick up right where you left off.</p>}
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
         <ul className="border-t border-border/40" aria-label="Bag items">
           {items.map((item) => (

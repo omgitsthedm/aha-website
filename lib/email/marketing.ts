@@ -42,6 +42,12 @@ export function unsubscribeUrl(email: string): string {
   return `${siteOrigin()}/api/lifecycle/unsubscribe?email=${encodeURIComponent(email)}&t=${token}`;
 }
 
+/** Recovery link that rehydrates the saved bag on any device (token-verified). */
+export function recoverCartUrl(email: string): string {
+  const token = signEmailToken(email);
+  return `${siteOrigin()}/cart?recover=1&e=${encodeURIComponent(email)}&t=${token}`;
+}
+
 export async function sendMarketingEmail(input: {
   idempotencyKey: string; to: string; subject: string; html: string; text: string; stream: string;
 }): Promise<string> {

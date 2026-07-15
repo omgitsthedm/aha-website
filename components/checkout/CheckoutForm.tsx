@@ -194,7 +194,7 @@ export function CheckoutForm({ squareConfig }: Props) {
           email,
           subtotal: total,
           currency: "USD",
-          items: items.map((i) => ({ title: i.name, size: i.variationName, quantity: i.quantity, lineTotal: i.price * i.quantity, slug: i.slug })),
+          items: items.map((i) => ({ title: i.name, size: i.variationName, quantity: i.quantity, lineTotal: i.price * i.quantity, slug: i.slug, variationId: i.variationId, productId: i.productId, price: i.price, priceFormatted: i.priceFormatted, image: i.image })),
         }),
       }).catch(() => { /* capture is best-effort */ });
     }, 1200);

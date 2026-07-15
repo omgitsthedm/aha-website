@@ -2,13 +2,17 @@ import { and, eq, gte, isNull, lte } from "drizzle-orm";
 import { db, isDbConfigured } from "@/lib/db/client";
 import { abandonedCarts, orders } from "@/db/schema";
 import { renderAbandonedCartEmail, type AbandonedCartLine } from "@/lib/email/marketing-templates";
-import { isMarketingEmailConfigured, isLifecycleEmailEnabled, sendMarketingEmail, unsubscribeUrl, siteOrigin } from "@/lib/email/marketing";
+import { isMarketingEmailConfigured, isLifecycleEmailEnabled, sendMarketingEmail, unsubscribeUrl, recoverCartUrl } from "@/lib/email/marketing";
 
 // Don't nag instantly, and don't chase stale carts forever.
 const MIN_AGE_MS = 60 * 60 * 1000;        // wait 1h after last activity before recovering
 const MAX_AGE_MS = 72 * 60 * 60 * 1000;   // give up after 3 days
 
-export interface CaptureLine { title: string; size?: string | null; quantity: number; lineTotal: number; slug?: string }
+export interface CaptureLine {
+  title: string; size?: string | null; quantity: number; lineTotal: number; slug?: string;
+  // Fields needed to rebuild the bag on any device from the recovery link.
+  variationId?: string; productId?: string; price?: number; priceFormatted?: string; image?: string;
+}
 
 const validEmail = (email: string) => /.+@.+\..+/.test(email);
 
@@ -34,6 +38,17 @@ export async function captureAbandonedCart(input: {
       set: { itemsJson: input.items, subtotal: input.subtotal, currency: input.currency || "USD", updatedAt: new Date() },
     });
   } catch { /* capture is best-effort — never surface to checkout */ }
+}
+
+/** Returns the saved bag lines for a verified email, for cross-device restore. */
+export async function getSavedCart(email: string): Promise<CaptureLine[]> {
+  if (!isDbConfigured()) return [];
+  try {
+    const [row] = await db().select({ items: abandonedCarts.itemsJson, unsubscribed: abandonedCarts.unsubscribed })
+      .from(abandonedCarts).where(eq(abandonedCarts.email, email.trim().toLowerCase())).limit(1);
+    if (!row) return [];
+    return Array.isArray(row.items) ? (row.items as CaptureLine[]) : [];
+  } catch { return []; }
 }
 
 export async function markCartRecovered(email: string): Promise<void> {
@@ -110,7 +125,7 @@ export async function dispatchAbandonedCarts(limit = 25): Promise<DispatchResult
     if (lines.length === 0) continue;
     const rendered = renderAbandonedCartEmail({
       items: lines, subtotal: cart.subtotal, currency: cart.currency,
-      recoverUrl: `${siteOrigin()}/cart?recover=1`,
+      recoverUrl: recoverCartUrl(cart.email),
       unsubscribeUrl: unsubscribeUrl(cart.email),
     });
     try {
@@ -129,7 +144,7 @@ export async function sendAbandonedCartTest(to: string): Promise<string> {
   const rendered = renderAbandonedCartEmail({
     items: [{ title: "No Kings — White Short Sleeve T-shirt", size: "M", quantity: 1, lineTotal: 3400 }],
     subtotal: 3400, currency: "USD",
-    recoverUrl: `${siteOrigin()}/cart?recover=1`,
+    recoverUrl: recoverCartUrl(to),
     unsubscribeUrl: unsubscribeUrl(to),
   });
   return sendMarketingEmail({ idempotencyKey: `abandoned-test:${Date.now()}`, to, stream: "abandoned_cart_test", ...rendered });

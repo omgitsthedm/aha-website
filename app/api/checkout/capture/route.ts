@@ -17,6 +17,11 @@ export async function POST(req: Request) {
         quantity: Math.max(1, Math.min(99, Math.round(Number(i.quantity) || 1))),
         lineTotal: Math.max(0, Math.round(Number(i.lineTotal) || 0)),
         slug: typeof i.slug === "string" ? i.slug.slice(0, 120) : undefined,
+        variationId: typeof i.variationId === "string" ? i.variationId.slice(0, 120) : undefined,
+        productId: typeof i.productId === "string" ? i.productId.slice(0, 120) : undefined,
+        price: Number.isFinite(Number(i.price)) ? Math.max(0, Math.round(Number(i.price))) : undefined,
+        priceFormatted: typeof i.priceFormatted === "string" ? i.priceFormatted.slice(0, 24) : undefined,
+        image: typeof i.image === "string" ? i.image.slice(0, 400) : undefined,
       }))
       .filter((i: CaptureLine) => i.title);
     const subtotal = Math.max(0, Math.round(Number(body?.subtotal) || 0));
