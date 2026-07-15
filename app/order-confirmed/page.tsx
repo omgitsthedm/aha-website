@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import { DELIVERY_WINDOW, PRODUCTION_WINDOW } from "@/lib/commerce/policies";
@@ -72,6 +73,15 @@ export default function OrderConfirmedPage() {
       <header className="border-t-2 border-accent pt-5"><p className="text-xs font-bold uppercase tracking-[0.1em] text-accent">{verified ? "Payment complete" : loaded ? "Order lookup" : "Loading"}</p><h1 className="mt-4 font-display text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">{verified ? "Order confirmed" : loaded ? "Details unavailable" : "Loading order"}</h1><p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted">{summary ? `Order ${summary.orderNumber} was received. Confirmation was sent to the checkout email.` : loaded ? "This browser could not verify a matching completed order. Check the confirmation email before attempting payment again." : "Retrieving the order summary."}</p></header>
 
       {summary && <>
+        {/* It's yours — close the funnel on the same aspirational note it opened. */}
+        <div className="relative mt-8 aspect-[21/9] overflow-hidden">
+          <Image src="/campaign/lifestyle/band.webp" alt="After Hours Agenda, worn on the streets of New York" fill className="object-cover object-center" sizes="(max-width: 1024px) 100vw, 56rem" priority />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF8DA1]">It&rsquo;s yours</p>
+            <p className="mt-1 font-display text-[clamp(1.25rem,3vw,2rem)] font-bold uppercase leading-[0.95] tracking-[-0.03em] text-white">Made after hours. Worn all day.</p>
+          </div>
+        </div>
         <section aria-labelledby="order-summary-title" className="mt-10 border-y border-border/40 py-7">
           <div className="flex flex-wrap items-end justify-between gap-5"><div><p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Status</p><h2 id="order-summary-title" className="mt-1 font-display text-2xl font-black uppercase text-success">Order received</h2></div><div className="text-right"><p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Amount paid</p><p className="mt-1 font-mono text-xl font-bold">{money(summary.total, summary.currency)}</p></div></div>
           <div className="mt-7 grid gap-8 md:grid-cols-2">

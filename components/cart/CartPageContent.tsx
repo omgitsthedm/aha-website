@@ -67,6 +67,15 @@ export function CartPageContent() {
         </ul>
 
         <aside aria-labelledby="summary-heading" className="border-t-2 border-accent pt-5 lg:sticky lg:top-28 lg:self-start">
+          {/* Funnel-wide aspirational moment: picture wearing it while you review the bag. */}
+          <div className="relative mb-6 aspect-[16/10] overflow-hidden">
+            <Image src="/campaign/lifestyle/women.webp" alt="After Hours Agenda, worn in New York" fill className="object-cover object-top" sizes="(max-width: 1024px) 100vw, 22rem" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-4">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF8DA1]">Build your fit</p>
+              <p className="mt-1 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.03em] text-white">Made after hours. Worn all day.</p>
+            </div>
+          </div>
           <h2 id="summary-heading" className="font-display text-2xl font-black uppercase">Order summary</h2>
           <dl className="mt-5 space-y-4 border-y border-border/40 py-5 text-sm">
             <div className="flex justify-between gap-4"><dt className="text-muted">Subtotal</dt><dd className="font-mono font-bold">{totalFormatted}</dd></div>
