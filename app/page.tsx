@@ -134,6 +134,20 @@ export default async function HomePage() {
 
       {spotlight && <FeaturedGraphic product={spotlight} eyebrow="Featured graphic" story={spotlightStory} />}
 
+      <section aria-labelledby="statement-heading" className="mx-auto mt-24 max-w-[1280px] px-4 sm:px-6 lg:mt-32">
+        <div className="reveal-item mx-auto max-w-4xl text-center">
+          <SheepMark className="mx-auto mb-6 w-12 text-accent" />
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent">Est. 2011 · New York</p>
+          <blockquote id="statement-heading" className="mt-6 font-display text-[clamp(2.25rem,7vw,5rem)] font-bold uppercase leading-[0.92] tracking-[-0.045em] text-cream">
+            Drawn when the day goes quiet.{" "}
+            <span className="text-accent">Worn</span> like you mean it.
+          </blockquote>
+          <p className="mx-auto mt-6 max-w-lg text-sm leading-relaxed text-muted md:text-base">
+            Loud, quiet, funny, defiant — printed one at a time, never asking permission.
+          </p>
+        </div>
+      </section>
+
       <section aria-labelledby="worn-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
