@@ -187,6 +187,16 @@ export const reviewRequestLog = pgTable("review_request_log", {
   orderId: bigint("order_id", { mode: "number" }).notNull().references(() => orders.id, { onDelete: "cascade" }).unique(),
   sentAt: timestamp("sent_at", { withTimezone: true }).defaultNow().notNull(),
 });
+// Passwordless (magic-link) sign-in. One-time tokens, short TTL, single-use.
+// No passwords are ever stored. Accounts are OPTIONAL — guest checkout is unchanged.
+export const loginTokens = pgTable("login_tokens", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  token: text("token").notNull().unique(),
+  email: text("email").notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  usedAt: timestamp("used_at", { withTimezone: true }),
+  createdAt: createdAt(),
+}, (t) => ({ byEmail: index("idx_login_tokens_email").on(t.email) }));
 
 // ── Webhooks / audit / ops ───────────────────────────────────────────────────
 export const webhookEvents = pgTable("webhook_events", {
