@@ -424,9 +424,10 @@ export function CheckoutForm({ squareConfig }: Props) {
           setQuote(data.quote);
           setQuoteStatus("ready");
         }
-        // Only a definitive payment decline consumes this payment attempt. Quote/cart validation
-        // never reached the Payments API, so keep the stable key.
-        if (res.status === 402) idempotencyKeyRef.current = crypto.randomUUID();
+        // Rotate the key ONLY on a CONFIRMED decline (server sets declined:true →
+        // card definitively not charged). On an ambiguous failure (declined:false)
+        // keep the same key so a retry is deduped by Square and never double-charges.
+        if (res.status === 402 && data.declined === true) idempotencyKeyRef.current = crypto.randomUUID();
         window.clearTimeout(slowTimer);
         setSlowPay(false);
         setStatus("error");

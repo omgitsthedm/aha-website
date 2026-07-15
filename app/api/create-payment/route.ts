@@ -150,17 +150,36 @@ export async function POST(request: Request) {
     });
     payment = result.payment;
   } catch (err) {
-    await markOrderFailed(order.orderId, err instanceof Error ? err.message : "charge error").catch(() => {});
-    console.error("Square payment failed:", err);
+    const msg = err instanceof Error ? err.message : "charge error";
+    // Square responded with a 4xx → the request was rejected and the card was
+    // definitively NOT charged. Safe to fail the order and let the client rotate
+    // the idempotency key for a fresh attempt.
+    const declined = /Square API error 4\d\d/.test(msg);
+    if (declined) {
+      await markOrderFailed(order.orderId, msg).catch(() => {});
+      console.error("Square payment declined:", msg);
+      return NextResponse.json(
+        { error: "Your card was declined. Try again or use another method.", declined: true },
+        { status: 402 }
+      );
+    }
+    // AMBIGUOUS (5xx / network drop / timeout): Square may have charged. Do NOT
+    // mark the order failed (reconciliation resolves it) and do NOT claim the card
+    // wasn't charged. The retry MUST reuse the same idempotency key so Square
+    // dedupes and never double-charges — hence declined:false (client keeps key).
+    void reportCheckoutError({ route: "create-payment", stage: "charge-ambiguous", err });
+    console.error("Square payment ambiguous (charge status unknown):", msg);
     return NextResponse.json(
-      { error: "We couldn't process the payment. Your card was not charged. Try again or use another method." },
+      { error: "We couldn't confirm your payment went through. Tap Pay again — it's safe, we won't charge you twice.", declined: false },
       { status: 402 }
     );
   }
 
   if (payment.status !== "COMPLETED" && payment.status !== "APPROVED") {
+    // Square returned a concrete non-success status: the attempt is spent, so a
+    // retry needs a fresh key (declined:true).
     await markOrderFailed(order.orderId, `status ${payment.status}`).catch(() => {});
-    return NextResponse.json({ error: "Payment was not completed." }, { status: 402 });
+    return NextResponse.json({ error: "Payment was not completed. Your card was not charged.", declined: true }, { status: 402 });
   }
 
   // 5) Charge SUCCEEDED — never tell the customer otherwise. Record + start fulfillment; failures

@@ -120,6 +120,16 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Product images are stable webp files — cache hard.
+        source: "/products/(.*)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        // Campaign/lifestyle imagery can be swapped — cache a day + revalidate.
+        source: "/campaign/(.*)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
+      },
     ];
   },
 };
