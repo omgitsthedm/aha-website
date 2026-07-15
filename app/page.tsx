@@ -6,6 +6,7 @@ import { TrustStrip } from "@/components/ui/TrustStrip";
 import { SheepMark } from "@/components/ui/SheepMark";
 import { NeonSheep } from "@/components/brand/NeonSheep";
 import { Marquee } from "@/components/homepage/Marquee";
+import { FeaturedGraphic } from "@/components/homepage/FeaturedGraphic";
 
 export const metadata: Metadata = {
   title: "After Hours Agenda | NYC Streetwear",
@@ -24,6 +25,14 @@ const categoryTiles = [
 export default async function HomePage() {
   const products = await getAllProducts();
   const featured = products.slice(0, 8);
+
+  // Featured-graphic spotlight: prefer a strong statement piece, fall back to the
+  // first product so the section always has real art.
+  const spotlight = products.find((p) => p.slug === "no-kings-white-short-sleeve-t-shirt") ?? featured[0];
+  const spotlightStory =
+    spotlight?.slug === "no-kings-white-short-sleeve-t-shirt"
+      ? "No crowns. No thrones. No permission needed — a statement piece drawn after hours, about self-rule and refusing the easy line."
+      : "Drawn after hours in New York, printed one at a time. A graphic with something to say — worn a hundred different ways.";
 
   return (
     <div className="pb-20 pt-14 lg:pb-28">
@@ -60,7 +69,7 @@ export default async function HomePage() {
         <TrustStrip />
       </div>
 
-      <section aria-labelledby="categories-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      <section aria-labelledby="categories-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 text-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Shop by category</p>
           <h2 id="categories-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">The collection</h2>
@@ -70,7 +79,7 @@ export default async function HomePage() {
             <Link
               key={tile.href}
               href={tile.href}
-              className="fold-surface group relative aspect-[3/4] overflow-hidden image-hover-zoom"
+              className="reveal-item fold-surface group relative aspect-[3/4] overflow-hidden image-hover-zoom"
             >
               <Image
                 src={tile.image}
@@ -89,7 +98,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="featured-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      <section aria-labelledby="featured-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Featured</p>
@@ -100,7 +109,7 @@ export default async function HomePage() {
         {featured.length > 0 ? (
           <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-4">
             {featured.map((product, index) => (
-              <Link key={product.id} href={`/product/${product.slug}`} className="group block focus-visible:outline-offset-4">
+              <Link key={product.id} href={`/product/${product.slug}`} className="reveal-item group block focus-visible:outline-offset-4">
                 <div className="fold-surface image-hover-zoom relative aspect-[3/4] overflow-hidden">
                   <Image
                     src={product.images[0]}
@@ -123,7 +132,9 @@ export default async function HomePage() {
         )}
       </section>
 
-      <section aria-labelledby="worn-heading" className="reveal-block mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      {spotlight && <FeaturedGraphic product={spotlight} eyebrow="Featured graphic" story={spotlightStory} />}
+
+      <section aria-labelledby="worn-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The Black Sheep</p>
@@ -132,14 +143,14 @@ export default async function HomePage() {
           <SheepMark className="hidden w-16 text-cream md:block" />
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <Link href="/product/black-sheep-mint-unisex-premium-sweatshirt" className="fold-surface group relative aspect-[4/5] overflow-hidden image-hover-zoom">
+          <Link href="/product/black-sheep-mint-unisex-premium-sweatshirt" className="reveal-item fold-surface group relative aspect-[4/5] overflow-hidden image-hover-zoom">
             <Image src="/brand/photography/sheep-sweatshirt-agave--mens-front.jpg" alt="The Black Sheep sweatshirt in agave, worn" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/20 to-transparent p-5">
               <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream group-hover:text-accent">Black Sheep Sweatshirt — Agave</p>
               <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Shop it →</p>
             </div>
           </Link>
-          <Link href="/product/black-sheep-bone-unisex-premium-sweatshirt" className="fold-surface group relative aspect-[4/5] overflow-hidden image-hover-zoom">
+          <Link href="/product/black-sheep-bone-unisex-premium-sweatshirt" className="reveal-item fold-surface group relative aspect-[4/5] overflow-hidden image-hover-zoom">
             <Image src="/brand/photography/sheep-sweatshirt-bone--womens-front.jpg" alt="The Black Sheep sweatshirt in bone, worn" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/20 to-transparent p-5">
               <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream group-hover:text-accent">Black Sheep Sweatshirt — Bone</p>
