@@ -22,6 +22,7 @@ type SquarePaymentRequest = unknown;
 type VerificationResult = { token?: string };
 type SquarePaymentsApi = {
   card: () => Promise<SquareCard>;
+  giftCard?: () => Promise<SquareCard>;
   paymentRequest: (req: unknown) => SquarePaymentRequest;
   applePay: (req: SquarePaymentRequest) => Promise<SquareWallet>;
   googlePay: (req: SquarePaymentRequest) => Promise<SquareWallet>;
@@ -99,6 +100,8 @@ export function CheckoutForm({ squareConfig }: Props) {
   const cardRef = useRef<SquareCard | null>(null);
   const applePayRef = useRef<SquareWallet | null>(null);
   const googlePayRef = useRef<SquareWallet | null>(null);
+  const giftCardRef = useRef<SquareCard | null>(null);
+  const [giftCardReady, setGiftCardReady] = useState(false);
   const afterpayRef = useRef<SquareWallet | null>(null);
   const cashAppRef = useRef<SquareCashAppPay | null>(null);
   // Always points at the current-quote charge fn, so Cash App Pay's one-time
@@ -128,6 +131,15 @@ export function CheckoutForm({ squareConfig }: Props) {
       await card.attach("#aha-card");
       cardRef.current = card;
       setSdkReady(true);
+      // Gift-card redemption (gated): a gift card is just another payment source.
+      if (process.env.NEXT_PUBLIC_GIFT_CARDS_ENABLED === "true" && payments.giftCard) {
+        try {
+          const gc = await payments.giftCard();
+          await gc.attach("#aha-giftcard");
+          giftCardRef.current = gc;
+          setGiftCardReady(true);
+        } catch { /* gift cards not enabled in Square / unavailable */ }
+      }
     } catch {
       setError("Could not load the secure card field. Refresh and try again.");
     }
@@ -643,6 +655,20 @@ export function CheckoutForm({ squareConfig }: Props) {
 
               {/* Square Web Payments SDK mounts the secure card field here */}
               <div id="aha-card" className="min-h-[56px] border border-border/60 bg-void p-3" />
+
+              {/* Gift-card redemption (gated). The field mounts when the flag is on;
+                  the pay button appears once Square confirms gift cards are enabled. */}
+              {process.env.NEXT_PUBLIC_GIFT_CARDS_ENABLED === "true" && (
+                <div className="mt-4">
+                  <p className="mb-2 font-body text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Or redeem a gift card</p>
+                  <div id="aha-giftcard" className="min-h-[56px] border border-border/60 bg-void p-3" />
+                  {giftCardReady && (
+                    <button type="button" onClick={() => payWallet(giftCardRef.current)} className="btn-secondary mt-2 w-full justify-center">
+                      Pay with gift card
+                    </button>
+                  )}
+                </div>
+              )}
               {!sdkReady && !sdkFailed && !error && (
                 <p className="mt-2 font-body text-xs font-bold text-muted" aria-live="polite">Loading secure card field…</p>
               )}

@@ -10,6 +10,7 @@ const serviceLinks = [
   { label: "Track order", href: "/track-order" },
   { label: "Wishlist", href: "/wishlist" },
   { label: "Account", href: "/account" },
+  { label: "Gift cards", href: "/gift-cards" },
   { label: "Contact", href: "/contact" },
 ];
 
