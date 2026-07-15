@@ -2,12 +2,27 @@
  * The canonical AHA black sheep (Brand Kit 2026-07 master), inlined as true
  * vector paths. Renders in currentColor; eye/ear/nostril are real cutouts.
  */
-export function SheepMark({ className, title }: { className?: string; title?: string }) {
+export function SheepMark({
+  className,
+  title,
+  outline = false,
+  strokeWidth = 90,
+}: {
+  className?: string;
+  title?: string;
+  /** Outline mode: stroke the silhouette contour (no fill) — for the neon tube look. */
+  outline?: boolean;
+  strokeWidth?: number;
+}) {
   return (
     <svg
       viewBox="0 0 1866.000000 1464.000000"
       className={className}
-      fill="currentColor"
+      fill={outline ? "none" : "currentColor"}
+      stroke={outline ? "currentColor" : undefined}
+      strokeWidth={outline ? strokeWidth : undefined}
+      strokeLinejoin={outline ? "round" : undefined}
+      strokeLinecap={outline ? "round" : undefined}
       role={title ? "img" : undefined}
       aria-label={title}
       aria-hidden={title ? undefined : true}

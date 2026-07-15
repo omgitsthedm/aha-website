@@ -658,6 +658,62 @@ textarea {
   padding-right: env(safe-area-inset-right, 0px);
 }
 
+/* ---------------------------------------------------------------------------
+   Neon sign ("after hours, the sign comes on"). GPU-composited glow via layered
+   text-shadow / drop-shadow (not animated SVG blur), so it stays smooth on
+   mobile. --neon defaults to brand rose; the flicker is opacity-only (cheap).
+   ------------------------------------------------------------------------ */
+.neon-band {
+  --neon: 255 107 107; /* brand rose #FF6B6B */
+  background:
+    radial-gradient(120% 90% at 50% 42%, rgb(var(--neon) / 0.10) 0%, transparent 55%),
+    radial-gradient(140% 120% at 50% 50%, #17060f 0%, #0a0409 55%, #050205 100%);
+}
+.neon-text {
+  color: #fff;
+  text-shadow:
+    0 0 4px rgba(255, 255, 255, 0.85),
+    0 0 11px rgb(var(--neon)),
+    0 0 22px rgb(var(--neon)),
+    0 0 44px rgb(var(--neon)),
+    0 0 82px rgb(var(--neon) / 0.75);
+}
+.neon-sheep {
+  color: #fff; /* white-hot stroke core */
+  filter:
+    drop-shadow(0 0 3px rgb(var(--neon)))
+    drop-shadow(0 0 9px rgb(var(--neon)))
+    drop-shadow(0 0 22px rgb(var(--neon)))
+    drop-shadow(0 0 46px rgb(var(--neon) / 0.55));
+}
+/* Paper variant: no glowing halo reads on white, so it degrades to a clean rose
+   tube outline with a soft shadow — line-art, not neon. */
+.neon-band-paper {
+  --neon: 206 61 86; /* rose ink #CE3D56 */
+  background: #fafafa;
+}
+.neon-band-paper .neon-text {
+  color: rgb(var(--neon));
+  text-shadow: 0 1px 0 rgb(var(--neon) / 0.25), 0 0 14px rgb(var(--neon) / 0.35);
+}
+.neon-band-paper .neon-sheep {
+  color: rgb(var(--neon));
+  filter: drop-shadow(0 0 6px rgb(var(--neon) / 0.4)) drop-shadow(0 1px 1px rgb(var(--neon) / 0.3));
+}
+@keyframes neon-flicker {
+  0%, 19%, 21%, 55%, 57%, 63%, 100% { opacity: 1; }
+  20% { opacity: 0.45; }
+  56% { opacity: 0.65; }
+  62% { opacity: 0.3; }
+}
+@keyframes neon-buzz {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.94; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .neon-flicker { animation: neon-flicker 7s 1s infinite steps(1, end), neon-buzz 2.7s infinite ease-in-out; }
+}
+
 /* Authored PDP story copy (Square description HTML). The global reset strips
    block margins + list markers and there is no typography plugin, so restore
    readable rhythm scoped to this container only. */
