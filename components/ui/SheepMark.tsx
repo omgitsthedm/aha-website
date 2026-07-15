@@ -7,12 +7,15 @@ export function SheepMark({
   title,
   outline = false,
   strokeWidth = 90,
+  strokeDasharray,
 }: {
   className?: string;
   title?: string;
   /** Outline mode: stroke the silhouette contour (no fill) — for the neon tube look. */
   outline?: boolean;
   strokeWidth?: number;
+  /** Dash pattern (path units) — periodic gaps for tube breaks / mounting supports. */
+  strokeDasharray?: string;
 }) {
   return (
     <svg
@@ -21,6 +24,7 @@ export function SheepMark({
       fill={outline ? "none" : "currentColor"}
       stroke={outline ? "currentColor" : undefined}
       strokeWidth={outline ? strokeWidth : undefined}
+      strokeDasharray={outline ? strokeDasharray : undefined}
       strokeLinejoin={outline ? "round" : undefined}
       strokeLinecap={outline ? "round" : undefined}
       role={title ? "img" : undefined}

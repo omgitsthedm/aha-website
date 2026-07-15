@@ -700,6 +700,45 @@ textarea {
   color: rgb(var(--neon));
   filter: drop-shadow(0 0 6px rgb(var(--neon) / 0.4)) drop-shadow(0 1px 1px rgb(var(--neon) / 0.3));
 }
+/* Photographed neon on a white wall: no bright halo reads on white, so realism
+   comes from a thick GLASS TUBE (saturated rose) + a lighter lit CORE running
+   down it + a faint colored haze + a plexiglass gloss sheen. Layers are stacked
+   copies of the same SVG, so gaps (tube breaks / supports) align. */
+.neon2 {
+  --neon: 197 42 74;        /* deep rose glass tube */
+  --neon-hot: 255 176 196;  /* lit core */
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.neon2 > * { grid-area: 1 / 1; } /* stack all layers */
+.neon2-haze {
+  color: rgb(var(--neon));
+  filter: blur(7px);
+  opacity: 0.45;
+}
+.neon2-tube {
+  color: rgb(var(--neon));
+  filter: drop-shadow(0 1px 1px rgb(var(--neon) / 0.35)) drop-shadow(0 0 3px rgb(var(--neon) / 0.5));
+}
+.neon2-core {
+  color: rgb(var(--neon-hot));
+  filter: drop-shadow(0 0 2px rgb(var(--neon-hot) / 0.9));
+}
+/* plexiglass gloss: a diagonal specular sweep across the whole sign */
+.neon2-gloss {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.5) 47%, rgba(255, 255, 255, 0.08) 52%, transparent 60%);
+  mix-blend-mode: screen;
+}
+.neon2-text {
+  color: rgb(var(--neon));
+  text-shadow: 0 0 1px rgb(var(--neon-hot)), 0 1px 0 rgb(var(--neon) / 0.35), 0 0 10px rgb(var(--neon) / 0.35);
+  -webkit-text-stroke: 1px rgb(var(--neon) / 0.35);
+}
+
 @keyframes neon-flicker {
   0%, 19%, 21%, 55%, 57%, 63%, 100% { opacity: 1; }
   20% { opacity: 0.45; }
