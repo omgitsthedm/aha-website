@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getAllProducts } from "@/lib/square/catalog";
 import { TrustStrip } from "@/components/ui/TrustStrip";
 import { SheepMark } from "@/components/ui/SheepMark";
+import { NeonSheep } from "@/components/brand/NeonSheep";
 
 export const metadata: Metadata = {
   title: "After Hours Agenda | NYC Streetwear",
@@ -41,15 +42,11 @@ export default async function HomePage() {
               <Link href="/new-arrivals" className="btn-secondary">Shop new arrivals</Link>
             </div>
           </div>
-          <div className="fold-surface relative aspect-video overflow-hidden">
-            <Image
-              src="/campaign/hero-home-onmodel.webp"
-              alt="The Black Sheep sweatshirt worn with a trench coat, photographed on a model"
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, (max-width: 1440px) 58vw, 820px"
-            />
+          <div className="neon-sign flex flex-col items-center justify-center py-6">
+            <div className="neon-flicker flex flex-col items-center">
+              <NeonSheep className="h-[min(58vw,400px)] w-[min(58vw,400px)]" />
+              <p className="neon2-text mt-1 font-mono text-sm font-bold uppercase tracking-[0.35em]">Est. 2011</p>
+            </div>
           </div>
         </div>
       </section>
