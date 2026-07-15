@@ -304,6 +304,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
         onClose={() => setSizeGuideOpen(false)}
         fitDescription={enrichment?.fitDescription}
         careInstructions={enrichment?.careInstructions}
+        catalogVariantId={enrichment ? Object.values(enrichment.catIdBySize)[0] : undefined}
       />
 
       <ImageLightbox
