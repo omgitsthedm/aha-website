@@ -36,12 +36,13 @@ async function createGiftCardOrder(amount: number, currency: string): Promise<{ 
   return { orderId: res.order.id, lineItemUid: res.order.line_items[0].uid };
 }
 
-async function chargeForGiftCard(sourceId: string, amount: number, currency: string, orderId: string, email: string): Promise<string> {
+async function chargeForGiftCard(sourceId: string, amount: number, currency: string, orderId: string, email: string, idempotencyKey: string): Promise<string> {
   const res = await squareRequest<{ payment: { id: string; status: string } }>("/payments", {
     method: "POST", revalidate: 0,
     body: {
       source_id: sourceId,
-      idempotency_key: randomUUID(),
+      // Stable across client retries → Square dedupes the charge (no double-charge).
+      idempotency_key: idempotencyKey,
       order_id: orderId,
       amount_money: { amount, currency },
       location_id: getSquareLocationId(),
@@ -79,11 +80,12 @@ async function activateGiftCard(giftCardId: string, amount: number, currency: st
   });
 }
 
-/** Full purchase orchestration. Returns the gift-card number (GAN) to email. */
-export async function purchaseGiftCard(input: { sourceId: string; amount: number; currency?: string; buyerEmail: string }): Promise<{ gan: string; giftCardId: string }> {
+/** Full purchase orchestration. Returns the gift-card number (GAN) to email +
+ *  show the buyer. `idempotencyKey` must be stable across client retries. */
+export async function purchaseGiftCard(input: { sourceId: string; amount: number; currency?: string; buyerEmail: string; idempotencyKey: string }): Promise<{ gan: string; giftCardId: string }> {
   const currency = input.currency || "USD";
   const { orderId, lineItemUid } = await createGiftCardOrder(input.amount, currency);
-  await chargeForGiftCard(input.sourceId, input.amount, currency, orderId, input.buyerEmail);
+  await chargeForGiftCard(input.sourceId, input.amount, currency, orderId, input.buyerEmail, input.idempotencyKey);
   const card = await createDigitalGiftCard();
   await activateGiftCard(card.id, input.amount, currency, orderId, lineItemUid);
   return { gan: card.gan, giftCardId: card.id };

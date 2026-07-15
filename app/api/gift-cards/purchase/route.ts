@@ -1,6 +1,8 @@
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { isGiftCardsEnabled, purchaseGiftCard } from "@/lib/square/giftcards";
 import { sendTransactionalEmail, isTransactionalEmailConfigured } from "@/lib/email/resend";
+import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
 
 export const dynamic = "force-dynamic";
 
@@ -16,13 +18,15 @@ export async function POST(req: Request) {
   const recipientEmail = typeof body?.recipientEmail === "string" ? body.recipientEmail.trim().toLowerCase() : "";
   const senderName = (typeof body?.senderName === "string" && body.senderName.trim().slice(0, 80)) || "A friend";
   const message = typeof body?.message === "string" ? body.message.slice(0, 300) : "";
+  // Stable across client retries so a dropped response can't cause a second charge.
+  const idempotencyKey = (typeof body?.idempotencyKey === "string" && body.idempotencyKey.slice(0, 45)) || randomUUID();
 
   if (!sourceId) return NextResponse.json({ ok: false, error: "Missing payment." }, { status: 400 });
   if (!Number.isInteger(amount) || amount < MIN || amount > MAX) return NextResponse.json({ ok: false, error: `Choose an amount between $${MIN / 100} and $${MAX / 100}.` }, { status: 400 });
   if (!/.+@.+\..+/.test(recipientEmail) || !/.+@.+\..+/.test(buyerEmail)) return NextResponse.json({ ok: false, error: "Valid buyer + recipient emails are required." }, { status: 400 });
 
   try {
-    const { gan } = await purchaseGiftCard({ sourceId, amount, buyerEmail });
+    const { gan } = await purchaseGiftCard({ sourceId, amount, buyerEmail, idempotencyKey });
     if (isTransactionalEmailConfigured()) {
       const dollars = (amount / 100).toFixed(2);
       const esc = (s: string) => s.replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c] || c));
@@ -31,8 +35,12 @@ export async function POST(req: Request) {
       const text = `${senderName} sent you a $${dollars} After Hours Agenda gift card.${message ? `\n\n"${message}"` : ""}\n\nCode: ${gan}\nBalance: $${dollars}\nEnter it at checkout: https://afterhoursagenda.com/shop`;
       await sendTransactionalEmail({ idempotencyKey: `giftcard:${gan}`, to: recipientEmail, subject: `${senderName} sent you an After Hours Agenda gift card`, html, text }).catch(() => {});
     }
-    return NextResponse.json({ ok: true });
+    // Return the code so a failed email never strands it (the buyer paid for it).
+    return NextResponse.json({ ok: true, gan });
   } catch (error) {
+    // A charge may have succeeded before create/activate failed — page ops so a
+    // stranded charge is never silent (mirrors the main create-payment flow).
+    void reportCheckoutError({ route: "gift-cards/purchase", stage: "purchase", err: error });
     console.error("Gift card purchase failed:", error);
     return NextResponse.json({ ok: false, error: "We couldn't complete the gift-card purchase. If your card was charged, contact info@afterhoursagenda.com and we'll resolve it." }, { status: 502 });
   }

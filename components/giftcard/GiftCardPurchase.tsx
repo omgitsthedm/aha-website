@@ -25,8 +25,12 @@ export function GiftCardPurchase({ squareConfig }: { squareConfig: SquareWebPaym
   const [sdkReady, setSdkReady] = useState(false);
   const [status, setStatus] = useState<"idle" | "paying" | "done" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [gan, setGan] = useState<string | null>(null);
   const cardRef = useRef<SquareCard | null>(null);
   const paymentsRef = useRef<SquarePaymentsApi | null>(null);
+  // Stable across retries of this purchase so a dropped response can't double-charge.
+  const idempotencyKeyRef = useRef<string>("");
+  if (!idempotencyKeyRef.current && typeof crypto !== "undefined") idempotencyKeyRef.current = crypto.randomUUID();
 
   const initSquare = useCallback(async () => {
     if (!getSquare() || paymentsRef.current) return;
@@ -57,10 +61,11 @@ export function GiftCardPurchase({ squareConfig }: { squareConfig: SquareWebPaym
     try {
       const res = await fetch("/api/gift-cards/purchase", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sourceId: t.token, amount: effectiveAmount, buyerEmail, recipientEmail, senderName, message }),
+        body: JSON.stringify({ sourceId: t.token, amount: effectiveAmount, buyerEmail, recipientEmail, senderName, message, idempotencyKey: idempotencyKeyRef.current }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) { setStatus("error"); setError(data.error || "Purchase failed."); return; }
+      if (typeof data.gan === "string") setGan(data.gan);
       setStatus("done");
     } catch { setStatus("error"); setError("Connection dropped. Try again."); }
   };
@@ -69,7 +74,18 @@ export function GiftCardPurchase({ squareConfig }: { squareConfig: SquareWebPaym
   const labelC = "mb-2 block text-[11px] font-bold uppercase tracking-[0.08em] text-muted";
 
   if (status === "done") {
-    return <div role="status" className="border-y border-border/40 py-10"><p className="font-display text-3xl font-black uppercase">Gift sent</p><p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">The gift card and code are on their way to {recipientEmail}. A receipt went to your email.</p></div>;
+    return (
+      <div role="status" className="border-y border-border/40 py-10">
+        <p className="font-display text-3xl font-black uppercase">Gift sent</p>
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">The gift card is on its way to {recipientEmail}. A receipt went to your email.</p>
+        {gan && (
+          <div className="mt-6 max-w-md border border-border/60 bg-surface p-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-muted">Gift card code (keep a copy)</p>
+            <p className="mt-1 break-all font-mono text-lg tracking-[0.12em] text-cream">{gan}</p>
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (
