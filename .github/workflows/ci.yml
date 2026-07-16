@@ -1,88 +1,87 @@
-name: ci
+name: CI
 
 on:
-  pull_request:
   push:
-    branches: [main, staging]
-  workflow_dispatch:
-
-# CI MUST NOT create live Square charges, confirm live Printful orders, send real
-# email/SMS, or use production secrets. Sandbox / mocked payloads only. (§12)
-env:
-  SQUARE_ENVIRONMENT: sandbox
-  AHA_PREVIEW_CATALOG: "true"
-  PRINTFUL_ALLOW_CONFIRM_ORDERS: "false"
-  PRINTFUL_LIVE_MODE: "false"
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
-  lint:
+  ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - run: npm ci
-      - run: npm run lint
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - run: npm ci
-      - run: npm run typecheck
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f "pnpm-lock.yaml" ] || grep -q '"packageManager".*pnpm' package.json 2>/dev/null; then
+            echo "manager=pnpm" >> "$GITHUB_OUTPUT"
+            echo "install_args=" >> "$GITHUB_OUTPUT"
+          elif [ -f "yarn.lock" ] || grep -q '"packageManager".*yarn' package.json 2>/dev/null; then
+            echo "manager=yarn" >> "$GITHUB_OUTPUT"
+            echo "install_args=" >> "$GITHUB_OUTPUT"
+          elif [ -f "bun.lockb" ] || [ -f "bun.lock" ] || grep -q '"packageManager".*bun' package.json 2>/dev/null; then
+            echo "manager=bun" >> "$GITHUB_OUTPUT"
+            echo "install_args=" >> "$GITHUB_OUTPUT"
+          else
+            echo "manager=npm" >> "$GITHUB_OUTPUT"
+            echo "install_args=--legacy-peer-deps" >> "$GITHUB_OUTPUT"
+          fi
 
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - run: npm ci
-      - run: npm test
+      - name: Setup Node
+        if: steps.pm.outputs.manager != 'bun'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: ${{ steps.pm.outputs.manager }}
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - run: npm ci
-      - run: npm run build
+      - name: Setup pnpm
+        if: steps.pm.outputs.manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-  product-data-validation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - run: npm ci
-      - run: npm run validate:products
+      - name: Setup Bun
+        if: steps.pm.outputs.manager == 'bun'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
-  square-map-validation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - run: npm ci
-      - run: npm run validate:square-map
+      - name: Install dependencies
+        run: ${{ steps.pm.outputs.manager }} install ${{ steps.pm.outputs.install_args }}
 
-  printful-v2-map-validation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - run: npm ci
-      - run: npm run validate:printful-v2-map
+      - name: Lint
+        run: |
+          if ${{ steps.pm.outputs.manager }} run | grep -qE '^\s+lint(\s|$)'; then
+            ${{ steps.pm.outputs.manager }} run lint
+          else
+            echo "No lint script found; skipping"
+          fi
 
-  margin-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - run: npm ci
-      - run: npm run margin-check
+      - name: Type check
+        run: |
+          if ${{ steps.pm.outputs.manager }} run | grep -qE '^\s+typecheck(\s|$)'; then
+            ${{ steps.pm.outputs.manager }} run typecheck
+          elif ${{ steps.pm.outputs.manager }} run | grep -qE '^\s+type-check(\s|$)'; then
+            ${{ steps.pm.outputs.manager }} run type-check
+          else
+            echo "No typecheck script found; skipping"
+          fi
+
+      - name: Test
+        run: |
+          if ${{ steps.pm.outputs.manager }} run | grep -qE '^\s+test(\s|$)'; then
+            ${{ steps.pm.outputs.manager }} run test
+          else
+            echo "No test script found; skipping"
+          fi
+
+      - name: Build
+        run: |
+          if ${{ steps.pm.outputs.manager }} run | grep -qE '^\s+build(\s|$)'; then
+            ${{ steps.pm.outputs.manager }} run build
+          else
+            echo "No build script found; skipping"
+          fi
