@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { SheepMark } from "@/components/ui/SheepMark";
 import { ConsentSettingsLink } from "@/components/consent/ConsentSettingsLink";
+import { isGiftCardsEnabled } from "@/lib/square/giftcards";
 
+// Gift cards are gated (GIFT_CARDS_ENABLED); until they ship, the /gift-cards
+// route is a "coming soon" stub — don't link a dead-end from every page.
 const serviceLinks = [
   { label: "Shipping", href: "/shipping" },
   { label: "Returns", href: "/returns" },
@@ -10,7 +13,7 @@ const serviceLinks = [
   { label: "Track order", href: "/track-order" },
   { label: "Wishlist", href: "/wishlist" },
   { label: "Account", href: "/account" },
-  { label: "Gift cards", href: "/gift-cards" },
+  ...(isGiftCardsEnabled() ? [{ label: "Gift cards", href: "/gift-cards" }] : []),
   { label: "Contact", href: "/contact" },
 ];
 

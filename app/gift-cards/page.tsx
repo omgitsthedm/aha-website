@@ -5,10 +5,13 @@ import { isGiftCardsEnabled } from "@/lib/square/giftcards";
 import { GiftCardPurchase } from "@/components/giftcard/GiftCardPurchase";
 import { PageHeader } from "@/components/ui/PageHeader";
 
+// noindex while the flow is gated off so the "coming soon" stub never gets
+// indexed; flip to indexable when GIFT_CARDS_ENABLED ships.
 export const metadata: Metadata = {
   title: "Gift Cards",
   description: "Send an After Hours Agenda digital gift card by email. Spend it on anything in the shop.",
   alternates: { canonical: "/gift-cards" },
+  robots: isGiftCardsEnabled() ? undefined : { index: false, follow: true },
 };
 
 export default function GiftCardsPage() {

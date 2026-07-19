@@ -22,6 +22,10 @@ function readHistory(): Visit[] {
 
 export function FeedbackWidget() {
   const pathname = usePathname();
+  // On product pages the mobile sticky "Add to bag" bar owns the bottom-right of
+  // the viewport; the floating launcher would overlap the primary buy CTA and
+  // steal its taps. Hide it below lg there (desktop PDPs keep it).
+  const isProductPage = pathname?.startsWith("/product/") ?? false;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -68,7 +72,7 @@ export function FeedbackWidget() {
   };
 
   return (
-    <div className="safe-bottom safe-x fixed bottom-4 right-4 z-[350] print:hidden">
+    <div className={`safe-bottom safe-x fixed bottom-4 right-4 z-[350] print:hidden ${isProductPage ? "hidden lg:block" : ""}`}>
       {open && (
         <div role="dialog" aria-label="Send feedback" className="mb-3 w-[min(20rem,calc(100vw-2rem))] border border-border/60 bg-void shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
           <div className="flex items-center justify-between border-b border-border/40 px-4 py-3">

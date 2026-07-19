@@ -33,7 +33,8 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
   { path: "/care", priority: 0.6, changeFrequency: "monthly" },
   { path: "/size-guide", priority: 0.6, changeFrequency: "monthly" },
   { path: "/track-order", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/gift-cards", priority: 0.6, changeFrequency: "monthly" },
+  // /gift-cards is intentionally omitted while GIFT_CARDS_ENABLED is off (the
+  // route is a "coming soon" stub). Add it back when the flow ships.
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
   { path: "/privacy", priority: 0.4, changeFrequency: "yearly" },
   { path: "/terms", priority: 0.4, changeFrequency: "yearly" },
