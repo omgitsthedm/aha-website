@@ -2,7 +2,7 @@ import { getAllProducts } from "@/lib/square/catalog";
 import { getColorCountMap, getColorNamesMap, getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { filterProductsByCategory, CATEGORIES } from "@/lib/commerce/taxonomy";
+import { filterProductsByCategory } from "@/lib/commerce/taxonomy";
 import type { Metadata } from "next";
 import Image from "next/image";
 
@@ -37,10 +37,11 @@ export default async function AccessoriesPage() {
             sizes="(max-width: 1280px) 100vw, 1280px"
           />
         </div>
+        {/* Products are pre-filtered to accessories; no category pills — a self-link
+            pill here 404s (/accessories/accessories has no catch-all route). */}
         <CategoryShopContent
           products={products} purchasableSizes={getPurchasableSizesMap(products)} colorCounts={getColorCountMap(products)} colorNames={getColorNamesMap(products)}
-          activeCategory="accessories"
-          categories={CATEGORIES}
+          categories={[]}
           basePath="/accessories"
         />
       </div>

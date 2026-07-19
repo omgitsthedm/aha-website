@@ -44,3 +44,6 @@ next-env.d.ts
 
 # local Claude Code state
 .claude/
+
+# local audit workspace (raw lighthouse/pa11y/linkinator output; reports live in docs/)
+/tmp/

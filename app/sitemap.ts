@@ -33,6 +33,7 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
   { path: "/care", priority: 0.6, changeFrequency: "monthly" },
   { path: "/size-guide", priority: 0.6, changeFrequency: "monthly" },
   { path: "/track-order", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/gift-cards", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
   { path: "/privacy", priority: 0.4, changeFrequency: "yearly" },
   { path: "/terms", priority: 0.4, changeFrequency: "yearly" },

@@ -88,7 +88,6 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme={process.env.NEXT_PUBLIC_AHA_THEME || "newsstand"}
       className={`${jetBrainsMono.variable} ${poppins.variable}`}
     >
       <body className="origami-shell font-body text-cream antialiased">

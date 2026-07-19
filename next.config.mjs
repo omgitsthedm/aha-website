@@ -1,7 +1,7 @@
 const isDevelopment = process.env.NODE_ENV === "development";
 
 const resetPublicRoutes = [
-  // /best-sellers handled separately below → /shop (shopping intent, not home).
+  // /best-sellers redirects to /shop below (shopping intent, not home).
   "/catalog-edit",
   "/collections/:path*",
   "/drops",
@@ -60,11 +60,20 @@ const nextConfig = {
     ],
   },
   async redirects() {
-    return resetPublicRoutes.map((source) => ({
-      source,
-      destination: "/",
-      permanent: false,
-    }));
+    return [
+      ...resetPublicRoutes.map((source) => ({
+        source,
+        destination: "/",
+        permanent: false,
+      })),
+      // Real HTTP redirect (not a prerendered meta-refresh page, which reads as
+      // a soft 404 with duplicate home metadata). Shopping intent → /shop.
+      {
+        source: "/best-sellers",
+        destination: "/shop",
+        permanent: false,
+      },
+    ];
   },
   async headers() {
     return [

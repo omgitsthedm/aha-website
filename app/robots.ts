@@ -44,7 +44,6 @@ export default function robots(): MetadataRoute.Robots {
           "/collections/",
           "/drops/",
           "/catalog-edit",
-          "/best-sellers",
           "/coming-soon",
         ],
       },
