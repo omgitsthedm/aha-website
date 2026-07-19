@@ -108,14 +108,14 @@ export default async function HomePage() {
         </div>
         {featured.length > 0 ? (
           <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-4">
-            {featured.map((product, index) => (
+            {featured.map((product) => (
               <Link key={product.id} href={`/product/${product.slug}`} className="reveal-item group block focus-visible:outline-offset-4">
                 <div className="fold-surface image-hover-zoom relative aspect-[3/4] overflow-hidden">
                   <Image
                     src={product.images[0]}
                     alt={product.name}
                     fill
-                    priority={index < 4}
+                    loading="lazy"
                     className="object-contain p-3 product-art"
                     sizes="(max-width: 768px) 50vw, 25vw"
                   />

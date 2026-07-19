@@ -1,5 +1,6 @@
 import type { Product } from "@/lib/utils/types";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
+import { absolutizeImage } from "@/lib/utils/image-helpers";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com";
@@ -30,7 +31,7 @@ export function ProductJsonLd({ product, description, reviews }: ProductJsonLdPr
     "@type": "Product",
     name: product.name,
     description: cleanDescription,
-    image: product.images,
+    image: product.images.map((src) => absolutizeImage(src, BASE_URL)),
     url: `${BASE_URL}/product/${product.slug}`,
     brand: {
       "@type": "Brand",

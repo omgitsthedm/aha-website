@@ -18,4 +18,16 @@ describe("product feed", () => {
     expect(feed).toContain("<g:shipping>");
     expect(feed).not.toMatch(/Review|AggregateRating|rating/i);
   });
+
+  it("absolutizes site-relative image paths and leaves CDN URLs intact", () => {
+    const withMixedImages: Product = {
+      ...product,
+      images: ["/products/black-sheep-tee/01-front.webp", "https://items-images-production.s3.us-west-2.amazonaws.com/f/original.jpeg"],
+    };
+    const feed = buildProductFeed([withMixedImages], "https://afterhoursagenda.com");
+    const imageUrls = [...feed.matchAll(/<g:(?:additional_)?image_link>([^<]+)<\/g:(?:additional_)?image_link>/g)].map((m) => m[1]);
+    expect(imageUrls.length).toBeGreaterThan(0);
+    expect(imageUrls.every((u) => /^https:\/\//.test(u))).toBe(true);
+    expect(feed).toContain("https://afterhoursagenda.com/products/black-sheep-tee/01-front.webp");
+  });
 });
