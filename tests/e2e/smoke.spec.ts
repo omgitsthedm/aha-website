@@ -28,7 +28,7 @@ test("@product PDP shows price and a working Add to bag", async ({ page }, testI
   await page.goto("/product/dont-fuck-fascists-shirt");
   await expect(page).toHaveURL(/\/product\/dont-fuck-fascists-shirt/);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("domcontentloaded");
   const addToBag = page.getByRole("button", { name: /Add to bag/i }).first();
   await expect(addToBag).toBeVisible();
   // The mobile project verifies the CTA is reachable; the click flow runs on
@@ -50,7 +50,7 @@ test("@product a tap on the sticky mobile buy CTA reaches the buy button, not fe
   // the only element that could cover the sticky buy CTA is the feedback launcher.
   await page.addInitScript(() => window.localStorage.setItem("aha-cookie-consent", "granted"));
   await page.goto("/product/dont-fuck-fascists-shirt");
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("domcontentloaded");
   // Hit-test the CTA inside the sticky buy bar (fixed to the viewport bottom).
   // Whatever sits at its center must be that button, never the feedback launcher.
   const stickyBar = page.getByTestId("sticky-buy-bar");

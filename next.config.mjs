@@ -35,6 +35,11 @@ const nextConfig = {
   // streaming response otherwise places dynamic metadata after <body>.
   htmlLimitedBots: /.*/,
   images: {
+    // Preview/CI builds (AHA_PREVIEW_CATALOG) serve images unoptimized: the
+    // on-demand optimizer storm on image-heavy pages can OOM a memory-limited
+    // `next start` (SIGABRT) and stall e2e. Production (no preview flag) keeps
+    // full AVIF/WebP optimization.
+    unoptimized: process.env.AHA_PREVIEW_CATALOG === "true",
     // Serve AVIF (≈20-30% smaller than WebP) where supported, WebP otherwise.
     // Visually identical; first-request encode is cached by the Next runtime.
     formats: ["image/avif", "image/webp"],
