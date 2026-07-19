@@ -11,7 +11,7 @@ import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { getFulfillmentSummary, RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { hapticTap } from "@/lib/utils/haptics";
-import { extractVariationSize } from "@/lib/utils/variation";
+import { extractVariationSize, extractVariationColor, groupVariationsByColor } from "@/lib/utils/variation";
 import { swatchHex } from "@/lib/data/color-swatches";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 import { ImageLightbox } from "@/components/product/ImageLightbox";
@@ -53,9 +53,32 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
     const mapped = enrichment ? enrichment.purchasableBySize[size]?.ok === true : true;
     return mapped && sizeInStock(size);
   };
-  const initialVariation = product.variations.find((variation) => variationAvailable(variation.name));
-  const [selectedVariation, setSelectedVariation] = useState(initialVariation?.id || product.variations[0]?.id || "");
+  const initialVariation = product.variations.find((variation) => variationAvailable(variation.name)) ?? product.variations[0];
+  const [selectedVariation, setSelectedVariation] = useState(initialVariation?.id || "");
   const [activeImage, setActiveImage] = useState(0);
+
+  // Group "Color / Size" variations so the size row shows only the sizes that
+  // exist for the chosen color. `enabled` is false for size-only products
+  // (preview catalog, single-color), in which case we show every variation —
+  // so the size list is never empty.
+  const colorGroups = groupVariationsByColor(product.variations);
+  const [selectedColor, setSelectedColor] = useState(
+    colorGroups.enabled ? extractVariationColor(initialVariation?.name || "") : "",
+  );
+  const sizeVariations = colorGroups.enabled
+    ? (colorGroups.byColor.get(selectedColor) ?? product.variations)
+    : product.variations;
+
+  // Switch color: filter sizes to that color and select its first available
+  // size so "Add to bag" stays one tap. `imageIndex` keeps the gallery in sync.
+  const selectColor = (color: string, imageIndex?: number) => {
+    if (typeof imageIndex === "number") setActiveImage(imageIndex);
+    if (!colorGroups.enabled) return;
+    setSelectedColor(color);
+    const forColor = colorGroups.byColor.get(color) ?? [];
+    const nextVariation = forColor.find((v) => variationAvailable(v.name)) ?? forColor[0];
+    if (nextVariation) setSelectedVariation(nextVariation.id);
+  };
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [addedFeedback, setAddedFeedback] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
@@ -227,7 +250,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                       <button
                         key={color}
                         type="button"
-                        onClick={() => setActiveImage(imageIndex)}
+                        onClick={() => selectColor(color, imageIndex)}
                         aria-pressed={isShown}
                         aria-label={`Show ${color} colorway`}
                         className={`inline-flex min-h-11 items-center gap-2 border px-3 py-2 text-sm transition-colors ${isShown ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
@@ -254,12 +277,14 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                   <button type="button" onClick={() => setSizeGuideOpen(true)} className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Size guide</button>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {product.variations.map((variation) => {
+                  {sizeVariations.map((variation) => {
                     const unavailable = !variationAvailable(variation.name);
                     const selected = variation.id === selectedVariation;
+                    // When colors are split out, the chip shows just the size.
+                    const label = colorGroups.enabled ? extractVariationSize(variation.name) : variation.name;
                     return (
                       <button key={variation.id} type="button" onClick={() => { setSelectedVariation(variation.id); trackCommerceEvent({ name: "select_variant", itemId: product.id, variantId: variation.id, valueCents: variation.price, currency: product.currency }); }} disabled={unavailable} aria-pressed={selected} aria-label={unavailable ? `${variation.name}, unavailable` : variation.name} className={`relative min-h-11 min-w-12 border px-4 py-2 text-sm font-bold transition-colors ${selected ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"} ${unavailable ? "cursor-not-allowed text-muted line-through opacity-50" : ""}`}>
-                        {variation.name}
+                        {label}
                       </button>
                     );
                   })}
@@ -299,6 +324,15 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 Buy it now
               </button>
             )}
+
+            {/* Trust + fast-pay signal at the decision point. */}
+            <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
+              <span>Secure checkout with Square</span>
+              <span aria-hidden="true" className="text-border">·</span>
+              <span>Apple Pay &amp; Google Pay</span>
+              <span aria-hidden="true" className="text-border">·</span>
+              <span>Free shipping</span>
+            </p>
 
             {!canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation?.name || "" } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}
             <p className="mt-3 text-xs leading-relaxed text-muted">{RETURNS_SUMMARY}</p>

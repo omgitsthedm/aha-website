@@ -1,4 +1,5 @@
 import { CartPageContent } from "@/components/cart/CartPageContent";
+import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 
 export const metadata = {
   title: "Your Bag",
@@ -7,5 +8,5 @@ export const metadata = {
 };
 
 export default function CartPage() {
-  return <CartPageContent />;
+  return <CartPageContent squareConfig={getSquareWebPaymentsConfig()} />;
 }
