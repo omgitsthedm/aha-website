@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About | After Hours Agenda",
+  title: "About",
   description:
     "After Hours Agenda is an independent NYC label. Every piece is designed after the day job and printed to order — nothing sits in a warehouse.",
   alternates: { canonical: "/about" },

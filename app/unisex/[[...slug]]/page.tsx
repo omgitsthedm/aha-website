@@ -17,14 +17,14 @@ import { notFound } from "next/navigation";
 
 export const revalidate = 300;
 
-interface MenPageProps {
+interface UnisexPageProps {
   params: Promise<{ slug?: string[] }>;
 }
 
-const GENDER = "men";
-const BASE_PATH = "/men";
+const GENDER = "unisex";
+const BASE_PATH = "/unisex";
 
-export async function generateMetadata({ params }: MenPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: UnisexPageProps): Promise<Metadata> {
   const { slug } = await params;
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
@@ -35,11 +35,11 @@ export async function generateMetadata({ params }: MenPageProps): Promise<Metada
   }
 
   const title = category
-    ? `${category.name} for Men`
-    : "Men's Graphic Tees & Hoodies NYC";
+    ? `Unisex ${category.name}`
+    : "Unisex Streetwear, Printed to Order";
   const description = category
-    ? `${category.description} Shop made-to-order ${category.name.toLowerCase()} for men.`
-    : "Men's graphic tees, hoodies, sweatshirts, and knitwear in unisex cuts — designed in NYC, printed when you order. Size guide on every product page.";
+    ? `${category.description} Shop made-to-order unisex ${category.name.toLowerCase()}.`
+    : "Unisex tees, hoodies, and sweatshirts from an independent NYC label. One cut, deep size runs, exact measurements listed on every product.";
 
   return {
     title,
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: MenPageProps): Promise<Metada
   };
 }
 
-export default async function MenPage({ params }: MenPageProps) {
+export default async function UnisexPage({ params }: UnisexPageProps) {
   const { slug } = await params;
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
@@ -69,25 +69,25 @@ export default async function MenPage({ params }: MenPageProps) {
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
       <CollectionJsonLd
-        name={category ? `${category.name} for Men` : "Men's"}
+        name={category ? `Unisex ${category.name}` : "Unisex"}
         path={category ? `${BASE_PATH}/${category.slug}` : BASE_PATH}
         products={displayProducts}
       />
       <div className="mx-auto max-w-7xl">
         <PageHeader
-          eyebrow="Men"
-          title={category ? category.name : "Men's tees, hoodies & knitwear"}
+          eyebrow="Unisex"
+          title={category ? category.name : "One cut, worn your way"}
           description={
             category
               ? category.description
-              : "Heavyweight hoodies, statement tees, and everyday staples, merchandised for him. Unisex cuts, printed to order."
+              : "Core pieces in unisex sizing, printed to order. One cut, worn your way."
           }
         />
         {!category && (
           <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
             <Image
-              src="/campaign/hero-men-onmodel.webp"
-              alt="The Classic AHA hoodie in black, worn"
+              src="/campaign/hero-unisex-onmodel.webp"
+              alt="The No Place Like New York sweatshirt in charcoal, worn"
               fill
               priority
               className="object-cover"

@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SUPPORT_EMAIL } from "@/lib/content/site-copy";
 
-export const metadata = { title: "Storefront Privacy Policy", description: "Learn what information After Hours Agenda collects for checkout and support, how Square and Printful process order data, and how to request access or deletion.", alternates: { canonical: "/privacy" } };
+export const metadata = { title: "Storefront Privacy Policy", description: "What After Hours Agenda collects for checkout and support, how Square and Printful process order data, and how to request access or deletion.", alternates: { canonical: "/privacy" } };
 
 const sections = [
   ["Information we collect", "We collect information you provide during checkout or support, including your name, email address, shipping address, order details, and messages. Payment details are handled by Square rather than stored by this storefront."],

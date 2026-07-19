@@ -7,3 +7,15 @@
 export function isPrintfulImage(src: string): boolean {
   return src.startsWith("/printful-assets/") || src.startsWith("/products/");
 }
+
+/**
+ * Make an image reference absolute for consumers that require a full URL —
+ * Google Merchant feed image_link and Product JSON-LD image[]. Already-absolute
+ * CDN URLs (Printful, Square S3) pass through unchanged; site-relative paths are
+ * resolved against the canonical origin. `baseUrl` must not have a trailing slash.
+ */
+export function absolutizeImage(src: string, baseUrl: string): string {
+  if (!src) return src;
+  if (/^https?:\/\//i.test(src)) return src;
+  return `${baseUrl}${src.startsWith("/") ? "" : "/"}${src}`;
+}

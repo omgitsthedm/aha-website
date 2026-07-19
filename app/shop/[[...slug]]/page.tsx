@@ -1,6 +1,7 @@
 import { getAllProducts } from "@/lib/square/catalog";
 import { getColorCountMap, getColorNamesMap, getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
+import { CollectionJsonLd } from "@/components/seo/CollectionJsonLd";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CATEGORIES, getCategoryBySlug, filterProductsByCategory } from "@/lib/commerce/taxonomy";
 import type { Metadata } from "next";
@@ -24,8 +25,8 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
         alternates: { canonical: `/shop/${category.slug}` },
       }
     : {
-        title: "Shop All",
-        description: "Shop the full After Hours Agenda catalog. Men's, women's, and unisex tees, hoodies, sweatshirts, and accessories, printed to order.",
+        title: "Shop All Graphic Tees, Hoodies & More",
+        description: "Every After Hours Agenda design in one place — graphic tees, hoodies, sweatshirts, knitwear, and accessories, each printed to order in 2–5 days.",
         alternates: { canonical: "/shop" },
       };
 }
@@ -41,13 +42,18 @@ export default async function ShopPage({ params }: ShopPageProps) {
 
   return (
     <div className="px-4 pb-16 pt-28 sm:px-6 lg:pt-32">
+      <CollectionJsonLd
+        name={category ? category.name : "Shop All"}
+        path={category ? `/shop/${category.slug}` : "/shop"}
+        products={displayProducts}
+      />
       <div className="mx-auto max-w-7xl">
         <PageHeader
           eyebrow="Shop"
-          title={category ? category.name : "All Products"}
+          title={category ? category.name : "The whole catalog, printed to order"}
           description={category
             ? `${category.description} Designed in NYC and printed to order.`
-            : "The full catalog. Men's, women's, and unisex streetwear, designed in NYC and printed to order."}
+            : "Every design in one place — graphic tees, hoodies, sweatshirts, knitwear, and accessories. Graphic-led, unisex cuts, designed in New York."}
         />
 
         <div className="mb-10 grid gap-4 border-y border-border/40 py-5 sm:grid-cols-3">

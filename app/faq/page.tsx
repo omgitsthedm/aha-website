@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { DELIVERY_WINDOW, PRODUCTION_WINDOW, RETURNS_SUMMARY } from "@/lib/commerce/policies";
 
-export const metadata = { title: "FAQ", description: "Answers about After Hours Agenda orders, shipping, returns, fit, and care.", alternates: { canonical: "/faq" } };
+export const metadata = { title: "FAQ: Shipping, Fit & Returns", description: "How After Hours Agenda orders work: made-to-order timelines, free shipping, 30-day returns, fit and care — answered by an actual person.", alternates: { canonical: "/faq" } };
 
 const faqs = [
   { q: "When will my order arrive?", a: `Production usually takes ${PRODUCTION_WINDOW}. Delivery is ${DELIVERY_WINDOW}. These windows run one after the other, and tracking is sent when the package leaves production.` },

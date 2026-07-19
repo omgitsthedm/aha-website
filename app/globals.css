@@ -728,9 +728,13 @@ textarea {
   mix-blend-mode: screen;
 }
 .neon2-text {
-  color: rgb(var(--neon));
+  /* A hair darker than --c-accent and with an opaque stroke: the small (14px)
+     "Est. 2011" label failed AA because the semi-transparent stroke lightened
+     the glyph edges below 4.5:1. #C3354C fill + solid stroke clears AA (~5:1)
+     while staying the same rose as the neon sheep glow. */
+  color: #c3354c;
   text-shadow: 0 0 2px rgb(var(--neon-hot)), 0 1px 0 rgb(var(--neon) / 0.4), 0 0 12px rgb(var(--neon) / 0.4);
-  -webkit-text-stroke: 1.5px rgb(var(--neon) / 0.5);
+  -webkit-text-stroke: 1px #c3354c;
 }
 
 @keyframes neon-flicker {

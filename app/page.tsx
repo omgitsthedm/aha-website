@@ -9,9 +9,11 @@ import { Marquee } from "@/components/homepage/Marquee";
 import { FeaturedGraphic } from "@/components/homepage/FeaturedGraphic";
 
 export const metadata: Metadata = {
-  title: "After Hours Agenda | NYC Streetwear",
+  // Absolute title bypasses the layout's "%s | After Hours Agenda" template so
+  // the brand name isn't doubled on the home page.
+  title: { absolute: "After Hours Agenda | Independent NYC Streetwear" },
   description:
-    "NYC streetwear made to order. Men's, women's, and unisex tees, hoodies, sweatshirts, and accessories. Free shipping. Secure Square checkout.",
+    "Independent NYC streetwear, printed to order. Graphic tees, hoodies, knitwear, totes — drawn after hours in New York, made when you order.",
   alternates: { canonical: "/" },
 };
 
@@ -39,7 +41,7 @@ export default async function HomePage() {
       <section aria-labelledby="hero-heading" className="mx-auto max-w-[1440px] px-4 pt-10 sm:px-6 lg:pt-16">
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
           <div>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">NYC Streetwear · Made to order</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">Independent NYC Streetwear · Made to order</p>
             <h1 id="hero-heading" className="mt-5 font-display text-[clamp(2.75rem,8vw,5.5rem)] font-bold uppercase leading-[0.88] tracking-[-0.05em] text-cream">
               After Hours <span className="text-accent">Agenda</span>
             </h1>
@@ -104,18 +106,18 @@ export default async function HomePage() {
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Featured</p>
             <h2 id="featured-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">Right now</h2>
           </div>
-          <Link href="/unisex" className="hidden font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent underline underline-offset-4 hover:text-cream md:block">Shop everything</Link>
+          <Link href="/shop" className="hidden font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent underline underline-offset-4 hover:text-cream md:block">Shop everything</Link>
         </div>
         {featured.length > 0 ? (
           <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-4">
-            {featured.map((product, index) => (
+            {featured.map((product) => (
               <Link key={product.id} href={`/product/${product.slug}`} className="reveal-item group block focus-visible:outline-offset-4">
                 <div className="fold-surface image-hover-zoom relative aspect-[3/4] overflow-hidden">
                   <Image
                     src={product.images[0]}
                     alt={product.name}
                     fill
-                    priority={index < 4}
+                    loading="lazy"
                     className="object-contain p-3 product-art"
                     sizes="(max-width: 768px) 50vw, 25vw"
                   />

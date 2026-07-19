@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Lookbook | After Hours Agenda",
+  title: "Lookbook",
   description:
     "The current After Hours Agenda lineup, laid out flat: tees, hoodies, sweatshirts, and accessories — every piece shoppable and printed to order.",
   alternates: { canonical: "/lookbook" },

@@ -28,6 +28,9 @@ export function isAuthoredSquareDescription(desc?: string | null): boolean {
   // Reject the generic auto-templated boilerplate.
   if (/\bby After Hours Agenda\.\s*Printed to order\.?\s*$/i.test(text)) return false;
   if (/printed to order as a graphic/i.test(text) && text.length < 200) return false;
+  // Reject raw Printful supplier boilerplate so it never becomes a meta/PDP story;
+  // these products fall back to the authored brand template instead.
+  if (/comfortable, soft, lightweight|ideal staple piece for any wardrobe|100% (ring-spun )?cotton|printed on demand|ethically sourced|blank product sourced/i.test(text)) return false;
   // Authored copy carries real markup or is a substantial multi-sentence story.
   return /<(p|strong|ul|li|br|em)\b/i.test(desc) || text.length >= 140;
 }
@@ -43,6 +46,9 @@ const TYPE_NAMES: Record<string, string> = {
 };
 
 const clean = (value: string) => value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+
+// "a accessory" -> "an accessory". Vowel-sound heuristic is enough for our type nouns.
+const article = (word: string) => (/^[aeiou]/i.test(word.trim()) ? "an" : "a");
 
 interface StoryTerritory {
   pattern: RegExp;
@@ -88,7 +94,7 @@ const STORY_TERRITORIES: StoryTerritory[] = [
 
 function designContext(name: string): string {
   const territory = STORY_TERRITORIES.find(({ pattern }) => pattern.test(name));
-  return territory?.line(name) ?? `${name} starts with a graphic idea and keeps the garment around it direct.`;
+  return territory?.line(name) ?? `${name} starts with the graphic and lets everything else stay out of its way.`;
 }
 
 function practicalClose(type: string): string {
@@ -116,8 +122,8 @@ export function buildProductStory(
     ? ` In the ${clean(collection.name)} collection, it sits inside this idea: ${clean(collection.description)}`
     : " It is part of the current After Hours Agenda product catalog.";
   const fabric = enrichment?.fabricDescription
-    ? ` The ${type} uses ${clean(enrichment.fabricDescription).replace(/\.$/, "").toLowerCase()}.`
+    ? ` Made with ${clean(enrichment.fabricDescription).replace(/\.$/, "").toLowerCase()}.`
     : "";
 
-  return `${designContext(product.name)} ${product.name} is printed to order as a ${type}.${collectionLine}${fabric} ${practicalClose(productType)}`;
+  return `${designContext(product.name)} ${product.name} is printed to order as ${article(type)} ${type}.${collectionLine}${fabric} ${practicalClose(productType)}`;
 }

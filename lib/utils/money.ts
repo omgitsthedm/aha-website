@@ -4,7 +4,3 @@ export function formatCents(cents: number, currency = "USD"): string {
     currency,
   }).format(cents / 100);
 }
-
-export function centsToFloat(cents: number): number {
-  return cents / 100;
-}

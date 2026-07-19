@@ -27,10 +27,24 @@ export function generateStaticParams() {
   }
 }
 
+const TITLE_SUFFIX = " | After Hours Agenda";
+
+// Truncate at a word boundary (never mid-word) and add an ellipsis only when we
+// actually cut. `max` is the visible character budget.
+const truncateAtWord = (value: string, max: number) => {
+  const text = value.trim();
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${(lastSpace > max * 0.5 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`;
+};
+
 const productMetaTitle = (name: string) => {
   const stem = name.length < 22 ? `${name} Streetwear` : name;
-  const shortened = stem.length > 37 ? `${stem.slice(0, 36).trimEnd()}…` : stem;
-  return `${shortened} | After Hours Agenda`;
+  // Prefer the full product name (keyword-complete). Only truncate — at a word
+  // boundary — when "<name> | After Hours Agenda" would exceed ~60 chars.
+  const budget = 60 - TITLE_SUFFIX.length;
+  return `${truncateAtWord(stem, budget)}${TITLE_SUFFIX}`;
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -43,7 +57,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const rawDescription = isAuthoredSquareDescription(product.description)
       ? product.description!.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
       : buildProductStory(product, enrichment);
-    const description = rawDescription.slice(0, 158);
+    const description = truncateAtWord(rawDescription, 155);
     const image = product.images[0];
     const title = productMetaTitle(product.name);
 
