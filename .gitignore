@@ -47,3 +47,7 @@ next-env.d.ts
 
 # local audit workspace (raw lighthouse/pa11y/linkinator output; reports live in docs/)
 /tmp/
+
+# Playwright artifacts
+/test-results/
+/playwright-report/

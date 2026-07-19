@@ -373,7 +373,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
       {/* Sticky mobile buy bar — the inline Add-to-bag can sit far below the fold
           on phones. Adds a persistent price + action without touching desktop. */}
-      <div className="safe-bottom safe-x fixed inset-x-0 bottom-0 z-[80] border-t border-border/60 bg-void/95 backdrop-blur-sm lg:hidden">
+      <div data-testid="sticky-buy-bar" className="safe-bottom safe-x fixed inset-x-0 bottom-0 z-[80] border-t border-border/60 bg-void/95 backdrop-blur-sm lg:hidden">
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
           <div className="min-w-0 flex-1">
             <p className="truncate font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">{product.name}</p>
