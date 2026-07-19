@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createLoginToken, isAccountsConfigured } from "@/lib/account/auth";
 import { sendTransactionalEmail, isTransactionalEmailConfigured } from "@/lib/email/resend";
 import { siteOrigin } from "@/lib/email/marketing";
+import { rateLimit, clientIp } from "@/lib/security/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -10,8 +11,18 @@ export const dynamic = "force-dynamic";
 // marketing gate.
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as Record<string, unknown>));
+
+  // Honeypot: silently succeed for bots without issuing a link.
+  if (typeof body?.hp === "string" && body.hp.trim() !== "") return NextResponse.json({ ok: true });
+
   const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
   if (!/.+@.+\..+/.test(email)) return NextResponse.json({ ok: false, error: "Enter a valid email." }, { status: 400 });
+
+  // Throttle per IP and per target email so this can't be used to bomb an
+  // arbitrary address with sign-in links. Still returns ok (no enumeration).
+  const ipLimit = rateLimit(`login-ip:${clientIp(req)}`, 8, 3_600_000);
+  const emailLimit = rateLimit(`login-email:${email}`, 4, 3_600_000);
+  if (!ipLimit.ok || !emailLimit.ok) return NextResponse.json({ ok: true });
   if (!isAccountsConfigured() || !isTransactionalEmailConfigured()) {
     return NextResponse.json({ ok: true }); // fail closed but don't leak config
   }

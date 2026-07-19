@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { sendTransactionalEmail, isTransactionalEmailConfigured } from "@/lib/email/resend";
+import { rateLimit, clientIp } from "@/lib/security/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,15 @@ const FEEDBACK_TO = process.env.FEEDBACK_EMAIL || process.env.ORDER_SUPPORT_EMAI
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({} as Record<string, unknown>));
+
+  // Honeypot: real users never fill this hidden field. Accept silently so bots
+  // get a success and don't retry, but send nothing.
+  if (typeof body?.hp === "string" && body.hp.trim() !== "") return NextResponse.json({ ok: true });
+
+  // Rate limit: this endpoint emails the ops inbox on every send.
+  const limit = rateLimit(`feedback:${clientIp(req)}`, 5, 60_000);
+  if (!limit.ok) return NextResponse.json({ ok: false, error: "Too many messages. Try again shortly." }, { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } });
+
   const message = typeof body?.message === "string" ? body.message.trim().slice(0, 4000) : "";
   if (!message) return NextResponse.json({ ok: false, error: "Empty feedback." }, { status: 400 });
   if (!isTransactionalEmailConfigured()) return NextResponse.json({ ok: false, error: "Email not configured." }, { status: 503 });
