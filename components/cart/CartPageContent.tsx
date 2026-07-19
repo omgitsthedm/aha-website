@@ -9,6 +9,8 @@ import { formatCents } from "@/lib/utils/money";
 import { TAX_LINE_COPY, WALLET_CHECKOUT_COPY, getFulfillmentSummary, getShippingLineCopy } from "@/lib/commerce/policies";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { trackCommerceEvent } from "@/lib/analytics/events";
+import { ExpressCheckout } from "@/components/checkout/ExpressCheckout";
+import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 
 interface RecItem { name: string; slug: string; priceFormatted: string; image: string }
 
@@ -16,7 +18,7 @@ interface RecItem { name: string; slug: string; priceFormatted: string; image: s
 const BUNDLE_MIN = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_MIN_QTY || "0", 10);
 const BUNDLE_PCT = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_PERCENT || "0", 10);
 
-export function CartPageContent() {
+export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPaymentsConfig }) {
   const { items, addItem, removeItem, updateQuantity, totalFormatted, totalItems, total } = useCart();
   const [recs, setRecs] = useState<RecItem[]>([]);
   const [restored, setRestored] = useState(false);
@@ -151,6 +153,7 @@ export function CartPageContent() {
               </>
             );
           })()}
+          <ExpressCheckout squareConfig={squareConfig} />
           <Link href="/checkout" className="primary-action flex min-h-14 w-full items-center justify-center px-5 py-4 text-sm">Continue to checkout</Link>
           <p className="mt-4 text-xs leading-relaxed text-muted">{WALLET_CHECKOUT_COPY}</p>
           <p className="mt-3 text-xs leading-relaxed text-muted">{getFulfillmentSummary()}</p>
