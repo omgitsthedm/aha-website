@@ -1,6 +1,7 @@
 import { getAllProducts } from "@/lib/square/catalog";
 import { getColorCountMap, getColorNamesMap, getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
+import { CollectionJsonLd } from "@/components/seo/CollectionJsonLd";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
   getCategoryBySlug,
@@ -35,10 +36,10 @@ export async function generateMetadata({ params }: UnisexPageProps): Promise<Met
 
   const title = category
     ? `Unisex ${category.name}`
-    : "Unisex Streetwear";
+    : "Unisex Streetwear, Printed to Order";
   const description = category
     ? `${category.description} Shop made-to-order unisex ${category.name.toLowerCase()}.`
-    : `${gender.description} Shop unisex tees, hoodies, sweatshirts, and accessories.`;
+    : "Unisex tees, hoodies, and sweatshirts from an independent NYC label. One cut, deep size runs, exact measurements listed on every product.";
 
   return {
     title,
@@ -67,10 +68,15 @@ export default async function UnisexPage({ params }: UnisexPageProps) {
 
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
+      <CollectionJsonLd
+        name={category ? `Unisex ${category.name}` : "Unisex"}
+        path={category ? `${BASE_PATH}/${category.slug}` : BASE_PATH}
+        products={displayProducts}
+      />
       <div className="mx-auto max-w-7xl">
         <PageHeader
           eyebrow="Unisex"
-          title={category ? category.name : "Unisex"}
+          title={category ? category.name : "One cut, worn your way"}
           description={
             category
               ? category.description

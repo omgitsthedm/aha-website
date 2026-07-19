@@ -9,9 +9,11 @@ import { Marquee } from "@/components/homepage/Marquee";
 import { FeaturedGraphic } from "@/components/homepage/FeaturedGraphic";
 
 export const metadata: Metadata = {
-  title: "After Hours Agenda | NYC Streetwear",
+  // Absolute title bypasses the layout's "%s | After Hours Agenda" template so
+  // the brand name isn't doubled on the home page.
+  title: { absolute: "After Hours Agenda | Independent NYC Streetwear" },
   description:
-    "NYC streetwear made to order. Men's, women's, and unisex tees, hoodies, sweatshirts, and accessories. Free shipping. Secure Square checkout.",
+    "Independent NYC streetwear, printed to order. Graphic tees, hoodies, knitwear, totes — drawn after hours in New York, made when you order.",
   alternates: { canonical: "/" },
 };
 
@@ -39,7 +41,7 @@ export default async function HomePage() {
       <section aria-labelledby="hero-heading" className="mx-auto max-w-[1440px] px-4 pt-10 sm:px-6 lg:pt-16">
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
           <div>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">NYC Streetwear · Made to order</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">Independent NYC Streetwear · Made to order</p>
             <h1 id="hero-heading" className="mt-5 font-display text-[clamp(2.75rem,8vw,5.5rem)] font-bold uppercase leading-[0.88] tracking-[-0.05em] text-cream">
               After Hours <span className="text-accent">Agenda</span>
             </h1>

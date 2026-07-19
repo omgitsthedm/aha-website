@@ -1,6 +1,7 @@
 import { getAllProducts } from "@/lib/square/catalog";
 import { getColorCountMap, getColorNamesMap, getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
+import { CollectionJsonLd } from "@/components/seo/CollectionJsonLd";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { filterProductsByCategory } from "@/lib/commerce/taxonomy";
 import type { Metadata } from "next";
@@ -9,9 +10,9 @@ import Image from "next/image";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Accessories",
+  title: "Totes, Hats, Socks & Stickers",
   description:
-    "Hats, beanies, bags, stickers, pins, and finishing pieces from After Hours Agenda. Printed to order.",
+    "Counting Sheep totes, embroidered black sheep socks, hats, pins, and stickers — small pieces from an independent NYC label, made to order.",
   alternates: { canonical: "/accessories" },
 };
 
@@ -21,11 +22,12 @@ export default async function AccessoriesPage() {
 
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
+      <CollectionJsonLd name="Accessories" path="/accessories" products={products} />
       <div className="mx-auto max-w-7xl">
         <PageHeader
           eyebrow="Accessories"
-          title="Accessories"
-          description="Hats, bags, stickers, pins, and the small details that finish the fit. Every piece made to order."
+          title="The finishing pieces"
+          description="Counting Sheep totes, embroidered black sheep socks, hats, pins, and stickers — the small pieces that finish the fit. Every one made to order."
         />
         <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
           <Image

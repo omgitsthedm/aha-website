@@ -1,6 +1,7 @@
 import { getAllProducts } from "@/lib/square/catalog";
 import { getColorCountMap, getColorNamesMap, getPurchasableSizesMap } from "@/lib/data/purchasable-sizes";
 import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
+import { CollectionJsonLd } from "@/components/seo/CollectionJsonLd";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
   getCategoryBySlug,
@@ -35,10 +36,10 @@ export async function generateMetadata({ params }: WomenPageProps): Promise<Meta
 
   const title = category
     ? `${category.name} for Women`
-    : `${gender.name}'s Streetwear`;
+    : "Women's Graphic Tees & Hoodies NYC";
   const description = category
     ? `${category.description} Shop made-to-order ${category.name.toLowerCase()} for women.`
-    : `${gender.description} Shop women's tees, hoodies, sweatshirts, and accessories.`;
+    : "Women's graphic tees, hoodies, sweatshirts, and knitwear in unisex cuts — designed in NYC, printed when you order. Exact measurements on every page.";
 
   return {
     title,
@@ -67,10 +68,15 @@ export default async function WomenPage({ params }: WomenPageProps) {
 
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
+      <CollectionJsonLd
+        name={category ? `${category.name} for Women` : "Women's"}
+        path={category ? `${BASE_PATH}/${category.slug}` : BASE_PATH}
+        products={displayProducts}
+      />
       <div className="mx-auto max-w-7xl">
         <PageHeader
           eyebrow="Women"
-          title={category ? category.name : "Women's"}
+          title={category ? category.name : "Women's tees, hoodies & knitwear"}
           description={
             category
               ? category.description

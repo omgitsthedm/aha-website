@@ -28,6 +28,9 @@ export function isAuthoredSquareDescription(desc?: string | null): boolean {
   // Reject the generic auto-templated boilerplate.
   if (/\bby After Hours Agenda\.\s*Printed to order\.?\s*$/i.test(text)) return false;
   if (/printed to order as a graphic/i.test(text) && text.length < 200) return false;
+  // Reject raw Printful supplier boilerplate so it never becomes a meta/PDP story;
+  // these products fall back to the authored brand template instead.
+  if (/comfortable, soft, lightweight|ideal staple piece for any wardrobe|100% (ring-spun )?cotton|printed on demand|ethically sourced|blank product sourced/i.test(text)) return false;
   // Authored copy carries real markup or is a substantial multi-sentence story.
   return /<(p|strong|ul|li|br|em)\b/i.test(desc) || text.length >= 140;
 }
