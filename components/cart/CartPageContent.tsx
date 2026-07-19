@@ -127,12 +127,30 @@ export function CartPageContent() {
             <div className="flex justify-between gap-4"><dt className="text-muted">Shipping</dt><dd className="max-w-[12rem] text-right text-xs">{getShippingLineCopy(total)}</dd></div>
             <div className="flex justify-between gap-4"><dt className="text-muted">Tax</dt><dd className="max-w-[12rem] text-right text-xs">{TAX_LINE_COPY}</dd></div>
           </dl>
-          <div className="flex items-center justify-between py-5"><span className="text-xs font-bold uppercase tracking-[0.08em]">Cart subtotal</span><strong className="font-mono text-lg">{totalFormatted}</strong></div>
-          {BUNDLE_MIN >= 2 && BUNDLE_PCT > 0 && (
-            totalItems >= BUNDLE_MIN
-              ? <p className="mb-4 border border-success/50 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-success">Bundle unlocked — {BUNDLE_PCT}% off applied at checkout.</p>
-              : <p className="mb-4 border border-border/40 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-muted">Add {BUNDLE_MIN - totalItems} more to save {BUNDLE_PCT}%.</p>
-          )}
+          {(() => {
+            const bundleActive = BUNDLE_MIN >= 2 && BUNDLE_PCT > 0 && totalItems >= BUNDLE_MIN;
+            // Display-only estimate; the server resolves the real (better-of) discount at checkout.
+            const bundleDiscount = bundleActive ? Math.round((total * BUNDLE_PCT) / 100) : 0;
+            return (
+              <>
+                {bundleActive && (
+                  <div className="flex items-center justify-between py-2 text-sm text-success">
+                    <span className="font-bold uppercase tracking-[0.06em]">Bundle discount ({BUNDLE_PCT}%)</span>
+                    <strong className="font-mono">−{formatCents(bundleDiscount)}</strong>
+                  </div>
+                )}
+                <div className="flex items-center justify-between py-5">
+                  <span className="text-xs font-bold uppercase tracking-[0.08em]">{bundleActive ? "Estimated total" : "Cart subtotal"}</span>
+                  <strong className="font-mono text-lg">{bundleActive ? formatCents(total - bundleDiscount) : totalFormatted}</strong>
+                </div>
+                {BUNDLE_MIN >= 2 && BUNDLE_PCT > 0 && (
+                  bundleActive
+                    ? <p className="mb-4 border border-success/50 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-success">Bundle unlocked — {BUNDLE_PCT}% off, applied at checkout. Final total confirmed at payment.</p>
+                    : <p className="mb-4 border border-border/40 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-muted">Add {BUNDLE_MIN - totalItems} more to save {BUNDLE_PCT}%.</p>
+                )}
+              </>
+            );
+          })()}
           <Link href="/checkout" className="primary-action flex min-h-14 w-full items-center justify-center px-5 py-4 text-sm">Continue to checkout</Link>
           <p className="mt-4 text-xs leading-relaxed text-muted">{WALLET_CHECKOUT_COPY}</p>
           <p className="mt-3 text-xs leading-relaxed text-muted">{getFulfillmentSummary()}</p>
