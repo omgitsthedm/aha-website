@@ -18494,7 +18494,7 @@
       "storySource": "authored",
       "productType": "tee",
       "collectionIds": [
-        "t-shirts"
+        "tees"
       ],
       "status": "active",
       "retailPrice": 3000,
@@ -18575,6 +18575,10 @@
           "printfulSource": "catalog",
           "sortOrder": 4
         }
+      ],
+      "category": "t-shirts",
+      "gender": [
+        "women"
       ]
     }
   ]
