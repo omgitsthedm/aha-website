@@ -109,3 +109,11 @@ test("@catalog best-sellers redirects to the shop", async ({ page }) => {
   await page.goto("/best-sellers");
   await expect(page).toHaveURL(/\/shop$/);
 });
+
+test("@brand manifesto page renders the flag and the signup", async ({ page }) => {
+  const response = await page.goto("/manifesto");
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/permission/i);
+  await expect(page.getByRole("link", { name: "Shop the label" })).toBeVisible();
+  await expect(page.locator('input[type="email"]').first()).toBeVisible();
+});

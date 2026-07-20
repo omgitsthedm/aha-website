@@ -172,9 +172,10 @@ export default async function HomePage() {
 
       <section aria-labelledby="worn-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 flex items-end justify-between gap-6">
-          <div>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The Black Sheep</p>
+          <div className="m-rise">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The signature · The Black Sheep</p>
             <h2 id="worn-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">Worn, not just shown</h2>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">The piece the label is named for — the mark that started it. <Link href="/manifesto" className="m-underline font-bold text-accent">Read the manifesto</Link>.</p>
           </div>
           <SheepMark className="hidden w-16 text-cream md:block" />
         </div>

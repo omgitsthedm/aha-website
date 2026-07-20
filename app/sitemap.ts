@@ -23,6 +23,7 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
   { path: "/unisex", priority: 0.9, changeFrequency: "weekly" },
   { path: "/accessories", priority: 0.8, changeFrequency: "weekly" },
   { path: "/new-arrivals", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/manifesto", priority: 0.7, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },
   { path: "/lookbook", priority: 0.6, changeFrequency: "monthly" },
   { path: "/newsletter", priority: 0.5, changeFrequency: "monthly" },
