@@ -33,6 +33,7 @@
     "verify:netlify-site": "bash ops/netlify-target-guard.sh site",
     "verify:netlify-live": "bash ops/netlify-target-guard.sh live",
     "product-factory": "node scripts/product-factory.mjs",
+    "product:new": "node scripts/product-new.mjs",
     "audit:provider-liveness": "node scripts/audit-provider-liveness.mjs"
   },
   "dependencies": {

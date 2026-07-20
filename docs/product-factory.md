@@ -4,6 +4,10 @@ Hand any agent a design and a garment choice; a purchasable product appears on
 afterhoursagenda.com. No Printful dashboard, no manual Square edits.
 Proven live 2026-07-14 (8-product resurrection run + the sheep rebuild).
 
+> **Fastest path (design + one line → live):** use `npm run product:new` and follow
+> [`PRODUCT-INTAKE.md`](./PRODUCT-INTAKE.md). It wraps this factory with garment presets,
+> art hosting, and live verification. This doc is the underlying engine + advanced modes.
+
 ## The one command
 
 ```bash

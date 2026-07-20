@@ -51,3 +51,6 @@ next-env.d.ts
 # Playwright artifacts
 /test-results/
 /playwright-report/
+
+# product-factory temp specs
+.tmp/

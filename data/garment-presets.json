@@ -1,0 +1,66 @@
+{
+  "_comment": "Garment presets for the product factory. A spec/CLI names a preset (e.g. \"women-tee\") and the factory fills in the Printful blank, taxonomy, and defaults. Blank product IDs verified against the live Printful catalog 2026-07-19. Override any field in the spec to win over the preset.",
+  "aliases": {
+    "tee": "unisex-tee",
+    "t-shirt": "unisex-tee",
+    "shirt": "unisex-tee",
+    "womens-tee": "women-tee",
+    "women-shirt": "women-tee",
+    "baby-doll": "women-tee",
+    "babydoll": "women-tee",
+    "fitted-tee": "women-tee",
+    "sweatshirt": "crewneck",
+    "crew": "crewneck",
+    "pullover": "hoodie"
+  },
+  "presets": {
+    "unisex-tee": {
+      "blank": "Next Level 3600 — Men's/Unisex Fitted Tee",
+      "garmentCatalogProductId": 108,
+      "productType": "tee",
+      "category": "t-shirts",
+      "collectionIds": ["tees"],
+      "gender": ["men", "women", "unisex"],
+      "sizeGuideId": "sg-tee",
+      "technique": "dtg",
+      "defaultColors": ["Black"],
+      "defaultSizes": ["S", "M", "L", "XL", "2XL"]
+    },
+    "women-tee": {
+      "blank": "Gildan 64000L — Women's Basic Softstyle Fitted Tee",
+      "garmentCatalogProductId": 849,
+      "productType": "tee",
+      "category": "t-shirts",
+      "collectionIds": ["tees"],
+      "gender": ["women"],
+      "sizeGuideId": "sg-tee",
+      "technique": "dtg",
+      "defaultColors": ["Black"],
+      "defaultSizes": ["S", "M", "L", "XL", "2XL"]
+    },
+    "hoodie": {
+      "blank": "Cotton Heritage M2580 — Unisex Premium Pullover Hoodie",
+      "garmentCatalogProductId": 380,
+      "productType": "hoodie",
+      "category": "hoodies-sweatshirts",
+      "collectionIds": ["hoodies"],
+      "gender": ["men", "women", "unisex"],
+      "sizeGuideId": "sg-hoodie",
+      "technique": "dtg",
+      "defaultColors": ["Black"],
+      "defaultSizes": ["S", "M", "L", "XL", "2XL"]
+    },
+    "crewneck": {
+      "blank": "Cotton Heritage M2480 — Unisex Premium Sweatshirt",
+      "garmentCatalogProductId": 411,
+      "productType": "sweater",
+      "category": "sweaters-knitwear",
+      "collectionIds": ["sweaters"],
+      "gender": ["men", "women", "unisex"],
+      "sizeGuideId": "sg-sweater",
+      "technique": "dtg",
+      "defaultColors": ["Black"],
+      "defaultSizes": ["S", "M", "L", "XL", "2XL"]
+    }
+  }
+}

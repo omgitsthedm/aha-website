@@ -8,17 +8,23 @@
 //   npm run product-factory -- --spec design.json [--live] [--verify-draft] [--push]
 //   npm run product-factory -- --resurrect <slug> --price 4600 [--live] ...
 //
-// Spec (new product):
+// Spec (new product) — the ONLY required fields are name, artUrl, and either a
+// preset OR garmentCatalogProductId. A preset (see data/garment-presets.json) fills
+// the blank + taxonomy + defaults; anything you set in the spec wins over it.
 // {
 //   "name": "Midnight Runners Tee",
 //   "artUrl": "https://afterhoursagenda.com/printful-assets/Midnight_Runners.png",
-//   "garmentCatalogProductId": 786,          // Printful catalog product (the blank)
-//   "colors": ["Black", "Pepper"],           // catalog color names, or omit for all
-//   "sizes": ["S","M","L","XL","2XL"],       // or omit for all available
+//   "preset": "women-tee",                    // resolves blank + gender/category/collection/sizes
+//   "story": "…2+ sentences…",                // authored PDP copy
+//   // — everything below is OPTIONAL; the preset supplies sensible defaults —
+//   "garmentCatalogProductId": 849,           // Printful blank (preset sets this)
+//   "colors": ["Black"],                      // catalog color names, or omit for preset default
+//   "sizes": ["S","M","L","XL","2XL"],        // or omit for preset default
 //   "placement": "front", "technique": "dtg",
-//   "position": { "width": 12, "height": 13.87, "top": 1.07, "left": 0 },  // optional
+//   "position": { "width": 12, "height": 13.87, "top": 1.07, "left": 0 },
 //   "retailPrice": 4000,                      // cents; omit for auto (35% floor + $1, whole dollar)
-//   "productType": "tee", "collectionIds": ["tees"]
+//   "productType": "tee", "collectionIds": ["tees"], "category": "t-shirts", "gender": ["women"],
+//   "mockupArtUrl": "https://raw.githubusercontent.com/.../art.png"  // fast URL for mockups only
 // }
 //
 // Env: PRINTFUL_API_TOKEN, PRINTFUL_STORE_ID (default 14298228),
@@ -45,6 +51,48 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const cents = (v) => Math.round(Number(v || 0) * 100);
 const suggestPrice = (cost) => Math.ceil((Math.ceil(cost / 0.65) + 100) / 100) * 100;
+
+// ── Storefront taxonomy the collection pages filter on (must match the live data) ──
+const KNOWN_COLLECTIONS = new Set(["tees", "hoodies", "sweaters", "accessorys"]);
+const KNOWN_CATEGORIES = new Set(["t-shirts", "hoodies-sweatshirts", "sweaters-knitwear", "accessories"]);
+const TYPE_TAX = {
+  tee: { category: "t-shirts", collectionIds: ["tees"], sizeGuideId: "sg-tee" },
+  hoodie: { category: "hoodies-sweatshirts", collectionIds: ["hoodies"], sizeGuideId: "sg-hoodie" },
+  sweater: { category: "sweaters-knitwear", collectionIds: ["sweaters"], sizeGuideId: "sg-sweater" },
+  accessory: { category: "accessories", collectionIds: ["accessorys"], sizeGuideId: "sg-accessory" },
+};
+
+// A spec may name a garment preset; the factory fills any field the spec omits.
+function expandPreset(spec) {
+  if (!spec.preset) return;
+  const doc = JSON.parse(readFileSync("data/garment-presets.json", "utf8"));
+  const key = doc.aliases?.[spec.preset] || spec.preset;
+  const p = doc.presets?.[key];
+  if (!p) throw new Error(`Unknown preset "${spec.preset}". Known: ${Object.keys(doc.presets).join(", ")} | aliases: ${Object.keys(doc.aliases).join(", ")}`);
+  spec.garmentCatalogProductId ??= p.garmentCatalogProductId;
+  spec.colors ??= p.defaultColors;
+  spec.sizes ??= p.defaultSizes;
+  spec.productType ??= p.productType;
+  spec.category ??= p.category;
+  spec.gender ??= p.gender;
+  spec.collectionIds ??= p.collectionIds;
+  spec.sizeGuideId ??= p.sizeGuideId;
+  spec.technique ??= p.technique;
+}
+
+// Resolve + validate the storefront taxonomy so a new product actually surfaces
+// in /shop AND its gender + collection grids (the gap that used to need a manual patch).
+function resolveTaxonomy(spec) {
+  const tax = TYPE_TAX[spec.productType] || {};
+  const category = spec.category || tax.category;
+  const collectionIds = spec.collectionIds || tax.collectionIds || ["tees"];
+  const gender = spec.gender || ["men", "women", "unisex"];
+  const sizeGuideId = spec.sizeGuideId || tax.sizeGuideId || `sg-${spec.productType || "tee"}`;
+  if (category && !KNOWN_CATEGORIES.has(category)) throw new Error(`category "${category}" is not one of: ${[...KNOWN_CATEGORIES].join(", ")}`);
+  const badCol = collectionIds.find((c) => !KNOWN_COLLECTIONS.has(c));
+  if (badCol) throw new Error(`collectionId "${badCol}" is not one of: ${[...KNOWN_COLLECTIONS].join(", ")}`);
+  return { category, collectionIds, gender, sizeGuideId };
+}
 
 async function pf(path, method = "GET", body) {
   for (let attempt = 0; attempt < 5; attempt++) {
@@ -219,7 +267,13 @@ async function main() {
     const specPath = opt("spec");
     if (!specPath) throw new Error("--spec <file> or --resurrect <slug> required");
     const spec = JSON.parse(readFileSync(specPath, "utf8"));
-    await assertArtReachable(spec.artUrl);
+    expandPreset(spec);
+    if (!spec.garmentCatalogProductId) throw new Error("garmentCatalogProductId required — set it directly or name a known --preset.");
+    // mockupArtUrl (optional): a fast/instant URL (e.g. raw.githubusercontent) used
+    // ONLY to fetch the art for reachability + web mockups. Fulfillment placements
+    // still print from the durable spec.artUrl. Falls back to artUrl when absent.
+    const mockupArt = spec.mockupArtUrl || spec.artUrl;
+    await assertArtReachable(mockupArt);
 
     const productData = (await pf(`/catalog-products/${spec.garmentCatalogProductId}`)).data;
     const catalogVariants = (await pf(`/catalog-products/${spec.garmentCatalogProductId}/catalog-variants`)).data || [];
@@ -268,6 +322,7 @@ async function main() {
       kind: "new", spec,
       garmentName: productData.name,
       artUrl: spec.artUrl,
+      mockupArt,
       productOptions,
       variants: chosen.map((v) => ({
         catalogVariantId: v.id, color: v.color, size: String(v.size).toUpperCase(),
@@ -314,7 +369,7 @@ async function main() {
   // ── Mockups (Printful CDN URLs, publicly fetchable for Square upload) ──
   let mockups = [];
   if (plan.kind === "new") {
-    mockups = await generateMockups(plan.spec.garmentCatalogProductId, plan.variants.map((v) => v.catalogVariantId), plan.artUrl, plan.variants[0].placements[0].placement, plan.variants[0].placements[0].technique);
+    mockups = await generateMockups(plan.spec.garmentCatalogProductId, plan.variants.map((v) => v.catalogVariantId), plan.mockupArt || plan.artUrl, plan.variants[0].placements[0].placement, plan.variants[0].placements[0].technique);
     console.log(`  mockups generated: ${mockups.length}`);
   }
   const imageUrls = mockups.slice(0, 4).map((m) => m.url);
@@ -361,6 +416,7 @@ async function main() {
     if (product.variants.every((v) => v.status === "active")) product.status = "active";
   } else {
     const spec = plan.spec;
+    const tax = resolveTaxonomy(spec);
     const variants = plan.variants.map((v, i) => {
       const optionKey = slugify(v.color ? `${v.color}-${v.size}` : v.size) || String(i);
       const vid = `${slug}-${optionKey}-${v.catalogVariantId}`;
@@ -375,7 +431,7 @@ async function main() {
         printfulPlacements: v.placements.map(({ layerOptions, ...pl }) => pl),
         ...(plan.productOptions ? { printfulProductOptions: plan.productOptions } : {}),
         printfulRegionAvailability: ["north_america"],
-        printfulSizeGuideReference: `sg-${spec.productType || "tee"}`,
+        printfulSizeGuideReference: tax.sizeGuideId,
         costEstimate: v.cost, costCurrency: "USD", costVerifiedAt: now,
       };
       return {
@@ -393,7 +449,8 @@ async function main() {
       ahaProductId: slug, slug, title, shortDescription: spec.shortDescription || title,
       fullDescription: spec.story || `${title} by After Hours Agenda. Printed to order.`,
       ...(spec.story ? { storySource: "authored" } : {}),
-      productType: spec.productType || "tee", collectionIds: spec.collectionIds || ["tees"],
+      productType: spec.productType || "tee", collectionIds: tax.collectionIds,
+      category: tax.category, gender: tax.gender,
       status: "active", retailPrice: priceCents, currency: "USD",
       fitDescription: spec.fitDescription || "Standard unisex fit — true to size.",
       fabricDescription: spec.fabricDescription || "See size guide for materials.",
@@ -403,7 +460,7 @@ async function main() {
       productionNote: "Made to order and printed just for you. Production takes 2–5 business days before shipping.",
       shippingNote: "Free shipping on every order. Delivery includes production time plus carrier transit.",
       returnsNote: "Exchanges and returns on unworn items within 30 days. Misprints and defects are always on us.",
-      sizeGuideId: `sg-${spec.productType || "tee"}`,
+      sizeGuideId: tax.sizeGuideId,
       featuredImage: `/products/${slug}.webp`, galleryImages: [],
       seoTitle: `${title} — After Hours Agenda`, seoDescription: `${title}. NYC streetwear, printed to order. Free shipping.`,
       variants,
