@@ -7,6 +7,7 @@ import { SheepMark } from "@/components/ui/SheepMark";
 import { NeonSheep } from "@/components/brand/NeonSheep";
 import { Marquee } from "@/components/homepage/Marquee";
 import { FeaturedGraphic } from "@/components/homepage/FeaturedGraphic";
+import { SocialProofWall } from "@/components/homepage/SocialProofWall";
 
 export const metadata: Metadata = {
   // Absolute title bypasses the layout's "%s | After Hours Agenda" template so
@@ -196,6 +197,9 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* Real, moderated reviews only — renders nothing until they exist. */}
+      <SocialProofWall />
 
       <section aria-labelledby="dispatch-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="corner-cut crease-rule relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">

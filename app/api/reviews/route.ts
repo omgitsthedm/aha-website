@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
-import { getProductReviews, submitReview } from "@/lib/commerce/reviews";
+import { getProductReviews, getReviewWall, submitReview } from "@/lib/commerce/reviews";
 
 export const dynamic = "force-dynamic";
 
-// GET /api/reviews?slug=... → approved reviews + average (public).
+// GET /api/reviews?slug=...  → approved reviews + average for one product (public)
+// GET /api/reviews?wall=1     → approved reviews across the catalog (public wall)
 export async function GET(request: Request) {
-  const slug = new URL(request.url).searchParams.get("slug")?.trim();
+  const params = new URL(request.url).searchParams;
+  if (params.get("wall")) {
+    const items = await getReviewWall(12);
+    return NextResponse.json({ items }, { headers: { "Cache-Control": "public, max-age=0, s-maxage=300, stale-while-revalidate=1800" } });
+  }
+  const slug = params.get("slug")?.trim();
   if (!slug) return NextResponse.json({ items: [], count: 0, average: 0 });
   const summary = await getProductReviews(slug);
   return NextResponse.json(summary, { headers: { "Cache-Control": "public, max-age=0, s-maxage=120, stale-while-revalidate=600" } });

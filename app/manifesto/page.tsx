@@ -4,6 +4,7 @@ import Image from "next/image";
 import { SheepMark } from "@/components/ui/SheepMark";
 import { NeonSheep } from "@/components/brand/NeonSheep";
 import { GetOnTheList } from "@/components/homepage/GetOnTheList";
+import { SocialProofWall } from "@/components/homepage/SocialProofWall";
 
 export const metadata: Metadata = {
   title: "Manifesto",
@@ -95,6 +96,9 @@ export default function ManifestoPage() {
         </div>
         <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.08em] text-muted/70">Placeholder — brand imagery, pending the real photography pass.</p>
       </section>
+
+      {/* Real, moderated reviews only — renders nothing until they exist. */}
+      <SocialProofWall />
 
       {/* ── Next drop (honest — no fake timers; reuses the tested signup) ── */}
       <GetOnTheList />

@@ -93,6 +93,37 @@ export async function submitReview(input: ReviewInput): Promise<{ ok: boolean; e
 
 // ── Moderation (ops-guarded) ────────────────────────────────────────────────
 
+export interface WallReview extends PublicReview {
+  productSlug: string;
+}
+
+/** Approved reviews across the whole catalog, newest first — for the site-wide
+ *  social-proof wall. Fails open to empty (the wall renders nothing when empty),
+ *  so this only ever shows REAL, moderated reviews — never fabricated proof. */
+export async function getReviewWall(limit = 12): Promise<WallReview[]> {
+  if (!isDbConfigured()) return [];
+  try {
+    const rows = await db()
+      .select()
+      .from(reviews)
+      .where(eq(reviews.status, "approved"))
+      .orderBy(desc(reviews.createdAt))
+      .limit(limit);
+    return rows.map((r) => ({
+      id: r.id,
+      rating: r.rating,
+      title: r.title,
+      body: r.body,
+      authorName: r.authorName,
+      verified: r.verified,
+      createdAt: r.createdAt.toISOString(),
+      productSlug: r.productSlug,
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export async function listReviewsByStatus(status: "pending" | "approved" | "rejected", limit = 100) {
   if (!isDbConfigured()) return [];
   try {
