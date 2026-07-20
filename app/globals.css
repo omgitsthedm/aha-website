@@ -857,6 +857,48 @@ textarea {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Motion system — reusable brand micro-animations. All transform/opacity only
+   (GPU, no layout), scroll-driven via native view()/scroll() timelines so they
+   need no JS. Content is fully visible whenever motion is reduced or timelines
+   are unsupported (progressive enhancement), so nothing is ever hidden.
+   ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .m-rise { animation: aha-m-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 32%; }
+    .m-fade { animation: aha-m-fade linear both; animation-timeline: view(); animation-range: entry 0% entry 30%; }
+    .m-mask { animation: aha-m-mask linear both; animation-timeline: view(); animation-range: entry 0% entry 45%; }
+    .m-scale { animation: aha-m-scale linear both; animation-timeline: view(); animation-range: entry 0% entry 40%; }
+
+    /* Staggered children — each rises a beat after the last. */
+    .m-stagger > * { animation: aha-m-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 40%; }
+    .m-stagger > *:nth-child(2) { animation-range: entry 4% entry 44%; }
+    .m-stagger > *:nth-child(3) { animation-range: entry 8% entry 48%; }
+    .m-stagger > *:nth-child(4) { animation-range: entry 12% entry 52%; }
+    .m-stagger > *:nth-child(5) { animation-range: entry 16% entry 56%; }
+    .m-stagger > *:nth-child(6) { animation-range: entry 20% entry 60%; }
+
+    /* Parallax-lite: a slow counter-drift as the element crosses the viewport. */
+    .m-drift { animation: aha-m-drift linear both; animation-timeline: view(); animation-range: cover; }
+  }
+
+  /* Hover affordances (not scroll-driven) — respect reduced-motion. */
+  .hover-lift { transition: transform 240ms var(--aha-ease-out); }
+  .hover-lift:hover { transform: translateY(-4px); }
+  .hover-fold { transition: transform 260ms var(--aha-ease-out), box-shadow 260ms var(--aha-ease-out); }
+  .hover-fold:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(26, 26, 26, 0.14); }
+}
+
+/* Animated underline grow — for editorial text links. */
+.m-underline { background-image: linear-gradient(currentColor, currentColor); background-size: 0% 1.5px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size 260ms var(--aha-ease-out); }
+.m-underline:hover, .m-underline:focus-visible { background-size: 100% 1.5px; }
+
+@keyframes aha-m-rise { from { opacity: 0; transform: translateY(26px); } }
+@keyframes aha-m-fade { from { opacity: 0; } }
+@keyframes aha-m-scale { from { opacity: 0; transform: scale(0.965); } }
+@keyframes aha-m-mask { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+@keyframes aha-m-drift { from { transform: translateY(24px); } to { transform: translateY(-24px); } }
+
 /* Print: order confirmations and tracking pages become clean receipts. */
 @media print {
   header,

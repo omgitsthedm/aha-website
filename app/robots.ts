@@ -20,6 +20,7 @@ export default function robots(): MetadataRoute.Robots {
           "/accessories",
           "/new-arrivals",
           "/product/",
+          "/manifesto",
           "/about",
           "/lookbook",
           "/newsletter",

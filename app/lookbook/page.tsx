@@ -119,7 +119,7 @@ export default function LookbookPage() {
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">
             How to read this
           </p>
-          <p className="mt-5 text-lg leading-relaxed text-muted md:text-xl">
+          <p className="m-mask mt-5 text-lg leading-relaxed text-muted md:text-xl">
             These are the real garments, shown flat and unretouched — the same
             production images we check against every order. Campaign
             photography with people in it comes later; the clothes come first.
@@ -144,7 +144,7 @@ export default function LookbookPage() {
 
           <div className="columns-1 gap-4 space-y-4 md:columns-2 lg:columns-3">
             {editorialLooks.map((look) => (
-              <article key={look.image} className="break-inside-avoid">
+              <article key={look.image} className="m-rise break-inside-avoid">
                 <div className={`image-hover-zoom relative ${look.aspect} overflow-hidden border border-border/40`}>
                   <Image
                     src={look.image}

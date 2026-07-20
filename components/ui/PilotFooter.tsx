@@ -32,6 +32,7 @@ const shopLinks = [
 ];
 
 const brandLinks = [
+  { label: "Manifesto", href: "/manifesto" },
   { label: "About", href: "/about" },
   { label: "Lookbook", href: "/lookbook" },
   { label: "FAQ", href: "/faq" },

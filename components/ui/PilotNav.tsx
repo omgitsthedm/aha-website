@@ -47,6 +47,7 @@ const topLinks = [
 ];
 
 const utilityLinks = [
+  { label: "Manifesto", href: "/manifesto" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
   { label: "Track order", href: "/track-order" },
