@@ -5,7 +5,6 @@ import { getAllProducts } from "@/lib/square/catalog";
 import { TrustStrip } from "@/components/ui/TrustStrip";
 import { SheepMark } from "@/components/ui/SheepMark";
 import { NeonSheep } from "@/components/brand/NeonSheep";
-import { Marquee } from "@/components/homepage/Marquee";
 import { FeaturedGraphic } from "@/components/homepage/FeaturedGraphic";
 import { SocialProofWall } from "@/components/homepage/SocialProofWall";
 
@@ -65,10 +64,6 @@ export default async function HomePage() {
       </section>
 
       <div className="mt-12 lg:mt-16">
-        <Marquee />
-      </div>
-
-      <div className="mt-0">
         <TrustStrip />
       </div>
 

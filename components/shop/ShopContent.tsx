@@ -8,6 +8,7 @@ import Link from "next/link";
 import type { Collection, Product } from "@/lib/utils/types";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { trackCommerceEvent } from "@/lib/analytics/events";
+import { useInfiniteScroll } from "@/lib/hooks/useInfiniteScroll";
 
 interface ShopContentProps {
   products: Product[];
@@ -66,6 +67,8 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
   const visibleProducts = usesCatalogPages
     ? filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
     : filtered.slice(0, visibleCount);
+  const hasMore = !usesCatalogPages && visibleCount < filtered.length;
+  const sentinelRef = useInfiniteScroll(() => setVisibleCount((count) => count + PAGE_SIZE), hasMore);
 
   const resetDiscovery = () => {
     setActiveFilter("all");
@@ -209,10 +212,12 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
         </nav>
       )}
 
-      {!usesCatalogPages && visibleCount < filtered.length && (
-        <div className="mt-10 flex justify-center">
-          <button type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)} className="min-h-12 border border-border/60 px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">
-            Load more products
+      {hasMore && (
+        <div ref={sentinelRef} className="mt-10 flex justify-center">
+          {/* Sentinel auto-loads on scroll; button is the keyboard / no-JS fallback. */}
+          <button type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)} aria-label="Load more products" className="inline-flex min-h-12 items-center gap-2 px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-muted transition-colors hover:text-cream">
+            <span className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden="true" />
+            Loading more
           </button>
         </div>
       )}
