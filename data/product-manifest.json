@@ -9452,54 +9452,6 @@
       ]
     },
     {
-      "ahaProductId": "punk-doodle-sticker-sheet",
-      "slug": "punk-doodle-sticker-sheet",
-      "title": "Punk Doodle Sticker Sheet",
-      "shortDescription": "Punk Doodle Sticker Sheet",
-      "fullDescription": "Punk Doodle Sticker Sheet by After Hours Agenda. Printed to order.",
-      "productType": "accessory",
-      "collectionIds": [
-        "accessorys"
-      ],
-      "status": "active",
-      "retailPrice": 1100,
-      "currency": "USD",
-      "fitDescription": "One size.",
-      "fabricDescription": "Printed to order on premium stock.",
-      "printMethod": "DTG/DTF",
-      "careInstructions": "Machine wash cold, inside out. Tumble dry low. Do not iron the print. Do not dry clean.",
-      "productionNote": "Made to order and printed just for you. Production takes 2–5 business days before shipping.",
-      "shippingNote": "Free shipping on every order. Delivery includes production time plus carrier transit.",
-      "returnsNote": "Exchanges and returns on unworn items within 30 days. Misprints and defects are always on us.",
-      "sizeGuideId": "sg-accessory",
-      "featuredImage": "/printful-assets/Punk_Doodle_Sticker_Sheet.png",
-      "galleryImages": [],
-      "seoTitle": "Punk Doodle Sticker Sheet — After Hours Agenda",
-      "seoDescription": "Punk Doodle Sticker Sheet. NYC streetwear, printed to order. Free shipping.",
-      "ogImage": "/products/punk-doodle-sticker-sheet.webp",
-      "badges": [],
-      "sortPriority": 0,
-      "variants": [
-        {
-          "ahaVariantId": "punk-doodle-sticker-sheet-punk-doodle-sticker-sheet-12917",
-          "ahaProductId": "punk-doodle-sticker-sheet",
-          "sku": "punk-doodle-sticker-sheet-12917",
-          "size": "PUNK DOODLE STICKER SHEET",
-          "retailPrice": 1100,
-          "currency": "USD",
-          "status": "active",
-          "printfulSource": "catalog",
-          "sortOrder": 0
-        }
-      ],
-      "category": "accessories",
-      "gender": [
-        "men",
-        "women",
-        "unisex"
-      ]
-    },
-    {
       "ahaProductId": "revolution",
       "slug": "revolution",
       "title": "Revolution",

@@ -13613,42 +13613,6 @@
    "costCurrency": "USD",
    "costVerifiedAt": "2026-07-14T05:53:32.959Z"
   },
-  "punk-doodle-sticker-sheet-punk-doodle-sticker-sheet-12917": {
-   "printfulCatalogVariantId": 12917,
-   "printfulSyncVariantId": 4873644535,
-   "printfulStoreId": 14298228,
-   "printfulPlacements": [
-    {
-     "placement": "default",
-     "technique": "sticker",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Punk_Doodle_Sticker_Sheet.png",
-     "position": {
-      "width": 5.8922,
-      "height": 8.8418,
-      "top": 0,
-      "left": 0
-     }
-    },
-    {
-     "placement": "background",
-     "technique": "sticker",
-     "fileUrl": "https://afterhoursagenda.com/printful-assets/Punk_Doodle_Sticker_Sheet.png",
-     "position": {
-      "width": 6.0733,
-      "height": 9.1101,
-      "top": 0,
-      "left": 0
-     }
-    }
-   ],
-   "printfulRegionAvailability": [
-    "north_america"
-   ],
-   "printfulSizeGuideReference": "sg-accessory",
-   "costEstimate": 625,
-   "costCurrency": "USD",
-   "costVerifiedAt": "2026-07-14T06:06:26.419Z"
-  },
   "revolution-xs-4865": {
    "printfulCatalogVariantId": 4865,
    "printfulSyncVariantId": 4522951310,
