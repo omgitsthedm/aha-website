@@ -53,7 +53,7 @@ export default function AboutPage() {
               <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">
                 About the label
               </p>
-              <h1 className="mt-5 max-w-4xl font-display text-[clamp(2.75rem,9vw,6.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.055em]">
+              <h1 className="m-mask mt-5 max-w-4xl font-display text-[clamp(2.75rem,9vw,6.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.055em]">
                 Made after hours
               </h1>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
@@ -90,11 +90,11 @@ export default function AboutPage() {
             >
               What we stand for
             </p>
-            <div className="mt-10 grid gap-px bg-border/40 md:grid-cols-3">
+            <div className="m-stagger mt-10 grid gap-px bg-border/40 md:grid-cols-3">
               {values.map((value) => (
                 <article
                   key={value.title}
-                  className="bg-void p-6 sm:p-8 lg:p-10"
+                  className="hover-fold bg-void p-6 sm:p-8 lg:p-10"
                 >
                   <span className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">
                     {value.number}
