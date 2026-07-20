@@ -41,7 +41,7 @@ export default async function ShopPage({ params }: ShopPageProps) {
   const displayProducts = category ? filterProductsByCategory(products, category.slug) : products;
 
   return (
-    <div className="px-4 pb-16 pt-28 sm:px-6 lg:pt-32">
+    <div className="px-4 pb-16 pt-24 sm:px-6 lg:pt-28">
       <CollectionJsonLd
         name={category ? category.name : "Shop All"}
         path={category ? `/shop/${category.slug}` : "/shop"}
@@ -56,18 +56,18 @@ export default async function ShopPage({ params }: ShopPageProps) {
             : "Every design in one place — graphic tees, hoodies, sweatshirts, knitwear, and accessories. Graphic-led, unisex cuts, designed in New York."}
         />
 
-        <div className="mb-10 grid gap-4 border-y border-border/40 py-5 sm:grid-cols-3">
-          <div className="flex items-start gap-3">
-            <span className="mt-0.5 block h-2 w-2 bg-accent" aria-hidden="true" />
-            <div><p className="text-xs font-bold uppercase tracking-[0.08em] text-cream">Free shipping</p><p className="mt-1 text-xs text-muted">On every order. No code needed.</p></div>
+        <div className="mb-8 grid grid-cols-3 divide-x divide-border/40 border-y border-border/40 py-4">
+          <div className="flex items-start gap-2 px-2 sm:gap-3 sm:px-4">
+            <span className="mt-0.5 hidden h-2 w-2 shrink-0 bg-accent sm:block" aria-hidden="true" />
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">Free shipping</p><p className="mt-1 hidden text-xs text-muted sm:block">On every order. No code needed.</p></div>
           </div>
-          <div className="flex items-start gap-3">
-            <span className="mt-0.5 block h-2 w-2 bg-accent" aria-hidden="true" />
-            <div><p className="text-xs font-bold uppercase tracking-[0.08em] text-cream">Secure checkout</p><p className="mt-1 text-xs text-muted">Payments processed by Square.</p></div>
+          <div className="flex items-start gap-2 px-2 sm:gap-3 sm:px-4">
+            <span className="mt-0.5 hidden h-2 w-2 shrink-0 bg-accent sm:block" aria-hidden="true" />
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">Secure checkout</p><p className="mt-1 hidden text-xs text-muted sm:block">Payments processed by Square.</p></div>
           </div>
-          <div className="flex items-start gap-3">
-            <span className="mt-0.5 block h-2 w-2 bg-accent" aria-hidden="true" />
-            <div><p className="text-xs font-bold uppercase tracking-[0.08em] text-cream">Made to order</p><p className="mt-1 text-xs text-muted">Printed and shipped by Printful.</p></div>
+          <div className="flex items-start gap-2 px-2 sm:gap-3 sm:px-4">
+            <span className="mt-0.5 hidden h-2 w-2 shrink-0 bg-accent sm:block" aria-hidden="true" />
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">Made to order</p><p className="mt-1 hidden text-xs text-muted sm:block">Printed and shipped by Printful.</p></div>
           </div>
         </div>
 

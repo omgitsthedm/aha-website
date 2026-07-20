@@ -77,7 +77,7 @@ export function resolveDiscount(code?: string | null, cart?: DiscountCart): Orde
  * Reversible instantly by unsetting the env. Resolved identically on quote +
  * charge so the QUOTE_CHANGED guard still holds.
  */
-export function resolveBundle(cart?: DiscountCart): OrderDiscount | null {
+function resolveBundle(cart?: DiscountCart): OrderDiscount | null {
   const minQty = Number.parseInt(process.env.BUNDLE_MIN_QTY || "0", 10);
   const percent = Number.parseInt(process.env.BUNDLE_PERCENT || "0", 10);
   if (!Number.isInteger(minQty) || minQty < 2) return null;

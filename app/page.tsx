@@ -39,10 +39,10 @@ export default async function HomePage() {
   return (
     <div className="pb-20 pt-14 lg:pb-28">
       <section aria-labelledby="hero-heading" className="mx-auto max-w-[1440px] px-4 pt-10 sm:px-6 lg:pt-16">
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
+        <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
           <div>
             <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">Independent NYC Streetwear · Made to order</p>
-            <h1 id="hero-heading" className="mt-5 font-display text-[clamp(2.75rem,8vw,5.5rem)] font-bold uppercase leading-[0.88] tracking-[-0.05em] text-cream">
+            <h1 id="hero-heading" className="mt-5 font-display text-[clamp(2.75rem,6.8vw,5.5rem)] font-bold uppercase leading-[0.88] tracking-[-0.05em] text-cream">
               After Hours <span className="text-accent">Agenda</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted md:text-lg">
@@ -54,8 +54,8 @@ export default async function HomePage() {
               <Link href="/new-arrivals" className="btn-secondary">Shop new arrivals</Link>
             </div>
           </div>
-          <div className="neon-sign flex items-center justify-center">
-            <div className="neon-flicker flex w-full max-w-[460px] flex-col items-center">
+          <div className="hero-visual-enter neon-sign flex items-center justify-center">
+            <div className="neon-flicker flex w-full max-w-[380px] flex-col items-center lg:max-w-[460px]">
               <NeonSheep className="aspect-[1866/1464] w-full" />
               <p className="neon2-text mt-3 font-mono text-sm font-bold uppercase tracking-[0.35em]">Est. 2011</p>
             </div>
@@ -77,7 +77,7 @@ export default async function HomePage() {
             <Link
               key={tile.href}
               href={tile.href}
-              className="reveal-item fold-surface group relative aspect-[3/4] overflow-hidden image-hover-zoom"
+              className="fold-surface paper-lift group relative aspect-[3/4] overflow-hidden image-hover-zoom"
             >
               <Image
                 src={tile.image}
@@ -89,7 +89,7 @@ export default async function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
                 <p className="font-display text-xl font-bold uppercase tracking-[-0.02em] text-white md:text-2xl">{tile.label}</p>
-                <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-[#FF8DA1] opacity-0 transition-opacity group-hover:opacity-100">Shop now →</p>
+                <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-rose opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">Shop category</p>
               </div>
             </Link>
           ))}
@@ -107,7 +107,7 @@ export default async function HomePage() {
         {featured.length > 0 ? (
           <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-4">
             {featured.map((product) => (
-              <Link key={product.id} href={`/product/${product.slug}`} className="reveal-item group block focus-visible:outline-offset-4">
+              <Link key={product.id} href={`/product/${product.slug}`} className="paper-lift group block focus-visible:outline-offset-4">
                 <div className="fold-surface image-hover-zoom relative aspect-[3/4] overflow-hidden">
                   <Image
                     src={product.images[0]}
@@ -131,7 +131,7 @@ export default async function HomePage() {
       </section>
 
       <section aria-labelledby="street-heading" className="mt-20 lg:mt-28">
-        <div className="reveal-item image-hover-zoom group relative h-[70vh] min-h-[26rem] w-full overflow-hidden">
+        <div className="image-hover-zoom group relative h-[70vh] min-h-[26rem] w-full overflow-hidden">
           <Image
             src="/campaign/lifestyle/band.webp"
             alt="Three friends in After Hours Agenda streetwear crossing a New York City street at golden hour"
@@ -141,7 +141,7 @@ export default async function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/20" />
           <div className="absolute inset-0 flex flex-col items-center justify-end pb-12 text-center sm:pb-16">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF8DA1]">On the street · New York</p>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-rose">On the street · New York</p>
             <h2 id="street-heading" className="mt-3 max-w-3xl px-4 font-display text-[clamp(1.75rem,5vw,3.5rem)] font-bold uppercase leading-[0.92] tracking-[-0.04em] text-white">
               However you wear it, wear it like you mean it
             </h2>
@@ -153,7 +153,7 @@ export default async function HomePage() {
       {spotlight && <FeaturedGraphic product={spotlight} eyebrow="Featured graphic" story={spotlightStory} />}
 
       <section aria-labelledby="statement-heading" className="mx-auto mt-24 max-w-[1280px] px-4 sm:px-6 lg:mt-32">
-        <div className="reveal-item mx-auto max-w-4xl text-center">
+        <div className="m-rise mx-auto max-w-4xl text-center">
           <SheepMark className="mx-auto mb-6 w-12 text-accent" />
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent">Est. 2011 · New York</p>
           <blockquote id="statement-heading" className="mt-6 font-display text-[clamp(2.25rem,7vw,5rem)] font-bold uppercase leading-[0.92] tracking-[-0.045em] text-cream">
@@ -176,18 +176,18 @@ export default async function HomePage() {
           <SheepMark className="hidden w-16 text-cream md:block" />
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <Link href="/product/black-sheep-mint-unisex-premium-sweatshirt" className="reveal-item fold-surface group relative aspect-[4/5] overflow-hidden image-hover-zoom">
+          <Link href="/product/black-sheep-mint-unisex-premium-sweatshirt" className="fold-surface paper-lift group relative aspect-[4/5] overflow-hidden image-hover-zoom">
             <Image src="/brand/photography/sheep-sweatshirt-agave--mens-front.jpg" alt="The Black Sheep sweatshirt in agave, worn" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/20 to-transparent p-5">
               <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream group-hover:text-accent">Black Sheep Sweatshirt — Agave</p>
-              <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Shop it →</p>
+              <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent">View piece</p>
             </div>
           </Link>
-          <Link href="/product/black-sheep-bone-unisex-premium-sweatshirt" className="reveal-item fold-surface group relative aspect-[4/5] overflow-hidden image-hover-zoom">
+          <Link href="/product/black-sheep-bone-unisex-premium-sweatshirt" className="fold-surface paper-lift group relative aspect-[4/5] overflow-hidden image-hover-zoom">
             <Image src="/brand/photography/sheep-sweatshirt-bone--womens-front.jpg" alt="The Black Sheep sweatshirt in bone, worn" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/20 to-transparent p-5">
               <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream group-hover:text-accent">Black Sheep Sweatshirt — Bone</p>
-              <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Shop it →</p>
+              <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent">View piece</p>
             </div>
           </Link>
         </div>
@@ -199,7 +199,7 @@ export default async function HomePage() {
       <section aria-labelledby="dispatch-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="corner-cut crease-rule relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">
           <SheepMark className="mx-auto mb-4 w-16 text-cream" />
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-[#B03246]">Newsletter</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Newsletter</p>
           <h2 id="dispatch-heading" className="mt-4 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">Get the next release first</h2>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">New releases and the occasional note from the shop. No spam, unsubscribe anytime.</p>
           <form name="newsletter" method="POST" data-netlify="true" className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row" action="/newsletter">

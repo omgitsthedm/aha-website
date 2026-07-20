@@ -1,4 +1,4 @@
-export interface FulfillmentSourcePlacement {
+interface FulfillmentSourcePlacement {
   placement: string;
   technique: string;
   fileUrl?: string;
@@ -90,7 +90,7 @@ function buildCatalogOrderItem(item: FulfillmentSourceItem): PrintfulOrderItem |
 }
 
 /** v1 order item shapes (sync legacy + catalog-as-files). */
-export type PrintfulV1OrderItem =
+type PrintfulV1OrderItem =
   | { sync_variant_id: number; quantity: number }
   | {
       variant_id: number;

@@ -210,50 +210,15 @@
   background-size: 3rem 3rem;
 }
 
-/* One orchestrated entrance establishes hierarchy without animating every section. */
+/* The hero artwork can arrive with character; primary copy stays immediately paintable. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero-copy-enter {
-    animation: aha-enter-copy 560ms var(--aha-ease-out) both;
-  }
-
   .hero-visual-enter {
     animation: aha-enter-visual 760ms 100ms var(--aha-ease-out) both;
   }
 
-  .hero-title-line > span {
-    animation: aha-enter-line 720ms var(--aha-ease-out) both;
-  }
-
-  .hero-title-line:nth-child(2) > span {
-    animation-delay: 80ms;
-  }
-
-  .hero-support-enter {
-    animation: aha-enter-copy 520ms 180ms var(--aha-ease-out) both;
-  }
-
-  .hero-actions-enter {
-    animation: aha-enter-copy 520ms 260ms var(--aha-ease-out) both;
-  }
-
-  @keyframes aha-enter-copy {
-    from {
-      opacity: 0;
-      transform: translateY(18px);
-    }
-  }
-
   @keyframes aha-enter-visual {
     from {
-      opacity: 0;
       transform: translateY(24px) scale(0.985);
-    }
-  }
-
-  @keyframes aha-enter-line {
-    from {
-      opacity: 0;
-      transform: translateY(105%);
     }
   }
 
@@ -303,82 +268,14 @@
   }
 }
 
-/* Skip layout and paint work for distant homepage sections until needed. */
-main > section:not(:first-child) {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 800px;
-}
-
-/* Primary and secondary action language */
-.primary-action {
-  position: relative;
-  display: inline-flex;
-  min-height: var(--aha-tap-min);
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--aha-rose);
-  background: var(--aha-rose);
-  color: var(--aha-ink);
-  font-family: var(--aha-font-mono);
-  font-weight: 700;
-  text-decoration: none;
-  text-transform: uppercase;
-  box-shadow: none;
-  filter: none;
-  transition:
-    background-color var(--aha-motion-base) var(--aha-ease-out),
-    border-color var(--aha-motion-base) var(--aha-ease-out),
-    transform var(--aha-motion-fast) var(--aha-ease-out);
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
-}
-
-.primary-action::after {
-  display: none;
-}
-
-.primary-action:hover {
-  border-color: color-mix(in srgb, var(--aha-rose) 84%, black);
-  background: color-mix(in srgb, var(--aha-rose) 92%, black);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
-  filter: none;
-  transform: translateY(-1px);
-}
-
-.primary-action:active {
-  transform: scale(0.98);
-}
-
-.primary-action:disabled {
-  border-color: var(--aha-line);
-  background: var(--aha-surface-raised);
-  color: var(--aha-paper-muted);
-}
-
-.secondary-action {
-  display: inline-flex;
-  min-height: var(--aha-tap-min);
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--aha-line);
-  background: var(--aha-paper);
-  color: var(--aha-ink);
-  font-family: var(--aha-font-mono);
-  font-weight: 700;
-  text-transform: uppercase;
-  transition:
-    border-color var(--aha-motion-base) var(--aha-ease-out),
-    color var(--aha-motion-base) var(--aha-ease-out),
-    transform var(--aha-motion-fast) var(--aha-ease-out);
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
-}
-
-.secondary-action:hover {
-  border-color: var(--aha-accent);
-  color: var(--aha-accent);
-}
-
-.secondary-action:active {
-  transform: scale(0.98);
+/* Skip layout and paint work for distant sections until needed. Home sections
+   sit inside a page wrapper, so cover both direct structures. */
+@supports (content-visibility: auto) {
+  main > section:not(:first-child),
+  main > div > section:not(:first-child) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 800px;
+  }
 }
 
 .nav-link {
@@ -404,14 +301,21 @@ main > section:not(:first-child) {
   transform-origin: left;
 }
 
-.hero-product-art {
-  pointer-events: none;
-  transform: rotate(-1.5deg) scale(0.96);
-  transition: transform 700ms var(--aha-ease-out);
+.mobile-menu-panel {
+  top: calc(3.5rem + env(safe-area-inset-top, 0px));
 }
 
-.group:hover .hero-product-art {
-  transform: rotate(0deg) scale(1.015);
+@media (prefers-reduced-motion: no-preference) {
+  .mobile-menu-enter {
+    animation: aha-mobile-menu 220ms var(--aha-ease-out) both;
+  }
+
+  @keyframes aha-mobile-menu {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
 }
 
 .product-art {
@@ -420,8 +324,10 @@ main > section:not(:first-child) {
   transition: transform 600ms var(--aha-ease-out);
 }
 
-.group:hover .product-art {
-  transform: scale(1.035);
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .group:hover .product-art {
+    transform: scale(1.035);
+  }
 }
 
 input,
@@ -435,65 +341,6 @@ textarea {
   background-image:
     linear-gradient(145deg, rgba(135, 206, 235, 0.11) 0 24%, transparent 24.5%),
     linear-gradient(35deg, rgba(168, 213, 186, 0.09) 0 18%, transparent 18.5%);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .fold-enter {
-    animation: aha-fold-enter 420ms var(--aha-ease-out) both;
-  }
-
-  @keyframes aha-fold-enter {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-  }
-}
-
-.design-tile:nth-child(3) {
-  margin-top: 0;
-}
-
-.collection-spotlight {
-  transition: transform var(--aha-motion-base) var(--aha-ease-out), background-color var(--aha-motion-base) var(--aha-ease-out);
-}
-
-.collection-spotlight:hover {
-  transform: translateY(-4px);
-  background: var(--aha-paper);
-}
-
-.collection-row {
-  border-bottom: 1px solid color-mix(in srgb, var(--aha-line) 65%, transparent);
-  transition: transform var(--aha-motion-base) var(--aha-ease-out), border-color var(--aha-motion-base) var(--aha-ease-out);
-}
-
-.collection-row:hover {
-  border-color: var(--aha-accent);
-  transform: translateX(8px);
-}
-
-.mobile-menu {
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(-12px);
-  transition:
-    opacity var(--aha-motion-base) var(--aha-ease-out),
-    transform var(--aha-motion-base) var(--aha-ease-out),
-    visibility 0s linear var(--aha-motion-base);
-}
-
-.mobile-menu[data-open='true'] {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0s;
-}
-
-@media (min-width: 768px) {
-  .design-tile:nth-child(3) {
-    margin-top: -7rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -514,7 +361,9 @@ textarea {
 }
 
 /* Premium fashion-brand utilities */
-.btn-primary {
+.btn-primary,
+.primary-action {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -533,19 +382,38 @@ textarea {
   transition:
     background-color var(--aha-motion-base) var(--aha-ease-out),
     border-color var(--aha-motion-base) var(--aha-ease-out),
+    box-shadow var(--aha-motion-base) var(--aha-ease-out),
     transform var(--aha-motion-fast) var(--aha-ease-out);
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.primary-action:hover {
   border-color: color-mix(in srgb, var(--aha-rose) 80%, black);
   background: color-mix(in srgb, var(--aha-rose) 90%, black);
 }
 
-.btn-primary:active {
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn-primary:hover,
+  .primary-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(26, 26, 26, 0.12);
+  }
+}
+
+.btn-primary:active,
+.primary-action:active {
   transform: scale(0.98);
 }
 
-.btn-secondary {
+.btn-primary:disabled,
+.primary-action:disabled {
+  border-color: var(--aha-line);
+  background: var(--aha-surface-raised);
+  color: var(--aha-paper-muted);
+}
+
+.btn-secondary,
+.secondary-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -563,12 +431,19 @@ textarea {
   transition:
     border-color var(--aha-motion-base) var(--aha-ease-out),
     color var(--aha-motion-base) var(--aha-ease-out),
-    background-color var(--aha-motion-base) var(--aha-ease-out);
+    background-color var(--aha-motion-base) var(--aha-ease-out),
+    transform var(--aha-motion-fast) var(--aha-ease-out);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover,
+.secondary-action:hover {
   border-color: var(--aha-accent);
   color: var(--aha-accent);
+}
+
+.btn-secondary:active,
+.secondary-action:active {
+  transform: scale(0.98);
 }
 
 .btn-ghost {
@@ -616,8 +491,10 @@ textarea {
   transition: transform var(--aha-motion-slow) var(--aha-ease-out);
 }
 
-.image-hover-zoom:hover img {
-  transform: scale(1.05);
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .image-hover-zoom:hover img {
+    transform: scale(1.05);
+  }
 }
 
 /* Paper-lift: product cards rise like a picked-up sheet. Hover devices only,
@@ -639,9 +516,7 @@ textarea {
   clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
 }
 
-/* ---------------------------------------------------------------------------
-   Platform layer (Wave 19)
-   ------------------------------------------------------------------------ */
+/* Platform layer */
 
 /* Safe areas: with viewport-fit=cover the page draws under the iPhone notch
    and home indicator, so chrome surfaces pad by the device insets. */
@@ -663,24 +538,10 @@ textarea {
    text-shadow / drop-shadow (not animated SVG blur), so it stays smooth on
    mobile. --neon defaults to brand rose; the flicker is opacity-only (cheap).
    ------------------------------------------------------------------------ */
-/* Per-item scroll reveal — each card rises + fades in as it enters the viewport
-   (native view() timeline, GPU, reduced-motion safe). Gives a living stagger. */
-@media (prefers-reduced-motion: no-preference) {
-  .reveal-item {
-    animation: aha-reveal-item linear both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 22%;
-  }
-}
-@keyframes aha-reveal-item {
-  from { opacity: 0; transform: translateY(22px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 /* The star wakes: a hover on the neon sign gives the black sheep a subtle
    lift — transform only, so it never competes with the copy or shifts layout. */
 @media (prefers-reduced-motion: no-preference) {
-  .neon-sign { transition: transform 300ms var(--aha-ease-out); will-change: transform; }
+  .neon-sign { transition: transform 300ms var(--aha-ease-out); }
   .neon-sign:hover { transform: scale(1.015); }
 }
 
@@ -715,7 +576,7 @@ textarea {
 /* plexiglass gloss: a diagonal specular sweep + a soft top light, as if behind glass */
 .neon2-gloss {
   position: absolute;
-  inset: -6%;
+  inset: 0;
   pointer-events: none;
   background:
     linear-gradient(118deg, transparent 40%, rgba(255, 255, 255, 0.65) 47%, rgba(255, 255, 255, 0.1) 51%, transparent 58%),
@@ -746,58 +607,10 @@ textarea {
   .neon-flicker { animation: neon-flicker 7s 1s infinite steps(1, end), neon-buzz 2.7s infinite ease-in-out; }
 }
 
-/* Authored PDP story copy (Square description HTML). The global reset strips
-   block margins + list markers and there is no typography plugin, so restore
-   readable rhythm scoped to this container only. */
-.product-story > * + * {
-  margin-top: 0.85em;
-}
+/* Provider-authored PDP descriptions are rendered as inert text paragraphs. */
 .product-story p {
   line-height: 1.65;
-}
-.product-story strong,
-.product-story b {
-  font-weight: 700;
-  color: rgb(var(--c-content));
-}
-.product-story ul,
-.product-story ol {
-  margin-top: 0.75em;
-  padding-left: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4em;
-}
-.product-story ul {
-  list-style: disc;
-}
-.product-story ol {
-  list-style: decimal;
-}
-.product-story li {
-  padding-left: 0.25rem;
-}
-.product-story h2,
-.product-story h3,
-.product-story h4 {
-  font-family: var(--aha-font-display, inherit);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  margin-top: 1.25em;
-}
-.product-story h2 { font-size: 1.35rem; }
-.product-story h3 { font-size: 1.15rem; }
-.product-story h4 { font-size: 1rem; }
-.product-story a {
-  color: rgb(var(--c-accent));
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.product-story em,
-.product-story i {
-  font-style: italic;
+  max-width: 72ch;
 }
 
 /* Installed web app: behave like a native shell. Kill the rubber-band /
@@ -832,7 +645,9 @@ textarea {
    so restore visible borders and let the system palette win. */
 @media (forced-colors: active) {
   .btn-primary,
-  .btn-secondary {
+  .primary-action,
+  .btn-secondary,
+  .secondary-action {
     border: 2px solid ButtonText;
     clip-path: none;
   }
@@ -851,8 +666,6 @@ textarea {
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .m-rise { animation: aha-m-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 32%; }
-    .m-fade { animation: aha-m-fade linear both; animation-timeline: view(); animation-range: entry 0% entry 30%; }
-    .m-mask { animation: aha-m-mask linear both; animation-timeline: view(); animation-range: entry 0% entry 45%; }
     .m-scale { animation: aha-m-scale linear both; animation-timeline: view(); animation-range: entry 0% entry 40%; }
 
     /* Staggered children — each rises a beat after the last. */
@@ -863,13 +676,9 @@ textarea {
     .m-stagger > *:nth-child(5) { animation-range: entry 16% entry 56%; }
     .m-stagger > *:nth-child(6) { animation-range: entry 20% entry 60%; }
 
-    /* Parallax-lite: a slow counter-drift as the element crosses the viewport. */
-    .m-drift { animation: aha-m-drift linear both; animation-timeline: view(); animation-range: cover; }
   }
 
   /* Hover affordances (not scroll-driven) — respect reduced-motion. */
-  .hover-lift { transition: transform 240ms var(--aha-ease-out); }
-  .hover-lift:hover { transform: translateY(-4px); }
   .hover-fold { transition: transform 260ms var(--aha-ease-out), box-shadow 260ms var(--aha-ease-out); }
   .hover-fold:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(26, 26, 26, 0.14); }
 }
@@ -879,10 +688,7 @@ textarea {
 .m-underline:hover, .m-underline:focus-visible { background-size: 100% 1.5px; }
 
 @keyframes aha-m-rise { from { opacity: 0; transform: translateY(26px); } }
-@keyframes aha-m-fade { from { opacity: 0; } }
 @keyframes aha-m-scale { from { opacity: 0; transform: scale(0.965); } }
-@keyframes aha-m-mask { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
-@keyframes aha-m-drift { from { transform: translateY(24px); } to { transform: translateY(-24px); } }
 
 /* Print: order confirmations and tracking pages become clean receipts. */
 @media print {

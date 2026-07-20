@@ -23,7 +23,7 @@ export interface GenderMeta {
   image?: string;
 }
 
-export const GENDERS: GenderMeta[] = [
+const GENDERS: GenderMeta[] = [
   {
     slug: "men",
     name: "Men",

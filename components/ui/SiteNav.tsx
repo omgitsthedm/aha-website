@@ -57,7 +57,7 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function PilotNav() {
+export function SiteNav() {
   const { totalItems, setCartOpen } = useCart();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -66,6 +66,25 @@ export function PilotNav() {
   // Search index is fetched lazily the first time search opens, so it no longer
   // blocks (or bloats) every page render.
   const [searchIndex, setSearchIndex] = useState<SearchIndexItem[]>([]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setOpenMobileSection(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobileOpen]);
 
   useEffect(() => {
     if (!searchOpen || searchIndex.length > 0) return;
@@ -110,13 +129,13 @@ export function PilotNav() {
               <div key={gender.label} className="group relative">
                 <Link
                   href={gender.href}
-                  className={`inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
+                  className={`nav-link inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
                     isActive(pathname, gender.href) ? "text-cream" : "text-muted hover:text-cream"
                   }`}
                 >
                   {gender.label}
                 </Link>
-                <div className="invisible absolute left-0 top-full min-w-[24rem] border border-border/10 bg-void opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div className="invisible absolute left-0 top-full min-w-[24rem] border border-border/10 bg-void opacity-0 shadow-xl transition-opacity duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                   <div className="grid grid-cols-[1fr_10rem]">
                     <ul className="space-y-0.5 px-2 py-2">
                       {gender.subLinks.map((link) => (
@@ -154,7 +173,7 @@ export function PilotNav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
+                className={`nav-link inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
                   isActive(pathname, link.href) ? "text-cream" : "text-muted hover:text-cream"
                 }`}
               >
@@ -168,7 +187,7 @@ export function PilotNav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`inline-flex h-14 items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
+                className={`nav-link inline-flex h-14 items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
                   isActive(pathname, link.href) ? "text-cream" : "text-muted hover:text-cream"
                 }`}
               >
@@ -180,10 +199,14 @@ export function PilotNav() {
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            className="inline-flex h-14 items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted transition-colors hover:text-cream"
+            className="inline-flex h-14 min-w-11 items-center justify-center px-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted transition-colors hover:text-cream sm:px-3"
             aria-label="Search products"
           >
-            Search
+            <span className="hidden sm:inline">Search</span>
+            <svg aria-hidden="true" className="h-5 w-5 sm:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m16.5 16.5 4 4" />
+            </svg>
           </button>
 
           <button
@@ -213,7 +236,7 @@ export function PilotNav() {
       <div
         id="mobile-menu"
         data-open={mobileOpen}
-        className={`absolute inset-x-0 top-14 border-b border-border/10 bg-void shadow-xl lg:hidden ${mobileOpen ? "block" : "hidden"}`}
+        className={`mobile-menu-panel absolute inset-x-0 max-h-[calc(100dvh-3.5rem-env(safe-area-inset-top,0px))] overflow-y-auto border-b border-border/10 bg-void shadow-xl lg:hidden ${mobileOpen ? "mobile-menu-enter block" : "hidden"}`}
       >
         <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6">
           <ul className="space-y-1">

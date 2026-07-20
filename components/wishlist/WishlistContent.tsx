@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import Link from "next/link";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -72,7 +72,7 @@ export function WishlistContent() {
         {items.map((p) => (
           <div key={p.slug} className="group block">
             <Link href={`/product/${p.slug}`} className="relative block aspect-[3/4] overflow-hidden border border-border/40 bg-surface">
-              {p.image && <Image src={p.image} alt={p.name} fill className={`${isPrintfulImage(p.image) ? "object-contain" : "object-cover"} transition-transform duration-300 group-hover:scale-[1.02]`} sizes="(max-width: 768px) 50vw, 25vw" />}
+              {p.image && <ResilientImage src={p.image} alt={p.name} fill className={`${isPrintfulImage(p.image) ? "object-contain" : "object-cover"} transition-transform duration-300 group-hover:scale-[1.02]`} sizes="(max-width: 768px) 50vw, 25vw" />}
             </Link>
             <div className="mt-3 flex items-start justify-between gap-2">
               <div className="min-w-0">

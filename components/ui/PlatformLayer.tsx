@@ -2,8 +2,7 @@
 
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
-// Both are progressive-enhancement, event/state-gated, and render null until they
-// decide to show — so defer them off the initial bundle (no SSR output anyway).
+// Progressive enhancement: defer the nudge off the initial bundle (no SSR output).
 const InAppBrowserNudge = dynamic(() => import("./InAppBrowserNudge").then((m) => m.InAppBrowserNudge), { ssr: false });
 
 /**
@@ -44,9 +43,5 @@ export function PlatformLayer() {
     }
   }, []);
 
-  return (
-    <>
-      <InAppBrowserNudge />
-    </>
-  );
+  return <InAppBrowserNudge />;
 }

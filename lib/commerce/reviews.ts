@@ -3,7 +3,7 @@ import { db, isDbConfigured } from "@/lib/db/client";
 import { reviews } from "@/db/schema";
 import { FIT_LABEL } from "@/lib/commerce/fit";
 
-export interface PublicReview {
+interface PublicReview {
   id: number;
   rating: number;
   title: string | null;

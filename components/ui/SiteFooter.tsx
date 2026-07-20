@@ -38,11 +38,11 @@ const brandLinks = [
   { label: "FAQ", href: "/faq" },
 ];
 
-export function PilotFooter() {
+export function SiteFooter() {
   return (
     <footer className="relative border-t border-border/60 bg-void px-4 py-12 sm:px-6 lg:py-16">
       <div className="mx-auto grid max-w-[1280px] gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)_minmax(18rem,0.5fr)]">
-        <div className="fold-surface p-6 sm:p-8">
+        <div className="fold-surface min-w-0 p-6 sm:p-8">
           <div className="flex flex-wrap items-end gap-6"><SheepMark className="w-20 text-cream" title="After Hours Agenda black sheep" /><p className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold uppercase leading-[0.9] tracking-[-0.05em]">After Hours Agenda</p></div>
           <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories, printed to order. Questions? Email info@afterhoursagenda.com.</p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -73,14 +73,14 @@ export function PilotFooter() {
                 type="email"
                 required
                 placeholder="you@email.com"
-                className="min-h-11 flex-1 border border-border/60 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
+                className="min-h-11 min-w-0 flex-1 border border-border/60 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
               />
               <button type="submit" className="btn-primary">Subscribe</button>
             </form>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-8 border-t border-accent pt-5 lg:grid-cols-1">
+        <div className="grid min-w-0 grid-cols-2 gap-8 border-t border-accent pt-5 lg:grid-cols-1">
           <nav aria-label="Shop">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Shop</p>
             <ul className="mt-3 space-y-1">
@@ -107,7 +107,7 @@ export function PilotFooter() {
           </nav>
         </div>
 
-        <div className="space-y-8 border-t border-accent pt-5">
+        <div className="min-w-0 space-y-8 border-t border-accent pt-5">
           <nav aria-label="Brand">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Brand</p>
             <ul className="mt-3 space-y-1">

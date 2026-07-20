@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import { QuickAdd } from "@/components/shop/QuickAdd";
 import { ColorSwatches } from "@/components/shop/ColorSwatches";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import { trackCommerceEvent } from "@/lib/analytics/events";
 import type { CategoryMeta, CategorySlug, GenderSlug } from "@/lib/commerce/taxonomy";
 import { CATEGORIES, productMatchesCategory, productMatchesGender } from "@/lib/commerce/taxonomy";
 import { useInfiniteList } from "@/lib/hooks/useInfiniteScroll";
+import { APPAREL_SIZE_ORDER, extractVariationSize } from "@/lib/utils/variation";
 
 interface CategoryShopContentProps {
   products: Product[];
@@ -26,9 +27,7 @@ interface CategoryShopContentProps {
   colorNames?: Record<string, string[]>;
 }
 
-const APPAREL_SIZE_ORDER = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
 const PAGE_SIZE = 24;
-const variationSize = (name: string) => name.split("/").pop()?.trim().toUpperCase() || name.toUpperCase();
 
 export function CategoryShopContent({
   products,
@@ -46,7 +45,7 @@ export function CategoryShopContent({
   const [viewMode, setViewMode] = useState<"grid" | "index">("grid");
 
   const sizeOptions = useMemo(() => {
-    const available = new Set(products.flatMap((product) => product.variations.map((variation) => variationSize(variation.name))));
+    const available = new Set(products.flatMap((product) => product.variations.map((variation) => extractVariationSize(variation.name))));
     return APPAREL_SIZE_ORDER.filter((size) => available.has(size));
   }, [products]);
 
@@ -54,7 +53,7 @@ export function CategoryShopContent({
     const query = searchTerm.trim().toLowerCase();
     const result = products.filter((product) => {
       const inCategory = !activeCategory || productMatchesCategory(product, activeCategory);
-      const inSize = activeSize === "all" || product.variations.some((variation) => variationSize(variation.name) === activeSize);
+      const inSize = activeSize === "all" || product.variations.some((variation) => extractVariationSize(variation.name) === activeSize);
       const matchesSearch = !query || product.name.toLowerCase().includes(query);
       const matchesGender = !gender || productMatchesGender(product, gender);
       return inCategory && inSize && matchesSearch && matchesGender;
@@ -124,11 +123,11 @@ export function CategoryShopContent({
 
         <div className="mt-5">
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-muted">Category</p>
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+          <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by category">
             <Link
               href={categoryHref("all")}
               aria-current={activeCategory === undefined ? "page" : undefined}
-              className={`${toggle} ${activeCategory === undefined ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
+              className={`${toggle} inline-flex shrink-0 items-center ${activeCategory === undefined ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
             >
               All <span aria-hidden="true">{products.length}</span>
             </Link>
@@ -141,7 +140,7 @@ export function CategoryShopContent({
                   href={categoryHref(category.slug)}
                   aria-current={activeCategory === category.slug ? "page" : undefined}
                   aria-label={`${category.name}, ${count} products`}
-                  className={`${toggle} inline-flex items-center gap-2 ${activeCategory === category.slug ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}
+                  className={`${toggle} inline-flex shrink-0 items-center gap-2 ${activeCategory === category.slug ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}
                 >
                   {category.name} <span aria-hidden="true">{count}</span>
                 </Link>
@@ -150,7 +149,7 @@ export function CategoryShopContent({
           </div>
         </div>
 
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
           {sizeOptions.length > 0 && (
             <div>
               <label htmlFor="category-size" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Size</label>
@@ -160,7 +159,7 @@ export function CategoryShopContent({
               </select>
             </div>
           )}
-          <div>
+          <div className={sizeOptions.length > 0 ? "" : "col-span-2"}>
             <label htmlFor="category-sort" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Sort</label>
             <select id="category-sort" value={sortBy} onChange={(event) => setSortBy(event.target.value)} className={`${control} w-full cursor-pointer`}>
               <option value="featured">Featured</option>
@@ -185,8 +184,8 @@ export function CategoryShopContent({
               <div key={product.id} className="group paper-lift">
                 <Link href={`/product/${product.slug}`} className="block focus-visible:outline-offset-4">
                   <div className="fold-surface relative aspect-[3/4] overflow-hidden">
-                    {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
-                    {product.images[1] && <Image src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
+                    {image ? <ResilientImage src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
+                    {product.images[1] && <ResilientImage src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
                   </div>
                   <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">
                     <h2 className="line-clamp-2 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">{product.name}</h2>

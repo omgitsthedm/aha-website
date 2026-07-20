@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useCart } from "@/components/cart/CartProvider";
 import type { Product } from "@/lib/utils/types";
-import { extractVariationSize } from "@/lib/utils/variation";
+import { extractVariationSize, groupVariationsByColor, sortVariationsBySize } from "@/lib/utils/variation";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { hapticTap } from "@/lib/utils/haptics";
 
@@ -45,12 +46,23 @@ export function QuickAdd({ product, purchasableSizes }: QuickAddProps) {
     };
   }, [open]);
 
-  const variations = product.variations.filter((v) => {
+  const variations = sortVariationsBySize(product.variations.filter((v) => {
     if (!purchasableSizes) return true;
     return purchasableSizes.includes(extractVariationSize(v.name).toUpperCase());
-  });
+  }));
 
   if (variations.length === 0) return null;
+
+  // A compact card cannot communicate both color and size without creating a
+  // wall of duplicate size labels. Send multi-color products to their full
+  // selector rather than adding an ambiguous variation.
+  if (groupVariationsByColor(variations).enabled) {
+    return (
+      <Link href={`/product/${product.slug}`} className="inline-flex min-h-11 w-full items-center justify-center border border-border/60 bg-surface px-3 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-cream transition-colors hover:border-accent hover:text-accent">
+        Choose color &amp; size
+      </Link>
+    );
+  }
 
   const add = (variationId: string) => {
     const variation = variations.find((v) => v.id === variationId);

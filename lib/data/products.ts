@@ -50,10 +50,6 @@ export function loadSizeGuides(): SizeGuide[] {
   return readJson<{ sizeGuides: SizeGuide[] }>("size-guides.json").sizeGuides;
 }
 
-export function getProductBySlug(slug: string): AhaProduct | undefined {
-  return loadProducts().find((p) => p.slug === slug);
-}
-
 /** Slug-lookup map for storefront enrichment (e.g., gender/category from manifest). */
 export function loadProductMap(): Map<string, AhaProduct> {
   return new Map(loadProducts().map((product) => [product.slug, product]));

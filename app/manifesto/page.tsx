@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/manifesto" },
 };
 
-// PLACEHOLDER imagery (brand/campaign assets) stands in until the real
-// photography pass. It is the label's own imagery, not fabricated customer posts.
+// Current label-owned campaign imagery. This is presented as brand editorial,
+// never passed off as customer-generated content.
 const feed = [
   { src: "/campaign/lifestyle/men.webp", alt: "After Hours Agenda worn in New York" },
   { src: "/campaign/lifestyle/women.webp", alt: "After Hours Agenda worn in New York" },
@@ -26,7 +26,7 @@ const feed = [
 
 const tenets = [
   { k: "Made after hours", v: "The designs get drawn when the day quiets down — after the job, after the noise. That's the name. It describes when the work happens, never who it's for." },
-  { k: "Printed to order", v: "Nothing sits in a warehouse waiting to be discounted. Your piece is made when you buy it, one at a time, in New York." },
+  { k: "Printed to order", v: "Nothing sits in a warehouse waiting to be discounted. Your piece enters production only after you order it." },
   { k: "No permission needed", v: "The black sheep is the whole point. Loud, quiet, funny, defiant — you don't have to earn a place in the city. You already belong to it." },
 ];
 
@@ -60,12 +60,13 @@ export default function ManifestoPage() {
 
       {/* ── Tenets ───────────────────────────────────────────────────────── */}
       <section aria-label="What the label stands for" className="border-y border-border/40 bg-surface">
-        <div className="mx-auto grid max-w-[1280px] gap-px bg-border/40 md:grid-cols-3">
-          {tenets.map((t) => (
-            <div key={t.k} className="hover-fold m-rise bg-surface p-8 lg:p-10">
-              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent">{t.k}</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{t.v}</p>
-            </div>
+        <div className="mx-auto max-w-[1280px] divide-y divide-border/40 px-4 sm:px-6">
+          {tenets.map((t, index) => (
+            <article key={t.k} className="m-rise grid gap-3 py-7 md:grid-cols-[5rem_minmax(12rem,0.65fr)_minmax(0,1.35fr)] md:items-baseline md:gap-8 md:py-9">
+              <p className="font-mono text-[10px] font-bold tracking-[0.12em] text-accent">0{index + 1}</p>
+              <h2 className="font-display text-xl font-bold uppercase tracking-[-0.025em] text-cream">{t.k}</h2>
+              <p className="max-w-2xl text-sm leading-relaxed text-muted md:text-base">{t.v}</p>
+            </article>
           ))}
         </div>
       </section>
@@ -73,7 +74,7 @@ export default function ManifestoPage() {
       {/* ── The statement ────────────────────────────────────────────────── */}
       <section aria-label="The statement" className="mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:py-28">
         <SheepMark className="m-rise mb-8 w-16 text-cream" title="The After Hours Agenda black sheep" />
-        <p className="m-mask font-display text-[clamp(1.6rem,4vw,3rem)] font-bold uppercase leading-[1.05] tracking-[-0.03em] text-cream">
+        <p className="m-rise font-display text-[clamp(1.6rem,4vw,3rem)] font-bold uppercase leading-[1.05] tracking-[-0.03em] text-cream">
           The same tee belongs on a 20-year-old heading to a show and a 40-year-old mom on the school run — without either one borrowing it from the other.
         </p>
         <p className="m-rise mt-8 max-w-2xl text-base leading-relaxed text-muted">
@@ -81,11 +82,14 @@ export default function ManifestoPage() {
         </p>
       </section>
 
-      {/* ── The feed (placeholder brand imagery) ─────────────────────────── */}
+      {/* Current label-owned campaign edit. */}
       <section aria-labelledby="feed-heading" className="mx-auto max-w-[1440px] px-4 pb-8 sm:px-6">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-          <h2 id="feed-heading" className="font-display text-[clamp(1.75rem,5vw,3.5rem)] font-black uppercase leading-none tracking-[-0.045em]">On the streets</h2>
-          <a href="https://www.instagram.com/afterhoursagenda" target="_blank" rel="noopener noreferrer" className="m-underline font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent">Tag @afterhoursagenda →</a>
+          <div>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">Campaign edit</p>
+            <h2 id="feed-heading" className="mt-2 font-display text-[clamp(1.75rem,5vw,3.5rem)] font-black uppercase leading-none tracking-[-0.045em]">Worn in New York</h2>
+          </div>
+          <a href="https://www.instagram.com/afterhoursagenda" target="_blank" rel="noopener noreferrer" className="m-underline inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent">Follow @afterhoursagenda</a>
         </div>
         <div className="m-stagger grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
           {feed.map((f, i) => (
@@ -94,7 +98,6 @@ export default function ManifestoPage() {
             </div>
           ))}
         </div>
-        <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.08em] text-muted/70">Placeholder — brand imagery, pending the real photography pass.</p>
       </section>
 
       {/* Real, moderated reviews only — renders nothing until they exist. */}

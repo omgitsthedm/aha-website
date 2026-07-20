@@ -25,15 +25,19 @@ test("@catalog shop lists products and links to PDPs", async ({ page }) => {
 });
 
 test("@product PDP shows price and a working Add to bag", async ({ page }, testInfo) => {
+  await page.addInitScript(() => window.localStorage.setItem("aha-cookie-consent", "granted"));
   await page.goto("/product/dont-fuck-fascists-shirt");
   await expect(page).toHaveURL(/\/product\/dont-fuck-fascists-shirt/);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await page.waitForLoadState("domcontentloaded");
+  await expect(page.locator('#size-selector button[aria-pressed="true"]')).toHaveCount(0);
+  const firstAvailableSize = page.locator('#size-selector button[aria-pressed]:not([disabled])').first();
+  if (await firstAvailableSize.count()) await firstAvailableSize.click();
   const addToBag = page.getByRole("button", { name: /Add to bag/i }).first();
   await expect(addToBag).toBeVisible();
   // The mobile project verifies the CTA is reachable; the click flow runs on
   // chromium to keep the pack fast and deterministic.
-  if (testInfo.project.name === "mobile") {
+  if (testInfo.project.name.startsWith("mobile-")) {
     const box = await addToBag.boundingBox();
     expect(box).not.toBeNull();
     return;
@@ -41,10 +45,18 @@ test("@product PDP shows price and a working Add to bag", async ({ page }, testI
   await expect(addToBag).toBeEnabled();
   await addToBag.click();
   await expect(page.getByRole("heading", { name: "Added to bag" })).toBeVisible();
+  if (testInfo.project.name === "chromium") {
+    await page.getByRole("button", { name: "Review bag" }).click();
+    await page.getByRole("link", { name: "Review bag" }).click();
+    await expect(page).toHaveURL(/\/cart$/);
+    await page.getByRole("link", { name: "Continue to checkout" }).click();
+    await expect(page).toHaveURL(/\/checkout$/);
+    await expect(page.getByRole("heading", { level: 1, name: "Checkout" })).toBeVisible();
+  }
 });
 
 test("@product a tap on the sticky mobile buy CTA reaches the buy button, not feedback", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "mobile", "The sticky buy bar and overlap only exist at mobile widths.");
+  test.skip(!testInfo.project.name.startsWith("mobile-"), "The sticky buy bar and overlap only exist at mobile widths.");
   // Pre-set the cookie-consent choice so its bottom banner (z-400) isn't shown
   // (a returning user has already chosen). That isolates the thing under test:
   // the only element that could cover the sticky buy CTA is the feedback launcher.
@@ -71,7 +83,7 @@ test("@catalog cart page renders its empty state", async ({ page }) => {
 });
 
 test("@operations order tracking fails closed without a match", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name === "mobile", "Provider-backed operation is browser-independent and covered in Chromium.");
+  test.skip(testInfo.project.name.startsWith("mobile-"), "Provider-backed operation is browser-independent and covered in Chromium.");
   await page.goto("/track-order");
   await expect(page).toHaveTitle(/Track/i);
   await page.getByLabel("Order number").fill("AHA-NOT-A-REAL-ORDER");
@@ -82,14 +94,18 @@ test("@operations order tracking fails closed without a match", async ({ page },
 
 test("@security the production CSP is present on the document", async ({ page }) => {
   const response = await page.goto("/");
-  const csp = response?.headers()["content-security-policy"] || "";
+  const headers = response?.headers() ?? {};
+  const csp = headers["content-security-policy"] || "";
   expect(csp).toContain("object-src 'none'");
   expect(csp).toContain("frame-ancestors 'none'");
   expect(csp).toContain("https://web.squarecdn.com");
+  expect(csp).not.toContain("upgrade-insecure-requests");
+  expect(headers["x-xss-protection"]).toBeUndefined();
+  expect(headers["x-powered-by"]).toBeUndefined();
 });
 
 test("@operations the ops sign-in surface renders", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name === "mobile", "Auth surface is browser-independent and covered in Chromium.");
+  test.skip(testInfo.project.name.startsWith("mobile-"), "Auth surface is browser-independent and covered in Chromium.");
   // The production redirect gate (unauthenticated /ops -> /ops/login) depends on
   // production ops secrets and is unit-tested (ops-auth). Here we just confirm
   // the sign-in front door renders in the build.
@@ -108,6 +124,20 @@ test("@catalog retired routes redirect home", async ({ page }) => {
 test("@catalog best-sellers redirects to the shop", async ({ page }) => {
   await page.goto("/best-sellers");
   await expect(page).toHaveURL(/\/shop$/);
+});
+
+test("@catalog product imagery fails gracefully when the image CDN is unavailable", async ({ page }) => {
+  await page.route("**/__image_failure__/**", (route) =>
+    route.fulfill({ status: 404, contentType: "text/plain", body: "missing" }),
+  );
+  await page.goto("/shop");
+  await page.locator('a[href^="/product/"] img').first().evaluate((image) => {
+    const imageElement = image as HTMLImageElement;
+    imageElement.removeAttribute("srcset");
+    imageElement.src = `/__image_failure__/${crypto.randomUUID()}.webp`;
+  });
+  await expect(page.getByText("Image unavailable").first()).toBeVisible();
+  await expect(page.locator('a[href^="/product/"]').first()).toBeVisible();
 });
 
 test("@brand manifesto page renders the flag and the signup", async ({ page }) => {

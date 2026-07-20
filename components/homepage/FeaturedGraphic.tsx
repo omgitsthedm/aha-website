@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import Link from "next/link";
 import type { Product } from "@/lib/utils/types";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
@@ -13,9 +13,9 @@ export function FeaturedGraphic({ product, eyebrow, story }: { product: Product;
   return (
     <section aria-labelledby="spotlight-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
       <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
-        <Link href={`/product/${product.slug}`} className="reveal-item fold-surface image-hover-zoom group relative block aspect-square overflow-hidden">
+        <Link href={`/product/${product.slug}`} className="fold-surface paper-lift image-hover-zoom group relative block aspect-square overflow-hidden">
           {image && (
-            <Image src={image} alt={product.name} fill className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} p-8 product-art`} sizes="(max-width: 1024px) 100vw, 50vw" />
+            <ResilientImage src={image} alt={product.name} fill className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} p-8 product-art`} sizes="(max-width: 1024px) 100vw, 50vw" />
           )}
         </Link>
         <div>
@@ -25,7 +25,7 @@ export function FeaturedGraphic({ product, eyebrow, story }: { product: Product;
           </h2>
           <p className="mt-6 max-w-md text-base leading-relaxed text-muted">{story}</p>
           <div className="mt-8">
-            <Link href={`/product/${product.slug}`} className="btn-primary">Shop it — {product.priceFormatted}</Link>
+            <Link href={`/product/${product.slug}`} className="btn-primary">View piece · {product.priceFormatted}</Link>
           </div>
         </div>
       </div>

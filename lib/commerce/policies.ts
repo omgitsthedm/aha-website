@@ -1,7 +1,3 @@
-import { formatCents } from "@/lib/utils/money";
-
-export const FREE_SHIPPING_THRESHOLD_CENTS = 0;
-
 export const PRODUCTION_WINDOW = "2 to 5 business days";
 export const DELIVERY_WINDOW = "usually 5 to 10 business days after production";
 export const RETURNS_WINDOW = "30 days";
@@ -14,10 +10,6 @@ export const WALLET_CHECKOUT_COPY =
 
 export const TAX_LINE_COPY =
   "Estimated by shipping address in Square before you pay";
-
-export function formatFreeShippingDelta(totalCents: number): string {
-  return formatCents(Math.max(FREE_SHIPPING_THRESHOLD_CENTS - totalCents, 0));
-}
 
 export function getShippingLineCopy(totalCents: number): string {
   void totalCents;

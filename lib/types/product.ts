@@ -2,7 +2,7 @@
 // Printful v2 beta has no sync-products/templates, so AHA maps its own products/variants
 // to Printful v2 catalog variants + files + placements. See docs/MASTER-BUILD-INSTRUCTION.md §13/§24.
 
-export type ProductStatus =
+type ProductStatus =
   | "draft"
   | "coming_soon"
   | "active"
@@ -11,7 +11,7 @@ export type ProductStatus =
   | "archived"
   | "discontinued";
 
-export type VariantStatus =
+type VariantStatus =
   | "active"
   | "coming_soon"
   | "sold_out"
@@ -20,21 +20,21 @@ export type VariantStatus =
   | "archived"
   | "manual_review";
 
-export type ProductType =
+type ProductType =
   | "tee"
   | "hoodie"
   | "sweater"
   | "accessory"
   | "other";
 
-export type ProductCategory =
+type ProductCategory =
   | "t-shirts"
   | "hoodies-sweatshirts"
   | "sweaters-knitwear"
   | "outerwear"
   | "accessories";
 
-export type ProductGender = "men" | "women" | "unisex";
+type ProductGender = "men" | "women" | "unisex";
 
 export type PrintTechnique =
   | "dtg"
@@ -50,7 +50,7 @@ export type PrintTechnique =
   | "phone-case";
 
 /** A single print placement on a garment (front, back, sleeve, …). */
-export interface PrintfulPlacement {
+interface PrintfulPlacement {
   placement: string; // e.g. "front", "back", "sleeve_left"
   technique: PrintTechnique;
   /** Stable, versioned production-file URL OR a Printful file id (one required). */
@@ -147,7 +147,7 @@ export interface AhaProduct {
   variants: AhaVariant[];
 }
 
-export interface SizeGuideMeasurement {
+interface SizeGuideMeasurement {
   size: string;
   chestIn?: number;
   lengthIn?: number;
@@ -166,19 +166,4 @@ export interface SizeGuide {
   modelSizing?: string;
   sizeUpIf?: string;
   sizeDownIf?: string;
-}
-
-export interface Drop {
-  id: string;
-  slug: string;
-  title: string;
-  story: string;
-  status: "upcoming" | "live" | "archived";
-  launchDate?: string;
-  heroImage?: string;
-}
-
-/** The full internal storefront dataset (composed from the /data manifest + maps). */
-export interface ProductManifest {
-  products: AhaProduct[];
 }

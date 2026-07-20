@@ -10,8 +10,8 @@
  * in your browser" nudge) is worth offering — always as enhancement.
  */
 
-export type OS = "ios" | "ipados" | "android" | "macos" | "windows" | "other";
-export type Engine = "webkit" | "blink" | "gecko" | "other";
+type OS = "ios" | "ipados" | "android" | "macos" | "windows" | "other";
+type Engine = "webkit" | "blink" | "gecko" | "other";
 
 /** In-app webviews that ship inside social apps. `null` = a real browser. */
 export type InAppBrowser =
@@ -48,7 +48,7 @@ const has = (ua: string, ...tokens: string[]) =>
 
 /** Which social in-app browser, from a UA string. Order matters: FB/Messenger
  *  share FBAN, so test the more specific token first. */
-export function detectInApp(ua: string): InAppBrowser {
+function detectInApp(ua: string): InAppBrowser {
   if (!ua) return null;
   if (has(ua, "Instagram")) return "instagram";
   if (has(ua, "BytedanceWebview", "musical_ly", "TikTok", "trill", "Bytedance")) return "tiktok";
@@ -65,7 +65,7 @@ export function detectInApp(ua: string): InAppBrowser {
   return null;
 }
 
-export function detectOS(ua: string, maxTouchPoints = 0): OS {
+function detectOS(ua: string, maxTouchPoints = 0): OS {
   if (!ua) return "other";
   if (/iPhone|iPod/.test(ua)) return "ios";
   if (/iPad/.test(ua)) return "ipados";
@@ -77,7 +77,7 @@ export function detectOS(ua: string, maxTouchPoints = 0): OS {
   return "other";
 }
 
-export function detectEngine(ua: string): Engine {
+function detectEngine(ua: string): Engine {
   if (!ua) return "other";
   // On iOS every engine is WebKit regardless of the browser badge.
   if (/iPhone|iPad|iPod/.test(ua)) return "webkit";
@@ -91,7 +91,7 @@ export function detectEngine(ua: string): Engine {
  * Build a full PlatformInfo from raw inputs. Kept pure so it can be unit-tested
  * and, if ever needed, run against a server-provided UA header.
  */
-export function detectPlatform(
+function detectPlatform(
   ua: string,
   opts: { maxTouchPoints?: number; standalone?: boolean; iosStandalone?: boolean } = {}
 ): PlatformInfo {

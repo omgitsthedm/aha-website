@@ -55,7 +55,7 @@ export function SocialProofWall() {
             <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{r.body}</p>
             <p className="mt-4 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-cream">{r.authorName}</p>
             <Link href={`/product/${r.productSlug}`} className="m-underline mt-1 self-start font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-accent">
-              {slugToName(r.productSlug)} →
+              {slugToName(r.productSlug)}
             </Link>
           </li>
         ))}

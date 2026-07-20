@@ -1,6 +1,6 @@
 const isDevelopment = process.env.NODE_ENV === "development";
 
-const resetPublicRoutes = [
+const retiredPublicRoutes = [
   // /best-sellers redirects to /shop below (shopping intent, not home).
   "/catalog-edit",
   "/collections/:path*",
@@ -26,11 +26,11 @@ const contentSecurityPolicy = [
   "frame-src 'self' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://*.squarecdn.com https://pay.google.com https://appleid.apple.com https://*.cardinalcommerce.com",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
-  "upgrade-insecure-requests",
 ].join("; ");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  poweredByHeader: false,
   // Keep route metadata in <head> for crawlers and link unfurlers. Netlify's
   // streaming response otherwise places dynamic metadata after <body>.
   htmlLimitedBots: /.*/,
@@ -66,7 +66,7 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      ...resetPublicRoutes.map((source) => ({
+      ...retiredPublicRoutes.map((source) => ({
         source,
         destination: "/",
         permanent: false,
@@ -92,10 +92,6 @@ const nextConfig = {
           {
             key: "X-Frame-Options",
             value: "DENY",
-          },
-          {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
           },
           {
             key: "Referrer-Policy",

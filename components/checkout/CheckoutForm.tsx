@@ -60,7 +60,7 @@ const STATE_REQUIRED = new Set(["US", "CA", "AU"]);
 // highest intent.
 const JOURNEY_STEPS = [
   { label: "Order placed", detail: "Confirmed instantly, receipt to your inbox." },
-  { label: "Printed in New York", detail: "Made to order just for you — 2 to 5 business days." },
+  { label: "Printed to order", detail: "Production begins after you order - usually 2 to 5 business days." },
   { label: "Shipped free", detail: "Tracking lands the moment it leaves the shop." },
   { label: "Yours to wear", detail: "Made after hours. Worn all day." },
 ];

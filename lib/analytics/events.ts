@@ -1,6 +1,6 @@
 "use client";
 
-export type CommerceEventName =
+type CommerceEventName =
   | "view_item"
   | "select_variant"
   | "add_to_cart"

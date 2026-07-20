@@ -90,15 +90,3 @@ export async function purchaseGiftCard(input: { sourceId: string; amount: number
   await activateGiftCard(card.id, input.amount, currency, orderId, lineItemUid);
   return { gan: card.gan, giftCardId: card.id };
 }
-
-/** Look up a gift card's live balance by its number (for a redeem-balance check). */
-export async function getGiftCardBalance(gan: string): Promise<{ amount: number; currency: string } | null> {
-  try {
-    const res = await squareRequest<{ gift_card: GiftCard }>("/gift-cards/from-gan", {
-      method: "POST", revalidate: 0, body: { gan },
-    });
-    return res.gift_card.balance_money ?? { amount: 0, currency: "USD" };
-  } catch {
-    return null;
-  }
-}

@@ -1,7 +1,7 @@
 import { squareRequest } from "./client";
 import type { OrderDiscount } from "@/lib/commerce/discounts";
 
-export interface LineItem {
+interface LineItem {
   catalogObjectId: string;
   quantity: string;
 }
@@ -94,20 +94,6 @@ export function buildSquareOrder(request: CreateOrderRequest): SquareOrderInput 
         }]
       : [],
   };
-}
-
-export async function createOrder(request: CreateOrderRequest) {
-  const idempotencyKey = crypto.randomUUID();
-
-  return squareRequest("/orders", {
-    method: "POST",
-    body: {
-      idempotency_key: idempotencyKey,
-      order: {
-        ...buildSquareOrder(request),
-      },
-    },
-  });
 }
 
 interface SquareMoney {
