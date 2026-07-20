@@ -19,7 +19,7 @@ export default function GiftCardsPage() {
   const config = getSquareWebPaymentsConfig();
   return (
     <main className="px-4 pb-24 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-3xl">
-      <PageHeader eyebrow="Gift cards" title="Give the after hours" description="A digital gift card, delivered by email. Spend it on anything — printed one at a time in New York." />
+      <PageHeader eyebrow="Gift cards" title="Give the after hours" description="A digital gift card, delivered by email. Spend it on anything in the made-to-order catalog." />
       {enabled ? (
         <GiftCardPurchase squareConfig={config} />
       ) : (

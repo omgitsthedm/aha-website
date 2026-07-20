@@ -64,35 +64,6 @@ export function normalizeSiteUrl(value: string | undefined): string | null {
   }
 }
 
-function resolveRequestOrigin(request: Request): string | null {
-  const requestUrl = normalizeSiteUrl(request.url);
-  if (requestUrl) return requestUrl;
-
-  const forwardedHost = request.headers.get("x-forwarded-host");
-  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
-  const forwardedUrl = normalizeSiteUrl(`${forwardedProto}://${forwardedHost}`);
-  if (forwardedUrl) return forwardedUrl;
-
-  return normalizeSiteUrl(request.headers.get("origin") || undefined);
-}
-
-export function resolveSiteUrl(request?: Request): string {
-  const requestOrigin = request ? resolveRequestOrigin(request) : null;
-  const deployContext = process.env.CONTEXT;
-  const shouldPreferRequestOrigin =
-    getCommerceEnvironment() === "sandbox" ||
-    Boolean(deployContext && deployContext !== "production");
-
-  if (shouldPreferRequestOrigin && requestOrigin) return requestOrigin;
-
-  const configured = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
-  if (configured) return configured;
-
-  if (requestOrigin) return requestOrigin;
-
-  return DEFAULT_SITE_URL;
-}
-
 export function getEnvPresence(names: string[]): Record<string, boolean> {
   return names.reduce<Record<string, boolean>>((presence, name) => {
     presence[name] = Boolean(process.env[name]?.trim());

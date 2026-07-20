@@ -9,7 +9,7 @@ export interface ReadinessResult {
   reasons: string[];
 }
 
-export const MIN_PRODUCT_MARGIN_RATIO = Number(process.env.AHA_MIN_MARGIN_RATIO ?? "0.35");
+const MIN_PRODUCT_MARGIN_RATIO = Number(process.env.AHA_MIN_MARGIN_RATIO ?? "0.35");
 
 /** Full purchasable check for a variant in the context of its product. */
 export function checkVariantPurchasable(

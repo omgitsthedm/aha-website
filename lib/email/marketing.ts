@@ -21,7 +21,7 @@ function tokenSecret(): string {
 }
 
 /** Stable, unguessable unsubscribe/recovery token bound to an email. */
-export function signEmailToken(email: string): string {
+function signEmailToken(email: string): string {
   const secret = tokenSecret();
   if (!secret) return "";
   return crypto.createHmac("sha256", secret).update(email.trim().toLowerCase()).digest("hex").slice(0, 32);

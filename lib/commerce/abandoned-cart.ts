@@ -51,15 +51,6 @@ export async function getSavedCart(email: string): Promise<CaptureLine[]> {
   } catch { return []; }
 }
 
-export async function markCartRecovered(email: string): Promise<void> {
-  if (!isDbConfigured()) return;
-  try {
-    await db().update(abandonedCarts)
-      .set({ recoveredAt: new Date(), updatedAt: new Date() })
-      .where(and(eq(abandonedCarts.email, email.trim().toLowerCase()), isNull(abandonedCarts.recoveredAt)));
-  } catch { /* best-effort */ }
-}
-
 /** Global suppression: upsert so unsubscribe is recorded even for someone who
  * never had an abandoned cart (e.g. unsubscribing from a review email). This
  * row doubles as the suppression list for all lifecycle email. */

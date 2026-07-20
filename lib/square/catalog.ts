@@ -73,7 +73,7 @@ interface EligibleSquareItem {
 }
 
 /** Exact internal commerce registry used to keep unmapped or unprofitable Square rows off-sale. */
-export function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
+function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
   const index = new Map<string, EligibleSquareItem>();
   for (const product of loadProducts()) {
     for (const variant of product.variants) {

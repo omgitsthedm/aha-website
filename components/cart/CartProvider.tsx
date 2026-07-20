@@ -138,7 +138,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setIsOpen(true);
   }, []);
 
-  // Memoized so useCart() consumers (incl. site-wide PilotNav) don't re-render on
+  // Memoized so useCart() consumers (including the site-wide navigation) don't re-render on
   // every unrelated provider state change. Callbacks are already useCallback-stable.
   const value = useMemo(() => {
     const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);

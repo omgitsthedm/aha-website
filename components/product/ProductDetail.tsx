@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type TouchEvent } from "react";
-import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Collection, Product } from "@/lib/utils/types";
@@ -11,7 +11,7 @@ import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { getFulfillmentSummary, RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { hapticTap } from "@/lib/utils/haptics";
-import { extractVariationSize, extractVariationColor, groupVariationsByColor } from "@/lib/utils/variation";
+import { extractVariationSize, extractVariationColor, groupVariationsByColor, sortVariationsBySize } from "@/lib/utils/variation";
 import { swatchHex } from "@/lib/data/color-swatches";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 import { ImageLightbox } from "@/components/product/ImageLightbox";
@@ -36,19 +36,59 @@ interface ProductDetailProps {
   squareConfig?: SquareWebPaymentsConfig;
 }
 
-const sanitizeHtml = (html: string): string => html
-  .replace(/<script[\s\S]*?<\/script>/gi, "")
-  .replace(/<style[\s\S]*?<\/style>/gi, "")
-  .replace(/<iframe[\s\S]*?<\/iframe>/gi, "")
-  .replace(/<object[\s\S]*?<\/object>/gi, "")
-  .replace(/<embed[\s\S]*?\/?>/gi, "")
-  .replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, "")
-  .replace(/\s+on\w+\s*=\s*\S+/gi, "")
-  .replace(/(?:href|src)\s*=\s*["']javascript:[^"']*["']/gi, "")
-  .replace(/src\s*=\s*["']data:(?!image\/(?:png|jpe?g|gif|webp|svg\+xml))[^"']*["']/gi, "")
-  .replace(/[—–]/g, "-");
-
 const cleanDisplayText = (value: string): string => value.replace(/[—–]/g, "-");
+
+const HTML_ENTITIES: Record<string, string> = {
+  amp: "&", apos: "'", gt: ">", hellip: "…", lt: "<", mdash: "-", nbsp: " ", ndash: "-", quot: '"',
+};
+
+/** Convert provider-authored HTML to inert text blocks instead of trusting a regex sanitizer. */
+const storyBlocks = (value: string): string[] => value
+  .replace(/<(script|style|iframe|object)[^>]*>[\s\S]*?<\/\1>/gi, "")
+  .replace(/<li[^>]*>/gi, "\n• ")
+  .replace(/<br\s*\/?>/gi, "\n")
+  .replace(/<\/(p|div|li|h[1-6]|ul|ol)>/gi, "\n\n")
+  .replace(/<[^>]+>/g, "")
+  .replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (match, entity: string) => {
+    if (entity.startsWith("#")) {
+      const point = entity.startsWith("#x")
+        ? Number.parseInt(entity.slice(2), 16)
+        : Number.parseInt(entity.slice(1), 10);
+      return Number.isInteger(point) && point >= 0 && point <= 0x10ffff
+        ? String.fromCodePoint(point)
+        : match;
+    }
+    return HTML_ENTITIES[entity.toLowerCase()] ?? match;
+  })
+  .replace(/[—–]/g, "-")
+  .split(/\n{2,}/)
+  .map((block) => block.replace(/\s+/g, " ").trim())
+  .filter(Boolean);
+
+function ProductIdentity({ id, product, reviews, price, className = "" }: {
+  id: string;
+  product: Product;
+  reviews?: ReviewSummary;
+  price: string;
+  className?: string;
+}) {
+  return (
+    <div className={className}>
+      <h1 id={id} className="max-w-2xl font-display text-[clamp(1.85rem,5.5vw,5.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-cream sm:leading-[0.86]">{product.name}</h1>
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <p className="font-mono text-2xl font-bold text-cream">{price}</p>
+        {reviews && reviews.count > 0 && (
+          <a href="#reviews" className="inline-flex min-h-11 items-center gap-1.5 text-sm text-muted transition-colors hover:text-cream" aria-label={`${reviews.average.toFixed(1)} out of 5 from ${reviews.count} ${reviews.count === 1 ? "review" : "reviews"}; read reviews`}>
+            <Stars rating={reviews.average} />
+            <span className="font-bold text-cream">{reviews.average.toFixed(1)}</span>
+            <span>({reviews.count})</span>
+          </a>
+        )}
+      </div>
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
+    </div>
+  );
+}
 
 export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription, colorImageIndex, reviews, squareConfig }: ProductDetailProps) {
   const { addItem } = useCart();
@@ -59,7 +99,11 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
     const mapped = enrichment ? enrichment.purchasableBySize[size]?.ok === true : true;
     return mapped && sizeInStock(size);
   };
-  const initialVariation = product.variations.find((variation) => variationAvailable(variation.name)) ?? product.variations[0];
+  // A wrong apparel size is a costly default. Auto-select only when the product
+  // genuinely has one variation; otherwise require an explicit shopper choice.
+  const initialVariation = product.variations.length === 1
+    ? (product.variations.find((variation) => variationAvailable(variation.name)) ?? product.variations[0])
+    : undefined;
   const [selectedVariation, setSelectedVariation] = useState(initialVariation?.id || "");
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
@@ -71,27 +115,34 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   // so the size list is never empty.
   const colorGroups = groupVariationsByColor(product.variations);
   const [selectedColor, setSelectedColor] = useState(
-    colorGroups.enabled ? extractVariationColor(initialVariation?.name || "") : "",
+    colorGroups.enabled ? colorGroups.colors[0] : "",
   );
-  const sizeVariations = colorGroups.enabled
+  const sizeVariations = sortVariationsBySize(colorGroups.enabled
     ? (colorGroups.byColor.get(selectedColor) ?? product.variations)
-    : product.variations;
+    : product.variations);
 
-  // Switch color: filter sizes to that color and select its first available
-  // size so "Add to bag" stays one tap. `imageIndex` keeps the gallery in sync.
+  // Switch color while preserving the shopper's chosen size when that size is
+  // available in the new color. Otherwise clear the size instead of guessing.
   const selectColor = (color: string, imageIndex?: number) => {
     if (typeof imageIndex === "number") setActiveImage(imageIndex);
     if (!colorGroups.enabled) return;
     setSelectedColor(color);
+    const previous = product.variations.find((variation) => variation.id === selectedVariation);
+    const previousSize = extractVariationSize(previous?.name || "");
     const forColor = colorGroups.byColor.get(color) ?? [];
-    const nextVariation = forColor.find((v) => variationAvailable(v.name)) ?? forColor[0];
-    if (nextVariation) setSelectedVariation(nextVariation.id);
+    const nextVariation = previousSize
+      ? forColor.find((variation) => extractVariationSize(variation.name) === previousSize && variationAvailable(variation.name))
+      : undefined;
+    setSelectedVariation(nextVariation?.id ?? "");
   };
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [addedFeedback, setAddedFeedback] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState("");
   const feedbackTimer = useRef<number | null>(null);
+  const shareTimer = useRef<number | null>(null);
+  const suppressZoomTimer = useRef<number | null>(null);
 
   // Inline gallery swipe (touch) — change the main image without opening the
   // lightbox. A horizontal swipe suppresses the tap-to-zoom click that follows.
@@ -115,6 +166,8 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
     const dy = t.clientY - start.y;
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
       suppressZoomRef.current = true; // this was a swipe, not a tap-to-zoom
+      if (suppressZoomTimer.current) window.clearTimeout(suppressZoomTimer.current);
+      suppressZoomTimer.current = window.setTimeout(() => { suppressZoomRef.current = false; }, 350);
       changeImage(dx < 0 ? 1 : -1);
     }
   };
@@ -137,7 +190,12 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   const toggleWishlist = () => {
     const list = readWishlist();
     const next = wishlisted ? list.filter((s) => s !== product.slug) : [...list, product.slug];
-    localStorage.setItem("aha-wishlist", JSON.stringify(next));
+    try {
+      localStorage.setItem("aha-wishlist", JSON.stringify(next));
+    } catch {
+      // Safari private mode and storage quotas can reject writes. Keep the
+      // interaction usable for this view even when persistence is unavailable.
+    }
     setWishlisted(!wishlisted);
     trackCommerceEvent({ name: wishlisted ? "remove_from_wishlist" : "add_to_wishlist", itemId: product.id });
   };
@@ -194,21 +252,44 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : "";
+    let shared = false;
     try {
       if (navigator.share) {
         await navigator.share({ title: product.name, url });
+        shared = true;
       } else {
         await navigator.clipboard.writeText(url);
+        shared = true;
       }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      try {
+        const copyField = document.createElement("textarea");
+        copyField.value = url;
+        copyField.setAttribute("readonly", "");
+        copyField.style.position = "fixed";
+        copyField.style.opacity = "0";
+        document.body.appendChild(copyField);
+        copyField.select();
+        shared = document.execCommand("copy");
+        copyField.remove();
+      } catch {
+        shared = false;
+      }
+    }
+    if (shared) {
+      setShareFeedback("Link copied");
+      if (shareTimer.current) window.clearTimeout(shareTimer.current);
+      shareTimer.current = window.setTimeout(() => setShareFeedback(""), 1800);
       trackCommerceEvent({ name: "share", itemId: product.id });
-    } catch {
-      /* user dismissed the sheet */
     }
   };
 
-  const descriptionMarkup = storyDescription || product.description
-    ? { __html: sanitizeHtml(storyDescription || product.description) }
-    : null;
+  const description = storyBlocks(storyDescription || product.description || "");
+  const suppliedFit = enrichment?.fitDescription ? cleanDisplayText(enrichment.fitDescription) : "";
+  const fitDescription = /women(?:'s)?/i.test(product.name) && /unisex/i.test(suppliedFit)
+    ? "Women's fit. Check the garment measurements before choosing a size."
+    : suppliedFit || "Check the garment measurements before choosing a size.";
   const activeImageSrc = product.images[activeImage];
 
   useEffect(() => {
@@ -217,33 +298,43 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
   useEffect(() => () => {
     if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
+    if (shareTimer.current) window.clearTimeout(shareTimer.current);
+    if (suppressZoomTimer.current) window.clearTimeout(suppressZoomTimer.current);
   }, []);
 
   return (
-    <div className="px-4 pb-32 pt-28 md:px-6 md:pt-32 lg:pb-24">
+    <div className="px-4 pb-32 pt-20 md:px-6 md:pt-24 lg:pb-24">
       <div className="mx-auto max-w-7xl">
-        <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-2 text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
-          <Link href="/shop" className="min-h-11 py-3 transition-colors hover:text-accent">Shop</Link>
+        <nav aria-label="Breadcrumb" className="mb-4 flex min-w-0 items-center gap-2 text-[11px] font-bold uppercase tracking-[0.06em] text-muted lg:mb-5">
+          <Link href="/shop" className="inline-flex min-h-10 shrink-0 items-center transition-colors hover:text-accent">Shop</Link>
           {collection && (
             <>
               <span aria-hidden="true">/</span>
-              <Link href={`/collections/${collection.slug}`} className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-accent">{collection.name}</Link>
+              <span className="shrink-0">{collection.name}</span>
             </>
           )}
           <span aria-hidden="true">/</span>
-          <span aria-current="page">{product.name}</span>
+          <span aria-current="page" className="min-w-0 truncate">{product.name}</span>
         </nav>
 
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-16">
-          <section aria-label="Product images" className="lg:sticky lg:top-28 lg:self-start">
+        <ProductIdentity
+          id="product-title-mobile"
+          product={product}
+          reviews={reviews}
+          price={currentVariation?.priceFormatted || product.priceFormatted}
+          className="mb-6 lg:hidden"
+        />
+
+        <div className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-16">
+          <section aria-label="Product images" className="min-w-0 lg:sticky lg:top-28 lg:self-start">
             <div
-              className="fold-surface relative aspect-square touch-pan-y overflow-hidden md:aspect-[4/5]"
+              className="fold-surface relative aspect-[5/4] touch-pan-y overflow-hidden sm:aspect-[4/3] lg:aspect-[4/5]"
               onTouchStart={onImageTouchStart}
               onTouchEnd={onImageTouchEnd}
             >
               {activeImageSrc ? (
                 <>
-                  <Image src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority />
+                  <ResilientImage src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority />
                   <button type="button" onClick={() => { if (suppressZoomRef.current) { suppressZoomRef.current = false; return; } setLightboxOpen(true); }} aria-label="Zoom image" className="absolute inset-0 cursor-zoom-in" />
                   {product.images.length > 1 && (
                     <div aria-hidden="true" className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-void/80 px-2.5 py-1 font-mono text-[10px] font-bold text-cream">
@@ -257,10 +348,10 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             </div>
 
             {product.images.length > 1 && (
-              <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Choose product image">
+              <div className="mt-3 flex w-full max-w-full gap-2 overflow-x-auto pb-1" role="group" aria-label="Choose product image">
                 {product.images.map((image, index) => (
-                  <button key={image} type="button" onClick={() => setActiveImage(index)} aria-label={`View image ${index + 1} of ${product.images.length}`} aria-pressed={index === activeImage} className={`relative h-16 w-16 overflow-hidden border transition-colors ${index === activeImage ? "border-accent" : "border-border/40 hover:border-cream"}`}>
-                    <Image src={image} alt="" fill className={isPrintfulImage(image) ? "object-contain" : "object-cover"} sizes="64px" />
+                  <button key={image} type="button" onClick={() => setActiveImage(index)} aria-label={`View image ${index + 1} of ${product.images.length}`} aria-pressed={index === activeImage} className={`relative h-16 w-16 shrink-0 overflow-hidden border transition-colors ${index === activeImage ? "border-accent" : "border-border/40 hover:border-cream"}`}>
+                    <ResilientImage src={image} alt="" fill className={isPrintfulImage(image) ? "object-contain" : "object-cover"} sizes="64px" />
                   </button>
                 ))}
               </div>
@@ -269,20 +360,15 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             {activeImageSrc && <button type="button" onClick={() => setLightboxOpen(true)} className="mt-3 inline-flex min-h-11 items-center text-xs font-bold uppercase text-muted underline underline-offset-4 hover:text-cream">Zoom &amp; view full</button>}
           </section>
 
-          <section aria-labelledby="product-title" className="lg:pt-3">
+          <section className="min-w-0 lg:pt-3">
             {collection && <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">{collection.name}</p>}
-            <h1 id="product-title" className="max-w-2xl font-display text-[clamp(1.85rem,5.5vw,5.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-cream sm:leading-[0.86]">{product.name}</h1>
-            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-              <p className="font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
-              {reviews && reviews.count > 0 && (
-                <a href="#reviews" className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-cream" aria-label={`${reviews.average.toFixed(1)} out of 5 from ${reviews.count} ${reviews.count === 1 ? "review" : "reviews"} — read reviews`}>
-                  <Stars rating={reviews.average} />
-                  <span className="font-bold text-cream">{reviews.average.toFixed(1)}</span>
-                  <span>({reviews.count})</span>
-                </a>
-              )}
-            </div>
-            <p className="mt-4 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
+            <ProductIdentity
+              id="product-title"
+              product={product}
+              reviews={reviews}
+              price={currentVariation?.priceFormatted || product.priceFormatted}
+              className="hidden lg:block"
+            />
 
             {enrichment?.colors && enrichment.colors.length > 0 && (
               <div className="mt-8 border-t border-border/40 pt-6">
@@ -291,7 +377,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                   {enrichment.colors.map((color) => {
                     const imageIndex = colorImageIndex?.[color];
                     const hasImage = typeof imageIndex === "number";
-                    const isShown = hasImage && imageIndex === activeImage;
+                    const isShown = colorGroups.enabled ? selectedColor === color : hasImage && imageIndex === activeImage;
                     const hex = swatchHex(color);
                     const dot = hex ? (
                       <span aria-hidden="true" className="h-3.5 w-3.5 shrink-0 rounded-full border border-border/40" style={{ backgroundColor: hex }} />
@@ -322,7 +408,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Size</p>
-                    <p className="mt-1 text-xs leading-relaxed text-cream">{enrichment?.fitDescription ? cleanDisplayText(enrichment.fitDescription) : "Standard unisex fit. Choose your usual size."}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-cream">{fitDescription}</p>
                   </div>
                   <button type="button" onClick={() => setSizeGuideOpen(true)} className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Size guide</button>
                 </div>
@@ -353,7 +439,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
             <div className="mt-4 flex gap-3">
               <button type="button" onClick={handleAddToCart} disabled={!canBuy} aria-live="polite" className={`btn-primary flex-1 ${canBuy ? "" : "cursor-not-allowed opacity-50"}`}>
-                {!canBuy ? "Unavailable" : addedFeedback ? "Added to bag" : `Add to bag — ${currentVariation?.priceFormatted || product.priceFormatted}`}
+                {!currentVariation ? "Choose a size" : !canBuy ? "Unavailable" : addedFeedback ? "Added to bag" : `Add to bag - ${currentVariation.priceFormatted}`}
               </button>
               <button
                 type="button"
@@ -376,6 +462,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                   <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
                 </svg>
               </button>
+              <span className="sr-only" aria-live="polite">{shareFeedback}</span>
             </div>
 
             {/* One-tap wallet, above the fold. Lazy-loads the Square SDK only on
@@ -413,10 +500,11 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               <span aria-hidden="true" className="text-border">·</span>
               <span>Free shipping</span>
               <span aria-hidden="true" className="text-border">·</span>
-              <span>Made to order in NYC</span>
+              <span>Designed in NYC</span>
             </p>
 
-            {!canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation?.name || "" } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}
+            {!currentVariation && product.variations.length > 1 && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">Choose a size to continue.</p>}
+            {currentVariation && !canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation.name } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}
             <p className="mt-3 text-xs leading-relaxed text-muted">{RETURNS_SUMMARY}</p>
 
             <div className="mt-8 border-y border-border/40 py-5">
@@ -428,17 +516,19 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               </dl>
             </div>
 
-            <ul className="mt-5 grid gap-2 text-xs font-bold uppercase tracking-[0.05em] text-muted sm:grid-cols-2" aria-label="Purchase assurances">
-              <li className="border-l-2 border-accent pl-3">Secure Square checkout</li>
-              <li className="border-l-2 border-accent pl-3">Free shipping</li>
-              <li className="border-l-2 border-accent pl-3">Made to order</li>
-              <li className="border-l-2 border-accent pl-3">Returns within {RETURNS_WINDOW}</li>
+            <ul className="mt-5 grid gap-x-5 gap-y-3 text-xs font-bold uppercase tracking-[0.05em] text-muted sm:grid-cols-2" aria-label="Purchase assurances">
+              <li className="border-t border-border/40 pt-2">Secure Square checkout</li>
+              <li className="border-t border-border/40 pt-2">Free shipping</li>
+              <li className="border-t border-border/40 pt-2">Made to order</li>
+              <li className="border-t border-border/40 pt-2">Returns within {RETURNS_WINDOW}</li>
             </ul>
 
-            {descriptionMarkup && (
+            {description.length > 0 && (
               <div className="mt-10 border-t border-border/40 pt-7">
                 <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Product details</h2>
-                <div className="product-story mt-4 font-body leading-relaxed text-cream/85" dangerouslySetInnerHTML={descriptionMarkup} />
+                <div className="product-story mt-4 space-y-3 font-body leading-relaxed text-cream/85">
+                  {description.map((block, index) => <p key={`${index}-${block.slice(0, 24)}`}>{block}</p>)}
+                </div>
               </div>
             )}
 
@@ -449,7 +539,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               <div>
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent">Made after hours</p>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Every After Hours Agenda design is drawn when the day quiets down, then printed to order in New York — one at a time, no warehouse, no dead stock. Expressive everyday clothing for anyone who never needed permission to belong to the city.{" "}
+                  Every After Hours Agenda design is drawn when the day quiets down in New York, then printed to order one at a time. Expressive everyday clothing for anyone who never needed permission to belong to the city.{" "}
                   <Link href="/about" className="font-bold text-accent underline underline-offset-4 hover:text-cream">The story</Link>.
                 </p>
               </div>
@@ -486,7 +576,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 return (
                   <Link key={item.id} href={`/product/${item.slug}`} className="group block">
                     <div className="relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">
-                      {image ? <Image src={image} alt={item.name} fill className={isPrintfulImage(image) ? "object-contain transition-transform duration-300 group-hover:scale-[1.02]" : "object-cover transition-transform duration-300 group-hover:scale-[1.02]"} sizes="(max-width: 768px) 50vw, 25vw" /> : null}
+                      {image ? <ResilientImage src={image} alt={item.name} fill className={isPrintfulImage(image) ? "object-contain transition-transform duration-300 group-hover:scale-[1.02]" : "object-cover transition-transform duration-300 group-hover:scale-[1.02]"} sizes="(max-width: 768px) 50vw, 25vw" /> : null}
                     </div>
                     <h3 className="mt-3 font-display text-sm font-black uppercase leading-tight">{item.name}</h3>
                     <p className="mt-1 text-xs font-bold text-muted">{item.priceFormatted}</p>
@@ -515,7 +605,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             onClick={
               canBuy
                 ? handleAddToCart
-                : () => document.getElementById("size-selector")?.scrollIntoView({ behavior: "smooth", block: "center" })
+                : () => document.getElementById("size-selector")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" })
             }
             className={`btn-primary whitespace-nowrap ${!canBuy && (currentInStock === false) ? "cursor-not-allowed opacity-50" : ""}`}
             disabled={!canBuy && currentInStock === false && Boolean(currentVariation)}

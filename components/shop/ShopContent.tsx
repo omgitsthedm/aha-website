@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import { QuickAdd } from "@/components/shop/QuickAdd";
 import { ColorSwatches } from "@/components/shop/ColorSwatches";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import type { Collection, Product } from "@/lib/utils/types";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { useInfiniteList } from "@/lib/hooks/useInfiniteScroll";
+import { APPAREL_SIZE_ORDER, extractVariationSize } from "@/lib/utils/variation";
 
 interface ShopContentProps {
   products: Product[];
@@ -22,9 +23,7 @@ interface ShopContentProps {
   colorNames?: Record<string, string[]>;
 }
 
-const APPAREL_SIZE_ORDER = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"];
 const PAGE_SIZE = 24;
-const variationSize = (name: string) => name.split("/").pop()?.trim().toUpperCase() || name.toUpperCase();
 
 export function ShopContent({ products, collections, initialPage = 1, paginationPath, purchasableSizes, colorCounts, colorNames }: ShopContentProps) {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -41,7 +40,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
   }, [products]);
 
   const sizeOptions = useMemo(() => {
-    const available = new Set(products.flatMap((product) => product.variations.map((variation) => variationSize(variation.name))));
+    const available = new Set(products.flatMap((product) => product.variations.map((variation) => extractVariationSize(variation.name))));
     return APPAREL_SIZE_ORDER.filter((size) => available.has(size));
   }, [products]);
 
@@ -49,7 +48,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
     const query = searchTerm.trim().toLowerCase();
     const result = products.filter((product) => {
       const inCollection = activeFilter === "all" || product.collectionIds.includes(activeFilter);
-      const inSize = activeSize === "all" || product.variations.some((variation) => variationSize(variation.name) === activeSize);
+      const inSize = activeSize === "all" || product.variations.some((variation) => extractVariationSize(variation.name) === activeSize);
       const matchesSearch = !query || product.name.toLowerCase().includes(query);
       return inCollection && inSize && matchesSearch;
     });
@@ -127,17 +126,17 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
 
         <div className="mt-5">
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-muted">Collection</p>
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by collection">
-            <button type="button" onClick={() => setActiveFilter("all")} aria-pressed={activeFilter === "all"} className={`${toggle} ${activeFilter === "all" ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}>All <span aria-hidden="true">{products.length}</span></button>
+          <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by collection">
+            <button type="button" onClick={() => setActiveFilter("all")} aria-pressed={activeFilter === "all"} className={`${toggle} inline-flex shrink-0 items-center gap-2 ${activeFilter === "all" ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}>All <span aria-hidden="true">{products.length}</span></button>
             {collections.filter((collection) => collectionCounts.get(collection.id)).map((collection) => (
-              <button key={collection.id} type="button" onClick={() => setActiveFilter(collection.id)} aria-pressed={activeFilter === collection.id} aria-label={`${collection.name}, ${collectionCounts.get(collection.id)} products`} className={`${toggle} inline-flex items-center gap-2 ${activeFilter === collection.id ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}>
+              <button key={collection.id} type="button" onClick={() => setActiveFilter(collection.id)} aria-pressed={activeFilter === collection.id} aria-label={`${collection.name}, ${collectionCounts.get(collection.id)} products`} className={`${toggle} inline-flex shrink-0 items-center gap-2 ${activeFilter === collection.id ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}>
                 {collection.name} <span aria-hidden="true">{collectionCounts.get(collection.id)}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
           {sizeOptions.length > 0 && (
             <div>
               <label htmlFor="shop-size" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Size</label>
@@ -147,7 +146,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
               </select>
             </div>
           )}
-          <div>
+          <div className={sizeOptions.length > 0 ? "" : "col-span-2"}>
             <label htmlFor="shop-sort" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Sort</label>
             <select id="shop-sort" value={sortBy} onChange={(event) => setSortBy(event.target.value)} className={`${control} w-full cursor-pointer`}>
               <option value="featured">Catalog order</option>
@@ -173,8 +172,8 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
               <div key={product.id} className="group paper-lift">
                 <Link href={`/product/${product.slug}`} className="block focus-visible:outline-offset-4">
                   <div className="fold-surface relative aspect-[3/4] overflow-hidden">
-                    {image ? <Image src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
-                    {product.images[1] && <Image src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
+                    {image ? <ResilientImage src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
+                    {product.images[1] && <ResilientImage src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
                   </div>
                   <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">
                     <h2 className="line-clamp-2 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">{product.name}</h2>

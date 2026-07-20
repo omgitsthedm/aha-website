@@ -9,8 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/lookbook" },
 };
 
-// Every look shows real garment mockups of live products; the product list
-// under each image is the exact set pictured.
+// Current label-owned campaign compositions linked to the featured products.
 const editorialLooks = [
   {
     image: "/campaign/hero-home.jpg",
@@ -86,9 +85,8 @@ export default function LookbookPage() {
                 The current lineup
               </h1>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-                Every piece we make right now, laid out flat. Each look below is
-                built from live products — tap through and order the exact
-                garment pictured.
+                A focused edit of the current catalog. Each composition links
+                directly to the featured products and their live options.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link href="/shop" className="btn-primary min-h-12 px-7">
@@ -119,10 +117,9 @@ export default function LookbookPage() {
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">
             How to read this
           </p>
-          <p className="m-mask mt-5 text-lg leading-relaxed text-muted md:text-xl">
-            These are the real garments, shown flat and unretouched — the same
-            production images we check against every order. Campaign
-            photography with people in it comes later; the clothes come first.
+          <p className="m-rise mt-5 text-lg leading-relaxed text-muted md:text-xl">
+            Product and campaign compositions sit together here so you can move
+            from the graphic to current price, fit, color, and size without guesswork.
           </p>
         </div>
       </section>
@@ -171,7 +168,7 @@ export default function LookbookPage() {
                           href={product.href}
                           className="inline-flex min-h-9 items-center text-sm font-bold text-accent underline underline-offset-4 hover:text-cream"
                         >
-                          {product.label} →
+                          {product.label}
                         </Link>
                       </li>
                     ))}

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
 interface ImageLightboxProps {
@@ -88,7 +88,7 @@ export function ImageLightbox({ images, index, alt, open, onClose, onIndexChange
           className={`relative h-full w-full max-w-5xl ${zoom.on ? "cursor-zoom-out" : "cursor-zoom-in"}`}
           style={{ touchAction: "pinch-zoom" }}
         >
-          <Image
+          <ResilientImage
             src={src}
             alt={alt}
             fill
@@ -115,7 +115,7 @@ export function ImageLightbox({ images, index, alt, open, onClose, onIndexChange
             <button key={image} type="button" onClick={() => { setZoom({ on: false, x: 50, y: 50 }); onIndexChange(i); }}
               aria-label={`View image ${i + 1}`} aria-current={i === index}
               className={`relative h-14 w-14 overflow-hidden border transition-colors ${i === index ? "border-accent" : "border-border/40 hover:border-cream"}`}>
-              <Image src={image} alt="" fill className={isPrintfulImage(image) ? "object-contain" : "object-cover"} sizes="56px" />
+              <ResilientImage src={image} alt="" fill className={isPrintfulImage(image) ? "object-contain" : "object-cover"} sizes="56px" />
             </button>
           ))}
         </div>

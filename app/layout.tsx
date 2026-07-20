@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/cart/CartProvider";
-import { PilotNav } from "@/components/ui/PilotNav";
-import { PilotFooter } from "@/components/ui/PilotFooter";
+import { SiteNav } from "@/components/ui/SiteNav";
+import { SiteFooter } from "@/components/ui/SiteFooter";
 import { PlatformLayer } from "@/components/ui/PlatformLayer";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { SocialPixels } from "@/components/analytics/SocialPixels";
@@ -22,7 +22,7 @@ const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-poppins",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"], // Only weights used by the storefront; avoid two unnecessary preloads.
 });
 
 export const metadata: Metadata = {
@@ -97,9 +97,9 @@ export default function RootLayout({
           <GoogleAnalytics />
           <SocialPixels />
           <StorefrontJsonLd />
-          <PilotNav />
+          <SiteNav />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
-          <PilotFooter />
+          <SiteFooter />
           <CookieConsent />
           <FeedbackWidget />
         </CartProvider>

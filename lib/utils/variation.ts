@@ -13,6 +13,22 @@ export function extractVariationColor(name: string): string {
   return parts.length > 1 ? parts.slice(0, -1).join(" / ").trim() : "";
 }
 
+export const APPAREL_SIZE_ORDER = ["XXS", "XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "6XL"] as const;
+
+const sizeRank = (name: string): number => {
+  const size = extractVariationSize(name);
+  const rank = APPAREL_SIZE_ORDER.indexOf(size as (typeof APPAREL_SIZE_ORDER)[number]);
+  return rank === -1 ? APPAREL_SIZE_ORDER.length : rank;
+};
+
+/** Stable apparel-size ordering with a readable alphabetical fallback. */
+export function sortVariationsBySize<T extends { name: string }>(variations: readonly T[]): T[] {
+  return [...variations].sort((a, b) => {
+    const rankDelta = sizeRank(a.name) - sizeRank(b.name);
+    return rankDelta || extractVariationSize(a.name).localeCompare(extractVariationSize(b.name), undefined, { numeric: true });
+  });
+}
+
 export interface VariationColorGroups<T> {
   /** true only when EVERY variation carries a color and there are ≥2 distinct colors */
   enabled: boolean;

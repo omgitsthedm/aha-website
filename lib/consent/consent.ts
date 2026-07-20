@@ -13,7 +13,7 @@ const KEY = "aha-cookie-consent";
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((cb) => cb());
 
-export function getConsent(): Consent | null {
+function getConsent(): Consent | null {
   if (typeof window === "undefined") return null;
   try {
     const v = localStorage.getItem(KEY);
@@ -32,7 +32,7 @@ export function setConsent(v: Consent): void {
   notify();
 }
 
-export function subscribeConsent(cb: () => void): () => void {
+function subscribeConsent(cb: () => void): () => void {
   listeners.add(cb);
   return () => listeners.delete(cb);
 }

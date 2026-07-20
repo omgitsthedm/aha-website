@@ -44,12 +44,3 @@ export interface CartItem {
   quantity: number;
   image: string;
 }
-
-export interface ShippingRate {
-  id: string;
-  name: string;
-  rate: string;
-  currency: string;
-  minDeliveryDays: number;
-  maxDeliveryDays: number;
-}

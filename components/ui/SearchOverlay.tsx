@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import Link from "next/link";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { trackCommerceEvent } from "@/lib/analytics/events";
@@ -112,7 +112,7 @@ export function SearchOverlay({ open, onClose, index }: SearchOverlayProps) {
                     <li key={item.slug}>
                       <Link href={`/product/${item.slug}`} onClick={onClose} className="group flex min-h-16 items-center gap-4 py-2 pr-2">
                         <span className="relative block h-14 w-14 shrink-0 overflow-hidden border border-border/40 bg-surface">
-                          {item.image && <Image src={item.image} alt="" fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="56px" />}
+                          {item.image && <ResilientImage src={item.image} alt="" fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="56px" />}
                         </span>
                         <span className="min-w-0 flex-1 truncate font-display text-sm font-bold uppercase leading-tight text-cream group-hover:text-accent">{item.name}</span>
                         <span className="font-mono text-xs font-bold text-muted">{item.priceFormatted}</span>

@@ -1,0 +1,15 @@
+{
+  // Registered dynamically by PlatformLayer; static import analysis cannot see it.
+  "ignoreFiles": [
+    "public/sw.js",
+
+    // Documented, intentionally manual product-factory maintenance tools.
+    "scripts/attach-rebuild-mockups.mjs",
+    "scripts/fix-rebuild-positions.mjs",
+    "scripts/generate-onmodel-shots.mjs",
+    "scripts/rebuild-sheep-products.mjs"
+  ],
+
+  // Release/ops scripts deliberately use Netlify through npx or the authenticated CLI.
+  "ignoreBinaries": ["netlify"]
+}

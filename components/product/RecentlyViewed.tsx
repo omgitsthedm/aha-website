@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import Link from "next/link";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 
@@ -54,7 +54,7 @@ export function RecentlyViewed({ current }: { current: RecentItem }) {
         {items.map((item) => (
           <Link key={item.slug} href={`/product/${item.slug}`} className="group block">
             <div className="relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">
-              {item.image ? <Image src={item.image} alt={item.name} fill className={`${isPrintfulImage(item.image) ? "object-contain" : "object-cover"} transition-transform duration-300 group-hover:scale-[1.02]`} sizes="(max-width: 768px) 50vw, 25vw" /> : null}
+              {item.image ? <ResilientImage src={item.image} alt={item.name} fill className={`${isPrintfulImage(item.image) ? "object-contain" : "object-cover"} transition-transform duration-300 group-hover:scale-[1.02]`} sizes="(max-width: 768px) 50vw, 25vw" /> : null}
             </div>
             <h3 className="mt-3 font-display text-sm font-black uppercase leading-tight">{item.name}</h3>
             <p className="mt-1 text-xs font-bold text-muted">{item.priceFormatted}</p>

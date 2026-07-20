@@ -35,16 +35,16 @@ export function CookieConsent() {
       aria-label="Cookie preferences"
       className="safe-bottom safe-x fixed inset-x-0 bottom-0 z-[400] border-t border-border/60 bg-void"
     >
-      <div className="mx-auto flex max-w-4xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center">
-        <p className="min-w-0 flex-1 text-sm leading-snug text-cream">
-          We use cookies for analytics and to improve the shop. Tracking stays off until you accept.{" "}
-          <Link href="/privacy" className="font-bold text-accent underline underline-offset-2 hover:text-cream">Privacy Policy</Link>.
+      <div className="mx-auto flex max-w-4xl flex-col gap-2 px-3 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-4">
+        <p className="min-w-0 flex-1 text-[13px] leading-snug text-cream sm:text-sm">
+          Analytics cookies are optional and stay off until you accept.{" "}
+          <Link href="/privacy" className="font-bold text-accent underline underline-offset-2 hover:text-cream">Details</Link>
         </p>
-        <div className="flex shrink-0 gap-2">
+        <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex">
           <button
             type="button"
             onClick={() => choose("denied")}
-            className="min-h-11 whitespace-nowrap border border-border/60 px-4 text-xs font-bold uppercase tracking-wide text-cream hover:border-accent hover:text-accent"
+            className="min-h-11 whitespace-nowrap border border-border/60 px-4 text-xs font-bold uppercase tracking-wide text-cream transition-colors hover:border-accent hover:text-accent"
           >
             Reject
           </button>

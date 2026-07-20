@@ -72,7 +72,7 @@ export function FeedbackWidget() {
   };
 
   return (
-    <div className={`safe-bottom safe-x fixed bottom-4 right-4 z-[350] print:hidden ${isProductPage ? "hidden lg:block" : ""}`}>
+    <div className={`safe-bottom safe-x fixed bottom-3 right-3 z-[350] print:hidden ${isProductPage ? "hidden lg:block" : "hidden sm:block"}`}>
       {open && (
         <div role="dialog" aria-label="Send feedback" className="mb-3 w-[min(20rem,calc(100vw-2rem))] border border-border/60 bg-void shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
           <div className="flex items-center justify-between border-b border-border/40 px-4 py-3">
@@ -108,9 +108,9 @@ export function FeedbackWidget() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label={open ? "Close feedback" : "Give feedback"}
-        className="flex min-h-11 items-center gap-2 border border-accent bg-accent px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-void shadow-[0_6px_20px_rgba(0,0,0,0.2)] transition-transform active:scale-[0.97]"
+        className="flex min-h-11 items-center gap-2 border border-border/60 bg-surface px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-muted shadow-[0_4px_14px_rgba(0,0,0,0.08)] transition-[color,border-color,transform] hover:border-accent hover:text-accent active:scale-[0.97]"
       >
-        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h8M8 14h5M21 12a8 8 0 01-11.6 7.1L3 21l1.9-6.4A8 8 0 1121 12z" />
         </svg>
         Feedback

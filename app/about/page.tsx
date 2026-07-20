@@ -53,7 +53,7 @@ export default function AboutPage() {
               <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">
                 About the label
               </p>
-              <h1 className="m-mask mt-5 max-w-4xl font-display text-[clamp(2.75rem,9vw,6.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.055em]">
+              <h1 className="m-rise mt-5 max-w-4xl font-display text-[clamp(2.75rem,9vw,6.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.055em]">
                 Made after hours
               </h1>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
@@ -90,19 +90,19 @@ export default function AboutPage() {
             >
               What we stand for
             </p>
-            <div className="m-stagger mt-10 grid gap-px bg-border/40 md:grid-cols-3">
+            <div className="m-stagger mt-10 border-t border-border/40">
               {values.map((value) => (
                 <article
                   key={value.title}
-                  className="hover-fold bg-void p-6 sm:p-8 lg:p-10"
+                  className="group grid gap-4 border-b border-border/40 py-7 sm:grid-cols-[3rem_minmax(0,0.65fr)_minmax(0,1.35fr)] sm:items-start sm:gap-8 sm:py-9"
                 >
                   <span className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">
                     {value.number}
                   </span>
-                  <h2 className="mt-4 font-display text-2xl font-bold uppercase tracking-[-0.03em] sm:text-3xl">
+                  <h2 className="font-display text-2xl font-bold uppercase tracking-[-0.03em] transition-transform duration-300 motion-safe:group-hover:translate-x-1 sm:text-3xl">
                     {value.title}
                   </h2>
-                  <p className="mt-4 text-sm leading-relaxed text-muted md:text-base">
+                  <p className="max-w-2xl text-sm leading-relaxed text-muted md:text-base">
                     {value.body}
                   </p>
                 </article>

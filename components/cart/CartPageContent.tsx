@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
@@ -95,7 +96,7 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
           {items.map((item) => (
             <li key={item.variationId} className="grid grid-cols-[6rem_1fr] gap-4 border-b border-border/40 py-5 md:grid-cols-[8rem_1fr] md:gap-6">
               <Link href={`/product/${item.slug || item.productId}`} className="relative aspect-square overflow-hidden border border-border/40 bg-surface">
-                {item.image && <Image src={item.image} alt={item.name} fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="128px" />}
+                {item.image && <ResilientImage src={item.image} alt={item.name} fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="128px" />}
               </Link>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -169,7 +170,7 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
             {recs.map((p) => (
               <Link key={p.slug} href={`/product/${p.slug}`} className="group block">
                 <div className="relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">
-                  {p.image && <Image src={p.image} alt={p.name} fill className={`${isPrintfulImage(p.image) ? "object-contain" : "object-cover"} transition-transform duration-300 group-hover:scale-[1.02]`} sizes="(max-width: 768px) 50vw, 25vw" />}
+                  {p.image && <ResilientImage src={p.image} alt={p.name} fill className={`${isPrintfulImage(p.image) ? "object-contain" : "object-cover"} transition-transform duration-300 group-hover:scale-[1.02]`} sizes="(max-width: 768px) 50vw, 25vw" />}
                 </div>
                 <h3 className="mt-3 font-display text-sm font-black uppercase leading-tight group-hover:text-accent">{p.name}</h3>
                 <p className="mt-1 text-xs font-bold text-muted">{p.priceFormatted}</p>

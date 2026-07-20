@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import { ResilientImage } from "@/components/ui/ResilientImage";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
@@ -54,7 +54,7 @@ export function CartDrawer() {
             <ul className="divide-y divide-border/40">
               {items.map((item) => (
                 <li key={item.variationId} className="grid grid-cols-[5rem_1fr] gap-4 py-5">
-                  <Link href={`/product/${item.slug || item.productId}`} onClick={toggleCart} className="relative aspect-square overflow-hidden border border-border/40 bg-surface">{item.image && <Image src={item.image} alt={item.name} fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="80px" />}</Link>
+                  <Link href={`/product/${item.slug || item.productId}`} onClick={toggleCart} className="relative aspect-square overflow-hidden border border-border/40 bg-surface">{item.image && <ResilientImage src={item.image} alt={item.name} fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="80px" />}</Link>
                   <div className="min-w-0"><Link href={`/product/${item.slug || item.productId}`} onClick={toggleCart} className="block truncate font-display text-base font-black uppercase hover:text-accent">{item.name}</Link><p className="mt-1 text-xs font-bold uppercase text-muted">{item.variationName}</p><p className="mt-1 font-mono text-xs font-bold">{formatCents(item.price * item.quantity)}</p><div className="mt-3 flex items-center gap-2"><button type="button" onClick={() => updateQuantity(item.variationId, item.quantity - 1)} className="flex h-11 w-11 items-center justify-center border border-border/60 hover:border-accent" aria-label={`Decrease quantity of ${item.name}`}>&minus;</button><span className="w-6 text-center font-mono text-xs" aria-live="polite">{item.quantity}</span><button type="button" onClick={() => updateQuantity(item.variationId, item.quantity + 1)} className="flex h-11 w-11 items-center justify-center border border-border/60 hover:border-accent" aria-label={`Increase quantity of ${item.name}`}>+</button><button type="button" onClick={() => removeItem(item.variationId)} className="ml-auto min-h-11 text-xs font-bold uppercase text-muted underline underline-offset-4 hover:text-accent">Remove</button></div></div>
                 </li>
               ))}
