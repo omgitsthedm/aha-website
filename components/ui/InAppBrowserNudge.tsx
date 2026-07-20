@@ -62,7 +62,7 @@ export function InAppBrowserNudge() {
             You&rsquo;re in {label.name}&rsquo;s browser
           </p>
           <p className="mt-1 text-sm leading-snug text-cream">
-            Open in Safari or Chrome for Apple&nbsp;Pay, one-tap install, and the full experience.
+            Open in Safari or Chrome for Apple&nbsp;Pay and faster checkout.
             <span className="mt-1 block text-muted">{label.how}.</span>
           </p>
         </div>

@@ -26,7 +26,10 @@ export function useInfiniteScroll<T extends HTMLElement = HTMLDivElement>(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) callback.current();
       },
-      { rootMargin: "600px 0px" }, // load the next batch before the user hits the end
+      // Generous margin: preloads the next batch before the end (bottom) AND still
+      // fires if a shopper jumps the scrollbar straight to a tall footer, landing
+      // just past the sentinel (top).
+      { rootMargin: "1400px 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
