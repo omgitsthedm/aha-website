@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type TouchEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,8 +16,11 @@ import { swatchHex } from "@/lib/data/color-swatches";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 import { ImageLightbox } from "@/components/product/ImageLightbox";
 import { ProductReviews } from "@/components/product/ProductReviews";
+import { Stars } from "@/components/product/Stars";
+import { PdpExpressCheckout } from "@/components/product/PdpExpressCheckout";
 import { SheepMark } from "@/components/ui/SheepMark";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
+import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 
 interface ProductDetailProps {
   product: Product;
@@ -29,6 +32,7 @@ interface ProductDetailProps {
   /** color name -> index in product.images showing that colorway */
   colorImageIndex?: Record<string, number>;
   reviews?: ReviewSummary;
+  squareConfig?: SquareWebPaymentsConfig;
 }
 
 const sanitizeHtml = (html: string): string => html
@@ -45,7 +49,7 @@ const sanitizeHtml = (html: string): string => html
 
 const cleanDisplayText = (value: string): string => value.replace(/[—–]/g, "-");
 
-export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription, colorImageIndex, reviews }: ProductDetailProps) {
+export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription, colorImageIndex, reviews, squareConfig }: ProductDetailProps) {
   const { addItem } = useCart();
   const router = useRouter();
   const sizeInStock = (size: string) => stockBySize ? stockBySize[extractVariationSize(size)] !== false : true;
@@ -85,6 +89,32 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
   const feedbackTimer = useRef<number | null>(null);
+
+  // Inline gallery swipe (touch) — change the main image without opening the
+  // lightbox. A horizontal swipe suppresses the tap-to-zoom click that follows.
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const suppressZoomRef = useRef(false);
+  const changeImage = (dir: number) => {
+    if (product.images.length < 2) return;
+    setActiveImage((i) => (i + dir + product.images.length) % product.images.length);
+    hapticTap();
+  };
+  const onImageTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    const t = event.touches[0];
+    touchStartRef.current = { x: t.clientX, y: t.clientY };
+  };
+  const onImageTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start) return;
+    const t = event.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      suppressZoomRef.current = true; // this was a swipe, not a tap-to-zoom
+      changeImage(dx < 0 ? 1 : -1);
+    }
+  };
 
   const readWishlist = (): string[] => {
     try {
@@ -202,12 +232,21 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
         </nav>
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-16">
-          <section aria-label="Product images">
-            <div className="fold-surface relative aspect-square overflow-hidden md:aspect-[4/5]">
+          <section aria-label="Product images" className="lg:sticky lg:top-28 lg:self-start">
+            <div
+              className="fold-surface relative aspect-square touch-pan-y overflow-hidden md:aspect-[4/5]"
+              onTouchStart={onImageTouchStart}
+              onTouchEnd={onImageTouchEnd}
+            >
               {activeImageSrc ? (
                 <>
                   <Image src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority />
-                  <button type="button" onClick={() => setLightboxOpen(true)} aria-label="Zoom image" className="absolute inset-0 cursor-zoom-in" />
+                  <button type="button" onClick={() => { if (suppressZoomRef.current) { suppressZoomRef.current = false; return; } setLightboxOpen(true); }} aria-label="Zoom image" className="absolute inset-0 cursor-zoom-in" />
+                  {product.images.length > 1 && (
+                    <div aria-hidden="true" className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-void/80 px-2.5 py-1 font-mono text-[10px] font-bold text-cream">
+                      {activeImage + 1} / {product.images.length}
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase text-muted">Image unavailable</div>
@@ -230,8 +269,15 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           <section aria-labelledby="product-title" className="lg:pt-3">
             {collection && <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">{collection.name}</p>}
             <h1 id="product-title" className="max-w-2xl font-display text-[clamp(1.85rem,5.5vw,5.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-cream sm:leading-[0.86]">{product.name}</h1>
-            <div className="mt-4 flex flex-wrap items-center gap-4">
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
               <p className="font-mono text-2xl font-bold text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
+              {reviews && reviews.count > 0 && (
+                <a href="#reviews" className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-cream" aria-label={`${reviews.average.toFixed(1)} out of 5 from ${reviews.count} ${reviews.count === 1 ? "review" : "reviews"} — read reviews`}>
+                  <Stars rating={reviews.average} />
+                  <span className="font-bold text-cream">{reviews.average.toFixed(1)}</span>
+                  <span>({reviews.count})</span>
+                </a>
+              )}
             </div>
             <p className="mt-4 text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
 
@@ -320,19 +366,41 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               </button>
             </div>
 
+            {/* One-tap wallet, above the fold. Lazy-loads the Square SDK only on
+                intent (hover/focus/tap) — honors "SDK loads only on payment". */}
+            {squareConfig && currentVariation && (
+              <PdpExpressCheckout
+                squareConfig={squareConfig}
+                line={{ squareVariationId: currentVariation.id, quantity: 1 }}
+                subtotalCents={currentVariation.price}
+                itemSnapshot={{
+                  name: product.name,
+                  variationName: currentVariation.name,
+                  quantity: 1,
+                  productId: product.id,
+                  slug: product.slug,
+                  variationId: currentVariation.id,
+                  price: currentVariation.price,
+                  priceFormatted: currentVariation.priceFormatted,
+                  image: product.images[0] || "",
+                }}
+                disabled={!canBuy}
+              />
+            )}
+
             {canBuy && (
               <button type="button" onClick={handleBuyNow} className="btn-secondary mt-3 w-full justify-center">
                 Buy it now
               </button>
             )}
 
-            {/* Trust + fast-pay signal at the decision point. */}
+            {/* Trust signal at the decision point. */}
             <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
               <span>Secure checkout with Square</span>
               <span aria-hidden="true" className="text-border">·</span>
-              <span>Apple Pay &amp; Google Pay</span>
-              <span aria-hidden="true" className="text-border">·</span>
               <span>Free shipping</span>
+              <span aria-hidden="true" className="text-border">·</span>
+              <span>Made to order in NYC</span>
             </p>
 
             {!canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation?.name || "" } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}

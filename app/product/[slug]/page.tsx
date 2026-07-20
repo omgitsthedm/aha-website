@@ -9,6 +9,7 @@ import type { Metadata } from "next";
 import { buildProductStory, isAuthoredSquareDescription } from "@/lib/content/product-copy";
 import { loadProducts } from "@/lib/data/products";
 import { getProductReviews } from "@/lib/commerce/reviews";
+import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -185,6 +186,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         storyDescription={storyDescription}
         colorImageIndex={colorImageIndex}
         reviews={reviews}
+        squareConfig={getSquareWebPaymentsConfig()}
       />
     </>
   );

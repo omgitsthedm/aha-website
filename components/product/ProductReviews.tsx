@@ -2,17 +2,7 @@
 
 import { useState } from "react";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
-
-function Stars({ rating, className = "" }: { rating: number; className?: string }) {
-  const full = Math.round(rating);
-  return (
-    <span aria-label={`${rating} out of 5`} className={`inline-flex ${className}`}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <span key={n} aria-hidden="true" className={n <= full ? "text-accent" : "text-muted/40"}>★</span>
-      ))}
-    </span>
-  );
-}
+import { Stars } from "@/components/product/Stars";
 
 const dateFmt = (iso: string) => {
   try {
@@ -53,7 +43,7 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
   const field = "min-h-12 w-full border border-border/60 bg-void px-3 py-3 text-base text-cream placeholder:text-muted";
 
   return (
-    <section aria-labelledby="reviews-title" className="mt-16 border-t border-border/40 pt-10">
+    <section id="reviews" aria-labelledby="reviews-title" className="mt-16 scroll-mt-28 border-t border-border/40 pt-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 id="reviews-title" className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Reviews</h2>
