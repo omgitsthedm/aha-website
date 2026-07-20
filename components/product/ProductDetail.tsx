@@ -16,6 +16,7 @@ import { swatchHex } from "@/lib/data/color-swatches";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 import { ImageLightbox } from "@/components/product/ImageLightbox";
 import { ProductReviews } from "@/components/product/ProductReviews";
+import { RecentlyViewed } from "@/components/product/RecentlyViewed";
 import { Stars } from "@/components/product/Stars";
 import { PdpExpressCheckout } from "@/components/product/PdpExpressCheckout";
 import { SheepMark } from "@/components/ui/SheepMark";
@@ -61,6 +62,8 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   const initialVariation = product.variations.find((variation) => variationAvailable(variation.name)) ?? product.variations[0];
   const [selectedVariation, setSelectedVariation] = useState(initialVariation?.id || "");
   const [activeImage, setActiveImage] = useState(0);
+  const [qty, setQty] = useState(1);
+  const MAX_QTY = 10;
 
   // Group "Color / Size" variations so the size row shows only the sizes that
   // exist for the chosen color. `enabled` is false for size-only products
@@ -157,10 +160,10 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
       variationName: currentVariation.name,
       price: currentVariation.price,
       priceFormatted: currentVariation.priceFormatted,
-      quantity: 1,
+      quantity: qty,
       image: product.images[0] || "",
     }, related);
-    trackCommerceEvent({ name: "add_to_cart", itemId: product.id, variantId: currentVariation.id, valueCents: currentVariation.price, currency: product.currency, quantity: 1 });
+    trackCommerceEvent({ name: "add_to_cart", itemId: product.id, variantId: currentVariation.id, valueCents: currentVariation.price * qty, currency: product.currency, quantity: qty });
     hapticTap();
     setAddedFeedback(true);
     if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
@@ -180,10 +183,10 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
       variationName: currentVariation.name,
       price: currentVariation.price,
       priceFormatted: currentVariation.priceFormatted,
-      quantity: 1,
+      quantity: qty,
       image: product.images[0] || "",
     }, undefined, { silent: true });
-    trackCommerceEvent({ name: "add_to_cart", itemId: product.id, variantId: currentVariation.id, valueCents: currentVariation.price, currency: product.currency, quantity: 1 });
+    trackCommerceEvent({ name: "add_to_cart", itemId: product.id, variantId: currentVariation.id, valueCents: currentVariation.price * qty, currency: product.currency, quantity: qty });
     hapticTap();
     router.push("/checkout");
   };
@@ -339,7 +342,16 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               </fieldset>
             )}
 
-            <div className="mt-8 flex gap-3">
+            <div className="mt-8 flex items-center gap-4">
+              <span id="qty-label" className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Qty</span>
+              <div className="inline-flex items-center border border-border/60" role="group" aria-labelledby="qty-label">
+                <button type="button" onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1} aria-label="Decrease quantity" className="min-h-11 w-11 text-lg font-bold text-cream transition-colors hover:text-accent disabled:opacity-40">&minus;</button>
+                <span aria-live="polite" className="min-w-10 border-x border-border/60 py-2 text-center text-sm font-bold text-cream">{qty}</span>
+                <button type="button" onClick={() => setQty((q) => Math.min(MAX_QTY, q + 1))} disabled={qty >= MAX_QTY} aria-label="Increase quantity" className="min-h-11 w-11 text-lg font-bold text-cream transition-colors hover:text-accent disabled:opacity-40">+</button>
+              </div>
+            </div>
+
+            <div className="mt-4 flex gap-3">
               <button type="button" onClick={handleAddToCart} disabled={!canBuy} aria-live="polite" className={`btn-primary flex-1 ${canBuy ? "" : "cursor-not-allowed opacity-50"}`}>
                 {!canBuy ? "Unavailable" : addedFeedback ? "Added to bag" : `Add to bag — ${currentVariation?.priceFormatted || product.priceFormatted}`}
               </button>
@@ -370,13 +382,14 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 intent (hover/focus/tap) — honors "SDK loads only on payment". */}
             {squareConfig && currentVariation && (
               <PdpExpressCheckout
+                key={`${currentVariation.id}-${qty}`}
                 squareConfig={squareConfig}
-                line={{ squareVariationId: currentVariation.id, quantity: 1 }}
-                subtotalCents={currentVariation.price}
+                line={{ squareVariationId: currentVariation.id, quantity: qty }}
+                subtotalCents={currentVariation.price * qty}
                 itemSnapshot={{
                   name: product.name,
                   variationName: currentVariation.name,
-                  quantity: 1,
+                  quantity: qty,
                   productId: product.id,
                   slug: product.slug,
                   variationId: currentVariation.id,
@@ -483,6 +496,8 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             </div>
           </section>
         )}
+
+        <RecentlyViewed current={{ slug: product.slug, name: product.name, image: product.images[0] || "", priceFormatted: product.priceFormatted }} />
 
         <ProductReviews productSlug={product.slug} initial={reviews ?? { items: [], count: 0, average: 0 }} />
       </div>

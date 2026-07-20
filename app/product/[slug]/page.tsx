@@ -12,14 +12,20 @@ import { getProductReviews } from "@/lib/commerce/reviews";
 import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 
 export const revalidate = 300;
-export const dynamicParams = true;
+// dynamicParams=false: only slugs present in generateStaticParams (every product
+// in the local manifest) are valid. Any other slug — a deleted or never-existent
+// product — returns a real HTTP 404 (Next's not-found) instead of the ISR
+// soft-404 (a "Product Not Found" page served with a 200) that Netlify produced
+// when notFound() ran inside an on-demand render. The manifest is the storefront
+// source of truth and every new product ships with a redeploy, so no real product
+// is ever missing from generateStaticParams.
+export const dynamicParams = false;
 
 // Prebuild every known PDP from the LOCAL manifest (no Square calls at build) so
 // product pages are served from the ISR cache instead of a cold on-demand render
 // (which re-paginated the whole Square catalog — the ~1.8s TTFB). Prices still
 // refresh every 300s via `revalidate`, and the charge is re-priced live, so this
-// changes nothing about how orders are priced. Unknown slugs still render on
-// demand thanks to `dynamicParams`.
+// changes nothing about how orders are priced.
 export function generateStaticParams() {
   try {
     return loadProducts().map((p) => ({ slug: p.slug }));
