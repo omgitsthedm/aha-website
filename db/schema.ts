@@ -271,6 +271,8 @@ export const reviews = pgTable("reviews", {
   authorName: text("author_name").notNull(),
   email: text("email"), // contact only, not displayed
   orderNumber: text("order_number"),
+  sizePurchased: text("size_purchased"), // reviewer's own size, e.g. "M" — real data only, optional
+  fit: text("fit"), // "small" | "true" | "large" — reviewer's fit assessment, optional
   verified: boolean("verified").notNull().default(false),
   status: text("status").notNull().default("pending"), // pending | approved | rejected
   createdAt: createdAt(),

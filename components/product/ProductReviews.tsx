@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
+import { FIT_LABEL } from "@/lib/commerce/fit";
 import { Stars } from "@/components/product/Stars";
 
 const dateFmt = (iso: string) => {
@@ -16,7 +17,7 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
   const [summary] = useState(initial);
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(5);
-  const [form, setForm] = useState({ authorName: "", title: "", body: "", email: "", company: "" });
+  const [form, setForm] = useState({ authorName: "", title: "", body: "", email: "", company: "", sizePurchased: "", fit: "" });
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
@@ -84,6 +85,18 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
                 value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
               <textarea aria-label="Your review" required placeholder="How does it fit and wear?" rows={4} className={`${field} resize-y`}
                 value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
+              {/* Optional fit context — the single biggest apparel sizing signal. */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <input aria-label="Size you bought (optional)" placeholder="Size you bought (e.g. M)" className={field}
+                  value={form.sizePurchased} onChange={(e) => setForm({ ...form, sizePurchased: e.target.value })} />
+                <select aria-label="How does it fit? (optional)" className={`${field} cursor-pointer`}
+                  value={form.fit} onChange={(e) => setForm({ ...form, fit: e.target.value })}>
+                  <option value="">How does it fit? (optional)</option>
+                  <option value="small">Runs small</option>
+                  <option value="true">True to size</option>
+                  <option value="large">Runs large</option>
+                </select>
+              </div>
               <input aria-label="Email (not shown)" type="email" placeholder="Email (kept private)" className={field}
                 value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
               {/* Honeypot — hidden from real users */}
@@ -109,6 +122,13 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
                 {r.verified && <span className="border border-success/60 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-success">Verified</span>}
                 <span className="ml-auto font-mono text-[11px] text-muted">{dateFmt(r.createdAt)}</span>
               </div>
+              {(r.sizePurchased || r.fit) && (
+                <p className="mt-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
+                  {r.sizePurchased && <>Bought {r.sizePurchased}</>}
+                  {r.sizePurchased && r.fit && <span aria-hidden="true"> · </span>}
+                  {r.fit && (FIT_LABEL[r.fit] ?? r.fit)}
+                </p>
+              )}
               {r.title && <p className="mt-2 font-display text-base font-black uppercase leading-tight text-cream">{r.title}</p>}
               <p className="mt-1 text-sm leading-relaxed text-cream/85">{r.body}</p>
             </li>

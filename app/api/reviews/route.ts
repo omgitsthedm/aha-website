@@ -37,6 +37,8 @@ export async function POST(request: Request) {
     authorName: String(body.authorName || ""),
     email: typeof body.email === "string" ? body.email : undefined,
     orderNumber: typeof body.orderNumber === "string" ? body.orderNumber : undefined,
+    sizePurchased: typeof body.sizePurchased === "string" ? body.sizePurchased : undefined,
+    fit: typeof body.fit === "string" ? body.fit : undefined,
   });
   return NextResponse.json(result, { status: result.ok ? 201 : 400 });
 }

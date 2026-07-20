@@ -1,6 +1,7 @@
 import { and, desc, eq } from "drizzle-orm";
 import { db, isDbConfigured } from "@/lib/db/client";
 import { reviews } from "@/db/schema";
+import { FIT_LABEL } from "@/lib/commerce/fit";
 
 export interface PublicReview {
   id: number;
@@ -10,6 +11,8 @@ export interface PublicReview {
   authorName: string;
   verified: boolean;
   createdAt: string;
+  sizePurchased: string | null; // reviewer's own size, e.g. "M" — real data only
+  fit: string | null; // "small" | "true" | "large" — reviewer's fit assessment
 }
 
 export interface ReviewSummary {
@@ -44,6 +47,8 @@ export async function getProductReviews(slug: string): Promise<ReviewSummary> {
         authorName: r.authorName,
         verified: r.verified,
         createdAt: r.createdAt.toISOString(),
+        sizePurchased: r.sizePurchased,
+        fit: r.fit,
       })),
     };
   } catch {
@@ -59,6 +64,8 @@ export interface ReviewInput {
   authorName: string;
   email?: string;
   orderNumber?: string;
+  sizePurchased?: string;
+  fit?: string;
 }
 
 /** Store a review as `pending`. Never auto-publishes — moderation approves it
@@ -74,6 +81,7 @@ export async function submitReview(input: ReviewInput): Promise<{ ok: boolean; e
   if (body.length < 4 || body.length > 4000) return { ok: false, error: "Write a few words about the piece." };
   if (authorName.length < 1 || authorName.length > 80) return { ok: false, error: "Add a name to display." };
   try {
+    const fitRaw = (input.fit || "").trim().toLowerCase();
     await db().insert(reviews).values({
       productSlug: slug,
       rating,
@@ -82,6 +90,8 @@ export async function submitReview(input: ReviewInput): Promise<{ ok: boolean; e
       authorName: authorName.slice(0, 80),
       email: (input.email || "").trim().slice(0, 160) || null,
       orderNumber: (input.orderNumber || "").trim().slice(0, 40) || null,
+      sizePurchased: (input.sizePurchased || "").trim().slice(0, 16) || null,
+      fit: fitRaw in FIT_LABEL ? fitRaw : null, // only accept known codes
       status: "pending",
       verified: false,
     });
@@ -117,6 +127,8 @@ export async function getReviewWall(limit = 12): Promise<WallReview[]> {
       authorName: r.authorName,
       verified: r.verified,
       createdAt: r.createdAt.toISOString(),
+      sizePurchased: r.sizePurchased,
+      fit: r.fit,
       productSlug: r.productSlug,
     }));
   } catch {
