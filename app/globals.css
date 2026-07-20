@@ -683,10 +683,20 @@ textarea {
 .marquee-track { will-change: transform; }
 @media (prefers-reduced-motion: no-preference) {
   .marquee-track { animation: aha-marquee 34s linear infinite; }
+  /* Pause the ticker so a shopper can actually read a phrase. */
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track { animation-play-state: paused; }
 }
 @keyframes aha-marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+
+/* The star wakes: a hover on the neon sign gives the black sheep a subtle
+   lift — transform only, so it never competes with the copy or shifts layout. */
+@media (prefers-reduced-motion: no-preference) {
+  .neon-sign { transition: transform 300ms var(--aha-ease-out); will-change: transform; }
+  .neon-sign:hover { transform: scale(1.015); }
 }
 
 /* Photographed neon on the paper wall: realism from a thick GLASS TUBE + a
