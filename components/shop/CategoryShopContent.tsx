@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { QuickAdd } from "@/components/shop/QuickAdd";
 import { ColorSwatches } from "@/components/shop/ColorSwatches";
@@ -10,7 +10,7 @@ import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import type { CategoryMeta, CategorySlug, GenderSlug } from "@/lib/commerce/taxonomy";
 import { CATEGORIES, productMatchesCategory, productMatchesGender } from "@/lib/commerce/taxonomy";
-import { useInfiniteScroll } from "@/lib/hooks/useInfiniteScroll";
+import { useInfiniteList } from "@/lib/hooks/useInfiniteScroll";
 
 interface CategoryShopContentProps {
   products: Product[];
@@ -44,7 +44,6 @@ export function CategoryShopContent({
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "index">("grid");
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const sizeOptions = useMemo(() => {
     const available = new Set(products.flatMap((product) => product.variations.map((variation) => variationSize(variation.name))));
@@ -68,9 +67,12 @@ export function CategoryShopContent({
   }, [activeCategory, activeSize, products, searchTerm, sortBy, gender]);
 
   const hasActiveDiscovery = activeCategory !== undefined || activeSize !== "all" || searchTerm.trim().length > 0;
+  const { visibleCount, hasMore, showLoadMore, sentinelRef, loadMore, reset } = useInfiniteList({
+    pageSize: PAGE_SIZE,
+    total: filtered.length,
+    keySuffix: `${activeCategory ?? "all"}:${activeSize}:${sortBy}:${viewMode}:${searchTerm.trim()}`,
+  });
   const visibleProducts = filtered.slice(0, visibleCount);
-  const hasMore = visibleCount < filtered.length;
-  const sentinelRef = useInfiniteScroll(() => setVisibleCount((count) => count + PAGE_SIZE), hasMore);
 
   const resetDiscovery = () => {
     setActiveSize("all");
@@ -88,8 +90,16 @@ export function CategoryShopContent({
     return () => window.clearTimeout(timer);
   }, [filtered.length, searchTerm]);
 
+  // Reset to the first page when a filter/sort/view changes — but not on the
+  // initial mount, so a Back-navigation restore isn't clobbered.
+  const filtersMounted = useRef(false);
   useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
+    if (!filtersMounted.current) {
+      filtersMounted.current = true;
+      return;
+    }
+    reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory, activeSize, searchTerm, sortBy, viewMode]);
 
   const categoryHref = (slug: string) =>
@@ -208,12 +218,22 @@ export function CategoryShopContent({
       )}
 
       {hasMore && (
-        <div ref={sentinelRef} className="mt-10 flex justify-center">
-          {/* Sentinel auto-loads on scroll; button is the keyboard / no-JS fallback. */}
-          <button type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)} aria-label="Load more products" className="inline-flex min-h-12 items-center gap-2 px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-muted transition-colors hover:text-cream">
-            <span className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden="true" />
-            Loading more
-          </button>
+        <div ref={sentinelRef} className="mt-10 flex flex-col items-center gap-3">
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted" aria-live="polite">
+            Showing {visibleProducts.length} of {filtered.length}
+          </p>
+          {showLoadMore ? (
+            // After a few auto-loads, hand control back so the footer is reachable.
+            <button type="button" onClick={loadMore} className="min-h-12 border border-border/60 px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-cream transition-colors hover:border-accent">
+              Load more products
+            </button>
+          ) : (
+            // Auto-loading on scroll; button is the keyboard / no-JS fallback.
+            <button type="button" onClick={loadMore} aria-label="Load more products" className="inline-flex min-h-11 items-center gap-2 px-6 py-2 text-xs font-bold uppercase tracking-[0.06em] text-muted transition-colors hover:text-cream">
+              <span className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden="true" />
+              Loading more
+            </button>
+          )}
         </div>
       )}
 
