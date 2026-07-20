@@ -26852,6 +26852,96 @@
    "costEstimate": 2290,
    "costCurrency": "USD",
    "costVerifiedAt": "2026-07-14T06:55:08.288Z"
+  },
+  "black-sheep-women-s-fitted-tee-black-2xl-22219": {
+   "printfulCatalogVariantId": 22219,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "front",
+     "technique": "dtg",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/black-sheep-paper-white.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-tee",
+   "costEstimate": 1825,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-20T05:30:59.449Z"
+  },
+  "black-sheep-women-s-fitted-tee-black-l-22197": {
+   "printfulCatalogVariantId": 22197,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "front",
+     "technique": "dtg",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/black-sheep-paper-white.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-tee",
+   "costEstimate": 1650,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-20T05:30:59.449Z"
+  },
+  "black-sheep-women-s-fitted-tee-black-m-22186": {
+   "printfulCatalogVariantId": 22186,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "front",
+     "technique": "dtg",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/black-sheep-paper-white.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-tee",
+   "costEstimate": 1650,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-20T05:30:59.449Z"
+  },
+  "black-sheep-women-s-fitted-tee-black-s-22175": {
+   "printfulCatalogVariantId": 22175,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "front",
+     "technique": "dtg",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/black-sheep-paper-white.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-tee",
+   "costEstimate": 1650,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-20T05:30:59.449Z"
+  },
+  "black-sheep-women-s-fitted-tee-black-xl-22208": {
+   "printfulCatalogVariantId": 22208,
+   "printfulStoreId": 14298228,
+   "printfulPlacements": [
+    {
+     "placement": "front",
+     "technique": "dtg",
+     "fileUrl": "https://afterhoursagenda.com/printful-assets/black-sheep-paper-white.png"
+    }
+   ],
+   "printfulRegionAvailability": [
+    "north_america"
+   ],
+   "printfulSizeGuideReference": "sg-tee",
+   "costEstimate": 1650,
+   "costCurrency": "USD",
+   "costVerifiedAt": "2026-07-20T05:30:59.449Z"
   }
  }
 }

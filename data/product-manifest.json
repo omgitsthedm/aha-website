@@ -18484,6 +18484,98 @@
         }
       ],
       "ogImage": "/products/black-sheep-embroidered-crew-socks.webp"
+    },
+    {
+      "ahaProductId": "black-sheep-women-s-fitted-tee",
+      "slug": "black-sheep-women-s-fitted-tee",
+      "title": "Black Sheep - Women's Fitted Tee",
+      "shortDescription": "Black Sheep - Women's Fitted Tee",
+      "fullDescription": "The mark the whole label is named for, printed clean and white on a fitted black women's tee. The black sheep is the point: loud, quiet, funny, defiant. You never needed permission to belong to the city. Drawn after hours in New York, printed to order, one at a time.",
+      "storySource": "authored",
+      "productType": "tee",
+      "collectionIds": [
+        "t-shirts"
+      ],
+      "status": "active",
+      "retailPrice": 3000,
+      "currency": "USD",
+      "fitDescription": "Standard unisex fit — true to size.",
+      "fabricDescription": "See size guide for materials.",
+      "ogImage": "/brand/og-image.png",
+      "printMethod": "DTG/DTF",
+      "careInstructions": "Machine wash cold, inside out. Tumble dry low. Do not iron the print. Do not dry clean.",
+      "productionNote": "Made to order and printed just for you. Production takes 2–5 business days before shipping.",
+      "shippingNote": "Free shipping on every order. Delivery includes production time plus carrier transit.",
+      "returnsNote": "Exchanges and returns on unworn items within 30 days. Misprints and defects are always on us.",
+      "sizeGuideId": "sg-tee",
+      "featuredImage": "https://items-images-production.s3.us-west-2.amazonaws.com/files/18eda93e773b57ef36934c342d1efc5dcdd0b068/original.jpeg",
+      "galleryImages": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/18eda93e773b57ef36934c342d1efc5dcdd0b068/original.jpeg"
+      ],
+      "seoTitle": "Black Sheep - Women's Fitted Tee — After Hours Agenda",
+      "seoDescription": "Black Sheep - Women's Fitted Tee. NYC streetwear, printed to order. Free shipping.",
+      "variants": [
+        {
+          "ahaVariantId": "black-sheep-women-s-fitted-tee-black-2xl-22219",
+          "ahaProductId": "black-sheep-women-s-fitted-tee",
+          "sku": "black-sheep-women-s-fitted-tee-22219",
+          "size": "2XL",
+          "color": "Black",
+          "retailPrice": 3000,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 0
+        },
+        {
+          "ahaVariantId": "black-sheep-women-s-fitted-tee-black-l-22197",
+          "ahaProductId": "black-sheep-women-s-fitted-tee",
+          "sku": "black-sheep-women-s-fitted-tee-22197",
+          "size": "L",
+          "color": "Black",
+          "retailPrice": 3000,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 1
+        },
+        {
+          "ahaVariantId": "black-sheep-women-s-fitted-tee-black-m-22186",
+          "ahaProductId": "black-sheep-women-s-fitted-tee",
+          "sku": "black-sheep-women-s-fitted-tee-22186",
+          "size": "M",
+          "color": "Black",
+          "retailPrice": 3000,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 2
+        },
+        {
+          "ahaVariantId": "black-sheep-women-s-fitted-tee-black-s-22175",
+          "ahaProductId": "black-sheep-women-s-fitted-tee",
+          "sku": "black-sheep-women-s-fitted-tee-22175",
+          "size": "S",
+          "color": "Black",
+          "retailPrice": 3000,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 3
+        },
+        {
+          "ahaVariantId": "black-sheep-women-s-fitted-tee-black-xl-22208",
+          "ahaProductId": "black-sheep-women-s-fitted-tee",
+          "sku": "black-sheep-women-s-fitted-tee-22208",
+          "size": "XL",
+          "color": "Black",
+          "retailPrice": 3000,
+          "currency": "USD",
+          "status": "active",
+          "printfulSource": "catalog",
+          "sortOrder": 4
+        }
+      ]
     }
   ]
 }
