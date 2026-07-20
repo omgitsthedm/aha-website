@@ -16,6 +16,7 @@ import { swatchHex } from "@/lib/data/color-swatches";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 import { ImageLightbox } from "@/components/product/ImageLightbox";
 import { ProductReviews } from "@/components/product/ProductReviews";
+import { SheepMark } from "@/components/ui/SheepMark";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
 
 interface ProductDetailProps {
@@ -359,6 +360,19 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 <div className="product-story mt-4 font-body leading-relaxed text-cream/85" dangerouslySetInnerHTML={descriptionMarkup} />
               </div>
             )}
+
+            {/* Brand story on every PDP — the ownable narrative that otherwise
+                only lived on the home + about pages. Honest; never niches the wearer. */}
+            <div className="mt-10 flex items-start gap-4 border-t border-border/40 pt-7">
+              <SheepMark className="mt-1 w-12 shrink-0 text-cream" title="The After Hours Agenda black sheep" />
+              <div>
+                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent">Made after hours</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  Every After Hours Agenda design is drawn when the day quiets down, then printed to order in New York — one at a time, no warehouse, no dead stock. Expressive everyday clothing for anyone who never needed permission to belong to the city.{" "}
+                  <Link href="/about" className="font-bold text-accent underline underline-offset-4 hover:text-cream">The story</Link>.
+                </p>
+              </div>
+            </div>
           </section>
         </div>
 

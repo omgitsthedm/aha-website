@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
+import { SheepMark } from "@/components/ui/SheepMark";
 import { DELIVERY_WINDOW, PRODUCTION_WINDOW } from "@/lib/commerce/policies";
 
 interface OrderItem {
@@ -70,7 +71,7 @@ export default function OrderConfirmedPage() {
 
   return (
     <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl">
-      <header className="border-t-2 border-accent pt-5"><p className="text-xs font-bold uppercase tracking-[0.1em] text-accent">{verified ? "Payment complete" : loaded ? "Order lookup" : "Loading"}</p><h1 className="mt-4 font-display text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">{verified ? "Order confirmed" : loaded ? "Details unavailable" : "Loading order"}</h1><p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted">{summary ? `Order ${summary.orderNumber} was received. Confirmation was sent to the checkout email.` : loaded ? "This browser could not verify a matching completed order. Check the confirmation email before attempting payment again." : "Retrieving the order summary."}</p></header>
+      <header className="border-t-2 border-accent pt-5"><p className="text-xs font-bold uppercase tracking-[0.1em] text-accent">{verified ? "Payment complete" : loaded ? "Order lookup" : "Loading"}</p><div className="mt-4 flex items-end gap-5">{loaded && !verified && <SheepMark className="w-14 shrink-0 text-cream" title="The After Hours Agenda black sheep" />}<h1 className="font-display text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">{verified ? "Order confirmed" : loaded ? "Details unavailable" : "Loading order"}</h1></div><p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted">{summary ? `Order ${summary.orderNumber} was received. Confirmation was sent to the checkout email.` : loaded ? "This browser could not verify a matching completed order. Check the confirmation email before attempting payment again." : "Retrieving the order summary."}</p></header>
 
       {summary && <>
         {/* It's yours — close the funnel on the same aspirational note it opened. */}
