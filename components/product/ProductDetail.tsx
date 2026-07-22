@@ -410,7 +410,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                     <p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Size</p>
                     <p className="mt-1 text-xs leading-relaxed text-cream">{fitDescription}</p>
                   </div>
-                  <button type="button" onClick={() => setSizeGuideOpen(true)} className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Size guide</button>
+                  <button type="button" onClick={() => { setSizeGuideOpen(true); trackCommerceEvent({ name: "view_size_guide", itemId: product.id, variantId: selectedVariation || undefined }); }} className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Size guide</button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {sizeVariations.map((variation) => {

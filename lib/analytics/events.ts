@@ -10,6 +10,7 @@ type CommerceEventName =
   | "search_no_results"
   | "add_to_wishlist"
   | "remove_from_wishlist"
+  | "view_size_guide"
   | "share";
 
 export interface CommerceEvent {
