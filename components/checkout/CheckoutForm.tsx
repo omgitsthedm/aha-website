@@ -556,6 +556,9 @@ export function CheckoutForm({ squareConfig }: Props) {
     );
   }
 
+  // Display only. The charged amount comes from Square via buildSquareOrder.
+  const shippingCents = isInternational(contact.country) ? INTERNATIONAL_SHIPPING_CENTS : 0;
+
   return (
     <>
       <Script src={squareConfig.sdkUrl} strategy="afterInteractive" onLoad={initSquare} />
@@ -772,10 +775,13 @@ export function CheckoutForm({ squareConfig }: Props) {
 
             <div className="mt-5 space-y-2 border-t border-border/40 pt-4 text-sm font-bold">
               <div className="flex justify-between text-muted"><span>Subtotal</span><span>{money(total)}</span></div>
-              {promoInfo && quote && total - quote.subtotal > 0 && (
-                <div className="flex justify-between text-success"><span>{promoInfo.label}{promoInfo.percentage ? ` (${promoInfo.percentage}% off)` : ""}</span><span>-{money(total - quote.subtotal)}</span></div>
+              {/* quote.subtotal is Square's total minus tax, so it carries the international
+                  shipping charge. Back it out before deriving the promo amount, or the
+                  discount line silently disappears on international orders. */}
+              {promoInfo && quote && total - (quote.subtotal - shippingCents) > 0 && (
+                <div className="flex justify-between text-success"><span>{promoInfo.label}{promoInfo.percentage ? ` (${promoInfo.percentage}% off)` : ""}</span><span>-{money(total - (quote.subtotal - shippingCents))}</span></div>
               )}
-              <div className="flex justify-between text-muted"><span>Shipping</span>{isInternational(contact.country) ? <span>{money(INTERNATIONAL_SHIPPING_CENTS)}</span> : <span className="text-success">Free</span>}</div>
+              <div className="flex justify-between text-muted"><span>Shipping</span>{shippingCents > 0 ? <span>{money(shippingCents)}</span> : <span className="text-success">Free</span>}</div>
               <div className="flex justify-between text-muted">
                 <span>Tax</span>
                 <span>{quote ? money(quote.tax) : "Calculated from address"}</span>
