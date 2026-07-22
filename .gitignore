@@ -54,3 +54,7 @@ next-env.d.ts
 
 # product-factory temp specs
 .tmp/
+
+# Local QA/audit artifacts (screenshots, captures) — never committed.
+# Matches the convention in Venue Circuit and PHC Cockpit.
+_qa/
