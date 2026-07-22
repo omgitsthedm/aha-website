@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 import { trackCommerceEvent } from "@/lib/analytics/events";
+import { INTERNATIONAL_SHIPPING_CENTS, isInternational } from "@/lib/commerce/policies";
 
 type TokenResult = { status: string; token: string };
 type SquareCard = { attach: (selector: string) => Promise<void>; tokenize: () => Promise<TokenResult> };
@@ -774,7 +775,7 @@ export function CheckoutForm({ squareConfig }: Props) {
               {promoInfo && quote && total - quote.subtotal > 0 && (
                 <div className="flex justify-between text-success"><span>{promoInfo.label}{promoInfo.percentage ? ` (${promoInfo.percentage}% off)` : ""}</span><span>-{money(total - quote.subtotal)}</span></div>
               )}
-              <div className="flex justify-between text-muted"><span>Shipping</span><span className="text-success">Free</span></div>
+              <div className="flex justify-between text-muted"><span>Shipping</span>{isInternational(contact.country) ? <span>{money(INTERNATIONAL_SHIPPING_CENTS)}</span> : <span className="text-success">Free</span>}</div>
               <div className="flex justify-between text-muted">
                 <span>Tax</span>
                 <span>{quote ? money(quote.tax) : "Calculated from address"}</span>

@@ -14,9 +14,27 @@ export const WALLET_CHECKOUT_COPY =
 export const TAX_LINE_COPY =
   "Estimated by shipping address in Square before you pay";
 
+/** Domestic ships free; every other country the storefront sells to is a $20 flat rate per order. */
+export const DOMESTIC_COUNTRY = "US";
+export const INTERNATIONAL_SHIPPING_CENTS = 2000;
+export const INTERNATIONAL_SHIPPING_LABEL = "International shipping";
+
+export function isInternational(country: string | undefined | null): boolean {
+  return Boolean(country) && country!.toUpperCase() !== DOMESTIC_COUNTRY;
+}
+
+/**
+ * Cart-stage copy. The cart runs before a shipping address exists, so it states
+ * both rates rather than guessing which one applies.
+ */
 export function getShippingLineCopy(totalCents: number): string {
   void totalCents;
-  return "Free standard shipping";
+  return "Free in the US, $20 international";
+}
+
+/** Checkout-stage copy, once the country is known. */
+export function getShippingCopyForCountry(country: string | undefined | null): string {
+  return isInternational(country) ? "$20 flat rate" : "Free standard shipping";
 }
 
 export function getFulfillmentSummary(): string {

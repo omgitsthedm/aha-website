@@ -1,5 +1,10 @@
 import { squareRequest } from "./client";
 import type { OrderDiscount } from "@/lib/commerce/discounts";
+import {
+  INTERNATIONAL_SHIPPING_CENTS,
+  INTERNATIONAL_SHIPPING_LABEL,
+  isInternational,
+} from "@/lib/commerce/policies";
 
 interface LineItem {
   catalogObjectId: string;
@@ -33,6 +38,12 @@ export interface SquareOrderInput {
     | { name: string; percentage: string; scope: "ORDER" }
     | { name: string; amount_money: { amount: number; currency: string }; scope: "ORDER" }
   >;
+  service_charges?: Array<{
+    name: string;
+    amount_money: { amount: number; currency: string };
+    calculation_phase: "TOTAL_PHASE";
+    taxable: false;
+  }>;
   fulfillments: Array<{
     type: "SHIPMENT";
     state: "PROPOSED";
@@ -72,6 +83,20 @@ export function buildSquareOrder(request: CreateOrderRequest): SquareOrderInput 
               ? { name: request.discount.name, amount_money: request.discount.amountMoney, scope: "ORDER" as const }
               : { name: request.discount.name, percentage: request.discount.percentage!, scope: "ORDER" as const },
           ],
+        }
+      : {}),
+    // Flat international shipping. Added as a TOTAL_PHASE service charge so Square
+    // stays the single authority on total_money: the quote and the final charge both
+    // run through buildSquareOrder, so they can never disagree and trip QUOTE_CHANGED.
+    // TOTAL_PHASE + taxable:false applies it after tax and never taxes the freight.
+    ...(isInternational(request.shippingAddress?.country)
+      ? {
+          service_charges: [{
+            name: INTERNATIONAL_SHIPPING_LABEL,
+            amount_money: { amount: INTERNATIONAL_SHIPPING_CENTS, currency: "USD" },
+            calculation_phase: "TOTAL_PHASE" as const,
+            taxable: false as const,
+          }],
         }
       : {}),
     fulfillments: request.shippingAddress
@@ -155,7 +180,8 @@ export async function calculatePricedSquareOrder(
 /**
  * Creates a Square Order so SQUARE computes price + location tax authoritatively (auto_apply_taxes).
  * We pay against this order id, so the customer is charged Square's number, not ours. Returns the
- * computed totals to persist + charge. Shipping is $0 (free-shipping policy).
+ * computed totals to persist + charge. Shipping is $0 domestically; non-US destinations
+ * carry a $20 flat service charge (see buildSquareOrder).
  */
 export async function createPricedSquareOrder(
   request: CreateOrderRequest
