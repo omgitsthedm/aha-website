@@ -85,7 +85,7 @@ function ProductIdentity({ id, product, reviews, price, className = "" }: {
           </a>
         )}
       </div>
-      <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping both ways. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
     </div>
   );
 }
