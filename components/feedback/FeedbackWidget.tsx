@@ -26,6 +26,11 @@ export function FeedbackWidget() {
   // the viewport; the floating launcher would overlap the primary buy CTA and
   // steal its taps. Hide it below lg there (desktop PDPs keep it).
   const isProductPage = pathname?.startsWith("/product/") ?? false;
+  // /cart gained a sticky mobile checkout bar (M7) that owns the same bottom
+  // corner below lg, exactly as the PDP sticky buy bar already did. Without
+  // this the widget overlapped the checkout CTA between sm and lg.
+  const isCartPage = pathname === "/cart";
+  const hasStickyBar = isProductPage || isCartPage;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -72,7 +77,7 @@ export function FeedbackWidget() {
   };
 
   return (
-    <div className={`safe-bottom safe-x fixed bottom-3 right-3 z-[350] print:hidden ${isProductPage ? "hidden lg:block" : "hidden sm:block"}`}>
+    <div className={`safe-bottom safe-x fixed bottom-3 right-3 z-[350] print:hidden ${hasStickyBar ? "hidden lg:block" : "hidden sm:block"}`}>
       {open && (
         <div role="dialog" aria-label="Send feedback" className="mb-3 w-[min(20rem,calc(100vw-2rem))] border border-border/60 bg-void shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
           <div className="flex items-center justify-between border-b border-border/40 px-4 py-3">

@@ -13,7 +13,13 @@ const KEY = "aha-cookie-consent";
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((cb) => cb());
 
-function getConsent(): Consent | null {
+/**
+ * Read the stored choice. Exported because `lib/analytics/events.ts` is called
+ * from plain event handlers and cannot use the `useConsent` hook — without this
+ * it has to re-declare the storage key, and a rename there would silently fail
+ * closed (every event dropped, no error). One key, one owner.
+ */
+export function getConsent(): Consent | null {
   if (typeof window === "undefined") return null;
   try {
     const v = localStorage.getItem(KEY);

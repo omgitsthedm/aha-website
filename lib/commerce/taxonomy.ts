@@ -64,7 +64,12 @@ export const CATEGORIES: CategoryMeta[] = [
     slug: "outerwear",
     name: "Outerwear",
     shortName: "Outerwear",
-    description: "Jackets and coats. Coming soon.",
+    // Consumers concatenate this into a meta description, so "Coming soon."
+    // produced the self-contradicting "Jackets and coats. Coming soon. Shop
+    // made-to-order outerwear." The empty-category state already tells a
+    // visitor there is nothing here yet; the description should not also
+    // try to, in a sentence that then gets a shopping CTA appended to it.
+    description: "Jackets and coats, printed and made to order in New York.",
   },
   {
     slug: "accessories",

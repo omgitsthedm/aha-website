@@ -1,5 +1,7 @@
 "use client";
 
+import { getConsent } from "@/lib/consent/consent";
+
 type CommerceEventName =
   | "view_item"
   | "select_variant"
@@ -55,12 +57,11 @@ declare global {
   }
 }
 
-/**
- * Mirrors the storage key in `lib/consent/consent.ts`. Read directly rather
- * than through `useConsent`, because this module is called from plain event
- * handlers and mount effects, not from React render.
- */
-const CONSENT_KEY = "aha-cookie-consent";
+// Consent is read through `getConsent()` from lib/consent/consent.ts rather
+// than the `useConsent` hook, because this module is called from plain event
+// handlers and mount effects, not from React render. It previously re-declared
+// the storage key literal, which meant renaming the key in one file would have
+// made this gate fail closed — every event silently dropped, no error.
 
 /**
  * Production runs bare gtag.js, so events are sent with `gtag('event', ...)`
@@ -98,7 +99,7 @@ let retryTimer: ReturnType<typeof setTimeout> | null = null;
 function consentGranted(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    return window.localStorage.getItem(CONSENT_KEY) === "granted";
+    return getConsent() === "granted";
   } catch {
     return false;
   }
