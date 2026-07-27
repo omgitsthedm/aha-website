@@ -49,7 +49,9 @@ test("@product PDP shows price and a working Add to bag", async ({ page }, testI
     // M1 relabelled these: the modal's button is "Open bag" (it opens the
     // drawer), and the drawer's "Review bag" link is the only route to /cart.
     // Both were "Review bag" before, which is the ambiguity M1 removed.
-    await page.getByRole("button", { name: "Open bag" }).click();
+    // `exact` matters: the nav bag button is labelled "Open bag, 1 item", so a
+    // substring match resolves to two elements and fails strict mode.
+    await page.getByRole("button", { name: "Open bag", exact: true }).click();
     await page.getByRole("link", { name: "Review bag" }).click();
     await expect(page).toHaveURL(/\/cart$/);
     await page.getByRole("link", { name: "Continue to checkout" }).click();
