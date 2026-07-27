@@ -99,7 +99,7 @@ export function GiftCardPurchase({ squareConfig }: { squareConfig: SquareWebPaym
               <button key={p} type="button" onClick={() => { setAmount(p); setCustom(""); }} aria-pressed={!custom && amount === p}
                 className={`min-h-11 min-w-16 border px-4 text-sm font-bold ${!custom && amount === p ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}>{money(p)}</button>
             ))}
-            <input inputMode="decimal" value={custom} onChange={(e) => setCustom(e.target.value.replace(/[^0-9.]/g, ""))} placeholder="Custom" aria-label="Custom amount in dollars" className="min-h-11 w-28 border border-border/60 bg-void px-3 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none" />
+            <input inputMode="decimal" value={custom} onChange={(e) => setCustom(e.target.value.replace(/[^0-9.]/g, ""))} placeholder="Custom" aria-label="Custom amount in dollars" className="min-h-11 w-28 border border-border/60 bg-void px-3 text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none" />
           </div>
         </fieldset>
         <div className="grid gap-4 sm:grid-cols-2">

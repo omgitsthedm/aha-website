@@ -1,6 +1,7 @@
 // Lifecycle (marketing) email templates. Brand-matched to the transactional
 // order emails but with an unsubscribe + physical-address footer (CAN-SPAM).
 // NOTE: MAILING_ADDRESS must be a real postal address before go-live.
+import { SHIPPING_CLAIM_SENTENCE } from "@/lib/commerce/policies";
 
 const escapeHtml = (value: unknown) => String(value ?? "")
   .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
@@ -24,7 +25,7 @@ export function renderAbandonedCartEmail(data: {
     const detail = item.size ? `<br><span style="color:#B0B0B0">${escapeHtml(item.size)}</span>` : "";
     return `<tr><td style="padding:12px 0;border-bottom:1px solid #4A4A4A"><strong>${escapeHtml(item.title)}</strong>${detail}</td><td style="padding:12px 0;border-bottom:1px solid #4A4A4A;text-align:center">${item.quantity}</td><td style="padding:12px 0;border-bottom:1px solid #4A4A4A;text-align:right">${money(item.lineTotal, data.currency)}</td></tr>`;
   }).join("");
-  const body = `<p style="color:#B0B0B0;line-height:1.6">You left something made to order in your bag. It is still here whenever you're ready.</p><table style="width:100%;border-collapse:collapse;margin-top:24px;color:#FAFAFA"><tbody>${rows}<tr><td colspan="2" style="padding-top:18px;font-weight:700">Subtotal</td><td style="padding-top:18px;text-align:right;font-weight:700">${money(data.subtotal, data.currency)}</td></tr></tbody></table><p style="margin:32px 0"><a href="${escapeHtml(data.recoverUrl)}" style="background:#FF6B6B;color:#1A1A1A;padding:16px 24px;text-decoration:none;font-weight:700">Finish checking out</a></p><p style="color:#B0B0B0;line-height:1.6">Free shipping. Secure Square checkout. Made after hours, worn all day.</p>`;
+  const body = `<p style="color:#B0B0B0;line-height:1.6">You left something made to order in your bag. It is still here whenever you're ready.</p><table style="width:100%;border-collapse:collapse;margin-top:24px;color:#FAFAFA"><tbody>${rows}<tr><td colspan="2" style="padding-top:18px;font-weight:700">Subtotal</td><td style="padding-top:18px;text-align:right;font-weight:700">${money(data.subtotal, data.currency)}</td></tr></tbody></table><p style="margin:32px 0"><a href="${escapeHtml(data.recoverUrl)}" style="background:#FF6B6B;color:#1A1A1A;padding:16px 24px;text-decoration:none;font-weight:700">Finish checking out</a></p><p style="color:#B0B0B0;line-height:1.6">${escapeHtml(SHIPPING_CLAIM_SENTENCE)} Secure Square checkout. Made after hours, worn all day.</p>`;
   const html = shell("Still in your bag", "You're almost wearing it", body, data.unsubscribeUrl);
   const text = ["AFTER HOURS AGENDA", "You left something in your bag — still here whenever you're ready.", ...data.items.map((i) => `${i.quantity}x ${i.title}${i.size ? ` / ${i.size}` : ""} — ${money(i.lineTotal, data.currency)}`), `Subtotal: ${money(data.subtotal, data.currency)}`, `Finish checking out: ${data.recoverUrl}`, `Unsubscribe: ${data.unsubscribeUrl}`, MAILING_ADDRESS].join("\n\n");
   return { subject, html, text };

@@ -3,7 +3,13 @@ import { getSizeTable } from "@/lib/printful/size-table";
 
 // Lazy size-measurement lookup for the PDP size guide. Fetched when the modal
 // opens (client-side) so it costs nothing at build/render and can't slow PDPs.
-export const revalidate = 86400;
+//
+// MUST stay dynamic. `export const revalidate` makes this handler prerenderable,
+// which drops `variant` from Netlify's edge cache key — every product then
+// replays the first cached table (tees, hoodies, beanies and socks all showing
+// one identical chart). Caching still happens correctly one layer down, in the
+// 24h `unstable_cache` inside `getSizeTable`.
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   const variant = Number(new URL(request.url).searchParams.get("variant"));

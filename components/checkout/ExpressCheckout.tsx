@@ -9,7 +9,9 @@ import { extractExpressContact, expressTotalAmount, isExpressCheckoutEnabled } f
 
 type TokenResult = { status: string; token?: string; details?: unknown };
 type SquareWallet = { attach?: (selector: string, opts?: unknown) => Promise<void>; tokenize: () => Promise<TokenResult> };
-interface SquarePaymentRequest { [k: string]: unknown }
+// Mirrors CheckoutForm's shape exactly so an already-initialised Payments
+// instance can be handed straight in via the `paymentsApi` prop.
+type SquarePaymentRequest = unknown;
 interface SquarePaymentsApi {
   paymentRequest: (req: unknown) => SquarePaymentRequest;
   applePay: (req: SquarePaymentRequest) => Promise<SquareWallet>;
@@ -27,7 +29,24 @@ const squareGlobal = () => (typeof window === "undefined" ? undefined : (window 
  * or charge a wrong amount. The actual pricing + charge reuse the same
  * /api/checkout-quote and /api/create-payment the standard checkout uses.
  */
-export function ExpressCheckout({ squareConfig }: { squareConfig: SquareWebPaymentsConfig }) {
+interface ExpressCheckoutProps {
+  squareConfig: SquareWebPaymentsConfig;
+  /**
+   * Reuse an already-initialised Square Payments instance instead of creating a
+   * second one. Set when this block is mounted on a page that has already booted
+   * the SDK (i.e. `/checkout`). When set, the SDK <Script> is not re-rendered.
+   */
+  paymentsApi?: SquarePaymentsApi | null;
+  /**
+   * Called instead of routing to `/checkout` when the wallet path cannot finish
+   * (no usable wallet address, re-quote failure, decline, unexpected error).
+   * Required when this block is mounted ON `/checkout`, where `router.push`
+   * would be a no-op and would strand the shopper on a disabled button.
+   */
+  onFallback?: () => void;
+}
+
+export function ExpressCheckout({ squareConfig, paymentsApi, onFallback }: ExpressCheckoutProps) {
   const router = useRouter();
   const { items, total, clearCart } = useCart();
   const paymentsRef = useRef<SquarePaymentsApi | null>(null);
@@ -45,10 +64,9 @@ export function ExpressCheckout({ squareConfig }: { squareConfig: SquareWebPayme
 
   const initWallets = useCallback(async () => {
     if (paymentsRef.current || !canRender) return;
-    const Square = squareGlobal();
-    if (!Square) return;
     try {
-      const payments = Square.payments(squareConfig.applicationId, squareConfig.locationId);
+      const payments = paymentsApi ?? squareGlobal()?.payments(squareConfig.applicationId, squareConfig.locationId);
+      if (!payments) return;
       paymentsRef.current = payments;
       const request = payments.paymentRequest({
         countryCode: "US",
@@ -71,13 +89,19 @@ export function ExpressCheckout({ squareConfig }: { squareConfig: SquareWebPayme
         setGooglePayReady(true);
       } catch { /* Google Pay unavailable on this device */ }
     } catch { /* SDK init failed — express simply doesn't render; normal checkout is unaffected */ }
-  }, [squareConfig, total, canRender]);
+  }, [squareConfig, total, canRender, paymentsApi]);
 
   useEffect(() => {
-    if (canRender && squareGlobal()) void initWallets();
-  }, [canRender, initWallets]);
+    if (canRender && (paymentsApi || squareGlobal())) void initWallets();
+  }, [canRender, initWallets, paymentsApi]);
 
-  const toCheckout = () => router.push("/checkout");
+  // Always clears `busy` first: when this block is mounted on /checkout there is
+  // nowhere to navigate, so leaving the button spinning would be a dead end.
+  const toCheckout = () => {
+    setBusy(false);
+    if (onFallback) { onFallback(); return; }
+    router.push("/checkout");
+  };
 
   const payWithWallet = async (wallet: SquareWallet | null) => {
     if (!wallet || busy) return;
@@ -137,7 +161,7 @@ export function ExpressCheckout({ squareConfig }: { squareConfig: SquareWebPayme
 
   return (
     <>
-      <Script src={squareConfig.sdkUrl} strategy="afterInteractive" onLoad={() => void initWallets()} />
+      {!paymentsApi && <Script src={squareConfig.sdkUrl} strategy="afterInteractive" onLoad={() => void initWallets()} />}
       {(applePayReady || googlePayReady) && (
         <div className="mb-4">
           <p className="mb-2 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-muted">Express checkout</p>
@@ -149,7 +173,7 @@ export function ExpressCheckout({ squareConfig }: { squareConfig: SquareWebPayme
             )}
             <div id="aha-express-gpay" onClick={() => void payWithWallet(googlePayRef.current)} className={googlePayReady ? "min-h-12 w-full" : "hidden"} />
           </div>
-          <p className="mt-2 text-center text-[10px] leading-snug text-muted">Uses the address from your wallet. If anything&rsquo;s missing you&rsquo;ll finish on the secure checkout page.</p>
+          <p className="mt-2 text-center text-[10px] leading-snug text-muted">Uses the address from your wallet. If anything&rsquo;s missing you&rsquo;ll finish {onFallback ? "with the form below" : "on the secure checkout page"}.</p>
         </div>
       )}
     </>

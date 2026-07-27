@@ -92,7 +92,7 @@ export function FeedbackWidget() {
                 rows={4}
                 maxLength={4000}
                 placeholder="Anything — a bug, a thought, something that felt off…"
-                className="w-full resize-none border border-border/60 bg-void px-3 py-2 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
+                className="w-full resize-none border border-border/60 bg-void px-3 py-2 text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none"
               />
               <p className="mt-2 text-[10px] leading-snug text-muted">Your page and the path you took are included automatically.</p>
               {status === "error" && <p className="mt-2 text-xs font-bold text-danger">Couldn&rsquo;t send — try again.</p>}

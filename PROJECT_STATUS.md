@@ -16,7 +16,7 @@ After Hours Agenda (AHA) is a **live NYC streetwear e-commerce store** at https:
 - **Branch:** `main` (canonical + production deploy branch).
 - **Design system (current):** Origami Geométrico on a **LIGHT ground** — Paper White `#FAFAFA`, Ink `#1A1A1A`, rose actions `#FF6B6B` (rose *text* uses `#CE3D56` for AA contrast). The old ink-black era is retired. ⚠️ Browser/tab chrome (theme-color) is intentionally **rose `#FF6B6B`**, not paper — do NOT "fix" it back. (Note: project memory refers to "inverted" token names void=paper/cream=ink; the repo's current `docs/AHA-DESIGN-SYSTEM.md` is the authority.)
 - **Catalog:** Per the newest STATE block (2026-07-14): ~122 buyable products live with real-model campaign photography. A pilot allowlist (`lib/data/pilot-assortment.ts`) can filter the public assortment; historical catalog remains connected to the backend but filtered from public lookups. **Verify current live assortment before assuming.**
-- **Analytics gap (2026-07-14):** `trackCommerceEvent` pushes to `dataLayer` but **no GA4/GTM script is loaded** — funnel events go nowhere until a measurement id is supplied.
+- **Analytics (corrected 2026-07-27 — the earlier "missing measurement id" note was wrong):** the GA4 measurement id **was** supplied and `<GoogleAnalytics />` does load gtag.js after consent, yet the funnel stayed dark: `trackCommerceEvent` pushed GTM-convention objects into `window.dataLayer` and **there is no GTM container** to read them, and mount-time events hit an uninitialised `dataLayer` and were dropped. Repaired in `lib/analytics/events.ts` — events now call `window.gtag('event', …)` with real GA4 ecommerce parameters, pre-tag events are buffered (consent-gated, never retroactive), and a `purchase` event fires on `/order-confirmed` keyed on the order number. **Unverified against live data: confirm in GA4 DebugView before trusting any funnel number.**
 
 ## 3. Where everything lives
 | Thing | Location |
@@ -39,7 +39,7 @@ Full live commerce stack: Next.js 15 App Router storefront (home/shop/product/co
 From `.ai/STATE.md` (Next Steps / QA-PENDING):
 - **Observe the first real organic paid order** end-to-end (Square → DB → Printful confirm → outbox → shipment webhook) and inspect any exception in `/ops`. **Do NOT fabricate a customer payment.**
 - Add **real Square Sandbox credentials** scoped to deploy previews/staging; create + get approval for a **sandbox checkout test plan**, then a **David-approved live safe-path** before any live payment test.
-- Wire **GA4/GTM measurement id** so `trackCommerceEvent` funnel events land somewhere.
+- **Validate the repaired GA4 funnel in DebugView** on a preview deploy: `view_item` → `add_to_cart` → `begin_checkout` → `purchase`, with `value`/`currency`/`items[]` populated. The measurement id was never the blocker; the event layer was. Consider a server-side `purchase` from the Square webhook (Measurement Protocol + Meta CAPI, de-duplicated on order number) — print-on-order loses a real share of client-side conversions to ad blockers and consent rejection.
 - Confirm/align the **Square webhook notification URL** to the exact non-redirecting URL Square posts to (env currently references a `www.` URL that 301s — signature verification needs an exact match). See SOURCE_OF_TRUTH.md "Active Caveats".
 - Decide whether AHA needs `.ai/RELEASES.md` for drop/product history.
 - Next.js/PostCSS dependency advisories: npm's auto-fix is a breaking upgrade to `next@16.2.10` — handle as a separate framework migration with Netlify compat review.

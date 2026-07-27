@@ -23,6 +23,18 @@ export function isInternational(country: string | undefined | null): boolean {
   return Boolean(country) && country!.toUpperCase() !== DOMESTIC_COUNTRY;
 }
 
+// Truth-in-advertising. INTERNATIONAL_SHIPPING_CENTS is charged as a real Square
+// service charge on CA/GB/AU orders, so no surface may claim unqualified free
+// shipping. Every marketing, SEO, and email surface routes through one of these
+// three constants instead of writing its own string.
+
+/** Badge / trust-strip length. Use where only two or three words fit. */
+export const SHIPPING_CLAIM_SHORT = "Free US shipping";
+/** The qualifier that goes under or beside SHIPPING_CLAIM_SHORT, where a full sentence will not fit. */
+export const SHIPPING_CLAIM_DETAIL = "$20 flat rate international";
+/** Full sentence for body copy, FAQ answers, meta descriptions, and emails. */
+export const SHIPPING_CLAIM_SENTENCE = "Free in the US; $20 flat rate to Canada, the UK, and Australia.";
+
 /**
  * Cart-stage copy. The cart runs before a shipping address exists, so it states
  * both rates rather than guessing which one applies.

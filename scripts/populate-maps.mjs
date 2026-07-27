@@ -20,6 +20,26 @@ if (!SQUARE_TOKEN || !PF_TOKEN) {
 const DATA = join(process.cwd(), "data");
 const DRY = process.argv.includes("--dry");
 
+// Products withdrawn from the storefront 2026-07-27 (commit 86fe6c6) for IP and
+// platform-policy risk. Nine IP-adjacent, three "Deny, Defend, Depose".
+// They are still live in Square and Printful, so this script — which rebuilds
+// the manifest from those live APIs — would otherwise re-publish all twelve on
+// its next run. Keys are `slugify(product.name)`.
+const WITHDRAWN_SLUGS = new Set([
+  "ninja-turtles",
+  "super-bros-black-short-sleeve-t-shirt",
+  "link-s-lawn-service-white-unisex-short-sleeve-t-shirt",
+  "nys-ecto-black-short-sleeve-t-shirt",
+  "nys-ecto-black-unisex-hoodie",
+  "unisex-where-s-waldo-comfort-colors",
+  "glen-coco",
+  "eras-to-remember-black-unisex-premium-sweatshirt",
+  "eras-to-remember-light-blue-unisex-premium-sweatshirt",
+  "deny-defend-depose",
+  "deny-defend-depose-unisex-hoodie",
+  "deny-defend-depose-unisex-sweatshirt",
+]);
+
 const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const parseVariant = (name) => { // "Product / Color / Size" | "Product / Size"
@@ -146,7 +166,7 @@ async function main() {
 
   // 3) Compose manifest + maps
   const manifest = [], squareMap = {}, printfulMap = {}, sizeGuides = {};
-  let matched = 0, unmatchedVariants = 0;
+  let matched = 0, unmatchedVariants = 0, withdrawnSkipped = 0;
   const productRows = Array.from(products.values()).map((p) => ({ ...p, variants: Array.from(p.variants.values()) }));
   const slugGroups = new Map();
   for (const p of productRows) {
@@ -160,6 +180,18 @@ async function main() {
   for (const p of productRows) {
     const type = typeFrom(p.name, p.variants.map((v) => v.size));
     const baseSlug = slugify(p.name);
+
+    // Withdrawn 2026-07-27 — see commit 86fe6c6. These SKUs were pulled from the
+    // storefront for IP and platform-policy risk. This script rebuilds the
+    // manifest from the LIVE Square/Printful APIs, and the products still exist
+    // there, so without this guard the next run silently restores all twelve.
+    // Remove a slug from this list only when the product is genuinely coming
+    // back; deleting the guard wholesale re-publishes the lot.
+    if (WITHDRAWN_SLUGS.has(baseSlug)) {
+      withdrawnSkipped++;
+      continue;
+    }
+
     const siblings = slugGroups.get(baseSlug);
     const siblingIndex = siblings.indexOf(p);
     const slug = siblingIndex === 0 ? baseSlug : `${baseSlug}-${slugify(String(p.key)).slice(-6)}`;
@@ -205,6 +237,7 @@ async function main() {
     products: manifest.length, active: manifest.filter((p) => p.status === "active").length,
     draft: manifest.filter((p) => p.status === "draft").length,
     variantsMatched: matched, variantsNeedingReview: unmatchedVariants,
+    withdrawnSkipped,
   };
   console.log("→ summary:", JSON.stringify(summary));
 

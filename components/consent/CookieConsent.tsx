@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useConsent, setConsent, OPEN_CONSENT_EVENT } from "@/lib/consent/consent";
+
+/**
+ * Published on <html> while the banner is on screen so other bottom-fixed
+ * elements can sit above it instead of underneath. Consumers read it as
+ * `bottom-[var(--aha-consent-h,0px)]`.
+ */
+const CONSENT_HEIGHT_VAR = "--aha-consent-h";
 
 /**
  * Cookie-consent banner. Shows until the shopper chooses; tracking stays OFF
@@ -13,6 +20,7 @@ import { useConsent, setConsent, OPEN_CONSENT_EVENT } from "@/lib/consent/consen
 export function CookieConsent() {
   const { consent, mounted } = useConsent();
   const [reopened, setReopened] = useState(false);
+  const bannerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const open = () => setReopened(true);
@@ -20,8 +28,29 @@ export function CookieConsent() {
     return () => window.removeEventListener(OPEN_CONSENT_EVENT, open);
   }, []);
 
-  if (!mounted) return null;
-  if (consent !== null && !reopened) return null;
+  const visible = mounted && (consent === null || reopened);
+
+  // Publish the live banner height so bottom-fixed elements (the PDP sticky buy
+  // bar in particular) can offset above it. Measured rather than hardcoded
+  // because the copy wraps to two lines on narrow viewports.
+  useEffect(() => {
+    const root = document.documentElement;
+    const el = bannerRef.current;
+    if (!visible || !el) {
+      root.style.removeProperty(CONSENT_HEIGHT_VAR);
+      return;
+    }
+    const publish = () => root.style.setProperty(CONSENT_HEIGHT_VAR, `${el.offsetHeight}px`);
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty(CONSENT_HEIGHT_VAR);
+    };
+  }, [visible]);
+
+  if (!visible) return null;
 
   const choose = (v: "granted" | "denied") => {
     setConsent(v);
@@ -30,6 +59,7 @@ export function CookieConsent() {
 
   return (
     <div
+      ref={bannerRef}
       role="dialog"
       aria-modal="false"
       aria-label="Cookie preferences"

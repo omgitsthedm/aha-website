@@ -87,8 +87,15 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
     return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><div className="mb-6 flex items-end gap-5"><SheepMark className="w-16 shrink-0 text-cream" title="The After Hours Agenda black sheep" /><PageHeader eyebrow="0 items" title="Your bag" description="Your bag is empty. Items stay saved in this browser until you remove them or complete a verified checkout." /></div><Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link></div></div>;
   }
 
+  // Hoisted so the summary and the mobile sticky bar quote the same number.
+  // Display-only estimate; the server resolves the real (better-of) discount at checkout.
+  const bundleActive = BUNDLE_MIN >= 2 && BUNDLE_PCT > 0 && totalItems >= BUNDLE_MIN;
+  const bundleDiscount = bundleActive ? Math.round((total * BUNDLE_PCT) / 100) : 0;
+  const estimatedTotalFormatted = bundleActive ? formatCents(total - bundleDiscount) : totalFormatted;
+
   return (
-    <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-6xl">
+    // Extra bottom padding below lg clears the fixed checkout bar.
+    <div className="px-4 pb-36 pt-28 md:px-6 md:pt-32 lg:pb-20"><div className="mx-auto max-w-6xl">
       <PageHeader eyebrow={`${totalItems} ${totalItems === 1 ? "item" : "items"}`} title="Your bag" description="Review sizes and quantities before moving to the secure Square payment step." />
       {restored && <p role="status" className="mb-6 border border-accent/60 bg-surface px-4 py-3 text-sm font-bold text-cream">We brought your bag back — pick up right where you left off.</p>}
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
@@ -116,8 +123,10 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
         </ul>
 
         <aside aria-labelledby="summary-heading" className="border-t-2 border-accent pt-5 lg:sticky lg:top-28 lg:self-start">
-          {/* Funnel-wide aspirational moment: picture wearing it while you review the bag. */}
-          <div className="relative mb-6 aspect-[16/10] overflow-hidden">
+          {/* Funnel-wide aspirational moment: picture wearing it while you review the bag.
+              Desktop only — on a phone this decorative block sat between the line items
+              and the summary and pushed the only primary action past the fold. */}
+          <div className="relative mb-6 hidden aspect-[16/10] overflow-hidden lg:block">
             <Image src="/campaign/lifestyle/women.webp" alt="After Hours Agenda, worn in New York" fill className="object-cover object-top" sizes="(max-width: 1024px) 100vw, 22rem" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-4">
@@ -131,30 +140,21 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
             <div className="flex justify-between gap-4"><dt className="text-muted">Shipping</dt><dd className="max-w-[12rem] text-right text-xs">{getShippingLineCopy(total)}</dd></div>
             <div className="flex justify-between gap-4"><dt className="text-muted">Tax</dt><dd className="max-w-[12rem] text-right text-xs">{TAX_LINE_COPY}</dd></div>
           </dl>
-          {(() => {
-            const bundleActive = BUNDLE_MIN >= 2 && BUNDLE_PCT > 0 && totalItems >= BUNDLE_MIN;
-            // Display-only estimate; the server resolves the real (better-of) discount at checkout.
-            const bundleDiscount = bundleActive ? Math.round((total * BUNDLE_PCT) / 100) : 0;
-            return (
-              <>
-                {bundleActive && (
-                  <div className="flex items-center justify-between py-2 text-sm text-success">
-                    <span className="font-bold uppercase tracking-[0.06em]">Bundle discount ({BUNDLE_PCT}%)</span>
-                    <strong className="font-mono">−{formatCents(bundleDiscount)}</strong>
-                  </div>
-                )}
-                <div className="flex items-center justify-between py-5">
-                  <span className="text-xs font-bold uppercase tracking-[0.08em]">{bundleActive ? "Estimated total" : "Cart subtotal"}</span>
-                  <strong className="font-mono text-lg">{bundleActive ? formatCents(total - bundleDiscount) : totalFormatted}</strong>
-                </div>
-                {BUNDLE_MIN >= 2 && BUNDLE_PCT > 0 && (
-                  bundleActive
-                    ? <p className="mb-4 border border-success/50 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-success">Bundle unlocked — {BUNDLE_PCT}% off, applied at checkout. Final total confirmed at payment.</p>
-                    : <p className="mb-4 border border-border/40 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-muted">Add {BUNDLE_MIN - totalItems} more to save {BUNDLE_PCT}%.</p>
-                )}
-              </>
-            );
-          })()}
+          {bundleActive && (
+            <div className="flex items-center justify-between py-2 text-sm text-success">
+              <span className="font-bold uppercase tracking-[0.06em]">Bundle discount ({BUNDLE_PCT}%)</span>
+              <strong className="font-mono">−{formatCents(bundleDiscount)}</strong>
+            </div>
+          )}
+          <div className="flex items-center justify-between py-5">
+            <span className="text-xs font-bold uppercase tracking-[0.08em]">{bundleActive ? "Estimated total" : "Cart subtotal"}</span>
+            <strong className="font-mono text-lg">{estimatedTotalFormatted}</strong>
+          </div>
+          {BUNDLE_MIN >= 2 && BUNDLE_PCT > 0 && (
+            bundleActive
+              ? <p className="mb-4 border border-success/50 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-success">Bundle unlocked — {BUNDLE_PCT}% off, applied at checkout. Final total confirmed at payment.</p>
+              : <p className="mb-4 border border-border/40 bg-surface px-4 py-3 text-xs font-bold uppercase tracking-[0.04em] text-muted">Add {BUNDLE_MIN - totalItems} more to save {BUNDLE_PCT}%.</p>
+          )}
           <ExpressCheckout squareConfig={squareConfig} />
           <Link href="/checkout" className="primary-action flex min-h-14 w-full items-center justify-center px-5 py-4 text-sm">Continue to checkout</Link>
           <p className="mt-4 text-xs leading-relaxed text-muted">{WALLET_CHECKOUT_COPY}</p>
@@ -179,6 +179,26 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
           </div>
         </section>
       )}
+
+      {/* Sticky mobile checkout bar — the summary's "Continue to checkout" sits
+          ~1.35 viewports down on a 375px phone, so the bag's only primary action
+          was never on screen. Offsets above the cookie banner via --aha-consent-h
+          exactly like the PDP buy bar (the banner is z-[400] and full width, so
+          bottom-0 here would put "Accept" on top of "Checkout"). Desktop keeps
+          the sticky summary column and never renders this. */}
+      <div className="safe-bottom safe-x fixed inset-x-0 bottom-[var(--aha-consent-h,0px)] z-[80] border-t border-border/60 bg-void/95 backdrop-blur-sm transition-[bottom] duration-200 motion-reduce:transition-none lg:hidden">
+        {/* sm:pr-36 keeps the CTA clear of the feedback launcher, which is
+            `fixed bottom-3 right-3 z-[350] hidden sm:block` and would otherwise sit
+            on top of "Checkout" between sm and lg. Stacking, not z-index raising,
+            so both controls stay tappable. */}
+        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3 sm:pr-36">
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">{bundleActive ? "Estimated total" : "Subtotal"}</p>
+            <p className="font-display text-lg font-black leading-none text-cream">{estimatedTotalFormatted}</p>
+          </div>
+          <Link href="/checkout" className="btn-primary whitespace-nowrap">Checkout</Link>
+        </div>
+      </div>
     </div></div>
   );
 }

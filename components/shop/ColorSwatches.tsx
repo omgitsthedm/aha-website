@@ -24,8 +24,12 @@ export function ColorSwatches({
   const shown = swatches.slice(0, max);
   const extra = swatches.length - shown.length;
 
+  // `role="img"` is load-bearing: a bare <span> maps to role="generic", which
+  // prohibits an author-supplied name, so the aria-label would be pruned. The
+  // label already names every colorway, including the ones behind the "+N".
   return (
     <span
+      role="img"
       className={`inline-flex items-center gap-1 ${className}`}
       aria-label={`Available in ${swatches.map((s) => s.name).join(", ")}`}
     >

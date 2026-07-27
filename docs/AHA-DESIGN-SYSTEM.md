@@ -16,26 +16,34 @@ This document adapts the supplied Origami Geométrico direction to a production 
 
 ## Color tokens
 
-| Role | Value |
-|---|---|
-| Paper White | `#FAFAFA` |
-| Fold Shadow | `#B0B0B0` |
-| Ink Black | `#1A1A1A` |
-| Accent Coral | `#FF6B6B` |
-| Sky Fold | `#87CEEB` |
-| Sage Paper | `#A8D5BA` |
-| Warm Crease | `#F0C987` |
-| Steel Grey | `#4A4A4A` |
+| Role | Value | Ships as |
+|---|---|---|
+| Paper White | `#FAFAFA` | ground |
+| Sunken Paper | `#F1F1F1` | tinted panels |
+| Ink Black | `#1A1A1A` | primary text |
+| Steel Grey | `#4A4A4A` | supporting text |
+| Fold Shadow | `#B0B0B0` | decorative hairlines only |
+| Control Border | `#8A8A8A` | the edge of an interactive control |
+| Accent Coral | `#FF6B6B` | rose **fill**, ink label on top |
+| Action Rose | `#CE3D56` | rose **text** and focus, on paper |
+| Action Rose (sunken) | `#B8304A` | rose text on `#F1F1F1` or darker |
+| Sky Fold | `#87CEEB` | fold plane |
+| Sage Paper | `#A8D5BA` | fold plane |
+| Warm Crease | `#F0C987` | fold plane |
 
-Paper White is the storefront ground. Ink Black is primary text. Accent Coral is the rose interaction color for buttons, links, labels, active states, and focus. Sky, sage, and warm crease are supporting paper-fold planes, never competing CTAs. Large black refracted backgrounds are not part of the storefront system.
+Paper White is the storefront ground. Ink Black is primary text. Sky, sage, and warm crease are supporting paper-fold planes, never competing CTAs and never status colors — sage and warm crease previously served as success and warning and measured ~1.5:1 on paper. Large black refracted backgrounds are not part of the storefront system.
+
+The rose is two values, and using the wrong one is the most common way to fail an audit here. **Accent Coral `#FF6B6B` is a surface, never a text color** — 2.5:1 on paper. Rose type, links, labels and focus rings use Action Rose `#CE3D56` (4.55:1), and drop to `#B8304A` on any tinted ground, because `#CE3D56` falls to 4.20:1 on `#F1F1F1`. Where a control's border is its only visual identification, that border is Control Border `#8A8A8A` (3.31:1) rather than Fold Shadow, which WCAG 1.4.11 only exempts for decoration.
+
+Exact values, Tailwind names and the change procedure live in `docs/design-tokens.md`.
 
 ## Type
 
-- Display and body: Poppins, weights 400–700.
-- Metadata and technical values: JetBrains Mono, weights 400–700.
-- Hero: `clamp(2.5rem, 5vw, 4rem)` as the default ceiling; larger type is reserved for the name on the homepage.
+- Display and body: Poppins. Metadata and technical values: JetBrains Mono.
+- **Only weights 400 and 700 are loaded.** Anything between them is a synthesised face, not a downloaded one.
+- Sizes come from the named scale in `docs/design-tokens.md` — `display-hero`, `display-section`, `display-sub`, body, `label`, `eyebrow` — not from fresh `clamp()` expressions.
 - Body: 1rem / 1.6 with a maximum readable width of 72 characters.
-- UI labels: 0.875rem, weight 500, slight tracking.
+- Form controls never render below 16px; iOS zooms the viewport if they do.
 
 ## Layout
 
@@ -62,6 +70,7 @@ Paper White is the storefront ground. Ink Black is primary text. Accent Coral is
 - Stagger lists by 80ms.
 - Hover: 200ms color/shadow adjustment.
 - Page transition: opacity only, 200ms.
+- **Every overlay that animates in animates out, and leaves faster than it arrived** — roughly 150ms out against 220–360ms in, on an accelerating curve. A drawer that slid in from the right leaves to the right; it does not blink out. Exit classes are defined outside the reduced-motion guard so an `animationend` unmount cannot hang, and are always paired with a timeout fallback: a stuck overlay blocks checkout.
 - Never globally smooth-scroll commerce pages; it can interfere with touch targeting.
 
 ## Content and accessibility

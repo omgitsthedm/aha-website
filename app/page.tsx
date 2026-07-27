@@ -211,7 +211,7 @@ export default async function HomePage() {
               type="email"
               required
               placeholder="you@email.com"
-              className="h-12 flex-1 border border-border/10 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
+              className="h-12 flex-1 border border-border/10 bg-void px-4 text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none"
             />
             <button type="submit" className="btn-primary">Subscribe</button>
           </form>

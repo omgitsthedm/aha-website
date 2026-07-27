@@ -34,6 +34,75 @@ function scoreMatch(name: string, query: string): number {
   return 0;
 }
 
+/**
+ * Levenshtein distance, abandoned as soon as it provably exceeds `max`. Runs
+ * over ~122 short product names, and only when the exact tier above already
+ * came back empty, so the cost never lands on a successful search.
+ */
+function editDistance(a: string, b: string, max: number): number {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let previous = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i += 1) {
+    const current = [i];
+    let rowBest = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      const value = Math.min(previous[j] + 1, current[j - 1] + 1, previous[j - 1] + cost);
+      current.push(value);
+      if (value < rowBest) rowBest = value;
+    }
+    if (rowBest > max) return max + 1;
+    previous = current;
+  }
+  return previous[b.length];
+}
+
+/**
+ * How wrong a word may be before it stops being a typo. Two edits on a short
+ * word matches almost anything ("tee" would reach "the"), so the budget scales
+ * with length: "hoodei" → "hoodie" is two edits over six characters and still
+ * qualifies, while anything under four characters has to be spelled right.
+ */
+function typoBudget(word: string): number {
+  if (word.length >= 6) return 2;
+  if (word.length >= 4) return 1;
+  return 0;
+}
+
+/**
+ * Also measures against the head of a longer catalog word, so the plurals this
+ * catalog is full of stay reachable — "stikcer" is three edits from "Stickers"
+ * but two from "Sticker".
+ */
+function wordDistance(word: string, candidate: string, max: number): number {
+  const whole = editDistance(word, candidate, max);
+  if (whole === 0 || candidate.length <= word.length) return whole;
+  return Math.min(whole, editDistance(word, candidate.slice(0, word.length), max));
+}
+
+/**
+ * Fallback tier: every query word must land within its typo budget of some word
+ * in the product name. Higher is closer.
+ */
+function fuzzyScore(name: string, query: string): number {
+  const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const candidates = name.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  if (words.length === 0 || candidates.length === 0) return 0;
+  let total = 0;
+  for (const word of words) {
+    const budget = typoBudget(word);
+    let best = budget + 1;
+    for (const candidate of candidates) {
+      const distance = wordDistance(word, candidate, budget);
+      if (distance < best) best = distance;
+      if (best === 0) break;
+    }
+    if (best > budget) return 0;
+    total += budget + 1 - best;
+  }
+  return total;
+}
+
 export function SearchOverlay({ open, onClose, index }: SearchOverlayProps) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +136,7 @@ export function SearchOverlay({ open, onClose, index }: SearchOverlayProps) {
     };
   }, [open, onClose]);
 
-  const results = useMemo(() => {
+  const exactResults = useMemo(() => {
     if (!query.trim()) return [];
     return index
       .map((item) => ({ item, score: scoreMatch(item.name, query) }))
@@ -76,6 +145,22 @@ export function SearchOverlay({ open, onClose, index }: SearchOverlayProps) {
       .slice(0, 8)
       .map((r) => r.item);
   }, [index, query]);
+
+  // Second tier only — a typo-tolerant pass never competes with, reorders or
+  // dilutes an exact match, it just stands in for the dead end.
+  const fuzzyResults = useMemo(() => {
+    const trimmed = query.trim();
+    if (exactResults.length > 0 || trimmed.length < 3) return [];
+    return index
+      .map((item) => ({ item, score: fuzzyScore(item.name, trimmed) }))
+      .filter((r) => r.score > 0)
+      .sort((a, b) => b.score - a.score || a.item.name.localeCompare(b.item.name))
+      .slice(0, 8)
+      .map((r) => r.item);
+  }, [index, query, exactResults]);
+
+  const results = exactResults.length > 0 ? exactResults : fuzzyResults;
+  const corrected = exactResults.length === 0 && fuzzyResults.length > 0;
 
   useEffect(() => {
     if (query.trim().length < 2) return;
@@ -107,19 +192,24 @@ export function SearchOverlay({ open, onClose, index }: SearchOverlayProps) {
           {query.trim() && (
             <div className="mt-3 max-h-[55dvh] overflow-y-auto" aria-live="polite">
               {results.length > 0 ? (
-                <ul className="divide-y divide-border/40">
-                  {results.map((item) => (
-                    <li key={item.slug}>
-                      <Link href={`/product/${item.slug}`} onClick={onClose} className="group flex min-h-16 items-center gap-4 py-2 pr-2">
-                        <span className="relative block h-14 w-14 shrink-0 overflow-hidden border border-border/40 bg-surface">
-                          {item.image && <ResilientImage src={item.image} alt="" fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="56px" />}
-                        </span>
-                        <span className="min-w-0 flex-1 truncate font-display text-sm font-bold uppercase leading-tight text-cream group-hover:text-accent">{item.name}</span>
-                        <span className="font-mono text-xs font-bold text-muted">{item.priceFormatted}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  {corrected && (
+                    <p className="pb-3 text-sm text-muted">No exact match for “{query.trim()}”. Closest pieces:</p>
+                  )}
+                  <ul className="divide-y divide-border/40">
+                    {results.map((item) => (
+                      <li key={item.slug}>
+                        <Link href={`/product/${item.slug}`} onClick={onClose} className="group flex min-h-16 items-center gap-4 py-2 pr-2">
+                          <span className="relative block h-14 w-14 shrink-0 overflow-hidden border border-border/40 bg-surface">
+                            {item.image && <ResilientImage src={item.image} alt="" fill className={isPrintfulImage(item.image) ? "object-contain" : "object-cover"} sizes="56px" />}
+                          </span>
+                          <span className="min-w-0 flex-1 truncate font-display text-sm font-bold uppercase leading-tight text-cream group-hover:text-accent">{item.name}</span>
+                          <span className="font-mono text-xs font-bold text-muted">{item.priceFormatted}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </>
               ) : (
                 <div className="py-6 text-center">
                   <SheepMark className="mx-auto mb-4 w-16 text-muted" />

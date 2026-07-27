@@ -6,10 +6,13 @@ import { ResilientImage } from "@/components/ui/ResilientImage";
 import Link from "next/link";
 import type { CartItem, Product } from "@/lib/utils/types";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
+import { useCart } from "./CartProvider";
+import { TAX_LINE_COPY, getShippingLineCopy } from "@/lib/commerce/policies";
 
 interface AddToCartModalProps { isOpen: boolean; onClose: () => void; onViewBag: () => void; addedItem: CartItem | null; relatedProducts: Product[]; }
 
 export function AddToCartModal({ isOpen, onClose, onViewBag, addedItem, relatedProducts }: AddToCartModalProps) {
+  const { total, totalFormatted } = useCart();
   const [mounted, setMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   useEffect(() => setMounted(true), []);
@@ -42,7 +45,21 @@ export function AddToCartModal({ isOpen, onClose, onViewBag, addedItem, relatedP
         <header className="flex items-center justify-between border-b border-border/40 px-5 py-4"><div><p className="text-[10px] font-bold uppercase tracking-[0.08em] text-accent">Bag updated</p><h2 id="added-title" className="mt-1 font-display text-2xl font-bold uppercase">Added to bag</h2></div><button type="button" onClick={onClose} className="min-h-11 border border-border/60 px-3 text-xs font-bold uppercase transition-colors hover:border-accent">Close</button></header>
         <div className="grid grid-cols-[4rem_1fr] gap-4 p-5">{addedItem.image && <div className="relative aspect-square overflow-hidden border border-border/40 bg-surface"><ResilientImage src={addedItem.image} alt={addedItem.name} fill className={isPrintfulImage(addedItem.image) ? "object-contain" : "object-cover"} sizes="64px" /></div>}<div className="min-w-0"><h3 className="truncate font-display text-lg font-bold uppercase">{addedItem.name}</h3><p className="mt-1 text-xs font-bold uppercase text-muted">{addedItem.variationName}</p><p className="mt-1 font-mono text-sm font-bold">{addedItem.priceFormatted}</p></div></div>
         {suggested.length > 0 && <section className="border-t border-border/40 p-5"><h3 className="font-display text-xl font-bold uppercase">Related pieces</h3><div className="mt-4 grid grid-cols-3 gap-3">{suggested.map((product) => { const image = product.images[0]; return <Link key={product.id} href={`/product/${product.slug}`} onClick={onClose} className="group block"><div className="relative aspect-[3/4] overflow-hidden border border-border/40 bg-surface">{image && <ResilientImage src={image} alt={product.name} fill className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art`} sizes="160px" />}</div><h4 className="mt-2 line-clamp-2 text-[10px] font-bold uppercase leading-tight">{product.name}</h4><p className="mt-1 font-mono text-[10px] text-muted">{product.priceFormatted}</p></Link>; })}</div></section>}
-        <footer className="grid gap-3 border-t border-border/40 p-5 sm:grid-cols-2"><button type="button" onClick={onClose} className="min-h-12 border border-border/60 px-5 py-3 text-xs font-bold uppercase hover:border-accent">Keep shopping</button><button type="button" onClick={onViewBag} className="primary-action min-h-12 px-5 py-3 text-xs">Review bag</button></footer>
+        {/* One label per destination. This overlay's primary action is the actual
+            goal — paying — not a second overlay. "Open bag" opens the drawer;
+            the drawer's own "Review bag" is the only route to /cart. */}
+        <footer className="border-t border-border/40 p-5">
+          {/* Routing straight to payment makes this a checkout-entry surface, so it
+              carries the same subtotal + shipping + tax expectation the drawer does.
+              Without it "Checkout — $X" reads as the final charge. */}
+          <div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Subtotal</span><strong className="font-mono text-lg">{totalFormatted}</strong></div>
+          <p className="mb-4 mt-2 text-xs leading-relaxed text-muted">Shipping: {getShippingLineCopy(total)}. Tax: {TAX_LINE_COPY}.</p>
+          <Link href="/checkout" onClick={onClose} className="primary-action flex min-h-12 w-full items-center justify-center px-5 py-3 text-sm">Checkout — {totalFormatted}</Link>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <button type="button" onClick={onClose} className="min-h-12 border border-border/60 px-5 py-3 text-xs font-bold uppercase hover:border-accent">Keep shopping</button>
+            <button type="button" onClick={onViewBag} className="min-h-12 border border-border/60 px-5 py-3 text-xs font-bold uppercase hover:border-accent">Open bag</button>
+          </div>
+        </footer>
       </div>
     </div>, document.body
   );

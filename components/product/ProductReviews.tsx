@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
 import { FIT_LABEL } from "@/lib/commerce/fit";
 import { Stars } from "@/components/product/Stars";
@@ -13,10 +13,13 @@ const dateFmt = (iso: string) => {
   }
 };
 
+const STAR_VALUES = [1, 2, 3, 4, 5] as const;
+
 export function ProductReviews({ productSlug, initial }: { productSlug: string; initial: ReviewSummary }) {
   const [summary] = useState(initial);
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(5);
+  const starRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [form, setForm] = useState({ authorName: "", title: "", body: "", email: "", company: "", sizePurchased: "", fit: "" });
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +44,27 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
     }
   };
 
+  // ARIA APG radiogroup: one tab stop for the whole rating, arrow keys move
+  // between stars. Five separate tab stops made the shortest field in the form
+  // the longest to get past.
+  const onStarKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, value: number) => {
+    const last = STAR_VALUES.length;
+    let next = value;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") next = value === last ? 1 : value + 1;
+    else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = value === 1 ? last : value - 1;
+    else if (event.key === "Home") next = 1;
+    else if (event.key === "End") next = last;
+    else return;
+    event.preventDefault();
+    setRating(next);
+    starRefs.current[next - 1]?.focus();
+  };
+
   const field = "min-h-12 w-full border border-border/60 bg-void px-3 py-3 text-base text-cream placeholder:text-muted";
+  // Every control below carries a visible <label> in this class. Placeholders are
+  // examples only: a placeholder disappears the moment someone types, so a form
+  // labelled by placeholders is an unlabelled form the moment it is filled in.
+  const labelC = "mb-2 block text-[11px] font-bold uppercase tracking-[0.08em] text-muted";
 
   return (
     <section id="reviews" aria-labelledby="reviews-title" className="mt-16 scroll-mt-28 border-t border-border/40 pt-10">
@@ -56,6 +79,12 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
           ) : (
             <p className="mt-2 text-sm text-muted">No reviews yet — be the first to share how it wears.</p>
           )}
+          {/* States what this system actually is, in the same terms as the FAQ
+              answer, so the two surfaces agree. Honest moderation is a stronger
+              trust signal than a review count. */}
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            Reviews come from buyers. Every one is read and approved by a person before it publishes, and a Verified badge means the review was matched to a real order. We do not write, buy, or edit reviews.
+          </p>
         </div>
         <button type="button" onClick={() => setOpen((v) => !v)}
           className="btn-secondary min-h-11 whitespace-nowrap">
@@ -70,35 +99,56 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
           ) : (
             <form onSubmit={submit} className="grid gap-4" noValidate>
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-muted">Your rating</span>
-                <div className="mt-2 flex gap-1" role="radiogroup" aria-label="Rating">
-                  {[1, 2, 3, 4, 5].map((n) => (
+                <span id="review-rating-label" className={labelC}>Your rating</span>
+                <div className="flex gap-1" role="radiogroup" aria-labelledby="review-rating-label">
+                  {STAR_VALUES.map((n) => (
                     <button key={n} type="button" role="radio" aria-checked={rating === n} aria-label={`${n} star${n > 1 ? "s" : ""}`}
+                      ref={(node) => { starRefs.current[n - 1] = node; }}
+                      tabIndex={rating === n ? 0 : -1}
+                      onKeyDown={(event) => onStarKeyDown(event, n)}
                       onClick={() => setRating(n)}
-                      className={`flex h-11 w-11 items-center justify-center border text-xl transition-colors ${n <= rating ? "border-accent text-accent" : "border-border/60 text-muted/40 hover:text-accent"}`}>★</button>
+                      className={`flex h-11 w-11 items-center justify-center border text-xl transition-colors ${n <= rating ? "border-accent text-accent" : "border-border/60 text-muted hover:text-accent"}`}>★</button>
                   ))}
                 </div>
               </div>
-              <input aria-label="Your name" required placeholder="Your name" className={field}
-                value={form.authorName} onChange={(e) => setForm({ ...form, authorName: e.target.value })} />
-              <input aria-label="Headline (optional)" placeholder="Headline (optional)" className={field}
-                value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-              <textarea aria-label="Your review" required placeholder="How does it fit and wear?" rows={4} className={`${field} resize-y`}
-                value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
+              <div>
+                <label className={labelC} htmlFor="review-author">Your name</label>
+                <input id="review-author" name="authorName" autoComplete="name" required placeholder="e.g. Alex R." className={field}
+                  value={form.authorName} onChange={(e) => setForm({ ...form, authorName: e.target.value })} />
+              </div>
+              <div>
+                <label className={labelC} htmlFor="review-title">Headline (optional)</label>
+                <input id="review-title" name="title" placeholder="e.g. Wears great, holds its shape" className={field}
+                  value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+              </div>
+              <div>
+                <label className={labelC} htmlFor="review-body">Your review</label>
+                <textarea id="review-body" name="body" required placeholder="How does it fit and wear?" rows={4} className={`${field} resize-y`}
+                  value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
+              </div>
               {/* Optional fit context — the single biggest apparel sizing signal. */}
               <div className="grid gap-4 sm:grid-cols-2">
-                <input aria-label="Size you bought (optional)" placeholder="Size you bought (e.g. M)" className={field}
-                  value={form.sizePurchased} onChange={(e) => setForm({ ...form, sizePurchased: e.target.value })} />
-                <select aria-label="How does it fit? (optional)" className={`${field} cursor-pointer`}
-                  value={form.fit} onChange={(e) => setForm({ ...form, fit: e.target.value })}>
-                  <option value="">How does it fit? (optional)</option>
-                  <option value="small">Runs small</option>
-                  <option value="true">True to size</option>
-                  <option value="large">Runs large</option>
-                </select>
+                <div>
+                  <label className={labelC} htmlFor="review-size">Size you bought (optional)</label>
+                  <input id="review-size" name="sizePurchased" placeholder="e.g. M" className={field}
+                    value={form.sizePurchased} onChange={(e) => setForm({ ...form, sizePurchased: e.target.value })} />
+                </div>
+                <div>
+                  <label className={labelC} htmlFor="review-fit">How does it fit? (optional)</label>
+                  <select id="review-fit" name="fit" className={`${field} cursor-pointer`}
+                    value={form.fit} onChange={(e) => setForm({ ...form, fit: e.target.value })}>
+                    <option value="">No comment</option>
+                    <option value="small">Runs small</option>
+                    <option value="true">True to size</option>
+                    <option value="large">Runs large</option>
+                  </select>
+                </div>
               </div>
-              <input aria-label="Email (not shown)" type="email" placeholder="Email (kept private)" className={field}
-                value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              <div>
+                <label className={labelC} htmlFor="review-email">Email (kept private)</label>
+                <input id="review-email" name="email" type="email" autoComplete="email" placeholder="e.g. you@example.com" className={field}
+                  value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              </div>
               {/* Honeypot — hidden from real users */}
               <input tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden"
                 value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />

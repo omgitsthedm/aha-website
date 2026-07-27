@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { SHIPPING_CLAIM_SENTENCE } from "@/lib/commerce/policies";
 
 export const metadata: Metadata = {
   title: "About",
@@ -38,7 +39,7 @@ const steps = [
   },
   {
     title: "Ship",
-    body: "Once production is done, the piece ships to you with free shipping. Tracking arrives as soon as the carrier takes custody.",
+    body: `Once production is done, the piece ships to you. ${SHIPPING_CLAIM_SENTENCE} Tracking arrives as soon as the carrier takes custody.`,
   },
 ];
 
@@ -270,7 +271,7 @@ export default function AboutPage() {
                   type="email"
                   required
                   placeholder="you@email.com"
-                  className="min-h-12 flex-1 border border-border/40 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
+                  className="min-h-12 flex-1 border border-border/40 bg-void px-4 text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none"
                 />
                 <button type="submit" className="btn-primary min-h-12 px-6">
                   Subscribe

@@ -22,11 +22,15 @@ export function CartDrawer() {
     const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const focusable = panelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
-    focusable?.[0]?.focus();
+    const selector = 'a[href], button:not([disabled])';
+    panelRef.current?.querySelector<HTMLElement>(selector)?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") { toggleCart(); return; }
-      if (event.key !== "Tab" || !focusable?.length) return;
+      if (event.key !== "Tab") return;
+      // Re-query every time: emptying the bag unmounts the last focusable node,
+      // and a list snapshotted at open time would then trap Tab on a dead node.
+      const focusable = panelRef.current?.querySelectorAll<HTMLElement>(selector);
+      if (!focusable?.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
@@ -62,7 +66,20 @@ export function CartDrawer() {
           )}
         </div>
 
-        {items.length > 0 && <footer className="border-t border-border/40 px-5 py-5"><div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Subtotal</span><strong className="font-mono text-lg">{totalFormatted}</strong></div><p className="mt-3 text-xs leading-relaxed text-muted">Shipping: {getShippingLineCopy(total)}. Tax: {TAX_LINE_COPY}.</p><Link href="/cart" onClick={toggleCart} className="primary-action mt-5 flex min-h-12 w-full items-center justify-center px-5 py-3 text-sm">Review bag</Link><p className="mt-3 text-center text-[11px] leading-relaxed text-muted">{getFulfillmentSummary()}</p></footer>}
+        {/* The drawer is the last blocking surface between "added to bag" and paying,
+            so its primary action goes straight to /checkout. "Review bag" stays as a
+            secondary link — one label per destination, never the same word twice. */}
+        {items.length > 0 && (
+          <footer className="border-t border-border/40 px-5 py-5">
+            <div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Subtotal</span><strong className="font-mono text-lg">{totalFormatted}</strong></div>
+            <p className="mt-3 text-xs leading-relaxed text-muted">Shipping: {getShippingLineCopy(total)}. Tax: {TAX_LINE_COPY}.</p>
+            <Link href="/checkout" onClick={toggleCart} className="primary-action mt-5 flex min-h-12 w-full items-center justify-center px-5 py-3 text-sm">Checkout — {totalFormatted}</Link>
+            <div className="mt-3 flex justify-center">
+              <Link href="/cart" onClick={toggleCart} className="inline-flex min-h-11 items-center px-2 text-xs font-bold uppercase tracking-[0.05em] text-muted underline underline-offset-4 hover:text-accent">Review bag</Link>
+            </div>
+            <p className="mt-1 text-center text-[11px] leading-relaxed text-muted">{getFulfillmentSummary()}</p>
+          </footer>
+        )}
       </div>
     </div>, document.body
   );

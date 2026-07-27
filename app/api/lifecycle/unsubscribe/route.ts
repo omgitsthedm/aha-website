@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 // both the confirm button and the RFC 8058 List-Unsubscribe-Post one-click path
 // (which providers only trigger on genuine user action).
 const shell = (msg: string, inner: string) =>
-  `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>After Hours Agenda</title></head><body style="margin:0;background:#FAFAFA;color:#1A1A1A;font-family:Arial,sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center"><div style="max-width:32rem;padding:2rem;text-align:center"><p style="font-weight:700;letter-spacing:.08em;color:#CE3D56;font-size:12px">AFTER HOURS AGENDA</p><p style="font-size:18px;line-height:1.6;margin:1rem 0">${msg}</p>${inner}</div></body></html>`;
+  `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>After Hours Agenda</title></head><body style="margin:0;background:#FAFAFA;color:#1A1A1A;font-family:Arial,sans-serif;display:flex;min-height:100dvh;align-items:center;justify-content:center"><div style="max-width:32rem;padding:2rem;text-align:center"><p style="font-weight:700;letter-spacing:.08em;color:#CE3D56;font-size:12px">AFTER HOURS AGENDA</p><p style="font-size:18px;line-height:1.6;margin:1rem 0">${msg}</p>${inner}</div></body></html>`;
 
 const escapeAttr = (s: string) => s.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#039;" }[c] || c));
 

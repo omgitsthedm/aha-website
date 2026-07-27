@@ -8,8 +8,10 @@ import { PlatformLayer } from "@/components/ui/PlatformLayer";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { SocialPixels } from "@/components/analytics/SocialPixels";
 import { StorefrontJsonLd } from "@/components/seo/StorefrontJsonLd";
+import { ConsentIdentifierCleanup } from "@/components/seo/ConsentIdentifierCleanup";
 import { CookieConsent } from "@/components/consent/CookieConsent";
 import { FeedbackWidget } from "@/components/feedback/FeedbackWidget";
+import { SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -30,16 +32,29 @@ export const metadata: Metadata = {
     default: "After Hours Agenda | NYC Streetwear",
     template: "%s | After Hours Agenda",
   },
-  description:
-    "After Hours Agenda — expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. Free shipping. Secure Square checkout.",
+  // Shipping claim comes from lib/commerce/policies.ts, never hand-written:
+  // $20 is charged on CA/GB/AU orders, so "free shipping" unqualified is false.
+  // These three surfaces are length-capped (SERP snippet, OG card, Twitter card),
+  // so they carry SHIPPING_CLAIM_SHORT — the qualifier that fits — rather than
+  // SHIPPING_CLAIM_SENTENCE, which pushes the description past 160 characters.
+  description: `After Hours Agenda — expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. ${SHIPPING_CLAIM_SHORT}. Secure Square checkout.`,
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com"
   ),
   openGraph: {
     title: "After Hours Agenda | NYC Streetwear",
-    description:
-      "Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. Free shipping. Secure Square checkout.",
+    description: `Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. ${SHIPPING_CLAIM_SHORT}. Secure Square checkout.`,
     type: "website",
+    // Deliberately NO `url` here. Next only overwrites the keys a child segment
+    // actually declares (`resolve-metadata.js` iterates `for (const key in
+    // source)`), so a root-level `openGraph.url` is inherited verbatim by every
+    // page that does not declare its own openGraph — which today is every page
+    // except /product/[slug]. That would make /about, /lookbook, /manifesto and
+    // ~26 others all advertise the homepage as their share canonical, which is
+    // worse than the current absent og:url (scrapers fall back to the fetched
+    // URL). og:url belongs per-page, from the `path` argument in
+    // components/seo/buildMetadata.ts — add it here only once every page routes
+    // through that helper and overrides this object.
     locale: "en_US",
     siteName: "After Hours Agenda",
     images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: "After Hours Agenda — script logo and the black sheep" }],
@@ -47,8 +62,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "After Hours Agenda | NYC Streetwear",
-    description:
-      "Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. Free shipping. Secure Square checkout.",
+    description: `Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. ${SHIPPING_CLAIM_SHORT}. Secure Square checkout.`,
     images: ["/brand/og-image.png"],
   },
   robots: {
@@ -95,7 +109,20 @@ export default function RootLayout({
           <a href="#main-content" className="fixed left-3 top-3 z-[500] -translate-y-24 bg-rose px-4 py-3 font-mono text-xs font-bold text-cream transition-transform focus:translate-y-0">Skip to content</a>
           <PlatformLayer />
           <GoogleAnalytics />
+          {/*
+            The Meta pixel stays. It is a deliberate keep, not drift: it is
+            env-gated (NEXT_PUBLIC_META_PIXEL_ID) and consent-gated (nothing
+            loads until consent === "granted"), it feeds the live product feed's
+            retargeting audience, and lib/analytics/events.ts already mirrors the
+            GA4 `purchase` to Meta `Purchase` with an eventID for CAPI de-dup.
+            Pulling the id would silently break an existing catalog/retargeting
+            setup — a marketing decision, not a technical one. Still open, and
+            owned outside this file: ViewContent / AddToCart / InitiateCheckout
+            mirrors in the same helper, the CAPI send, and app/privacy/page.tsx,
+            which names a TikTok pixel that never runs (no TikTok id is set).
+          */}
           <SocialPixels />
+          <ConsentIdentifierCleanup />
           <StorefrontJsonLd />
           <SiteNav />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>

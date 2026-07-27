@@ -1,8 +1,10 @@
 /** Shared 5-star rating glyphs (rounded). Honest: only render when real reviews exist. */
 export function Stars({ rating, className = "" }: { rating: number; className?: string }) {
   const full = Math.round(rating);
+  // `role="img"` is load-bearing: a bare <span> maps to role="generic", which
+  // prohibits an author-supplied name, so the aria-label would be pruned.
   return (
-    <span aria-label={`${rating} out of 5`} className={`inline-flex ${className}`}>
+    <span role="img" aria-label={`${rating} out of 5`} className={`inline-flex ${className}`}>
       {[1, 2, 3, 4, 5].map((n) => (
         <span key={n} aria-hidden="true" className={n <= full ? "text-accent" : "text-muted/40"}>★</span>
       ))}

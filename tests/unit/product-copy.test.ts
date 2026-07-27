@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildProductStory } from "@/lib/content/product-copy";
-import type { Product, Collection } from "@/lib/utils/types";
+import type { Product } from "@/lib/utils/types";
 
 const product = (name: string): Product => ({
   id: name.toLowerCase().replace(/\s+/g, "-"),
@@ -16,23 +16,30 @@ const product = (name: string): Product => ({
   variations: [],
 });
 
-const collection: Collection = {
-  id: "night-mode",
-  slug: "night-mode",
-  name: "Night Mode",
-  description: "For the hours between midnight and dawn.",
-  accent: "blue",
-};
-
 describe("buildProductStory", () => {
-  it("replaces generic provider copy with specific brand and collection context", () => {
-    const story = buildProductStory(product("Be You"), null, collection);
+  it("replaces generic provider copy with specific brand context", () => {
+    const story = buildProductStory(product("Be You"), null);
 
     expect(story).toContain("Optimism with its eyes open");
     expect(story).toContain("Be You is printed to order");
-    expect(story).toContain(collection.description);
-    expect(story).toContain("free shipping");
     expect(story).not.toContain("comfortable, soft, lightweight");
+  });
+
+  // H9: the close used to promise unqualified "free shipping" on every generated
+  // PDP story — and that string also fed the Product JSON-LD description across
+  // ~92 pages, while the store charges $20 flat to CA/GB/AU. The close now points
+  // at the live rates instead of asserting a price.
+  it("never claims free shipping in generated copy", () => {
+    for (const name of ["Be You", "Cities", "Hot Air"]) {
+      expect(buildProductStory(product(name)).toLowerCase()).not.toContain("free shipping");
+    }
+  });
+
+  // M25: `collection` was a third parameter that only this test ever passed —
+  // both production callers passed two, which is how the branch stayed dead.
+  // buildProductStory now takes (product, enrichment?) only.
+  it("takes no collection argument", () => {
+    expect(buildProductStory.length).toBeLessThanOrEqual(2);
   });
 
   it("produces distinct copy for distinct products", () => {
