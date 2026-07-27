@@ -215,7 +215,7 @@ export default function LookbookPage() {
               type="email"
               required
               placeholder="you@email.com"
-              className="min-h-12 flex-1 border border-border/40 bg-void px-4 text-sm text-cream placeholder:text-muted focus:border-accent focus:outline-none"
+              className="min-h-12 flex-1 border border-border/40 bg-void px-4 text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none"
             />
             <button type="submit" className="btn-primary min-h-12 px-6">
               Subscribe

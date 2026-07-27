@@ -764,7 +764,7 @@ export function CheckoutForm({ squareConfig }: Props) {
                 <input id="promo" value={promoCode} autoComplete="off"
                   onChange={(e) => { setPromoCode(e.target.value); setPromoInvalid(false); }}
                   placeholder="Enter code"
-                  className="min-h-11 flex-1 border border-border/60 bg-void px-3 text-sm uppercase text-cream placeholder:normal-case placeholder:text-muted" />
+                  className="min-h-11 flex-1 border border-border/60 bg-void px-3 text-base uppercase text-cream placeholder:normal-case placeholder:text-muted" />
                 <button type="button" onClick={() => setAppliedPromo(promoCode.trim())}
                   disabled={!promoCode.trim() || quoteStatus === "loading" || promoCode.trim().toUpperCase() === appliedPromo.toUpperCase()}
                   className="btn-secondary min-h-11 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-50">Apply</button>

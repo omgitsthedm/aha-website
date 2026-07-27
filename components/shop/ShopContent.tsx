@@ -79,7 +79,7 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
   };
 
   const collectionFor = (product: Product) => collections.find((collection) => product.collectionIds.includes(collection.id));
-  const control = "min-h-11 border border-border/60 bg-void px-3 py-2 text-sm text-cream placeholder:text-muted transition-colors duration-200 focus:border-accent focus:outline-none";
+  const control = "min-h-11 border border-border/60 bg-void px-3 py-2 text-base text-cream placeholder:text-muted transition-colors duration-200 focus:border-accent focus:outline-none";
   const toggle = "min-h-11 border px-3 text-xs font-bold uppercase tracking-[0.06em] transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.98]";
 
   useEffect(() => {

@@ -87,10 +87,18 @@
   }
 
   /* iOS zooms the viewport when a focused field is under 16px. Floor form
-     controls at 16px so tapping search / checkout inputs never lurches. */
-  input,
-  select,
-  textarea {
+     controls at 16px so tapping search / checkout inputs never lurches.
+
+     The `:not()` is load-bearing, not cosmetic. A bare `input, select, textarea`
+     selector scores (0,0,1) and loses to Tailwind's `.text-sm` (0,1,0), which is
+     emitted later — that silently defeated this guard on nine controls including
+     the whole /shop filter bar and the site-wide footer newsletter. `:not()`
+     contributes its argument's specificity (unlike `:where()`, which is always
+     zero), lifting these to (0,1,1) so a utility class can no longer override
+     them. Do not "simplify" this back to bare element selectors. */
+  input:not([type="hidden"]),
+  select:not([hidden]),
+  textarea:not([hidden]) {
     font-size: max(16px, 1em);
   }
 
