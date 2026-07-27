@@ -1,3 +1,5 @@
+import { DELIVERY_WINDOW, PRODUCTION_WINDOW } from "@/lib/commerce/policies";
+
 export type OrderEmailKind = "order_confirmed" | "order_in_production" | "order_shipped" | "fulfillment_attention";
 
 export interface OrderEmailData {
@@ -22,10 +24,22 @@ const money = (amount: number, currency: string) => new Intl.NumberFormat("en-US
   style: "currency", currency: currency || "USD",
 }).format(amount / 100);
 
+/**
+ * Canonical origin for links inside transactional email. Netlify's own URL can be
+ * a deploy hostname, so the configured canonical wins. Deliberately duplicated
+ * from lib/email/marketing.ts instead of imported: transactional order email must
+ * not take a dependency on the marketing/lifecycle module.
+ */
+const siteOrigin = () => (
+  process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || process.env.URL || "https://afterhoursagenda.com"
+).replace(/\/$/, "");
+
 const copy: Record<OrderEmailKind, { subject: string; eyebrow: string; heading: string; message: string }> = {
   order_confirmed: {
     subject: "Order received", eyebrow: "Payment confirmed", heading: "Your order is in",
-    message: "We received your payment and are preparing your items for production.",
+    // The kept email has to answer "when does it arrive" on its own — the same
+    // two windows the confirmation page and the FAQ quote, from one constant.
+    message: `We received your payment and your order is entering production. Production usually takes ${PRODUCTION_WINDOW}, and delivery is ${DELIVERY_WINDOW}. Tracking is emailed when the package ships.`,
   },
   order_in_production: {
     subject: "Your order is in production", eyebrow: "Production started", heading: "We are making it",
@@ -50,11 +64,18 @@ export function renderOrderEmail(data: OrderEmailData): { subject: string; html:
   }).join("");
   const tracking = data.kind === "order_shipped" && data.trackingUrl?.startsWith("https://")
     ? `<p style="margin:28px 0"><a href="${escapeHtml(data.trackingUrl)}" style="background:#FF6B6B;color:#1A1A1A;padding:14px 20px;text-decoration:none;font-weight:700">Track package</a></p><p style="color:#B0B0B0">${escapeHtml(data.carrier)} ${escapeHtml(data.trackingNumber)}</p>` : "";
+  // Self-serve status lookup, for every state except the one that already ships a
+  // carrier button. The page needs the order number plus the checkout email, both
+  // of which the recipient of this email has.
+  const trackOrderUrl = `${siteOrigin()}/track-order`;
+  const orderLookup = tracking
+    ? ""
+    : `<p style="margin-top:14px;color:#B0B0B0;line-height:1.6">Check the status any time at <a href="${escapeHtml(trackOrderUrl)}" style="color:#FF6B6B;font-weight:700">${escapeHtml(trackOrderUrl)}</a> using this order number and your checkout email.</p>`;
   const discount = data.discountAmount ?? 0;
   const summaryRows = discount > 0
     ? `<tr><td colspan="2" style="padding-top:14px;color:#B0B0B0">Subtotal</td><td style="padding-top:14px;text-align:right;color:#B0B0B0">${money(data.subtotalAmount ?? data.totalAmount + discount, data.currency)}</td></tr><tr><td colspan="2" style="color:#8fce9b">Discount</td><td style="text-align:right;color:#8fce9b">-${money(discount, data.currency)}</td></tr>`
     : "";
-  const html = `<!doctype html><html><body style="margin:0;background:#1A1A1A;color:#FAFAFA;font-family:Arial,sans-serif"><div style="max-width:640px;margin:auto;padding:40px 24px"><div style="height:8px;background:linear-gradient(90deg,#FF6B6B 0 25%,#87CEEB 25% 50%,#A8D5BA 50% 75%,#F0C987 75%)"></div><p style="color:#FF6B6B;font-size:12px;font-weight:700;letter-spacing:.08em">After Hours Agenda / ${escapeHtml(state.eyebrow)}</p><h1 style="font-size:40px;line-height:1;margin:18px 0">${escapeHtml(state.heading)}</h1><p style="color:#B0B0B0;line-height:1.6">${escapeHtml(state.message)}</p><p style="margin-top:24px"><strong>Order ${escapeHtml(data.orderNumber)}</strong></p>${tracking}<table style="width:100%;border-collapse:collapse;margin-top:24px;color:#FAFAFA"><tbody>${rows}${summaryRows}<tr><td colspan="2" style="padding-top:18px;font-weight:700">Total</td><td style="padding-top:18px;text-align:right;font-weight:700">${money(data.totalAmount, data.currency)}</td></tr></tbody></table><p style="margin-top:36px;color:#B0B0B0;line-height:1.6">Questions? Reply to this email or contact info@afterhoursagenda.com. Never send card details by email.</p><p style="margin-top:36px;font-size:12px;color:#B0B0B0">After Hours Agenda · New York City · afterhoursagenda.com</p></div></body></html>`;
-  const text = [`AFTER HOURS AGENDA — ${state.eyebrow}`, state.heading, state.message, `Order ${data.orderNumber}`, ...data.items.map((item) => `${item.quantity}x ${item.title}${item.size ? ` / ${item.size}` : ""} — ${money(item.lineTotal, data.currency)}`), discount > 0 ? `Subtotal: ${money(data.subtotalAmount ?? data.totalAmount + discount, data.currency)}` : "", discount > 0 ? `Discount: -${money(discount, data.currency)}` : "", `Total: ${money(data.totalAmount, data.currency)}`, data.trackingUrl ? `Tracking: ${data.trackingUrl}` : "", "Questions: info@afterhoursagenda.com"].filter(Boolean).join("\n\n");
+  const html = `<!doctype html><html><body style="margin:0;background:#1A1A1A;color:#FAFAFA;font-family:Arial,sans-serif"><div style="max-width:640px;margin:auto;padding:40px 24px"><div style="height:8px;background:linear-gradient(90deg,#FF6B6B 0 25%,#87CEEB 25% 50%,#A8D5BA 50% 75%,#F0C987 75%)"></div><p style="color:#FF6B6B;font-size:12px;font-weight:700;letter-spacing:.08em">After Hours Agenda / ${escapeHtml(state.eyebrow)}</p><h1 style="font-size:40px;line-height:1;margin:18px 0">${escapeHtml(state.heading)}</h1><p style="color:#B0B0B0;line-height:1.6">${escapeHtml(state.message)}</p><p style="margin-top:24px"><strong>Order ${escapeHtml(data.orderNumber)}</strong></p>${orderLookup}${tracking}<table style="width:100%;border-collapse:collapse;margin-top:24px;color:#FAFAFA"><tbody>${rows}${summaryRows}<tr><td colspan="2" style="padding-top:18px;font-weight:700">Total</td><td style="padding-top:18px;text-align:right;font-weight:700">${money(data.totalAmount, data.currency)}</td></tr></tbody></table><p style="margin-top:36px;color:#B0B0B0;line-height:1.6">Questions? Reply to this email or contact info@afterhoursagenda.com. Never send card details by email.</p><p style="margin-top:36px;font-size:12px;color:#B0B0B0">After Hours Agenda · New York City · afterhoursagenda.com</p></div></body></html>`;
+  const text = [`AFTER HOURS AGENDA — ${state.eyebrow}`, state.heading, state.message, `Order ${data.orderNumber}`, ...data.items.map((item) => `${item.quantity}x ${item.title}${item.size ? ` / ${item.size}` : ""} — ${money(item.lineTotal, data.currency)}`), discount > 0 ? `Subtotal: ${money(data.subtotalAmount ?? data.totalAmount + discount, data.currency)}` : "", discount > 0 ? `Discount: -${money(discount, data.currency)}` : "", `Total: ${money(data.totalAmount, data.currency)}`, data.trackingUrl ? `Tracking: ${data.trackingUrl}` : "", tracking ? "" : `Order status: ${trackOrderUrl}`, "Questions: info@afterhoursagenda.com"].filter(Boolean).join("\n\n");
   return { subject, html, text };
 }

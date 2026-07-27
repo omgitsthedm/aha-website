@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata: Metadata = {
   title: "Newsletter",
-  description: "Join the After Hours Agenda email list for product releases, restocks, and occasional notes from the design index.",
+  description: "Join the After Hours Agenda email list for product releases, restocks, and design notes. No daily noise, no purchased lists, unsubscribe in every message.",
   alternates: { canonical: "/newsletter" },
 };
 

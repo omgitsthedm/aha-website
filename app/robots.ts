@@ -66,14 +66,24 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
           "/terms",
           "/accessibility",
         ],
+        // Deliberately short. A `Disallow` blocks the *fetch*, so anything that
+        // relies on the response being read must NOT appear here:
+        //   - /cart and /checkout carry `robots: { index: false }` in their own
+        //     metadata (app/cart/page.tsx:7, app/checkout/page.tsx:7). Blocking
+        //     the crawl means Google never reads that noindex and can still
+        //     index the URL from inbound links, which is the opposite outcome.
+        //   - /collections/* and /drops/* are redirects (next.config.mjs
+        //     `retiredPublicRoutes`). A blocked redirect cannot pass its signal
+        //     to the destination.
+        // /order-confirmed stays: it is only reachable with a live order token,
+        // has no noindex to read, and nothing should be following it.
+        // /catalog-edit and /coming-soon also redirect, but they are internal
+        // routes that never had public links, so there is no signal to pass on
+        // and blocking the fetch costs nothing.
         disallow: [
           "/api/",
           "/ops/",
-          "/cart",
-          "/checkout",
           "/order-confirmed",
-          "/collections/",
-          "/drops/",
           "/catalog-edit",
           "/coming-soon",
         ],

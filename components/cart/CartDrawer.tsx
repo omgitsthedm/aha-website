@@ -22,11 +22,15 @@ export function CartDrawer() {
     const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const focusable = panelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
-    focusable?.[0]?.focus();
+    const selector = 'a[href], button:not([disabled])';
+    panelRef.current?.querySelector<HTMLElement>(selector)?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") { toggleCart(); return; }
-      if (event.key !== "Tab" || !focusable?.length) return;
+      if (event.key !== "Tab") return;
+      // Re-query every time: emptying the bag unmounts the last focusable node,
+      // and a list snapshotted at open time would then trap Tab on a dead node.
+      const focusable = panelRef.current?.querySelectorAll<HTMLElement>(selector);
+      if (!focusable?.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }

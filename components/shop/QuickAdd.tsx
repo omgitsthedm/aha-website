@@ -25,15 +25,29 @@ export function QuickAdd({ product, purchasableSizes }: QuickAddProps) {
   const [added, setAdded] = useState(false);
   const timer = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => () => {
     if (timer.current) window.clearTimeout(timer.current);
   }, []);
 
+  // The popover is `absolute bottom-full`, so DOM order already matches the
+  // visual reading order — the gap is that nothing moved focus into it. Move
+  // focus to the first size, and hand it back to the trigger when we close it
+  // ourselves (an outside click is already taking focus somewhere deliberate).
+  useEffect(() => {
+    if (!open) return;
+    popoverRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
     };
     const onClick = (e: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
@@ -81,6 +95,9 @@ export function QuickAdd({ product, purchasableSizes }: QuickAddProps) {
     trackCommerceEvent({ name: "add_to_cart", itemId: product.id, variantId: variation.id, valueCents: variation.price, currency: product.currency, quantity: 1 });
     hapticTap();
     setOpen(false);
+    // The chosen size button unmounts with the popover, so focus would fall to
+    // <body>. Send it to the trigger, which is also what announces "Added".
+    triggerRef.current?.focus();
     setAdded(true);
     if (timer.current) window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => setAdded(false), 1800);
@@ -89,7 +106,7 @@ export function QuickAdd({ product, purchasableSizes }: QuickAddProps) {
   return (
     <div ref={rootRef} className="relative">
       {open && variations.length > 1 && (
-        <div role="group" aria-label={`Choose a size for ${product.name}`} className="absolute bottom-full left-0 right-0 z-10 flex flex-wrap gap-1.5 border border-border/40 bg-surface p-2 shadow-lg">
+        <div ref={popoverRef} role="group" aria-label={`Choose a size for ${product.name}`} className="absolute bottom-full left-0 right-0 z-10 flex flex-wrap gap-1.5 border border-border/40 bg-surface p-2 shadow-lg">
           {variations.map((variation) => (
             <button
               key={variation.id}
@@ -103,6 +120,7 @@ export function QuickAdd({ product, purchasableSizes }: QuickAddProps) {
         </div>
       )}
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => {
           if (variations.length === 1) {

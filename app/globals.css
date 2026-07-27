@@ -29,8 +29,9 @@
   /* Status primitives track the --c-* channels below exactly. The former pale
      pair (#A8D5BA sage / #F0C987 warm crease) sat at ~1.5:1 on paper — those
      values are RETIRED for status, not merely unused, and must not come back
-     via this layer. Sage and warm crease survive only as fold-plane washes
-     (literal rgba() below) and in the transactional email band. */
+     via this layer. Sage survives only as a fold-plane wash — the
+     --c-fold-sage channel below, never text — and warm crease only in the
+     transactional email band. */
   --aha-success: #166534;
   --aha-warning: #8a5a00;
 
@@ -53,6 +54,28 @@
   --c-success: 22 101 52;   /* #166534 — ~6:1 on paper */
   --c-warning: 138 90 0;    /* #8A5A00 — ~5:1 on paper */
   --c-error: 206 61 86;
+  /* Structural border ink, split off --c-content so the colour of TYPE and the
+     colour of a RULE can move independently. Same value today, so splitting it
+     is value-preserving — Tailwind's `border` key now points here instead of at
+     the text channel. */
+  --c-border: 26 26 26;
+  /* The control border as a Tailwind channel — the half of the border/ink
+     reconciliation that was never wired up. --aha-control-border (#8A8A8A,
+     3.31:1 on paper) exists in the primitive layer above but is invisible to
+     Tailwind, so TSX reaches for `border-border/40` instead: ink at 40% alpha,
+     a different colour doing the same job. Keep this in sync with
+     --aha-control-border. */
+  --c-control-border: 138 138 138;
+
+  /* Fold-plane wash channels. Deliberately NOT exposed to Tailwind — they exist
+     so the origami washes, the registration grid and the paper shadows stop
+     restating colours the token layer already holds. Before this, 14 rgba()
+     literals hardcoded values named tokens owned, so editing --aha-sky or
+     --aha-rose moved nothing on screen. Ink washes and shadows read
+     --c-content; the specular whites in .neon2-gloss stay literal, because
+     those are light on glass, not a surface colour. */
+  --c-sky: 135 206 235;        /* mirrors --aha-sky #87CEEB */
+  --c-fold-sage: 168 213 186;  /* #A8D5BA — WASH ONLY. Failed at ~1.5:1 as text. */
 
   --aha-font-display: var(--font-poppins), Arial, sans-serif;
   --aha-font-body: var(--font-poppins), Arial, sans-serif;
@@ -60,8 +83,10 @@
   --aha-motion-fast: 140ms;
   --aha-motion-base: 260ms;
   --aha-motion-slow: 640ms;
-  /* Overlays leave faster than they arrive: an entrance is being introduced,
-     an exit is being got out of the way. 150ms out against 220-360ms in. */
+  /* Things leave faster than they arrive: an entrance is being introduced, an
+     exit is being got out of the way. 150ms out against 220-360ms in. Overlays
+     use it for their close animation; hover affordances use it as the duration
+     on the BASE rule, which is the one that governs hover-OUT. */
   --aha-motion-exit: 150ms;
   --aha-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   /* Accelerating partner to --aha-ease-out, for exits only. */
@@ -160,6 +185,17 @@
     outline: none;
   }
 
+  /* Firefox has no ::-webkit-scrollbar, so until now it drew the stock OS
+     scrollbar against the paper ground — and Firefox desktop is on the required
+     browser matrix. The standard properties inherit, so declaring them on html
+     covers every scroller the pseudo-element rules below already cover, at the
+     same colours. Chrome supports both and gives the ::-webkit- rules
+     precedence; the values match either way, so which one wins is moot. */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--aha-line) var(--aha-paper);
+  }
+
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -198,9 +234,9 @@
   content: '';
   opacity: 1;
   background:
-    linear-gradient(145deg, rgba(135, 206, 235, 0.13) 0 10rem, transparent 10.1rem),
-    linear-gradient(215deg, rgba(168, 213, 186, 0.14) 0 8rem, transparent 8.1rem),
-    linear-gradient(325deg, rgba(255, 107, 107, 0.08) 0 7rem, transparent 7.1rem);
+    linear-gradient(145deg, rgb(var(--c-sky) / 0.13) 0 10rem, transparent 10.1rem),
+    linear-gradient(215deg, rgb(var(--c-fold-sage) / 0.14) 0 8rem, transparent 8.1rem),
+    linear-gradient(325deg, rgb(var(--c-rose) / 0.08) 0 7rem, transparent 7.1rem);
   background-position: left top, right top, right bottom;
   background-repeat: no-repeat;
 }
@@ -213,8 +249,8 @@
 .registration-grid {
   background: var(--aha-paper);
   background-image:
-    linear-gradient(rgba(26, 26, 26, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26, 26, 26, 0.035) 1px, transparent 1px);
+    linear-gradient(rgb(var(--c-content) / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--c-content) / 0.035) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
@@ -223,10 +259,10 @@
   isolation: isolate;
   border: 1px solid color-mix(in srgb, var(--aha-line) 72%, transparent);
   background:
-    linear-gradient(142deg, rgba(135, 206, 235, 0.13) 0 22%, transparent 22.4%),
-    linear-gradient(38deg, rgba(168, 213, 186, 0.1) 0 17%, transparent 17.4%),
+    linear-gradient(142deg, rgb(var(--c-sky) / 0.13) 0 22%, transparent 22.4%),
+    linear-gradient(38deg, rgb(var(--c-fold-sage) / 0.1) 0 17%, transparent 17.4%),
     var(--aha-surface);
-  box-shadow: 0 2px 12px rgba(26, 26, 26, 0.06);
+  box-shadow: 0 2px 12px rgb(var(--c-content) / 0.06);
   clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
 }
 
@@ -243,7 +279,7 @@
 
 .crease-rule {
   border-top: 1px solid var(--aha-accent);
-  background-image: linear-gradient(135deg, transparent 0 49%, rgba(255, 107, 107, 0.14) 50% 50.5%, transparent 51%);
+  background-image: linear-gradient(135deg, transparent 0 49%, rgb(var(--c-rose) / 0.14) 50% 50.5%, transparent 51%);
   background-size: 3rem 3rem;
 }
 
@@ -355,15 +391,35 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Product art hover.
+
+   LONGHAND, not the `transition:` shorthand — the shorthand is what broke the
+   shop-grid crossfade. ShopContent and CategoryShopContent stack two images and
+   fade between them with `transition-opacity duration-300 group-hover:opacity-0
+   / -100`. This rule is plain CSS emitted AFTER Tailwind's utilities layer, so
+   at equal specificity it wins on source order — and `transition: transform …`
+   resets transition-property to `transform` alone, which silently deleted the
+   crossfade. It snapped. Naming both properties here puts it back.
+
+   Duration lists map positionally to transition-property: transform first,
+   opacity second. Base rule = hover-OUT (fast), :hover rule = hover-IN (slow),
+   per the brief's "exits faster than entrances". The 300ms crossfade the shop
+   grids asked for is preserved as the opacity entry.
+   ------------------------------------------------------------------------ */
 .product-art {
   pointer-events: none;
   transform: scale(1);
-  transition: transform 600ms var(--aha-ease-out);
+  transition-property: transform, opacity;
+  transition-duration: var(--aha-motion-exit);
+  transition-timing-function: var(--aha-ease-in);
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .group:hover .product-art {
     transform: scale(1.035);
+    transition-duration: 600ms, 300ms;
+    transition-timing-function: var(--aha-ease-out);
   }
 }
 
@@ -378,8 +434,8 @@ textarea {
 .cart-dialog-enter,
 .cart-dialog-exit {
   background-image:
-    linear-gradient(145deg, rgba(135, 206, 235, 0.11) 0 24%, transparent 24.5%),
-    linear-gradient(35deg, rgba(168, 213, 186, 0.09) 0 18%, transparent 18.5%);
+    linear-gradient(145deg, rgb(var(--c-sky) / 0.11) 0 24%, transparent 24.5%),
+    linear-gradient(35deg, rgb(var(--c-fold-sage) / 0.09) 0 18%, transparent 18.5%);
 }
 
 /* ---------------------------------------------------------------------------
@@ -532,7 +588,7 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
   .btn-primary:hover,
   .primary-action:hover {
     transform: translateY(-1px);
-    box-shadow: 0 8px 18px rgba(26, 26, 26, 0.12);
+    box-shadow: 0 8px 18px rgb(var(--c-content) / 0.12);
   }
 }
 
@@ -625,13 +681,16 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
   overflow: hidden;
 }
 
+/* The base rule is the hover-OUT: 640ms in both directions meant the zoom took
+   two thirds of a second to let go of the pointer. Slow in, fast out. */
 .image-hover-zoom img {
-  transition: transform var(--aha-motion-slow) var(--aha-ease-out);
+  transition: transform var(--aha-motion-exit) var(--aha-ease-in);
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .image-hover-zoom:hover img {
     transform: scale(1.05);
+    transition: transform var(--aha-motion-slow) var(--aha-ease-out);
   }
 }
 
@@ -645,7 +704,7 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
   }
   .paper-lift:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(26, 26, 26, 0.1);
+    box-shadow: 0 12px 28px rgb(var(--c-content) / 0.1);
   }
 }
 
@@ -711,7 +770,11 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
   color: rgb(var(--neon-hot)); /* thin near-white lit line inside the rose tube */
   filter: drop-shadow(0 0 3px rgb(255 120 160 / 0.9)) drop-shadow(0 0 1px #fff);
 }
-/* plexiglass gloss: a diagonal specular sweep + a soft top light, as if behind glass */
+/* plexiglass gloss: a diagonal specular sweep + a soft top light, as if behind
+   glass. These three whites are the LAST rgba() literals in the file and stay
+   literal on purpose — they are a specular highlight under mix-blend-mode:
+   screen, i.e. light on glass. Routing them through --c-surface would make the
+   sheen follow the panel colour, which is exactly wrong. */
 .neon2-gloss {
   position: absolute;
   inset: 0;
@@ -771,14 +834,6 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
   }
 }
 
-/* Cross-document view transitions: a soft page-to-page crossfade in browsers
-   that support it (Chrome 126+, Safari 18.2+). Pure CSS — zero JS cost. */
-@media (prefers-reduced-motion: no-preference) {
-  @view-transition {
-    navigation: auto;
-  }
-}
-
 /* Forced colors (Windows High Contrast): clip-path buttons lose their fill,
    so restore visible borders and let the system palette win. */
 @media (forced-colors: active) {
@@ -818,12 +873,60 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
 
   /* Hover affordances (not scroll-driven) — respect reduced-motion. */
   .hover-fold { transition: transform 260ms var(--aha-ease-out), box-shadow 260ms var(--aha-ease-out); }
-  .hover-fold:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(26, 26, 26, 0.14); }
+  .hover-fold:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgb(var(--c-content) / 0.14); }
 }
 
-/* Animated underline grow — for editorial text links. */
-.m-underline { background-image: linear-gradient(currentColor, currentColor); background-size: 0% 1.5px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size 260ms var(--aha-ease-out); }
-.m-underline:hover, .m-underline:focus-visible { background-size: 100% 1.5px; }
+/* Animated underline grow — for editorial text links.
+
+   This was the one non-compositable transition in the system: it animated
+   `background-size`, which repaints the element every frame. Same rest state,
+   same hovered state, same 260ms — but now a scaleX on a pseudo-element, which
+   the compositor owns. Identical mechanism to .nav-link::after above; the only
+   difference is `bottom: 0` (the underline sits on the content-box edge, where
+   `background-position: 0 100%` used to put it) instead of the nav's 5px inset.
+
+   The `display` default is load-bearing, not tidiness. An absolutely positioned
+   ::after on a bare INLINE element that wraps across lines is laid out against
+   the union box of all its fragments, so a link that breaks over two lines
+   draws one over-wide rule across the whole paragraph instead of an underline
+   under its own text. `app/page.tsx:174` sits inside a `max-w-md` paragraph and
+   does break at ~320px, and at any viewport once the reader has raised their
+   default font size — which is exactly the reader most likely to be arriving by
+   keyboard, where :focus-visible fires the same rule. inline-block makes the
+   element a single unbreakable box and the pseudo-element correct again.
+
+   It is set through `:where()` so it carries zero specificity: `inline-flex` at
+   `app/manifesto:92` (a 44px tap target that needs items-center) still wins, as
+   would any other display utility, and a flex item such as
+   `SocialProofWall:57` is blockified by its container either way. New call
+   sites need do nothing; only a call site that deliberately sets `display`
+   inline needs to keep it non-wrapping. */
+:where(.m-underline) {
+  display: inline-block;
+}
+
+.m-underline {
+  position: relative;
+}
+
+.m-underline::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1.5px;
+  content: '';
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--aha-motion-base) var(--aha-ease-out);
+}
+
+.m-underline:hover::after,
+.m-underline:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
 
 @keyframes aha-m-rise { from { opacity: 0; transform: translateY(26px); } }
 @keyframes aha-m-scale { from { opacity: 0; transform: scale(0.965); } }

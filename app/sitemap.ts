@@ -42,11 +42,23 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
   { path: "/accessibility", priority: 0.4, changeFrequency: "yearly" },
 ];
 
+// NOTE ON `lastmod`: it is deliberately absent.
+//
+// Every entry previously carried `new Date()`, evaluated when the sitemap was
+// rendered — so all 152 URLs shared one timestamp that moved on every request
+// and described nothing. Google discounts a `lastmod` it can prove is not a
+// modification date, and a whole sitemap of them teaches it to distrust the
+// field site-wide. Omitting is strictly better than asserting something false.
+//
+// Restoring it needs a real per-URL date, which this file cannot reach today:
+//   - products: Square returns `updated_at` on every catalog object, but
+//     `Product` (lib/utils/types.ts) does not carry it and
+//     `mapSquareItemToProduct` (lib/utils/mappers.ts) drops it.
+//   - static pages: the git commit date for each route's source file, captured
+//     at build time — the deployed serverless bundle has no `.git`.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
   const staticEntries: MetadataRoute.Sitemap = publicPages.map((page) => ({
     url: `${BASE_URL}${page.path}`,
-    lastModified: now,
     changeFrequency: page.changeFrequency,
     priority: page.priority,
   }));
@@ -56,7 +68,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const products = await getAllProducts();
     productEntries = products.map((product) => ({
       url: `${BASE_URL}/product/${product.slug}`,
-      lastModified: now,
       changeFrequency: "weekly",
       priority: 0.7,
     }));

@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SheepMark } from "@/components/ui/SheepMark";
+
+// Without this the 404 inherits the root default title and every dead URL says
+// "After Hours Agenda | NYC Streetwear" in the tab and in history. The root
+// template turns this into "Page not found | After Hours Agenda".
+export const metadata: Metadata = {
+  title: "Page not found",
+};
 
 export default function NotFound() {
   return (
