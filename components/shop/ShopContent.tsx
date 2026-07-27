@@ -242,11 +242,23 @@ export function ShopContent({ products, collections, initialPage = 1, pagination
         </div>
       )}
 
-      {filtered.length === 0 && (
+      {filtered.length === 0 && hasActiveDiscovery && (
         <div className="border border-border/40 bg-surface px-5 py-16 text-center">
           <h2 className="font-display text-2xl font-black uppercase">No matches</h2>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">Try another product name, size, or collection.</p>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
+            {searchTerm.trim() ? <>Nothing matches “{searchTerm.trim()}”.</> : "Nothing matches those filters."} Try another product name, size, or collection.
+          </p>
           <button type="button" onClick={resetDiscovery} className="primary-action mt-6 min-h-11 px-6 py-3 text-xs">Clear filters</button>
+        </div>
+      )}
+
+      {/* Nothing filtered and nothing to show means the list itself is empty — offering
+          "Clear filters" there is a dead end, so point at the catalog instead. */}
+      {filtered.length === 0 && !hasActiveDiscovery && (
+        <div className="border border-border/40 bg-surface px-5 py-16 text-center">
+          <h2 className="font-display text-2xl font-black uppercase">Nothing here yet</h2>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">This list is empty right now. The rest of the catalog is printed to order and ready now.</p>
+          <Link href="/shop" className={`${toggle} mt-6 inline-flex items-center border-accent bg-rose text-cream`}>The whole catalog</Link>
         </div>
       )}
     </section>

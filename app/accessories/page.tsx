@@ -29,7 +29,7 @@ export default async function AccessoriesPage() {
           title="The finishing pieces"
           description="Counting Sheep totes, embroidered black sheep socks, hats, pins, and stickers — the small pieces that finish the fit. Every one made to order."
         />
-        <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
+        <div className="fold-surface relative mb-6 aspect-[3/1] overflow-hidden md:mb-10">
           <Image
             src="/campaign/hero-accessories.jpg"
             alt="After Hours Agenda dad hats and pin sets on a paper background"

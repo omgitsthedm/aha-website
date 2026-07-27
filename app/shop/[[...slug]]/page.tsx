@@ -11,6 +11,7 @@ export const revalidate = 300;
 
 interface ShopPageProps {
   params: Promise<{ slug?: string[] }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 export async function generateMetadata({ params }: ShopPageProps): Promise<Metadata> {
@@ -18,33 +19,42 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
   if (categorySlug && !category) return { title: "Category Not Found | After Hours Agenda" };
-  return category
-    ? {
-        title: `${category.name}`,
-        description: `${category.description} Shop made-to-order ${category.name.toLowerCase()} at After Hours Agenda.`,
-        alternates: { canonical: `/shop/${category.slug}` },
-      }
-    : {
-        title: "Shop All Graphic Tees, Hoodies & More",
-        description: "Every After Hours Agenda design in one place — graphic tees, hoodies, sweatshirts, knitwear, and accessories, each printed to order in 2–5 days.",
-        alternates: { canonical: "/shop" },
-      };
+  if (category) {
+    // A category we stock nothing in is a real URL with no product on it. Keep it
+    // reachable but out of the index rather than letting a placeholder description
+    // rank. `getAllProducts` is request-deduped with the page body below.
+    const isEmpty = filterProductsByCategory(await getAllProducts(), category.slug).length === 0;
+    return {
+      title: `${category.name}`,
+      description: `${category.description} Shop made-to-order ${category.name.toLowerCase()} at After Hours Agenda.`,
+      alternates: { canonical: `/shop/${category.slug}` },
+      ...(isEmpty ? { robots: { index: false, follow: true } } : {}),
+    };
+  }
+  return {
+    title: "Shop All Graphic Tees, Hoodies & More",
+    description: "Every After Hours Agenda design in one place — graphic tees, hoodies, sweatshirts, knitwear, and accessories, each printed to order in 2–5 days.",
+    alternates: { canonical: "/shop" },
+  };
 }
 
-export default async function ShopPage({ params }: ShopPageProps) {
+export default async function ShopPage({ params, searchParams }: ShopPageProps) {
   const { slug } = await params;
+  const { page } = await searchParams;
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
   if (categorySlug && !category) notFound();
 
   const products = await getAllProducts();
   const displayProducts = category ? filterProductsByCategory(products, category.slug) : products;
+  const listPath = category ? `/shop/${category.slug}` : "/shop";
+  const initialPage = Math.max(1, Number.parseInt(page ?? "1", 10) || 1);
 
   return (
     <div className="px-4 pb-16 pt-24 sm:px-6 lg:pt-28">
       <CollectionJsonLd
         name={category ? category.name : "Shop All"}
-        path={category ? `/shop/${category.slug}` : "/shop"}
+        path={listPath}
         products={displayProducts}
       />
       <div className="mx-auto max-w-7xl">
@@ -79,6 +89,8 @@ export default async function ShopPage({ params }: ShopPageProps) {
           categories={CATEGORIES}
           activeCategory={category?.slug}
           basePath="/shop"
+          initialPage={initialPage}
+          paginationPath={listPath}
         />
       </div>
     </div>

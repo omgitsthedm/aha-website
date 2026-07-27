@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 import { trackCommerceEvent } from "@/lib/analytics/events";
-import { INTERNATIONAL_SHIPPING_CENTS, isInternational } from "@/lib/commerce/policies";
+import { INTERNATIONAL_SHIPPING_CENTS, SHIPPING_CLAIM_SENTENCE, isInternational } from "@/lib/commerce/policies";
+import { ExpressCheckout } from "@/components/checkout/ExpressCheckout";
 
 type TokenResult = { status: string; token: string };
 type SquareCard = { attach: (selector: string) => Promise<void>; tokenize: () => Promise<TokenResult> };
@@ -55,6 +56,17 @@ declare global {
 const money = (cents: number) => `$${(cents / 100).toFixed(2)}`;
 const STATE_REQUIRED = new Set(["US", "CA", "AU"]);
 
+// Shipping/contact PII must not sit in this browser forever — on a shared machine
+// an old entry silently prefills the next person's checkout. Keep the resume
+// window that makes a reload or a crash mid-checkout survivable, then drop it.
+const CONTACT_STORAGE_KEY = "aha-checkout-contact";
+const CONTACT_TTL_MS = 24 * 60 * 60 * 1000;
+
+interface StoredContact {
+  savedAt: number;
+  contact: Partial<ShippingContact>;
+}
+
 // The "boarding pass" itinerary — like a plane ticket, it turns a form into a
 // journey, building anticipation and answering "when do I get it?" before the
 // shopper has to ask. Reinforces the made-to-order brand story at the moment of
@@ -62,7 +74,7 @@ const STATE_REQUIRED = new Set(["US", "CA", "AU"]);
 const JOURNEY_STEPS = [
   { label: "Order placed", detail: "Confirmed instantly, receipt to your inbox." },
   { label: "Printed to order", detail: "Production begins after you order - usually 2 to 5 business days." },
-  { label: "Shipped free", detail: "Tracking lands the moment it leaves the shop." },
+  { label: "Shipped with tracking", detail: "Tracking lands the moment it leaves the shop." },
   { label: "Yours to wear", detail: "Made after hours. Worn all day." },
 ];
 
@@ -110,6 +122,12 @@ export function CheckoutForm({ squareConfig }: Props) {
   const submitTokenRef = useRef<(token: string) => void>(() => {});
   const [applePayReady, setApplePayReady] = useState(false);
   const [googlePayReady, setGooglePayReady] = useState(false);
+  // Latches once a typed address has produced a real quote. From then on the
+  // address-gated wallets below (which show the exact tax-inclusive total) take
+  // over from the subtotal-priced express block, and the express block stays
+  // hidden — one wallet control on the page, and never a remount loop as the
+  // shopper edits an address field.
+  const [addressQuoted, setAddressQuoted] = useState(false);
   const [afterpayReady, setAfterpayReady] = useState(false);
   const [cashAppReady, setCashAppReady] = useState(false);
   // Stable idempotency key for this checkout attempt. Kept the same across network retries so a
@@ -161,15 +179,31 @@ export function CheckoutForm({ squareConfig }: Props) {
 
   // Restore a previously-typed address so a mid-checkout connection drop or
   // reload doesn't wipe the form. Card data is NEVER stored (Square holds it).
+  // Anything older than CONTACT_TTL_MS is discarded on read and deleted, so a
+  // shared machine can't prefill a stranger's name and address.
   useEffect(() => {
+    const forget = () => { try { localStorage.removeItem(CONTACT_STORAGE_KEY); } catch { /* private mode */ } };
     try {
-      const saved = localStorage.getItem("aha-checkout-contact");
-      if (saved) setContact((prev) => ({ ...prev, ...JSON.parse(saved) }));
-    } catch { /* private mode / bad JSON — start fresh */ }
+      const raw = localStorage.getItem(CONTACT_STORAGE_KEY);
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object") { forget(); return; }
+      const record = parsed as Partial<StoredContact> & Partial<ShippingContact>;
+      // Entries written before the TTL landed are a bare contact object. Accept
+      // them once so nobody mid-checkout loses what they already typed.
+      const savedAt = typeof record.savedAt === "number" ? record.savedAt : null;
+      const saved = savedAt === null ? (record as Partial<ShippingContact>) : record.contact;
+      const fresh = savedAt === null || Date.now() - savedAt < CONTACT_TTL_MS;
+      if (!fresh || !saved) { forget(); return; }
+      setContact((prev) => ({ ...prev, ...saved }));
+    } catch { forget(); /* bad JSON — start fresh */ }
   }, []);
 
   useEffect(() => {
-    try { localStorage.setItem("aha-checkout-contact", JSON.stringify(contact)); } catch { /* ignore */ }
+    try {
+      const record: StoredContact = { savedAt: Date.now(), contact };
+      localStorage.setItem(CONTACT_STORAGE_KEY, JSON.stringify(record));
+    } catch { /* ignore */ }
   }, [contact]);
 
   // Keyless ZIP → city/state autofill: one friction cut Shopify gets from
@@ -371,6 +405,10 @@ export function CheckoutForm({ squareConfig }: Props) {
   }, [quote, contact.country, sdkReady]);
 
   useEffect(() => {
+    if (quoteStatus === "ready") setAddressQuoted(true);
+  }, [quoteStatus]);
+
+  useEffect(() => {
     if (!googlePayReady || !googlePayRef.current?.attach) return;
     void googlePayRef.current.attach("#aha-gpay", {
       buttonColor: "white", buttonType: "long", buttonSizeMode: "fill",
@@ -466,7 +504,7 @@ export function CheckoutForm({ squareConfig }: Props) {
         },
       }));
       clearCart();
-      try { localStorage.removeItem("aha-checkout-contact"); } catch { /* ignore */ }
+      try { localStorage.removeItem(CONTACT_STORAGE_KEY); } catch { /* ignore */ }
       router.push(`/order-confirmed?order=${encodeURIComponent(data.orderNumber)}`);
     } catch {
       // Keep the key after an unknown network outcome so a retry is deduped server-side.
@@ -559,6 +597,22 @@ export function CheckoutForm({ squareConfig }: Props) {
   // Display only. The charged amount comes from Square via buildSquareOrder.
   const shippingCents = isInternational(contact.country) ? INTERNATIONAL_SHIPPING_CENTS : 0;
 
+  // The Pay button stays focusable in every state (aria-disabled, not disabled) so
+  // it is never dropped from the tab order mid-checkout. pay() already returns
+  // early with a user-facing message for each blocked state, so an activatable
+  // button can't fire a charge before the quote is ready.
+  const payBlocked = status === "paying" || quoteStatus !== "ready" || !sdkReady;
+  // Persistently mounted below, so the transition into "calculating" and into
+  // "ready" is actually announced — a live region that mounts with its text is not.
+  const quoteAnnouncement =
+    quoteStatus === "loading"
+      ? "Calculating tax and final total…"
+      : quoteStatus === "ready" && quote
+        ? `Final total ready — ${money(quote.total)}.`
+        : quoteStatus === "idle"
+          ? "Enter your shipping address to see the final total."
+          : "";
+
   return (
     <>
       <Script src={squareConfig.sdkUrl} strategy="afterInteractive" onLoad={initSquare} />
@@ -573,6 +627,23 @@ export function CheckoutForm({ squareConfig }: Props) {
             <p className="mb-10 max-w-md text-sm leading-relaxed text-muted">
               A few details and it&rsquo;s on its way — printed one at a time, just for you. <span className="font-bold text-cream">Secure Square checkout.</span>
             </p>
+
+            {/* A wallet's whole point is that it already holds the address, so it must
+                not sit behind six typed fields. This block initialises against the cart
+                subtotal as soon as the SDK is up, uses the contact the wallet supplies,
+                and re-prices server-side before charging (a mismatch fails safe back to
+                this form). It reuses the Payments instance created above instead of
+                booting a second one, and every failure path hands the shopper back to
+                the form below rather than navigating to the page they are already on.
+                It retires the moment a typed address yields a quote, because the wallets
+                inside the Payment fieldset can then quote the exact final total. */}
+            {sdkReady && !addressQuoted && (
+              <ExpressCheckout
+                squareConfig={squareConfig}
+                paymentsApi={paymentsRef.current}
+                onFallback={() => setError("We couldn't finish with your wallet — complete the details below and pay by card.")}
+              />
+            )}
 
             <form onSubmit={pay} noValidate>
             <fieldset className="mb-9 border-t border-border/40 pt-6" disabled={status === "paying"}>
@@ -630,7 +701,10 @@ export function CheckoutForm({ squareConfig }: Props) {
             <fieldset className="border-t border-border/40 pt-6" disabled={status === "paying"}>
               <legend className="mb-4 font-display text-xl font-bold uppercase tracking-[-0.03em] text-cream">Payment</legend>
 
-              {/* Express wallets (shown only when the device/browser + Square support them) */}
+              {/* Express wallets (shown only when the device/browser + Square support them).
+                  These are quote-gated and therefore quote the exact tax-inclusive total,
+                  so once they exist the subtotal-priced block at the top of the page is
+                  already hidden — the shopper never sees two wallet controls. */}
               {(applePayReady || googlePayReady || afterpayReady || cashAppReady) && (
                 <div className="mb-5">
                   <p className="mb-2 font-body text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Express checkout</p>
@@ -688,11 +762,9 @@ export function CheckoutForm({ squareConfig }: Props) {
               )}
             </fieldset>
 
-            {quoteStatus === "loading" && (
-              <p className="mt-4 font-body text-xs font-bold text-muted" aria-live="polite">
-                Calculating tax and final total…
-              </p>
-            )}
+            <p className="mt-4 min-h-4 font-body text-xs font-bold text-muted" aria-live="polite">
+              {quoteAnnouncement}
+            </p>
             {quoteError && (
               <div role="alert" className="mt-4 border border-danger bg-surface px-4 py-3">
                 <p className="text-sm font-bold text-danger">{quoteError}</p>
@@ -717,8 +789,8 @@ export function CheckoutForm({ squareConfig }: Props) {
 
             <button
               type="submit"
-              disabled={status === "paying" || quoteStatus !== "ready" || !sdkReady}
-              className={`primary-action mt-6 min-h-14 w-full px-5 py-5 text-base ${status === "paying" || quoteStatus !== "ready" || !sdkReady ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
+              aria-disabled={payBlocked}
+              className={`primary-action mt-6 min-h-14 w-full px-5 py-5 text-base ${payBlocked ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
             >
               <span className="relative z-10">
                 {status === "paying"
@@ -731,7 +803,7 @@ export function CheckoutForm({ squareConfig }: Props) {
               </span>
             </button>
             <p className="mt-3 font-body text-xs font-bold leading-relaxed text-muted">
-              Secured by Square. Card details are handled by Square and do not pass through our servers. Free shipping and tax are confirmed before payment.
+              Secured by Square. Card details are handled by Square and do not pass through our servers. {SHIPPING_CLAIM_SENTENCE} Your exact shipping and tax are confirmed before payment.
             </p>
             </form>
           </div>

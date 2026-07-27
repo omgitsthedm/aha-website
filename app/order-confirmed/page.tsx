@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import { SheepMark } from "@/components/ui/SheepMark";
+import { trackPurchase } from "@/lib/analytics/events";
 import { DELIVERY_WINDOW, PRODUCTION_WINDOW } from "@/lib/commerce/policies";
 
 interface OrderItem {
@@ -65,6 +66,27 @@ export default function OrderConfirmedPage() {
     }
     setLoaded(true);
   }, [clearCart]);
+
+  // The revenue event — the only place a purchase can be attributed client-side.
+  // Runs once the summary is verified, and `trackPurchase` keys on the order
+  // number so a refresh cannot double-count. Fire-and-forget by contract: the
+  // order is already paid and queued for production regardless of what analytics
+  // does here.
+  useEffect(() => {
+    if (!summary) return;
+    trackPurchase({
+      orderNumber: summary.orderNumber,
+      totalCents: summary.total,
+      currency: summary.currency,
+      items: summary.items.map((item) => ({
+        itemId: item.productId || item.slug || item.variationId || item.name,
+        itemName: item.name,
+        itemVariant: item.variationName,
+        priceCents: item.price ?? Math.round(item.lineTotal / Math.max(1, item.quantity)),
+        quantity: item.quantity,
+      })),
+    });
+  }, [summary]);
 
   const money = (amount: number, currency: string) => new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount / 100);
   const verified = Boolean(summary);

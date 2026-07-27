@@ -8,7 +8,14 @@ import type { Collection, Product } from "@/lib/utils/types";
 import type { ProductEnrichment } from "@/lib/data/enrichment";
 import { useCart } from "@/components/cart/CartProvider";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
-import { getFulfillmentSummary, RETURNS_SUMMARY, RETURNS_WINDOW } from "@/lib/commerce/policies";
+import {
+  getFulfillmentSummary,
+  PRODUCTION_WINDOW,
+  RETURNS_SUMMARY,
+  RETURNS_WINDOW,
+  SHIPPING_CLAIM_DETAIL,
+  SHIPPING_CLAIM_SHORT,
+} from "@/lib/commerce/policies";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { hapticTap } from "@/lib/utils/haptics";
 import { extractVariationSize, extractVariationColor, groupVariationsByColor, sortVariationsBySize } from "@/lib/utils/variation";
@@ -23,6 +30,23 @@ import { SheepMark } from "@/components/ui/SheepMark";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
 import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 
+/**
+ * One member of a design family — the same garment and graphic in a different
+ * colour, sold as its own Square product and its own indexed slug.
+ */
+export interface ColorwayOption {
+  slug: string;
+  /** Full product name, used as the accessible name of the swatch. */
+  name: string;
+  /** Colour label from the title ("Dark Tan"), or "" when the title omits one. */
+  color: string;
+  /** Approximate swatch hex, or null when the colour is not in the swatch table. */
+  hex: string | null;
+  /** First gallery image — the true colour of the garment. */
+  image: string;
+  current: boolean;
+}
+
 interface ProductDetailProps {
   product: Product;
   related: Product[];
@@ -32,6 +56,8 @@ interface ProductDetailProps {
   storyDescription?: string;
   /** color name -> index in product.images showing that colorway */
   colorImageIndex?: Record<string, number>;
+  /** Sibling colourways of this exact garment, including this product. */
+  colorways?: ColorwayOption[];
   reviews?: ReviewSummary;
   squareConfig?: SquareWebPaymentsConfig;
 }
@@ -65,16 +91,24 @@ const storyBlocks = (value: string): string[] => value
   .map((block) => block.replace(/\s+/g, " ").trim())
   .filter(Boolean);
 
-function ProductIdentity({ id, product, reviews, price, className = "" }: {
-  id: string;
+// Both copies of the identity block are in the DOM at once and CSS-toggled, so
+// only ONE of them may be an <h1> element: `as` picks which. The other keeps the
+// heading SEMANTICS via role/aria-level, because the two copies are swapped with
+// display:none and the mobile viewport would otherwise have no level-1 heading
+// in its accessibility tree at all. No bare-element styles exist for either tag,
+// so the swap is a zero-pixel change.
+function ProductIdentity({ as: Heading = "h1", product, reviews, price, className = "" }: {
+  as?: "h1" | "p";
   product: Product;
   reviews?: ReviewSummary;
   price: string;
   className?: string;
 }) {
+  const headingRole: { role?: "heading"; "aria-level"?: number } =
+    Heading === "p" ? { role: "heading", "aria-level": 1 } : {};
   return (
     <div className={className}>
-      <h1 id={id} className="max-w-2xl font-display text-[clamp(1.85rem,5.5vw,5.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-cream sm:leading-[0.86]">{product.name}</h1>
+      <Heading {...headingRole} className="max-w-2xl font-display text-[clamp(1.85rem,5.5vw,5.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-cream sm:leading-[0.86]">{product.name}</Heading>
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
         <p className="font-mono text-2xl font-bold text-cream">{price}</p>
         {reviews && reviews.count > 0 && (
@@ -85,12 +119,15 @@ function ProductIdentity({ id, product, reviews, price, className = "" }: {
           </a>
         )}
       </div>
-      <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">Made to order in 2 to 5 business days. Free shipping both ways. Returns accepted within {RETURNS_WINDOW} on unworn items.</p>
+      {/* Shipping wording comes from lib/commerce/policies.ts — international
+          orders carry a real $20 Square service charge, so "free shipping"
+          unqualified is not a claim this page is allowed to make. */}
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">Made to order in {PRODUCTION_WINDOW}. {SHIPPING_CLAIM_SHORT}, {SHIPPING_CLAIM_DETAIL.toLowerCase()}. Returns accepted within {RETURNS_WINDOW} on unworn items, and we cover return shipping.</p>
     </div>
   );
 }
 
-export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription, colorImageIndex, reviews, squareConfig }: ProductDetailProps) {
+export function ProductDetail({ product, related, collection, enrichment, stockBySize, storyDescription, colorImageIndex, colorways, reviews, squareConfig }: ProductDetailProps) {
   const { addItem } = useCart();
   const router = useRouter();
   const sizeInStock = (size: string) => stockBySize ? stockBySize[extractVariationSize(size)] !== false : true;
@@ -208,6 +245,19 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
     : { ok: true, reasons: [] };
   const canBuy = Boolean(currentVariation && currentInStock && purchasable.ok);
 
+  const prefersReducedMotion = () =>
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // What the sticky bar has always done for a shopper who has not picked a size:
+  // move them to the control that is actually missing, and put the keyboard
+  // there too. Used by both money buttons so neither has to be `disabled`.
+  const goToSizeSelector = () => {
+    const selector = document.getElementById("size-selector");
+    if (!selector) return;
+    selector.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "center" });
+    selector.querySelector<HTMLButtonElement>("[data-size-chips] button:not([disabled])")?.focus({ preventScroll: true });
+  };
+
   const handleAddToCart = () => {
     if (!currentVariation || !canBuy) return;
     addItem({
@@ -249,6 +299,17 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
     router.push("/checkout");
   };
 
+  // A `disabled` submit takes the primary conversion control out of the tab
+  // order entirely, for the whole size-choosing session. The button stays
+  // focusable and says what is missing instead; `handleAddToCart` still guards,
+  // so an enabled button can never add an unpurchasable variation.
+  const handlePrimaryAction = () => {
+    if (canBuy) {
+      handleAddToCart();
+      return;
+    }
+    if (!currentVariation) goToSizeSelector();
+  };
 
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : "";
@@ -318,7 +379,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
         </nav>
 
         <ProductIdentity
-          id="product-title-mobile"
+          as="p"
           product={product}
           reviews={reviews}
           price={currentVariation?.priceFormatted || product.priceFormatted}
@@ -363,7 +424,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           <section className="min-w-0 lg:pt-3">
             {collection && <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">{collection.name}</p>}
             <ProductIdentity
-              id="product-title"
+              as="h1"
               product={product}
               reviews={reviews}
               price={currentVariation?.priceFormatted || product.priceFormatted}
@@ -412,7 +473,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                   </div>
                   <button type="button" onClick={() => { setSizeGuideOpen(true); trackCommerceEvent({ name: "view_size_guide", itemId: product.id, variantId: selectedVariation || undefined }); }} className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Size guide</button>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div data-size-chips className="flex flex-wrap gap-2">
                   {sizeVariations.map((variation) => {
                     const unavailable = !variationAvailable(variation.name);
                     const selected = variation.id === selectedVariation;
@@ -428,6 +489,58 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               </fieldset>
             )}
 
+            {/* Sibling colourways. Colour is the primary variant axis on this
+                catalog, but each colourway is its own Square product and its own
+                indexed slug, so the only way to move between them is a link.
+                Rendered under the size selector, and only when a sibling exists,
+                so the PDPs with no colourway family gain no extra height. */}
+            {colorways && colorways.length > 1 && (
+              <div className="mt-6 border-t border-border/40 pt-5">
+                <p id="colorway-label" className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-muted">Other colorways</p>
+                {/* One row that scrolls, not a wrapping grid: four chips wrap to
+                    two lines at 375px and push the buy block ~165px down. Same
+                    treatment as the gallery thumbnail strip above. */}
+                <ul aria-labelledby="colorway-label" className="flex max-w-full gap-2 overflow-x-auto pb-1">
+                  {colorways.map((option) => {
+                    const chip = "inline-flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap border px-2.5 py-1.5 text-sm";
+                    // The garment photo is the honest swatch; the approximate hex
+                    // is only a fallback for a colourway with no image at all.
+                    const swatch = option.image ? (
+                      <ResilientImage
+                        src={option.image}
+                        alt=""
+                        width={28}
+                        height={28}
+                        className={`h-7 w-7 shrink-0 border border-border/40 ${isPrintfulImage(option.image) ? "object-contain" : "object-cover"}`}
+                        fallback={<span aria-hidden="true" className="h-7 w-7 shrink-0 border border-border/40 bg-surface" />}
+                      />
+                    ) : option.hex ? (
+                      <span aria-hidden="true" className="h-3.5 w-3.5 shrink-0 rounded-full border border-border/40" style={{ backgroundColor: option.hex }} />
+                    ) : null;
+                    return (
+                      <li key={option.slug} className="shrink-0">
+                        {option.current ? (
+                          <span aria-current="true" className={`${chip} border-accent bg-rose text-cream`}>
+                            {swatch}
+                            {option.color || <span className="sr-only">{option.name}</span>}
+                          </span>
+                        ) : (
+                          <Link
+                            href={`/product/${option.slug}`}
+                            aria-label={`View ${option.name}`}
+                            className={`${chip} border-border/60 text-cream transition-colors hover:border-accent`}
+                          >
+                            {swatch}
+                            {option.color}
+                          </Link>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+
             <div className="mt-8 flex items-center gap-4">
               <span id="qty-label" className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Qty</span>
               <div className="inline-flex items-center border border-border/60" role="group" aria-labelledby="qty-label">
@@ -438,7 +551,13 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             </div>
 
             <div className="mt-4 flex gap-3">
-              <button type="button" onClick={handleAddToCart} disabled={!canBuy} aria-live="polite" className={`btn-primary flex-1 ${canBuy ? "" : "cursor-not-allowed opacity-50"}`}>
+              <button
+                type="button"
+                onClick={handlePrimaryAction}
+                aria-disabled={!canBuy}
+                aria-describedby="pdp-buy-status"
+                className={`btn-primary flex-1 ${canBuy ? "" : "cursor-not-allowed opacity-50"}`}
+              >
                 {!currentVariation ? "Choose a size" : !canBuy ? "Unavailable" : addedFeedback ? "Added to bag" : `Add to bag - ${currentVariation.priceFormatted}`}
               </button>
               <button
@@ -498,13 +617,19 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
               <span>Secure checkout with Square</span>
               <span aria-hidden="true" className="text-border">·</span>
-              <span>Free shipping</span>
+              <span>{SHIPPING_CLAIM_SHORT}</span>
               <span aria-hidden="true" className="text-border">·</span>
               <span>Designed in NYC</span>
             </p>
 
-            {!currentVariation && product.variations.length > 1 && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">Choose a size to continue.</p>}
-            {currentVariation && !canBuy && <p role="status" className="mt-3 text-xs font-bold leading-relaxed text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation.name } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}
+            {/* Mounted on every render so a state change is announced. A status
+                node that mounts together with its own text is not reliably read,
+                which is why the blocked reasons used to be silent. */}
+            <div id="pdp-buy-status" role="status" aria-live="polite" className="text-xs font-bold leading-relaxed">
+              {!currentVariation && product.variations.length > 1 && <p className="mt-3 text-warning">Choose a size to continue.</p>}
+              {currentVariation && !canBuy && <p className="mt-3 text-warning">{!currentInStock ? "This size is out of stock right now." : "This size is not available right now."} <Link href={{ pathname: "/restock", query: { product: product.name, size: currentVariation.name } }} className="underline underline-offset-4">Request a restock alert</Link>.</p>}
+              {canBuy && addedFeedback && <p className="mt-3 text-success">Added to bag.</p>}
+            </div>
             <p className="mt-3 text-xs leading-relaxed text-muted">{RETURNS_SUMMARY}</p>
 
             <div className="mt-8 border-y border-border/40 py-5">
@@ -518,7 +643,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
             <ul className="mt-5 grid gap-x-5 gap-y-3 text-xs font-bold uppercase tracking-[0.05em] text-muted sm:grid-cols-2" aria-label="Purchase assurances">
               <li className="border-t border-border/40 pt-2">Secure Square checkout</li>
-              <li className="border-t border-border/40 pt-2">Free shipping</li>
+              <li className="border-t border-border/40 pt-2">{SHIPPING_CLAIM_SHORT} · {SHIPPING_CLAIM_DETAIL}</li>
               <li className="border-t border-border/40 pt-2">Made to order</li>
               <li className="border-t border-border/40 pt-2">Returns within {RETURNS_WINDOW}</li>
             </ul>
@@ -600,24 +725,47 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
           Stacking (not raising z-index) keeps Reject reachable. */}
       <div data-testid="sticky-buy-bar" className="safe-bottom safe-x fixed inset-x-0 bottom-[var(--aha-consent-h,0px)] z-[80] border-t border-border/60 bg-void/95 backdrop-blur-sm transition-[bottom] duration-200 motion-reduce:transition-none lg:hidden">
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
-          <div className="min-w-0 flex-1">
-            <p className="truncate font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">{product.name}</p>
-            <p className="font-display text-lg font-black leading-none text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
-          </div>
-          <button
-            type="button"
-            onClick={
-              canBuy
-                ? handleAddToCart
-                : () => document.getElementById("size-selector")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" })
-            }
-            className={`btn-primary whitespace-nowrap ${!canBuy && (currentInStock === false) ? "cursor-not-allowed opacity-50" : ""}`}
-            disabled={!canBuy && currentInStock === false && Boolean(currentVariation)}
-          >
-            {canBuy
-              ? addedFeedback ? "Added ✓" : "Add to bag"
-              : currentVariation ? "Unavailable" : "Select size"}
-          </button>
+          {canBuy ? (
+            <>
+              {/* Once a size is chosen the bar carries both endings: the bag for
+                  shoppers still browsing, and the one-tap path to checkout for
+                  shoppers who are done. "Buy it now" previously rendered only in
+                  the inline block, 1.46 viewports down, and never here. The price
+                  yields first on narrow phones so neither label ever wraps. */}
+              <p className="hidden shrink-0 font-display text-base font-black leading-none text-cream min-[400px]:block">
+                {currentVariation?.priceFormatted || product.priceFormatted}
+              </p>
+              {/* .btn-secondary's default label is 11px and .btn-primary's is
+                  13px (globals.css), so the pair would render at two different
+                  sizes side by side. The sanctioned override is a text utility
+                  on the button — see the note above the .btn-* font-size rules. */}
+              <button type="button" onClick={handleAddToCart} className="btn-secondary min-w-0 flex-1 whitespace-nowrap text-[13px]">
+                {addedFeedback ? "Added ✓" : "Add to bag"}
+              </button>
+              <button type="button" onClick={handleBuyNow} className="btn-primary min-w-0 flex-1 whitespace-nowrap">
+                Buy it now
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">{product.name}</p>
+                <p className="font-display text-lg font-black leading-none text-cream">{currentVariation?.priceFormatted || product.priceFormatted}</p>
+              </div>
+              <button
+                type="button"
+                onClick={handlePrimaryAction}
+                aria-disabled={Boolean(currentVariation)}
+                // Same status node as the inline button. It lives in the buy
+                // block, which renders at every viewport, so the reason an
+                // aria-disabled sticky button is blocked is reachable here too.
+                aria-describedby="pdp-buy-status"
+                className={`btn-primary whitespace-nowrap ${currentVariation ? "cursor-not-allowed opacity-50" : ""}`}
+              >
+                {currentVariation ? "Unavailable" : "Select size"}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

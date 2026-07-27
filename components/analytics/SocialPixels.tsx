@@ -6,8 +6,9 @@ import { useConsent } from "@/lib/consent/consent";
 /**
  * Meta (Facebook/Instagram) + TikTok pixels for shopping tags, catalog matching,
  * and retargeting. Inert until the ids are set in the environment — renders and
- * loads nothing otherwise. No consent gate exists on the site yet; add Consent
- * Mode here if EU compliance is later needed.
+ * loads nothing otherwise, and strictly opt-in: nothing loads until consent is
+ * granted. The Meta `Purchase` conversion is fired from `lib/analytics/events.ts`
+ * (`trackPurchase`), keyed on the order number as `eventID`.
  *
  *   NEXT_PUBLIC_META_PIXEL_ID   e.g. 1234567890
  *   NEXT_PUBLIC_TIKTOK_PIXEL_ID e.g. CabcdEfgh...

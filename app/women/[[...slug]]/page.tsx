@@ -19,6 +19,7 @@ export const revalidate = 300;
 
 interface WomenPageProps {
   params: Promise<{ slug?: string[] }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 const GENDER = "women";
@@ -41,15 +42,24 @@ export async function generateMetadata({ params }: WomenPageProps): Promise<Meta
     ? `${category.description} Shop made-to-order ${category.name.toLowerCase()} for women.`
     : "Women's graphic tees, hoodies, sweatshirts, and knitwear in unisex cuts — designed in NYC, printed when you order. Exact measurements on every page.";
 
+  // A category we stock nothing in is a real URL with no product on it. Keep it
+  // reachable but out of the index rather than letting a placeholder description
+  // rank. `getAllProducts` is request-deduped with the page body below.
+  const isEmptyCategory = category
+    ? filterProductsByCategory(filterProductsByGender(await getAllProducts(), GENDER), category.slug).length === 0
+    : false;
+
   return {
     title,
     description,
     alternates: { canonical: category ? `${BASE_PATH}/${category.slug}` : BASE_PATH },
+    ...(isEmptyCategory ? { robots: { index: false, follow: true } } : {}),
   };
 }
 
-export default async function WomenPage({ params }: WomenPageProps) {
+export default async function WomenPage({ params, searchParams }: WomenPageProps) {
   const { slug } = await params;
+  const { page } = await searchParams;
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
 
@@ -65,12 +75,14 @@ export default async function WomenPage({ params }: WomenPageProps) {
 
   const categorySlugs = getCategorySlugsForGender(GENDER);
   const categoryOptions = CATEGORIES.filter((c) => categorySlugs.includes(c.slug));
+  const listPath = category ? `${BASE_PATH}/${category.slug}` : BASE_PATH;
+  const initialPage = Math.max(1, Number.parseInt(page ?? "1", 10) || 1);
 
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
       <CollectionJsonLd
         name={category ? `${category.name} for Women` : "Women's"}
-        path={category ? `${BASE_PATH}/${category.slug}` : BASE_PATH}
+        path={listPath}
         products={displayProducts}
       />
       <div className="mx-auto max-w-7xl">
@@ -84,7 +96,7 @@ export default async function WomenPage({ params }: WomenPageProps) {
           }
         />
         {!category && (
-          <div className="fold-surface relative mb-10 aspect-[21/9] overflow-hidden md:aspect-[3/1]">
+          <div className="fold-surface relative mb-6 aspect-[3/1] overflow-hidden md:mb-10">
             <Image
               src="/campaign/hero-women-onmodel.webp"
               alt="The Hope and Tomorrow sweatshirt in dusty rose, worn"
@@ -101,6 +113,8 @@ export default async function WomenPage({ params }: WomenPageProps) {
           activeCategory={category?.slug}
           categories={categoryOptions}
           basePath={BASE_PATH}
+          initialPage={initialPage}
+          paginationPath={listPath}
         />
       </div>
     </div>

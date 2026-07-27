@@ -6,12 +6,19 @@
   color-scheme: light;
 
   --aha-ink: #1a1a1a;
-  --aha-ink-soft: #4a4a4a;
   --aha-surface: #ffffff;
   --aha-surface-raised: #f1f1f1;
   --aha-paper: #fafafa;
   --aha-paper-muted: #4a4a4a;
+  /* Fold Shadow. DECORATIVE hairlines only — section rules, fold-surface edges,
+     scrollbar thumb, disabled chrome. 2.08:1 on paper, which is fine for
+     decoration (WCAG 1.4.11 exempts it) and NOT fine for a live control. */
   --aha-line: #b0b0b0;
+  /* Control border. The visible edge of an interactive control that has no fill
+     of its own — .btn-secondary is identified by nothing else. 3.31:1 on paper,
+     which clears 1.4.11's 3:1 with margin. Do not collapse this back into
+     --aha-line: the border IS the button. */
+  --aha-control-border: #8a8a8a;
   /* Rose fills (design-2 Accent Coral): buttons and selected states carry the
      TRUE rose as a surface with ink text on top — 6.15:1, passes AA. */
   --aha-rose: #ff6b6b;
@@ -19,11 +26,13 @@
      tone to hold WCAG AA (4.55:1). Never set small text in #FF6B6B on white. */
   --aha-accent: #ce3d56;
   --aha-sky: #87ceeb;
-  --aha-sage: #a8d5ba;
-  --aha-warm-crease: #f0c987;
-  --aha-success: #a8d5ba;
-  --aha-warning: #f0c987;
-  --aha-error: #ce3d56;
+  /* Status primitives track the --c-* channels below exactly. The former pale
+     pair (#A8D5BA sage / #F0C987 warm crease) sat at ~1.5:1 on paper — those
+     values are RETIRED for status, not merely unused, and must not come back
+     via this layer. Sage and warm crease survive only as fold-plane washes
+     (literal rgba() below) and in the transactional email band. */
+  --aha-success: #166534;
+  --aha-warning: #8a5a00;
 
   /* Semantic Tailwind channels */
   --c-bg: 250 250 250;
@@ -32,6 +41,12 @@
   --c-content: 26 26 26;
   --c-muted: 74 74 74;
   --c-accent: 206 61 86;
+  /* Accent text on a SUNKEN ground (--aha-surface-raised #F1F1F1 or darker).
+     #CE3D56 is tuned for #FAFAFA paper and drops to 4.20:1 on #F1F1F1, which
+     fails AA for the small bold eyebrows that sit on tinted panels.
+     #B8304A == 5.2:1 on #F1F1F1. Reach for this any time accent text is not
+     on paper. */
+  --c-accent-on-sunken: 184 48 74;
   --c-rose: 255 107 107;
   /* Darkened for text legibility on the paper ground (WCAG AA). The former pale
      values (#A8D5BA / #F0C987) failed at ~1.5:1 on status/confirmation copy. */
@@ -45,7 +60,12 @@
   --aha-motion-fast: 140ms;
   --aha-motion-base: 260ms;
   --aha-motion-slow: 640ms;
+  /* Overlays leave faster than they arrive: an entrance is being introduced,
+     an exit is being got out of the way. 150ms out against 220-360ms in. */
+  --aha-motion-exit: 150ms;
   --aha-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Accelerating partner to --aha-ease-out, for exits only. */
+  --aha-ease-in: cubic-bezier(0.4, 0, 1, 1);
   --aha-tap-min: 44px;
 }
 
@@ -60,6 +80,15 @@
     background: var(--aha-paper);
     color: var(--aha-ink);
     scroll-behavior: auto;
+    /* Six components (cart drawer, add-to-cart modal, search overlay, mobile
+       menu, lightbox, size guide) set body overflow:hidden with no width
+       compensation. `body { overflow-x: hidden }` propagates body's overflow to
+       the viewport, so the scrollbar those locks remove IS the viewport
+       scrollbar — every add-to-cart shunted the page sideways on Windows/Linux
+       Chrome and on Macs set to always-show scrollbars. Reserving the gutter
+       permanently costs ~15px of full-bleed width on those platforms and is
+       invisible under macOS overlay scrollbars. One declaration, all six. */
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -345,10 +374,82 @@ textarea {
 }
 
 .cart-panel-enter,
-.cart-dialog-enter {
+.cart-panel-exit,
+.cart-dialog-enter,
+.cart-dialog-exit {
   background-image:
     linear-gradient(145deg, rgba(135, 206, 235, 0.11) 0 24%, transparent 24.5%),
     linear-gradient(35deg, rgba(168, 213, 186, 0.09) 0 18%, transparent 18.5%);
+}
+
+/* ---------------------------------------------------------------------------
+   Overlay exits. Entrances existed; exits did not, so every overlay hard
+   unmounted — the drawer that slid in from the right simply blinked out. Each
+   exit is the mirror of its entrance, transform/opacity only, and runs at
+   --aha-motion-exit (150ms) against entrances of 220-360ms.
+
+   DELIBERATELY NOT wrapped in `prefers-reduced-motion: no-preference`. The
+   entrances are, because an entrance that never runs is harmless. An exit that
+   never runs is not: a consumer unmounting on `animationend` would wait forever
+   and leave a modal overlay sitting on top of checkout. Defined unconditionally
+   here, the reduced-motion block further down collapses the duration to
+   0.001ms — `animationend` still fires, just immediately.
+
+   Consumer contract (components own this half — see CartDrawer, AddToCartModal,
+   SearchOverlay, SiteNav):
+     1. On close, swap `-enter` for `-exit`; keep the node mounted.
+     2. Return focus to the opener IMMEDIATELY, not after the animation.
+     3. Unmount on `animationend`, AND on a `setTimeout` fallback of ~300ms.
+        The timeout is not belt-and-braces — it is the only guarantee if the
+        element is display:none'd mid-flight or the tab is backgrounded.
+   ------------------------------------------------------------------------ */
+.cart-backdrop-exit,
+.cart-panel-exit,
+.cart-dialog-exit,
+.mobile-menu-exit {
+  /* A closing overlay must not accept the tap that is already on its way. */
+  pointer-events: none;
+}
+
+.cart-backdrop-exit {
+  animation: aha-cart-backdrop-out var(--aha-motion-exit) var(--aha-ease-in) both;
+}
+
+.cart-panel-exit {
+  animation: aha-cart-panel-out var(--aha-motion-exit) var(--aha-ease-in) both;
+}
+
+.cart-dialog-exit {
+  animation: aha-cart-dialog-out var(--aha-motion-exit) var(--aha-ease-in) both;
+}
+
+.mobile-menu-exit {
+  animation: aha-mobile-menu-out var(--aha-motion-exit) var(--aha-ease-in) both;
+}
+
+@keyframes aha-cart-backdrop-out {
+  to { opacity: 0; }
+}
+
+@keyframes aha-cart-panel-out {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes aha-cart-dialog-out {
+  to {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+}
+
+@keyframes aha-mobile-menu-out {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -356,6 +457,7 @@ textarea {
     --aha-motion-fast: 0ms;
     --aha-motion-base: 0ms;
     --aha-motion-slow: 0ms;
+    --aha-motion-exit: 0ms;
   }
 
   *,
@@ -369,6 +471,33 @@ textarea {
 }
 
 /* Premium fashion-brand utilities */
+
+/* ---------------------------------------------------------------------------
+   Button label size lives on its own, apart from the .btn-* blocks below, and
+   at deliberately low specificity.
+
+   The 11px used to sit inside `.btn-primary` at (0,1,0), emitted AFTER the
+   utilities layer — so `text-base` on the Pay button and `text-sm` on "Review
+   bag" tied on specificity and lost on source order. Every per-button size the
+   authors wrote was silently discarded and every label in the store rendered at
+   11px: the smallest interactive text on a page whose body copy is 16px.
+
+   `html :where(...)` scores (0,0,1). That is high enough to beat the base
+   `button, a { font: inherit }` reset (also (0,0,1), earlier in source) and low
+   enough that ANY `text-*` utility (0,1,0) now wins. Both halves matter — drop
+   the `html` for a bare `:where()` at (0,0,0) and `font: inherit` takes over.
+
+   Primary/price-bearing actions carry a step up; secondary and ghost keep the
+   11px chrome size, so this is not a site-wide type change. Step an individual
+   button with a `text-*` utility or by setting --btn-font-size on it. */
+html :where(.btn-primary, .primary-action) {
+  font-size: var(--btn-font-size, 13px);
+}
+
+html :where(.btn-secondary, .secondary-action, .btn-ghost) {
+  font-size: var(--btn-font-size, 11px);
+}
+
 .btn-primary,
 .primary-action {
   position: relative;
@@ -381,7 +510,6 @@ textarea {
   background: var(--aha-rose);
   color: var(--aha-ink);
   font-family: var(--aha-font-mono);
-  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -420,6 +548,10 @@ textarea {
   color: var(--aha-paper-muted);
 }
 
+/* The border is this button's ONLY visual identification, so WCAG 1.4.11's 3:1
+   applies to it. --aha-line (#B0B0B0) measured 2.08:1 on paper and failed —
+   including on the homepage hero's "Shop new arrivals". --aha-control-border
+   (#8A8A8A) measures 3.31:1. Decorative hairlines keep --aha-line. */
 .btn-secondary,
 .secondary-action {
   display: inline-flex;
@@ -427,11 +559,10 @@ textarea {
   justify-content: center;
   min-height: var(--aha-tap-min);
   padding: 0 1.5rem;
-  border: 1px solid var(--aha-line);
+  border: 1px solid var(--aha-control-border);
   background: transparent;
   color: var(--aha-ink);
   font-family: var(--aha-font-mono);
-  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -464,7 +595,6 @@ textarea {
   background: transparent;
   color: var(--aha-ink);
   font-family: var(--aha-font-mono);
-  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

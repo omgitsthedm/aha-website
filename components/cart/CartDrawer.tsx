@@ -62,7 +62,20 @@ export function CartDrawer() {
           )}
         </div>
 
-        {items.length > 0 && <footer className="border-t border-border/40 px-5 py-5"><div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Subtotal</span><strong className="font-mono text-lg">{totalFormatted}</strong></div><p className="mt-3 text-xs leading-relaxed text-muted">Shipping: {getShippingLineCopy(total)}. Tax: {TAX_LINE_COPY}.</p><Link href="/cart" onClick={toggleCart} className="primary-action mt-5 flex min-h-12 w-full items-center justify-center px-5 py-3 text-sm">Review bag</Link><p className="mt-3 text-center text-[11px] leading-relaxed text-muted">{getFulfillmentSummary()}</p></footer>}
+        {/* The drawer is the last blocking surface between "added to bag" and paying,
+            so its primary action goes straight to /checkout. "Review bag" stays as a
+            secondary link — one label per destination, never the same word twice. */}
+        {items.length > 0 && (
+          <footer className="border-t border-border/40 px-5 py-5">
+            <div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Subtotal</span><strong className="font-mono text-lg">{totalFormatted}</strong></div>
+            <p className="mt-3 text-xs leading-relaxed text-muted">Shipping: {getShippingLineCopy(total)}. Tax: {TAX_LINE_COPY}.</p>
+            <Link href="/checkout" onClick={toggleCart} className="primary-action mt-5 flex min-h-12 w-full items-center justify-center px-5 py-3 text-sm">Checkout — {totalFormatted}</Link>
+            <div className="mt-3 flex justify-center">
+              <Link href="/cart" onClick={toggleCart} className="inline-flex min-h-11 items-center px-2 text-xs font-bold uppercase tracking-[0.05em] text-muted underline underline-offset-4 hover:text-accent">Review bag</Link>
+            </div>
+            <p className="mt-1 text-center text-[11px] leading-relaxed text-muted">{getFulfillmentSummary()}</p>
+          </footer>
+        )}
       </div>
     </div>, document.body
   );

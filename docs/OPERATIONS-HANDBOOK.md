@@ -123,11 +123,18 @@ LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live
 - Codex design branch `design/origami-storefront-polish-20260713`: review or delete
 - Copy book read-through (`../WEBSITE-COPY-BOOK-2026-07-13.md`)
 - Fonts/palette print + fabric sign-off; release rhythm; social channels
-- GA4/GTM measurement id (see analytics gap below)
 
 **Buildable without decisions:**
-- **Analytics is dark:** `trackCommerceEvent` pushes to `window.dataLayer` but no
-  GA4/GTM script loads — funnel events go NOWHERE. Blocked only on a measurement id.
+- **Analytics (corrected 2026-07-27):** the old "analytics is dark, blocked on a
+  measurement id" note was wrong. The GA4 id was supplied and gtag.js loads after
+  consent; the funnel was dead because `trackCommerceEvent` pushed GTM-convention
+  objects at a `window.dataLayer` that no container reads — and that was
+  `undefined` at mount, so `view_item`/`view_cart` were dropped outright. Repaired
+  in `lib/analytics/events.ts`: direct `gtag('event', …)` with real GA4 ecommerce
+  parameters, a consent-gated buffer for events raised before the tag loads, and a
+  `purchase` event on `/order-confirmed` keyed on the order number. **Still to do:
+  verify in GA4 DebugView on a preview, then consider a server-side `purchase`
+  (Measurement Protocol + Meta CAPI, de-duplicated on order number).**
 - Back/detail views for ~40 single-image PDPs (local library has more angles)
 - Colorway chips (swatch dots) on grid cards
 - LCP 2.1s → <2.0s (hero preload tuning)

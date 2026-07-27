@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SheepMark } from "@/components/ui/SheepMark";
+import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { ConsentSettingsLink } from "@/components/consent/ConsentSettingsLink";
 import { isGiftCardsEnabled } from "@/lib/square/giftcards";
 
@@ -64,19 +65,16 @@ export function SiteFooter() {
           <div className="mt-8 border-t border-border/40 pt-6">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Newsletter</p>
             <p className="mt-2 max-w-sm text-sm text-muted">New releases and the occasional note from the shop. No spam, unsubscribe anytime.</p>
-            <form name="newsletter" method="POST" data-netlify="true" className="mt-4 flex max-w-sm flex-col gap-3 sm:flex-row" action="/newsletter">
-              <input type="hidden" name="form-name" value="newsletter" />
-              <label htmlFor="footer-email" className="sr-only">Email address</label>
-              <input
-                id="footer-email"
-                name="email"
-                type="email"
-                required
-                placeholder="you@email.com"
-                className="min-h-11 min-w-0 flex-1 border border-border/60 bg-void px-4 text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none"
-              />
-              <button type="submit" className="btn-primary">Subscribe</button>
-            </form>
+            {/* Shared implementation — one submission path, one honeypot, one
+                validation rule set. The old inline form posted to /newsletter,
+                which bounced footer subscribers off whatever page they were on. */}
+            <NewsletterForm
+              instanceId="footer-newsletter"
+              className="mt-4 max-w-sm"
+              rowClassName="flex flex-col gap-3 sm:flex-row"
+              inputClassName="min-h-11 min-w-0 flex-1 border border-border/60 bg-void px-4 text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none"
+              buttonClassName="btn-primary min-h-11 aria-disabled:cursor-wait aria-disabled:opacity-60"
+            />
           </div>
         </div>
 
