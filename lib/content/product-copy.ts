@@ -1,4 +1,4 @@
-import type { Product, Collection } from "@/lib/utils/types";
+import type { Product } from "@/lib/utils/types";
 import type { ProductEnrichment } from "@/lib/data/enrichment";
 import { loadProductMap } from "@/lib/data/products";
 
@@ -99,31 +99,39 @@ function designContext(name: string): string {
 
 function practicalClose(type: string): string {
   if (type === "accessory" || type === "hat") {
-    return "Check the product options, care guidance, free shipping, and 30-day return terms before ordering.";
+    return "Check the product options, care guidance, shipping rates, and 30-day return terms before ordering.";
   }
   if (type === "hoodie" || type === "sweater" || type === "jacket") {
     return "Use the live size options and fit note to choose your layer, then review care, delivery, and 30-day return terms.";
   }
-  return "Use the live size options and fit note to choose your cut, then review care, free shipping, and 30-day return terms.";
+  return "Use the live size options and fit note to choose your cut, then review care, shipping, and 30-day return terms.";
 }
 
-export function buildProductStory(
-  product: Product,
-  enrichment?: ProductEnrichment | null,
-  collection?: Collection,
-): string {
+// The manifest's `fabricDescription` is not always a material. Some products carry a
+// process note ("Printed to order on premium stock.") or a pointer ("See size guide for
+// materials."), and interpolating those after "Made with " reads as broken grammar on a
+// live PDP. Only inline the value when it is a single short material noun phrase; the
+// PDP `Fabric:` row renders the raw field verbatim either way, so nothing is lost.
+const MATERIAL_NOUN =
+  /\b(cotton|poly|polyester|fleece|knit|wool|linen|nylon|acrylic|spandex|elastane|rayon|modal|jersey|twill|denim|canvas|blend)\b/i;
+
+function fabricClause(fabricDescription?: string): string {
+  if (!fabricDescription) return "";
+  const value = clean(fabricDescription).replace(/\.$/, "");
+  // Multi-sentence copy and instructions are descriptions of something else.
+  if (value.includes(".") || /^(printed|made|see|check|use)\b/i.test(value)) return "";
+  if (!MATERIAL_NOUN.test(value)) return "";
+  return ` Made with ${value.toLowerCase()}.`;
+}
+
+export function buildProductStory(product: Product, enrichment?: ProductEnrichment | null): string {
   // An authored story (written at design time, factory spec.story) is the
   // truth of the design — it always beats the generated template.
   const authored = getAuthoredStory(product.slug);
   if (authored) return authored;
   const productType = enrichment?.productType || "";
   const type = TYPE_NAMES[productType] || "piece";
-  const collectionLine = collection?.description
-    ? ` In the ${clean(collection.name)} collection, it sits inside this idea: ${clean(collection.description)}`
-    : " It is part of the current After Hours Agenda product catalog.";
-  const fabric = enrichment?.fabricDescription
-    ? ` Made with ${clean(enrichment.fabricDescription).replace(/\.$/, "").toLowerCase()}.`
-    : "";
+  const fabric = fabricClause(enrichment?.fabricDescription);
 
-  return `${designContext(product.name)} ${product.name} is printed to order as ${article(type)} ${type}.${collectionLine}${fabric} ${practicalClose(productType)}`;
+  return `${designContext(product.name)} ${product.name} is printed to order as ${article(type)} ${type}.${fabric} ${practicalClose(productType)}`;
 }

@@ -1,7 +1,9 @@
+import { SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
+
 export function TrustStrip() {
   const items = [
     { label: "Designed in NYC", description: "After hours, literally" },
-    { label: "Free shipping", description: "On every order" },
+    { label: SHIPPING_CLAIM_SHORT, description: SHIPPING_CLAIM_DETAIL },
     { label: "Made to order", description: "No dead stock" },
     { label: "30-day returns", description: "Hassle-free" },
   ];

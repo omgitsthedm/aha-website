@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { DELIVERY_WINDOW, PRODUCTION_WINDOW, RETURNS_SUMMARY } from "@/lib/commerce/policies";
+import { DELIVERY_WINDOW, PRODUCTION_WINDOW, RETURNS_SUMMARY, SHIPPING_CLAIM_SENTENCE } from "@/lib/commerce/policies";
 
-export const metadata = { title: "FAQ: Shipping, Fit & Returns", description: "How After Hours Agenda orders work: made-to-order timelines, free shipping, 30-day returns, fit and care — answered by an actual person.", alternates: { canonical: "/faq" } };
+export const metadata = { title: "FAQ: Shipping, Fit & Returns", description: "How After Hours Agenda orders work: made-to-order timelines, US and international shipping rates, 30-day returns, fit and care — answered by an actual person.", alternates: { canonical: "/faq" } };
 
 const faqs = [
   { q: "When will my order arrive?", a: `Production usually takes ${PRODUCTION_WINDOW}. Delivery is ${DELIVERY_WINDOW}. These windows run one after the other, and tracking is sent when the package leaves production.` },
   { q: "Why are products made to order?", a: "After Hours Agenda begins production after payment. This reduces unused stock but means an item does not ship immediately." },
-  { q: "What does shipping cost?", a: "Standard shipping is free. The checkout quote confirms the final shipping line and estimated tax before payment." },
+  { q: "What does shipping cost?", a: `${SHIPPING_CLAIM_SENTENCE} The rate is charged once per order, not per item. The checkout quote confirms the final shipping line and estimated tax before payment.` },
   { q: "How do I choose a size?", a: "Use the fit note and size guide on the product page. Product-specific fit information takes priority over general guidance." },
   { q: "What payment methods can I use?", a: "Card payments are processed securely by Square. Apple Pay or Google Pay appears when Square supports the wallet on your device and browser." },
   { q: "How do I track an order?", a: "Use the order number and checkout email on the Track Order page. A tracking link appears after the carrier receives the shipment." },
@@ -17,7 +17,7 @@ const faqs = [
   { q: "What if my item arrives damaged or misprinted?", a: "Email clear photos of the item, packaging, and order number. Confirmed production defects, damage, or incorrect items are handled separately from change-of-mind returns." },
   { q: "How do I care for a piece?", a: "Machine wash cold, inside out, and use low heat. Do not iron directly over the print." },
   { q: "Will the color match my screen exactly?", a: "Screens, garment batches, and print methods can shift color slightly. Product photography is a guide; product-specific descriptions and the garment label remain the practical source of truth." },
-  { q: "Do you have customer reviews?", a: "After Hours Agenda does not publish an on-site review system yet. Ratings and testimonials will not be added without a real collection and moderation process." },
+  { q: "Do you have customer reviews?", a: "Yes. Every product page carries a review section, and anyone can submit one from that page. Nothing publishes automatically: each review is read and approved by a person first, and a Verified badge is added only when the review is matched to a real order. We do not write, buy, or edit reviews." },
 ];
 
 const faqJsonLd = {

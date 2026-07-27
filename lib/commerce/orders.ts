@@ -4,6 +4,7 @@ import { db, isDbConfigured } from "@/lib/db/client";
 import { orders, orderItems, payments, auditLog } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { loadProducts } from "@/lib/data/products";
+import { INTERNATIONAL_SHIPPING_CENTS, isInternational } from "@/lib/commerce/policies";
 import type { AhaProduct, AhaVariant } from "@/lib/types/product";
 
 export interface CheckoutLine {
@@ -106,9 +107,16 @@ export async function createOrder(
 ): Promise<{ orderId: number; externalOrderNumber: string; total: number }> {
   if (!isDbConfigured()) throw new Error("Order store unavailable.");
   const external = orderNumber();
-  const shipping = 0; // free shipping (brand policy)
+  // US ships free; CA/GB/AU carry a real flat service charge on the Square order,
+  // so the freight column has to record it too. Square still owns `total`.
+  const shippingCountry =
+    typeof contact.shippingAddress?.country === "string" ? contact.shippingAddress.country : undefined;
+  const shipping = isInternational(shippingCountry) ? INTERNATIONAL_SHIPPING_CENTS : 0;
   const grossSubtotal = cart.subtotal; // pre-discount line-item total
-  const netSubtotal = pricing?.subtotal ?? cart.subtotal; // Square's post-discount subtotal
+  // Square's `subtotal` is total − tax, which still contains the TOTAL_PHASE shipping
+  // service charge. Strip the freight before deriving the promo discount, or a
+  // discounted international order records $20 less discount than it actually got.
+  const netSubtotal = pricing ? Math.max(0, pricing.subtotal - shipping) : cart.subtotal;
   const discountAmount = Math.max(0, grossSubtotal - netSubtotal); // itemized promo savings
   const tax = pricing?.tax ?? 0;
   const total = pricing?.total ?? cart.subtotal + shipping;
@@ -121,8 +129,8 @@ export async function createOrder(
       shippingName: contact.shippingName, shippingAddressJson: contact.shippingAddress ?? null,
       squareOrderId: pricing?.squareOrderId ?? null,
       // Store the GROSS subtotal + the discount separately so records reconcile
-      // with Square (gross − discount + tax = total). Square holds the discount
-      // name/code; we keep the amount.
+      // with Square (gross − discount + tax + shipping = total). Square holds the
+      // discount name/code; we keep the amount.
       currency, subtotalAmount: grossSubtotal, discountAmount, shippingAmount: shipping, taxAmount: tax,
       totalAmount: total, paymentStatus: "created", fulfillmentStatus: "not_started",
     })
