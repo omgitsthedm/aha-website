@@ -1,51 +1,44 @@
-# After Hours Agenda — Storefront
+# After Hours Agenda storefront
 
-Premium DTC clothing-brand ecommerce. **Live:** https://afterhoursagenda.com
+After Hours Agenda is a live New York streetwear storefront at `https://afterhoursagenda.com`. The application uses Next.js 15, TypeScript, Netlify, Square, Printful, Netlify Database, and Resend.
 
-**Stack:** Next.js 14 (App Router) · TypeScript · Tailwind · GSAP · Netlify · **Square** (payments) · **Printful API v2 beta** (fulfillment) · Netlify DB / Neon (operational data).
+## Start here
 
-## Doctrine (read before building)
-1. `docs/MASTER-UIUX-HANDOFF-v2.md` — controlling UI/UX/product doctrine.
-2. `docs/MASTER-BUILD-INSTRUCTION.md` — full ecommerce build spec.
-3. `CLAUDE.md` — repo rules (protect the purchase flow above all).
-4. `SOURCE_OF_TRUTH.md` / `.ai/STATE.md` — live production truth + current state.
+Agents read `AGENTS.md` and `SOURCE_OF_TRUTH.md`. Open detailed design, product, commerce, or operations documents only when the task needs them.
 
-## Commands
+## Local commands
+
 ```bash
-npm run dev            # local dev
-npm run build          # production build (run before pushing)
-npm run typecheck      # tsc --noEmit
+npm run dev
 npm run lint
-npm test               # vitest unit tests
-npm run test:e2e       # Playwright (Sandbox)
-npm run validate:all   # product + square-map + printful-v2-map + margin gates
-npm run db:migrate     # apply db/migrations (needs DATABASE_URL)
-# Deploy is Git-backed: merge to main → Netlify. Guards:
-npm run verify:netlify-site        # exact target site id
-npm run verify:netlify-live        # live serves AHA content
+npm run typecheck
+npm test
+npm run validate:all
+npm run build
+```
+
+## Read-only production checks
+
+```bash
+npm run verify:netlify-site
+LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live
 npm run verify:commerce-readiness:netlify
 ```
 
-Production operations: `/ops` (credential retrieval and runbook: `docs/commerce-operations.md`). Customer order status: `/track-order`.
+These checks do not authorize a deploy, live checkout, provider write, order, fulfillment, email, or production-data mutation.
 
-## Structure
+## Repository layout
+
+```text
+app/                Next.js routes and application programming interface routes
+components/         Storefront and shared interface components
+lib/                Commerce, provider, data, database, and shared logic
+data/               Product manifest and provider mappings
+scripts/            Validation and product operations
+ops/                Exact-site and commerce-readiness guards
+db/                 Database schema and migrations
+docs/               Task-specific design, commerce, operations, and historical evidence
+.github/workflows/  Continuous integration and release checks
 ```
-app/            App Router pages + api routes (checkout, webhooks, commerce/readiness)
-components/     cart · checkout · homepage · product · seo · shop · ui
-lib/            square/ · printful/ (v2) · commerce/ · data/ (loader + purchasable gate) · db/ · types/
-data/           product-manifest.json + square-map / printful-v2-map / size-guides (internal product layer)
-scripts/        validate-* + margin-check + db-migrate (tsx)
-db/migrations/  Postgres schema (§14)
-docs/           doctrine + build docs + design tokens + ci/branch-protection
-.github/workflows/  ci · e2e · lighthouse · security · release
-ops/            netlify target guard + commerce-readiness
-```
 
-## Non-negotiables
-No unmapped product purchasable · no Printful fulfillment before Square payment success · no live Printful confirm outside production flags · Square SDK only on checkout · never expose/commit Square/Printful secrets · no fake urgency/scarcity/reviews/hidden costs · WCAG 2.2 AA · mobile-first.
-
-## Build status
-Phase 1 (foundation) landed: env/Netlify contexts, design tokens, internal product model + validation harness, DB schema/migrations, CI gates + tests, docs. **Phases 2-6 (storefront, commerce backend, Printful v2 fulfillment, brand systems, launch) in progress** — see `.ai/STATE.md` and `docs/MASTER-BUILD-INSTRUCTION.md §46`.
-
-## Every session ends with
-what changed · files touched · tests run · risks · remaining gaps · next recommended step.
+Use `docs/AHA-DESIGN-SYSTEM.md` for brand work, `docs/commerce-operations.md` for authorized operations, and `docs/product-factory.md` for product creation. The large master handoffs are historical references, not mandatory startup reading.

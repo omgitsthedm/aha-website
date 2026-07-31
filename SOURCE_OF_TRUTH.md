@@ -1,114 +1,89 @@
-# SOURCE_OF_TRUTH.md - After Hours Agenda
+# After Hours Agenda source of truth
 
-Last verified: 2026-07-14 by Claude from local Git, Netlify API, and public HTTPS checks.
+Last verified: July 31, 2026 from local Git, GitHub, the Netlify application programming interface (API), and public Hypertext Transfer Protocol Secure (HTTPS) checks.
 
-GitHub `main` is canonical. The production Netlify project must serve builds from this repo only. Local clones and manual deploy artifacts are disposable.
+This file contains the current routing and operational contract. Detailed design, commerce, legal, and historical evidence remains available on demand under `docs/` and in Git history.
 
-## Production Linkage
+## Canonical source and production map
 
-- GitHub repo: `https://github.com/omgitsthedm/aha-website.git`
-- Canonical branch: `main`
-- Current deployed commit: `3f46c061bdcdecddb2361ba1296feaafd695f653` (pending this commit; verify via Netlify API)
-- Source PR: PR #2, `Prepare AHA Netlify commerce backend for cutover`, merged 2026-07-09 04:19:25 UTC.
-- Host: Netlify
-- Netlify project name: `afterhoursagenda`
-- Netlify site id: `275b4115-16bf-42fb-9b36-6bce9bb93608`
-- Netlify dashboard: `https://app.netlify.com/projects/afterhoursagenda`
-- Default Netlify URL: `https://afterhoursagenda.netlify.app`
-- Primary custom URL: `https://afterhoursagenda.com/`
-- `www` behavior: `https://www.afterhoursagenda.com/` redirects to `https://afterhoursagenda.com/`
-- Build command: `npm run build`
-- Publish dir: `.next`
-- Current deploy mechanism: Git-backed Netlify production deploys from `main`.
-- Latest verified production deploy id: `6a4f2851e4c1b9fb71f86a67`
-- Required target check before deploy: `npm run verify:netlify-site`
-- Required environment readiness check before relying on commerce backend: `npm run verify:commerce-readiness:netlify`
-- Required live check after deploy: `npm run verify:netlify-live`
+- **Project**: After Hours Agenda production storefront
+- **Canonical local checkout**: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/aha-website`
+- **GitHub repository**: `https://github.com/omgitsthedm/aha-website`
+- **Canonical and production branch**: `main`
+- **Netlify project**: `afterhoursagenda`
+- **Netlify site ID**: `275b4115-16bf-42fb-9b36-6bce9bb93608`
+- **Primary domain**: `https://afterhoursagenda.com`
+- **Default Netlify domain**: `https://afterhoursagenda.netlify.app`
+- **www behavior**: `https://www.afterhoursagenda.com` returns Netlify HTTP 301 to the primary domain
+- **Build**: `npm run build`
+- **Publish directory**: `.next`
+- **Deployment path**: GitHub continuous deployment from `main`
+- **Non-Git production deploys**: blocked in current Netlify site metadata
 
-## DNS And Domain
+The retired iCloud backup family is not an active source and must remain untouched. A visible compatibility path is valid only when `pwd -P` resolves to the canonical physical checkout above.
 
-- Authoritative DNS provider reported by handoff: Wix DNS
-- Nameservers:
-  - `ns8.wixdns.net`
-  - `ns9.wixdns.net`
-- Apex A record: `afterhoursagenda.com -> 75.2.60.5`
-- `www` CNAME: `www.afterhoursagenda.com -> afterhoursagenda.netlify.app`
-- Google Workspace MX records were preserved during the cutover.
-- Public resolver checks against `1.1.1.1`, `8.8.8.8`, and `9.9.9.9` returned Netlify records.
-- Netlify HTTPS is active for apex and `www`.
+## Current production baseline
 
-## Verified Live State
+- **Production deploy ID**: `6a679898148e9000086c19b3`
+- **Deployed source commit**: `61946684db42559ba95dad43d718e2eb890c21fa`
+- **Deploy state**: `ready`
+- **Published**: July 27, 2026 at 17:44:07 UTC
+- **Production root**: HTTP 200, 285,122 bytes, SHA-256 `66ebaa736595edb2c52617609359b771563c99e1ce70752cce2f2837db2f312b`
+- **Production root ETag**: `"l9qh4rgjk463y2"`
 
-- `npm run verify:netlify-site` passes for site `afterhoursagenda` / `275b4115-16bf-42fb-9b36-6bce9bb93608`.
-- `npm run verify:commerce-readiness:netlify` passes; all required production env var names are present. Values were not printed.
-- `npm run verify:netlify-live` passes for `https://afterhoursagenda.netlify.app/`.
-- `LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live` passes.
-- `https://afterhoursagenda.com/` returns HTTP 200 from `server: Netlify` with title `After Hours Agenda | Blacklight Grunge Streetwear`.
-- `https://www.afterhoursagenda.com/` returns Netlify 301 to `https://afterhoursagenda.com/`.
+The primary domain and immutable deploy URL returned the same body fingerprint during the July 31 verification. Refresh these fields after any intentional production release. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
 
-## Source Layout
+## Runtime ownership
 
-- App Router pages/routes: `app/`
-- UI/components: `components/`
-- Commerce integrations: `lib/square/`, `lib/printful/`, `lib/commerce/`
-- Static assets: `public/`
-- Build output (gitignored, do not hand-edit): `.next/`
+- **Storefront**: Next.js 15 App Router with TypeScript on Netlify
+- **Payments and transaction records**: Square
+- **Fulfillment and shipping lifecycle**: Printful through the current repository routing
+- **Operational records**: Netlify Database
+- **Transactional email**: the existing Resend outbox and templates
+- **Product presentation and provider mappings**: this repository plus verified provider data
 
-## Secrets
+Never infer price, inventory, product availability, order state, or provider status from an old handoff. Read the current code and authorized provider state for the task.
 
-- `.env*` files are gitignored and must not be inspected or committed.
-- Real values belong in Netlify environment variables or the approved password manager.
-- Commit only non-secret public configuration, such as `NEXT_PUBLIC_SITE_URL`.
-- Name-only readiness checks are allowed; secret values must not be printed.
+## Production safety
 
-## Branches / Archives
+- Never inspect or commit `.env*` or secret values
+- Never fabricate a payment, order, customer, refund, fulfillment, shipment, provider event, email, or production form submission
+- Keep Square and Printful tokens server-side
+- Require verified payment before production fulfillment
+- Keep preview, branch, local, and continuous integration contexts non-transactional
+- Preserve exact-site verification because this property previously experienced a wrong-site deployment
+- Require clear scoped authorization for product, commerce, provider, database, Domain Name System (DNS), Netlify, email, analytics, or live-system changes
 
-- `main` = canonical source branch and production deploy branch.
-- `feature/uiux-doctrine-commerce-hardening` = merged into `main` via PR #2, remote branch deleted after merge.
-- `feature/retro-grunge-block-overhaul` = earlier redesign/restoration branch, retained remotely.
-- `backup/consolidation-20260629` = preserved baseline from pre-overhaul consolidation.
+The first genuine customer order remains an operational observation path unless current protected operations evidence proves it complete. Agents must not manufacture that proof.
 
-## Commerce Integrations
+## Verification rails
 
-- Square app used by handoff: `Claude`
-- Square application ID: `sq0idp-g1rzr9cjPnZuw9gJTxD4bA`
-- Square production location ID: `FGKRPYEXNV482`
-- Square production webhook was created by handoff as `AHA Netlify Square Webhook`.
-- Square webhook events reported by handoff:
-  - `order.created`
-  - `order.fulfillment.updated`
-  - `order.updated`
-  - `payment.created`
-  - `payment.updated`
-- Printful store reported by handoff: Square Online / Square store
-- Printful store ID: `14298228`
-- Printful token name reported by handoff: `AHA Netlify Commerce`
-- Printful webhook events reported by handoff:
-  - `order_created`
-  - `order_updated`
-  - `order_failed`
-  - `order_canceled`
-  - `shipment_sent`
-  - `shipment_returned`
-  - `shipment_out_of_stock`
-  - `shipment_canceled`
-  - `order_put_hold`
-  - `order_remove_hold`
+```bash
+npm run verify:netlify-site
+LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live
+npm run verify:commerce-readiness:netlify
+```
 
-## Active Caveats
+`verify:commerce-readiness:netlify` checks required variable names without printing protected values. For code changes, add proportional local checks from `npm run lint`, `npm run typecheck`, `npm test`, `npm run validate:all`, and `npm run build`.
 
-- No live checkout was run during cutover.
-- No Square order was created during cutover.
-- No Printful fulfillment was triggered during cutover.
-- Webhook routes currently verify signatures and acknowledge/log events only; they do not create Printful orders or automate fulfillment.
-- Netlify API still reports `prevent_non_git_prod_deploys: false`. Production deploys are Git-backed now, but non-Git production deploy blocking still needs confirmation if Netlify supports it for this site/account.
-- Handoff says the Square production webhook was created with URL `https://afterhoursagenda.netlify.app/api/webhooks/square`; Netlify production currently reports non-secret `SQUARE_WEBHOOK_NOTIFICATION_URL=https://www.afterhoursagenda.com/api/webhooks/square`. Square signature verification requires the exact URL used by Square to match the env var. Confirm and align before relying on Square webhook processing.
-- GitHub Action `Claude Code Review` failed on PR #2 due to Claude account billing lock per handoff, not due to a verified app build failure.
+Do not use a real checkout as verification. When public live requests encounter Netlify's managed challenge, distinguish infrastructure behavior from a confirmed storefront failure.
 
-## Notes / History
+## Deployment and documentation changes
 
-- 2026-07-08 wrong-site incident: `https://afterhoursagenda.netlify.app/` served unrelated Pole Position IT content even though this repo had not been merged or deployed for the redesign.
-- Root cause: the Netlify project was not Git-backed and accepted production deploy state outside the repo pipeline, so GitHub branch protections, PR review, and repo naming discipline could not protect the live `.netlify.app` URL.
-- Restore completed: production deploy `6a4e3854c37b683eab4d38b8` published `main` merge commit `55d63fc` to `https://afterhoursagenda.netlify.app/` on 2026-07-08.
-- Cutover completed after PR #2: domain, Netlify Git linking, production env names, Square webhook, Printful token/webhook, and HTTPS were configured; production deploys now point at commit `13c25e8`.
-- Prevention rule: never deploy AHA by site name alone. Use the exact site id, run the target guard before deploy, run the live guard after deploy, and keep Git-backed deploys as the normal production path.
+A normal push to `main` can trigger production. The [Netlify deploy management documentation](https://docs.netlify.com/deploy/manage-deploys/manage-deploys-overview/#skip-a-deploy) confirms that `[skip netlify]` can appear anywhere in the most recent commit message and applies to all commits in that push. The next commit without a skip marker can deploy the accumulated source tree, including skipped documentation.
+
+Use the skip marker only when the diff cannot change the built storefront or runtime. After a skipped push, prove the production deploy ID, source commit, domains, and live fingerprint remain unchanged.
+
+## Task-specific references
+
+- **Brand and design**: `docs/AHA-DESIGN-SYSTEM.md`, `.impeccable.md`
+- **Operations**: `docs/OPERATIONS-HANDBOOK.md`, `docs/commerce-operations.md`
+- **Product factory**: `docs/product-factory.md`
+- **Commerce readiness**: `docs/netlify-commerce-backend-readiness.md`
+- **Historical doctrine, plans, and audits**: open only for evidence relevant to the current task
+
+Historical master handoffs can describe retired phases, routes, products, branches, deploys, and visual directions. They do not override this file or current external evidence.
+
+## Maintenance rule
+
+Keep this file concise. Update it only for durable, verified routing, production, safety, or operational facts. Do not append session history. Git history and the central LiFi fleet manifest preserve housekeeping and recovery evidence.
