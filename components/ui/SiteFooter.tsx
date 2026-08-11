@@ -134,14 +134,8 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="mx-auto mt-10 flex max-w-[1280px] flex-col justify-between gap-4 border-t border-border/40 pt-5 sm:flex-row sm:items-center">
+      <div className="mx-auto mt-10 max-w-[1280px] border-t border-border/40 pt-5">
         <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted">© 2026 After Hours Agenda</p>
-        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted">
-          Designed, Hosted and Cared For by{" "}
-          <a href="https://littlefightnyc.com" className="text-accent underline underline-offset-4 hover:text-cream">
-            LittleFightNYC.com
-          </a>
-        </p>
       </div>
     </footer>
   );

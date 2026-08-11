@@ -1,8 +1,9 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { DELIVERY_WINDOW, PRODUCTION_WINDOW } from "@/lib/commerce/policies";
 import Link from "next/link";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
-export const metadata = { title: "Production and Free Shipping", description: "Made-to-order production timing, free standard shipping, carrier delivery estimates, tracking, and the exact costs shown before payment.", alternates: { canonical: "/shipping" } };
+export const metadata = buildMetadata({ title: "Production and Free Shipping", description: "Made-to-order production timing, free standard shipping, carrier delivery estimates, tracking, and the exact costs shown before payment.", path: "/shipping" });
 
 export default function ShippingPage() {
   return (

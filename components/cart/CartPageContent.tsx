@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { ResilientImage } from "@/components/ui/ResilientImage";
 import Link from "next/link";
@@ -10,18 +11,24 @@ import { formatCents } from "@/lib/utils/money";
 import { TAX_LINE_COPY, WALLET_CHECKOUT_COPY, getFulfillmentSummary, getShippingLineCopy } from "@/lib/commerce/policies";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { trackCommerceEvent } from "@/lib/analytics/events";
-import { ExpressCheckout } from "@/components/checkout/ExpressCheckout";
 import { SheepMark } from "@/components/ui/SheepMark";
 import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 
 interface RecItem { name: string; slug: string; priceFormatted: string; image: string }
+
+// Wallet boot is optional; the normal checkout link remains immediately
+// available, so an empty or newly restored bag does not pay this JS cost.
+const ExpressCheckout = dynamic(
+  () => import("@/components/checkout/ExpressCheckout").then((m) => m.ExpressCheckout),
+  { ssr: false, loading: () => null }
+);
 
 // Automatic bundle offer (display only — the server enforces the real discount).
 const BUNDLE_MIN = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_MIN_QTY || "0", 10);
 const BUNDLE_PCT = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_PERCENT || "0", 10);
 
 export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPaymentsConfig }) {
-  const { items, addItem, removeItem, updateQuantity, totalFormatted, totalItems, total } = useCart();
+  const { items, hydrated, addItem, removeItem, updateQuantity, totalFormatted, totalItems, total } = useCart();
   const [recs, setRecs] = useState<RecItem[]>([]);
   const [restored, setRestored] = useState(false);
 
@@ -82,6 +89,10 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
       .catch(() => { /* recs are optional — never block the cart */ });
     return () => controller.abort();
   }, [items]);
+
+  if (!hydrated) {
+    return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><PageHeader eyebrow="Bag" title="Your bag" description="Loading your saved items…" /></div></div>;
+  }
 
   if (items.length === 0) {
     return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><div className="mb-6 flex items-end gap-5"><SheepMark className="w-16 shrink-0 text-cream" title="The After Hours Agenda black sheep" /><PageHeader eyebrow="0 items" title="Your bag" description="Your bag is empty. Items stay saved in this browser until you remove them or complete a verified checkout." /></div><Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link></div></div>;

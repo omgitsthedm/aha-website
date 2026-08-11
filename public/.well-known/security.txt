@@ -1,0 +1,4 @@
+Contact: mailto:info@afterhoursagenda.com
+Expires: 2027-08-11T23:59:59Z
+Preferred-Languages: en
+Canonical: https://afterhoursagenda.com/.well-known/security.txt

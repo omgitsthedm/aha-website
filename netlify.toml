@@ -3,7 +3,7 @@
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "20.20.2"
   NEXT_PUBLIC_SITE_URL = "https://afterhoursagenda.com"
   SQUARE_API_VERSION = "2024-01-18"
   AHA_FULFILLMENT_MODE = "manual"

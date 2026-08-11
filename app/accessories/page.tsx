@@ -4,17 +4,17 @@ import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
 import { CollectionJsonLd } from "@/components/seo/CollectionJsonLd";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { filterProductsByCategory } from "@/lib/commerce/taxonomy";
-import type { Metadata } from "next";
 import Image from "next/image";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Totes, Hats, Socks & Stickers",
   description:
     "Counting Sheep totes, embroidered black sheep socks, hats, pins, and stickers — small pieces from an independent NYC label, made to order.",
-  alternates: { canonical: "/accessories" },
-};
+  path: "/accessories",
+});
 
 export default async function AccessoriesPage() {
   const allProducts = await getAllProducts();

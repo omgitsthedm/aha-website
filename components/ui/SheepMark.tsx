@@ -31,6 +31,19 @@ export function SheepMark({
       aria-label={title}
       aria-hidden={title ? undefined : true}
     >
+      <use href="#aha-sheep-mark" />
+    </svg>
+  );
+}
+
+/**
+ * One document-level copy of the canonical path. Every SheepMark references
+ * this symbol, avoiding repeated 10 KB path payloads in HTML and RSC data.
+ */
+export function SheepMarkSprite() {
+  return (
+    <svg aria-hidden="true" className="absolute h-0 w-0 overflow-hidden" focusable="false">
+      <symbol id="aha-sheep-mark" viewBox="0 0 1866.000000 1464.000000">
       <g transform="translate(0.000000,1464.000000) scale(0.100000,-0.100000)">
         <path d="M9820 14576 c0 -12 -33 -16 -182 -20 -238 -7 -316 -14 -356 -32 -19
 -9 -45 -13 -60 -9 -17 3 -35 0 -47 -9 -11 -9 -33 -16 -50 -16 -16 0 -39 -7
@@ -156,6 +169,7 @@ c142 -51 205 -110 268 -252 32 -74 25 -244 -13 -318 -128 -245 -391 -313 -591
 -108 -10 -153 -122 -280 -248 -280 -124 0 -219 74 -204 158 11 58 119 202 151
 202 8 0 18 11 22 24 16 42 138 86 156 56z" />
       </g>
+      </symbol>
     </svg>
   );
 }

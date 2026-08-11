@@ -1,7 +1,8 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SUPPORT_EMAIL } from "@/lib/content/site-copy";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
-export const metadata = { title: "Storefront Terms of Service", description: "Read the After Hours Agenda terms for made-to-order products, pricing, Square payments, shipping, returns, intellectual property, site use, and support.", alternates: { canonical: "/terms" } };
+export const metadata = buildMetadata({ title: "Storefront Terms of Service", description: "Read the After Hours Agenda terms for made-to-order products, pricing, Square payments, shipping, returns, intellectual property, site use, and support.", path: "/terms" });
 
 const sections = [
   ["Orders", "Products are made to order. An order is accepted when payment is approved and the storefront issues a confirmation. We may cancel and refund an order when a product, price, payment, address, fraud, or fulfillment issue prevents safe completion."],

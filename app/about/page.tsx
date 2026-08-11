@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 import Image from "next/image";
 import Link from "next/link";
 import { SHIPPING_CLAIM_SENTENCE } from "@/lib/commerce/policies";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "About",
   description:
     "After Hours Agenda is an independent NYC label. Every piece is designed after the day job and printed to order — nothing sits in a warehouse.",
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
 
 const values = [
   {

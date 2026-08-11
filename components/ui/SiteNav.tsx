@@ -119,7 +119,7 @@ export function SiteNav() {
   return (
     <header className="safe-top safe-x fixed inset-x-0 top-0 z-[100] border-b border-border/10 bg-void">
       <nav aria-label="Primary navigation" className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="inline-flex h-14 items-center font-display text-sm font-bold uppercase tracking-[-0.02em] text-cream hover:text-accent focus-visible:outline-offset-4">
+        <Link href="/" prefetch={false} className="inline-flex h-14 items-center font-display text-sm font-bold uppercase tracking-[-0.02em] text-cream hover:text-accent focus-visible:outline-offset-4">
           After Hours Agenda
         </Link>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 interface WallReview {
@@ -23,15 +23,44 @@ const slugToName = (slug: string) =>
  */
 export function SocialProofWall() {
   const [reviews, setReviews] = useState<WallReview[]>([]);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+
+    if (!("IntersectionObserver" in window)) {
+      setShouldLoad(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShouldLoad(true);
+        observer.disconnect();
+      },
+      { rootMargin: "600px 0px" }
+    );
+
+    observer.observe(trigger);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoad) return;
     let active = true;
     fetch("/api/reviews?wall=1")
       .then((r) => (r.ok ? r.json() : { items: [] }))
       .then((data) => { if (active && Array.isArray(data.items)) setReviews(data.items); })
       .catch(() => { /* silent — the section just stays hidden */ });
     return () => { active = false; };
-  }, []);
+  }, [shouldLoad]);
+
+  if (!shouldLoad) {
+    return <div ref={triggerRef} className="h-px" aria-hidden="true" />;
+  }
 
   if (reviews.length === 0) return null;
 

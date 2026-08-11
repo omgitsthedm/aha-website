@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 import Link from "next/link";
 import Image from "next/image";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Lookbook",
   description:
     "The current After Hours Agenda lineup, laid out flat: tees, hoodies, sweatshirts, and accessories — every piece shoppable and printed to order.",
-  alternates: { canonical: "/lookbook" },
-};
+  path: "/lookbook",
+});
 
 // Current label-owned campaign compositions linked to the featured products.
 const editorialLooks = [

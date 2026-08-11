@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { DELIVERY_WINDOW, PRODUCTION_WINDOW, RETURNS_SUMMARY, SHIPPING_CLAIM_SENTENCE } from "@/lib/commerce/policies";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
-export const metadata = { title: "FAQ: Shipping, Fit & Returns", description: "How After Hours Agenda orders work: made-to-order timelines, US and international shipping rates, 30-day returns, fit and care — answered by an actual person.", alternates: { canonical: "/faq" } };
+export const metadata = buildMetadata({ title: "FAQ: Shipping, Fit & Returns", description: "How After Hours Agenda orders work: made-to-order timelines, US and international shipping rates, 30-day returns, fit and care — answered by an actual person.", path: "/faq" });
 
 const faqs = [
   { q: "When will my order arrive?", a: `Production usually takes ${PRODUCTION_WINDOW}. Delivery is ${DELIVERY_WINDOW}. These windows run one after the other, and tracking is sent when the package leaves production.` },

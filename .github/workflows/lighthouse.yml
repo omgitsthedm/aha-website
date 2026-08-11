@@ -6,33 +6,69 @@ on:
 
 env:
   AHA_PREVIEW_CATALOG: "true"
+  SQUARE_ENVIRONMENT: sandbox
+  AHA_FULFILLMENT_MODE: dry-run
+  PRINTFUL_ALLOW_CONFIRM_ORDERS: "false"
+  PRINTFUL_LIVE_MODE: "false"
 
-# Performance budgets (§39): LCP <=2.5s, INP <=200ms, CLS <=0.1. Runs against the built
-# site locally; tighten to Deploy Preview URLs once staging is wired.
+permissions:
+  contents: read
+
+# This is repeatable lab evidence, not field CWV: Lighthouse cannot establish INP.
+# The mobile profile uses throttled mobile emulation; desktop is captured separately.
+# Both run against the exact Netlify deploy preview, so the real HTTP/2 delivery,
+# image optimizer, headers, and CDN behavior are included. The release endpoint
+# must identify the PR head commit before collection begins, preventing stale-preview
+# false passes. Preview commerce remains sandboxed/dry-run by netlify.toml.
 jobs:
   performance:
+    name: Lighthouse (${{ matrix.profile }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [mobile, desktop]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - run: npm ci
-      - run: npm run build
-      - name: Start production server
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with: { node-version: "20.20.2", cache: "npm" }
+      - name: Resolve exact release target
+        id: target
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EXPECTED_COMMIT: ${{ github.event.pull_request.head.sha }}
+          PREVIEW_URL: https://deploy-preview-${{ github.event.pull_request.number }}--afterhoursagenda.netlify.app
         run: |
-          npm run start > /tmp/aha-next.log 2>&1 &
-          for attempt in {1..30}; do
-            if curl --fail --silent --show-error http://127.0.0.1:3000/ > /dev/null; then
+          if [[ "$EVENT_NAME" != "pull_request" ]]; then
+            echo "url=https://afterhoursagenda.com" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          for attempt in {1..120}; do
+            deployed_commit="$(curl --fail --silent --show-error \
+              --header 'Cache-Control: no-cache' \
+              "$PREVIEW_URL/release.json?expected=$EXPECTED_COMMIT" \
+              | jq -r '.commit // empty' 2>/dev/null || true)"
+            if [[ "$deployed_commit" == "$EXPECTED_COMMIT" ]]; then
+              echo "url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
               exit 0
             fi
-            sleep 2
+            sleep 10
           done
-          cat /tmp/aha-next.log
+
+          echo "Timed out waiting for Netlify preview commit $EXPECTED_COMMIT" >&2
           exit 1
       - name: Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v12
+        uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # v12
         with:
+          configPath: .lighthouserc.${{ matrix.profile }}.json
           urls: |
-            http://127.0.0.1:3000/
+            ${{ steps.target.outputs.url }}/
+            ${{ steps.target.outputs.url }}/shop
+            ${{ steps.target.outputs.url }}/product/dont-fuck-fascists-shirt
+            ${{ steps.target.outputs.url }}/cart
+            ${{ steps.target.outputs.url }}/checkout
+          runs: 3
           uploadArtifacts: true
+          artifactName: lighthouse-${{ matrix.profile }}-results
           temporaryPublicStorage: true

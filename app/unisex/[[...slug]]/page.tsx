@@ -14,6 +14,7 @@ import {
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
 export const revalidate = 300;
 
@@ -49,12 +50,12 @@ export async function generateMetadata({ params }: UnisexPageProps): Promise<Met
     ? filterProductsByCategory(filterProductsByGender(await getAllProducts(), GENDER), category.slug).length === 0
     : false;
 
-  return {
+  return buildMetadata({
     title,
     description,
-    alternates: { canonical: category ? `${BASE_PATH}/${category.slug}` : BASE_PATH },
+    path: category ? `${BASE_PATH}/${category.slug}` : BASE_PATH,
     ...(isEmptyCategory ? { robots: { index: false, follow: true } } : {}),
-  };
+  });
 }
 
 export default async function UnisexPage({ params, searchParams }: UnisexPageProps) {

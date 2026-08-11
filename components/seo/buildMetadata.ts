@@ -53,6 +53,8 @@ export interface BuildMetadataInput {
    * Graph has no template and an untitled brand card is worse than none.
    */
   title: string;
+  /** Optional share-card title when the browser title needs a different form. */
+  shareTitle?: string;
   description: string;
   /** Site-root-relative path with a leading slash, e.g. "/shop/hoodies". */
   path: string;
@@ -71,6 +73,7 @@ export function absoluteUrl(path: string): string {
 
 export function buildMetadata({
   title,
+  shareTitle: shareTitleOverride,
   description,
   path,
   image,
@@ -78,7 +81,7 @@ export function buildMetadata({
   robots,
 }: BuildMetadataInput): Metadata {
   const card = image ?? DEFAULT_IMAGE;
-  const shareTitle = `${title} | ${SITE_NAME}`;
+  const shareTitle = shareTitleOverride ?? `${title} | ${SITE_NAME}`;
   const imageUrl = absoluteUrl(card.url);
 
   return {

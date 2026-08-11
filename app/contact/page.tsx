@@ -1,8 +1,9 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import Link from "next/link";
 import { SUPPORT_EMAIL } from "@/lib/content/site-copy";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
-export const metadata = { title: "Customer and Order Support", description: "Contact After Hours Agenda for help with an order, product, fit, return, or accessibility issue. Include the order number, but never send card details.", alternates: { canonical: "/contact" } };
+export const metadata = buildMetadata({ title: "Customer and Order Support", description: "Contact After Hours Agenda for help with an order, product, fit, return, or accessibility issue. Include the order number, but never send card details.", path: "/contact" });
 
 export default function ContactPage() {
   return (

@@ -1,8 +1,9 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { RETURNS_SUMMARY, RETURNS_WINDOW, RETURN_SHIPPING_COPY } from "@/lib/commerce/policies";
 import { SUPPORT_EMAIL } from "@/lib/content/site-copy";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
-export const metadata = { title: "Returns and Refund Review", description: "Read the After Hours Agenda return process, eligibility conditions, timing, and refund review terms for unworn made-to-order apparel before purchasing.", alternates: { canonical: "/returns" } };
+export const metadata = buildMetadata({ title: "Returns and Refund Review", description: "Read the After Hours Agenda return process, eligibility conditions, timing, and refund review terms for unworn made-to-order apparel before purchasing.", path: "/returns" });
 
 export default function ReturnsPage() {
   return (

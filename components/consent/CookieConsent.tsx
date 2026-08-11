@@ -18,7 +18,7 @@ const CONSENT_HEIGHT_VAR = "--aha-consent-h";
  * patterns — Reject is as prominent as Accept).
  */
 export function CookieConsent() {
-  const { consent, mounted } = useConsent();
+  const { consent, mounted, globalPrivacyControl } = useConsent();
   const [reopened, setReopened] = useState(false);
   const bannerRef = useRef<HTMLDivElement | null>(null);
 
@@ -67,20 +67,24 @@ export function CookieConsent() {
     >
       <div className="mx-auto flex max-w-4xl flex-col gap-2 px-3 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-4">
         <p className="min-w-0 flex-1 text-[13px] leading-snug text-cream sm:text-sm">
-          Analytics cookies are optional and stay off until you accept.{" "}
-          <Link href="/privacy" className="font-bold text-accent underline underline-offset-2 hover:text-cream">Details</Link>
+          {globalPrivacyControl
+            ? "Your browser sent a Global Privacy Control signal. Optional analytics and advertising stay off while it is active."
+            : "Analytics cookies are optional and stay off until you accept."}{" "}
+          <Link href="/privacy" prefetch={false} className="font-bold text-accent underline underline-offset-2 hover:text-cream">Details</Link>
         </p>
-        <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex">
+        <div className={`grid shrink-0 gap-2 sm:flex ${globalPrivacyControl ? "grid-cols-1" : "grid-cols-2"}`}>
           <button
             type="button"
             onClick={() => choose("denied")}
             className="min-h-11 whitespace-nowrap border border-border/60 px-4 text-xs font-bold uppercase tracking-wide text-cream transition-colors hover:border-accent hover:text-accent"
           >
-            Reject
+            {globalPrivacyControl ? "Keep tracking off" : "Reject"}
           </button>
-          <button type="button" onClick={() => choose("granted")} className="btn-primary whitespace-nowrap">
-            Accept
-          </button>
+          {!globalPrivacyControl && (
+            <button type="button" onClick={() => choose("granted")} className="btn-primary whitespace-nowrap">
+              Accept
+            </button>
+          )}
         </div>
       </div>
     </div>
