@@ -50,10 +50,17 @@ test("@privacy a fresh document includes the consent choice before hydration", a
   const response = await page.request.get("/");
   expect(response.status()).toBe(200);
   const html = await response.text();
-  expect(html).toContain('id="aha-consent-bootstrap"');
+  const headStart = html.indexOf("<head>");
+  const headEnd = html.indexOf("</head>");
+  const bodyStart = html.indexOf("<body");
+  const bootstrap = html.indexOf('id="aha-consent-bootstrap"');
+  expect(headStart).toBeGreaterThanOrEqual(0);
+  expect(bootstrap).toBeGreaterThan(headStart);
+  expect(bootstrap).toBeLessThan(headEnd);
+  expect(headEnd).toBeLessThan(bodyStart);
   expect(html).toContain('aria-label="Cookie preferences"');
   expect(html).toContain('data-aha-consent-banner=""');
-  expect(html.indexOf('id="aha-consent-bootstrap"')).toBeLessThan(html.indexOf('data-aha-consent-banner=""'));
+  expect(bootstrap).toBeLessThan(html.indexOf('data-aha-consent-banner=""'));
 });
 
 test("@privacy a stored choice stays hidden without a hydration warning and can reopen", async ({ page }, testInfo) => {

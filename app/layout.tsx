@@ -14,6 +14,7 @@ import { LazyFeedbackWidget } from "@/components/feedback/LazyFeedbackWidget";
 import { LittleFightCareBar } from "@/components/ui/LittleFightCareBar";
 import { SheepMarkSprite } from "@/components/ui/SheepMark";
 import { SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
+import { CONSENT_BOOTSTRAP } from "@/lib/consent/bootstrap";
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -110,6 +111,9 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${jetBrainsMono.variable} ${littleFightOswald.variable} ${poppins.variable}`}
     >
+      <head>
+        <script id="aha-consent-bootstrap" dangerouslySetInnerHTML={{ __html: CONSENT_BOOTSTRAP }} />
+      </head>
       <body className="origami-shell font-body text-cream antialiased">
         <SheepMarkSprite />
         <CartProvider>

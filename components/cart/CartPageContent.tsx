@@ -95,7 +95,7 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
   }
 
   if (items.length === 0) {
-    return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><div className="mb-6 flex items-end gap-5"><SheepMark className="w-16 shrink-0 text-cream" title="The After Hours Agenda black sheep" /><PageHeader eyebrow="0 items" title="Your bag" description="Your bag is empty. Saved items stay on this device." /></div><Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link></div></div>;
+    return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><div className="mb-6 flex items-end gap-5"><SheepMark className="w-16 shrink-0 text-cream" title="The After Hours Agenda black sheep" /><PageHeader eyebrow="0 items" title="Your bag" description="Your bag is empty. Saved items stay on this device." /></div><Link href="/shop" prefetch={false} className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link></div></div>;
   }
 
   // Hoisted so the summary and the mobile sticky bar quote the same number.

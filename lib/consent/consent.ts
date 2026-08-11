@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CONSENT_STORAGE_KEY } from "./bootstrap";
+
+export { CONSENT_STORAGE_KEY } from "./bootstrap";
 
 /**
  * Cookie-consent state, persisted in localStorage. Tracking (GA / Meta / TikTok)
@@ -9,7 +12,6 @@ import { useEffect, useState } from "react";
  */
 export type Consent = "granted" | "denied";
 
-export const CONSENT_STORAGE_KEY = "aha-cookie-consent";
 let volatileConsent: Consent | null = null;
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((cb) => cb());

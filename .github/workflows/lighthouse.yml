@@ -74,6 +74,7 @@ jobs:
           artifactName: lighthouse-${{ matrix.profile }}-results
           temporaryPublicStorage: true
       - name: Verify performance assertions were executed
+        if: always()
         env:
           ASSERTION_RESULTS: ${{ steps.lighthouse.outputs.assertionResults }}
         run: |
