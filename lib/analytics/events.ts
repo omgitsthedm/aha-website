@@ -1,6 +1,7 @@
 "use client";
 
 import { getConsent } from "@/lib/consent/consent";
+import { isCanonicalAnalyticsHost } from "@/lib/analytics/host";
 
 type CommerceEventName =
   | "view_item"
@@ -29,6 +30,8 @@ export interface CommerceEventItem {
 export interface CommerceEvent {
   name: CommerceEventName;
   itemId?: string;
+  itemName?: string;
+  itemVariant?: string;
   variantId?: string;
   valueCents?: number;
   currency?: string;
@@ -187,10 +190,11 @@ function toGa4Item(item: CommerceEventItem): TagParams {
 /**
  * Flat AHA payload → real GA4 ecommerce parameters. On an item-scoped event
  * `valueCents` is the line total, so the per-unit `price` is derived from it.
- * Cart-level events (`view_cart`, `begin_checkout`) carry no line items yet, so
- * they send `value` plus a custom `item_count` instead of a partial `items[]`.
+ * Cart-level events can pass their complete product-only `items[]` snapshot;
+ * when an older call site has no lines yet, preserve value plus `item_count`
+ * instead of inventing partial item data.
  */
-function toGa4Params(event: CommerceEvent): TagParams {
+export function toGa4Params(event: CommerceEvent): TagParams {
   const params: TagParams = {};
   if (event.currency) params.currency = event.currency;
   if (typeof event.valueCents === "number") params.value = toMajorUnits(event.valueCents);
@@ -201,7 +205,8 @@ function toGa4Params(event: CommerceEvent): TagParams {
   const items: CommerceEventItem[] = event.items ?? (event.itemId
     ? [{
         itemId: event.itemId,
-        itemVariant: event.variantId,
+        itemName: event.itemName,
+        itemVariant: event.itemVariant ?? event.variantId,
         priceCents: typeof event.valueCents === "number" ? event.valueCents / units : undefined,
         quantity: event.quantity,
       }]
@@ -220,6 +225,7 @@ export function trackCommerceEvent(event: CommerceEvent): void {
     // Opt-in only. Pre-consent events are dropped here rather than buffered, so
     // nothing a shopper did before accepting can be transmitted afterwards.
     if (!consentGranted()) return;
+    if (!isCanonicalAnalyticsHost(window.location.hostname)) return;
     enqueue({
       destination: "google",
       name: event.name,

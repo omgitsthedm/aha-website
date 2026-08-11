@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Script from "next/script";
 import { useConsent } from "@/lib/consent/consent";
 import { flushCommerceEvents } from "@/lib/analytics/events";
+import { isCanonicalAnalyticsHost } from "@/lib/analytics/host";
 
 /**
  * Lights up analytics the moment a measurement id is set in the environment —
@@ -21,15 +22,18 @@ import { flushCommerceEvents } from "@/lib/analytics/events";
 export function GoogleAnalytics() {
   const { consent } = useConsent();
   const granted = consent === "granted";
+  // `useConsent` begins as null on both the server and first client render, so
+  // this client-only hostname read cannot create a hydration mismatch.
+  const canMount = granted && isCanonicalAnalyticsHost(window.location.hostname);
 
   // Commerce events raised before the tag finished loading are held in
   // lib/analytics/events.ts rather than dropped. Retry them from the top the
   // moment consent flips to granted and these scripts mount.
   useEffect(() => {
-    if (granted) flushCommerceEvents();
-  }, [granted]);
+    if (canMount) flushCommerceEvents();
+  }, [canMount]);
 
-  if (!granted) return null; // opt-in: no tracking until accepted
+  if (!canMount) return null; // Opt-in plus canonical production host only.
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID?.trim();
   const gaId = process.env.NEXT_PUBLIC_GA4_ID?.trim();
 

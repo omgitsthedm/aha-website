@@ -353,8 +353,17 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
   const activeImageSrc = product.images[activeImage];
 
   useEffect(() => {
-    trackCommerceEvent({ name: "view_item", itemId: product.id, valueCents: product.price, currency: product.currency });
-  }, [product.currency, product.id, product.price]);
+    const onlyVariation = product.variations.length === 1 ? product.variations[0] : undefined;
+    trackCommerceEvent({
+      name: "view_item",
+      itemId: product.id,
+      itemName: product.name,
+      itemVariant: onlyVariation?.name,
+      valueCents: onlyVariation?.price ?? product.price,
+      currency: product.currency,
+      quantity: 1,
+    });
+  }, [product.currency, product.id, product.name, product.price, product.variations]);
 
   useEffect(() => () => {
     if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
