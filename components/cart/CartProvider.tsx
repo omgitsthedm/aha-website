@@ -17,6 +17,8 @@ const AddToCartModal = dynamic(() => import("./AddToCartModal").then((m) => m.Ad
 
 interface CartContextType {
   items: CartItem[];
+  /** True once browser storage has been read, even when the saved bag is empty. */
+  hydrated: boolean;
   addItem: (item: CartItem, relatedProducts?: Product[], opts?: { silent?: boolean }) => void;
   removeItem: (variationId: string) => void;
   updateQuantity: (variationId: string, quantity: number) => void;
@@ -46,7 +48,7 @@ export function useCart() {
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   // Modal state for add-to-cart confirmation
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,10 +57,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   // Load from localStorage on mount
   useEffect(() => {
-    setMounted(true);
-    const saved = localStorage.getItem("aha-cart");
-    if (saved) {
-      try {
+    try {
+      const saved = localStorage.getItem("aha-cart");
+      if (saved) {
         const parsed = JSON.parse(saved);
         // Validate shape: keep only well-formed items so schema drift or tampering
         // can never render a $NaN total. Drop anything without a finite numeric
@@ -71,19 +72,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
           );
           if (clean.length) setItems(clean);
         }
-      } catch (err) {
-        console.warn("Failed to parse cart from localStorage:", err);
-        localStorage.removeItem("aha-cart");
       }
+    } catch (err) {
+      console.warn("Failed to restore cart from localStorage:", err);
+      try { localStorage.removeItem("aha-cart"); } catch { /* storage may be unavailable */ }
+    } finally {
+      setHydrated(true);
     }
   }, []);
 
   // Save to localStorage on change
   useEffect(() => {
-    if (mounted) {
-      localStorage.setItem("aha-cart", JSON.stringify(items));
+    if (hydrated) {
+      try {
+        localStorage.setItem("aha-cart", JSON.stringify(items));
+      } catch (err) {
+        console.warn("Failed to save cart to localStorage:", err);
+      }
     }
-  }, [items, mounted]);
+  }, [items, hydrated]);
 
   const MAX_QUANTITY_PER_ITEM = 20;
 
@@ -149,6 +156,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }).format(total / 100);
     return {
       items,
+      hydrated,
       addItem,
       removeItem,
       updateQuantity,
@@ -166,7 +174,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       openCartFromModal,
     };
   }, [
-    items, addItem, removeItem, updateQuantity, clearCart, isOpen, toggleCart,
+    items, hydrated, addItem, removeItem, updateQuantity, clearCart, isOpen, toggleCart,
     setCartOpen, isModalOpen, lastAddedItem, modalRelated, closeModal, openCartFromModal,
   ]);
 

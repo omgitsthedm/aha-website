@@ -70,7 +70,7 @@ export function CookieConsent() {
           {globalPrivacyControl
             ? "Your browser sent a Global Privacy Control signal. Optional analytics and advertising stay off while it is active."
             : "Analytics cookies are optional and stay off until you accept."}{" "}
-          <Link href="/privacy" className="font-bold text-accent underline underline-offset-2 hover:text-cream">Details</Link>
+          <Link href="/privacy" prefetch={false} className="font-bold text-accent underline underline-offset-2 hover:text-cream">Details</Link>
         </p>
         <div className={`grid shrink-0 gap-2 sm:flex ${globalPrivacyControl ? "grid-cols-1" : "grid-cols-2"}`}>
           <button

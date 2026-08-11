@@ -15,6 +15,13 @@ test("@product home renders the brand hero and primary shopping CTAs", async ({ 
   await expect(page.getByRole("link", { name: "Shop Men", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Shop Women", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Open bag" })).toBeVisible();
+
+  await expect(page.locator("symbol#aha-sheep-mark")).toHaveCount(1);
+  const filledMark = page.locator('svg[fill="currentColor"]:has(use[href="#aha-sheep-mark"])').first();
+  const outlineMark = page.locator('svg[fill="none"]:has(use[href="#aha-sheep-mark"])').first();
+  await expect(filledMark).toBeVisible();
+  await expect(outlineMark).toBeVisible();
+  expect(await filledMark.locator("use").evaluate((element) => (element as SVGGraphicsElement).getBBox().width)).toBeGreaterThan(0);
 });
 
 test("@care Little Fight care mark matches the approved responsive contract", async ({ page }, testInfo) => {
@@ -115,6 +122,48 @@ test("@catalog @cart cart page renders its empty state", async ({ page }) => {
   await expect(page.locator("body")).toContainText(/bag|cart/i);
 });
 
+test("@cart a saved bag restores without flashing the empty state", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "Browser-storage restore is covered once in Chromium.");
+  await page.addInitScript(() => {
+    window.localStorage.setItem("aha-cart", JSON.stringify([{
+      productId: "preview-dont-fuck-fascists-shirt",
+      slug: "dont-fuck-fascists-shirt",
+      variationId: "preview-dont-fuck-fascists-shirt-m",
+      name: "Don't Fuck Fascists Shirt",
+      variationName: "M",
+      price: 4000,
+      priceFormatted: "$40.00",
+      quantity: 1,
+      image: "/products/dont-fuck-fascists-shirt/01-black-mens-fitted-t-shirt-front.webp",
+    }]));
+  });
+
+  await page.goto("/cart");
+  await expect(page.getByRole("heading", { level: 1, name: "Your bag" })).toBeVisible();
+  await expect(page.getByText("Don't Fuck Fascists Shirt", { exact: true })).toBeVisible();
+  await expect(page.getByText("Your bag is empty.")).toHaveCount(0);
+});
+
+test("@cart unavailable browser storage still reaches a usable empty bag", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "Storage failure handling is browser-independent.");
+  await page.addInitScript(() => {
+    const getItem = Storage.prototype.getItem;
+    const setItem = Storage.prototype.setItem;
+    Storage.prototype.getItem = function (key: string) {
+      if (key === "aha-cart") throw new DOMException("Storage unavailable", "SecurityError");
+      return getItem.call(this, key);
+    };
+    Storage.prototype.setItem = function (key: string, value: string) {
+      if (key === "aha-cart") throw new DOMException("Storage unavailable", "SecurityError");
+      return setItem.call(this, key, value);
+    };
+  });
+
+  await page.goto("/cart");
+  await expect(page.getByRole("heading", { level: 1, name: "Your bag" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Start shopping" })).toBeVisible();
+});
+
 test("@operations order tracking fails closed without a match", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name.startsWith("mobile-"), "Provider-backed operation is browser-independent and covered in Chromium.");
   await page.goto("/track-order");
@@ -153,6 +202,23 @@ test("@security security.txt exposes the canonical disclosure basics", async ({ 
   expect(Date.parse(fields.Expires)).toBeGreaterThan(Date.now());
 });
 
+test("@security release identity is public, non-indexable, and traceable", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "Release identity is browser-independent.");
+  const response = await page.request.get("/release.json");
+  expect(response.status()).toBe(200);
+  expect(response.headers()["cache-control"]).toContain("no-store");
+  expect(response.headers()["x-robots-tag"]).toContain("noindex");
+  const release = await response.json();
+  expect(release).toMatchObject({
+    schemaVersion: 1,
+    site: "afterhoursagenda.com",
+    source: "omgitsthedm/aha-website",
+  });
+  expect(release.commit).toMatch(/^(local|[a-f0-9]{40})$/);
+  expect(release.context).toEqual(expect.any(String));
+  expect(release.branch).toEqual(expect.any(String));
+});
+
 test("@seo indexable pages expose matching canonical and Open Graph URLs", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "Server metadata is browser-independent.");
   for (const route of ["/", "/shop", "/contact", "/privacy", "/terms", "/accessibility"]) {
@@ -180,7 +246,7 @@ test("@operations the ops sign-in surface renders", async ({ page }, testInfo) =
   // the sign-in front door renders in the build.
   await page.goto("/ops/login");
   await expect(page.getByRole("heading", { level: 1, name: /sign in/i })).toBeVisible();
-  await expect(page.locator('input[type="password"]')).toBeVisible();
+  await expect(page.getByRole("textbox", { name: /Operations password/ })).toBeVisible();
 });
 
 test("@catalog retired routes redirect home", async ({ page }) => {

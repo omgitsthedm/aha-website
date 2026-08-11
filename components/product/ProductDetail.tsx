@@ -394,7 +394,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             >
               {activeImageSrc ? (
                 <>
-                  <ResilientImage src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority />
+                  <ResilientImage src={activeImageSrc} alt={product.name} fill className={`${isPrintfulImage(activeImageSrc) ? "object-contain" : "object-cover"} product-art`} sizes="(max-width: 1024px) 100vw, 58vw" priority fetchPriority="high" />
                   <button type="button" onClick={() => { if (suppressZoomRef.current) { suppressZoomRef.current = false; return; } setLightboxOpen(true); }} aria-label="Zoom image" className="absolute inset-0 cursor-zoom-in" />
                   {product.images.length > 1 && (
                     <div aria-hidden="true" className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-void/80 px-2.5 py-1 font-mono text-[10px] font-bold text-cream">

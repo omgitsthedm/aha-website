@@ -12,6 +12,7 @@ import { ConsentIdentifierCleanup } from "@/components/seo/ConsentIdentifierClea
 import { CookieConsent } from "@/components/consent/CookieConsent";
 import { LazyFeedbackWidget } from "@/components/feedback/LazyFeedbackWidget";
 import { LittleFightCareBar } from "@/components/ui/LittleFightCareBar";
+import { SheepMarkSprite } from "@/components/ui/SheepMark";
 import { SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 
 const jetBrainsMono = JetBrains_Mono({
@@ -25,6 +26,7 @@ const littleFightOswald = Oswald({
   subsets: ["latin"],
   variable: "--font-lf-oswald",
   display: "swap",
+  preload: false,
   weight: ["700"],
 });
 
@@ -105,6 +107,7 @@ export default function RootLayout({
       className={`${jetBrainsMono.variable} ${littleFightOswald.variable} ${poppins.variable}`}
     >
       <body className="origami-shell font-body text-cream antialiased">
+        <SheepMarkSprite />
         <CartProvider>
           <a href="#main-content" className="fixed left-3 top-3 z-[500] -translate-y-24 bg-rose px-4 py-3 font-mono text-xs font-bold text-cream transition-transform focus:translate-y-0">Skip to content</a>
           <PlatformLayer />

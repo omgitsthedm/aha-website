@@ -54,9 +54,9 @@ export default async function HomePage() {
               Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories — printed to order, one at a time.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/men" className="btn-primary px-7">Shop Men</Link>
-              <Link href="/women" className="btn-primary px-7">Shop Women</Link>
-              <Link href="/new-arrivals" className="btn-secondary">Shop new arrivals</Link>
+              <Link href="/men" prefetch={false} className="btn-primary px-7">Shop Men</Link>
+              <Link href="/women" prefetch={false} className="btn-primary px-7">Shop Women</Link>
+              <Link href="/new-arrivals" prefetch={false} className="btn-secondary">Shop new arrivals</Link>
             </div>
           </div>
           <div className="hero-visual-enter neon-sign flex items-center justify-center">
@@ -82,6 +82,7 @@ export default async function HomePage() {
             <Link
               key={tile.href}
               href={tile.href}
+              prefetch={false}
               className="fold-surface paper-lift group relative aspect-[3/4] overflow-hidden image-hover-zoom"
             >
               <Image

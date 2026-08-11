@@ -245,7 +245,7 @@ export function CategoryShopContent({
               <div key={product.id} className="group paper-lift">
                 <Link href={`/product/${product.slug}`} className="block focus-visible:outline-offset-4">
                   <div className="fold-surface relative aspect-[3/4] overflow-hidden">
-                    {image ? <ResilientImage src={image} alt={product.name} fill priority={index < 4} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
+                    {image ? <ResilientImage src={image} alt={product.name} fill priority={index < 2} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                     {product.images[1] && <ResilientImage src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
                   </div>
                   <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">

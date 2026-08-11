@@ -90,7 +90,7 @@ interface Props {
 }
 
 export function CheckoutForm({ squareConfig }: Props) {
-  const { items, total, clearCart } = useCart();
+  const { items, hydrated, total, clearCart } = useCart();
   const router = useRouter();
 
   const [sdkReady, setSdkReady] = useState(false);
@@ -165,17 +165,19 @@ export function CheckoutForm({ squareConfig }: Props) {
   }, [squareConfig.applicationId, squareConfig.locationId]);
 
   useEffect(() => {
+    if (!hydrated || items.length === 0) return;
     if (window.Square) initSquare();
-  }, [initSquare]);
+  }, [hydrated, items.length, initSquare]);
 
   // Watchdog: on a slow/blocked connection the Square SDK script can stall. If
   // the secure card field still isn't ready after 10s, surface a reload path
   // instead of a permanently disabled button.
   useEffect(() => {
+    if (!hydrated || items.length === 0) return;
     if (sdkReady) { setSdkFailed(false); return; }
     const t = window.setTimeout(() => { if (!sdkReady) setSdkFailed(true); }, 10_000);
     return () => window.clearTimeout(t);
-  }, [sdkReady]);
+  }, [hydrated, items.length, sdkReady]);
 
   // Restore a previously-typed address so a mid-checkout connection drop or
   // reload doesn't wipe the form. Card data is NEVER stored (Square holds it).
@@ -580,11 +582,23 @@ export function CheckoutForm({ squareConfig }: Props) {
   const field = "min-h-12 w-full border border-border/60 bg-void px-3 py-3 text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none";
   const labelC = "mb-2 block text-[11px] font-bold uppercase tracking-[0.08em] text-muted";
 
+  if (!hydrated) {
+    return (
+      <div className="px-4 pb-24 pt-32 md:px-6">
+        <div className="mx-auto max-w-md border-t-2 border-accent pt-6 text-left">
+          <h1 className="font-display text-4xl font-black uppercase tracking-[-0.05em] text-cream">Checkout</h1>
+          <p className="mt-3 text-sm text-muted">Loading your saved bag…</p>
+        </div>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className="px-4 pb-24 pt-32 md:px-6">
         <div className="mx-auto max-w-md border-t-2 border-accent pt-6 text-left">
-          <h1 className="font-display text-4xl font-black uppercase tracking-[-0.05em] text-cream">Your bag is empty</h1>
+          <h1 className="font-display text-4xl font-black uppercase tracking-[-0.05em] text-cream">Checkout</h1>
+          <h2 className="mt-6 font-display text-2xl font-black uppercase tracking-[-0.04em] text-cream">Your bag is empty</h2>
           <p className="mt-3 text-sm text-muted">Nothing to check out yet.</p>
           <Link href="/shop" className="primary-action mt-6 inline-block min-h-12 px-6 py-4 text-sm">
             Shop the catalog
