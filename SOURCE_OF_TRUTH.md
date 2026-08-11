@@ -24,14 +24,14 @@ The retired iCloud backup family is not an active source and must remain untouch
 
 ## Service restoration and release baseline
 
-- **Production deploy ID**: `6a679898148e9000086c19b3`
-- **Deployed source commit**: `61946684db42559ba95dad43d718e2eb890c21fa`
+- **Production deploy ID**: `6a7a7ad65a588f0008c59f46`
+- **Deployed source commit**: `9ed4a9abedb74153d74b8b9a2aa3eb4639894168`
 - **Artifact state**: `ready`
-- **Published**: July 27, 2026 at 17:44:07 UTC
-- **Current availability**: HTTP 200 on the primary and default domains after Netlify service restoration
-- **Release state**: the ready artifact above predates the validated August 10 cleanup and dependency patches on GitHub `main`
+- **Published**: August 11, 2026 at 01:30:12 UTC
+- **Current availability**: HTTP 200 on the primary, default, branch, and deploy-specific domains
+- **Release state**: live deploy and source parity verified
 
-Public delivery has resumed. The first unskipped `main` push after restoration is the authorized Git-connected release of the accumulated, locally validated source. Do not declare source parity until that exact commit reaches a ready production deploy and the exact-site live checks pass. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
+Public delivery is restored. The primary, default, and deploy-specific homepages were byte-identical at 285,122 bytes with SHA-256 `e5752088a66c7de37ca7a243e304b5715291a365469e486073fbbbc6039b1eea`; the exact-site live guard and representative public routes passed. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
 
 ## Runtime ownership
 
