@@ -14,7 +14,7 @@ This file contains the current routing and operational contract. Detailed design
 - **Netlify site ID**: `275b4115-16bf-42fb-9b36-6bce9bb93608`
 - **Primary domain**: `https://afterhoursagenda.com`
 - **Default Netlify domain**: `https://afterhoursagenda.netlify.app`
-- **www behavior**: `https://www.afterhoursagenda.com` returns Netlify HTTP 301 to the primary domain
+- **www behavior when operational**: `https://www.afterhoursagenda.com` is configured to return Netlify HTTP 301 to the primary domain
 - **Build**: `npm run build`
 - **Publish directory**: `.next`
 - **Deployment path**: GitHub continuous deployment from `main`

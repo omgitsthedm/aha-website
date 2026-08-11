@@ -1,6 +1,6 @@
 # After Hours Agenda storefront
 
-After Hours Agenda is a live New York streetwear storefront at `https://afterhoursagenda.com`. The application uses Next.js 15, TypeScript, Netlify, Square, Printful, Netlify Database, and Resend.
+After Hours Agenda is a New York streetwear storefront at `https://afterhoursagenda.com`. The application uses Next.js 15, TypeScript, Netlify, Square, Printful, Netlify Database, and Resend. See `SOURCE_OF_TRUTH.md` for current production availability.
 
 ## Start here
 
