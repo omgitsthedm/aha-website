@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { loadSizeGuides } from "@/lib/data/products";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
-export const metadata = { title: "Apparel Size Guide", description: "How After Hours Agenda sizing works: products that come in more than one size carry the manufacturer's own measurements on the product page, plus general fit notes and how to measure.", alternates: { canonical: "/size-guide" } };
+export const metadata = buildMetadata({ title: "Apparel Size Guide", description: "How After Hours Agenda sizing works: products that come in more than one size carry the manufacturer's own measurements on the product page, plus general fit notes and how to measure.", path: "/size-guide" });
 
 // The blanks behind the catalog do not share a measurement chart, so a single static
 // table on this page was wrong for most products. Exact numbers now come from one

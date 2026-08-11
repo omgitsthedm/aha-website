@@ -18,13 +18,17 @@ interface CollectionJsonLdProps {
 export function CollectionJsonLd({ name, path, products }: CollectionJsonLdProps) {
   if (products.length === 0) return null;
 
+  // Keep the declared list size honest: the schema intentionally caps emitted
+  // entries so catalog pages do not ship the full product catalog in JSON-LD.
+  const listedProducts = products.slice(0, 60);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name,
     url: `${BASE_URL}${path}`,
-    numberOfItems: products.length,
-    itemListElement: products.slice(0, 60).map((product, index) => ({
+    numberOfItems: listedProducts.length,
+    itemListElement: listedProducts.map((product, index) => ({
       "@type": "ListItem",
       position: index + 1,
       url: `${BASE_URL}/product/${product.slug}`,

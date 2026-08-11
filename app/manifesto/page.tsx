@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 import Link from "next/link";
 import Image from "next/image";
 import { SheepMark } from "@/components/ui/SheepMark";
@@ -6,12 +6,12 @@ import { NeonSheep } from "@/components/brand/NeonSheep";
 import { GetOnTheList } from "@/components/homepage/GetOnTheList";
 import { SocialProofWall } from "@/components/homepage/SocialProofWall";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Manifesto",
   description:
     "After Hours Agenda is an independent New York label — made after the day job, printed to order, worn by anyone who never needed permission to belong to the city.",
-  alternates: { canonical: "/manifesto" },
-};
+  path: "/manifesto",
+});
 
 // Current label-owned campaign imagery. This is presented as brand editorial,
 // never passed off as customer-generated content.

@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { CATEGORIES, getCategoryBySlug, filterProductsByCategory } from "@/lib/commerce/taxonomy";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
 export const revalidate = 300;
 
@@ -24,18 +25,18 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
     // reachable but out of the index rather than letting a placeholder description
     // rank. `getAllProducts` is request-deduped with the page body below.
     const isEmpty = filterProductsByCategory(await getAllProducts(), category.slug).length === 0;
-    return {
+    return buildMetadata({
       title: `${category.name}`,
       description: `${category.description} Shop made-to-order ${category.name.toLowerCase()} at After Hours Agenda.`,
-      alternates: { canonical: `/shop/${category.slug}` },
+      path: `/shop/${category.slug}`,
       ...(isEmpty ? { robots: { index: false, follow: true } } : {}),
-    };
+    });
   }
-  return {
+  return buildMetadata({
     title: "Shop All Graphic Tees, Hoodies & More",
     description: "Every After Hours Agenda design in one place — graphic tees, hoodies, sweatshirts, knitwear, and accessories, each printed to order in 2–5 days.",
-    alternates: { canonical: "/shop" },
-  };
+    path: "/shop",
+  });
 }
 
 export default async function ShopPage({ params, searchParams }: ShopPageProps) {

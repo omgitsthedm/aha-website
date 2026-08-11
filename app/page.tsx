@@ -7,14 +7,19 @@ import { SheepMark } from "@/components/ui/SheepMark";
 import { NeonSheep } from "@/components/brand/NeonSheep";
 import { FeaturedGraphic } from "@/components/homepage/FeaturedGraphic";
 import { SocialProofWall } from "@/components/homepage/SocialProofWall";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
 export const metadata: Metadata = {
+  ...buildMetadata({
+    title: "Independent NYC Streetwear",
+    shareTitle: "After Hours Agenda | NYC Streetwear",
+    description:
+      "Independent NYC streetwear, printed to order. Graphic tees, hoodies, knitwear, totes — drawn after hours in New York, made when you order.",
+    path: "/",
+  }),
   // Absolute title bypasses the layout's "%s | After Hours Agenda" template so
   // the brand name isn't doubled on the home page.
   title: { absolute: "After Hours Agenda | Independent NYC Streetwear" },
-  description:
-    "Independent NYC streetwear, printed to order. Graphic tees, hoodies, knitwear, totes — drawn after hours in New York, made when you order.",
-  alternates: { canonical: "/" },
 };
 
 const categoryTiles = [

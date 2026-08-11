@@ -9,41 +9,45 @@ on:
 env:
   SQUARE_ENVIRONMENT: sandbox
   AHA_PREVIEW_CATALOG: "true"
+  AHA_FULFILLMENT_MODE: dry-run
   PRINTFUL_ALLOW_CONFIRM_ORDERS: "false"
   PRINTFUL_LIVE_MODE: "false"
 
+permissions:
+  contents: read
+
 jobs:
-  # Job names map to the spec's required checks (§12). cart/checkout specs land in Phase 2-3;
-  # --pass-with-no-tests keeps the gate green until their tagged specs exist.
+  # Stable job names map to required checks. Every job selects at least one
+  # real browser flow; a no-test result must never satisfy a release gate.
   product-flow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: "20.20.2", cache: "npm" }
       - run: npm ci
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run build
-      - run: npx playwright test --grep '@product|@catalog' --pass-with-no-tests
+      - run: npx playwright test --grep '@product|@catalog|@seo|@security|@care|@brand|@operations'
 
   cart-flow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: "20.20.2", cache: "npm" }
       - run: npm ci
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run build
-      - run: npx playwright test --grep @cart --pass-with-no-tests
+      - run: npx playwright test --grep @cart
 
   checkout-sandbox-flow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: "20.20.2", cache: "npm" }
       - run: npm ci
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run build
-      - run: npx playwright test --grep @checkout --pass-with-no-tests
+      - run: npx playwright test --grep @checkout

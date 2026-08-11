@@ -18,6 +18,7 @@ import { NextResponse } from "next/server";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { squareRequest } from "@/lib/square/client";
+import { isPreviewCatalogEnabled } from "@/lib/commerce/runtime";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,12 @@ export async function POST(request: Request) {
   const key = process.env.OPS_MAINTENANCE_KEY;
   if (!key) return new NextResponse("Not found", { status: 404 });
   if (request.headers.get("x-maintenance-key") !== key) return new NextResponse("Not found", { status: 404 });
+  if (isPreviewCatalogEnabled()) {
+    return NextResponse.json(
+      { ok: false, error: "Catalog maintenance is disabled in preview builds" },
+      { status: 403 }
+    );
+  }
 
   const action = new URL(request.url).searchParams.get("action") || "inspect";
 

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Poppins } from "next/font/google";
+import { JetBrains_Mono, Oswald, Poppins } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { SiteNav } from "@/components/ui/SiteNav";
@@ -10,14 +10,22 @@ import { SocialPixels } from "@/components/analytics/SocialPixels";
 import { StorefrontJsonLd } from "@/components/seo/StorefrontJsonLd";
 import { ConsentIdentifierCleanup } from "@/components/seo/ConsentIdentifierCleanup";
 import { CookieConsent } from "@/components/consent/CookieConsent";
-import { FeedbackWidget } from "@/components/feedback/FeedbackWidget";
+import { LazyFeedbackWidget } from "@/components/feedback/LazyFeedbackWidget";
+import { LittleFightCareBar } from "@/components/ui/LittleFightCareBar";
 import { SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
   display: "swap",
-  weight: ["400", "700"], // 500/600 are unused site-wide
+  weight: ["400", "500", "700"],
+});
+
+const littleFightOswald = Oswald({
+  subsets: ["latin"],
+  variable: "--font-lf-oswald",
+  display: "swap",
+  weight: ["700"],
 });
 
 const poppins = Poppins({
@@ -48,13 +56,9 @@ export const metadata: Metadata = {
     // Deliberately NO `url` here. Next only overwrites the keys a child segment
     // actually declares (`resolve-metadata.js` iterates `for (const key in
     // source)`), so a root-level `openGraph.url` is inherited verbatim by every
-    // page that does not declare its own openGraph — which today is every page
-    // except /product/[slug]. That would make /about, /lookbook, /manifesto and
-    // ~26 others all advertise the homepage as their share canonical, which is
-    // worse than the current absent og:url (scrapers fall back to the fetched
-    // URL). og:url belongs per-page, from the `path` argument in
-    // components/seo/buildMetadata.ts — add it here only once every page routes
-    // through that helper and overrides this object.
+    // page that does not declare its own openGraph. That would make child pages
+    // advertise the homepage as their share canonical. og:url belongs per-page,
+    // from the `path` argument in components/seo/buildMetadata.ts.
     locale: "en_US",
     siteName: "After Hours Agenda",
     images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: "After Hours Agenda — script logo and the black sheep" }],
@@ -64,10 +68,6 @@ export const metadata: Metadata = {
     title: "After Hours Agenda | NYC Streetwear",
     description: `Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. ${SHIPPING_CLAIM_SHORT}. Secure Square checkout.`,
     images: ["/brand/og-image.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
   },
   // Installed-app polish: standalone window with the brand-rose chrome
   // (status bar stays legible dark-on-rose). The home-screen icon itself comes
@@ -102,7 +102,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jetBrainsMono.variable} ${poppins.variable}`}
+      className={`${jetBrainsMono.variable} ${littleFightOswald.variable} ${poppins.variable}`}
     >
       <body className="origami-shell font-body text-cream antialiased">
         <CartProvider>
@@ -127,8 +127,9 @@ export default function RootLayout({
           <SiteNav />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
           <SiteFooter />
+          <LittleFightCareBar />
           <CookieConsent />
-          <FeedbackWidget />
+          <LazyFeedbackWidget />
         </CartProvider>
       </body>
     </html>

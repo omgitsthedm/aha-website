@@ -13,6 +13,12 @@ const KEY = "aha-cookie-consent";
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((cb) => cb());
 
+export function isGlobalPrivacyControlEnabled(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return (navigator as Navigator & { globalPrivacyControl?: boolean })
+    .globalPrivacyControl === true;
+}
+
 /**
  * Read the stored choice. Exported because `lib/analytics/events.ts` is called
  * from plain event handlers and cannot use the `useConsent` hook — without this
@@ -21,6 +27,7 @@ const notify = () => listeners.forEach((cb) => cb());
  */
 export function getConsent(): Consent | null {
   if (typeof window === "undefined") return null;
+  if (isGlobalPrivacyControlEnabled()) return "denied";
   try {
     const v = localStorage.getItem(KEY);
     return v === "granted" || v === "denied" ? v : null;
@@ -30,8 +37,10 @@ export function getConsent(): Consent | null {
 }
 
 export function setConsent(v: Consent): void {
+  const effectiveConsent =
+    v === "granted" && isGlobalPrivacyControlEnabled() ? "denied" : v;
   try {
-    localStorage.setItem(KEY, v);
+    localStorage.setItem(KEY, effectiveConsent);
   } catch {
     /* private mode — holds for this session */
   }
@@ -50,13 +59,19 @@ export function openConsentSettings(): void {
 }
 
 /** Hydration-safe read: null on server + first render, real value after mount. */
-export function useConsent(): { consent: Consent | null; mounted: boolean } {
+export function useConsent(): {
+  consent: Consent | null;
+  mounted: boolean;
+  globalPrivacyControl: boolean;
+} {
   const [consent, setC] = useState<Consent | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [globalPrivacyControl, setGlobalPrivacyControl] = useState(false);
   useEffect(() => {
     setMounted(true);
+    setGlobalPrivacyControl(isGlobalPrivacyControlEnabled());
     setC(getConsent());
     return subscribeConsent(() => setC(getConsent()));
   }, []);
-  return { consent, mounted };
+  return { consent, mounted, globalPrivacyControl };
 }

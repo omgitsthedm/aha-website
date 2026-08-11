@@ -3,13 +3,14 @@ import { getColorCountMap, getColorNamesMap, getPurchasableSizesMap } from "@/li
 import { ShopContent } from "@/components/shop/ShopContent";
 import type { Product, Collection } from "@/lib/utils/types";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
 export const revalidate = 300;
-export const metadata = {
+export const metadata = buildMetadata({
   title: "New Arrivals",
   description: "The latest After Hours Agenda designs, added as they're finished — new graphic tees, hoodies, and accessories, printed to order.",
-  alternates: { canonical: "/new-arrivals" },
-};
+  path: "/new-arrivals",
+});
 
 export default async function NewArrivalsPage() {
   let products: Product[] = [];

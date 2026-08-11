@@ -1,7 +1,8 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SUPPORT_EMAIL } from "@/lib/content/site-copy";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 
-export const metadata = { title: "Storefront Accessibility", description: "Read the After Hours Agenda accessibility standard, WCAG 2.2 AA target, supported shopping flows, and contact route for reporting an access barrier.", alternates: { canonical: "/accessibility" } };
+export const metadata = buildMetadata({ title: "Storefront Accessibility", description: "Read the After Hours Agenda accessibility standard, WCAG 2.2 AA target, supported shopping flows, and contact route for reporting an access barrier.", path: "/accessibility" });
 
 export default function AccessibilityPage() {
   return (

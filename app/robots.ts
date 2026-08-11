@@ -6,10 +6,27 @@ const BASE_URL =
 
 const CANONICAL_HOST = new URL(BASE_URL).host.toLowerCase();
 
+const DENIED_TRAINING_AND_BULK_CRAWLERS = [
+  "GPTBot",
+  "ClaudeBot",
+  "Google-Extended",
+  "CCBot",
+  "Bytespider",
+  "Meta-ExternalAgent",
+  "Applebot-Extended",
+  "AhrefsBot",
+  "SemrushBot",
+  "MJ12bot",
+  "DotBot",
+  "BLEXBot",
+  "PetalBot",
+  "DataForSeoBot",
+] as const;
+
 /**
  * `afterhoursagenda.netlify.app` serves the whole storefront a second time, so
- * all 152 URLs exist on two hosts. Deliberately narrow: only a `*.netlify.app`
- * host that is NOT the configured canonical host is closed off, so a
+ * the storefront exists on two hosts. Deliberately narrow: only a
+ * `*.netlify.app` host that is NOT the configured canonical host is closed off, so a
  * misconfigured `NEXT_PUBLIC_SITE_URL` can never de-index the real apex.
  *
  * This is a crawler directive only — it does not redirect and does not touch
@@ -21,9 +38,7 @@ function isNonCanonicalHost(host: string): boolean {
   return host.endsWith(".netlify.app") && host !== CANONICAL_HOST;
 }
 
-export default async function robots(): Promise<MetadataRoute.Robots> {
-  const host = (await headers()).get("host")?.split(":")[0]?.toLowerCase() ?? "";
-
+export function robotsForHost(host: string): MetadataRoute.Robots {
   if (isNonCanonicalHost(host)) {
     return {
       rules: [{ userAgent: "*", disallow: "/" }],
@@ -88,7 +103,19 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
           "/coming-soon",
         ],
       },
+      // Public search, user-requested retrieval, and ads crawlers intentionally
+      // inherit the wildcard rule above. These named agents are restricted to
+      // model-training/corpus collection and high-volume SEO harvesting.
+      ...DENIED_TRAINING_AND_BULK_CRAWLERS.map((userAgent) => ({
+        userAgent,
+        disallow: "/",
+      })),
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
   };
+}
+
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const host = (await headers()).get("host")?.split(":")[0]?.toLowerCase() ?? "";
+  return robotsForHost(host);
 }

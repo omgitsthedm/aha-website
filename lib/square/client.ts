@@ -1,7 +1,15 @@
-import { getCommerceEnvironment, getSquareBaseUrl } from "@/lib/commerce/runtime";
+import {
+  getCommerceEnvironment,
+  getSquareBaseUrl,
+  isPreviewCatalogEnabled,
+} from "@/lib/commerce/runtime";
 
 // Fail fast if Square credentials are missing (server-side only)
-if (typeof window === "undefined" && !process.env.SQUARE_ACCESS_TOKEN) {
+if (
+  typeof window === "undefined" &&
+  !process.env.SQUARE_ACCESS_TOKEN &&
+  !isPreviewCatalogEnabled()
+) {
   console.warn(
     "⚠ SQUARE_ACCESS_TOKEN is not set. Square API calls will fail."
   );

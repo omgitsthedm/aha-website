@@ -3,6 +3,11 @@ export type FulfillmentMode = "manual" | "dry-run" | "auto";
 
 export const DEFAULT_SITE_URL = "https://afterhoursagenda.com";
 
+/** Preview, branch, local-E2E, and CI builds must never query a provider catalog. */
+export function isPreviewCatalogEnabled(): boolean {
+  return process.env.AHA_PREVIEW_CATALOG === "true";
+}
+
 const SQUARE_BASE_URLS: Record<CommerceEnvironment, string> = {
   production: "https://connect.squareup.com/v2",
   sandbox: "https://connect.squareupsandbox.com/v2",

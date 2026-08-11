@@ -2,12 +2,17 @@
   "name": "aha-website",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "npm@10.8.2",
+  "engines": {
+    "node": "20.20.x",
+    "npm": "10.8.x"
+  },
   "browserslist": [
     "last 2 years",
     "not dead",
     "not op_mini all",
-    "iOS >= 15",
-    "Safari >= 15"
+    "iOS >= 16.4",
+    "Safari >= 16.4"
   ],
   "scripts": {
     "dev": "next dev",
@@ -40,30 +45,32 @@
     "@neondatabase/serverless": "^0.10.4",
     "@netlify/database": "^1.1.0",
     "drizzle-orm": "^1.0.0-beta.22",
-    "next": "^15.5.23",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "web-push": "^3.6.7"
   },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "^5.15.8",
+    "@netlify/plugin-nextjs": "5.15.13",
     "@playwright/test": "^1.49.1",
-    "@types/node": "^25.3.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
+    "@types/node": "20.19.43",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
     "@types/web-push": "^3.6.4",
     "autoprefixer": "^10.4.24",
     "drizzle-kit": "^1.0.0-beta.22",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "^15.5.23",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.0",
     "postcss": "^8.5.26",
     "tailwindcss": "^3.4.19",
     "tsx": "^4.19.2",
     "typescript": "^5.9.3",
-    "vitest": "^2.1.8"
+    "vitest": "4.1.10"
   },
   "overrides": {
     "glob": "10.5.0",
-    "postcss": "$postcss"
+    "postcss": "$postcss",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4"
   }
 }

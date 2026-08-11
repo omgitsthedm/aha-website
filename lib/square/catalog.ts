@@ -6,10 +6,7 @@ import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { buildPreviewCollections, buildPreviewProducts } from "@/lib/data/preview-catalog";
-
-function previewCatalogFallbackAllowed(): boolean {
-  return process.env.AHA_PREVIEW_CATALOG === "true";
-}
+import { isPreviewCatalogEnabled } from "@/lib/commerce/runtime";
 
 const LEGACY_COLLECTION_ID = "57JPU5ZDHXGWVPRQQZMWVR5Q";
 
@@ -181,7 +178,10 @@ const fetchAllProductsCached = unstable_cache(
 );
 
 export const getAllProducts = cache(async function getAllProducts(): Promise<Product[]> {
-  if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
+  // The preview flag is an explicit isolation boundary, not merely a fallback
+  // for missing credentials. Even if a host or local shell exposes a Square
+  // token accidentally, preview/branch/CI builds stay on the committed catalog.
+  if (isPreviewCatalogEnabled()) {
     return buildPreviewProducts().filter(isCurrentStorefrontProduct);
   }
   return fetchAllProductsCached();
@@ -193,7 +193,7 @@ export async function getProduct(slug: string): Promise<Product | null> {
 }
 
 export const getAllCollections = cache(async function getAllCollections(): Promise<Collection[]> {
-  if (!process.env.SQUARE_ACCESS_TOKEN && previewCatalogFallbackAllowed()) {
+  if (isPreviewCatalogEnabled()) {
     return buildPreviewCollections();
   }
   const res = await squareRequest<SquareCatalogResponse>(

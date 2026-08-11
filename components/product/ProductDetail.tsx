@@ -221,7 +221,6 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
   useEffect(() => {
     setWishlisted(readWishlist().includes(product.slug));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.slug]);
 
   const toggleWishlist = () => {

@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 import Link from "next/link";
 import { RestockRequestForm } from "@/components/forms/RestockRequestForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Request a Restock Alert",
   description: "Request an availability update for an After Hours Agenda product, size, color, or variant without joining the general marketing list.",
-  alternates: { canonical: "/restock" },
-};
+  path: "/restock",
+});
 
 export default async function RestockPage({ searchParams }: { searchParams: Promise<{ product?: string; size?: string }> }) {
   const { product = "", size = "" } = await searchParams;
