@@ -1,13 +1,13 @@
 # After Hours Agenda agent contract
 
-After Hours Agenda is a live commerce storefront. Read this file and `SOURCE_OF_TRUTH.md` before working. No other file is mandatory startup context.
+After Hours Agenda is a production commerce storefront. Read this file and `SOURCE_OF_TRUTH.md` before working; that file records current availability. No other file is mandatory startup context.
 
 ## Canonical route
 
 - **Local root**: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/aha-website`
 - **GitHub**: `https://github.com/omgitsthedm/aha-website.git`
 - **Production branch**: `main`
-- **Live site**: `https://afterhoursagenda.com`
+- **Primary site**: `https://afterhoursagenda.com`
 - **Current operational truth**: `SOURCE_OF_TRUTH.md`
 
 Run `pwd -P`, `git rev-parse --show-toplevel`, and `git status --short --branch` before editing. Preserve unrelated work. The compatibility path under `Website/aha-website` may resolve to this same physical checkout; never treat an alias as a second source.
