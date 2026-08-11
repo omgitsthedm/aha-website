@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "5.15.13",
-    "@playwright/test": "^1.49.1",
+    "@playwright/test": "^1.62.1",
     "@types/node": "20.19.43",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
