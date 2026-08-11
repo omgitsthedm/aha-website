@@ -228,7 +228,19 @@ test("@product a tap on the sticky mobile buy CTA reaches the buy button, not fe
 test("@catalog @cart cart page renders its empty state", async ({ page }) => {
   await page.goto("/cart");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByText("Your bag is empty. Saved items stay on this device.")).toBeVisible();
+  await expect(page.getByText("Saved items stay on this device.")).toBeVisible();
+  await expect(page.getByText("0 items", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Start shopping" })).toBeVisible();
+});
+
+test("@cart the server-rendered bag header stays truthful before storage hydration", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "SSR bag markup is browser-independent.");
+  const response = await page.request.get("/cart");
+  expect(response.status()).toBe(200);
+  const html = await response.text();
+  expect(html).toContain("Saved items stay on this device.");
+  expect(html).not.toContain("Loading your saved items");
+  expect(html).not.toContain("Your bag is empty");
 });
 
 test("@cart a saved bag restores without flashing the empty state", async ({ page }, testInfo) => {

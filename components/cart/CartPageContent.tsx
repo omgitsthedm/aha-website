@@ -26,6 +26,7 @@ const ExpressCheckout = dynamic(
 // Automatic bundle offer (display only — the server enforces the real discount).
 const BUNDLE_MIN = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_MIN_QTY || "0", 10);
 const BUNDLE_PCT = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_PERCENT || "0", 10);
+const BAG_DESCRIPTION = "Saved items stay on this device.";
 
 export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPaymentsConfig }) {
   const { items, hydrated, addItem, removeItem, updateQuantity, totalFormatted, totalItems, total } = useCart();
@@ -90,12 +91,25 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
     return () => controller.abort();
   }, [items]);
 
-  if (!hydrated) {
-    return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><PageHeader eyebrow="Bag" title="Your bag" description="Loading your saved items…" /></div></div>;
-  }
-
-  if (items.length === 0) {
-    return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><div className="mb-6 flex items-end gap-5"><SheepMark className="w-16 shrink-0 text-cream" title="The After Hours Agenda black sheep" /><PageHeader eyebrow="0 items" title="Your bag" description="Your bag is empty. Saved items stay on this device." /></div><Link href="/shop" prefetch={false} className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link></div></div>;
+  if (!hydrated || items.length === 0) {
+    return (
+      <div className="px-4 pb-36 pt-28 md:px-6 md:pt-32 lg:pb-20">
+        <div className="mx-auto max-w-6xl">
+          <PageHeader eyebrow="Bag" title="Your bag" description={BAG_DESCRIPTION} />
+          {!hydrated ? (
+            <p role="status" className="sr-only">Checking saved items…</p>
+          ) : (
+            <div className="flex max-w-4xl flex-wrap items-center gap-5">
+              <SheepMark className="w-16 shrink-0 text-cream" title="The After Hours Agenda black sheep" />
+              <div>
+                <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted">0 items</p>
+                <Link href="/shop" prefetch={false} className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   // Hoisted so the summary and the mobile sticky bar quote the same number.
@@ -107,7 +121,8 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
   return (
     // Extra bottom padding below lg clears the fixed checkout bar.
     <div className="px-4 pb-36 pt-28 md:px-6 md:pt-32 lg:pb-20"><div className="mx-auto max-w-6xl">
-      <PageHeader eyebrow={`${totalItems} ${totalItems === 1 ? "item" : "items"}`} title="Your bag" description="Review sizes and quantities before moving to the secure Square payment step." />
+      <PageHeader eyebrow="Bag" title="Your bag" description={BAG_DESCRIPTION} />
+      <p className="mb-6 text-xs font-bold uppercase tracking-[0.08em] text-muted">{totalItems} {totalItems === 1 ? "item" : "items"} · Review sizes and quantities before checkout.</p>
       {restored && <p role="status" className="mb-6 border border-accent/60 bg-surface px-4 py-3 text-sm font-bold text-cream">We brought your bag back — pick up right where you left off.</p>}
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
         <ul className="border-t border-border/40" aria-label="Bag items">
