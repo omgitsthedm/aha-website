@@ -37,8 +37,8 @@ data/               Product manifest and provider mappings
 scripts/            Validation and product operations
 ops/                Exact-site and commerce-readiness guards
 db/                 Database schema and migrations
-docs/               Task-specific design, commerce, operations, and historical evidence
+docs/               Current task-specific references and an on-demand historical archive
 .github/workflows/  Continuous integration and release checks
 ```
 
-Use `docs/AHA-DESIGN-SYSTEM.md` for brand work, `docs/commerce-operations.md` for authorized operations, and `docs/product-factory.md` for product creation. The large master handoffs are historical references, not mandatory startup reading.
+Use `docs/README.md` to select one current reference. Historical handoffs, audits, plans, and superseded operations guides are archived and excluded from normal searches.

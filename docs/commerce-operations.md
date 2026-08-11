@@ -1,11 +1,10 @@
-# AHA Production Commerce Operations
+# AHA production commerce operations
 
 ## Access
 
 - Dashboard: `https://afterhoursagenda.com/ops`
-- Password is stored in the macOS Keychain under service `After Hours Agenda Production Ops`, account `davidmarsh`.
-- Terminal retrieval: `security find-generic-password -s 'After Hours Agenda Production Ops' -a davidmarsh -w`
-- Never paste the password into Git, chat, issues, screenshots, or documentation.
+- Authentication is protected outside the repository. Never retrieve, reveal, copy, or test it during routine work.
+- Authenticated dashboard actions require a task that explicitly authorizes the named production effect.
 
 ## Production flow
 
@@ -26,10 +25,10 @@ Production is automatic: only a verified completed Square payment can create a P
 
 ## Provider tests
 
-The operations dashboard exposes signed webhook tests. These do not create a payment or Printful order. Square's control uses the provider test-notification API. Printful's control sends a correctly signed synthetic v2 event through the deployed endpoint and database dedupe path.
+The operations dashboard exposes signed webhook tests. These controls call provider interfaces and write test or deduplication records, even though they do not create a payment or Printful order. Run one only when the current task explicitly authorizes that external test.
 
 ## Known external dependency
 
 Branded order, production, exception, and tracking email uses Resend through a durable database outbox. Required production variables: `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `RESEND_REPLY_TO`, and `ORDER_SUPPORT_EMAIL`. Pending email is retried every five minutes and by the reconciliation job. Square receipts remain independent.
 
-After verifying the Resend domain and setting the production API key, sign in at `/ops` and use **Test order email**. It sends one branded system message to `ORDER_SUPPORT_EMAIL` without creating an order or charging a card.
+The **Test order email** control sends a real system message to the configured support address. Do not use it during routine verification or without explicit authorization to send that message.

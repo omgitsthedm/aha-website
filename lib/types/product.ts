@@ -1,6 +1,6 @@
 // Internal product data model — After Hours Agenda owns the storefront product layer.
 // Printful v2 beta has no sync-products/templates, so AHA maps its own products/variants
-// to Printful v2 catalog variants + files + placements. See docs/MASTER-BUILD-INSTRUCTION.md §13/§24.
+// to Printful v2 catalog variants, files, and placements. See docs/product-factory.md.
 
 type ProductStatus =
   | "draft"

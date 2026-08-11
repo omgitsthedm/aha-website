@@ -1,10 +1,11 @@
-// Auto-populates data/{product-manifest,square-map,printful-v2-map,size-guides}.json from the
-// LIVE Square catalog + Printful v2 sync-products. Read-only against both APIs.
+// Rebuilds data/{product-manifest,square-map,printful-v2-map,size-guides}.json from the
+// live Square catalog and Printful v2 sync-products. It reads both providers and rewrites
+// local catalog mappings unless --dry is present.
 // Join: Printful sync_variant.external_id is the exact Square variation id. No product-name or
 // size-string guessing is allowed. Printful sync_variant_id carries the store's configured art.
 //
-// Run:  ( set -a; eval "$(netlify env:list --plain 2>/dev/null)"; set +a; node scripts/populate-maps.mjs )
-// or pass tokens via env. Tokens are never written to output. See MASTER-BUILD-INSTRUCTION §24.
+// Run only for an explicitly authorized provider/catalog task. Supply credentials through the
+// protected runtime environment; never print or copy them into a command. See docs/product-factory.md.
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 

@@ -1,6 +1,8 @@
-# Database — After Hours Agenda
+# After Hours Agenda database
 
 **Netlify DB (Neon Postgres), managed via Drizzle.** Operational data only: orders, payments, fulfillments, shipments, webhook dedupe, audit, mappings, subscribers. **No card data, no API tokens.** (§14)
+
+Database connection and migration commands can target production. Run them only when the current task explicitly authorizes the exact database action and target. Never inspect customer or provider records during routine validation.
 
 - **Schema:** `db/schema.ts` (Drizzle) — the single source of truth.
 - **Migrations:** `netlify/database/migrations/` — Netlify **auto-applies pending migrations on every deploy**.

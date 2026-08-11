@@ -1,6 +1,6 @@
-# AHA Theme Contract
+# AHA theme contract
 
-The storefront has one governed visual theme: Black Sheep Newsstand. Runtime theme switching is not a current product requirement. The `data-theme` attribute remains only as a stable document hook.
+The storefront has one governed light editorial theme defined by `docs/AHA-DESIGN-SYSTEM.md`. Runtime theme switching is not a current product requirement. The `data-theme` attribute remains only as a stable document hook.
 
 ## Semantic channels
 
@@ -29,4 +29,4 @@ The RGB channels in `app/globals.css` support Tailwind opacity modifiers:
 - Validate text, focus, control, and state contrast before changing a channel.
 - A new theme requires a documented product reason and a full route and state matrix. It is not a component-level styling shortcut.
 
-See `docs/design-tokens.md` and `docs/AHA-UIUX-SYSTEM-V3.md` for the complete contract.
+See `docs/design-tokens.md` and `docs/AHA-DESIGN-SYSTEM.md` for the complete contract.

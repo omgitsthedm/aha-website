@@ -1,12 +1,8 @@
-# Product Factory — design in, live product out
+# Product factory: design in, product out
 
-Hand any agent a design and a garment choice; a purchasable product appears on
-afterhoursagenda.com. No Printful dashboard, no manual Square edits.
-Proven live 2026-07-14 (8-product resurrection run + the sheep rebuild).
+This tool can create provider records, change catalog mappings, commit files, push `main`, and publish products. Start with a dry run. Use any live or push mode only when the current request explicitly authorizes those exact effects.
 
-> **Fastest path (design + one line → live):** use `npm run product:new` and follow
-> [`PRODUCT-INTAKE.md`](./PRODUCT-INTAKE.md). It wraps this factory with garment presets,
-> art hosting, and live verification. This doc is the underlying engine + advanced modes.
+`npm run product:new` is the guided wrapper for garment presets and art hosting. Without `--live`, it prints a local preview and changes nothing. Its live mode creates provider records, commits, pushes `main`, and waits for production, so the same authorization boundary applies.
 
 ## The one command
 
@@ -21,8 +17,7 @@ OPS_MAINTENANCE_KEY=... PRINTFUL_API_TOKEN=... \
   [--art <url>] [--price-map '{"15″×3.75″":1100}']
 ```
 
-Always dry-run first (omit `--live`) — it prints variants, per-variant cost,
-price vs the 35% floor, and placements without touching anything.
+Always dry-run first by omitting `--live`. The preview prints variants, per-variant cost, price against the 35% floor, and placements without changing external systems.
 
 ## Spec format (new products)
 

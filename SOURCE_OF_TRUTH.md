@@ -1,6 +1,6 @@
 # After Hours Agenda source of truth
 
-Last verified: July 31, 2026 from local Git, GitHub, the Netlify application programming interface (API), and public Hypertext Transfer Protocol Secure (HTTPS) checks.
+Last verified: August 10, 2026 from local Git, GitHub, the Netlify application programming interface (API), and public Hypertext Transfer Protocol Secure (HTTPS) checks.
 
 This file contains the current routing and operational contract. Detailed design, commerce, legal, and historical evidence remains available on demand under `docs/` and in Git history.
 
@@ -26,12 +26,13 @@ The retired iCloud backup family is not an active source and must remain untouch
 
 - **Production deploy ID**: `6a679898148e9000086c19b3`
 - **Deployed source commit**: `61946684db42559ba95dad43d718e2eb890c21fa`
-- **Deploy state**: `ready`
+- **Artifact state**: `ready`
 - **Published**: July 27, 2026 at 17:44:07 UTC
-- **Production root**: HTTP 200, 285,122 bytes, SHA-256 `66ebaa736595edb2c52617609359b771563c99e1ce70752cce2f2837db2f312b`
-- **Production root ETag**: `"l9qh4rgjk463y2"`
+- **Current availability**: HTTP 503 `usage_exceeded` on the primary, default, branch, and immutable deploy URLs
+- **Account cause**: the Little Fight NYC Netlify team exhausted its 3,000 monthly credits at `2026-08-11T00:09:58.905Z`; auto-recharge is off
+- **Automatic reset**: August 16, 2026 at 00:00 America/Phoenix unless a Team Owner restores credits sooner
 
-The primary domain and immutable deploy URL returned the same body fingerprint during the July 31 verification. Refresh these fields after any intentional production release. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
+The published artifact is still marked ready, but the team-level credit pause prevents it from serving web requests or accepting deploys. Do not describe the storefront as live or healthy until the account returns to operational mode and the exact-site live checks pass. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
 
 ## Runtime ownership
 
@@ -74,15 +75,20 @@ A normal push to `main` can trigger production. The [Netlify deploy management d
 
 Use the skip marker only when the diff cannot change the built storefront or runtime. After a skipped push, prove the production deploy ID, source commit, domains, and live fingerprint remain unchanged.
 
+## Known maintenance gate
+
+The August 10 patch update resolved the Next.js, PostCSS, and Nano ID advisories without changing commerce code. The remaining production audit finding is Sharp `<0.35.0`, inherited through Next.js 15. Resolving it requires a major Next.js 16 upgrade under the current dependency graph. Do not run `npm audit fix --force` or override Next's Sharp range without a dedicated migration and full local, preview, and production verification.
+
 ## Task-specific references
 
+- **Documentation map**: `docs/README.md`
 - **Brand and design**: `docs/AHA-DESIGN-SYSTEM.md`, `.impeccable.md`
-- **Operations**: `docs/OPERATIONS-HANDBOOK.md`, `docs/commerce-operations.md`
+- **Commerce architecture**: `docs/commerce-operations.md`
 - **Product factory**: `docs/product-factory.md`
-- **Commerce readiness**: `docs/netlify-commerce-backend-readiness.md`
-- **Historical doctrine, plans, and audits**: open only for evidence relevant to the current task
+- **Database changes**: `db/README.md`
+- **Historical evidence**: `docs/archive/2026-08-10-house-cleaning/`, opened only when a task names it
 
-Historical master handoffs can describe retired phases, routes, products, branches, deploys, and visual directions. They do not override this file or current external evidence.
+Archived documents can describe retired phases, routes, products, branches, deploys, operations, and visual directions. They do not override this file or current external evidence.
 
 ## Maintenance rule
 

@@ -41,12 +41,14 @@ Use the smallest validation set that proves the task. Run the exact-site guard b
 
 ## On-demand references
 
+- Documentation map: `docs/README.md`
 - Brand and interface work: `docs/AHA-DESIGN-SYSTEM.md` and `.impeccable.md`
-- Commerce operations: `docs/OPERATIONS-HANDBOOK.md` and `docs/commerce-operations.md`
+- Commerce architecture: `docs/commerce-operations.md`
 - Product creation: `docs/product-factory.md`
-- Detailed build history and audits: open only when the task requires their evidence
+- Database changes: `db/README.md`
+- Historical evidence: `docs/archive/2026-08-10-house-cleaning/`, opened only when a task names it
 
-The large master handoffs and dated audits are historical references, not current instructions. When a reference conflicts with Git, current Netlify metadata, the live site, or `SOURCE_OF_TRUTH.md`, verify the external truth and update only the current contract.
+Archived handoffs, plans, operations guides, and dated audits are not current instructions. When a reference conflicts with Git, current Netlify metadata, the live site, or `SOURCE_OF_TRUTH.md`, verify the external truth and update only the current contract.
 
 ## Completion
 
