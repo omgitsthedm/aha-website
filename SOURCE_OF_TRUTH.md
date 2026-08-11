@@ -1,6 +1,6 @@
 # After Hours Agenda source of truth
 
-Last verified: August 10, 2026 from local Git, GitHub, the Netlify application programming interface (API), and public Hypertext Transfer Protocol Secure (HTTPS) checks.
+Last verified: August 11, 2026 from local Git, GitHub, the Netlify application programming interface (API), and public Hypertext Transfer Protocol Secure (HTTPS) checks.
 
 This file contains the current routing and operational contract. Detailed design, commerce, legal, and historical evidence remains available on demand under `docs/` and in Git history.
 
@@ -24,18 +24,18 @@ The retired iCloud backup family is not an active source and must remain untouch
 
 ## Service restoration and release baseline
 
-- **Production deploy ID**: `6a7a7ad65a588f0008c59f46`
-- **Deployed source commit**: `9ed4a9abedb74153d74b8b9a2aa3eb4639894168`
+- **Production deploy ID**: `6a7ba9691f646c0009677c37`
+- **Deployed source commit**: `7543cc1a67f93affbb22f30ed7d4b80d6f10d535`
 - **Artifact state**: `ready`
-- **Published**: August 11, 2026 at 01:30:12 UTC
+- **Published**: August 11, 2026 at 23:00:46 UTC
 - **Current availability**: HTTP 200 on the primary, default, branch, and deploy-specific domains
-- **Release state**: live deploy and source parity verified
+- **Release state**: live deploy and source parity verified after pull requests [#19](https://github.com/omgitsthedm/aha-website/pull/19) and [#29](https://github.com/omgitsthedm/aha-website/pull/29)
 
-Public delivery is restored. The primary, default, and deploy-specific homepages were byte-identical at 285,122 bytes with SHA-256 `e5752088a66c7de37ca7a243e304b5715291a365469e486073fbbbc6039b1eea`; the exact-site live guard and representative public routes passed. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
+The primary, default, and deploy-specific homepages were byte-identical at 349,843 bytes with SHA-256 `1eca35685dfe630c5c2766f3eb89e2a8dbeb1b20d42b5a566b6d3418c264b734`; the exact-site live guard and representative public routes passed. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
 
 ## Runtime ownership
 
-- **Storefront**: Next.js 15 App Router with TypeScript on Netlify
+- **Storefront**: Next.js 16.3.0 App Router, React 19.2.8, and TypeScript on Netlify
 - **Payments and transaction records**: Square
 - **Fulfillment and shipping lifecycle**: Printful through the current repository routing
 - **Operational records**: Netlify Database
@@ -70,13 +70,13 @@ Do not use a real checkout as verification. When public live requests encounter 
 
 ## Deployment and documentation changes
 
-A normal push to `main` can trigger production. The [Netlify deploy management documentation](https://docs.netlify.com/deploy/manage-deploys/manage-deploys-overview/#skip-a-deploy) confirms that `[skip netlify]` can appear anywhere in the most recent commit message and applies to all commits in that push. The next commit without a skip marker can deploy the accumulated source tree, including skipped documentation.
+A squash merge to `main` can trigger production. Active GitHub ruleset `20717491` requires a pull request, nine current checks, one approval, resolved threads, linear history, and squash-only history; it blocks direct pushes, force-pushes, and deletion. Its owner bypass is limited to the pull-request path and does not permit direct pushes. The [Netlify deploy management documentation](https://docs.netlify.com/deploy/manage-deploys/manage-deploys-overview/#skip-a-deploy) confirms that `[skip netlify]` can appear anywhere in the most recent commit message and applies to all commits in that push. The next commit without a skip marker can deploy the accumulated source tree, including skipped documentation.
 
 Use the skip marker only when the diff cannot change the built storefront or runtime. After a skipped push, prove the production deploy ID, source commit, domains, and live fingerprint remain unchanged.
 
-## Known maintenance gate
+## Current dependency baseline
 
-The August 10 patch update resolved the Next.js, PostCSS, and Nano ID advisories without changing commerce code. The remaining production audit finding is Sharp `<0.35.0`, inherited through Next.js 15. Resolving it requires a major Next.js 16 upgrade under the current dependency graph. Do not run `npm audit fix --force` or override Next's Sharp range without a dedicated migration and full local, preview, and production verification.
+The August 11 release migrated the storefront to Next.js 16.3.0 and React 19.2.8, removing the inherited Sharp advisory. Both the full and production-only npm audits report zero known vulnerabilities at this baseline. Keep Dependabot, dependency review, the pinned workflow actions, and both audit gates active; future major migrations still require full local, preview, and production verification. Do not use `npm audit fix --force` as a release shortcut.
 
 ## Task-specific references
 
