@@ -107,6 +107,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${jetBrainsMono.variable} ${littleFightOswald.variable} ${poppins.variable}`}
     >
       <body className="origami-shell font-body text-cream antialiased">

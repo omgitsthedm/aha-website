@@ -9,7 +9,8 @@ import { useEffect, useState } from "react";
  */
 export type Consent = "granted" | "denied";
 
-const KEY = "aha-cookie-consent";
+export const CONSENT_STORAGE_KEY = "aha-cookie-consent";
+let volatileConsent: Consent | null = null;
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((cb) => cb());
 
@@ -29,18 +30,19 @@ export function getConsent(): Consent | null {
   if (typeof window === "undefined") return null;
   if (isGlobalPrivacyControlEnabled()) return "denied";
   try {
-    const v = localStorage.getItem(KEY);
-    return v === "granted" || v === "denied" ? v : null;
+    const v = localStorage.getItem(CONSENT_STORAGE_KEY);
+    return v === "granted" || v === "denied" ? v : volatileConsent;
   } catch {
-    return null;
+    return volatileConsent;
   }
 }
 
 export function setConsent(v: Consent): void {
   const effectiveConsent =
     v === "granted" && isGlobalPrivacyControlEnabled() ? "denied" : v;
+  volatileConsent = effectiveConsent;
   try {
-    localStorage.setItem(KEY, effectiveConsent);
+    localStorage.setItem(CONSENT_STORAGE_KEY, effectiveConsent);
   } catch {
     /* private mode — holds for this session */
   }

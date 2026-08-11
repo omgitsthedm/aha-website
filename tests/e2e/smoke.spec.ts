@@ -45,6 +45,108 @@ test("@care Little Fight care mark matches the approved responsive contract", as
   expect(box?.width).toBeLessThanOrEqual(testInfo.project.use.viewport?.width ?? Infinity);
 });
 
+test("@privacy a fresh document includes the consent choice before hydration", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "SSR consent markup is browser-independent.");
+  const response = await page.request.get("/");
+  expect(response.status()).toBe(200);
+  const html = await response.text();
+  expect(html).toContain('id="aha-consent-bootstrap"');
+  expect(html).toContain('aria-label="Cookie preferences"');
+  expect(html).toContain('data-aha-consent-banner=""');
+  expect(html.indexOf('id="aha-consent-bootstrap"')).toBeLessThan(html.indexOf('data-aha-consent-banner=""'));
+});
+
+test("@privacy a stored choice stays hidden without a hydration warning and can reopen", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "Parser-time consent behavior is covered once in Chromium.");
+  const hydrationMessages: string[] = [];
+  page.on("console", (message) => {
+    if (/hydration|did not match/i.test(message.text())) hydrationMessages.push(message.text());
+  });
+  await page.addInitScript(() => window.localStorage.setItem("aha-cookie-consent", "granted"));
+  await page.goto("/");
+  const dialog = page.getByRole("dialog", { name: "Cookie preferences" });
+  await expect(dialog).toHaveCount(0);
+  await page.getByRole("button", { name: "Do Not Sell or Share My Info" }).click();
+  await expect(dialog).toBeVisible();
+  expect(hydrationMessages).toEqual([]);
+});
+
+test("@privacy GPC overrides a stored grant and reopens with only the keep-off choice", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "GPC browser behavior is covered once in Chromium.");
+  const trackingRequests: string[] = [];
+  page.on("request", (request) => {
+    if (/googletagmanager|google-analytics|facebook\.com\/tr|analytics\.tiktok/i.test(request.url())) {
+      trackingRequests.push(request.url());
+    }
+  });
+  await page.addInitScript(() => {
+    window.localStorage.setItem("aha-cookie-consent", "granted");
+    Object.defineProperty(navigator, "globalPrivacyControl", { configurable: true, value: true });
+  });
+  await page.goto("/");
+  const dialog = page.getByRole("dialog", { name: "Cookie preferences" });
+  await expect(dialog).toHaveCount(0);
+  await page.getByRole("button", { name: "Do Not Sell or Share My Info" }).click();
+  await expect(dialog.getByRole("button", { name: "Keep tracking off" })).toBeVisible();
+  await expect(dialog.getByRole("button", { name: "Accept" })).toHaveCount(0);
+  expect(trackingRequests).toEqual([]);
+});
+
+test("@privacy unavailable storage still allows an in-tab consent choice", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "Storage failure handling is browser-independent.");
+  await page.addInitScript(() => {
+    const getItem = Storage.prototype.getItem;
+    const setItem = Storage.prototype.setItem;
+    Storage.prototype.getItem = function (key: string) {
+      if (key === "aha-cookie-consent") throw new DOMException("Storage unavailable", "SecurityError");
+      return getItem.call(this, key);
+    };
+    Storage.prototype.setItem = function (key: string, value: string) {
+      if (key === "aha-cookie-consent") throw new DOMException("Storage unavailable", "SecurityError");
+      return setItem.call(this, key, value);
+    };
+  });
+  await page.goto("/");
+  const dialog = page.getByRole("dialog", { name: "Cookie preferences" });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "Accept" }).click();
+  await expect(dialog).toHaveCount(0);
+});
+
+test("@privacy the consent choice exclusively owns fresh mobile bottom surfaces", async ({ page }, testInfo) => {
+  test.skip(!testInfo.project.name.startsWith("mobile-"), "Fixed mobile controls are covered at phone width.");
+  await page.goto("/product/dont-fuck-fascists-shirt");
+  const banner = page.getByRole("dialog", { name: "Cookie preferences" });
+  const stickyBar = page.getByTestId("sticky-buy-bar");
+  await expect(banner).toBeVisible();
+  await expect(stickyBar).toBeHidden();
+  await banner.getByRole("button", { name: "Reject" }).click();
+  await expect(banner).toHaveCount(0);
+  await expect(stickyBar).toBeVisible();
+
+  await page.evaluate(() => {
+    window.localStorage.removeItem("aha-cookie-consent");
+    window.localStorage.setItem("aha-cart", JSON.stringify([{
+      productId: "preview-dont-fuck-fascists-shirt",
+      slug: "dont-fuck-fascists-shirt",
+      variationId: "preview-dont-fuck-fascists-shirt-m",
+      name: "Don't Fuck Fascists Shirt",
+      variationName: "M",
+      price: 4000,
+      priceFormatted: "$40.00",
+      quantity: 1,
+      image: "/products/dont-fuck-fascists-shirt/01-black-mens-fitted-t-shirt-front.webp",
+    }]));
+  });
+  await page.goto("/cart");
+  const cartBanner = page.getByRole("dialog", { name: "Cookie preferences" });
+  const checkoutBar = page.getByTestId("sticky-checkout-bar");
+  await expect(cartBanner).toBeVisible();
+  await expect(checkoutBar).toBeHidden();
+  await cartBanner.getByRole("button", { name: "Reject" }).click();
+  await expect(checkoutBar).toBeVisible();
+});
+
 test("@catalog shop lists products and links to PDPs", async ({ page }) => {
   await page.goto("/shop");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/catalog/i);
@@ -119,7 +221,7 @@ test("@product a tap on the sticky mobile buy CTA reaches the buy button, not fe
 test("@catalog @cart cart page renders its empty state", async ({ page }) => {
   await page.goto("/cart");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.locator("body")).toContainText(/bag|cart/i);
+  await expect(page.getByText("Your bag is empty. Saved items stay on this device.")).toBeVisible();
 });
 
 test("@cart a saved bag restores without flashing the empty state", async ({ page }, testInfo) => {

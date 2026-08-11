@@ -46,4 +46,17 @@ describe("Global Privacy Control", () => {
     expect(stored.get("aha-cookie-consent")).toBe("denied");
     expect(getConsent()).toBe("denied");
   });
+
+  it("keeps the choice for the session when browser storage is unavailable", () => {
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("navigator", { globalPrivacyControl: false });
+    vi.stubGlobal("localStorage", {
+      getItem: () => { throw new DOMException("Storage unavailable", "SecurityError"); },
+      setItem: () => { throw new DOMException("Storage unavailable", "SecurityError"); },
+    });
+
+    setConsent("granted");
+
+    expect(getConsent()).toBe("granted");
+  });
 });
