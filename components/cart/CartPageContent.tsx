@@ -26,6 +26,7 @@ const ExpressCheckout = dynamic(
 // Automatic bundle offer (display only — the server enforces the real discount).
 const BUNDLE_MIN = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_MIN_QTY || "0", 10);
 const BUNDLE_PCT = Number.parseInt(process.env.NEXT_PUBLIC_BUNDLE_PERCENT || "0", 10);
+const BAG_DESCRIPTION = "Saved items stay on this device.";
 
 export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPaymentsConfig }) {
   const { items, hydrated, addItem, removeItem, updateQuantity, totalFormatted, totalItems, total } = useCart();
@@ -90,12 +91,25 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
     return () => controller.abort();
   }, [items]);
 
-  if (!hydrated) {
-    return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><PageHeader eyebrow="Bag" title="Your bag" description="Loading your saved items…" /></div></div>;
-  }
-
-  if (items.length === 0) {
-    return <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl"><div className="mb-6 flex items-end gap-5"><SheepMark className="w-16 shrink-0 text-cream" title="The After Hours Agenda black sheep" /><PageHeader eyebrow="0 items" title="Your bag" description="Your bag is empty. Items stay saved in this browser until you remove them or complete a verified checkout." /></div><Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link></div></div>;
+  if (!hydrated || items.length === 0) {
+    return (
+      <div className="px-4 pb-36 pt-28 md:px-6 md:pt-32 lg:pb-20">
+        <div className="mx-auto max-w-6xl">
+          <PageHeader eyebrow="Bag" title="Your bag" description={BAG_DESCRIPTION} />
+          {!hydrated ? (
+            <p role="status" className="sr-only">Checking saved items…</p>
+          ) : (
+            <div className="flex max-w-4xl flex-wrap items-center gap-5">
+              <SheepMark className="w-16 shrink-0 text-cream" title="The After Hours Agenda black sheep" />
+              <div>
+                <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted">0 items</p>
+                <Link href="/shop" prefetch={false} className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   // Hoisted so the summary and the mobile sticky bar quote the same number.
@@ -107,7 +121,8 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
   return (
     // Extra bottom padding below lg clears the fixed checkout bar.
     <div className="px-4 pb-36 pt-28 md:px-6 md:pt-32 lg:pb-20"><div className="mx-auto max-w-6xl">
-      <PageHeader eyebrow={`${totalItems} ${totalItems === 1 ? "item" : "items"}`} title="Your bag" description="Review sizes and quantities before moving to the secure Square payment step." />
+      <PageHeader eyebrow="Bag" title="Your bag" description={BAG_DESCRIPTION} />
+      <p className="mb-6 text-xs font-bold uppercase tracking-[0.08em] text-muted">{totalItems} {totalItems === 1 ? "item" : "items"} · Review sizes and quantities before checkout.</p>
       {restored && <p role="status" className="mb-6 border border-accent/60 bg-surface px-4 py-3 text-sm font-bold text-cream">We brought your bag back — pick up right where you left off.</p>}
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
         <ul className="border-t border-border/40" aria-label="Bag items">
@@ -192,12 +207,9 @@ export function CartPageContent({ squareConfig }: { squareConfig: SquareWebPayme
       )}
 
       {/* Sticky mobile checkout bar — the summary's "Continue to checkout" sits
-          ~1.35 viewports down on a 375px phone, so the bag's only primary action
-          was never on screen. Offsets above the cookie banner via --aha-consent-h
-          exactly like the PDP buy bar (the banner is z-[400] and full width, so
-          bottom-0 here would put "Accept" on top of "Checkout"). Desktop keeps
-          the sticky summary column and never renders this. */}
-      <div className="safe-bottom safe-x fixed inset-x-0 bottom-[var(--aha-consent-h,0px)] z-[80] border-t border-border/60 bg-void/95 backdrop-blur-sm transition-[bottom] duration-200 motion-reduce:transition-none lg:hidden">
+          ~1.35 viewports down on a 375px phone, so the bag's primary action needs
+          a mobile surface. The privacy prompt owns that surface until resolved. */}
+      <div data-testid="sticky-checkout-bar" data-aha-consent-gated-fixed="" className="safe-bottom safe-x fixed inset-x-0 bottom-0 z-[80] border-t border-border/60 bg-void/95 backdrop-blur-sm lg:hidden">
         {/* sm:pr-36 keeps the CTA clear of the feedback launcher, which is
             `fixed bottom-3 right-3 z-[350] hidden sm:block` and would otherwise sit
             on top of "Checkout" between sm and lg. Stacking, not z-index raising,

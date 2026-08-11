@@ -48,7 +48,7 @@ const contentSecurityPolicy = [
   "form-action 'self'",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""} https://web.squarecdn.com${squareSandbox.webCdn} https://pay.google.com https://www.googletagmanager.com https://connect.facebook.net https://analytics.tiktok.com`,
   `style-src 'self' 'unsafe-inline' https://web.squarecdn.com${squareSandbox.webCdn}`,
-  "img-src 'self' data: blob: https://items-images-production.s3.us-west-2.amazonaws.com https://images.squarespace-cdn.com https://*.printful.com https://*.squarecdn.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.facebook.com https://analytics.tiktok.com",
+  "img-src 'self' data: blob: https://items-images-production.s3.us-west-2.amazonaws.com https://images.squarespace-cdn.com https://*.printful.com https://*.squarecdn.com https://www.gstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.facebook.com https://analytics.tiktok.com",
   "font-src 'self' data: https://*.squarecdn.com https://cash-f.squarecdn.com https://square-fonts-production-f.squarecdn.com https://d1g145x70srn7h.cloudfront.net",
   // https://www.google.com is where the Google Pay payment manifest actually
   // resolves — without it googlePay() fails on every surface with a CSP error.
@@ -64,6 +64,12 @@ const contentSecurityPolicy = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  // Inline the small route stylesheet into the initial document. The primary
+  // LCP on the storefront is text, so removing the render-blocking CSS request
+  // shortens the critical path without changing the rendered design.
+  experimental: {
+    inlineCss: true,
+  },
   // Keep route metadata in <head> for crawlers and link unfurlers. Netlify's
   // streaming response otherwise places dynamic metadata after <body>.
   htmlLimitedBots: /.*/,

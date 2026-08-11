@@ -116,6 +116,21 @@
     scrollbar-gutter: stable;
   }
 
+  /* CookieConsent is server-rendered so first-time visitors receive the choice
+     in the first paint. Its parser-time bootstrap marks returning/GPC browsers
+     before this element is painted, preventing a consent-banner flash. */
+  html[data-aha-consent-resolved] [data-aha-consent-banner]:not([data-reopened="true"]) {
+    display: none;
+  }
+
+  /* The privacy choice is the only fixed bottom action until it is resolved.
+     Hiding commerce bars at the CSS layer prevents a pre-hydration overlap,
+     removes them from focus navigation, and avoids guessing the banner height. */
+  html:not([data-aha-consent-resolved]) [data-aha-consent-gated-fixed] {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   body {
     min-height: 100dvh;
     overflow-x: hidden;

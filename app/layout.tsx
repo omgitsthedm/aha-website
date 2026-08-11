@@ -14,11 +14,15 @@ import { LazyFeedbackWidget } from "@/components/feedback/LazyFeedbackWidget";
 import { LittleFightCareBar } from "@/components/ui/LittleFightCareBar";
 import { SheepMarkSprite } from "@/components/ui/SheepMark";
 import { SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
+import { CONSENT_BOOTSTRAP } from "@/lib/consent/bootstrap";
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
   display: "swap",
+  // Poppins paints the homepage LCP. The mono face is supporting UI copy, so
+  // it can swap in without competing on the initial critical path.
+  preload: false,
   weight: ["400", "500", "700"],
 });
 
@@ -104,8 +108,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${jetBrainsMono.variable} ${littleFightOswald.variable} ${poppins.variable}`}
     >
+      <head>
+        <script id="aha-consent-bootstrap" dangerouslySetInnerHTML={{ __html: CONSENT_BOOTSTRAP }} />
+      </head>
       <body className="origami-shell font-body text-cream antialiased">
         <SheepMarkSprite />
         <CartProvider>

@@ -243,7 +243,7 @@ export function CategoryShopContent({
             const image = product.images[0];
             return (
               <div key={product.id} className="group paper-lift">
-                <Link href={`/product/${product.slug}`} className="block focus-visible:outline-offset-4">
+                <Link href={`/product/${product.slug}`} prefetch={false} className="block focus-visible:outline-offset-4">
                   <div className="fold-surface relative aspect-[3/4] overflow-hidden">
                     {image ? <ResilientImage src={image} alt={product.name} fill priority={index < 2} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                     {product.images[1] && <ResilientImage src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
@@ -268,7 +268,7 @@ export function CategoryShopContent({
       {viewMode === "index" && filtered.length > 0 && (
         <div className="border-t border-border/40">
           {visibleProducts.map((product) => (
-            <Link key={product.id} href={`/product/${product.slug}`} className="grid min-h-16 grid-cols-[1fr_auto] items-center gap-4 border-b border-border/40 py-3 transition-colors hover:bg-surface sm:grid-cols-[1fr_12rem_auto] sm:px-3">
+            <Link key={product.id} href={`/product/${product.slug}`} prefetch={false} className="grid min-h-16 grid-cols-[1fr_auto] items-center gap-4 border-b border-border/40 py-3 transition-colors hover:bg-surface sm:grid-cols-[1fr_12rem_auto] sm:px-3">
               <span className="font-display text-base font-black uppercase leading-tight text-cream">{product.name}</span>
               <span className="hidden text-xs uppercase tracking-[0.06em] text-muted sm:block">{product.category || "Catalog"}</span>
               <span className="font-mono text-sm font-bold text-cream">{product.priceFormatted}</span>

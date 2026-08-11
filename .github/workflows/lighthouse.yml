@@ -59,6 +59,7 @@ jobs:
           echo "Timed out waiting for Netlify preview commit $EXPECTED_COMMIT" >&2
           exit 1
       - name: Lighthouse CI
+        id: lighthouse
         uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # v12
         with:
           configPath: .lighthouserc.${{ matrix.profile }}.json
@@ -72,3 +73,28 @@ jobs:
           uploadArtifacts: true
           artifactName: lighthouse-${{ matrix.profile }}-results
           temporaryPublicStorage: true
+      - name: Verify performance assertions were executed
+        if: always()
+        env:
+          ASSERTION_RESULTS: ${{ steps.lighthouse.outputs.assertionResults }}
+        run: |
+          node <<'NODE'
+          const results = JSON.parse(process.env.ASSERTION_RESULTS || "[]");
+          const requiredAudits = new Set([
+            "largest-contentful-paint",
+            "cumulative-layout-shift",
+            "total-blocking-time",
+          ]);
+          if (!Array.isArray(results) || results.length < 15) {
+            throw new Error(`Expected at least 15 enforced assertions; received ${results.length || 0}`);
+          }
+          for (const auditId of requiredAudits) {
+            if (!results.some((result) => result.auditId === auditId)) {
+              throw new Error(`Missing enforced assertion for ${auditId}`);
+            }
+          }
+          const failures = results.filter((result) => result.level === "error" && !result.passed);
+          if (failures.length) {
+            throw new Error(`${failures.length} performance assertion(s) failed`);
+          }
+          NODE

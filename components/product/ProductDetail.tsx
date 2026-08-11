@@ -717,12 +717,9 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
       </div>
 
       {/* Sticky mobile buy bar — the inline Add-to-bag can sit far below the fold
-          on phones. Adds a persistent price + action without touching desktop.
-          Offsets above the cookie banner while consent is unresolved: the banner
-          is z-[400] and full width, so bottom-0 here put "Accept" directly on top
-          of "Add to bag" and a buy tap silently granted analytics consent.
-          Stacking (not raising z-index) keeps Reject reachable. */}
-      <div data-testid="sticky-buy-bar" className="safe-bottom safe-x fixed inset-x-0 bottom-[var(--aha-consent-h,0px)] z-[80] border-t border-border/60 bg-void/95 backdrop-blur-sm transition-[bottom] duration-200 motion-reduce:transition-none lg:hidden">
+          on phones. The consent prompt temporarily owns the fixed bottom surface,
+          so this bar stays hidden and non-interactive until privacy is resolved. */}
+      <div data-testid="sticky-buy-bar" data-aha-consent-gated-fixed="" className="safe-bottom safe-x fixed inset-x-0 bottom-0 z-[80] border-t border-border/60 bg-void/95 backdrop-blur-sm lg:hidden">
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
           {canBuy ? (
             <>
