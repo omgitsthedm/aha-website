@@ -181,6 +181,7 @@ test("@security the production CSP is present on the document", async ({ page })
   expect(csp).toContain("object-src 'none'");
   expect(csp).toContain("frame-ancestors 'none'");
   expect(csp).toContain("https://web.squarecdn.com");
+  expect(csp).toContain("https://www.gstatic.com");
   expect(csp).not.toContain("upgrade-insecure-requests");
   expect(headers["x-xss-protection"]).toBeUndefined();
   expect(headers["x-powered-by"]).toBeUndefined();

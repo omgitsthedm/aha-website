@@ -19,6 +19,9 @@ const jetBrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
   display: "swap",
+  // Poppins paints the homepage LCP. The mono face is supporting UI copy, so
+  // it can swap in without competing on the initial critical path.
+  preload: false,
   weight: ["400", "500", "700"],
 });
 
