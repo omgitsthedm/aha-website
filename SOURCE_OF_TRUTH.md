@@ -22,17 +22,16 @@ This file contains the current routing and operational contract. Detailed design
 
 The retired iCloud backup family is not an active source and must remain untouched. A visible compatibility path is valid only when `pwd -P` resolves to the canonical physical checkout above.
 
-## Current production baseline
+## Service restoration and release baseline
 
 - **Production deploy ID**: `6a679898148e9000086c19b3`
 - **Deployed source commit**: `61946684db42559ba95dad43d718e2eb890c21fa`
 - **Artifact state**: `ready`
 - **Published**: July 27, 2026 at 17:44:07 UTC
-- **Current availability**: HTTP 503 `usage_exceeded` on the primary, default, branch, and immutable deploy URLs
-- **Account cause**: the Little Fight NYC Netlify team exhausted its 3,000 monthly credits at `2026-08-11T00:09:58.905Z`; auto-recharge is off
-- **Automatic reset**: August 16, 2026 at 00:00 America/Phoenix unless a Team Owner restores credits sooner
+- **Current availability**: HTTP 200 on the primary and default domains after Netlify service restoration
+- **Release state**: the ready artifact above predates the validated August 10 cleanup and dependency patches on GitHub `main`
 
-The published artifact is still marked ready, but the team-level credit pause prevents it from serving web requests or accepting deploys. Do not describe the storefront as live or healthy until the account returns to operational mode and the exact-site live checks pass. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
+Public delivery has resumed. The first unskipped `main` push after restoration is the authorized Git-connected release of the accumulated, locally validated source. Do not declare source parity until that exact commit reaches a ready production deploy and the exact-site live checks pass. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
 
 ## Runtime ownership
 
