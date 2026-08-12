@@ -12,7 +12,7 @@
   # Without this, Netlify secrets scanning fails the build (exit 2) on these
   # values. Real secrets (SQUARE_ACCESS_TOKEN, PRINTFUL_API_TOKEN, webhook
   # signature keys) are NOT listed here and remain fully scanned.
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SQUARE_APP_ID,SQUARE_APPLICATION_ID,SQUARE_LOCATION_ID,PRINTFUL_STORE_ID"
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SQUARE_APP_ID,NEXT_PUBLIC_GTM_ID,SQUARE_APPLICATION_ID,SQUARE_LOCATION_ID,PRINTFUL_STORE_ID"
   # Printful v2 defaults. Non-production contexts remain dry-run and never confirm orders.
   PRINTFUL_API_VERSION = "v2-beta"
   PRINTFUL_API_BASE_URL = "https://api.printful.com/v2"
@@ -22,6 +22,9 @@
 # ── Production (main) ────────────────────────────────────────────────────────
 # Production: a verified Square payment creates and confirms the mapped Printful order.
 [context.production.environment]
+  # Public container ID: consent and canonical-host gated by GoogleAnalytics.
+  # With this set, the component never renders direct gtag.js, preventing duplicate GA4 pageviews.
+  NEXT_PUBLIC_GTM_ID = "GTM-NDDT5PXZ"
   SQUARE_ENVIRONMENT = "production"
   # Must exactly match Square's enabled production subscription for signature verification.
   SQUARE_WEBHOOK_NOTIFICATION_URL = "https://afterhoursagenda.netlify.app/api/webhooks/square"
