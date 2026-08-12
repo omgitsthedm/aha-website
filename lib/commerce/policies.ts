@@ -1,6 +1,12 @@
-export const PRODUCTION_WINDOW = "2 to 5 business days";
-export const DELIVERY_WINDOW = "usually 5 to 10 business days after production";
-export const RETURNS_WINDOW = "30 days";
+export const PRODUCTION_MIN_BUSINESS_DAYS = 2;
+export const PRODUCTION_MAX_BUSINESS_DAYS = 5;
+export const DELIVERY_MIN_BUSINESS_DAYS_AFTER_PRODUCTION = 5;
+export const DELIVERY_MAX_BUSINESS_DAYS_AFTER_PRODUCTION = 10;
+export const RETURNS_WINDOW_DAYS = 30;
+
+export const PRODUCTION_WINDOW = `${PRODUCTION_MIN_BUSINESS_DAYS} to ${PRODUCTION_MAX_BUSINESS_DAYS} business days`;
+export const DELIVERY_WINDOW = `usually ${DELIVERY_MIN_BUSINESS_DAYS_AFTER_PRODUCTION} to ${DELIVERY_MAX_BUSINESS_DAYS_AFTER_PRODUCTION} business days after production`;
+export const RETURNS_WINDOW = `${RETURNS_WINDOW_DAYS} days`;
 
 export const RETURNS_SUMMARY =
   "Unworn items can be returned within 30 days and we cover return shipping; made-to-order production fees may be non-refundable once printing starts.";
@@ -16,6 +22,8 @@ export const TAX_LINE_COPY =
 
 /** Domestic ships free; every other country the storefront sells to is a $20 flat rate per order. */
 export const DOMESTIC_COUNTRY = "US";
+export const INTERNATIONAL_COUNTRIES = ["CA", "GB", "AU"] as const;
+export const SHIPPING_COUNTRIES = [DOMESTIC_COUNTRY, ...INTERNATIONAL_COUNTRIES] as const;
 export const INTERNATIONAL_SHIPPING_CENTS = 2000;
 export const INTERNATIONAL_SHIPPING_LABEL = "International shipping";
 
