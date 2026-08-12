@@ -78,6 +78,19 @@ test("@privacy a stored choice stays hidden without a hydration warning and can 
   expect(hydrationMessages).toEqual([]);
 });
 
+test("@privacy a local preview never mounts Google Analytics after stored consent", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "Host-bound analytics behavior is covered once in Chromium.");
+  const googleRequests: string[] = [];
+  page.on("request", (request) => {
+    if (/googletagmanager|google-analytics|analytics\.google/i.test(request.url())) googleRequests.push(request.url());
+  });
+  await page.route(/https?:\/\/(?:www\.googletagmanager\.com|www\.google-analytics\.com|connect\.facebook\.net|www\.facebook\.com|analytics\.tiktok\.com)\//i, (route) => route.abort());
+  await page.addInitScript(() => window.localStorage.setItem("aha-cookie-consent", "granted"));
+  await page.goto("/");
+  await page.waitForTimeout(150);
+  expect(googleRequests).toEqual([]);
+});
+
 test("@privacy GPC overrides a stored grant and reopens with only the keep-off choice", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "GPC browser behavior is covered once in Chromium.");
   const trackingRequests: string[] = [];

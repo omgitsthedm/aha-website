@@ -239,7 +239,20 @@ export function CheckoutForm({ squareConfig }: Props) {
 
   useEffect(() => {
     if (items.length > 0) {
-      trackCommerceEvent({ name: "begin_checkout", valueCents: total, currency: "USD", quantity: items.reduce((sum, item) => sum + item.quantity, 0) });
+      trackCommerceEvent({
+        name: "begin_checkout",
+        valueCents: total,
+        currency: "USD",
+        quantity: items.reduce((sum, item) => sum + item.quantity, 0),
+        // Cart data is product-only: never include checkout contact or address fields.
+        items: items.map(({ productId, name, variationName, price, quantity }) => ({
+          itemId: productId,
+          itemName: name,
+          itemVariant: variationName,
+          priceCents: price,
+          quantity,
+        })),
+      });
     }
   }, [items, total]);
 
