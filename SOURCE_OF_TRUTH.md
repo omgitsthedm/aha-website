@@ -78,7 +78,7 @@ Use the skip marker only when the diff cannot change the built storefront or run
 
 ## Current dependency baseline
 
-The August 11 release migrated the storefront to Next.js 16.3.0 and React 19.2.8. This removed the inherited Sharp advisory. The full and production-only npm audits both report zero known vulnerabilities at this baseline. Keep Dependabot, dependency review, pinned workflow actions, and both audit gates active. Future major migrations still require full local, preview, and production verification. Do not use `npm audit fix --force` as a release shortcut.
+The August 11 release migrated the storefront to Next.js 16.3.0 and React 19.2.8. This removed the inherited Sharp advisory. The full and production-only npm audits both reported zero known vulnerabilities during this verification. Keep Dependabot, dependency review, pinned workflow actions, and the npm-audit gate active. Future major migrations still require full local, preview, and production verification. Do not use `npm audit fix --force` as a release shortcut.
 
 ## Task-specific references
 
