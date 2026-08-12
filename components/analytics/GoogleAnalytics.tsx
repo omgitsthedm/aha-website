@@ -10,11 +10,11 @@ import { isCanonicalAnalyticsHost } from "@/lib/analytics/host";
  * Lights up analytics the moment a measurement id is set in the environment —
  * and stays completely inert (renders nothing, loads nothing) until then.
  *
- * A direct GA4 tag (`NEXT_PUBLIC_GA4_ID`, `G-XXXXXXXXXX`) is the shipped path:
- * `trackCommerceEvent` calls `window.gtag` with real GA4 ecommerce parameters,
- * so no container mapping is needed. A GTM container (`NEXT_PUBLIC_GTM_ID`,
- * `GTM-XXXXXXX`) still takes precedence when one is configured, and receives
- * the historic `aha_*` dataLayer objects instead.
+ * A GTM container (`NEXT_PUBLIC_GTM_ID`, `GTM-XXXXXXX`) is the preferred
+ * production path. When configured it takes precedence over direct GA4, so the
+ * direct `gtag.js` tag never renders and cannot duplicate pageviews. Commerce
+ * events are delivered as the existing `aha_*` dataLayer objects. Direct GA4
+ * (`NEXT_PUBLIC_GA4_ID`, `G-XXXXXXXXXX`) remains the fallback only.
  *
  * Tracking is strictly opt-in: nothing loads until consent is granted. Add
  * Google Consent Mode here if granular EU consent categories are later needed.
