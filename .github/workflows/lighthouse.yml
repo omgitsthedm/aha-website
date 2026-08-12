@@ -32,8 +32,33 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with: { node-version: "20.20.2", cache: "npm" }
+      - name: Classify documentation-only changes
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          docs_only=false
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            git fetch --no-tags --depth=1 origin "$BASE_SHA"
+            git fetch --no-tags --depth=1 origin "$HEAD_SHA"
+            mapfile -t changed_paths < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+            if (( ${#changed_paths[@]} > 0 )); then
+              docs_only=true
+              for changed_path in "${changed_paths[@]}"; do
+                case "$changed_path" in
+                  SOURCE_OF_TRUTH.md|docs/*) ;;
+                  *) docs_only=false ;;
+                esac
+              done
+            fi
+          fi
+          echo "docs_only=$docs_only" >> "$GITHUB_OUTPUT"
+          echo "Documentation-only release evidence: $docs_only"
       - name: Resolve exact release target
         id: target
+        if: steps.scope.outputs.docs_only != 'true'
         env:
           EVENT_NAME: ${{ github.event_name }}
           EXPECTED_COMMIT: ${{ github.event.pull_request.head.sha }}
@@ -60,6 +85,7 @@ jobs:
           exit 1
       - name: Lighthouse CI
         id: lighthouse
+        if: steps.scope.outputs.docs_only != 'true'
         uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # v12
         with:
           configPath: .lighthouserc.${{ matrix.profile }}.json
@@ -77,8 +103,13 @@ jobs:
         if: always()
         env:
           ASSERTION_RESULTS: ${{ steps.lighthouse.outputs.assertionResults }}
+          DOCS_ONLY: ${{ steps.scope.outputs.docs_only }}
         run: |
           node <<'NODE'
+          if (process.env.DOCS_ONLY === "true") {
+            console.log("Verified documentation-only diff; no deploy-dependent performance evidence required.");
+            process.exit(0);
+          }
           const results = JSON.parse(process.env.ASSERTION_RESULTS || "[]");
           const requiredAudits = new Set([
             "largest-contentful-paint",
