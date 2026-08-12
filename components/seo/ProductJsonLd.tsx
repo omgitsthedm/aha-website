@@ -1,9 +1,64 @@
 import type { Product } from "@/lib/utils/types";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
+import {
+  DELIVERY_MAX_BUSINESS_DAYS_AFTER_PRODUCTION,
+  DELIVERY_MIN_BUSINESS_DAYS_AFTER_PRODUCTION,
+  DOMESTIC_COUNTRY,
+  INTERNATIONAL_SHIPPING_CENTS,
+  PRODUCTION_MAX_BUSINESS_DAYS,
+  PRODUCTION_MIN_BUSINESS_DAYS,
+  RETURNS_WINDOW_DAYS,
+  SHIPPING_COUNTRIES,
+} from "@/lib/commerce/policies";
 import { absolutizeImage } from "@/lib/utils/image-helpers";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com";
+
+function buildShippingDetails(currency: string) {
+  return SHIPPING_COUNTRIES.map((country) => ({
+    "@type": "OfferShippingDetails",
+    shippingRate: {
+      "@type": "MonetaryAmount",
+      value:
+        country === DOMESTIC_COUNTRY
+          ? 0
+          : INTERNATIONAL_SHIPPING_CENTS / 100,
+      currency,
+    },
+    shippingDestination: {
+      "@type": "DefinedRegion",
+      addressCountry: country,
+    },
+    deliveryTime: {
+      "@type": "ShippingDeliveryTime",
+      handlingTime: {
+        "@type": "QuantitativeValue",
+        minValue: PRODUCTION_MIN_BUSINESS_DAYS,
+        maxValue: PRODUCTION_MAX_BUSINESS_DAYS,
+        unitCode: "DAY",
+      },
+      transitTime: {
+        "@type": "QuantitativeValue",
+        minValue: DELIVERY_MIN_BUSINESS_DAYS_AFTER_PRODUCTION,
+        maxValue: DELIVERY_MAX_BUSINESS_DAYS_AFTER_PRODUCTION,
+        unitCode: "DAY",
+      },
+    },
+  }));
+}
+
+function buildReturnPolicy() {
+  return {
+    "@type": "MerchantReturnPolicy",
+    applicableCountry: [...SHIPPING_COUNTRIES],
+    returnPolicyCategory:
+      "https://schema.org/MerchantReturnFiniteReturnWindow",
+    merchantReturnDays: RETURNS_WINDOW_DAYS,
+    returnMethod: "https://schema.org/ReturnByMail",
+    merchantReturnLink: `${BASE_URL}/returns`,
+  };
+}
 
 interface ProductJsonLdProps {
   product: Product;
@@ -26,6 +81,10 @@ export function ProductJsonLd({ product, description, reviews }: ProductJsonLdPr
     .replace(/<[^>]*>/g, "")
     .slice(0, 500);
 
+  const offerCurrency = product.currency || "USD";
+  const shippingDetails = buildShippingDetails(offerCurrency);
+  const returnPolicy = buildReturnPolicy();
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -41,9 +100,11 @@ export function ProductJsonLd({ product, description, reviews }: ProductJsonLdPr
       "@type": "Offer",
       sku: variation.sku || variation.id,
       price: (variation.price / 100).toFixed(2),
-      priceCurrency: product.currency || "USD",
+      priceCurrency: offerCurrency,
       availability: "https://schema.org/InStock",
       url: `${BASE_URL}/product/${product.slug}`,
+      shippingDetails,
+      hasMerchantReturnPolicy: returnPolicy,
       seller: {
         "@type": "Organization",
         name: "After Hours Agenda",
