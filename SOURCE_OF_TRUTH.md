@@ -1,6 +1,6 @@
 # After Hours Agenda source of truth
 
-Last verified: August 12, 2026 from local Git, GitHub, the Netlify application programming interface (API), and public Hypertext Transfer Protocol Secure (HTTPS) checks.
+Last verified: August 15, 2026 from local Git, GitHub, the Netlify application programming interface (API), and public Hypertext Transfer Protocol Secure (HTTPS) checks.
 
 This file contains the current routing and operational contract. Detailed design, commerce, legal, and historical evidence remains available on demand under `docs/` and in Git history.
 
@@ -24,14 +24,16 @@ The retired iCloud backup family is not an active source and must remain untouch
 
 ## Service restoration and release baseline
 
-- **Production deploy ID**: `6a7cd8518a4b5e0008c82a2d`
-- **Deployed source commit**: `60414d2c4eb9e0538287620fd7d3abd22c83212c`
+- **Production deploy ID**: `6a7cfebff4731e0008482e3b`
+- **Deployed source commit**: `bce654b0725bb040147d6332338d30338c4dc4bd`
 - **Artifact state**: `ready`
-- **Published**: August 12, 2026 at 20:33:13 UTC
+- **Published**: August 12, 2026 at 23:17:07.250 UTC
+- **Netlify production branch**: `main`
+- **Release title**: `feat: route consented analytics through GTM (#36)`
 - **Current availability**: HTTP 200 on the primary, default, branch, and deploy-specific domains
-- **Release state**: live deploy and source parity verified after [pull request #33](https://github.com/omgitsthedm/aha-website/pull/33)
+- **Release state**: live deploy and `/release.json` parity verified for the current production release
 
-The primary, default, branch, and deploy-specific homepages each returned HTTP 200. Their 349,843-byte bodies were byte-identical, with SHA-256 `1a66eb2a9ed476470801d9be88e4dab5e19dddaf082130dd3275c35f51dccc30`. The exact-site live guard passed. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, and behavior before declaring drift.
+The primary, default, branch, and deploy-specific homepages each returned HTTP 200 during the current release verification, and the exact-site live guard passed. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, `/release.json`, and behavior before declaring drift.
 
 ## Runtime ownership
 
