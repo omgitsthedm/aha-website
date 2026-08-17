@@ -7,7 +7,7 @@ const seenSyncVariants = new Set<string>();
 for (const p of loadProducts()) {
   if (p.status !== "active") continue;
   for (const v of p.variants) {
-    if (v.status !== "active") continue;
+    if (v.status !== "active" || v.fulfillmentProvider !== "printful") continue;
     const id = `${p.slug}/${v.sku}`;
     // printfulCatalogProductId is not required for sync_variant fulfillment.
     if (!v.printfulCatalogVariantId) errors.push(`[${id}] missing printfulCatalogVariantId`);

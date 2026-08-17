@@ -1,0 +1,2 @@
+ALTER TABLE "webhook_events" ADD COLUMN "processing_started_at" timestamp with time zone;--> statement-breakpoint
+CREATE UNIQUE INDEX "uniq_apliiq_shipment_provider_id" ON "shipments" ("fulfillment_provider","provider_shipment_id") WHERE "fulfillment_provider" = 'apliiq' and "provider_shipment_id" is not null;

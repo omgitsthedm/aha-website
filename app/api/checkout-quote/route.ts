@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { revalidateCart, type CheckoutLine, type OrderContact } from "@/lib/commerce/orders";
+import {
+  assertCartFulfillableToCountry,
+  revalidateCart,
+  type CheckoutLine,
+  type OrderContact,
+} from "@/lib/commerce/orders";
 import { calculatePricedSquareOrder } from "@/lib/square/orders";
 import { getSquareLocationId } from "@/lib/commerce/runtime";
 import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
@@ -33,6 +38,7 @@ export async function POST(request: Request) {
   let cart;
   try {
     cart = revalidateCart(body.lines);
+    assertCartFulfillableToCountry(cart, address.country);
   } catch (error) {
     return NextResponse.json({
       error: error instanceof Error ? error.message : "Cart could not be validated.",

@@ -1,5 +1,16 @@
 # Product factory: design in, product out
 
+## Current catalog hold and APLIIQ intake
+
+The legacy Printful factory below is retained for historical recovery only. It is not the APLIIQ publishing path, and the archived Square catalog must not be resurrected through it. The public catalog remains closed until a new APLIIQ assortment is deliberately approved.
+
+APLIIQ product intake uses two review-only callbacks:
+
+- `POST /api/integrations/apliiq/products/upsert` validates the provider payload and stores one `pending_review` draft per APQ SKU.
+- `GET /api/integrations/apliiq/products/search` returns only products already represented by a committed, sale-ready `data/apliiq-map.json` mapping.
+
+Both require the dedicated `APLIIQ_PRODUCT_CALLBACK_TOKEN`; neither accepts the API shared secret. Intake never writes `data/product-manifest.json`, `data/apliiq-map.json`, Square, or active storefront state. Human review must establish the APQ production SKU, decoration and private-label snapshots, HTTPS assets, supported regions, size guide, verified cost/margin timestamps, physical sample approval, and active Square variation before a line can become purchasable. `npm run validate:apliiq-map` and `npm run validate:all` fail closed on incomplete committed mappings.
+
 This tool can create provider records, change catalog mappings, commit files, push `main`, and publish products. Start with a dry run. Use any live or push mode only when the current request explicitly authorizes those exact effects.
 
 `npm run product:new` is the guided wrapper for garment presets and art hosting. Without `--live`, it prints a local preview and changes nothing. Its live mode creates provider records, commits, pushes `main`, and waits for production, so the same authorization boundary applies.

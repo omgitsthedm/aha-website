@@ -18,6 +18,13 @@
   PRINTFUL_API_BASE_URL = "https://api.printful.com/v2"
   PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
   PRINTFUL_LIVE_MODE = "false"
+  # APLIIQ infrastructure ships fail-closed. Production order submission stays
+  # disabled until credentials, approved APQ mappings, samples, and the live
+  # pilot have all been verified separately.
+  APLIIQ_API_BASE_URL = "https://api.apliiq.com/v1"
+  APLIIQ_DEFAULT_SHIPPING = "standard"
+  APLIIQ_ALLOW_CREATE_ORDERS = "false"
+  APLIIQ_LIVE_MODE = "false"
 
 # ── Production (main) ────────────────────────────────────────────────────────
 # Production: a verified Square payment creates and confirms the mapped Printful order.
@@ -31,6 +38,8 @@
   AHA_FULFILLMENT_MODE = "auto"
   PRINTFUL_ALLOW_CONFIRM_ORDERS = "true"
   PRINTFUL_LIVE_MODE = "true"
+  APLIIQ_ALLOW_CREATE_ORDERS = "false"
+  APLIIQ_LIVE_MODE = "false"
 
 # ── Staging (persistent branch deploy) ───────────────────────────────────────
 [context."staging".environment]
@@ -39,6 +48,8 @@
   AHA_FULFILLMENT_MODE = "dry-run"
   PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
   PRINTFUL_LIVE_MODE = "false"
+  APLIIQ_ALLOW_CREATE_ORDERS = "false"
+  APLIIQ_LIVE_MODE = "false"
 
 # ── Deploy Previews (feature/*, drop/*) ──────────────────────────────────────
 [context.deploy-preview.environment]
@@ -47,6 +58,8 @@
   AHA_FULFILLMENT_MODE = "dry-run"
   PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
   PRINTFUL_LIVE_MODE = "false"
+  APLIIQ_ALLOW_CREATE_ORDERS = "false"
+  APLIIQ_LIVE_MODE = "false"
 
 # ── All other branch deploys ─────────────────────────────────────────────────
 [context.branch-deploy.environment]
@@ -55,6 +68,8 @@
   AHA_FULFILLMENT_MODE = "dry-run"
   PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
   PRINTFUL_LIVE_MODE = "false"
+  APLIIQ_ALLOW_CREATE_ORDERS = "false"
+  APLIIQ_LIVE_MODE = "false"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

@@ -3,8 +3,9 @@
 // Rules (§14): external IDs stored; purchase-time snapshots; payment vs fulfillment status
 // SEPARATE; raw webhook payloads stored + deduped; no card data; no API tokens; minimize PII.
 import {
-  pgTable, serial, bigserial, bigint, text, integer, boolean, timestamp, jsonb, unique, index,
+  pgTable, serial, bigserial, bigint, text, integer, boolean, timestamp, jsonb, unique, uniqueIndex, index, check,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 const cents = (name: string) => integer(name);
 const createdAt = () => timestamp("created_at", { withTimezone: true }).defaultNow().notNull();
@@ -37,13 +38,23 @@ export const productVariants = pgTable("product_variants", {
   squareCatalogObjectId: text("square_catalog_object_id"),
   squareVariationId: text("square_variation_id"),
   squareLocationId: text("square_location_id"),
+  // Provider-neutral catalog identity. The Printful columns remain the legacy
+  // record and are intentionally retained for historical orders and rollback.
+  fulfillmentProvider: text("fulfillment_provider").notNull().default("printful"),
+  providerProductId: text("provider_product_id"),
+  providerVariantId: text("provider_variant_id"),
+  providerSku: text("provider_sku"),
+  providerDataJson: jsonb("provider_data_json"),
   printfulCatalogProductId: integer("printful_catalog_product_id"),
   printfulCatalogVariantId: integer("printful_catalog_variant_id"),
   printfulPlacementsJson: jsonb("printful_placements_json"),
   costEstimate: cents("cost_estimate"),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
-}, (t) => ({ byProduct: index("idx_variants_product").on(t.productId) }));
+}, (t) => ({
+  byProduct: index("idx_variants_product").on(t.productId),
+  validProvider: check("chk_variants_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
+}));
 
 export const collections = pgTable("collections", {
   id: text("id").primaryKey(), slug: text("slug").notNull().unique(),
@@ -76,6 +87,27 @@ export const printfulV2CatalogSnapshots = pgTable("printful_v2_catalog_snapshots
   id: bigserial("id", { mode: "number" }).primaryKey(),
   takenAt: timestamp("taken_at", { withTimezone: true }).defaultNow().notNull(), payloadJson: jsonb("payload_json").notNull(),
 });
+// Inbound provider catalog records remain review-only until an operator maps
+// and approves them into data/apliiq-map.json. No callback handler writes live
+// catalog or Square records directly.
+export const providerProductDrafts = pgTable("provider_product_drafts", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  provider: text("provider").notNull(),
+  providerProductId: text("provider_product_id").notNull(),
+  providerVariantId: text("provider_variant_id"),
+  providerSku: text("provider_sku"),
+  status: text("status").notNull().default("pending_review"),
+  payloadJson: jsonb("payload_json").notNull().default({}),
+  receivedAt: timestamp("received_at", { withTimezone: true }).defaultNow().notNull(),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+}, (t) => ({
+  uniqProviderDraft: unique("uniq_provider_product_draft").on(t.provider, t.providerProductId, t.providerVariantId).nullsNotDistinct(),
+  byProviderStatus: index("idx_provider_product_drafts_status").on(t.provider, t.status, t.createdAt),
+  validProvider: check("chk_provider_product_drafts_provider", sql`${t.provider} in ('printful', 'apliiq')`),
+  validStatus: check("chk_provider_product_drafts_status", sql`${t.status} in ('pending_review', 'approved', 'rejected', 'archived')`),
+}));
 
 // ── Customers / carts ────────────────────────────────────────────────────────
 export const customers = pgTable("customers", {
@@ -123,10 +155,16 @@ export const orderItems = pgTable("order_items", {
   sizeSnapshot: text("size_snapshot"), colorSnapshot: text("color_snapshot"),
   quantity: integer("quantity").notNull(), unitPrice: cents("unit_price").notNull(), lineTotal: cents("line_total").notNull(),
   squareVariationId: text("square_variation_id"), printfulCatalogVariantId: integer("printful_catalog_variant_id"),
+  fulfillmentProvider: text("fulfillment_provider").notNull().default("printful"),
+  providerVariantId: text("provider_variant_id"), providerSku: text("provider_sku"),
+  providerSnapshotJson: jsonb("provider_snapshot_json"),
   printfulPlacementSnapshotJson: jsonb("printful_placement_snapshot_json"), printfulFileSnapshotJson: jsonb("printful_file_snapshot_json"),
   fulfillmentStatus: text("fulfillment_status").notNull().default("not_started"),
   createdAt: createdAt(), updatedAt: updatedAt(),
-}, (t) => ({ byOrder: index("idx_order_items_order").on(t.orderId) }));
+}, (t) => ({
+  byOrder: index("idx_order_items_order").on(t.orderId),
+  validProvider: check("chk_order_items_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
+}));
 
 export const payments = pgTable("payments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
@@ -139,18 +177,40 @@ export const fulfillments = pgTable("fulfillments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
   providerStoreId: integer("provider_store_id"),
+  fulfillmentProvider: text("fulfillment_provider").notNull().default("printful"),
+  // Required idempotent claim boundary within an AHA order. Examples:
+  // printful:<store-id>, apliiq:default.
+  providerClaimKey: text("provider_claim_key").notNull(),
+  providerReference: text("provider_reference"), providerRequestId: text("provider_request_id"),
+  providerOrderId: text("provider_order_id"), providerDataJson: jsonb("provider_data_json"),
   printfulOrderId: text("printful_order_id").unique(), status: text("status").notNull().default("not_started"),
   lastError: text("last_error"),
   createdAt: createdAt(), updatedAt: updatedAt(),
-}, (t) => ({ uniqOrderStore: unique("uniq_fulfillment_order_store").on(t.orderId, t.providerStoreId) }));
+}, (t) => ({
+  uniqOrderStore: unique("uniq_fulfillment_order_store").on(t.orderId, t.providerStoreId),
+  uniqOrderClaim: unique("uniq_fulfillment_order_claim").on(t.orderId, t.providerClaimKey),
+  uniqProviderRequest: unique("uniq_fulfillment_provider_request").on(t.fulfillmentProvider, t.providerRequestId),
+  uniqProviderOrder: unique("uniq_fulfillment_provider_order").on(t.fulfillmentProvider, t.providerOrderId),
+  validProvider: check("chk_fulfillments_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
+}));
 export const shipments = pgTable("shipments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
+  fulfillmentProvider: text("fulfillment_provider").notNull().default("printful"),
+  providerShipmentId: text("provider_shipment_id"),
   printfulShipmentId: text("printful_shipment_id"), carrier: text("carrier"),
   trackingNumber: text("tracking_number"), trackingUrl: text("tracking_url"), status: text("status"),
   shippedAt: timestamp("shipped_at", { withTimezone: true }), deliveredAt: timestamp("delivered_at", { withTimezone: true }),
   dataJson: jsonb("data_json"),
-});
+}, (t) => ({
+  // Historical Printful rows predate provider-neutral shipment identity and
+  // may contain duplicate/blank provider ids. Enforce race-safe uniqueness on
+  // the new APLIIQ path without making the additive migration rewrite history.
+  uniqApliiqProviderShipment: uniqueIndex("uniq_apliiq_shipment_provider_id")
+    .on(t.fulfillmentProvider, t.providerShipmentId)
+    .where(sql`${t.fulfillmentProvider} = 'apliiq' and ${t.providerShipmentId} is not null`),
+  validProvider: check("chk_shipments_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
+}));
 
 // ── Growth / retention ───────────────────────────────────────────────────────
 export const restockRequests = pgTable("restock_requests", {
@@ -211,7 +271,9 @@ export const webhookEvents = pgTable("webhook_events", {
   signature: text("signature"), signatureValid: boolean("signature_valid").notNull().default(false),
   rawPayload: jsonb("raw_payload").notNull(), processingStatus: text("processing_status").notNull().default("received"),
   dedupeKey: text("dedupe_key").notNull(), retryCount: integer("retry_count").notNull().default(0),
-  lastError: text("last_error"), processedAt: timestamp("processed_at", { withTimezone: true }), createdAt: createdAt(),
+  lastError: text("last_error"),
+  processingStartedAt: timestamp("processing_started_at", { withTimezone: true }),
+  processedAt: timestamp("processed_at", { withTimezone: true }), createdAt: createdAt(),
 }, (t) => ({ uniqEvent: unique("uniq_webhook").on(t.provider, t.dedupeKey) }));
 export const auditLog = pgTable("audit_log", {
   id: bigserial("id", { mode: "number" }).primaryKey(),

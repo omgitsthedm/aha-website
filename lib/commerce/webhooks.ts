@@ -3,7 +3,7 @@
 // and idempotent; a webhook never creates fulfillment (that's the paid-order path) — it reconciles.
 import { db, isDbConfigured } from "@/lib/db/client";
 import { webhookEvents, orders, fulfillments, shipments, auditLog } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq, isNull, lt, or } from "drizzle-orm";
 import { syncOrderFulfillmentStatus } from "./fulfillment";
 import { dispatchOrderNotifications, enqueueOrderNotification } from "./notifications";
 import { sendOrderShippedPush } from "@/lib/push/webpush";
@@ -16,20 +16,75 @@ const get = (o: unknown, ...path: string[]): unknown =>
 export async function recordWebhookEvent(input: {
   provider: string; eventId?: string | null; eventType?: string | null;
   signatureValid: boolean; rawPayload: unknown; dedupeKey: string;
-}): Promise<{ isNew: boolean; eventRecordId: number | null }> {
-  if (!isDbConfigured()) return { isNew: true, eventRecordId: null };
+}): Promise<{
+  isNew: boolean;
+  eventRecordId: number | null;
+  processingStatus: string | null;
+}> {
+  if (!isDbConfigured()) {
+    return { isNew: true, eventRecordId: null, processingStatus: null };
+  }
   const inserted = await db().insert(webhookEvents).values({
     provider: input.provider, eventId: input.eventId ?? null, eventType: input.eventType ?? null,
     signatureValid: input.signatureValid, rawPayload: input.rawPayload as Json,
     dedupeKey: input.dedupeKey, processingStatus: "received",
   }).onConflictDoNothing().returning({ id: webhookEvents.id });
-  return { isNew: inserted.length > 0, eventRecordId: inserted[0]?.id ?? null };
+  if (inserted[0]) {
+    return { isNew: true, eventRecordId: inserted[0].id, processingStatus: "received" };
+  }
+  const [existing] = await db().select({
+    id: webhookEvents.id,
+    processingStatus: webhookEvents.processingStatus,
+  }).from(webhookEvents).where(and(
+    eq(webhookEvents.provider, input.provider),
+    eq(webhookEvents.dedupeKey, input.dedupeKey),
+  )).limit(1);
+  return {
+    isNew: false,
+    eventRecordId: existing?.id ?? null,
+    processingStatus: existing?.processingStatus ?? null,
+  };
+}
+
+/**
+ * Atomically lease a durable event. A redelivery may immediately recover an
+ * unclaimed `received` row or a failed attempt; only a genuinely stale active
+ * lease can be reclaimed while another invocation may still be running.
+ */
+export async function claimWebhookEvent(
+  eventRecordId: number | null,
+  now = new Date(),
+  leaseMilliseconds = 5 * 60 * 1000,
+): Promise<boolean> {
+  if (!eventRecordId || !isDbConfigured()) return false;
+  const staleBefore = new Date(now.getTime() - leaseMilliseconds);
+  const claimed = await db().update(webhookEvents).set({
+    processingStatus: "processing",
+    processingStartedAt: now,
+    processedAt: null,
+    lastError: null,
+  }).where(and(
+    eq(webhookEvents.id, eventRecordId),
+    or(
+      eq(webhookEvents.processingStatus, "received"),
+      eq(webhookEvents.processingStatus, "failed"),
+      and(
+        eq(webhookEvents.processingStatus, "processing"),
+        or(
+          isNull(webhookEvents.processingStartedAt),
+          lt(webhookEvents.processingStartedAt, staleBefore),
+        ),
+      ),
+    ),
+  )).returning({ id: webhookEvents.id });
+  return claimed.length === 1;
 }
 
 export async function markWebhookProcessed(eventRecordId: number | null): Promise<void> {
   if (!eventRecordId || !isDbConfigured()) return;
   await db().update(webhookEvents).set({
-    processingStatus: "processed", processedAt: new Date(), lastError: null,
+    processingStatus: "processed", processingStartedAt: null,
+    processedAt: new Date(), lastError: null,
   }).where(eq(webhookEvents.id, eventRecordId));
 }
 
@@ -40,7 +95,7 @@ export async function markWebhookFailed(eventRecordId: number | null, error: unk
     .from(webhookEvents).where(eq(webhookEvents.id, eventRecordId)).limit(1);
   await db().update(webhookEvents).set({
     processingStatus: "failed", retryCount: (row?.retryCount ?? 0) + 1,
-    lastError: message, processedAt: new Date(),
+    lastError: message, processingStartedAt: null, processedAt: new Date(),
   }).where(eq(webhookEvents.id, eventRecordId));
 }
 

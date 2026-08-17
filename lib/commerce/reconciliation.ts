@@ -1,58 +1,73 @@
 import { and, eq, inArray, lt } from "drizzle-orm";
 import { db, isDbConfigured } from "@/lib/db/client";
-import { fulfillments, orderItems, orders } from "@/db/schema";
+import { auditLog, fulfillments, orderItems, orders } from "@/db/schema";
 import { startFulfillment } from "./fulfillment";
-import { revalidateCartForFulfillmentRetry, type OrderContact, type RevalidatedCart, type RevalidatedItem } from "./orders";
+import { revalidateCartForFulfillmentRetry, type OrderContact, type RevalidatedCart } from "./orders";
+import {
+  FulfillmentSnapshotError,
+  isLegacyPrintfulSnapshotRepairEligible,
+  rebuildFulfillmentCartFromSnapshots,
+  type PersistedFulfillmentItem,
+} from "./fulfillment-snapshot";
+
+async function markFulfillmentManualReview(orderId: number, reason: string): Promise<void> {
+  const safeReason = reason.slice(0, 500);
+  await db().update(orders).set({
+    fulfillmentStatus: "manual_review", customerStatus: "Action needed", updatedAt: new Date(),
+  }).where(eq(orders.id, orderId));
+  await db().insert(auditLog).values({
+    entityType: "order", entityId: String(orderId), action: "fulfillment:manual_review",
+    newStatus: "manual_review", source: "reconciliation", metadataJson: { reason: safeReason },
+  });
+}
+
+function assertLegacyRepairMatchesPaidItems(cart: RevalidatedCart, items: PersistedFulfillmentItem[]): void {
+  if (cart.items.length !== items.length) throw new Error("Legacy Printful repair changed the paid order item count");
+  for (let index = 0; index < items.length; index += 1) {
+    const paid = items[index];
+    const repaired = cart.items[index];
+    if (repaired.fulfillmentProvider !== "printful" || paid.ahaProductId !== repaired.ahaProductId ||
+      paid.ahaVariantId !== repaired.ahaVariantId || paid.sku !== repaired.sku ||
+      paid.squareVariationId !== repaired.squareVariationId ||
+      (paid.printfulCatalogVariantId && paid.printfulCatalogVariantId !== repaired.printfulCatalogVariantId)) {
+      throw new Error("Legacy Printful repair did not match the immutable paid item identity");
+    }
+  }
+}
 
 export async function retryOrderFulfillment(orderId: number): Promise<void> {
   if (!isDbConfigured()) throw new Error("Production order store is unavailable.");
   const [order] = await db().select().from(orders).where(eq(orders.id, orderId)).limit(1);
   if (!order || order.paymentStatus !== "paid") throw new Error("Only paid orders can enter fulfillment.");
-  const items = await db().select().from(orderItems).where(eq(orderItems.orderId, orderId));
+  const items = await db().select().from(orderItems).where(eq(orderItems.orderId, orderId)) as PersistedFulfillmentItem[];
   if (!items.length) throw new Error("Order has no fulfillment items.");
 
-  // Re-derive the FULL fulfillment DNA (placements, product options, store id, catalog/sync
-  // variant ids) from the live manifest by squareVariationId — exactly the way create-payment
-  // built the order. This is the authoritative source and fixes the prior bug where the retry
-  // rebuilt catalog items WITHOUT placements (→ permanent manual_review). Fulfillment ignores
-  // retail price, so re-pricing in the derived cart is harmless. If a variant has since left the
-  // catalog, fall back to the persisted snapshot (now reading every field, not just sync id).
+  // Paid orders use the provider/art/SKU captured at purchase time. The only
+  // live-catalog exception is a strictly-identical legacy Printful repair for
+  // records that genuinely predate snapshots; malformed snapshots never fall
+  // through to current catalog data.
   let cart: RevalidatedCart;
   try {
-    const derived = revalidateCartForFulfillmentRetry(
-      items.map((item) => ({ squareVariationId: item.squareVariationId || "", quantity: item.quantity }))
-    );
-    cart = { currency: order.currency, subtotal: order.subtotalAmount, items: derived.items };
-  } catch {
-    cart = {
-      currency: order.currency,
-      subtotal: order.subtotalAmount,
-      items: items.map((item) => {
-        const snapshot = (item.printfulFileSnapshotJson || {}) as {
-          printfulSyncVariantId?: number;
-          printfulStoreId?: number;
-          printfulPlacements?: RevalidatedItem["printfulPlacements"];
-          printfulProductOptions?: RevalidatedItem["printfulProductOptions"];
-        };
-        return {
-          ahaProductId: item.ahaProductId,
-          ahaVariantId: item.ahaVariantId,
-          sku: item.sku,
-          title: item.titleSnapshot,
-          size: item.sizeSnapshot || "",
-          color: item.colorSnapshot || undefined,
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          lineTotal: item.lineTotal,
-          squareVariationId: item.squareVariationId || "",
-          printfulCatalogVariantId: item.printfulCatalogVariantId || undefined,
-          printfulSyncVariantId: snapshot.printfulSyncVariantId,
-          printfulStoreId: snapshot.printfulStoreId,
-          printfulPlacements: snapshot.printfulPlacements,
-          printfulProductOptions: snapshot.printfulProductOptions,
-        };
-      }),
-    };
+    cart = rebuildFulfillmentCartFromSnapshots(items, order.currency, order.subtotalAmount);
+  } catch (error) {
+    const canRepairLegacyPrintful = error instanceof FulfillmentSnapshotError && error.kind === "missing" &&
+      isLegacyPrintfulSnapshotRepairEligible(items);
+    if (!canRepairLegacyPrintful) {
+      const reason = error instanceof Error ? error.message : "Paid order fulfillment snapshot could not be reconstructed";
+      await markFulfillmentManualReview(order.id, reason);
+      throw error;
+    }
+    try {
+      const derived = revalidateCartForFulfillmentRetry(
+        items.map((item) => ({ squareVariationId: item.squareVariationId || "", quantity: item.quantity }))
+      );
+      assertLegacyRepairMatchesPaidItems(derived, items);
+      cart = { currency: order.currency, subtotal: order.subtotalAmount, items: derived.items };
+    } catch (repairError) {
+      const reason = repairError instanceof Error ? repairError.message : "Legacy Printful repair failed";
+      await markFulfillmentManualReview(order.id, reason);
+      throw repairError;
+    }
   }
   const contact: OrderContact = {
     email: order.email,

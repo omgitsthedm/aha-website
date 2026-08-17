@@ -29,6 +29,16 @@ const PRINTFUL_CUTOVER_ENV = [
   "PRINTFUL_WEBHOOK_PUBLIC_KEY",
 ] as const;
 
+const APLIIQ_CUTOVER_ENV = [
+  "APLIIQ_API_KEY",
+  "APLIIQ_SHARED_SECRET",
+  "APLIIQ_API_BASE_URL",
+  "APLIIQ_DEFAULT_SHIPPING",
+  "APLIIQ_PRODUCT_CALLBACK_TOKEN",
+  "APLIIQ_ALLOW_CREATE_ORDERS",
+  "APLIIQ_LIVE_MODE",
+] as const;
+
 const NETLIFY_CUTOVER_ENV = [
   "NEXT_PUBLIC_SITE_URL",
   "NEXT_PUBLIC_SQUARE_APP_ID",
@@ -46,6 +56,7 @@ const EMAIL_CUTOVER_ENV = [
 const ALL_CUTOVER_ENV = [
   ...SQUARE_CUTOVER_ENV,
   ...PRINTFUL_CUTOVER_ENV,
+  ...APLIIQ_CUTOVER_ENV,
   ...NETLIFY_CUTOVER_ENV,
   ...EMAIL_CUTOVER_ENV,
 ] as const;
@@ -60,6 +71,7 @@ export function getCommerceReadinessSnapshot() {
   const checkout = getEnvPresence([...CHECKOUT_REQUIRED_ENV]);
   const square = getEnvPresence([...SQUARE_CUTOVER_ENV]);
   const printful = getEnvPresence([...PRINTFUL_CUTOVER_ENV]);
+  const apliiq = getEnvPresence([...APLIIQ_CUTOVER_ENV]);
   const netlify = getEnvPresence([...NETLIFY_CUTOVER_ENV]);
   const email = getEnvPresence([...EMAIL_CUTOVER_ENV]);
   const all = getEnvPresence([...ALL_CUTOVER_ENV]);
@@ -82,6 +94,8 @@ export function getCommerceReadinessSnapshot() {
   const fulfillmentMode = getFulfillmentMode();
   const allowPrintfulConfirm = process.env.PRINTFUL_ALLOW_CONFIRM_ORDERS === "true";
   const printfulLiveMode = process.env.PRINTFUL_LIVE_MODE === "true";
+  const allowApliiqCreate = process.env.APLIIQ_ALLOW_CREATE_ORDERS === "true";
+  const apliiqLiveMode = process.env.APLIIQ_LIVE_MODE === "true";
   if (fulfillmentMode === "auto" && (!allowPrintfulConfirm || !printfulLiveMode)) {
     warnings.push(
       "AHA_FULFILLMENT_MODE=auto is selected, but one or both Printful confirmation flags are off; paid orders will remain drafts."
@@ -90,6 +104,16 @@ export function getCommerceReadinessSnapshot() {
   if (fulfillmentMode !== "auto" && allowPrintfulConfirm && printfulLiveMode) {
     warnings.push(
       "Printful confirmation flags are on, but AHA_FULFILLMENT_MODE is not auto; confirmation remains safely disabled."
+    );
+  }
+  if (allowApliiqCreate !== apliiqLiveMode) {
+    warnings.push(
+      "Exactly one APLIIQ order-submission flag is enabled; APLIIQ remains safely disabled until both flags agree."
+    );
+  }
+  if (allowApliiqCreate && apliiqLiveMode && fulfillmentMode !== "auto") {
+    warnings.push(
+      "APLIIQ live flags are on, but AHA_FULFILLMENT_MODE is not auto; APLIIQ order submission remains disabled."
     );
   }
 
@@ -110,6 +134,12 @@ export function getCommerceReadinessSnapshot() {
       printful: {
         configured: printful,
         missing: missingFrom(printful),
+      },
+      apliiq: {
+        configured: apliiq,
+        missing: missingFrom(apliiq),
+        orderSubmissionEnabled:
+          fulfillmentMode === "auto" && allowApliiqCreate && apliiqLiveMode,
       },
       netlify: {
         configured: netlify,

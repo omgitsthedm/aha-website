@@ -1,11 +1,19 @@
-// Fulfillment engine (§25). Runs only after Square payment succeeds. Each Printful store gets its
+// Fulfillment engine (§25). Runs only after Square payment succeeds. Each provider batch gets its
 // own durable fulfillment row so retries and webhooks can reconcile provider orders independently.
-// Confirmation remains gated by both explicit production flags.
+// Printful confirmation remains gated by both explicit production flags; APLIIQ order submission
+// has its own server-only live gate in the provider adapter.
 import { printfulRequest } from "@/lib/printful/client";
 import { db, isDbConfigured } from "@/lib/db/client";
 import { orders, fulfillments, auditLog } from "@/db/schema";
 import { and, eq, isNull } from "drizzle-orm";
 import type { RevalidatedCart, OrderContact } from "./orders";
+import {
+  createLiveApliiqClient,
+  getApliiqSubmissionBlockReason,
+  isApliiqSubmissionAllowed,
+  submitApliiqFulfillment,
+} from "@/lib/fulfillment/apliiq-adapter";
+import { groupItemsByFulfillmentProvider } from "@/lib/fulfillment/provider-dispatcher";
 import {
   aggregateFulfillmentStatus, buildStoreOrderRequest, groupSourceItemsByPrintfulStore,
   isPrintfulConfirmationAllowed, shouldRetryPrintfulConfirmation,
@@ -79,6 +87,201 @@ async function confirmPrintfulOrder(orderId: number, fulfillmentId: number, prin
   }
 }
 
+async function auditApliiqFulfillment(
+  orderId: number,
+  action: string,
+  newStatus: string,
+  metadata: Record<string, unknown>,
+  oldStatus?: string
+): Promise<void> {
+  await db().insert(auditLog).values({
+    entityType: "order",
+    entityId: String(orderId),
+    action,
+    ...(oldStatus ? { oldStatus } : {}),
+    newStatus,
+    source: "fulfillment",
+    metadataJson: { provider: "apliiq", ...metadata },
+  });
+}
+
+async function transitionApliiqFulfillment(input: {
+  orderId: number;
+  fulfillmentId: number;
+  oldStatus: string;
+  status: string;
+  action: string;
+  reason?: string | null;
+  providerOrderId?: string;
+  providerData?: Record<string, unknown>;
+  providerRequestId?: string;
+}): Promise<void> {
+  await db().update(fulfillments).set({
+    status: input.status,
+    ...(input.reason === undefined ? {} : { lastError: input.reason }),
+    ...(input.providerOrderId ? { providerOrderId: input.providerOrderId } : {}),
+    ...(input.providerData ? { providerDataJson: input.providerData } : {}),
+    updatedAt: new Date(),
+  }).where(eq(fulfillments.id, input.fulfillmentId));
+  await auditApliiqFulfillment(input.orderId, input.action, input.status, {
+    ...(input.reason ? { reason: input.reason } : {}),
+    ...(input.providerOrderId ? { providerOrderId: input.providerOrderId } : {}),
+    ...(input.providerRequestId ? { providerRequestId: input.providerRequestId } : {}),
+  }, input.oldStatus);
+}
+
+async function holdApliiqFulfillment(
+  orderId: number,
+  providerReference: string,
+  reason: string
+): Promise<void> {
+  const held = await db().insert(fulfillments).values({
+    orderId,
+    fulfillmentProvider: "apliiq",
+    providerClaimKey: "apliiq:default",
+    providerReference,
+    status: "manual_review",
+    lastError: reason.slice(0, 500),
+  }).onConflictDoNothing().returning({ id: fulfillments.id });
+  if (held[0]) {
+    await auditApliiqFulfillment(orderId, "fulfillment:apliiq_claimed_manual", "manual_review", {
+      providerReference,
+      reason: reason.slice(0, 500),
+    }, "not_started");
+  }
+  await markManualReview(orderId, reason);
+}
+
+/**
+ * APLIIQ has no safe POST retry guarantee. The row, request identity, and
+ * customer-visible AHA reference are therefore persisted in the initial
+ * insert, before its only remote create-order call. Any later invocation that
+ * sees the row stops for manual reconciliation instead of resubmitting.
+ */
+async function startApliiqFulfillment(
+  orderId: number,
+  items: RevalidatedCart["items"],
+  contact: OrderContact
+): Promise<void> {
+  const [order] = await db().select({
+    externalOrderNumber: orders.externalOrderNumber,
+    paymentStatus: orders.paymentStatus,
+    squarePaymentId: orders.squarePaymentId,
+  }).from(orders).where(eq(orders.id, orderId)).limit(1);
+  if (!order || order.paymentStatus !== "paid") {
+    throw new Error("Only paid orders can enter APLIIQ fulfillment.");
+  }
+  if (!order.squarePaymentId) {
+    await holdApliiqFulfillment(orderId, order.externalOrderNumber, "APLIIQ fulfillment requires a persisted Square payment id.");
+    return;
+  }
+
+  const blocked = getApliiqSubmissionBlockReason();
+  if (!isApliiqSubmissionAllowed() || blocked) {
+    // Record the hold as a provider row so the final aggregate cannot erase
+    // the manual-attention state when this order contains only APLIIQ lines.
+    await holdApliiqFulfillment(orderId, order.externalOrderNumber, blocked ?? "APLIIQ order submission is disabled by server-side production gates.");
+    return;
+  }
+
+  const providerClaimKey = "apliiq:default";
+  const [existing] = await db().select({
+    id: fulfillments.id,
+    providerRequestId: fulfillments.providerRequestId,
+    providerOrderId: fulfillments.providerOrderId,
+    status: fulfillments.status,
+  }).from(fulfillments).where(and(
+    eq(fulfillments.orderId, orderId),
+    eq(fulfillments.providerClaimKey, providerClaimKey)
+  )).limit(1);
+
+  if (existing) {
+    if (!existing.providerOrderId) {
+      const reason = `APLIIQ request ${existing.providerRequestId || "(missing reference)"} already has a durable claim (${existing.status}); it will not be submitted again automatically.`;
+      await transitionApliiqFulfillment({
+        orderId,
+        fulfillmentId: existing.id,
+        oldStatus: existing.status,
+        status: "manual_review",
+        action: "fulfillment:apliiq_manual_reconciliation_required",
+        reason,
+        providerRequestId: existing.providerRequestId || undefined,
+      });
+      await markManualReview(orderId, reason);
+    }
+    return;
+  }
+
+  const providerRequestId = `aha-apliiq-${orderId}`;
+  const claimed = await db().insert(fulfillments).values({
+    orderId,
+    fulfillmentProvider: "apliiq",
+    providerClaimKey,
+    providerReference: order.externalOrderNumber,
+    providerRequestId,
+    status: "draft_creating",
+  }).onConflictDoNothing().returning({ id: fulfillments.id });
+
+  // The unique (order, providerClaimKey) row is the cross-request claim. Do
+  // not assume the losing request knows whether the winner reached APLIIQ.
+  if (!claimed[0]) return;
+  await auditApliiqFulfillment(orderId, "fulfillment:apliiq_claimed", "draft_creating", {
+    providerReference: order.externalOrderNumber,
+    providerRequestId,
+  }, "not_started");
+
+  try {
+    const submission = await submitApliiqFulfillment(createLiveApliiqClient(), {
+      orderId,
+      externalOrderNumber: order.externalOrderNumber,
+      providerRequestId,
+      contact,
+      items,
+    });
+    if (submission.outcome === "accepted") {
+      await transitionApliiqFulfillment({
+        orderId,
+        fulfillmentId: claimed[0].id,
+        oldStatus: "draft_creating",
+        status: "manual_review",
+        action: "fulfillment:apliiq_accepted_manual_review",
+        reason: submission.attentionReason.slice(0, 500),
+        providerData: { outcome: "accepted" },
+        providerRequestId,
+      });
+      await markManualReview(orderId, submission.attentionReason);
+      return;
+    }
+
+    await transitionApliiqFulfillment({
+      orderId,
+      fulfillmentId: claimed[0].id,
+      oldStatus: "draft_creating",
+      status: "draft_created",
+      action: "fulfillment:apliiq_submitted",
+      reason: null,
+      providerOrderId: submission.providerOrderId,
+      providerData: { outcome: "processed" },
+      providerRequestId,
+    });
+  } catch (error) {
+    // A timeout or transport error can still mean that APLIIQ accepted the
+    // request. Retain the request id and require a provider-side lookup.
+    const message = error instanceof Error ? error.message.slice(0, 500) : "APLIIQ order submission outcome is unknown";
+    await transitionApliiqFulfillment({
+      orderId,
+      fulfillmentId: claimed[0].id,
+      oldStatus: "draft_creating",
+      status: "manual_review",
+      action: "fulfillment:apliiq_submission_outcome_unknown",
+      reason: message,
+      providerRequestId,
+    });
+    await markManualReview(orderId, message);
+    throw error;
+  }
+}
+
 /**
  * Create one Printful draft per owning store. A unique (order, store) row is claimed before the
  * remote call, preventing concurrent retries from creating two drafts for the same provider store.
@@ -88,10 +291,11 @@ export async function startFulfillment(
 ): Promise<void> {
   if (!isDbConfigured()) return;
 
+  const providerGroups = groupItemsByFulfillmentProvider(cart.items);
   const defaultStore = Number(process.env.PRINTFUL_STORE_ID) || undefined;
-  const byStore = groupSourceItemsByPrintfulStore(cart.items, defaultStore);
-  if (byStore.size === 0) {
-    await markManualReview(orderId, "No cart item has a Printful fulfillment path (sync variant or catalog placements with hosted art)");
+  const byStore = groupSourceItemsByPrintfulStore(providerGroups.printful, defaultStore);
+  if (byStore.size === 0 && providerGroups.apliiq.length === 0) {
+    await markManualReview(orderId, "No cart item has a supported fulfillment path in its purchase-time provider snapshot.");
     return;
   }
 
@@ -133,7 +337,7 @@ export async function startFulfillment(
       ? await db().update(fulfillments).set({ status: "draft_creating", lastError: null, updatedAt: new Date() })
           .where(eq(fulfillments.id, existing.id)).returning({ id: fulfillments.id })
       : await db().insert(fulfillments).values({
-          orderId, providerStoreId: storeId, status: "draft_creating",
+          orderId, providerStoreId: storeId, providerClaimKey: `printful:${storeId}`, status: "draft_creating",
         }).onConflictDoNothing().returning({ id: fulfillments.id });
 
     if (!claimed[0]) continue; // another request claimed this order/store pair
@@ -178,6 +382,10 @@ export async function startFulfillment(
       await dispatchOrderNotifications(5, orderId).catch(() => {});
       throw error;
     }
+  }
+
+  if (providerGroups.apliiq.length > 0) {
+    await startApliiqFulfillment(orderId, providerGroups.apliiq, contact);
   }
 
   await syncOrderFulfillmentStatus(orderId);

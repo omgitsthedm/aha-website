@@ -5,7 +5,7 @@
 - **Technical release and incident owner:** Little Fight NYC, represented in GitHub by `@omgitsthedm`.
 - **Customer-support route:** `info@afterhoursagenda.com`.
 - **Security-report route:** `info@afterhoursagenda.com`, published at `/.well-known/security.txt`.
-- **Provider authority:** Square, Printful, Netlify Database, Resend, Domain Name System (DNS), and analytics changes require an explicitly scoped production task. Routine code verification never creates provider events.
+- **Provider authority:** Square, APLIIQ, legacy Printful, Netlify Database, Resend, Domain Name System (DNS), and analytics changes require an explicitly scoped production task. Routine code verification never creates provider events.
 
 Treat an unavailable storefront, broken checkout, duplicate charge or order, customer-data exposure, fulfillment misrouting, or loss of order reconciliation as an incident. Stop rollout work, preserve logs and identifiers without copying protected data, and notify the technical owner. Customer communication goes through the support route; do not contact customers from an engineering test.
 
@@ -19,8 +19,8 @@ Treat an unavailable storefront, broken checkout, duplicate charge or order, cus
 
 1. Square calculates the tax-inclusive quote and processes the payment.
 2. AHA writes the order and payment to Netlify Database.
-3. AHA creates one Printful draft per owning store.
-4. Production confirmation requires all three gates: `AHA_FULFILLMENT_MODE=auto`, `PRINTFUL_ALLOW_CONFIRM_ORDERS=true`, and `PRINTFUL_LIVE_MODE=true`.
+3. AHA dispatches each immutable order-line snapshot to its recorded fulfillment provider. Historical Printful lines retain their existing store/draft path; approved APLIIQ lines use one durable request identity and one create attempt.
+4. Printful confirmation requires `AHA_FULFILLMENT_MODE=auto`, `PRINTFUL_ALLOW_CONFIRM_ORDERS=true`, and `PRINTFUL_LIVE_MODE=true`. APLIIQ creation separately requires production context, Square production, auto mode, `APLIIQ_ALLOW_CREATE_ORDERS=true`, and `APLIIQ_LIVE_MODE=true`.
 5. Signed provider webhooks reconcile payment, fulfillment, and shipment state.
 6. The scheduled `reconcile-orders` function retries eligible paid orders every 15 minutes.
 
@@ -69,11 +69,13 @@ Customers use `/track-order` with the AHA order number and checkout email. The r
 
 ## Current confirmation policy
 
-Production is automatic: only a verified completed Square payment can create a Printful order. The remote Printful order id is persisted before confirmation, so confirmation retries reuse the same order instead of creating duplicates. Preview and branch deploys remain dry-run with both confirmation flags off.
+Only a verified completed Square payment can enter fulfillment. The remote Printful order id is persisted before confirmation, so confirmation retries reuse the same order instead of creating duplicates. An APLIIQ request id and claim are persisted before its single create call; a `202`, missing order id, timeout, or uncertain response moves to manual review and is never automatically posted twice. Preview and branch deploys remain non-transactional.
+
+APLIIQ is intentionally fail-closed until the new catalog is approved. Required names are `APLIIQ_API_KEY`, `APLIIQ_SHARED_SECRET`, `APLIIQ_API_BASE_URL`, `APLIIQ_DEFAULT_SHIPPING`, and the separate `APLIIQ_PRODUCT_CALLBACK_TOKEN`. Keep both order flags false until APQ mappings, decoration/private-label snapshots, costs, margins, Square variations, and physical samples are approved. The fulfillment callback is `/api/webhooks/apliiq/fulfillment`; product intake/search callbacks are `/api/integrations/apliiq/products/upsert` and `/api/integrations/apliiq/products/search`. Product callbacks only create pending-review records; they never publish a storefront or Square item.
 
 ## Provider tests
 
-The operations dashboard exposes signed webhook tests. These controls call provider interfaces and write test or deduplication records, even though they do not create a payment or Printful order. Run one only when the current task explicitly authorizes that external test.
+The operations dashboard exposes the existing signed provider tests and a read-only provider access check. These controls call provider interfaces and can write test or deduplication records, even though they do not create a payment or fulfillment order. Run one only when the current task explicitly authorizes that external test. There is no synthetic APLIIQ order test: APLIIQ has no sandbox, so a real paid pilot and same-day cancellation require separate authorization.
 
 ## Known external dependency
 
