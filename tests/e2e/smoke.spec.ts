@@ -1,20 +1,21 @@
 import { test, expect } from "@playwright/test";
 
-// Smoke pack for the current full-catalog storefront (the earlier three-hoodie
-// "pilot" era is retired). Runs against a local production build in preview-
-// catalog mode (see e2e.yml). Protects the browse -> product -> add-to-bag ->
-// checkout-entry path plus the security/ops gates.
+// Smoke pack for the catalog migration hold. Runs against a local production
+// build (see e2e.yml) and proves the public storefront cannot expose the
+// retired catalog, restore a saved legacy bag, or start a new checkout.
 
-test("@product home renders the brand hero and primary shopping CTAs", async ({ page }) => {
+test("@catalog home renders the brand hero without retired shopping controls", async ({ page }) => {
   const response = await page.goto("/");
   expect(response?.status()).toBe(200);
   await expect(page).toHaveTitle(/After Hours Agenda \| Independent NYC Streetwear/i);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("After Hours");
   // Rose browser chrome: light theme-color is the brand rose fill.
   await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')).toHaveAttribute("content", "#FF6B6B");
-  await expect(page.getByRole("link", { name: "Shop Men", exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Shop Women", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Open bag" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Get the next release first", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Shop Men", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Shop Women", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Open bag" })).toHaveCount(0);
+  await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
 
   await expect(page.locator("symbol#aha-sheep-mark")).toHaveCount(1);
   const filledMark = page.locator('svg[fill="currentColor"]:has(use[href="#aha-sheep-mark"])').first();
@@ -133,112 +134,36 @@ test("@privacy unavailable storage still allows an in-tab consent choice", async
   await expect(dialog).toHaveCount(0);
 });
 
-test("@privacy the consent choice exclusively owns fresh mobile bottom surfaces", async ({ page }, testInfo) => {
+test("@privacy the consent choice owns mobile bottom surfaces while commerce is paused", async ({ page }, testInfo) => {
   test.skip(!testInfo.project.name.startsWith("mobile-"), "Fixed mobile controls are covered at phone width.");
-  await page.goto("/product/dont-fuck-fascists-shirt");
+  await page.goto("/shop");
   const banner = page.getByRole("dialog", { name: "Cookie preferences" });
-  const stickyBar = page.getByTestId("sticky-buy-bar");
   await expect(banner).toBeVisible();
-  await expect(stickyBar).toBeHidden();
+  await expect(page.getByTestId("sticky-buy-bar")).toHaveCount(0);
+  await expect(page.getByTestId("sticky-checkout-bar")).toHaveCount(0);
   await banner.getByRole("button", { name: "Reject" }).click();
   await expect(banner).toHaveCount(0);
-  await expect(stickyBar).toBeVisible();
-
-  await page.evaluate(() => {
-    window.localStorage.removeItem("aha-cookie-consent");
-    window.localStorage.setItem("aha-cart", JSON.stringify([{
-      productId: "preview-dont-fuck-fascists-shirt",
-      slug: "dont-fuck-fascists-shirt",
-      variationId: "preview-dont-fuck-fascists-shirt-m",
-      name: "Don't Fuck Fascists Shirt",
-      variationName: "M",
-      price: 4000,
-      priceFormatted: "$40.00",
-      quantity: 1,
-      image: "/products/dont-fuck-fascists-shirt/01-black-mens-fitted-t-shirt-front.webp",
-    }]));
-  });
-  await page.goto("/cart");
-  const cartBanner = page.getByRole("dialog", { name: "Cookie preferences" });
-  const checkoutBar = page.getByTestId("sticky-checkout-bar");
-  await expect(cartBanner).toBeVisible();
-  await expect(checkoutBar).toBeHidden();
-  await cartBanner.getByRole("button", { name: "Reject" }).click();
-  await expect(checkoutBar).toBeVisible();
+  await expect(page.getByTestId("sticky-buy-bar")).toHaveCount(0);
+  await expect(page.getByTestId("sticky-checkout-bar")).toHaveCount(0);
 });
 
-test("@catalog shop lists products and links to PDPs", async ({ page }) => {
-  await page.goto("/shop");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(/catalog/i);
-  const firstProduct = page.locator('a[href^="/product/"]').first();
-  await expect(firstProduct).toBeVisible();
+test("@catalog shop presents the archived collection hold without PDP links", async ({ page }) => {
+  const response = await page.goto("/shop");
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("The previous collection is archived");
+  await expect(page.getByRole("link", { name: "Get release updates", exact: true })).toBeVisible();
+  await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
 });
 
-test("@product @cart @checkout PDP shows price and a working Add to bag", async ({ page }, testInfo) => {
-  await page.addInitScript(() => window.localStorage.setItem("aha-cookie-consent", "granted"));
-  await page.goto("/product/dont-fuck-fascists-shirt");
-  await expect(page).toHaveURL(/\/product\/dont-fuck-fascists-shirt/);
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page.waitForLoadState("domcontentloaded");
-  await expect(page.locator('#size-selector button[aria-pressed="true"]')).toHaveCount(0);
-  const firstAvailableSize = page.locator('#size-selector button[aria-pressed]:not([disabled])').first();
-  if (await firstAvailableSize.count()) await firstAvailableSize.click();
-  const addToBag = page.getByRole("button", { name: /Add to bag/i }).first();
-  await expect(addToBag).toBeVisible();
-  // The mobile project verifies the CTA is reachable; the click flow runs on
-  // chromium to keep the pack fast and deterministic.
-  if (testInfo.project.name.startsWith("mobile-")) {
-    const box = await addToBag.boundingBox();
-    expect(box).not.toBeNull();
-    return;
-  }
-  await expect(addToBag).toBeEnabled();
-  await addToBag.click();
-  await expect(page.getByRole("heading", { name: "Added to bag" })).toBeVisible();
-  if (testInfo.project.name === "chromium") {
-    const checkoutEntry = page.getByRole("link", { name: /^Checkout —/ });
-    await expect(checkoutEntry).toBeInViewport();
-    const checkoutBox = await checkoutEntry.boundingBox();
-    const viewport = page.viewportSize();
-    expect(checkoutBox).not.toBeNull();
-    expect(viewport).not.toBeNull();
-    expect((checkoutBox?.y ?? Infinity) + (checkoutBox?.height ?? Infinity)).toBeLessThanOrEqual(viewport?.height ?? 0);
-    // M1 relabelled these: the modal's button is "Open bag" (it opens the
-    // drawer), and the drawer's "Review bag" link is the only route to /cart.
-    // Both were "Review bag" before, which is the ambiguity M1 removed.
-    // `exact` matters: the nav bag button is labelled "Open bag, 1 item", so a
-    // substring match resolves to two elements and fails strict mode.
-    await page.getByRole("button", { name: "Open bag", exact: true }).click();
-    await page.getByRole("link", { name: "Review bag" }).click();
-    await expect(page).toHaveURL(/\/cart$/);
-    await page.getByRole("link", { name: "Continue to checkout" }).click();
-    await expect(page).toHaveURL(/\/checkout$/);
-    await expect(page.getByRole("heading", { level: 1, name: "Checkout" })).toBeVisible();
-  }
+test("@product archived product routes return a noindex 404 without buy controls", async ({ page }) => {
+  const response = await page.goto("/product/dont-fuck-fascists-shirt");
+  expect(response?.status()).toBe(404);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  await expect(page.getByRole("button", { name: /Add to bag/i })).toHaveCount(0);
+  await expect(page.getByTestId("sticky-buy-bar")).toHaveCount(0);
 });
 
-test("@product a tap on the sticky mobile buy CTA reaches the buy button, not feedback", async ({ page }, testInfo) => {
-  test.skip(!testInfo.project.name.startsWith("mobile-"), "The sticky buy bar and overlap only exist at mobile widths.");
-  // Pre-set the cookie-consent choice so its bottom banner (z-400) isn't shown
-  // (a returning user has already chosen). That isolates the thing under test:
-  // the only element that could cover the sticky buy CTA is the feedback launcher.
-  await page.addInitScript(() => window.localStorage.setItem("aha-cookie-consent", "granted"));
-  await page.goto("/product/dont-fuck-fascists-shirt");
-  await page.waitForLoadState("domcontentloaded");
-  // Hit-test the CTA inside the sticky buy bar (fixed to the viewport bottom).
-  // Whatever sits at its center must be that button, never the feedback launcher.
-  const stickyBar = page.getByTestId("sticky-buy-bar");
-  const stickyButton = stickyBar.locator("button").first();
-  await expect(stickyButton).toBeInViewport();
-  const result = await stickyButton.evaluate((el) => {
-    const r = el.getBoundingClientRect();
-    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-    return { insideButton: !!hit && (hit === el || el.contains(hit)), hitLabel: hit?.closest("[aria-label]")?.getAttribute("aria-label") ?? null };
-  });
-  expect(result.insideButton, `tap landed on ${result.hitLabel ?? "an element outside the buy button"}`).toBe(true);
-});
-
-test("@catalog @cart cart page renders its empty state", async ({ page }) => {
+test("@cart cart page renders its empty state during the catalog hold", async ({ page }) => {
   await page.goto("/cart");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.getByText("Saved items stay on this device.")).toBeVisible();
@@ -256,7 +181,7 @@ test("@cart the server-rendered bag header stays truthful before storage hydrati
   expect(html).not.toContain("Your bag is empty");
 });
 
-test("@cart a saved bag restores without flashing the empty state", async ({ page }, testInfo) => {
+test("@cart a legacy saved bag is cleared and cannot reopen checkout", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "Browser-storage restore is covered once in Chromium.");
   await page.addInitScript(() => {
     window.localStorage.setItem("aha-cart", JSON.stringify([{
@@ -274,8 +199,32 @@ test("@cart a saved bag restores without flashing the empty state", async ({ pag
 
   await page.goto("/cart");
   await expect(page.getByRole("heading", { level: 1, name: "Your bag" })).toBeVisible();
-  await expect(page.getByText("Don't Fuck Fascists Shirt", { exact: true })).toBeVisible();
-  await expect(page.getByText("Your bag is empty.")).toHaveCount(0);
+  await expect(page.getByText("Don't Fuck Fascists Shirt", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("0 items", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Continue to checkout" })).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => JSON.parse(window.localStorage.getItem("aha-cart") || "[]"))).toEqual([]);
+});
+
+test("@checkout checkout is paused and stale quote requests fail before payment pricing", async ({ page }) => {
+  const response = await page.goto("/checkout");
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1, name: "Checkout is paused" })).toBeVisible();
+  await expect(page.locator("iframe")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /pay/i })).toHaveCount(0);
+
+  const quote = await page.request.post("/api/checkout-quote", {
+    data: {
+      lines: [{ productId: "legacy-product", variationId: "legacy-variation", quantity: 1 }],
+      contact: {
+        shippingName: "Archive Test",
+        shippingAddress: { address1: "1 Archive Way", city: "New York", state: "NY", zip: "10001", country: "US" },
+      },
+    },
+  });
+  expect(quote.status()).toBe(409);
+  await expect(quote.json()).resolves.toMatchObject({
+    error: "The store is being updated. Existing items cannot be purchased right now.",
+  });
 });
 
 test("@cart unavailable browser storage still reaches a usable empty bag", async ({ page }, testInfo) => {
@@ -396,31 +345,16 @@ test("@catalog best-sellers redirects to the shop", async ({ page }) => {
   await expect(page).toHaveURL(/\/shop$/);
 });
 
-test("@catalog product imagery fails gracefully when the image CDN is unavailable", async ({ page }) => {
-  await page.route("**/__image_failure__/**", (route) =>
-    route.fulfill({ status: 404, contentType: "text/plain", body: "missing" }),
-  );
+test("@catalog archived shop exposes no product imagery or PDP links", async ({ page }) => {
   await page.goto("/shop");
-  const image = page.locator('a[href^="/product/"] img').first();
-  await expect(image).toBeVisible();
-  // Prove React attached this element's event props before inducing a real
-  // image error. WebKit can decode a priority image before hydration finishes.
-  await expect.poll(() => image.evaluate((element) =>
-    Object.keys(element).some((key) => key.startsWith("__reactProps$")),
-  )).toBe(true);
-  await image.evaluate((element) => {
-    const imageElement = element as HTMLImageElement;
-    imageElement.removeAttribute("srcset");
-    imageElement.src = `/__image_failure__/${crypto.randomUUID()}.webp`;
-  });
-  await expect(page.getByText("Image unavailable").first()).toBeVisible();
-  await expect(page.locator('a[href^="/product/"]').first()).toBeVisible();
+  await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
+  await expect(page.locator('img[src*="/products/"]')).toHaveCount(0);
 });
 
 test("@brand manifesto page renders the flag and the signup", async ({ page }) => {
   const response = await page.goto("/manifesto");
   expect(response?.status()).toBe(200);
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/permission/i);
-  await expect(page.getByRole("link", { name: "Shop the label" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Get the next release first" })).toBeVisible();
   await expect(page.locator('input[type="email"]').first()).toBeVisible();
 });
