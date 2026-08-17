@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "After Hours Agenda",
     short_name: "After Hours",
-    description: "Expressive everyday clothing from New York. Printed to order.",
+    description: "Independent New York label. The next release is in development.",
     id: "/",
     start_url: "/",
     scope: "/",
@@ -12,7 +12,7 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#FAFAFA",
     theme_color: "#FF6B6B",
     orientation: "portrait-primary",
-    categories: ["shopping", "lifestyle"],
+    categories: ["lifestyle"],
     icons: [
       { src: "/brand/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "/brand/icons/icon-512.png", sizes: "512x512", type: "image/png" },
@@ -20,9 +20,8 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/brand/icons/maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
     shortcuts: [
-      { name: "New Arrivals", url: "/new-arrivals", icons: [{ src: "/brand/icons/icon-192.png", sizes: "192x192" }] },
+      { name: "Next release", url: "/", icons: [{ src: "/brand/icons/icon-192.png", sizes: "192x192" }] },
       { name: "Track my order", url: "/track-order", icons: [{ src: "/brand/icons/icon-192.png", sizes: "192x192" }] },
-      { name: "Bag", url: "/cart", icons: [{ src: "/brand/icons/icon-192.png", sizes: "192x192" }] },
     ],
   };
 }

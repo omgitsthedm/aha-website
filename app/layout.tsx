@@ -13,7 +13,6 @@ import { CookieConsent } from "@/components/consent/CookieConsent";
 import { LazyFeedbackWidget } from "@/components/feedback/LazyFeedbackWidget";
 import { LittleFightCareBar } from "@/components/ui/LittleFightCareBar";
 import { SheepMarkSprite } from "@/components/ui/SheepMark";
-import { SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 import { CONSENT_BOOTSTRAP } from "@/lib/consent/bootstrap";
 
 const jetBrainsMono = JetBrains_Mono({
@@ -43,21 +42,16 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: "After Hours Agenda | NYC Streetwear",
+    default: "After Hours Agenda | New York Label",
     template: "%s | After Hours Agenda",
   },
-  // Shipping claim comes from lib/commerce/policies.ts, never hand-written:
-  // $20 is charged on CA/GB/AU orders, so "free shipping" unqualified is false.
-  // These three surfaces are length-capped (SERP snippet, OG card, Twitter card),
-  // so they carry SHIPPING_CLAIM_SHORT — the qualifier that fits — rather than
-  // SHIPPING_CLAIM_SENTENCE, which pushes the description past 160 characters.
-  description: `After Hours Agenda — expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. ${SHIPPING_CLAIM_SHORT}. Secure Square checkout.`,
+  description: "After Hours Agenda is an independent New York label. The previous collection is archived while the next release is in development.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com"
   ),
   openGraph: {
-    title: "After Hours Agenda | NYC Streetwear",
-    description: `Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. ${SHIPPING_CLAIM_SHORT}. Secure Square checkout.`,
+    title: "After Hours Agenda | New York Label",
+    description: "The previous collection is archived while the next After Hours Agenda release is in development.",
     type: "website",
     // Deliberately NO `url` here. Next only overwrites the keys a child segment
     // actually declares (`resolve-metadata.js` iterates `for (const key in
@@ -71,8 +65,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "After Hours Agenda | NYC Streetwear",
-    description: `Expressive everyday clothing from New York. Loud graphics, dependable garments, printed to order. ${SHIPPING_CLAIM_SHORT}. Secure Square checkout.`,
+    title: "After Hours Agenda | New York Label",
+    description: "The previous collection is archived while the next After Hours Agenda release is in development.",
     images: ["/brand/og-image.png"],
   },
   // Installed-app polish: standalone window with the brand-rose chrome
@@ -120,18 +114,6 @@ export default function RootLayout({
           <a href="#main-content" className="fixed left-3 top-3 z-[500] -translate-y-24 bg-rose px-4 py-3 font-mono text-xs font-bold text-cream transition-transform focus:translate-y-0">Skip to content</a>
           <PlatformLayer />
           <GoogleAnalytics />
-          {/*
-            The Meta pixel stays. It is a deliberate keep, not drift: it is
-            env-gated (NEXT_PUBLIC_META_PIXEL_ID) and consent-gated (nothing
-            loads until consent === "granted"), it feeds the live product feed's
-            retargeting audience, and lib/analytics/events.ts already mirrors the
-            GA4 `purchase` to Meta `Purchase` with an eventID for CAPI de-dup.
-            Pulling the id would silently break an existing catalog/retargeting
-            setup — a marketing decision, not a technical one. Still open, and
-            owned outside this file: ViewContent / AddToCart / InitiateCheckout
-            mirrors in the same helper, the CAPI send, and app/privacy/page.tsx,
-            which names a TikTok pixel that never runs (no TikTok id is set).
-          */}
           <SocialPixels />
           <ConsentIdentifierCleanup />
           <StorefrontJsonLd />

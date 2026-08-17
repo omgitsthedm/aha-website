@@ -23,6 +23,40 @@ interface PrintfulOrderLayer {
   position?: { width: number; height: number; top: number; left: number };
 }
 
+const RETIRED_PRINTFUL_ASSET_ORIGIN = "https://afterhoursagenda.com";
+const RETIRED_PRINTFUL_ASSET_PATH = "/printful-assets/";
+const IMMUTABLE_PRINTFUL_ASSET_ARCHIVE =
+  "https://raw.githubusercontent.com/omgitsthedm/aha-website/d255aa403b6bf4a978cb5f9af969a72cdc5c2488/public/printful-assets/";
+
+/**
+ * The retired public art directory is intentionally absent from the current
+ * storefront. Paid-order snapshots and the legacy rollback map can still
+ * contain those exact canonical URLs, so provider payloads resolve them to a
+ * pinned Git object without making the old paths public on the custom site.
+ */
+export function resolvePrintfulAssetUrl(fileUrl: string): string {
+  let parsed: URL;
+  try {
+    parsed = new URL(fileUrl);
+  } catch {
+    return fileUrl;
+  }
+  if (parsed.origin !== RETIRED_PRINTFUL_ASSET_ORIGIN || !parsed.pathname.startsWith(RETIRED_PRINTFUL_ASSET_PATH)) {
+    return fileUrl;
+  }
+  const encodedName = parsed.pathname.slice(RETIRED_PRINTFUL_ASSET_PATH.length);
+  let decodedName = "";
+  try {
+    decodedName = decodeURIComponent(encodedName);
+  } catch {
+    return fileUrl;
+  }
+  if (!decodedName || decodedName.includes("/") || decodedName.includes("\\") || decodedName === "." || decodedName === "..") {
+    return fileUrl;
+  }
+  return `${IMMUTABLE_PRINTFUL_ASSET_ARCHIVE}${encodedName}`;
+}
+
 /**
  * Printful v2 order item. Two fulfillment paths:
  * - sync_variant: the store's configured product carries the art (legacy path)
@@ -76,7 +110,7 @@ function buildCatalogOrderItem(item: FulfillmentSourceItem): PrintfulOrderItem |
       technique: placement.technique,
       layers: [{
         type: "file" as const,
-        url: placement.fileUrl!,
+        url: resolvePrintfulAssetUrl(placement.fileUrl!),
         ...(placement.position
           ? { position: {
               width: placement.position.width, height: placement.position.height,
@@ -113,7 +147,7 @@ function toV1Item(item: FulfillmentSourceItem): PrintfulV1OrderItem | null {
     quantity: item.quantity,
     files: placements.map((p) => ({
       type: p.placement,
-      url: p.fileUrl!,
+      url: resolvePrintfulAssetUrl(p.fileUrl!),
       // Position is only expressible in v1 when the area size is known.
       ...(p.position?.areaWidth && p.position?.areaHeight
         ? { position: {

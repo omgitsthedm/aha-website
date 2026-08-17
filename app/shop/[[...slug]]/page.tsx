@@ -11,6 +11,11 @@ import { CatalogMigrationPage, catalogMigrationMetadata } from "@/components/sho
 import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 export const revalidate = 300;
+// The committed catalog policy currently returns the same migration screen for
+// every shop path. Prerender it so a store reset never pays an avoidable edge
+// function cold start. Remove this override only when a replacement catalog is
+// intentionally activated and query-driven pagination is restored.
+export const dynamic = "force-static";
 
 interface ShopPageProps {
   params: Promise<{ slug?: string[] }>;

@@ -3,7 +3,7 @@ import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 
 export const metadata = {
   title: "Your Bag",
-  description: "Review your shopping bag and proceed to checkout.",
+  description: "Your saved bag is unavailable while the next After Hours Agenda release is prepared.",
   robots: { index: false, follow: false },
 };
 

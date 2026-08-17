@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { squareRequest } from "@/lib/square/client";
 import { getSquareLocationId } from "@/lib/commerce/runtime";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 // Square Gift Cards. SELL = create an order for the amount → charge the buyer's
 // card → create + activate a DIGITAL gift card → email the code. REDEEM is not
@@ -11,7 +12,7 @@ import { getSquareLocationId } from "@/lib/commerce/runtime";
 // $1 buy-test — Square's activation params can only be confirmed live.
 
 export function isGiftCardsEnabled(): boolean {
-  return process.env.GIFT_CARDS_ENABLED === "true";
+  return isLegacyCatalogPublic() && process.env.GIFT_CARDS_ENABLED === "true";
 }
 
 interface GiftCard { id: string; gan: string; state?: string; balance_money?: { amount: number; currency: string } }

@@ -1,37 +1,18 @@
 # After Hours Agenda
 
-> Independent New York streetwear. Expressive everyday clothing — graphic tees, hoodies, sweatshirts, and accessories — designed after hours and printed to order, one at a time. Free US shipping ($20 flat rate to Canada, the UK, and Australia), secure Square checkout, 30-day returns.
+> Independent New York label. The previous collection is archived while the next release is in development.
 
-After Hours Agenda is a NYC direct-to-consumer clothing brand. Every piece is made to order (printed on demand) to avoid overproduction and dead stock. Cuts are unisex. The customer-facing name is always "After Hours Agenda". Support: info@afterhoursagenda.com.
+After Hours Agenda is preparing a new collection. There are no products for sale and checkout is unavailable. The customer-facing name is always "After Hours Agenda". Support: info@afterhoursagenda.com.
 
-Individual products live at https://afterhoursagenda.com/product/<slug>. This file lists sections only — https://afterhoursagenda.com/sitemap.xml is the authoritative, always-current list of every live URL, product pages included.
+## Current pages
 
-## Shop
-- [Home](https://afterhoursagenda.com/): Featured pieces and the current entry points into the catalog.
-- [Shop all](https://afterhoursagenda.com/shop): The full catalog of tees, hoodies, sweatshirts, and accessories.
-- [New arrivals](https://afterhoursagenda.com/new-arrivals): The most recently added pieces.
-- [Men](https://afterhoursagenda.com/men): The catalog with men's sizing guidance. Cuts are unisex.
-- [Women](https://afterhoursagenda.com/women): The catalog with women's sizing guidance. Cuts are unisex.
-- [Unisex](https://afterhoursagenda.com/unisex): The catalog without a gender split.
-- [Accessories](https://afterhoursagenda.com/accessories): Hats, beanies, bags, stickers, and pins.
-
-## Brand
-- [About](https://afterhoursagenda.com/about): Who we are, and what happens between order and doorstep.
+- [Home](https://afterhoursagenda.com/): Release updates and the current studio note.
+- [About](https://afterhoursagenda.com/about): The label and what comes next.
 - [Manifesto](https://afterhoursagenda.com/manifesto): What the brand stands for.
-- [Lookbook](https://afterhoursagenda.com/lookbook): Editorial photography.
-- [Newsletter](https://afterhoursagenda.com/newsletter): Email list for new releases.
-- [Restock](https://afterhoursagenda.com/restock): Ask for a size or piece that is not currently listed.
-
-## Help
-- [FAQ](https://afterhoursagenda.com/faq): Orders, shipping, returns, fit, and care.
-- [Shipping](https://afterhoursagenda.com/shipping): Free in the US; $20 flat rate to Canada, the UK, and Australia. Made to order in 2 to 5 business days, then usually 5 to 10 business days in transit.
-- [Returns](https://afterhoursagenda.com/returns): Unworn items can be returned within 30 days and we cover return shipping; made-to-order production fees may be non-refundable once printing starts.
-- [Size guide](https://afterhoursagenda.com/size-guide): Fit and measurements.
-- [Care](https://afterhoursagenda.com/care): How to wash and keep a printed garment.
-- [Track order](https://afterhoursagenda.com/track-order): Track with order number and checkout email.
+- [Next release](https://afterhoursagenda.com/lookbook): Collection status and email updates.
+- [Track order](https://afterhoursagenda.com/track-order): Support for a completed order.
 - [Contact](https://afterhoursagenda.com/contact): Reach support.
 
-## Policies
-- [Privacy](https://afterhoursagenda.com/privacy): What is collected, and how to opt out.
-- [Terms](https://afterhoursagenda.com/terms): Terms of sale and site use.
-- [Accessibility](https://afterhoursagenda.com/accessibility): Accessibility statement and how to report a barrier.
+## Existing-order support
+
+Historical customers can use the order number and checkout email to request order support, tracking, returns, or care guidance. Those pages support completed orders; they do not indicate current product availability.

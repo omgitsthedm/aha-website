@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Script from "next/script";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
@@ -837,16 +836,6 @@ export function CheckoutForm({ squareConfig }: Props) {
 
           {/* Order summary */}
           <aside className="h-fit border-t-2 border-accent pt-5 lg:sticky lg:top-28">
-            {/* Envision it: a lifestyle moment at the point of highest intent —
-                the shopper pictures themselves wearing it, not filling a form. */}
-            <div className="relative mb-6 aspect-[16/10] overflow-hidden">
-              <Image src="/campaign/lifestyle/band.webp" alt="After Hours Agenda, worn on the streets of New York" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 360px" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-4">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF8DA1]">You&rsquo;re almost wearing it</p>
-                <p className="mt-1 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.03em] text-white">Made after hours. Worn all day.</p>
-              </div>
-            </div>
             <h2 className="mb-4 font-display text-2xl font-black uppercase leading-none tracking-[-0.04em] text-cream">Order</h2>
             <ul className="space-y-3">
               {items.map((i) => (

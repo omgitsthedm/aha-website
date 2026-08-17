@@ -12,7 +12,6 @@ import {
   CATEGORIES,
 } from "@/lib/commerce/taxonomy";
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 import { CatalogMigrationPage, catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
@@ -100,18 +99,6 @@ export default async function UnisexPage({ params, searchParams }: UnisexPagePro
               : "Core pieces in unisex sizing, printed to order. One cut, worn your way."
           }
         />
-        {!category && (
-          <div className="fold-surface relative mb-6 aspect-[3/1] overflow-hidden md:mb-10">
-            <Image
-              src="/campaign/hero-unisex-onmodel.webp"
-              alt="The No Place Like New York sweatshirt in charcoal, worn"
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 1280px) 100vw, 1280px"
-            />
-          </div>
-        )}
         <CategoryShopContent
           products={displayProducts} purchasableSizes={getPurchasableSizesMap(displayProducts)} colorCounts={getColorCountMap(displayProducts)} colorNames={getColorNamesMap(displayProducts)}
           gender={GENDER}

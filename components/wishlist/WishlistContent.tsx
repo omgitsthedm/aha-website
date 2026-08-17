@@ -62,7 +62,7 @@ export function WishlistContent() {
   if (items.length === 0) {
     return (
       <div className="px-4 pb-24 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-3xl">
-        <PageHeader eyebrow="Saved" title="Your wishlist" description="Saved items will return with the next release." />
+        <PageHeader eyebrow="Saved" title="Your wishlist" description="The wishlist will return with the next release." />
         <div className="mt-2 flex flex-col items-start gap-4">
           <SheepMark className="w-16 text-muted" />
           {isLegacyCatalogPublic() && <Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Browse the shop</Link>}

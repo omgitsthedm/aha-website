@@ -26,14 +26,11 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
   { path: "/new-arrivals", priority: 0.8, changeFrequency: "weekly" },
   { path: "/manifesto", priority: 0.7, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/lookbook", priority: 0.6, changeFrequency: "monthly" },
   { path: "/newsletter", priority: 0.5, changeFrequency: "monthly" },
-  { path: "/restock", priority: 0.5, changeFrequency: "monthly" },
   { path: "/faq", priority: 0.6, changeFrequency: "monthly" },
   { path: "/shipping", priority: 0.6, changeFrequency: "monthly" },
   { path: "/returns", priority: 0.6, changeFrequency: "monthly" },
   { path: "/care", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/size-guide", priority: 0.6, changeFrequency: "monthly" },
   { path: "/track-order", priority: 0.6, changeFrequency: "monthly" },
   // /gift-cards is intentionally omitted while GIFT_CARDS_ENABLED is off (the
   // route is a "coming soon" stub). Add it back when the flow ships.
