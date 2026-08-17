@@ -30,14 +30,14 @@ describe("preview catalog isolation", () => {
     vi.unstubAllGlobals();
   });
 
-  it("uses committed products and collections even when a Square token is present", async () => {
+  it("keeps legacy products and collections dark even when a Square token is present", async () => {
     const { getAllCollections, getAllProducts } = await import("@/lib/square/catalog");
 
     const products = await getAllProducts();
     const collections = await getAllCollections();
 
-    expect(products.length).toBeGreaterThan(0);
-    expect(collections.length).toBeGreaterThan(0);
+    expect(products).toEqual([]);
+    expect(collections).toEqual([]);
     expect(squareRequest).not.toHaveBeenCalled();
   });
 

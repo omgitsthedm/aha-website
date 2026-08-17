@@ -3,6 +3,7 @@ import { SheepMark } from "@/components/ui/SheepMark";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { ConsentSettingsLink } from "@/components/consent/ConsentSettingsLink";
 import { isGiftCardsEnabled } from "@/lib/square/giftcards";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 // Gift cards are gated (GIFT_CARDS_ENABLED); until they ship, the /gift-cards
 // route is a "coming soon" stub — don't link a dead-end from every page.
@@ -40,12 +41,17 @@ const brandLinks = [
 ];
 
 export function SiteFooter() {
+  const catalogIsPublic = isLegacyCatalogPublic();
   return (
     <footer className="relative border-t border-border/60 bg-void px-4 py-12 sm:px-6 lg:py-16">
       <div className="mx-auto grid max-w-[1280px] gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)_minmax(18rem,0.5fr)]">
         <div className="fold-surface min-w-0 p-6 sm:p-8">
           <div className="flex flex-wrap items-end gap-6"><SheepMark className="w-20 text-cream" title="After Hours Agenda black sheep" /><p className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold uppercase leading-[0.9] tracking-[-0.05em]">After Hours Agenda</p></div>
-          <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories, printed to order. Questions? Email info@afterhoursagenda.com.</p>
+          <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+            {catalogIsPublic
+              ? "Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories, printed to order. Questions? Email info@afterhoursagenda.com."
+              : "Independent New York label. The previous collection is archived while the next release is prepared. Questions? Email info@afterhoursagenda.com."}
+          </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <a href="mailto:info@afterhoursagenda.com" className="btn-secondary">Email support</a>
             <a href="https://www.instagram.com/afterhoursagenda" target="_blank" rel="noopener noreferrer"
@@ -79,7 +85,7 @@ export function SiteFooter() {
         </div>
 
         <div className="grid min-w-0 grid-cols-2 gap-8 border-t border-accent pt-5 lg:grid-cols-1">
-          <nav aria-label="Shop">
+          {catalogIsPublic && <nav aria-label="Shop">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Shop</p>
             <ul className="mt-3 space-y-1">
               {shopLinks.map((link) => (
@@ -90,7 +96,7 @@ export function SiteFooter() {
                 </li>
               ))}
             </ul>
-          </nav>
+          </nav>}
           <nav aria-label="Customer service">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Service</p>
             <ul className="mt-3 space-y-1">

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllProducts } from "@/lib/square/catalog";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com";
@@ -57,7 +58,10 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
 //   - static pages: the git commit date for each route's source file, captured
 //     at build time — the deployed serverless bundle has no `.git`.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticEntries: MetadataRoute.Sitemap = publicPages.map((page) => ({
+  const catalogPaths = new Set(["/shop", "/men", "/men/t-shirts", "/men/hoodies-sweatshirts", "/men/sweaters-knitwear", "/men/accessories", "/women", "/women/t-shirts", "/women/hoodies-sweatshirts", "/women/sweaters-knitwear", "/women/accessories", "/unisex", "/accessories", "/new-arrivals"]);
+  const staticEntries: MetadataRoute.Sitemap = publicPages
+    .filter((page) => isLegacyCatalogPublic() || !catalogPaths.has(page.path))
+    .map((page) => ({
     url: `${BASE_URL}${page.path}`,
     changeFrequency: page.changeFrequency,
     priority: page.priority,

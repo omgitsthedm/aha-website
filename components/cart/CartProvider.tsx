@@ -11,6 +11,7 @@ import {
 } from "react";
 import dynamic from "next/dynamic";
 import type { CartItem, Product } from "@/lib/utils/types";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 // Only shown on open/add — keep them out of the initial bundle on every page.
 const CartDrawer = dynamic(() => import("./CartDrawer").then((m) => m.CartDrawer), { ssr: false });
 const AddToCartModal = dynamic(() => import("./AddToCartModal").then((m) => m.AddToCartModal), { ssr: false });
@@ -58,6 +59,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Load from localStorage on mount
   useEffect(() => {
     try {
+      // A saved browser bag is not a catalog source of truth. Drop legacy
+      // entries during the provider cutover so it cannot surface dead PDP links
+      // or encourage a checkout that the server will reject.
+      if (!isLegacyCatalogPublic()) {
+        localStorage.removeItem("aha-cart");
+        return;
+      }
       const saved = localStorage.getItem("aha-cart");
       if (saved) {
         const parsed = JSON.parse(saved);

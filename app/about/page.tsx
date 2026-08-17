@@ -62,8 +62,8 @@ export default function AboutPage() {
                 is designed after the day job and printed to order.
               </p>
               <div className="mt-8">
-                <Link href="/shop" className="btn-primary min-h-12 px-8">
-                  Shop all products
+                <Link href="/#dispatch-heading" className="btn-primary min-h-12 px-8">
+                  Get the next release first
                 </Link>
               </div>
             </div>

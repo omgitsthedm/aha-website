@@ -30,10 +30,6 @@ export async function POST(request: Request) {
   if (!Array.isArray(body.lines) || !body.lines.length || !address?.address1 || !address.city || !address.zip || !address.country) {
     return NextResponse.json({ error: "Complete the shipping address to calculate the final total." }, { status: 400 });
   }
-  if (!getSquareLocationId() || !process.env.SQUARE_ACCESS_TOKEN) {
-    return NextResponse.json({ error: "Final pricing is temporarily unavailable." }, { status: 503 });
-  }
-
   let cart;
   try {
     cart = revalidateCart(body.lines);
@@ -41,6 +37,10 @@ export async function POST(request: Request) {
     return NextResponse.json({
       error: error instanceof Error ? error.message : "Cart could not be validated.",
     }, { status: 409 });
+  }
+
+  if (!getSquareLocationId() || !process.env.SQUARE_ACCESS_TOKEN) {
+    return NextResponse.json({ error: "Final pricing is temporarily unavailable." }, { status: 503 });
   }
 
   const { firstName, lastName } = splitName(body.contact.shippingName);

@@ -66,9 +66,9 @@ jobs:
           urls: |
             ${{ steps.target.outputs.url }}/
             ${{ steps.target.outputs.url }}/shop
-            ${{ steps.target.outputs.url }}/product/dont-fuck-fascists-shirt
             ${{ steps.target.outputs.url }}/cart
             ${{ steps.target.outputs.url }}/checkout
+            ${{ steps.target.outputs.url }}/contact
           runs: 3
           uploadArtifacts: true
           artifactName: lighthouse-${{ matrix.profile }}-results

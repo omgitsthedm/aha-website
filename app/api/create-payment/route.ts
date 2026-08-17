@@ -57,11 +57,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing payment details." }, { status: 400 });
   }
 
-  const locationId = getSquareLocationId();
-  if (!locationId || !process.env.SQUARE_ACCESS_TOKEN) {
-    return NextResponse.json({ error: "Checkout is temporarily unavailable. Please try again shortly." }, { status: 503 });
-  }
-
   // Idempotency: if this attempt already succeeded, return the same order.
   try {
     const existing = await findPaidOrderByIdempotencyKey(body.idempotencyKey);
@@ -77,6 +72,11 @@ export async function POST(request: Request) {
       { error: err instanceof Error ? err.message : "Cart could not be validated." },
       { status: 409 }
     );
+  }
+
+  const locationId = getSquareLocationId();
+  if (!locationId || !process.env.SQUARE_ACCESS_TOKEN) {
+    return NextResponse.json({ error: "Checkout is temporarily unavailable. Please try again shortly." }, { status: 503 });
   }
 
   // 2) Square prices the order (price + location tax). Shipping address drives destination tax.

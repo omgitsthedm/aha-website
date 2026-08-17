@@ -1,0 +1,857 @@
+{
+  "generated_at": "2026-08-16T22:05:03-07:00",
+  "square_location_id": "FGKRPYEXNV482",
+  "snapshot_counts": {
+    "total_items": 242,
+    "already_deleted": 122,
+    "active": 120
+  },
+  "archive_candidate_count": 118,
+  "archive_candidates": [
+    {
+      "id": "F5GB4RLEV3LCMFAFAEYHBDYI",
+      "name": "AHA Cuffed Beanie",
+      "version": 1777153945671,
+      "updated_at": "2026-04-25T21:52:25.671Z",
+      "variation_count": 12
+    },
+    {
+      "id": "6Q4KOD6MLQTPIMGLA47ZBWMU",
+      "name": "AHA Wall - Crossbody Bag",
+      "version": 1783993985871,
+      "updated_at": "2026-07-14T01:53:05.871Z",
+      "variation_count": 1
+    },
+    {
+      "id": "PZ47TIFZDB32KBGNMCSMSABQ",
+      "name": "Alter Ego",
+      "version": 1777153942391,
+      "updated_at": "2026-04-25T21:52:22.391Z",
+      "variation_count": 7
+    },
+    {
+      "id": "DFZK4LYYBCECRBCCUGIF3KJX",
+      "name": "Avenue B, New York - Grey Unisex Hoodie",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 6
+    },
+    {
+      "id": "CJRE6IETYXKNGDAIPT2DOXSZ",
+      "name": "Be You",
+      "version": 1777153938952,
+      "updated_at": "2026-04-25T21:52:18.952Z",
+      "variation_count": 7
+    },
+    {
+      "id": "QRRYWTBO7ZNNGWHYCQF27WEZ",
+      "name": "Be You",
+      "version": 1777153942391,
+      "updated_at": "2026-04-25T21:52:22.391Z",
+      "variation_count": 7
+    },
+    {
+      "id": "M37XHVM57SKTTGV3ZP3XRNFB",
+      "name": "Believe",
+      "version": 1777153938952,
+      "updated_at": "2026-04-25T21:52:18.952Z",
+      "variation_count": 7
+    },
+    {
+      "id": "7KTQJMEYBML6ODDTICW56JDQ",
+      "name": "Black Sheep - Bone Unisex Premium Sweatshirt",
+      "version": 1784008734520,
+      "updated_at": "2026-07-14T05:58:54.52Z",
+      "variation_count": 6
+    },
+    {
+      "id": "5HNTENCBUFECNSU3KPDW5VXE",
+      "name": "Black Sheep - Mint Unisex Premium Sweatshirt",
+      "version": 1784008743016,
+      "updated_at": "2026-07-14T05:59:03.016Z",
+      "variation_count": 6
+    },
+    {
+      "id": "HXC4I5F5VFCNO4FUB4OTJT5Z",
+      "name": "Black Sheep - Unisex Premium Sweatshirt",
+      "version": 1784008751027,
+      "updated_at": "2026-07-14T05:59:11.027Z",
+      "variation_count": 6
+    },
+    {
+      "id": "D7N6MV6VVXTZY5HSTRQP4HM3",
+      "name": "Black Sheep - Women's Fitted Tee",
+      "version": 1784525458187,
+      "updated_at": "2026-07-20T05:30:58.187Z",
+      "variation_count": 5
+    },
+    {
+      "id": "JXRETN667EZ4B4BUSU5P2WJC",
+      "name": "Black Sheep Can Cooler",
+      "version": 1784008818675,
+      "updated_at": "2026-07-14T06:00:18.675Z",
+      "variation_count": 2
+    },
+    {
+      "id": "IFKZ62UHMVENTPF6YYJVEQ3K",
+      "name": "Black Sheep Embroidered Crew Socks",
+      "version": 1784012375250,
+      "updated_at": "2026-07-14T06:59:35.25Z",
+      "variation_count": 6
+    },
+    {
+      "id": "X5K2ZOWTZBKUVG2ETIGLQWEQ",
+      "name": "Books and Regrets Tote Bag",
+      "version": 1784009173374,
+      "updated_at": "2026-07-14T06:06:13.374Z",
+      "variation_count": 2
+    },
+    {
+      "id": "2X7GZBW67J7VOOXQVFFX63O6",
+      "name": "Branded Black Bubble-free Stickers",
+      "version": 1777153952026,
+      "updated_at": "2026-04-25T21:52:32.026Z",
+      "variation_count": 3
+    },
+    {
+      "id": "QXL7RGM5HZIEBXDQRVXGME76",
+      "name": "Branded Unisex Hoodie",
+      "version": 1777588790954,
+      "updated_at": "2026-04-30T22:39:50.954Z",
+      "variation_count": 90
+    },
+    {
+      "id": "CF543SM6DI4LTGBGJLUA2RE4",
+      "name": "Branded White Bubble-free Stickers",
+      "version": 1777153952026,
+      "updated_at": "2026-04-25T21:52:32.026Z",
+      "variation_count": 3
+    },
+    {
+      "id": "XMNROVD2ZK5TCHAGP6PJAWCN",
+      "name": "Circle",
+      "version": 1777153941021,
+      "updated_at": "2026-04-25T21:52:21.021Z",
+      "variation_count": 7
+    },
+    {
+      "id": "3PBZ2WVZ3JUBJVQ6HWQO2O6I",
+      "name": "Cities",
+      "version": 1777153939666,
+      "updated_at": "2026-04-25T21:52:19.666Z",
+      "variation_count": 7
+    },
+    {
+      "id": "QHZPQQHJJJYN4AMV6QTIZU5T",
+      "name": "Cities",
+      "version": 1777153942391,
+      "updated_at": "2026-04-25T21:52:22.391Z",
+      "variation_count": 7
+    },
+    {
+      "id": "MKFTLSRQBH2MEXZU4CR2GUGF",
+      "name": "Classic - Black Unisex Hoodie",
+      "version": 1777153959285,
+      "updated_at": "2026-04-25T21:52:39.285Z",
+      "variation_count": 6
+    },
+    {
+      "id": "R6GBIRO2ZACK3KFPD2GSFTQH",
+      "name": "Classic AHA",
+      "version": 1777153945671,
+      "updated_at": "2026-04-25T21:52:25.671Z",
+      "variation_count": 12
+    },
+    {
+      "id": "FTK3ZSXDIFY75HRPAH4ZDMFA",
+      "name": "Club TechNoir - Black Unisex Short Sleeve T-shirt",
+      "version": 1777153955445,
+      "updated_at": "2026-04-25T21:52:35.445Z",
+      "variation_count": 7
+    },
+    {
+      "id": "MQIDKSKHVYVBW6H3PS55KFX7",
+      "name": "Club TechNoir - Unisex Short Sleeve T-shirt",
+      "version": 1784009181436,
+      "updated_at": "2026-07-14T06:06:21.436Z",
+      "variation_count": 1
+    },
+    {
+      "id": "U7ULOUSFBYGVJTYYFGKYMVSQ",
+      "name": "Colors",
+      "version": 1777153942391,
+      "updated_at": "2026-04-25T21:52:22.391Z",
+      "variation_count": 7
+    },
+    {
+      "id": "OCCWIWEJL6FMX3NVN37NZHQ5",
+      "name": "Colors Unisex Hoodie",
+      "version": 1777153945671,
+      "updated_at": "2026-04-25T21:52:25.671Z",
+      "variation_count": 78
+    },
+    {
+      "id": "XVY6Q4GS4ADXNKR5XCBIY44E",
+      "name": "Counting Sheep - Crossbody Bag",
+      "version": 1784008764190,
+      "updated_at": "2026-07-14T05:59:24.19Z",
+      "variation_count": 1
+    },
+    {
+      "id": "MHBABCSAVRLWTV2WFLVTB2A6",
+      "name": "Counting Sheep Tote Bag (Large With Pocket)",
+      "version": 1784008834975,
+      "updated_at": "2026-07-14T06:00:34.975Z",
+      "variation_count": 1
+    },
+    {
+      "id": "LFTMTQV2MCT7LTLUPEOOV422",
+      "name": "Counting Sheep Tote Bag (Regular)",
+      "version": 1784008827015,
+      "updated_at": "2026-07-14T06:00:27.015Z",
+      "variation_count": 1
+    },
+    {
+      "id": "NHVBOTQFVXWUZLZKDJ6N3VTR",
+      "name": "Cover Story",
+      "version": 1777153940368,
+      "updated_at": "2026-04-25T21:52:20.368Z",
+      "variation_count": 7
+    },
+    {
+      "id": "AEXH6MWLQVAE4QHPEUFVOS7E",
+      "name": "Crewneck",
+      "version": 1777153946378,
+      "updated_at": "2026-04-25T21:52:26.378Z",
+      "variation_count": 1
+    },
+    {
+      "id": "EOHCMLD3JPNIXCPGXMDDFJKP",
+      "name": "Dad hat",
+      "version": 1777153950715,
+      "updated_at": "2026-04-25T21:52:30.715Z",
+      "variation_count": 5
+    },
+    {
+      "id": "PGM3BYVXR6U6KEPY3F3XTF6B",
+      "name": "Do It For Al Orange",
+      "version": 1777153945001,
+      "updated_at": "2026-04-25T21:52:25.001Z",
+      "variation_count": 12
+    },
+    {
+      "id": "FDHAMCB77LCAKEOX546R6J63",
+      "name": "Do It For Al Orange Shirt",
+      "version": 1777153944319,
+      "updated_at": "2026-04-25T21:52:24.319Z",
+      "variation_count": 7
+    },
+    {
+      "id": "A42BLNHCSOJOCIXBBETJNRTR",
+      "name": "Do It For Al Purple",
+      "version": 1777153945001,
+      "updated_at": "2026-04-25T21:52:25.001Z",
+      "variation_count": 6
+    },
+    {
+      "id": "QWFDZPMI7HJT43L5ON6PKDTA",
+      "name": "Do It For Al Purple Shirt",
+      "version": 1777153944319,
+      "updated_at": "2026-04-25T21:52:24.319Z",
+      "variation_count": 7
+    },
+    {
+      "id": "2SRVWHCQQCIO7FVTTPS4PXLK",
+      "name": "Dont Fuck Fascists Shirt",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 49
+    },
+    {
+      "id": "KYNNERZAE4AGLNBLJU5K7K3C",
+      "name": "Dont Fuck Fascists Stickers",
+      "version": 1784009275932,
+      "updated_at": "2026-07-14T06:07:55.932Z",
+      "variation_count": 4
+    },
+    {
+      "id": "4UT7FKUICVRQ6HTGS756JEZX",
+      "name": "Dont Fuck Fascists Sweatshirt",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 60
+    },
+    {
+      "id": "JXPHIV5FH32L27QZ55INWG62",
+      "name": "Dont Fuck Fascists Unisex Hoodie",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 84
+    },
+    {
+      "id": "MLPSQTOK6H7SBL6FZV35HYZE",
+      "name": "Dots - Unisex Knitted Crewneck Sweater",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 9
+    },
+    {
+      "id": "QOMFTIGM5HTL5AWDBLZHYLBZ",
+      "name": "Dropout",
+      "version": 1777153940368,
+      "updated_at": "2026-04-25T21:52:20.368Z",
+      "variation_count": 7
+    },
+    {
+      "id": "N6TU2FXT4YHSKK2ZYIPPDJHJ",
+      "name": "EMO, But In Heels - Dark Grey Unisex Hoodie",
+      "version": 1777153955445,
+      "updated_at": "2026-04-25T21:52:35.445Z",
+      "variation_count": 6
+    },
+    {
+      "id": "S63GHS7AFO7YGSE7E3WG4ZHG",
+      "name": "EMO, But In Heels - White Unisex Premium Sweatshirt",
+      "version": 1777153954063,
+      "updated_at": "2026-04-25T21:52:34.063Z",
+      "variation_count": 6
+    },
+    {
+      "id": "ETA2QV7342Y6JQB222GUUOWY",
+      "name": "Enemy Of The State",
+      "version": 1777153947115,
+      "updated_at": "2026-04-25T21:52:27.115Z",
+      "variation_count": 42
+    },
+    {
+      "id": "3H6UMZ4XAFGDQ562X2WMA5QU",
+      "name": "Enemy Of The State Unisex Hoodie",
+      "version": 1777153947115,
+      "updated_at": "2026-04-25T21:52:27.115Z",
+      "variation_count": 78
+    },
+    {
+      "id": "4PRDL5F26UWZQFY52ZS3ACGB",
+      "name": "Enemy Of The State Unisex Sweatshirt",
+      "version": 1782149276726,
+      "updated_at": "2026-06-22T17:27:56.726Z",
+      "variation_count": 60
+    },
+    {
+      "id": "7PBXFAUI36E2OMMFUTWKSPGA",
+      "name": "Fuck Walter",
+      "version": 1777153944319,
+      "updated_at": "2026-04-25T21:52:24.319Z",
+      "variation_count": 7
+    },
+    {
+      "id": "ITWZLQZKEJON5K4QUS6CSK7F",
+      "name": "Haze - Lavender Unisex Premium Sweatshirt",
+      "version": 1777153956118,
+      "updated_at": "2026-04-25T21:52:36.118Z",
+      "variation_count": 6
+    },
+    {
+      "id": "RQGX6K5DLUO2SXKJ6OLASMVE",
+      "name": "Hope & Tomorrow - Pink Unisex Premium Sweatshirt",
+      "version": 1777153956118,
+      "updated_at": "2026-04-25T21:52:36.118Z",
+      "variation_count": 6
+    },
+    {
+      "id": "H4LTHIYKHH4ICQU5PBWL4TMO",
+      "name": "Hope and Tomorrow - Dark Grey Cuffed Beanie",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 1
+    },
+    {
+      "id": "UFZZ6MY2SNZ2EDVJQKLG67VB",
+      "name": "Hope and Tomorrow - Red Cuffed Beanie",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 1
+    },
+    {
+      "id": "IXIDT2JHXHGJP7TMG3V4BAXX",
+      "name": "Hot Air",
+      "version": 1777153939666,
+      "updated_at": "2026-04-25T21:52:19.666Z",
+      "variation_count": 7
+    },
+    {
+      "id": "Q4EBGFK6ZPBL7GC24WCVCQTW",
+      "name": "Japanese Garden Puzzle - Charcoal Unisex Hoodie",
+      "version": 1777153959285,
+      "updated_at": "2026-04-25T21:52:39.285Z",
+      "variation_count": 6
+    },
+    {
+      "id": "NXBZPAIZ34LDY5RSKBHJPPMU",
+      "name": "Just Trying My Best",
+      "version": 1777153943047,
+      "updated_at": "2026-04-25T21:52:23.047Z",
+      "variation_count": 7
+    },
+    {
+      "id": "JFFQHATGLHYYTROJSBSZB5IT",
+      "name": "Keano",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 7
+    },
+    {
+      "id": "VGTIMQTR2CEGNF3CCGVK3JQX",
+      "name": "Liberté",
+      "version": 1777153943679,
+      "updated_at": "2026-04-25T21:52:23.679Z",
+      "variation_count": 7
+    },
+    {
+      "id": "U647Q3G2WVIZIJBCTKRZEWHJ",
+      "name": "Library Tote Bag",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 2
+    },
+    {
+      "id": "AGZJVE7T2P6SI4ZG6QKRJHQ4",
+      "name": "Lipstick",
+      "version": 1777153940368,
+      "updated_at": "2026-04-25T21:52:20.368Z",
+      "variation_count": 7
+    },
+    {
+      "id": "PEHX6I224RFZPZGYAV2YWU5Y",
+      "name": "Loose Receipts Tote Bag",
+      "version": 1784009177276,
+      "updated_at": "2026-07-14T06:06:17.276Z",
+      "variation_count": 2
+    },
+    {
+      "id": "WQ57R4YN5Q3YTOZ2FGUN4X64",
+      "name": "Native",
+      "version": 1777153941702,
+      "updated_at": "2026-04-25T21:52:21.702Z",
+      "variation_count": 7
+    },
+    {
+      "id": "O3SDH7NXKDTYLRBXBOGPI457",
+      "name": "No Kings - Dark Grey Unisex Premium Sweatshirt",
+      "version": 1777153957397,
+      "updated_at": "2026-04-25T21:52:37.397Z",
+      "variation_count": 6
+    },
+    {
+      "id": "YIJNQYNSFGZ37446OYDE7WF3",
+      "name": "No Kings - White Short Sleeve T-shirt",
+      "version": 1777153957397,
+      "updated_at": "2026-04-25T21:52:37.397Z",
+      "variation_count": 7
+    },
+    {
+      "id": "KWO4RCGRGDTQDFACGZMRUGT3",
+      "name": "No Kings - White Unisex Premium Sweatshirt",
+      "version": 1777153956754,
+      "updated_at": "2026-04-25T21:52:36.754Z",
+      "variation_count": 6
+    },
+    {
+      "id": "VVBBCWCEUFFOET54FX5LJLZY",
+      "name": "No Place Like New York - Charcoal Unisex Premium Sweatshirt",
+      "version": 1777153953387,
+      "updated_at": "2026-04-25T21:52:33.387Z",
+      "variation_count": 6
+    },
+    {
+      "id": "6GNYF4IGDV7WGLZNW2ZVKJV6",
+      "name": "No Place Like New York - Grey Unisex Premium Sweatshirt",
+      "version": 1782149277802,
+      "updated_at": "2026-06-22T17:27:57.802Z",
+      "variation_count": 6
+    },
+    {
+      "id": "CTLASTY4KYNPEQADAKHAZJXR",
+      "name": "Not A $220 Sweater - Navy Unisex Premium Sweatshirt",
+      "version": 1777153957397,
+      "updated_at": "2026-04-25T21:52:37.397Z",
+      "variation_count": 6
+    },
+    {
+      "id": "JHQP6CIGEOSRGH6KYSK43PEZ",
+      "name": "Number 7",
+      "version": 1777153939666,
+      "updated_at": "2026-04-25T21:52:19.666Z",
+      "variation_count": 7
+    },
+    {
+      "id": "57ABG7JJ45TXRHQJNIVAENWE",
+      "name": "Palms",
+      "version": 1777153941021,
+      "updated_at": "2026-04-25T21:52:21.021Z",
+      "variation_count": 7
+    },
+    {
+      "id": "RTJFDWSL2KCIATMFI6X7BVLH",
+      "name": "Party People",
+      "version": 1777153943679,
+      "updated_at": "2026-04-25T21:52:23.679Z",
+      "variation_count": 7
+    },
+    {
+      "id": "XPYOJJ3TZY3TFIKRM27DAF3S",
+      "name": "Pink Sheep Comfy Socks",
+      "version": 1784009123068,
+      "updated_at": "2026-07-14T06:05:23.068Z",
+      "variation_count": 1
+    },
+    {
+      "id": "PEP2IHGCVXGTBVZ3D3MACNID",
+      "name": "Rebel Rebel",
+      "version": 1777153943047,
+      "updated_at": "2026-04-25T21:52:23.047Z",
+      "variation_count": 7
+    },
+    {
+      "id": "GIRAJA764NYDKCQYCRQZLQR7",
+      "name": "Relativity",
+      "version": 1777153941702,
+      "updated_at": "2026-04-25T21:52:21.702Z",
+      "variation_count": 7
+    },
+    {
+      "id": "VCA32RQG6RQBGW4M5QULU3WC",
+      "name": "Retro (Colors) Unisex Hoodie",
+      "version": 1777588792694,
+      "updated_at": "2026-04-30T22:39:52.694Z",
+      "variation_count": 84
+    },
+    {
+      "id": "FX7I4AJMGOAGFZWDY2XH7TIS",
+      "name": "Retro - Black Unisex Short Sleeve T-shirt",
+      "version": 1777153954742,
+      "updated_at": "2026-04-25T21:52:34.742Z",
+      "variation_count": 7
+    },
+    {
+      "id": "GX6WUI36C6LDR5AM7AJW7RME",
+      "name": "Retro Dad Hat",
+      "version": 1777153951362,
+      "updated_at": "2026-04-25T21:52:31.362Z",
+      "variation_count": 5
+    },
+    {
+      "id": "G3CSQA4J2MTPALKL4SNYBWEL",
+      "name": "Retro Golf Rope Cap",
+      "version": 1777153950715,
+      "updated_at": "2026-04-25T21:52:30.715Z",
+      "variation_count": 3
+    },
+    {
+      "id": "M23Q7M7QL2WHX5NIMGDF4UR3",
+      "name": "Retro Golf Rope Cap",
+      "version": 1777153951362,
+      "updated_at": "2026-04-25T21:52:31.362Z",
+      "variation_count": 3
+    },
+    {
+      "id": "KMZO4ZOZJG7PTGLBPLNABGDB",
+      "name": "Revolution",
+      "version": 1777153943679,
+      "updated_at": "2026-04-25T21:52:23.679Z",
+      "variation_count": 7
+    },
+    {
+      "id": "YXUEWD4FTKROYEUFO5ZBCTOX",
+      "name": "Roaring 20s",
+      "version": 1777153945001,
+      "updated_at": "2026-04-25T21:52:25.001Z",
+      "variation_count": 6
+    },
+    {
+      "id": "ANDP7LX74OJQUHTRBBKSMKAR",
+      "name": "Royal - Black Unisex Hoodie",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 6
+    },
+    {
+      "id": "6MRGHBFZB6ZHUGFG5FBUZBQH",
+      "name": "Scarlet Letter",
+      "version": 1777153941021,
+      "updated_at": "2026-04-25T21:52:21.021Z",
+      "variation_count": 7
+    },
+    {
+      "id": "NB3JKLXNX5GVWBGNAIYXTSS6",
+      "name": "Set (#1) of pin buttons",
+      "version": 1777153943679,
+      "updated_at": "2026-04-25T21:52:23.679Z",
+      "variation_count": 1
+    },
+    {
+      "id": "IR43NDPVMGIUSWPJ7CAMBADJ",
+      "name": "Set (#2) of pin buttons",
+      "version": 1777153945001,
+      "updated_at": "2026-04-25T21:52:25.001Z",
+      "variation_count": 2
+    },
+    {
+      "id": "3JVMXP2XKUDYTRWQBI5G2YGP",
+      "name": "Sex Fashion and Rock n Roll",
+      "version": 1777153941021,
+      "updated_at": "2026-04-25T21:52:21.021Z",
+      "variation_count": 7
+    },
+    {
+      "id": "AO6IEUS3SAJV4HMZL6Q2BDBZ",
+      "name": "Sheep Min - Black Unisex Hoodie",
+      "version": 1777153958651,
+      "updated_at": "2026-04-25T21:52:38.651Z",
+      "variation_count": 6
+    },
+    {
+      "id": "MBSW7EUBK7LNKDWFSOHFSOPK",
+      "name": "Sheep Min - Dark Tan Unisex Hoodie",
+      "version": 1777153958651,
+      "updated_at": "2026-04-25T21:52:38.651Z",
+      "variation_count": 6
+    },
+    {
+      "id": "4ZXMDPVOUKFMM24HK2MWW7RP",
+      "name": "Sheep Min - Grey Unisex Hoodie",
+      "version": 1777153958651,
+      "updated_at": "2026-04-25T21:52:38.651Z",
+      "variation_count": 6
+    },
+    {
+      "id": "CAO5L4WWE7PA6VFDOOIAMIYN",
+      "name": "Sheep Min - Maroon Unisex Hoodie",
+      "version": 1777153958651,
+      "updated_at": "2026-04-25T21:52:38.651Z",
+      "variation_count": 6
+    },
+    {
+      "id": "AONOKECUUAPXW3UFUNLAJMTY",
+      "name": "Social Club",
+      "version": 1777153943047,
+      "updated_at": "2026-04-25T21:52:23.047Z",
+      "variation_count": 7
+    },
+    {
+      "id": "7RE646QR3G2RKHHBFQ4TRNFS",
+      "name": "Splatter",
+      "version": 1777153945671,
+      "updated_at": "2026-04-25T21:52:25.671Z",
+      "variation_count": 6
+    },
+    {
+      "id": "VTW4NXXWULXMBTFVPGHAHNLE",
+      "name": "Start A Riot",
+      "version": 1777153941702,
+      "updated_at": "2026-04-25T21:52:21.702Z",
+      "variation_count": 7
+    },
+    {
+      "id": "DAYYKEUHYDWSO6E3JYEMV4OG",
+      "name": "Unisex Aftermath *Comfort Colors",
+      "version": 1777153950014,
+      "updated_at": "2026-04-25T21:52:30.014Z",
+      "variation_count": 28
+    },
+    {
+      "id": "4WYEA455REM6NB5MMV6L4QX7",
+      "name": "Unisex Crush It! *Comfort Colors",
+      "version": 1777153949314,
+      "updated_at": "2026-04-25T21:52:29.314Z",
+      "variation_count": 28
+    },
+    {
+      "id": "JUZF25GPMFBIE24II5VDOAAB",
+      "name": "Unisex Dont Fuck Fascists *Comfort Colors",
+      "version": 1777153951362,
+      "updated_at": "2026-04-25T21:52:31.362Z",
+      "variation_count": 42
+    },
+    {
+      "id": "IRY4NSEW5CAZOJIVC4YG52YD",
+      "name": "Unisex Dont Lick The Boot *Comfort Colors",
+      "version": 1777153949314,
+      "updated_at": "2026-04-25T21:52:29.314Z",
+      "variation_count": 28
+    },
+    {
+      "id": "X2JBKSRACXTWS6B7JTFQ33H5",
+      "name": "Unisex Enemy Of The State *Comfort Colors",
+      "version": 1777153948597,
+      "updated_at": "2026-04-25T21:52:28.597Z",
+      "variation_count": 35
+    },
+    {
+      "id": "APP6RGZ3KEMUSX56VQZ3MTYS",
+      "name": "Unisex Flower Shop *Comfort Colors",
+      "version": 1777153948597,
+      "updated_at": "2026-04-25T21:52:28.597Z",
+      "variation_count": 28
+    },
+    {
+      "id": "YKQKY6PGJ3WEARXCFNXMYSP6",
+      "name": "Unisex Just Trying My Best *Comfort Colors",
+      "version": 1777153952714,
+      "updated_at": "2026-04-25T21:52:32.714Z",
+      "variation_count": 28
+    },
+    {
+      "id": "EVKXE2XHTTWBVGGWSLL6NAZC",
+      "name": "Unisex Lipstick *Comfort Colors",
+      "version": 1777153950014,
+      "updated_at": "2026-04-25T21:52:30.014Z",
+      "variation_count": 28
+    },
+    {
+      "id": "ACQT5U25CCBOCDZ46FKE5HJF",
+      "name": "Unisex Live To Read *Comfort Colors",
+      "version": 1777153947861,
+      "updated_at": "2026-04-25T21:52:27.861Z",
+      "variation_count": 28
+    },
+    {
+      "id": "MZYAU5ZT7TUY6HJCPTSGNKYT",
+      "name": "Unisex No Kings *Comfort Colors",
+      "version": 1777153948597,
+      "updated_at": "2026-04-25T21:52:28.597Z",
+      "variation_count": 28
+    },
+    {
+      "id": "CI2BBIUQDCSNS77O7XLKLMDJ",
+      "name": "Unisex Party People *Comfort Colors",
+      "version": 1777153951362,
+      "updated_at": "2026-04-25T21:52:31.362Z",
+      "variation_count": 21
+    },
+    {
+      "id": "YACZUVSAR2Z3I4J7DAMPJS23",
+      "name": "Unisex Read Banned Book *Comfort Colors",
+      "version": 1777153948597,
+      "updated_at": "2026-04-25T21:52:28.597Z",
+      "variation_count": 28
+    },
+    {
+      "id": "S2DH22UUYSGPDOVZA6HTY5RK",
+      "name": "Unisex Rebel Rebel *Comfort Colors",
+      "version": 1777153952714,
+      "updated_at": "2026-04-25T21:52:32.714Z",
+      "variation_count": 28
+    },
+    {
+      "id": "KO5HDY7IFBAFBWXSOE6FPP2A",
+      "name": "Unisex Relativity *Comfort Colors",
+      "version": 1777153949314,
+      "updated_at": "2026-04-25T21:52:29.314Z",
+      "variation_count": 35
+    },
+    {
+      "id": "PAJQKCHBSQ3IU2CMOOSTFLDO",
+      "name": "Unisex Retro *Comfort Colors",
+      "version": 1777153950715,
+      "updated_at": "2026-04-25T21:52:30.715Z",
+      "variation_count": 35
+    },
+    {
+      "id": "OTKVEH4IZQBYDMFGRFSRQZXH",
+      "name": "Unisex Revolution *Comfort Colors",
+      "version": 1777153950014,
+      "updated_at": "2026-04-25T21:52:30.014Z",
+      "variation_count": 35
+    },
+    {
+      "id": "664ZGRWCP6A425GCSVL7MGGB",
+      "name": "Unisex Rock On *Comfort Colors",
+      "version": 1777153952714,
+      "updated_at": "2026-04-25T21:52:32.714Z",
+      "variation_count": 28
+    },
+    {
+      "id": "BGHEXMGQ7RSIDHVHS4L7AET7",
+      "name": "Unisex Social Club *Comfort Colors",
+      "version": 1777153950014,
+      "updated_at": "2026-04-25T21:52:30.014Z",
+      "variation_count": 14
+    },
+    {
+      "id": "PX273TVCCC7WIRWGSTZH7AN5",
+      "name": "Unisex Thoughts *Comfort Colors",
+      "version": 1777153952026,
+      "updated_at": "2026-04-25T21:52:32.026Z",
+      "variation_count": 28
+    },
+    {
+      "id": "ZVVT7QM65ZSZNSIG6P7FSOJX",
+      "name": "Unisex the Crime of Genocide *Comfort Colors",
+      "version": 1777153949314,
+      "updated_at": "2026-04-25T21:52:29.314Z",
+      "variation_count": 28
+    },
+    {
+      "id": "R7ERO243J4IODTSCROETORFG",
+      "name": "Waves",
+      "version": 1777153941702,
+      "updated_at": "2026-04-25T21:52:21.702Z",
+      "variation_count": 7
+    },
+    {
+      "id": "MY575EFDGM5EZGLB2NXI6MEK",
+      "name": "Winter Track Relay - Unisex classic tee",
+      "version": 1777153959285,
+      "updated_at": "2026-04-25T21:52:39.285Z",
+      "variation_count": 8
+    },
+    {
+      "id": "Q4UUZEIZVY2DZCYX7GAHRMIE",
+      "name": "Yellow Reversible Bucket Hat",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 3
+    },
+    {
+      "id": "WIICZ6W5POWL4LNTVVATL3BD",
+      "name": "Yikes",
+      "version": 1783593474770,
+      "updated_at": "2026-07-09T10:37:54.77Z",
+      "variation_count": 6
+    },
+    {
+      "id": "XTN3LMZAQM7OAN2LLYRX23DT",
+      "name": "You Are Here - Black Unisex Short Sleeve T-shirt",
+      "version": 1777153954742,
+      "updated_at": "2026-04-25T21:52:34.742Z",
+      "variation_count": 7
+    },
+    {
+      "id": "7DIZTCWPV4BF65X5SZBIAL64",
+      "name": "Zebra - Unisex Knitted Cardigan",
+      "version": 1783993112736,
+      "updated_at": "2026-07-14T01:38:32.736Z",
+      "variation_count": 8
+    }
+  ],
+  "preserve_count": 2,
+  "preserve_items": [
+    {
+      "id": "WBGU2P2CKLDF2UKTOWY4KAZR",
+      "name": "Billable Hour",
+      "product_type": "LEGACY_SQUARE_ONLINE_SERVICE",
+      "version": 1777153938952,
+      "updated_at": "2026-04-25T21:52:18.952Z",
+      "variation_count": 1
+    },
+    {
+      "id": "QNKFUEOAIGWZRTKZ7G3VWTYQ",
+      "name": "Discount",
+      "product_type": "LEGACY_SQUARE_ONLINE_SERVICE",
+      "version": 1777153938952,
+      "updated_at": "2026-04-25T21:52:18.952Z",
+      "variation_count": 1
+    }
+  ]
+}

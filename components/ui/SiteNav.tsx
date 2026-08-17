@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import { type SearchIndexItem } from "@/components/ui/SearchOverlay";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 // Portal overlay that only renders when opened — load it on demand.
 const SearchOverlay = dynamic(() => import("@/components/ui/SearchOverlay").then((m) => m.SearchOverlay), { ssr: false });
@@ -58,6 +59,7 @@ function isActive(pathname: string, href: string): boolean {
 }
 
 export function SiteNav() {
+  const catalogIsPublic = isLegacyCatalogPublic();
   const { totalItems, setCartOpen } = useCart();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -98,6 +100,7 @@ export function SiteNav() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
+      if (!catalogIsPublic) return;
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
         event.preventDefault();
         setSearchOpen((prev) => !prev);
@@ -114,7 +117,7 @@ export function SiteNav() {
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [catalogIsPublic]);
 
   return (
     <header className="safe-top safe-x fixed inset-x-0 top-0 z-[100] border-b border-border/10 bg-void">
@@ -125,6 +128,7 @@ export function SiteNav() {
 
         <div className="flex items-center">
           <div className="hidden items-center lg:flex">
+            {catalogIsPublic && <>
             {genderLinks.map((gender) => (
               <div key={gender.label} className="group relative">
                 <Link
@@ -182,6 +186,7 @@ export function SiteNav() {
             ))}
 
             <span className="mx-2 h-4 w-px bg-border/10" aria-hidden="true" />
+            </>}
 
             {utilityLinks.map((link) => (
               <Link
@@ -196,6 +201,7 @@ export function SiteNav() {
             ))}
           </div>
 
+          {catalogIsPublic && <>
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
@@ -208,7 +214,7 @@ export function SiteNav() {
               <path d="m16.5 16.5 4 4" />
             </svg>
           </button>
-
+          <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} index={searchIndex} />
           <button
             type="button"
             onClick={() => setCartOpen(true)}
@@ -217,8 +223,7 @@ export function SiteNav() {
           >
             Bag{totalItems ? ` ${totalItems}` : ""}
           </button>
-
-          <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} index={searchIndex} />
+          </>}
 
           <button
             type="button"
@@ -240,6 +245,7 @@ export function SiteNav() {
       >
         <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6">
           <ul className="space-y-1">
+            {catalogIsPublic && <>
             {genderLinks.map((gender) => (
               <li key={gender.label}>
                 <button
@@ -282,6 +288,7 @@ export function SiteNav() {
             ))}
 
             <li className="border-t border-border/10 pt-2" aria-hidden="true" />
+            </>}
 
             {utilityLinks.map((link) => (
               <li key={link.href}>

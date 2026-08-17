@@ -12,6 +12,7 @@ import type { CategoryMeta, CategorySlug, GenderSlug } from "@/lib/commerce/taxo
 import { CATEGORIES, getCategoryBySlug, productMatchesCategory, productMatchesGender } from "@/lib/commerce/taxonomy";
 import { useInfiniteList } from "@/lib/hooks/useInfiniteScroll";
 import { APPAREL_SIZE_ORDER, extractVariationSize } from "@/lib/utils/variation";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 interface CategoryShopContentProps {
   products: Product[];
@@ -38,7 +39,21 @@ interface CategoryShopContentProps {
 
 const PAGE_SIZE = 24;
 
-export function CategoryShopContent({
+function CatalogMigrationNotice() {
+  return (
+    <section aria-label="Store update" className="border border-border/40 bg-surface px-5 py-16 text-center">
+      <h2 className="font-display text-2xl font-black uppercase">The new collection is in production</h2>
+      <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">The previous catalog is archived while we prepare the next release.</p>
+      <Link href="/#dispatch-heading" className="primary-action mt-6 inline-flex min-h-11 items-center px-6 py-3 text-xs">Get release updates</Link>
+    </section>
+  );
+}
+
+export function CategoryShopContent(props: CategoryShopContentProps) {
+  return isLegacyCatalogPublic() ? <OpenCategoryShopContent {...props} /> : <CatalogMigrationNotice />;
+}
+
+function OpenCategoryShopContent({
   products,
   gender,
   activeCategory,

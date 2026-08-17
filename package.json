@@ -39,7 +39,8 @@
     "verify:netlify-live": "bash ops/netlify-target-guard.sh live",
     "product-factory": "node scripts/product-factory.mjs",
     "product:new": "node scripts/product-new.mjs",
-    "audit:provider-liveness": "node scripts/audit-provider-liveness.mjs"
+    "audit:provider-liveness": "node scripts/audit-provider-liveness.mjs",
+    "archive:square-legacy": "tsx scripts/archive-square-legacy-catalog.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
