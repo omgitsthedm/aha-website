@@ -45,7 +45,7 @@ export default function ManifestoPage() {
               After Hours Agenda is expressive everyday clothing from New York — made after the day job, printed to order, worn a hundred different ways. This is the whole idea, in one place.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/shop" className="btn-primary px-7">Shop the label</Link>
+              <Link href="/#dispatch-heading" className="btn-primary px-7">Get the next release first</Link>
               <Link href="/lookbook" className="btn-secondary">See the lookbook</Link>
             </div>
           </div>

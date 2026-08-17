@@ -6,17 +6,20 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { filterProductsByCategory } from "@/lib/commerce/taxonomy";
 import Image from "next/image";
 import { buildMetadata } from "@/components/seo/buildMetadata";
+import { CatalogMigrationPage, catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 export const revalidate = 300;
 
-export const metadata = buildMetadata({
+export const metadata = isLegacyCatalogPublic() ? buildMetadata({
   title: "Totes, Hats, Socks & Stickers",
   description:
     "Counting Sheep totes, embroidered black sheep socks, hats, pins, and stickers — small pieces from an independent NYC label, made to order.",
   path: "/accessories",
-});
+}) : catalogMigrationMetadata("/accessories");
 
 export default async function AccessoriesPage() {
+  if (!isLegacyCatalogPublic()) return <CatalogMigrationPage />;
   const allProducts = await getAllProducts();
   const products = filterProductsByCategory(allProducts, "accessories");
 

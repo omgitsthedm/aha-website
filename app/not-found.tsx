@@ -24,7 +24,7 @@ export default function NotFound() {
           The page you&apos;re after doesn&apos;t exist or has moved. The sheep knows the way back.
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
-          <Link href="/shop" className="primary-action min-h-11 px-5 py-3 text-xs">Open shop</Link>
+          <Link href="/#dispatch-heading" className="primary-action min-h-11 px-5 py-3 text-xs">Get release updates</Link>
           <Link href="/" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">Go home</Link>
         </div>
       </div>

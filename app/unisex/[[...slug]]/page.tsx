@@ -15,6 +15,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { buildMetadata } from "@/components/seo/buildMetadata";
+import { CatalogMigrationPage, catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 export const revalidate = 300;
 
@@ -28,6 +30,7 @@ const BASE_PATH = "/unisex";
 
 export async function generateMetadata({ params }: UnisexPageProps): Promise<Metadata> {
   const { slug } = await params;
+  if (!isLegacyCatalogPublic()) return catalogMigrationMetadata(slug?.length ? `${BASE_PATH}/${slug.join("/")}` : BASE_PATH);
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
   const gender = getGenderBySlug(GENDER)!;
@@ -59,6 +62,7 @@ export async function generateMetadata({ params }: UnisexPageProps): Promise<Met
 }
 
 export default async function UnisexPage({ params, searchParams }: UnisexPageProps) {
+  if (!isLegacyCatalogPublic()) return <CatalogMigrationPage />;
   const { slug } = await params;
   const { page } = await searchParams;
   const categorySlug = slug?.[0];

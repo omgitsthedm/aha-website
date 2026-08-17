@@ -5,6 +5,7 @@ import { orders, orderItems, payments, auditLog } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { loadProducts } from "@/lib/data/products";
 import { INTERNATIONAL_SHIPPING_CENTS, isInternational } from "@/lib/commerce/policies";
+import { assertLegacyCatalogCheckoutAllowed } from "@/lib/commerce/catalog-policy";
 import type { AhaProduct, AhaVariant } from "@/lib/types/product";
 
 export interface CheckoutLine {
@@ -52,8 +53,7 @@ function variationIndex(): Map<string, IndexEntry> {
   return idx;
 }
 
-/** Recompute the cart from server truth. Throws if any line is unknown or not purchasable. */
-export function revalidateCart(lines: CheckoutLine[]): RevalidatedCart {
+function revalidateCatalogLines(lines: CheckoutLine[]): RevalidatedCart {
   if (!lines.length) throw new Error("Cart is empty.");
   const idx = variationIndex();
   const items: RevalidatedItem[] = [];
@@ -84,6 +84,24 @@ export function revalidateCart(lines: CheckoutLine[]): RevalidatedCart {
     });
   }
   return { items, subtotal, currency };
+}
+
+/** Recompute a public checkout cart from server truth. */
+export function revalidateCart(lines: CheckoutLine[]): RevalidatedCart {
+  // This is intentionally the first checkout guard. A stale local cart must
+  // fail before its Square variation can be priced or attached to an order.
+  assertLegacyCatalogCheckoutAllowed();
+  return revalidateCatalogLines(lines);
+}
+
+/**
+ * Rebuild fulfillment DNA for an order that was already paid before the
+ * catalog hold. This does not authorize a charge or a new order; reconciliation
+ * falls back to the immutable order-item snapshot if the legacy manifest no
+ * longer contains the variant.
+ */
+export function revalidateCartForFulfillmentRetry(lines: CheckoutLine[]): RevalidatedCart {
+  return revalidateCatalogLines(lines);
 }
 
 function orderNumber(): string {

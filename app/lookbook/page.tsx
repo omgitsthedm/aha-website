@@ -5,22 +5,18 @@ import Image from "next/image";
 export const metadata = buildMetadata({
   title: "Lookbook",
   description:
-    "The current After Hours Agenda lineup, laid out flat: tees, hoodies, sweatshirts, and accessories — every piece shoppable and printed to order.",
+    "A visual archive of After Hours Agenda campaign work.",
   path: "/lookbook",
 });
 
-// Current label-owned campaign compositions linked to the featured products.
+// Label-owned campaign compositions. This is editorial only while the catalog
+// is migrated; it must not point at archived product detail pages.
 const editorialLooks = [
   {
     image: "/campaign/hero-home.jpg",
     eyebrow: "The lineup",
     title: "Start here",
     note: "Three ways into the label: loud color, clean logo, soft warmth.",
-    products: [
-      { label: "Be You tee", href: "/product/be-you" },
-      { label: "Classic AHA hoodie", href: "/product/classic-black-unisex-hoodie" },
-      { label: "Hope & Tomorrow sweatshirt", href: "/product/hope-tomorrow-pink-unisex-premium-sweatshirt" },
-    ],
     aspect: "aspect-[4/5]",
   },
   {
@@ -28,10 +24,6 @@ const editorialLooks = [
     eyebrow: "Heavyweights",
     title: "Statement hoodies",
     note: "Premium pullover hoodies with graphics that carry the conversation.",
-    products: [
-      { label: "Enemy of the State hoodie", href: "/product/enemy-of-the-state-unisex-hoodie" },
-      { label: "Japanese Garden Puzzle hoodie", href: "/product/japanese-garden-puzzle-charcoal-unisex-hoodie" },
-    ],
     aspect: "aspect-[3/4]",
   },
   {
@@ -39,10 +31,6 @@ const editorialLooks = [
     eyebrow: "Soft tones",
     title: "Color you can live in",
     note: "Dusty rose and lavender premium sweatshirts, printed to order.",
-    products: [
-      { label: "Hope & Tomorrow sweatshirt", href: "/product/hope-tomorrow-pink-unisex-premium-sweatshirt" },
-      { label: "Haze sweatshirt", href: "/product/haze-lavender-unisex-premium-sweatshirt" },
-    ],
     aspect: "aspect-[4/3]",
   },
   {
@@ -50,10 +38,6 @@ const editorialLooks = [
     eyebrow: "Unisex",
     title: "One cut, worn your way",
     note: "The unisex core: heavyweight fleece built for long nights.",
-    products: [
-      { label: "No Place Like New York sweatshirt", href: "/product/no-place-like-new-york-charcoal-unisex-premium-sweatshirt" },
-      { label: "EMO But In Heels hoodie", href: "/product/emo-but-in-heels-dark-grey-unisex-hoodie" },
-    ],
     aspect: "aspect-square",
   },
   {
@@ -61,11 +45,6 @@ const editorialLooks = [
     eyebrow: "Accessories",
     title: "The finishing move",
     note: "Embroidered dad hats and pin sets. Small pieces, heavy presence.",
-    products: [
-      { label: "Dad hat", href: "/product/dad-hat" },
-      { label: "Retro dad hat", href: "/product/retro-dad-hat" },
-      { label: "Pin set #1", href: "/product/set-1-of-pin-buttons" },
-    ],
     aspect: "aspect-[3/4]",
   },
 ];
@@ -82,18 +61,15 @@ export default function LookbookPage() {
                 Lookbook
               </p>
               <h1 className="mt-5 font-display text-[clamp(2.75rem,9vw,6.5rem)] font-bold uppercase leading-[0.86] tracking-[-0.055em] text-cream">
-                The current lineup
+                Campaign archive
               </h1>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-                A focused edit of the current catalog. Each composition links
-                directly to the featured products and their live options.
+                A focused visual archive of the label while the next release is
+                being prepared.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/shop" className="btn-primary min-h-12 px-7">
-                  Shop all products
-                </Link>
-                <Link href="/unisex" className="btn-secondary min-h-12 px-7">
-                  Shop unisex
+                <Link href="/#dispatch-heading" className="btn-primary min-h-12 px-7">
+                  Get the next release first
                 </Link>
               </div>
             </div>
@@ -135,7 +111,7 @@ export default function LookbookPage() {
               id="looks-heading"
               className="mt-2 font-display text-[clamp(2rem,5vw,4rem)] font-bold leading-none tracking-[-0.045em] text-cream"
             >
-              Shop the lineup
+              The visual archive
             </h2>
           </div>
 
@@ -161,18 +137,6 @@ export default function LookbookPage() {
                   <p className="mt-1 text-sm leading-relaxed text-muted">
                     {look.note}
                   </p>
-                  <ul className="mt-3 space-y-1">
-                    {look.products.map((product) => (
-                      <li key={product.href}>
-                        <Link
-                          href={product.href}
-                          className="inline-flex min-h-9 items-center text-sm font-bold text-accent underline underline-offset-4 hover:text-cream"
-                        >
-                          {product.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </article>
             ))}

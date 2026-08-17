@@ -10,6 +10,7 @@ import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { useInfiniteList } from "@/lib/hooks/useInfiniteScroll";
 import { APPAREL_SIZE_ORDER, extractVariationSize } from "@/lib/utils/variation";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 interface ShopContentProps {
   products: Product[];
@@ -25,7 +26,21 @@ interface ShopContentProps {
 
 const PAGE_SIZE = 24;
 
-export function ShopContent({ products, collections, initialPage = 1, paginationPath, purchasableSizes, colorCounts, colorNames }: ShopContentProps) {
+function CatalogMigrationNotice() {
+  return (
+    <section aria-label="Store update" className="border border-border/40 bg-surface px-5 py-16 text-center">
+      <h2 className="font-display text-2xl font-black uppercase">The new collection is in production</h2>
+      <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">The previous catalog is archived while we prepare the next release.</p>
+      <Link href="/#dispatch-heading" className="primary-action mt-6 inline-flex min-h-11 items-center px-6 py-3 text-xs">Get release updates</Link>
+    </section>
+  );
+}
+
+export function ShopContent(props: ShopContentProps) {
+  return isLegacyCatalogPublic() ? <OpenShopContent {...props} /> : <CatalogMigrationNotice />;
+}
+
+function OpenShopContent({ products, collections, initialPage = 1, paginationPath, purchasableSizes, colorCounts, colorNames }: ShopContentProps) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeSize, setActiveSize] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");

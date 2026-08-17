@@ -6,6 +6,7 @@ import Link from "next/link";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SheepMark } from "@/components/ui/SheepMark";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 interface SavedProduct { name: string; slug: string; priceFormatted: string; image: string }
 
@@ -26,6 +27,11 @@ export function WishlistContent() {
   const [items, setItems] = useState<SavedProduct[]>([]);
 
   useEffect(() => {
+    if (!isLegacyCatalogPublic()) {
+      try { localStorage.removeItem(KEY); } catch { /* storage may be unavailable */ }
+      setReady(true);
+      return;
+    }
     const slugs = readSlugs();
     if (slugs.length === 0) { setReady(true); return; }
     const controller = new AbortController();
@@ -56,10 +62,10 @@ export function WishlistContent() {
   if (items.length === 0) {
     return (
       <div className="px-4 pb-24 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-3xl">
-        <PageHeader eyebrow="Saved" title="Your wishlist" description="Nothing saved yet. Tap the heart on any product to keep it here for later — it stays in this browser." />
+        <PageHeader eyebrow="Saved" title="Your wishlist" description="Saved items will return with the next release." />
         <div className="mt-2 flex flex-col items-start gap-4">
           <SheepMark className="w-16 text-muted" />
-          <Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Browse the shop</Link>
+          {isLegacyCatalogPublic() && <Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Browse the shop</Link>}
         </div>
       </div></div>
     );

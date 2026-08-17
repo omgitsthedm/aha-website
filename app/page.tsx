@@ -8,13 +8,15 @@ import { NeonSheep } from "@/components/brand/NeonSheep";
 import { FeaturedGraphic } from "@/components/homepage/FeaturedGraphic";
 import { SocialProofWall } from "@/components/homepage/SocialProofWall";
 import { buildMetadata } from "@/components/seo/buildMetadata";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 export const metadata: Metadata = {
   ...buildMetadata({
     title: "Independent NYC Streetwear",
     shareTitle: "After Hours Agenda | NYC Streetwear",
-    description:
-      "Independent NYC streetwear, printed to order. Graphic tees, hoodies, knitwear, totes — drawn after hours in New York, made when you order.",
+    description: isLegacyCatalogPublic()
+      ? "Independent NYC streetwear, printed to order. Graphic tees, hoodies, knitwear, totes — drawn after hours in New York, made when you order."
+      : "The previous After Hours Agenda collection is archived while the next independent NYC streetwear release is prepared.",
     path: "/",
   }),
   // Absolute title bypasses the layout's "%s | After Hours Agenda" template so
@@ -30,7 +32,8 @@ const categoryTiles = [
 ];
 
 export default async function HomePage() {
-  const products = await getAllProducts();
+  const catalogIsPublic = isLegacyCatalogPublic();
+  const products = catalogIsPublic ? await getAllProducts() : [];
   const featured = products.slice(0, 8);
 
   // Featured-graphic spotlight: prefer a strong statement piece, fall back to the
@@ -46,17 +49,25 @@ export default async function HomePage() {
       <section aria-labelledby="hero-heading" className="mx-auto max-w-[1440px] px-4 pt-10 sm:px-6 lg:pt-16">
         <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
           <div>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">Independent NYC Streetwear · Made to order</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">
+              {catalogIsPublic ? "Independent NYC Streetwear · Made to order" : "Independent NYC label · New collection in production"}
+            </p>
             <h1 id="hero-heading" className="mt-5 font-display text-[clamp(2.75rem,6.8vw,5.5rem)] font-bold uppercase leading-[0.88] tracking-[-0.05em] text-cream">
               After Hours <span className="text-accent">Agenda</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-              Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories — printed to order, one at a time.
+              A new After Hours Agenda collection is in production. The previous catalog is archived; join the Agenda for the next release.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/men" prefetch={false} className="btn-primary px-7">Shop Men</Link>
-              <Link href="/women" prefetch={false} className="btn-primary px-7">Shop Women</Link>
-              <Link href="/new-arrivals" prefetch={false} className="btn-secondary">Shop new arrivals</Link>
+              {catalogIsPublic ? (
+                <>
+                  <Link href="/men" prefetch={false} className="btn-primary px-7">Shop Men</Link>
+                  <Link href="/women" prefetch={false} className="btn-primary px-7">Shop Women</Link>
+                  <Link href="/new-arrivals" prefetch={false} className="btn-secondary">Shop new arrivals</Link>
+                </>
+              ) : (
+                <Link href="#dispatch-heading" className="btn-primary px-7">Get the next release first</Link>
+              )}
             </div>
           </div>
           <div className="hero-visual-enter neon-sign flex items-center justify-center">
@@ -69,10 +80,10 @@ export default async function HomePage() {
       </section>
 
       <div className="mt-12 lg:mt-16">
-        <TrustStrip />
+        {catalogIsPublic && <TrustStrip />}
       </div>
 
-      <section aria-labelledby="categories-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      {catalogIsPublic && <section aria-labelledby="categories-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 text-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Shop by category</p>
           <h2 id="categories-heading" className="mt-3 font-display text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase leading-none tracking-[-0.045em] text-cream">The collection</h2>
@@ -100,9 +111,9 @@ export default async function HomePage() {
             </Link>
           ))}
         </div>
-      </section>
+      </section>}
 
-      <section aria-labelledby="featured-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
+      {catalogIsPublic && <section aria-labelledby="featured-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Featured</p>
@@ -134,9 +145,9 @@ export default async function HomePage() {
         ) : (
           <p className="text-sm text-muted">Check back soon for new drops.</p>
         )}
-      </section>
+      </section>}
 
-      <section aria-labelledby="street-heading" className="mt-20 lg:mt-28">
+      {catalogIsPublic && <section aria-labelledby="street-heading" className="mt-20 lg:mt-28">
         <div className="image-hover-zoom group relative h-[70vh] min-h-[26rem] w-full overflow-hidden">
           <Image
             src="/campaign/lifestyle/band.webp"
@@ -154,9 +165,9 @@ export default async function HomePage() {
             <Link href="/new-arrivals" className="btn-primary mt-6">Shop the new arrivals</Link>
           </div>
         </div>
-      </section>
+      </section>}
 
-      {spotlight && <FeaturedGraphic product={spotlight} eyebrow="Featured graphic" story={spotlightStory} />}
+      {catalogIsPublic && spotlight && <FeaturedGraphic product={spotlight} eyebrow="Featured graphic" story={spotlightStory} />}
 
       <section aria-labelledby="statement-heading" className="mx-auto mt-24 max-w-[1280px] px-4 sm:px-6 lg:mt-32">
         <div className="m-rise mx-auto max-w-4xl text-center">
@@ -182,25 +193,23 @@ export default async function HomePage() {
           <SheepMark className="hidden w-16 text-cream md:block" />
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <Link href="/product/black-sheep-mint-unisex-premium-sweatshirt" className="fold-surface paper-lift group relative aspect-[4/5] overflow-hidden image-hover-zoom">
+          <div className="fold-surface relative aspect-[4/5] overflow-hidden">
             <Image src="/brand/photography/sheep-sweatshirt-agave--mens-front.jpg" alt="The Black Sheep sweatshirt in agave, worn" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/20 to-transparent p-5">
-              <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream group-hover:text-accent">Black Sheep Sweatshirt — Agave</p>
-              <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent">View piece</p>
+              <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream">Black Sheep campaign</p>
             </div>
-          </Link>
-          <Link href="/product/black-sheep-bone-unisex-premium-sweatshirt" className="fold-surface paper-lift group relative aspect-[4/5] overflow-hidden image-hover-zoom">
+          </div>
+          <div className="fold-surface relative aspect-[4/5] overflow-hidden">
             <Image src="/brand/photography/sheep-sweatshirt-bone--womens-front.jpg" alt="The Black Sheep sweatshirt in bone, worn" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/20 to-transparent p-5">
-              <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream group-hover:text-accent">Black Sheep Sweatshirt — Bone</p>
-              <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent">View piece</p>
+              <p className="font-display text-lg font-bold uppercase tracking-[-0.02em] text-cream">Black Sheep campaign</p>
             </div>
-          </Link>
+          </div>
         </div>
       </section>
 
       {/* Real, moderated reviews only — renders nothing until they exist. */}
-      <SocialProofWall />
+      {catalogIsPublic && <SocialProofWall />}
 
       <section aria-labelledby="dispatch-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
         <div className="corner-cut crease-rule relative overflow-hidden bg-charcoal px-6 py-14 text-center sm:px-10 md:py-20">
@@ -236,10 +245,7 @@ export default async function HomePage() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
-            <p className="mt-3 text-xs leading-relaxed text-muted">
-              Pictured:{" "}
-              <Link href="/product/no-place-like-new-york-charcoal-unisex-premium-sweatshirt" className="font-bold text-accent underline underline-offset-4 hover:text-cream">No Place Like New York sweatshirt</Link>
-            </p>
+            <p className="mt-3 text-xs leading-relaxed text-muted">Archive campaign photograph.</p>
           </div>
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The agenda</p>

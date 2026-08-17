@@ -2,7 +2,7 @@ import { and, eq, inArray, lt } from "drizzle-orm";
 import { db, isDbConfigured } from "@/lib/db/client";
 import { fulfillments, orderItems, orders } from "@/db/schema";
 import { startFulfillment } from "./fulfillment";
-import { revalidateCart, type OrderContact, type RevalidatedCart, type RevalidatedItem } from "./orders";
+import { revalidateCartForFulfillmentRetry, type OrderContact, type RevalidatedCart, type RevalidatedItem } from "./orders";
 
 export async function retryOrderFulfillment(orderId: number): Promise<void> {
   if (!isDbConfigured()) throw new Error("Production order store is unavailable.");
@@ -19,7 +19,7 @@ export async function retryOrderFulfillment(orderId: number): Promise<void> {
   // catalog, fall back to the persisted snapshot (now reading every field, not just sync id).
   let cart: RevalidatedCart;
   try {
-    const derived = revalidateCart(
+    const derived = revalidateCartForFulfillmentRetry(
       items.map((item) => ({ squareVariationId: item.squareVariationId || "", quantity: item.quantity }))
     );
     cart = { currency: order.currency, subtotal: order.subtotalAmount, items: derived.items };
