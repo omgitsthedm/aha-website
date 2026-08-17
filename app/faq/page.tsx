@@ -1,50 +1,27 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { DELIVERY_WINDOW, PRODUCTION_WINDOW, RETURNS_SUMMARY, SHIPPING_CLAIM_SENTENCE } from "@/lib/commerce/policies";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 
-export const metadata = buildMetadata({ title: "FAQ: Shipping, Fit & Returns", description: "How After Hours Agenda orders work: made-to-order timelines, US and international shipping rates, 30-day returns, fit and care — answered by an actual person.", path: "/faq" });
+export const metadata = buildMetadata({
+  title: "Existing Order Help",
+  description: "Support for completed After Hours Agenda orders while the next collection is in development.",
+  path: "/faq",
+});
 
 const faqs = [
-  { q: "When will my order arrive?", a: `Production usually takes ${PRODUCTION_WINDOW}. Delivery is ${DELIVERY_WINDOW}. These windows run one after the other, and tracking is sent when the package leaves production.` },
-  { q: "Why are products made to order?", a: "After Hours Agenda begins production after payment. This reduces unused stock but means an item does not ship immediately." },
-  { q: "What does shipping cost?", a: `${SHIPPING_CLAIM_SENTENCE} The rate is charged once per order, not per item. The checkout quote confirms the final shipping line and estimated tax before payment.` },
-  { q: "How do I choose a size?", a: "Use the fit note and size guide on the product page. Product-specific fit information takes priority over general guidance." },
-  { q: "What payment methods can I use?", a: "Card payments are processed securely by Square. Apple Pay or Google Pay appears when Square supports the wallet on your device and browser." },
-  { q: "How do I track an order?", a: "Use the order number and checkout email on the Track Order page. A tracking link appears after the carrier receives the shipment." },
-  { q: "Can I cancel an order?", a: "Contact us as soon as possible. Because production can begin shortly after purchase, cancellation is not guaranteed once printing starts." },
-  { q: "Can I change my shipping address?", a: "Contact us immediately with the order number and corrected address. We can only change it before the production or shipping partner locks the order." },
-  { q: "What is the return policy?", a: RETURNS_SUMMARY },
-  { q: "What if my item arrives damaged or misprinted?", a: "Email clear photos of the item, packaging, and order number. Confirmed production defects, damage, or incorrect items are handled separately from change-of-mind returns." },
-  { q: "How do I care for a piece?", a: "Machine wash cold, inside out, and use low heat. Do not iron directly over the print." },
-  { q: "Will the color match my screen exactly?", a: "Screens, garment batches, and print methods can shift color slightly. Product photography is a guide; product-specific descriptions and the garment label remain the practical source of truth." },
-  { q: "Do you have customer reviews?", a: "Yes. Every product page carries a review section, and anyone can submit one from that page. Nothing publishes automatically: each review is read and approved by a person first, and a Verified badge is added only when the review is matched to a real order. We do not write, buy, or edit reviews." },
-];
-
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((faq) => ({
-    "@type": "Question",
-    name: faq.q,
-    acceptedAnswer: { "@type": "Answer", text: faq.a },
-  })),
-};
+  ["Is anything available to order?", "No. The previous collection is archived and checkout is unavailable while the next release is prepared."],
+  ["How do I track a completed order?", "Use the order number and checkout email on the Track Order page. If a carrier link is available, it appears once the shipment is in transit."],
+  ["Can I update an address or cancel a completed order?", "Contact support as soon as possible with the order number and corrected details. We will confirm what can still be changed for that order."],
+  ["How do returns or damaged-item requests work?", "Contact support with the order number, a clear description of the issue, and photographs when relevant. Requests are reviewed under the terms that applied when the order was placed."],
+  ["How should I care for an item from the prior collection?", "Follow the garment label first. General care guidance remains available on the Care page."],
+] as const;
 
 export default function FAQPage() {
   return (
-    <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c") }}
-      />
-      <div className="mx-auto max-w-4xl">
-        <PageHeader eyebrow="Order help / Straight answers" title="Before you email" description={<>Production, payment, fit, tracking, and returns are covered here. If your question is specific to an order, <Link href="/contact" className="text-accent underline underline-offset-4">contact support</Link>.</>} />
-        <div className="border-t border-border/40">
-          {faqs.map((faq) => <details key={faq.q} className="group border-b border-border/40"><summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-5 py-4 font-display text-lg font-black uppercase leading-tight text-cream hover:text-accent"><span>{faq.q}</span><span aria-hidden="true" className="text-accent transition-transform group-open:rotate-45">+</span></summary><p className="max-w-2xl pb-6 text-sm leading-relaxed text-muted">{faq.a}</p></details>)}
-        </div>
-        <div className="mt-8 border-l-2 border-accent pl-4"><p className="text-sm leading-relaxed text-muted">Still stuck? Include your order number and checkout email when contacting support. Never send card details by email.</p></div>
-      </div>
-    </div>
+    <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl">
+      <PageHeader eyebrow="Order help" title="Support for completed orders" description={<>The previous collection is archived. If your question is about an order you already placed, <Link href="/contact" className="text-accent underline underline-offset-4">contact support</Link> with the order number and checkout email.</>} />
+      <div className="border-t border-border/40">{faqs.map(([question, answer]) => <details key={question} className="group border-b border-border/40"><summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-5 py-4 font-display text-lg font-black uppercase leading-tight text-cream hover:text-accent"><span>{question}</span><span aria-hidden="true" className="text-accent transition-transform group-open:rotate-45">+</span></summary><p className="max-w-2xl pb-6 text-sm leading-relaxed text-muted">{answer}</p></details>)}</div>
+      <p className="mt-8 border-l-2 border-accent pl-4 text-sm leading-relaxed text-muted">Never send card details by email.</p>
+    </div></div>
   );
 }

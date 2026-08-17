@@ -1,10 +1,21 @@
 import { NextResponse } from "next/server";
 import { captureAbandonedCart, type CaptureLine } from "@/lib/commerce/abandoned-cart";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 // Best-effort capture of an in-progress checkout for abandoned-cart recovery.
-// ALWAYS returns 200 and never throws to the client — it must never interfere
-// with the purchase flow.
+// While the legacy catalog is closed, return before reading or storing the
+// request. When open, capture remains best-effort and never throws to checkout.
 export async function POST(req: Request) {
+  if (!isLegacyCatalogPublic()) {
+    return NextResponse.json(
+      {
+        ok: false,
+        code: "CATALOG_MIGRATION_IN_PROGRESS",
+        error: "Cart recovery is unavailable while the store is being updated.",
+      },
+      { status: 410, headers: { "Cache-Control": "no-store" } },
+    );
+  }
   try {
     const body = await req.json();
     const email = typeof body?.email === "string" ? body.email : "";

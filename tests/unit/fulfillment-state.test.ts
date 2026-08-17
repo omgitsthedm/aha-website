@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   aggregateFulfillmentStatus, buildStoreOrderRequest, groupItemsByPrintfulStore,
   groupSourceItemsByPrintfulStore, isPrintfulConfirmationAllowed,
-  shouldRetryPrintfulConfirmation,
+  resolvePrintfulAssetUrl, shouldRetryPrintfulConfirmation,
 } from "@/lib/commerce/fulfillment-state";
+
+const ARCHIVED_ART_BASE = "https://raw.githubusercontent.com/omgitsthedm/aha-website/d255aa403b6bf4a978cb5f9af969a72cdc5c2488/public/printful-assets/";
 
 describe("multi-store fulfillment state", () => {
   it("groups order items by their owning Printful store", () => {
@@ -59,7 +61,7 @@ describe("catalog-source fulfillment (blank + hosted art)", () => {
       placements: [{
         placement: "front",
         technique: "dtg",
-        layers: [{ type: "file", url: "https://afterhoursagenda.com/printful-assets/Be_You.png", position: { width: 12, height: 13.87, top: 1.07, left: 0 } }],
+        layers: [{ type: "file", url: `${ARCHIVED_ART_BASE}Be_You.png`, position: { width: 12, height: 13.87, top: 1.07, left: 0 } }],
       }],
     }]);
   });
@@ -97,6 +99,15 @@ describe("catalog-source fulfillment (blank + hosted art)", () => {
     const item = groups.get(14298228)![0] as Extract<import("@/lib/commerce/fulfillment-state").PrintfulOrderItem, { source: "catalog" }>;
     expect(item.placements[0].layers[0]).toEqual({ type: "file", url: "https://x/y.png" });
   });
+
+  it("moves only retired custom-site art URLs to the immutable provider archive", () => {
+    expect(resolvePrintfulAssetUrl("https://afterhoursagenda.com/printful-assets/Black_Sheep_CLEAN_Print_Front.png"))
+      .toBe(`${ARCHIVED_ART_BASE}Black_Sheep_CLEAN_Print_Front.png`);
+    expect(resolvePrintfulAssetUrl("https://cdn.example.com/printful-assets/art.png"))
+      .toBe("https://cdn.example.com/printful-assets/art.png");
+    expect(resolvePrintfulAssetUrl("https://afterhoursagenda.com/printful-assets/%2E%2E%2Fsecret"))
+      .toBe("https://afterhoursagenda.com/printful-assets/%2E%2E%2Fsecret");
+  });
 });
 
 describe("buildStoreOrderRequest (v1/v2 API routing)", () => {
@@ -118,6 +129,7 @@ describe("buildStoreOrderRequest (v1/v2 API routing)", () => {
     expect(items).toHaveLength(1);
     const placement = (items[0].placements as Array<{ layers: Array<{ position?: Record<string, number> }> }>)[0];
     expect(placement.layers[0].position).toEqual({ width: 15, height: 11.7679, top: 1, left: 0 });
+    expect((placement.layers[0] as { url: string }).url).toBe(`${ARCHIVED_ART_BASE}Black_Sheep_CLEAN_Print_Front.png`);
   });
 
   it("routes any batch containing a sync item to v1, converting catalog items to files", () => {
@@ -128,6 +140,7 @@ describe("buildStoreOrderRequest (v1/v2 API routing)", () => {
     const files = items[1].files as Array<Record<string, unknown>>;
     expect(items[1].variant_id).toBe(20357);
     expect(files[0].type).toBe("front_large");
+    expect(files[0].url).toBe(`${ARCHIVED_ART_BASE}Black_Sheep_CLEAN_Print_Front.png`);
     // inches -> pixels at 150dpi, area carried through
     expect(files[0].position).toEqual({ area_width: 2250, area_height: 2700, width: 2250, height: 1765, top: 150, left: 0 });
   });

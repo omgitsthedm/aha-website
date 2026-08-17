@@ -7,7 +7,7 @@ import { test, expect } from "@playwright/test";
 test("@catalog home renders the brand hero without retired shopping controls", async ({ page }) => {
   const response = await page.goto("/");
   expect(response?.status()).toBe(200);
-  await expect(page).toHaveTitle(/After Hours Agenda \| Independent NYC Streetwear/i);
+  await expect(page).toHaveTitle(/After Hours Agenda \| New York/i);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("After Hours");
   // Rose browser chrome: light theme-color is the brand rose fill.
   await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')).toHaveAttribute("content", "#FF6B6B");
@@ -163,12 +163,23 @@ test("@product archived product routes return a noindex 404 without buy controls
   await expect(page.getByTestId("sticky-buy-bar")).toHaveCount(0);
 });
 
+test("@catalog retired product and campaign assets return 404", async ({ page }) => {
+  for (const path of [
+    "/products/dont-fuck-fascists-shirt/01-black-mens-fitted-t-shirt-front.webp",
+    "/printful-assets/Dont_Fuck_Fascists_Shirt.png",
+    "/campaign/hero-home.jpg",
+  ]) {
+    const response = await page.request.get(path);
+    expect(response.status(), path).toBe(404);
+  }
+});
+
 test("@cart cart page renders its empty state during the catalog hold", async ({ page }) => {
   await page.goto("/cart");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.getByText("Saved items stay on this device.")).toBeVisible();
   await expect(page.getByText("0 items", { exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Start shopping" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Get release updates" })).toBeVisible();
 });
 
 test("@cart the server-rendered bag header stays truthful before storage hydration", async ({ page }, testInfo) => {
@@ -244,7 +255,7 @@ test("@cart unavailable browser storage still reaches a usable empty bag", async
 
   await page.goto("/cart");
   await expect(page.getByRole("heading", { level: 1, name: "Your bag" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Start shopping" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Get release updates" })).toBeVisible();
 });
 
 test("@operations order tracking fails closed without a match", async ({ page }, testInfo) => {

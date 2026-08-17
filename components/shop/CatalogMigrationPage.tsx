@@ -22,11 +22,10 @@ export function CatalogMigrationPage() {
         <section className="corner-cut crease-rule bg-charcoal px-6 py-12 text-center sm:px-10 md:py-16" aria-label="Next release">
           <SheepMark className="mx-auto mb-5 w-16 text-accent" />
           <p className="mx-auto max-w-xl text-sm leading-relaxed text-muted md:text-base">
-            Join the Agenda for the next release, or spend some time with the archive while we get it ready.
+            Join the Agenda for the next release while we get it ready.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Link href="/#dispatch-heading" className="btn-primary min-h-11 px-6 py-3 text-xs">Get release updates</Link>
-            <Link href="/lookbook" className="btn-secondary min-h-11 px-6 py-3 text-xs">View the lookbook</Link>
           </div>
         </section>
       </div>

@@ -1,15 +1,15 @@
-import { buildMetadata } from "@/components/seo/buildMetadata";
 import Link from "next/link";
-import { RestockRequestForm } from "@/components/forms/RestockRequestForm";
+import { buildMetadata } from "@/components/seo/buildMetadata";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { GetOnTheList } from "@/components/homepage/GetOnTheList";
 
 export const metadata = buildMetadata({
-  title: "Request a Restock Alert",
-  description: "Request an availability update for an After Hours Agenda product, size, color, or variant without joining the general marketing list.",
+  title: "Release Updates",
+  description: "The prior After Hours Agenda collection is archived. Join the list for the next release.",
   path: "/restock",
+  robots: { index: false, follow: true },
 });
 
-export default async function RestockPage({ searchParams }: { searchParams: Promise<{ product?: string; size?: string }> }) {
-  const { product = "", size = "" } = await searchParams;
-  return <main className="px-4 pb-24 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-3xl"><PageHeader eyebrow="Availability request" title="Ask for the one you missed" description="Tell us which product and variant you want. If it becomes available again, we can send an update to the address below." /><RestockRequestForm initialProduct={product} initialSize={size} /><p className="mt-6 text-sm leading-relaxed text-muted">Want release notes as well? <Link href="/newsletter" className="text-accent underline underline-offset-4">Join the general email list separately</Link>.</p></div></main>;
+export default function RestockPage() {
+  return <main className="px-4 pb-12 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-3xl"><PageHeader eyebrow="Release updates" title="The next collection is on the way" description="The previous collection will not be restocked. Join the list for the next release instead." /><p className="mt-8 border-l-2 border-accent pl-4 text-sm leading-relaxed text-muted">Need help with an existing order? <Link href="/contact" className="text-accent underline underline-offset-4">Contact support</Link> with the order number and checkout email.</p></div><GetOnTheList /></main>;
 }

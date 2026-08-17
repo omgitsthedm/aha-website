@@ -13,7 +13,6 @@ const serviceLinks = [
   { label: "Care", href: "/care" },
   { label: "Size guide", href: "/size-guide" },
   { label: "Track order", href: "/track-order" },
-  { label: "Wishlist", href: "/wishlist" },
   { label: "Account", href: "/account" },
   ...(isGiftCardsEnabled() ? [{ label: "Gift cards", href: "/gift-cards" }] : []),
   { label: "Contact", href: "/contact" },
@@ -70,7 +69,7 @@ export function SiteFooter() {
 
           <div className="mt-8 border-t border-border/40 pt-6">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Newsletter</p>
-            <p className="mt-2 max-w-sm text-sm text-muted">New releases and the occasional note from the shop. No spam, unsubscribe anytime.</p>
+            <p className="mt-2 max-w-sm text-sm text-muted">Release news and the occasional studio note. No spam, unsubscribe anytime.</p>
             {/* Shared implementation — one submission path, one honeypot, one
                 validation rule set. The old inline form posted to /newsletter,
                 which bounced footer subscribers off whatever page they were on. */}

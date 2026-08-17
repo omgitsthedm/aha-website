@@ -25,7 +25,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
   if (!email) {
     return (
       <main className="px-4 pb-24 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-3xl">
-        <PageHeader eyebrow="Account" title="Sign in" description="See your order history and reorder in a tap. Passwordless — we email you a one-time link." />
+        <PageHeader eyebrow="Account" title="Sign in" description="See your order history. Passwordless — we email you a one-time link." />
         <AccountSignIn linkError={error === "link"} />
       </div></main>
     );
@@ -45,7 +45,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       {rows.length === 0 ? (
         <div className="border-y border-border/40 py-8">
           <p className="text-sm text-muted">No orders yet under this email.</p>
-          <Link href="/shop" className="primary-action mt-4 inline-flex min-h-11 items-center px-5 py-3 text-xs">Start shopping</Link>
+          <Link href="/#dispatch-heading" className="primary-action mt-4 inline-flex min-h-11 items-center px-5 py-3 text-xs">Get release updates</Link>
         </div>
       ) : (
         <ul className="border-t border-border/40">

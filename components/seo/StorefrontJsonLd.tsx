@@ -5,11 +5,11 @@ export function StorefrontJsonLd() {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "OnlineStore",
+        "@type": "Organization",
         "@id": `${SITE_URL}/#store`,
         name: "After Hours Agenda",
         url: SITE_URL,
-        description: "Clothing and accessories sold online and made to order.",
+        description: "Independent New York label. The next After Hours Agenda release is in development.",
         email: "info@afterhoursagenda.com",
         logo: `${SITE_URL}/brand/icons/icon-512.png`,
         sameAs: [

@@ -3,6 +3,7 @@ import { db, isDbConfigured } from "@/lib/db/client";
 import { abandonedCarts, orders } from "@/db/schema";
 import { renderAbandonedCartEmail, type AbandonedCartLine } from "@/lib/email/marketing-templates";
 import { isMarketingEmailConfigured, isLifecycleEmailEnabled, sendMarketingEmail, unsubscribeUrl, recoverCartUrl } from "@/lib/email/marketing";
+import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
 // Don't nag instantly, and don't chase stale carts forever.
 const MIN_AGE_MS = 60 * 60 * 1000;        // wait 1h after last activity before recovering
@@ -23,6 +24,7 @@ const validEmail = (email: string) => /.+@.+\..+/.test(email);
 export async function captureAbandonedCart(input: {
   email: string; items: CaptureLine[]; subtotal: number; currency?: string;
 }): Promise<void> {
+  if (!isLegacyCatalogPublic()) return;
   if (!isDbConfigured()) return;
   const email = input.email.trim().toLowerCase();
   if (!validEmail(email) || input.items.length === 0) return;
@@ -82,6 +84,7 @@ interface DispatchResult { configured: boolean; enabled: boolean; candidates: nu
  */
 export async function dispatchAbandonedCarts(limit = 25): Promise<DispatchResult> {
   const result: DispatchResult = { configured: false, enabled: false, candidates: 0, sent: 0, suppressed: 0, dryRun: 0 };
+  if (!isLegacyCatalogPublic()) return result;
   if (!isDbConfigured() || !isMarketingEmailConfigured()) return result;
   result.configured = true;
   result.enabled = isLifecycleEmailEnabled();

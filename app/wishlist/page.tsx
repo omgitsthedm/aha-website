@@ -3,7 +3,7 @@ import { WishlistContent } from "@/components/wishlist/WishlistContent";
 
 export const metadata: Metadata = {
   title: "Your Wishlist",
-  description: "Pieces you've saved at After Hours Agenda, kept in this browser for later.",
+  description: "The After Hours Agenda wishlist is paused while the next collection is developed.",
   alternates: { canonical: "/wishlist" },
   robots: { index: false, follow: false },
 };

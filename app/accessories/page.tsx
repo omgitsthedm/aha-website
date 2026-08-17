@@ -4,7 +4,6 @@ import { CategoryShopContent } from "@/components/shop/CategoryShopContent";
 import { CollectionJsonLd } from "@/components/seo/CollectionJsonLd";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { filterProductsByCategory } from "@/lib/commerce/taxonomy";
-import Image from "next/image";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 import { CatalogMigrationPage, catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
 import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
@@ -32,16 +31,6 @@ export default async function AccessoriesPage() {
           title="The finishing pieces"
           description="Counting Sheep totes, embroidered black sheep socks, hats, pins, and stickers — the small pieces that finish the fit. Every one made to order."
         />
-        <div className="fold-surface relative mb-6 aspect-[3/1] overflow-hidden md:mb-10">
-          <Image
-            src="/campaign/hero-accessories.jpg"
-            alt="After Hours Agenda dad hats and pin sets on a paper background"
-            fill
-            priority
-            className="object-cover"
-            sizes="(max-width: 1280px) 100vw, 1280px"
-          />
-        </div>
         {/* Products are pre-filtered to accessories; no category pills — a self-link
             pill here 404s (/accessories/accessories has no catch-all route). */}
         <CategoryShopContent

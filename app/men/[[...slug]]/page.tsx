@@ -13,7 +13,6 @@ import {
   type CategorySlug,
 } from "@/lib/commerce/taxonomy";
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 import { CatalogMigrationPage, catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
@@ -125,18 +124,6 @@ export default async function MenPage({ params, searchParams }: MenPageProps) {
               : "Sheep Min hoodies, Black Sheep sweatshirts, and ringspun cotton graphic tees. One unisex cut, true to size, printed when you order."
           }
         />
-        {!category && (
-          <div className="fold-surface relative mb-6 aspect-[3/1] overflow-hidden md:mb-10">
-            <Image
-              src="/campaign/hero-men-onmodel.webp"
-              alt="The Classic AHA hoodie in black, worn"
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 1280px) 100vw, 1280px"
-            />
-          </div>
-        )}
         <CategoryShopContent
           products={displayProducts} purchasableSizes={getPurchasableSizesMap(displayProducts)} colorCounts={getColorCountMap(displayProducts)} colorNames={getColorNamesMap(displayProducts)}
           gender={GENDER}

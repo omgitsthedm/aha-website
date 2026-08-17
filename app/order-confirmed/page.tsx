@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import { SheepMark } from "@/components/ui/SheepMark";
 import { trackPurchase } from "@/lib/analytics/events";
@@ -11,8 +9,7 @@ import { DELIVERY_WINDOW, PRODUCTION_WINDOW } from "@/lib/commerce/policies";
 
 interface OrderItem {
   name: string; variationName: string; quantity: number; lineTotal: number;
-  // Present on orders placed after the reorder feature shipped.
-  productId?: string; slug?: string; variationId?: string; price?: number; priceFormatted?: string; image?: string;
+  productId?: string; slug?: string; variationId?: string; price?: number;
 }
 
 interface OrderSummary {
@@ -28,32 +25,10 @@ interface OrderSummary {
 }
 
 export default function OrderConfirmedPage() {
-  const { clearCart, addItem } = useCart();
-  const router = useRouter();
+  const { clearCart } = useCart();
   const [summary, setSummary] = useState<OrderSummary | null>(null);
   const [loaded, setLoaded] = useState(false);
 
-  // "Order again" — re-adds the same pieces to the bag and jumps to it. Useful
-  // for gifts and repeats. Only shown when the stored order carries the fields.
-  const reorderable = Boolean(summary?.items.some((i) => i.variationId && i.slug));
-  const reorder = () => {
-    if (!summary) return;
-    summary.items.forEach((item) => {
-      if (!item.variationId || !item.slug) return;
-      addItem({
-        productId: item.productId || item.slug,
-        slug: item.slug,
-        variationId: item.variationId,
-        name: item.name,
-        variationName: item.variationName,
-        price: item.price ?? Math.round(item.lineTotal / Math.max(1, item.quantity)),
-        priceFormatted: item.priceFormatted || "",
-        quantity: item.quantity,
-        image: item.image || "",
-      }, undefined, { silent: true });
-    });
-    router.push("/cart");
-  };
 
   useEffect(() => {
     const orderNumber = new URLSearchParams(window.location.search).get("order");
@@ -96,15 +71,6 @@ export default function OrderConfirmedPage() {
       <header className="border-t-2 border-accent pt-5"><p className="text-xs font-bold uppercase tracking-[0.1em] text-accent">{verified ? "Payment complete" : loaded ? "Order lookup" : "Loading"}</p><div className="mt-4 flex items-end gap-5">{loaded && !verified && <SheepMark className="w-14 shrink-0 text-cream" title="The After Hours Agenda black sheep" />}<h1 className="font-display text-[clamp(2.75rem,8vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.06em]">{verified ? "Order confirmed" : loaded ? "Details unavailable" : "Loading order"}</h1></div><p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted">{summary ? `Order ${summary.orderNumber} was received. Confirmation was sent to the checkout email.` : loaded ? "This browser could not verify a matching completed order. Check the confirmation email before attempting payment again." : "Retrieving the order summary."}</p></header>
 
       {summary && <>
-        {/* It's yours — close the funnel on the same aspirational note it opened. */}
-        <div className="relative mt-8 aspect-[21/9] overflow-hidden">
-          <Image src="/campaign/lifestyle/band.webp" alt="After Hours Agenda, worn on the streets of New York" fill className="object-cover object-center" sizes="(max-width: 1024px) 100vw, 56rem" priority />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#FF8DA1]">It&rsquo;s yours</p>
-            <p className="mt-1 font-display text-[clamp(1.25rem,3vw,2rem)] font-bold uppercase leading-[0.95] tracking-[-0.03em] text-white">Made after hours. Worn all day.</p>
-          </div>
-        </div>
         <section aria-labelledby="order-summary-title" className="mt-10 border-y border-border/40 py-7">
           <div className="flex flex-wrap items-end justify-between gap-5"><div><p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Status</p><h2 id="order-summary-title" className="mt-1 font-display text-2xl font-black uppercase text-success">Order received</h2></div><div className="text-right"><p className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Amount paid</p><p className="mt-1 font-mono text-xl font-bold">{money(summary.total, summary.currency)}</p></div></div>
           <div className="mt-7 grid gap-8 md:grid-cols-2">
@@ -120,7 +86,7 @@ export default function OrderConfirmedPage() {
 
       {!summary && loaded && <section className="mt-10 border border-border/40 bg-surface p-5"><h2 className="font-display text-xl font-black uppercase">Your bag is safe</h2><p className="mt-3 text-sm leading-relaxed text-muted">The bag was not cleared because this page could not verify a matching completed checkout. Check email or contact support before paying again.</p></section>}
 
-      <div className="mt-10 flex flex-wrap gap-3">{reorderable && <button type="button" onClick={reorder} className="primary-action min-h-11 px-5 py-3 text-xs">Order again</button>}<Link href="/shop" className={`${reorderable ? "inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent" : "primary-action min-h-11 px-5 py-3 text-xs"}`}>Continue shopping</Link><Link href="/shipping" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">Shipping details</Link></div>
+      <div className="mt-10 flex flex-wrap gap-3"><Link href="/track-order" className="primary-action min-h-11 px-5 py-3 text-xs">Track this order</Link><Link href="/shipping" className="inline-flex min-h-11 items-center border border-border/60 px-5 py-3 text-xs font-bold uppercase tracking-[0.06em] hover:border-accent">Shipping details</Link></div>
     </div></div>
   );
 }

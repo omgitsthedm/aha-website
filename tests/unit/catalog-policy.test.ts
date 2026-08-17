@@ -41,6 +41,7 @@ describe("legacy catalog migration hold", () => {
     await expect(search.json()).resolves.toEqual([]);
     expect(entries.some((entry) => entry.url.includes("/product/"))).toBe(false);
     expect(entries.some((entry) => entry.url.endsWith("/shop"))).toBe(false);
+    expect(entries.some((entry) => /\/(lookbook|restock|size-guide)$/.test(entry.url))).toBe(false);
     expect(squareRequest).not.toHaveBeenCalled();
   });
 
