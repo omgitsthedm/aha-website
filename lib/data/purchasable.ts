@@ -3,6 +3,7 @@
 // If this returns reasons, the variant is NOT purchasable and add-to-cart must be disabled.
 
 import type { AhaProduct, AhaVariant } from "@/lib/types/product";
+import { isApliiqSku } from "@/lib/apliiq/orders";
 
 export interface ReadinessResult {
   ok: boolean;
@@ -37,6 +38,7 @@ export function checkVariantPurchasable(
     // gates make its source mapping and human approvals explicit before a
     // checkout route is allowed to charge for the line.
     if (!variant.apliiqSku) reasons.push("missing APLIIQ SKU");
+    else if (!isApliiqSku(variant.apliiqSku)) reasons.push("invalid APLIIQ APQ SKU");
     if (!variant.apliiqDecorationSnapshot || Object.keys(variant.apliiqDecorationSnapshot).length === 0) {
       reasons.push("missing APLIIQ decoration snapshot");
     }
@@ -54,6 +56,9 @@ export function checkVariantPurchasable(
       reasons.push(`product-cost margin below ${Math.round(MIN_PRODUCT_MARGIN_RATIO * 100)}% floor`);
     }
     if ((variant.apliiqRegionAvailability?.length ?? 0) === 0) reasons.push("missing APLIIQ region availability");
+    else if (variant.apliiqRegionAvailability!.some((entry) => !/^[A-Z]{2}$/.test(entry))) {
+      reasons.push("invalid APLIIQ region availability");
+    }
     if (!variant.apliiqSizeGuideReference) reasons.push("missing APLIIQ size-guide reference");
     if (variant.apliiqMappingApproval !== "approved") reasons.push("APLIIQ mapping is not approved");
     if (variant.apliiqSampleApproval !== "approved") reasons.push("APLIIQ sample is not approved");

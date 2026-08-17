@@ -3,7 +3,7 @@
 // Rules (§14): external IDs stored; purchase-time snapshots; payment vs fulfillment status
 // SEPARATE; raw webhook payloads stored + deduped; no card data; no API tokens; minimize PII.
 import {
-  pgTable, serial, bigserial, bigint, text, integer, boolean, timestamp, jsonb, unique, index, check,
+  pgTable, serial, bigserial, bigint, text, integer, boolean, timestamp, jsonb, unique, uniqueIndex, index, check,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -203,6 +203,12 @@ export const shipments = pgTable("shipments", {
   shippedAt: timestamp("shipped_at", { withTimezone: true }), deliveredAt: timestamp("delivered_at", { withTimezone: true }),
   dataJson: jsonb("data_json"),
 }, (t) => ({
+  // Historical Printful rows predate provider-neutral shipment identity and
+  // may contain duplicate/blank provider ids. Enforce race-safe uniqueness on
+  // the new APLIIQ path without making the additive migration rewrite history.
+  uniqApliiqProviderShipment: uniqueIndex("uniq_apliiq_shipment_provider_id")
+    .on(t.fulfillmentProvider, t.providerShipmentId)
+    .where(sql`${t.fulfillmentProvider} = 'apliiq' and ${t.providerShipmentId} is not null`),
   validProvider: check("chk_shipments_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
 }));
 
@@ -265,7 +271,9 @@ export const webhookEvents = pgTable("webhook_events", {
   signature: text("signature"), signatureValid: boolean("signature_valid").notNull().default(false),
   rawPayload: jsonb("raw_payload").notNull(), processingStatus: text("processing_status").notNull().default("received"),
   dedupeKey: text("dedupe_key").notNull(), retryCount: integer("retry_count").notNull().default(0),
-  lastError: text("last_error"), processedAt: timestamp("processed_at", { withTimezone: true }), createdAt: createdAt(),
+  lastError: text("last_error"),
+  processingStartedAt: timestamp("processing_started_at", { withTimezone: true }),
+  processedAt: timestamp("processed_at", { withTimezone: true }), createdAt: createdAt(),
 }, (t) => ({ uniqEvent: unique("uniq_webhook").on(t.provider, t.dedupeKey) }));
 export const auditLog = pgTable("audit_log", {
   id: bigserial("id", { mode: "number" }).primaryKey(),

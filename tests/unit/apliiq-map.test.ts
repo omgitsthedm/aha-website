@@ -3,7 +3,7 @@ import { parseApliiqMapDocument } from "@/lib/data/apliiq-map";
 
 function validEntry(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
-    apliiqSku: "APQ-TEE-M",
+    apliiqSku: "APQ-1998244S7A1",
     apliiqProductId: "product-1",
     apliiqVariantId: "variant-1",
     apliiqDecorationSnapshot: { front: { artworkUrl: "https://assets.example/front.png" } },
@@ -33,7 +33,7 @@ describe("APLIIQ map runtime parser", () => {
 
   it("accepts a fully approved mapping with HTTPS assets and integer cents", () => {
     expect(parseApliiqMapDocument(document(validEntry())).map["apliiq-tee-m"]).toMatchObject({
-      apliiqSku: "APQ-TEE-M", costEstimate: 2500, apliiqMappingApproval: "approved",
+      apliiqSku: "APQ-1998244S7A1", costEstimate: 2500, apliiqMappingApproval: "approved",
     });
   });
 
@@ -46,6 +46,7 @@ describe("APLIIQ map runtime parser", () => {
     ["empty decoration", { apliiqDecorationSnapshot: {} }, "nonempty object"],
     ["empty private label", { apliiqPrivateLabelSnapshot: {} }, "nonempty object"],
     ["HTTP asset", { apliiqAssetUrls: ["http://assets.example/front.png"] }, "HTTPS URL"],
+    ["non-country region", { apliiqRegionAvailability: ["north_america"] }, "uppercase ISO alpha-2"],
   ])("rejects %s", (_label, override, expected) => {
     expect(() => parseApliiqMapDocument(document(validEntry(override)))).toThrow(expected);
   });
@@ -60,5 +61,10 @@ describe("APLIIQ map runtime parser", () => {
   it("rejects unknown fields so mapping typos cannot silently activate", () => {
     expect(() => parseApliiqMapDocument(document(validEntry({ apliiqSkuTypo: "APQ-TEE-M" }))))
       .toThrow("is not a recognized field");
+  });
+
+  it("rejects a label-like value that is not an APLIIQ production SKU", () => {
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqSku: "APQ-TEE-M" }))))
+      .toThrow("must be an APLIIQ APQ production SKU");
   });
 });

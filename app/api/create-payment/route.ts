@@ -5,6 +5,7 @@ import { findOrCreateCustomer } from "@/lib/square/customers";
 import { getSquareLocationId } from "@/lib/commerce/runtime";
 import {
   revalidateCart, createOrder, markOrderPaid, markOrderFailed, findPaidOrderByIdempotencyKey,
+  assertCartFulfillableToCountry,
   type CheckoutLine, type OrderContact,
 } from "@/lib/commerce/orders";
 import { startFulfillment } from "@/lib/commerce/fulfillment";
@@ -67,6 +68,8 @@ export async function POST(request: Request) {
   let cart;
   try {
     cart = revalidateCart(body.lines);
+    const shippingAddress = body.contact.shippingAddress as Record<string, string> | undefined;
+    assertCartFulfillableToCountry(cart, shippingAddress?.country);
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Cart could not be validated." },

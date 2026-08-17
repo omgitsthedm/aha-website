@@ -56,7 +56,8 @@ describe("Apliiq authentication", () => {
   });
 
   it("does not retry an order POST and signs exactly what it sends", async () => {
-    const fetchMock = vi.fn(async () => new Response('{"id":567890}', { status: 200 }));
+    const fetchMock = vi.fn(async (_input: string, _init?: RequestInit) =>
+      new Response('{"id":567890}', { status: 200 }));
     const client = createApliiqClient({
       apiKey: "app-id",
       sharedSecret: "shared-secret",

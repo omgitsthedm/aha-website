@@ -1,4 +1,5 @@
 import type { AhaVariant } from "@/lib/types/product";
+import { isApliiqSku } from "@/lib/apliiq/orders";
 
 export type ApliiqMapEntry = Pick<AhaVariant,
   | "apliiqSku"
@@ -84,6 +85,14 @@ function stringList(value: unknown, path: string): string[] {
   return result;
 }
 
+function countryCodeList(value: unknown, path: string): string[] {
+  const result = stringList(value, path);
+  if (result.some((entry) => !/^[A-Z]{2}$/.test(entry))) {
+    fail(path, "must contain uppercase ISO alpha-2 country codes");
+  }
+  return result;
+}
+
 function validateStructuredValue(value: unknown, path: string): void {
   if (value === null || typeof value === "string" || typeof value === "boolean") return;
   if (typeof value === "number") {
@@ -139,14 +148,17 @@ function parseEntry(value: unknown, path: string): ApliiqMapEntry {
       return urls;
     })();
 
+  const apliiqSku = requiredString(value.apliiqSku, `${path}.apliiqSku`);
+  if (!isApliiqSku(apliiqSku)) fail(`${path}.apliiqSku`, "must be an APLIIQ APQ production SKU");
+
   return {
-    apliiqSku: requiredString(value.apliiqSku, `${path}.apliiqSku`),
+    apliiqSku,
     apliiqProductId: optionalString(value.apliiqProductId, `${path}.apliiqProductId`),
     apliiqVariantId: optionalString(value.apliiqVariantId, `${path}.apliiqVariantId`),
     apliiqDecorationSnapshot: structuredSnapshot(value.apliiqDecorationSnapshot, `${path}.apliiqDecorationSnapshot`),
     apliiqPrivateLabelSnapshot: structuredSnapshot(value.apliiqPrivateLabelSnapshot, `${path}.apliiqPrivateLabelSnapshot`),
     apliiqAssetUrls: assetUrls,
-    apliiqRegionAvailability: stringList(value.apliiqRegionAvailability, `${path}.apliiqRegionAvailability`),
+    apliiqRegionAvailability: countryCodeList(value.apliiqRegionAvailability, `${path}.apliiqRegionAvailability`),
     apliiqSizeGuideReference: requiredString(value.apliiqSizeGuideReference, `${path}.apliiqSizeGuideReference`),
     apliiqMappingApproval: approved(value.apliiqMappingApproval, `${path}.apliiqMappingApproval`),
     apliiqSampleApproval: approved(value.apliiqSampleApproval, `${path}.apliiqSampleApproval`),

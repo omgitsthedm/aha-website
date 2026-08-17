@@ -6,6 +6,10 @@ const migrationPath = join(
   process.cwd(),
   "netlify/database/migrations/20260817062128_right_maverick/migration.sql"
 );
+const webhookLeaseMigrationPath = join(
+  process.cwd(),
+  "netlify/database/migrations/20260817065714_adorable_iceman/migration.sql"
+);
 
 describe("provider persistence hardening migration", () => {
   const sql = readFileSync(migrationPath, "utf8");
@@ -45,5 +49,20 @@ describe("provider persistence hardening migration", () => {
     expect(sql).toContain('DROP CONSTRAINT "uniq_variants_provider_variant"');
     expect(sql).toContain('DROP CONSTRAINT "uniq_variants_provider_sku"');
     expect(sql).not.toMatch(/DROP\s+(TABLE|COLUMN)|TRUNCATE|DELETE\s+FROM/i);
+  });
+});
+
+describe("APLIIQ webhook lease and shipment identity migration", () => {
+  const sql = readFileSync(webhookLeaseMigrationPath, "utf8");
+
+  it("adds a durable processing lease and APLIIQ-only shipment uniqueness", () => {
+    expect(sql).toContain('ADD COLUMN "processing_started_at" timestamp with time zone');
+    expect(sql).toContain('CREATE UNIQUE INDEX "uniq_apliiq_shipment_provider_id"');
+    expect(sql).toContain("WHERE \"fulfillment_provider\" = 'apliiq'");
+    expect(sql).toContain('"provider_shipment_id" is not null');
+  });
+
+  it("does not rewrite legacy Printful shipment history", () => {
+    expect(sql).not.toMatch(/UPDATE\s+"shipments"|DELETE\s+FROM|DROP\s+(TABLE|COLUMN)/i);
   });
 });

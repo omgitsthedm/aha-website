@@ -106,7 +106,7 @@ describe("checkVariantPurchasable", () => {
       fulfillmentProvider: "apliiq",
       printfulCatalogVariantId: undefined,
       printfulPlacements: undefined,
-      apliiqSku: "APQ-TEE-BLK-M",
+      apliiqSku: "APQ-1998244S7A1",
       apliiqProductId: "apq-product-1",
       apliiqVariantId: "apq-variant-1",
       apliiqDecorationSnapshot: { front: { artworkId: "art-1" } },
@@ -128,7 +128,7 @@ describe("checkVariantPurchasable", () => {
   it("blocks an APLIIQ margin snapshot that does not reconcile to retail minus cost", () => {
     const v = fullyMappedVariant({
       fulfillmentProvider: "apliiq",
-      apliiqSku: "APQ-TEE-BLK-M",
+      apliiqSku: "APQ-1998244S7A1",
       apliiqDecorationSnapshot: { front: { artworkId: "art-1" } },
       apliiqPrivateLabelSnapshot: { neckLabel: { artworkId: "label-1" } },
       apliiqRegionAvailability: ["US"], apliiqSizeGuideReference: "sg-tee",

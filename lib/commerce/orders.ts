@@ -46,6 +46,53 @@ export interface RevalidatedCart {
   currency: string;
 }
 
+/**
+ * Build the immutable order-item records used by both the initial fulfillment
+ * call and every later reconciliation. Keeping this projection pure makes the
+ * paid snapshot contract directly testable without touching a database.
+ */
+export function buildOrderItemRecords(orderId: number, items: readonly RevalidatedItem[]) {
+  return items.map((it) => ({
+    orderId, ahaProductId: it.ahaProductId, ahaVariantId: it.ahaVariantId, sku: it.sku,
+    titleSnapshot: it.title, sizeSnapshot: it.size, colorSnapshot: it.color ?? null,
+    quantity: it.quantity, unitPrice: it.unitPrice, lineTotal: it.lineTotal,
+    squareVariationId: it.squareVariationId,
+    printfulCatalogVariantId: it.printfulCatalogVariantId ?? null,
+    fulfillmentProvider: it.fulfillmentProvider ?? "printful",
+    providerVariantId: it.providerVariantId ?? null,
+    providerSku: it.providerSku ?? null,
+    providerSnapshotJson: it.providerSnapshot,
+    printfulPlacementSnapshotJson: null,
+    printfulFileSnapshotJson: it.printfulSyncVariantId
+      ? { printfulSyncVariantId: it.printfulSyncVariantId, printfulStoreId: it.printfulStoreId }
+      : {
+        printfulPlacements: it.printfulPlacements ?? [],
+        printfulProductOptions: it.printfulProductOptions ?? [],
+        printfulStoreId: it.printfulStoreId,
+      },
+  }));
+}
+
+/** Block an unsupported APLIIQ destination before Square pricing or payment. */
+export function assertCartFulfillableToCountry(
+  cart: RevalidatedCart,
+  country: string | undefined,
+): void {
+  const countryCode = country?.trim().toUpperCase();
+  for (const item of cart.items) {
+    if (item.fulfillmentProvider !== "apliiq") continue;
+    if (!countryCode || !/^[A-Z]{2}$/.test(countryCode)) {
+      throw new Error("APLIIQ items require a valid two-letter shipping country code.");
+    }
+    const regions = Array.isArray(item.providerSnapshot.regions)
+      ? item.providerSnapshot.regions.filter((value): value is string => typeof value === "string")
+      : [];
+    if (!regions.includes(countryCode)) {
+      throw new Error(`"${item.title}" is not available for shipping to ${countryCode}.`);
+    }
+  }
+}
+
 interface IndexEntry { product: AhaProduct; variant: AhaVariant }
 
 function variationIndex(): Map<string, IndexEntry> {
@@ -190,21 +237,7 @@ export async function createOrder(
     })
     .returning({ id: orders.id });
 
-  await db().insert(orderItems).values(
-    cart.items.map((it) => ({
-      orderId: order.id, ahaProductId: it.ahaProductId, ahaVariantId: it.ahaVariantId, sku: it.sku,
-      titleSnapshot: it.title, sizeSnapshot: it.size, colorSnapshot: it.color ?? null,
-      quantity: it.quantity, unitPrice: it.unitPrice, lineTotal: it.lineTotal,
-      squareVariationId: it.squareVariationId, printfulCatalogVariantId: it.printfulCatalogVariantId ?? null,
-      fulfillmentProvider: it.fulfillmentProvider ?? "printful",
-      providerVariantId: it.providerVariantId ?? null,
-      providerSku: it.providerSku ?? null,
-      providerSnapshotJson: it.providerSnapshot,
-      printfulFileSnapshotJson: it.printfulSyncVariantId
-        ? { printfulSyncVariantId: it.printfulSyncVariantId, printfulStoreId: it.printfulStoreId }
-        : { printfulPlacements: it.printfulPlacements ?? [], printfulProductOptions: it.printfulProductOptions ?? [], printfulStoreId: it.printfulStoreId },
-    }))
-  );
+  await db().insert(orderItems).values(buildOrderItemRecords(order.id, cart.items));
 
   await db().insert(auditLog).values({
     entityType: "order", entityId: String(order.id), action: "created",

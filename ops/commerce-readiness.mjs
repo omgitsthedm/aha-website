@@ -20,6 +20,15 @@ const REQUIRED = {
     "PRINTFUL_WEBHOOK_SECRET_KEY",
     "PRINTFUL_WEBHOOK_PUBLIC_KEY",
   ],
+  apliiq: [
+    "APLIIQ_API_KEY",
+    "APLIIQ_SHARED_SECRET",
+    "APLIIQ_API_BASE_URL",
+    "APLIIQ_DEFAULT_SHIPPING",
+    "APLIIQ_PRODUCT_CALLBACK_TOKEN",
+    "APLIIQ_ALLOW_CREATE_ORDERS",
+    "APLIIQ_LIVE_MODE",
+  ],
   netlify: [
     "NEXT_PUBLIC_SITE_URL",
     "NEXT_PUBLIC_SQUARE_APP_ID",
@@ -123,6 +132,7 @@ function main() {
 
   printGroup("Square", presence, REQUIRED.square);
   printGroup("Printful", presence, REQUIRED.printful);
+  printGroup("APLIIQ", presence, REQUIRED.apliiq);
   printGroup("Netlify/runtime", presence, REQUIRED.netlify);
   printGroup("Transactional email", presence, REQUIRED.email);
 
