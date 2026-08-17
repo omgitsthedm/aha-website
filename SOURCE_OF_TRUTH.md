@@ -22,21 +22,23 @@ This file contains the current routing and operational contract. Detailed design
 
 The retired iCloud backup family is not an active source and must remain untouched. A visible compatibility path is valid only when `pwd -P` resolves to the canonical physical checkout above.
 
-## Catalog closure and APLIIQ staging baseline
+## Fresh catalog reset and APLIIQ staging baseline
 
-- **Production deploy ID**: `6a82b59991786e000856721a`
-- **Deployed source commit**: `1b9b078dd795e18d65c0d2e7c11d61fee978c336`
+- **Production deploy ID**: `6a82c62774e9be00087ab0a0`
+- **Deployed source commit**: `58c2dd58b540dae0cf579ff32d8d00cff74f5ebe`
 - **Artifact state**: `ready`
-- **Published**: August 17, 2026 at 07:18:35.529 UTC
+- **Published**: August 17, 2026 at 08:29:05.951 UTC
 - **Netlify production branch**: `main`
-- **Release title**: `Add live-disabled APLIIQ provider backend (#39)`
+- **Release title**: `Fresh catalog reset (#41)`
 - **Current availability**: HTTP 200 on the primary, default, branch, and deploy-specific domains
 - **Release state**: live deploy and `/release.json` parity verified for the current production release
 
 The primary, branch, and immutable deploy URLs returned the exact production commit from `/release.json`, and the exact-site live guard passed. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, `/release.json`, and behavior before declaring drift.
 
-- The previous public collection is closed. Product-listing routes show the archive notice, retired product detail routes return `404` with `noindex`, catalog search is empty, saved legacy carts are cleared, and checkout rejects legacy lines before Square pricing or payment.
-- Square contains 118 exact legacy merchandise items in archived state, zero outstanding legacy archive writes, and two exact protected service items still active. The August 17 reconciliation was read-only and used no delete operation.
+- The previous public collection is fully reset. Product-listing routes show the archive notice; retired product detail, product-media, Printful-art, and campaign-asset URLs return `404`; catalog search is empty; saved legacy carts are cleared; and checkout rejects legacy lines before Square pricing or payment.
+- Square contains all 120 known After Hours Agenda catalog `ITEM` objects in archived, non-deleted state, with zero active items and zero outstanding archive writes. The final archive used full-object Square upserts and no delete operation; a fresh August 17 dry run reconfirmed the terminal state.
+- Gift-card purchase, cart capture, cart restore, quote, and lifecycle-marketing paths fail closed while the catalog is dark. Existing-order tracking, returns, shipping support, payment history, and fulfillment history remain available; no order, payment, customer, or database record was deleted by the reset.
+- Public Printful art was removed from the current site. Historical fulfillment requests that still reference the retired host path are rewritten server-side to the immutable Git source at commit `d255aa403b6bf4a978cb5f9af969a72cdc5c2488`, preserving existing-order recovery without republishing old art on the storefront.
 - The provider-neutral fulfillment, reconciliation, webhook, and product-intake foundation for APLIIQ is deployed. `APLIIQ_ALLOW_CREATE_ORDERS` and `APLIIQ_LIVE_MODE` both resolve to `false` in production, the committed APLIIQ product map is empty, and the public product callback fails closed while unconfigured.
 - No replacement APLIIQ products, new Square merchandise, APLIIQ provider order, payment, customer, fulfillment, shipment, or transactional message was created as part of this staging release.
 - Do not activate APLIIQ until production credentials pass readiness checks, callback authentication is proven with APLIIQ, each replacement variant has an approved APQ SKU and immutable decoration/private-label/cost/sample evidence, the corresponding Square object is reviewed, and an explicitly authorized paid pilot and cancellation procedure are ready.
