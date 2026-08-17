@@ -1,6 +1,6 @@
 # After Hours Agenda source of truth
 
-Last verified: August 15, 2026 from local Git, GitHub, the Netlify application programming interface (API), and public Hypertext Transfer Protocol Secure (HTTPS) checks.
+Last verified: August 17, 2026 from local Git, GitHub, the Netlify application programming interface (API), public Hypertext Transfer Protocol Secure (HTTPS) checks, and a read-only Square catalog reconciliation.
 
 This file contains the current routing and operational contract. Detailed design, commerce, legal, and historical evidence remains available on demand under `docs/` and in Git history.
 
@@ -22,27 +22,33 @@ This file contains the current routing and operational contract. Detailed design
 
 The retired iCloud backup family is not an active source and must remain untouched. A visible compatibility path is valid only when `pwd -P` resolves to the canonical physical checkout above.
 
-## Service restoration and release baseline
+## Catalog closure and APLIIQ staging baseline
 
-- **Production deploy ID**: `6a7cfebff4731e0008482e3b`
-- **Deployed source commit**: `bce654b0725bb040147d6332338d30338c4dc4bd`
+- **Production deploy ID**: `6a82b59991786e000856721a`
+- **Deployed source commit**: `1b9b078dd795e18d65c0d2e7c11d61fee978c336`
 - **Artifact state**: `ready`
-- **Published**: August 12, 2026 at 23:17:07.250 UTC
+- **Published**: August 17, 2026 at 07:18:35.529 UTC
 - **Netlify production branch**: `main`
-- **Release title**: `feat: route consented analytics through GTM (#36)`
+- **Release title**: `Add live-disabled APLIIQ provider backend (#39)`
 - **Current availability**: HTTP 200 on the primary, default, branch, and deploy-specific domains
 - **Release state**: live deploy and `/release.json` parity verified for the current production release
 
-The primary, default, branch, and deploy-specific homepages each returned HTTP 200 during the current release verification, and the exact-site live guard passed. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, `/release.json`, and behavior before declaring drift.
+The primary, branch, and immutable deploy URLs returned the exact production commit from `/release.json`, and the exact-site live guard passed. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, `/release.json`, and behavior before declaring drift.
+
+- The previous public collection is closed. Product-listing routes show the archive notice, retired product detail routes return `404` with `noindex`, catalog search is empty, saved legacy carts are cleared, and checkout rejects legacy lines before Square pricing or payment.
+- Square contains 118 exact legacy merchandise items in archived state, zero outstanding legacy archive writes, and two exact protected service items still active. The August 17 reconciliation was read-only and used no delete operation.
+- The provider-neutral fulfillment, reconciliation, webhook, and product-intake foundation for APLIIQ is deployed. `APLIIQ_ALLOW_CREATE_ORDERS` and `APLIIQ_LIVE_MODE` both resolve to `false` in production, the committed APLIIQ product map is empty, and the public product callback fails closed while unconfigured.
+- No replacement APLIIQ products, new Square merchandise, APLIIQ provider order, payment, customer, fulfillment, shipment, or transactional message was created as part of this staging release.
+- Do not activate APLIIQ until production credentials pass readiness checks, callback authentication is proven with APLIIQ, each replacement variant has an approved APQ SKU and immutable decoration/private-label/cost/sample evidence, the corresponding Square object is reviewed, and an explicitly authorized paid pilot and cancellation procedure are ready.
 
 ## Runtime ownership
 
 - **Storefront**: Next.js 16.3.0 App Router, React 19.2.8, and TypeScript on Netlify
 - **Payments and transaction records**: Square
-- **Fulfillment and shipping lifecycle**: Printful through the current repository routing
+- **Fulfillment and shipping lifecycle**: the provider-neutral repository dispatcher; APLIIQ is staged but disabled, while Printful records and routing remain available for historical paid orders and rollback safety
 - **Operational records**: Netlify Database
 - **Transactional email**: the existing Resend outbox and templates
-- **Product presentation and provider mappings**: this repository plus verified provider data
+- **Product presentation and provider mappings**: this repository plus verified provider data; no APLIIQ variant is sellable without a committed approved mapping and active Square variation
 
 Never infer price, inventory, product availability, order state, or provider status from an old handoff. Read the current code and authorized provider state for the task.
 
@@ -50,9 +56,12 @@ Never infer price, inventory, product availability, order state, or provider sta
 
 - Never inspect or commit `.env*` or secret values
 - Never fabricate a payment, order, customer, refund, fulfillment, shipment, provider event, email, or production form submission
-- Keep Square and Printful tokens server-side
+- Keep Square, APLIIQ, and Printful tokens server-side
 - Require verified payment before production fulfillment
 - Keep preview, branch, local, and continuous integration contexts non-transactional
+- Require all five APLIIQ submission rails: Netlify production context, Square production, automatic fulfillment mode, explicit APLIIQ create-order permission, and APLIIQ live mode
+- Never automatically resubmit an APLIIQ request after a timeout, acceptance without a provider order ID, or any other ambiguous outcome; route it to manual review
+- Do not register the APLIIQ product callbacks until their URL-token behavior has been proven in a controlled provider test
 - Preserve exact-site verification because this property previously experienced a wrong-site deployment
 - Require clear scoped authorization for product, commerce, provider, database, Domain Name System (DNS), Netlify, email, analytics, or live-system changes
 
