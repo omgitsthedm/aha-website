@@ -11,14 +11,29 @@ describe("provider persistence hardening migration", () => {
   const sql = readFileSync(migrationPath, "utf8");
 
   it("backfills a non-null provider claim before adding per-order uniqueness", () => {
+    const triggerFunction = sql.indexOf('CREATE FUNCTION "derive_fulfillment_provider_claim_key"');
+    const trigger = sql.indexOf('CREATE TRIGGER "trg_derive_fulfillment_provider_claim_key"');
     const backfill = sql.indexOf('UPDATE "fulfillments"');
     const notNull = sql.indexOf('ALTER COLUMN "provider_claim_key" SET NOT NULL');
     const uniqueClaim = sql.indexOf('CONSTRAINT "uniq_fulfillment_order_claim"');
-    expect(backfill).toBeGreaterThan(-1);
+    expect(triggerFunction).toBeGreaterThan(-1);
+    expect(trigger).toBeGreaterThan(triggerFunction);
+    expect(backfill).toBeGreaterThan(trigger);
     expect(notNull).toBeGreaterThan(backfill);
     expect(uniqueClaim).toBeGreaterThan(notNull);
     expect(sql).toContain("'printful:' || \"provider_store_id\"::text");
     expect(sql).toContain("'printful:legacy:' || \"id\"::text");
+  });
+
+  it("keeps old Printful inserts compatible after NOT NULL is enforced", () => {
+    const trigger = sql.slice(
+      sql.indexOf('CREATE FUNCTION "derive_fulfillment_provider_claim_key"'),
+      sql.indexOf('CREATE TRIGGER "trg_derive_fulfillment_provider_claim_key"')
+    );
+    expect(trigger).toContain('NEW."provider_store_id" IS NOT NULL');
+    expect(trigger).toContain("NEW.\"provider_claim_key\" := 'printful:' || NEW.\"provider_store_id\"::text");
+    expect(trigger).toContain("NEW.\"provider_claim_key\" := 'printful:default'");
+    expect(sql).toMatch(/CREATE TRIGGER[\s\S]+BEFORE INSERT OR UPDATE ON "fulfillments"/);
   });
 
   it("uses provider-aware request identity and NULL-safe draft dedupe", () => {

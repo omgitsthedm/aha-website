@@ -3,6 +3,26 @@ ALTER TABLE "product_variants" DROP CONSTRAINT "uniq_variants_provider_sku";--> 
 -- Add nullable first so legacy rows can receive a deterministic claim before
 -- the NOT NULL and per-order uniqueness guarantees are enforced.
 ALTER TABLE "fulfillments" ADD COLUMN "provider_claim_key" text;--> statement-breakpoint
+-- Expand compatibility: older Printful builds do not send provider_claim_key.
+-- Keep deriving it in the database so an in-flight deploy or code rollback can
+-- still insert one row per Printful store after this migration is applied.
+CREATE FUNCTION "derive_fulfillment_provider_claim_key"() RETURNS trigger AS $$
+BEGIN
+	IF NEW."provider_claim_key" IS NULL OR btrim(NEW."provider_claim_key") = '' THEN
+		IF NEW."fulfillment_provider" = 'printful' AND NEW."provider_store_id" IS NOT NULL THEN
+			NEW."provider_claim_key" := 'printful:' || NEW."provider_store_id"::text;
+		ELSIF NEW."fulfillment_provider" = 'printful' THEN
+			NEW."provider_claim_key" := 'printful:default';
+		ELSE
+			NEW."provider_claim_key" := NEW."fulfillment_provider" || ':default';
+		END IF;
+	END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;--> statement-breakpoint
+CREATE TRIGGER "trg_derive_fulfillment_provider_claim_key"
+BEFORE INSERT OR UPDATE ON "fulfillments"
+FOR EACH ROW EXECUTE FUNCTION "derive_fulfillment_provider_claim_key"();--> statement-breakpoint
 UPDATE "fulfillments"
 SET "provider_claim_key" = CASE
 	WHEN "fulfillment_provider" = 'printful' AND "provider_store_id" IS NOT NULL
