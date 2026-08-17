@@ -111,6 +111,8 @@ export interface AhaVariant {
   apliiqProductId?: string;
   apliiqVariantId?: string;
   apliiqDecorationSnapshot?: Record<string, unknown>;
+  apliiqPrivateLabelSnapshot?: Record<string, unknown>;
+  apliiqAssetUrls?: string[];
   apliiqRegionAvailability?: string[];
   apliiqSizeGuideReference?: string;
   apliiqMappingApproval?: "pending" | "approved" | "rejected";

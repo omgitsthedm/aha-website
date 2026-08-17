@@ -5,6 +5,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { AhaProduct, AhaVariant, SizeGuide } from "@/lib/types/product";
+import { parseApliiqMapDocument, type ApliiqMapEntry } from "@/lib/data/apliiq-map";
 
 const DATA_DIR = join(process.cwd(), "data");
 
@@ -33,20 +34,8 @@ interface PrintfulMapEntry {
   marginVerifiedAt?: string;
 }
 
-interface ApliiqMapEntry {
-  apliiqSku?: string;
-  apliiqProductId?: string;
-  apliiqVariantId?: string;
-  apliiqDecorationSnapshot?: Record<string, unknown>;
-  apliiqRegionAvailability?: string[];
-  apliiqSizeGuideReference?: string;
-  apliiqMappingApproval?: "pending" | "approved" | "rejected";
-  apliiqSampleApproval?: "pending" | "approved" | "rejected";
-  squareMappingStatus?: "active" | "pending" | "archived";
-  costEstimate?: number;
-  marginEstimate?: number;
-  costVerifiedAt?: string;
-  marginVerifiedAt?: string;
+export function loadApliiqMap(): Record<string, ApliiqMapEntry> {
+  return parseApliiqMapDocument(readJson<unknown>("apliiq-map.json")).map;
 }
 
 /** Load products with Square + provider maps merged in by ahaVariantId.
@@ -56,7 +45,7 @@ export function loadProducts(): AhaProduct[] {
   const manifest = readJson<{ products: AhaProduct[] }>("product-manifest.json");
   const squareMap = readJson<{ map: Record<string, SquareMapEntry> }>("square-map.json").map;
   const printfulMap = readJson<{ map: Record<string, PrintfulMapEntry> }>("printful-v2-map.json").map;
-  const apliiqMap = readJson<{ map: Record<string, ApliiqMapEntry> }>("apliiq-map.json").map;
+  const apliiqMap = loadApliiqMap();
 
   return manifest.products.map((product) => ({
     ...product,

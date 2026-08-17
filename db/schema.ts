@@ -3,8 +3,9 @@
 // Rules (§14): external IDs stored; purchase-time snapshots; payment vs fulfillment status
 // SEPARATE; raw webhook payloads stored + deduped; no card data; no API tokens; minimize PII.
 import {
-  pgTable, serial, bigserial, bigint, text, integer, boolean, timestamp, jsonb, unique, index,
+  pgTable, serial, bigserial, bigint, text, integer, boolean, timestamp, jsonb, unique, index, check,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 const cents = (name: string) => integer(name);
 const createdAt = () => timestamp("created_at", { withTimezone: true }).defaultNow().notNull();
@@ -52,8 +53,7 @@ export const productVariants = pgTable("product_variants", {
   updatedAt: updatedAt(),
 }, (t) => ({
   byProduct: index("idx_variants_product").on(t.productId),
-  uniqProviderVariant: unique("uniq_variants_provider_variant").on(t.fulfillmentProvider, t.providerVariantId),
-  uniqProviderSku: unique("uniq_variants_provider_sku").on(t.fulfillmentProvider, t.providerSku),
+  validProvider: check("chk_variants_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
 }));
 
 export const collections = pgTable("collections", {
@@ -103,8 +103,10 @@ export const providerProductDrafts = pgTable("provider_product_drafts", {
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 }, (t) => ({
-  uniqProviderDraft: unique("uniq_provider_product_draft").on(t.provider, t.providerProductId, t.providerVariantId),
+  uniqProviderDraft: unique("uniq_provider_product_draft").on(t.provider, t.providerProductId, t.providerVariantId).nullsNotDistinct(),
   byProviderStatus: index("idx_provider_product_drafts_status").on(t.provider, t.status, t.createdAt),
+  validProvider: check("chk_provider_product_drafts_provider", sql`${t.provider} in ('printful', 'apliiq')`),
+  validStatus: check("chk_provider_product_drafts_status", sql`${t.status} in ('pending_review', 'approved', 'rejected', 'archived')`),
 }));
 
 // ── Customers / carts ────────────────────────────────────────────────────────
@@ -159,7 +161,10 @@ export const orderItems = pgTable("order_items", {
   printfulPlacementSnapshotJson: jsonb("printful_placement_snapshot_json"), printfulFileSnapshotJson: jsonb("printful_file_snapshot_json"),
   fulfillmentStatus: text("fulfillment_status").notNull().default("not_started"),
   createdAt: createdAt(), updatedAt: updatedAt(),
-}, (t) => ({ byOrder: index("idx_order_items_order").on(t.orderId) }));
+}, (t) => ({
+  byOrder: index("idx_order_items_order").on(t.orderId),
+  validProvider: check("chk_order_items_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
+}));
 
 export const payments = pgTable("payments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
@@ -173,6 +178,9 @@ export const fulfillments = pgTable("fulfillments", {
   orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
   providerStoreId: integer("provider_store_id"),
   fulfillmentProvider: text("fulfillment_provider").notNull().default("printful"),
+  // Required idempotent claim boundary within an AHA order. Examples:
+  // printful:<store-id>, apliiq:default.
+  providerClaimKey: text("provider_claim_key").notNull(),
   providerReference: text("provider_reference"), providerRequestId: text("provider_request_id"),
   providerOrderId: text("provider_order_id"), providerDataJson: jsonb("provider_data_json"),
   printfulOrderId: text("printful_order_id").unique(), status: text("status").notNull().default("not_started"),
@@ -180,7 +188,10 @@ export const fulfillments = pgTable("fulfillments", {
   createdAt: createdAt(), updatedAt: updatedAt(),
 }, (t) => ({
   uniqOrderStore: unique("uniq_fulfillment_order_store").on(t.orderId, t.providerStoreId),
+  uniqOrderClaim: unique("uniq_fulfillment_order_claim").on(t.orderId, t.providerClaimKey),
+  uniqProviderRequest: unique("uniq_fulfillment_provider_request").on(t.fulfillmentProvider, t.providerRequestId),
   uniqProviderOrder: unique("uniq_fulfillment_provider_order").on(t.fulfillmentProvider, t.providerOrderId),
+  validProvider: check("chk_fulfillments_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
 }));
 export const shipments = pgTable("shipments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
@@ -191,7 +202,9 @@ export const shipments = pgTable("shipments", {
   trackingNumber: text("tracking_number"), trackingUrl: text("tracking_url"), status: text("status"),
   shippedAt: timestamp("shipped_at", { withTimezone: true }), deliveredAt: timestamp("delivered_at", { withTimezone: true }),
   dataJson: jsonb("data_json"),
-});
+}, (t) => ({
+  validProvider: check("chk_shipments_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
+}));
 
 // ── Growth / retention ───────────────────────────────────────────────────────
 export const restockRequests = pgTable("restock_requests", {

@@ -93,6 +93,8 @@ function revalidateCatalogLines(lines: CheckoutLine[]): RevalidatedCart {
           apliiqVariantId: variant.apliiqVariantId,
           apliiqSku: variant.apliiqSku,
           decoration: variant.apliiqDecorationSnapshot,
+          privateLabel: variant.apliiqPrivateLabelSnapshot,
+          assetUrls: variant.apliiqAssetUrls,
           regions: variant.apliiqRegionAvailability,
           sizeGuideReference: variant.apliiqSizeGuideReference,
           mappingApproval: variant.apliiqMappingApproval,

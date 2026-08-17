@@ -40,11 +40,16 @@ export function checkVariantPurchasable(
     if (!variant.apliiqDecorationSnapshot || Object.keys(variant.apliiqDecorationSnapshot).length === 0) {
       reasons.push("missing APLIIQ decoration snapshot");
     }
+    if (!variant.apliiqPrivateLabelSnapshot || Object.keys(variant.apliiqPrivateLabelSnapshot).length === 0) {
+      reasons.push("missing APLIIQ private-label snapshot");
+    }
     if (variant.costEstimate == null || !variant.costVerifiedAt) {
       reasons.push("missing verified APLIIQ fulfillment cost");
     }
     if (variant.marginEstimate == null || !variant.marginVerifiedAt) {
       reasons.push("missing verified APLIIQ margin");
+    } else if (variant.costEstimate != null && variant.marginEstimate !== variant.retailPrice - variant.costEstimate) {
+      reasons.push("APLIIQ margin does not match retail minus cost");
     } else if (variant.marginEstimate / variant.retailPrice < MIN_PRODUCT_MARGIN_RATIO) {
       reasons.push(`product-cost margin below ${Math.round(MIN_PRODUCT_MARGIN_RATIO * 100)}% floor`);
     }

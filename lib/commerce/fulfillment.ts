@@ -133,7 +133,7 @@ export async function startFulfillment(
       ? await db().update(fulfillments).set({ status: "draft_creating", lastError: null, updatedAt: new Date() })
           .where(eq(fulfillments.id, existing.id)).returning({ id: fulfillments.id })
       : await db().insert(fulfillments).values({
-          orderId, providerStoreId: storeId, status: "draft_creating",
+          orderId, providerStoreId: storeId, providerClaimKey: `printful:${storeId}`, status: "draft_creating",
         }).onConflictDoNothing().returning({ id: fulfillments.id });
 
     if (!claimed[0]) continue; // another request claimed this order/store pair

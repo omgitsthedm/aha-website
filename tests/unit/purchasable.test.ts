@@ -91,6 +91,7 @@ describe("checkVariantPurchasable", () => {
       "Square mapping is not active",
       "missing APLIIQ SKU",
       "missing APLIIQ decoration snapshot",
+      "missing APLIIQ private-label snapshot",
       "missing verified APLIIQ fulfillment cost",
       "missing verified APLIIQ margin",
       "missing APLIIQ region availability",
@@ -109,6 +110,7 @@ describe("checkVariantPurchasable", () => {
       apliiqProductId: "apq-product-1",
       apliiqVariantId: "apq-variant-1",
       apliiqDecorationSnapshot: { front: { artworkId: "art-1" } },
+      apliiqPrivateLabelSnapshot: { neckLabel: { artworkId: "label-1" } },
       apliiqRegionAvailability: ["US"],
       apliiqSizeGuideReference: "sg-tee",
       apliiqMappingApproval: "approved",
@@ -121,5 +123,20 @@ describe("checkVariantPurchasable", () => {
     });
     const p = activeProduct({ variants: [v] });
     expect(checkVariantPurchasable(p, v)).toEqual({ ok: true, reasons: [] });
+  });
+
+  it("blocks an APLIIQ margin snapshot that does not reconcile to retail minus cost", () => {
+    const v = fullyMappedVariant({
+      fulfillmentProvider: "apliiq",
+      apliiqSku: "APQ-TEE-BLK-M",
+      apliiqDecorationSnapshot: { front: { artworkId: "art-1" } },
+      apliiqPrivateLabelSnapshot: { neckLabel: { artworkId: "label-1" } },
+      apliiqRegionAvailability: ["US"], apliiqSizeGuideReference: "sg-tee",
+      apliiqMappingApproval: "approved", apliiqSampleApproval: "approved", squareMappingStatus: "active",
+      costEstimate: 2500, costVerifiedAt: "2026-08-16T00:00:00.000Z",
+      marginEstimate: 2200, marginVerifiedAt: "2026-08-16T00:00:00.000Z",
+    });
+    const p = activeProduct({ variants: [v] });
+    expect(checkVariantPurchasable(p, v).reasons).toContain("APLIIQ margin does not match retail minus cost");
   });
 });

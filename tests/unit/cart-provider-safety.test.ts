@@ -21,6 +21,7 @@ function approvedApliiqProduct(): AhaProduct {
       squareCatalogObjectId: "square-item", squareVariationId: "square-variation", squareMappingStatus: "active",
       apliiqSku: "APQ-TEE-M", apliiqProductId: "apq-product", apliiqVariantId: "apq-variant",
       apliiqDecorationSnapshot: { front: { art: "art-1" } }, apliiqRegionAvailability: ["US"],
+      apliiqPrivateLabelSnapshot: { neckLabel: { art: "label-1" } },
       apliiqSizeGuideReference: "sg-tee", apliiqMappingApproval: "approved", apliiqSampleApproval: "approved",
       costEstimate: 2500, marginEstimate: 2300,
       costVerifiedAt: "2026-08-16T00:00:00.000Z", marginVerifiedAt: "2026-08-16T00:00:00.000Z",
