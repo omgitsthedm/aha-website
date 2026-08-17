@@ -17,6 +17,9 @@ export function checkVariantPurchasable(
   variant: AhaVariant
 ): ReadinessResult {
   const reasons: string[] = [];
+  // Keep direct callers and legacy fixtures compatible with the loader's
+  // documented default while product data transitions to explicit providers.
+  const fulfillmentProvider = variant.fulfillmentProvider ?? "printful";
 
   if (product.status !== "active") reasons.push("product not active");
   if (variant.status !== "active") reasons.push("variant not active");
@@ -25,20 +28,51 @@ export function checkVariantPurchasable(
   if (!variant.squareCatalogObjectId) reasons.push("missing Square catalog object id");
   if (!variant.squareVariationId) reasons.push("missing Square variation id");
 
-  // Printful v2 mapping. Fulfillment uses the store sync-variant (art configured server-side);
-  // a catalog file url/id is only required when there is no sync variant.
-  if (!variant.printfulCatalogVariantId) reasons.push("missing Printful v2 catalog variant id");
-  const placements = variant.printfulPlacements ?? [];
-  if (placements.length === 0) reasons.push("missing Printful placement data");
-  const hasArt =
-    Boolean(variant.printfulSyncVariantId) || placements.some((p) => Boolean(p.fileUrl || p.fileId));
-  if (!hasArt) reasons.push("missing print art (sync variant or file)");
+  if (fulfillmentProvider === "apliiq" && variant.squareMappingStatus !== "active") {
+    reasons.push("Square mapping is not active");
+  }
+
+  if (fulfillmentProvider === "apliiq") {
+    // APLIIQ cannot reuse Printful's catalog/sync-variant assumptions. These
+    // gates make its source mapping and human approvals explicit before a
+    // checkout route is allowed to charge for the line.
+    if (!variant.apliiqSku) reasons.push("missing APLIIQ SKU");
+    if (!variant.apliiqDecorationSnapshot || Object.keys(variant.apliiqDecorationSnapshot).length === 0) {
+      reasons.push("missing APLIIQ decoration snapshot");
+    }
+    if (variant.costEstimate == null || !variant.costVerifiedAt) {
+      reasons.push("missing verified APLIIQ fulfillment cost");
+    }
+    if (variant.marginEstimate == null || !variant.marginVerifiedAt) {
+      reasons.push("missing verified APLIIQ margin");
+    } else if (variant.marginEstimate / variant.retailPrice < MIN_PRODUCT_MARGIN_RATIO) {
+      reasons.push(`product-cost margin below ${Math.round(MIN_PRODUCT_MARGIN_RATIO * 100)}% floor`);
+    }
+    if ((variant.apliiqRegionAvailability?.length ?? 0) === 0) reasons.push("missing APLIIQ region availability");
+    if (!variant.apliiqSizeGuideReference) reasons.push("missing APLIIQ size-guide reference");
+    if (variant.apliiqMappingApproval !== "approved") reasons.push("APLIIQ mapping is not approved");
+    if (variant.apliiqSampleApproval !== "approved") reasons.push("APLIIQ sample is not approved");
+  } else if (fulfillmentProvider === "printful") {
+
+    // Printful v2 mapping. Fulfillment uses the store sync-variant (art configured server-side);
+    // a catalog file url/id is only required when there is no sync variant.
+    if (!variant.printfulCatalogVariantId) reasons.push("missing Printful v2 catalog variant id");
+    const placements = variant.printfulPlacements ?? [];
+    if (placements.length === 0) reasons.push("missing Printful placement data");
+    const hasArt =
+      Boolean(variant.printfulSyncVariantId) || placements.some((p) => Boolean(p.fileUrl || p.fileId));
+    if (!hasArt) reasons.push("missing print art (sync variant or file)");
+    if ((variant.printfulRegionAvailability?.length ?? 0) === 0) reasons.push("missing region availability");
+  } else {
+    reasons.push("unsupported fulfillment provider");
+  }
 
   // Commercial fields
   if (!(variant.retailPrice > 0)) reasons.push("missing retail price");
-  if (variant.costEstimate == null) {
+  const costEstimate = variant.costEstimate;
+  if (fulfillmentProvider !== "apliiq" && costEstimate == null) {
     reasons.push("missing verified fulfillment cost");
-  } else if ((variant.retailPrice - variant.costEstimate) / variant.retailPrice < MIN_PRODUCT_MARGIN_RATIO) {
+  } else if (fulfillmentProvider !== "apliiq" && costEstimate != null && (variant.retailPrice - costEstimate) / variant.retailPrice < MIN_PRODUCT_MARGIN_RATIO) {
     reasons.push(`product-cost margin below ${Math.round(MIN_PRODUCT_MARGIN_RATIO * 100)}% floor`);
   }
   if (!variant.size) reasons.push("missing size");
@@ -52,10 +86,6 @@ export function checkVariantPurchasable(
   // Media + SEO
   if (!product.featuredImage) reasons.push("missing product image");
   if (!product.seoTitle || !product.seoDescription) reasons.push("missing SEO metadata");
-
-  // Region availability
-  const regions = variant.printfulRegionAvailability ?? [];
-  if (regions.length === 0) reasons.push("missing region availability");
 
   return { ok: reasons.length === 0, reasons };
 }

@@ -28,13 +28,35 @@ interface PrintfulMapEntry {
   printfulTechnique?: AhaVariant["printfulTechnique"];
   printfulSizeGuideReference?: string;
   costEstimate?: number;
+  costVerifiedAt?: string;
+  marginEstimate?: number;
+  marginVerifiedAt?: string;
 }
 
-/** Load products with Square + Printful maps merged in by ahaVariantId. */
+interface ApliiqMapEntry {
+  apliiqSku?: string;
+  apliiqProductId?: string;
+  apliiqVariantId?: string;
+  apliiqDecorationSnapshot?: Record<string, unknown>;
+  apliiqRegionAvailability?: string[];
+  apliiqSizeGuideReference?: string;
+  apliiqMappingApproval?: "pending" | "approved" | "rejected";
+  apliiqSampleApproval?: "pending" | "approved" | "rejected";
+  squareMappingStatus?: "active" | "pending" | "archived";
+  costEstimate?: number;
+  marginEstimate?: number;
+  costVerifiedAt?: string;
+  marginVerifiedAt?: string;
+}
+
+/** Load products with Square + provider maps merged in by ahaVariantId.
+ * Existing catalog rows predate provider neutrality, so they default to Printful.
+ */
 export function loadProducts(): AhaProduct[] {
   const manifest = readJson<{ products: AhaProduct[] }>("product-manifest.json");
   const squareMap = readJson<{ map: Record<string, SquareMapEntry> }>("square-map.json").map;
   const printfulMap = readJson<{ map: Record<string, PrintfulMapEntry> }>("printful-v2-map.json").map;
+  const apliiqMap = readJson<{ map: Record<string, ApliiqMapEntry> }>("apliiq-map.json").map;
 
   return manifest.products.map((product) => ({
     ...product,
@@ -42,6 +64,13 @@ export function loadProducts(): AhaProduct[] {
       ...variant,
       ...(squareMap[variant.ahaVariantId] ?? {}),
       ...(printfulMap[variant.ahaVariantId] ?? {}),
+      ...(apliiqMap[variant.ahaVariantId] ?? {}),
+      // The dedicated APLIIQ map is authoritative when it contains an entry.
+      // This lets the manifest remain provider-neutral while keeping all mapping
+      // and approval evidence in one reviewable file.
+      fulfillmentProvider: apliiqMap[variant.ahaVariantId]
+        ? "apliiq"
+        : variant.fulfillmentProvider ?? "printful",
     })),
   }));
 }

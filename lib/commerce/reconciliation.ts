@@ -34,6 +34,7 @@ export async function retryOrderFulfillment(orderId: number): Promise<void> {
           printfulPlacements?: RevalidatedItem["printfulPlacements"];
           printfulProductOptions?: RevalidatedItem["printfulProductOptions"];
         };
+        const providerSnapshot = (item.providerSnapshotJson || {}) as Record<string, unknown>;
         return {
           ahaProductId: item.ahaProductId,
           ahaVariantId: item.ahaVariantId,
@@ -45,6 +46,10 @@ export async function retryOrderFulfillment(orderId: number): Promise<void> {
           unitPrice: item.unitPrice,
           lineTotal: item.lineTotal,
           squareVariationId: item.squareVariationId || "",
+          fulfillmentProvider: item.fulfillmentProvider === "apliiq" ? "apliiq" : "printful",
+          providerVariantId: item.providerVariantId || String(item.printfulCatalogVariantId || ""),
+          providerSku: item.providerSku || item.sku,
+          providerSnapshot,
           printfulCatalogVariantId: item.printfulCatalogVariantId || undefined,
           printfulSyncVariantId: snapshot.printfulSyncVariantId,
           printfulStoreId: snapshot.printfulStoreId,

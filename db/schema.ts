@@ -37,13 +37,24 @@ export const productVariants = pgTable("product_variants", {
   squareCatalogObjectId: text("square_catalog_object_id"),
   squareVariationId: text("square_variation_id"),
   squareLocationId: text("square_location_id"),
+  // Provider-neutral catalog identity. The Printful columns remain the legacy
+  // record and are intentionally retained for historical orders and rollback.
+  fulfillmentProvider: text("fulfillment_provider").notNull().default("printful"),
+  providerProductId: text("provider_product_id"),
+  providerVariantId: text("provider_variant_id"),
+  providerSku: text("provider_sku"),
+  providerDataJson: jsonb("provider_data_json"),
   printfulCatalogProductId: integer("printful_catalog_product_id"),
   printfulCatalogVariantId: integer("printful_catalog_variant_id"),
   printfulPlacementsJson: jsonb("printful_placements_json"),
   costEstimate: cents("cost_estimate"),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
-}, (t) => ({ byProduct: index("idx_variants_product").on(t.productId) }));
+}, (t) => ({
+  byProduct: index("idx_variants_product").on(t.productId),
+  uniqProviderVariant: unique("uniq_variants_provider_variant").on(t.fulfillmentProvider, t.providerVariantId),
+  uniqProviderSku: unique("uniq_variants_provider_sku").on(t.fulfillmentProvider, t.providerSku),
+}));
 
 export const collections = pgTable("collections", {
   id: text("id").primaryKey(), slug: text("slug").notNull().unique(),
@@ -76,6 +87,25 @@ export const printfulV2CatalogSnapshots = pgTable("printful_v2_catalog_snapshots
   id: bigserial("id", { mode: "number" }).primaryKey(),
   takenAt: timestamp("taken_at", { withTimezone: true }).defaultNow().notNull(), payloadJson: jsonb("payload_json").notNull(),
 });
+// Inbound provider catalog records remain review-only until an operator maps
+// and approves them into data/apliiq-map.json. No callback handler writes live
+// catalog or Square records directly.
+export const providerProductDrafts = pgTable("provider_product_drafts", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  provider: text("provider").notNull(),
+  providerProductId: text("provider_product_id").notNull(),
+  providerVariantId: text("provider_variant_id"),
+  providerSku: text("provider_sku"),
+  status: text("status").notNull().default("pending_review"),
+  payloadJson: jsonb("payload_json").notNull().default({}),
+  receivedAt: timestamp("received_at", { withTimezone: true }).defaultNow().notNull(),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+}, (t) => ({
+  uniqProviderDraft: unique("uniq_provider_product_draft").on(t.provider, t.providerProductId, t.providerVariantId),
+  byProviderStatus: index("idx_provider_product_drafts_status").on(t.provider, t.status, t.createdAt),
+}));
 
 // ── Customers / carts ────────────────────────────────────────────────────────
 export const customers = pgTable("customers", {
@@ -123,6 +153,9 @@ export const orderItems = pgTable("order_items", {
   sizeSnapshot: text("size_snapshot"), colorSnapshot: text("color_snapshot"),
   quantity: integer("quantity").notNull(), unitPrice: cents("unit_price").notNull(), lineTotal: cents("line_total").notNull(),
   squareVariationId: text("square_variation_id"), printfulCatalogVariantId: integer("printful_catalog_variant_id"),
+  fulfillmentProvider: text("fulfillment_provider").notNull().default("printful"),
+  providerVariantId: text("provider_variant_id"), providerSku: text("provider_sku"),
+  providerSnapshotJson: jsonb("provider_snapshot_json"),
   printfulPlacementSnapshotJson: jsonb("printful_placement_snapshot_json"), printfulFileSnapshotJson: jsonb("printful_file_snapshot_json"),
   fulfillmentStatus: text("fulfillment_status").notNull().default("not_started"),
   createdAt: createdAt(), updatedAt: updatedAt(),
@@ -139,13 +172,21 @@ export const fulfillments = pgTable("fulfillments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
   providerStoreId: integer("provider_store_id"),
+  fulfillmentProvider: text("fulfillment_provider").notNull().default("printful"),
+  providerReference: text("provider_reference"), providerRequestId: text("provider_request_id"),
+  providerOrderId: text("provider_order_id"), providerDataJson: jsonb("provider_data_json"),
   printfulOrderId: text("printful_order_id").unique(), status: text("status").notNull().default("not_started"),
   lastError: text("last_error"),
   createdAt: createdAt(), updatedAt: updatedAt(),
-}, (t) => ({ uniqOrderStore: unique("uniq_fulfillment_order_store").on(t.orderId, t.providerStoreId) }));
+}, (t) => ({
+  uniqOrderStore: unique("uniq_fulfillment_order_store").on(t.orderId, t.providerStoreId),
+  uniqProviderOrder: unique("uniq_fulfillment_provider_order").on(t.fulfillmentProvider, t.providerOrderId),
+}));
 export const shipments = pgTable("shipments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
+  fulfillmentProvider: text("fulfillment_provider").notNull().default("printful"),
+  providerShipmentId: text("provider_shipment_id"),
   printfulShipmentId: text("printful_shipment_id"), carrier: text("carrier"),
   trackingNumber: text("tracking_number"), trackingUrl: text("tracking_url"), status: text("status"),
   shippedAt: timestamp("shipped_at", { withTimezone: true }), deliveredAt: timestamp("delivered_at", { withTimezone: true }),

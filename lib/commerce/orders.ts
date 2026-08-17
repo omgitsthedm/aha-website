@@ -4,6 +4,7 @@ import { db, isDbConfigured } from "@/lib/db/client";
 import { orders, orderItems, payments, auditLog } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { loadProducts } from "@/lib/data/products";
+import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import { INTERNATIONAL_SHIPPING_CENTS, isInternational } from "@/lib/commerce/policies";
 import { assertLegacyCatalogCheckoutAllowed } from "@/lib/commerce/catalog-policy";
 import type { AhaProduct, AhaVariant } from "@/lib/types/product";
@@ -29,6 +30,10 @@ export interface RevalidatedItem {
   unitPrice: number;
   lineTotal: number;
   squareVariationId: string;
+  fulfillmentProvider: AhaVariant["fulfillmentProvider"];
+  providerVariantId?: string;
+  providerSku?: string;
+  providerSnapshot: Record<string, unknown>;
   printfulCatalogVariantId?: number;
   printfulSyncVariantId?: number;
   printfulStoreId?: number;
@@ -65,8 +70,9 @@ function revalidateCatalogLines(lines: CheckoutLine[]): RevalidatedCart {
     const hit = idx.get(line.squareVariationId);
     if (!hit) throw new Error(`Item no longer available (${line.squareVariationId}).`);
     const { product, variant } = hit;
-    if (product.status !== "active" || variant.status !== "active") {
-      throw new Error(`"${product.title}" (${variant.size}) is no longer available.`);
+    const readiness = checkVariantPurchasable(product, variant);
+    if (!readiness.ok) {
+      throw new Error(`"${product.title}" (${variant.size}) is not currently purchasable: ${readiness.reasons.join(", ")}.`);
     }
     const unitPrice = variant.retailPrice;
     const lineTotal = unitPrice * qty;
@@ -76,6 +82,34 @@ function revalidateCatalogLines(lines: CheckoutLine[]): RevalidatedCart {
       ahaProductId: product.ahaProductId, ahaVariantId: variant.ahaVariantId, sku: variant.sku,
       title: product.title, size: variant.size, color: variant.color, quantity: qty,
       unitPrice, lineTotal, squareVariationId: variant.squareVariationId!,
+      fulfillmentProvider: variant.fulfillmentProvider ?? "printful",
+      providerVariantId: variant.fulfillmentProvider === "apliiq"
+        ? variant.apliiqVariantId
+        : String(variant.printfulCatalogVariantId ?? ""),
+      providerSku: variant.fulfillmentProvider === "apliiq" ? variant.apliiqSku : variant.sku,
+      providerSnapshot: variant.fulfillmentProvider === "apliiq"
+        ? {
+          apliiqProductId: variant.apliiqProductId,
+          apliiqVariantId: variant.apliiqVariantId,
+          apliiqSku: variant.apliiqSku,
+          decoration: variant.apliiqDecorationSnapshot,
+          regions: variant.apliiqRegionAvailability,
+          sizeGuideReference: variant.apliiqSizeGuideReference,
+          mappingApproval: variant.apliiqMappingApproval,
+          sampleApproval: variant.apliiqSampleApproval,
+          costEstimate: variant.costEstimate,
+          marginEstimate: variant.marginEstimate,
+          costVerifiedAt: variant.costVerifiedAt,
+          marginVerifiedAt: variant.marginVerifiedAt,
+        }
+        : {
+          printfulCatalogVariantId: variant.printfulCatalogVariantId,
+          printfulSyncVariantId: variant.printfulSyncVariantId,
+          printfulStoreId: variant.printfulStoreId,
+          printfulPlacements: variant.printfulPlacements ?? [],
+          printfulProductOptions: variant.printfulProductOptions ?? [],
+          printfulRegionAvailability: variant.printfulRegionAvailability ?? [],
+        },
       printfulCatalogVariantId: variant.printfulCatalogVariantId,
       printfulSyncVariantId: variant.printfulSyncVariantId,
       printfulStoreId: variant.printfulStoreId,
@@ -160,6 +194,10 @@ export async function createOrder(
       titleSnapshot: it.title, sizeSnapshot: it.size, colorSnapshot: it.color ?? null,
       quantity: it.quantity, unitPrice: it.unitPrice, lineTotal: it.lineTotal,
       squareVariationId: it.squareVariationId, printfulCatalogVariantId: it.printfulCatalogVariantId ?? null,
+      fulfillmentProvider: it.fulfillmentProvider ?? "printful",
+      providerVariantId: it.providerVariantId ?? null,
+      providerSku: it.providerSku ?? null,
+      providerSnapshotJson: it.providerSnapshot,
       printfulFileSnapshotJson: it.printfulSyncVariantId
         ? { printfulSyncVariantId: it.printfulSyncVariantId, printfulStoreId: it.printfulStoreId }
         : { printfulPlacements: it.printfulPlacements ?? [], printfulProductOptions: it.printfulProductOptions ?? [], printfulStoreId: it.printfulStoreId },

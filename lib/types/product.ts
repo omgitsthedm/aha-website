@@ -36,6 +36,9 @@ type ProductCategory =
 
 type ProductGender = "men" | "women" | "unisex";
 
+/** The fulfillment system that produces a purchased variant. */
+export type FulfillmentProvider = "printful" | "apliiq";
+
 export type PrintTechnique =
   | "dtg"
   | "dtf"
@@ -78,6 +81,10 @@ export interface AhaVariant {
   status: VariantStatus;
   sortOrder: number;
 
+  /** Defaults to Printful for legacy catalog rows. APLIIQ rows must carry the
+   * structural approval data below before they can be sold. */
+  fulfillmentProvider?: FulfillmentProvider;
+
   // Square mapping (payments/orders source of truth)
   squareCatalogObjectId?: string;
   squareVariationId?: string;
@@ -98,8 +105,23 @@ export interface AhaVariant {
   printfulTechnique?: PrintTechnique;
   printfulSizeGuideReference?: string;
 
+  // APLIIQ mapping (fulfillment source of truth when fulfillmentProvider is "apliiq")
+  // This is deliberately data-only: provider calls and product creation happen elsewhere.
+  apliiqSku?: string;
+  apliiqProductId?: string;
+  apliiqVariantId?: string;
+  apliiqDecorationSnapshot?: Record<string, unknown>;
+  apliiqRegionAvailability?: string[];
+  apliiqSizeGuideReference?: string;
+  apliiqMappingApproval?: "pending" | "approved" | "rejected";
+  apliiqSampleApproval?: "pending" | "approved" | "rejected";
+  /** A Square mapping is not sale-ready until its operator-confirmed state is active. */
+  squareMappingStatus?: "active" | "pending" | "archived";
+
   costEstimate?: number; // minor units — from Printful, for margin
   marginEstimate?: number; // minor units
+  costVerifiedAt?: string;
+  marginVerifiedAt?: string;
   createdAt?: string;
   updatedAt?: string;
 }

@@ -74,4 +74,52 @@ describe("checkVariantPurchasable", () => {
     const p = activeProduct({ variants: [v] });
     expect(checkVariantPurchasable(p, v).reasons).toContain("product-cost margin below 35% floor");
   });
+
+  it("requires APLIIQ mapping, approved sample, and an active Square mapping", () => {
+    const v = fullyMappedVariant({
+      fulfillmentProvider: "apliiq",
+      printfulCatalogVariantId: undefined,
+      printfulPlacements: undefined,
+      costVerifiedAt: undefined,
+      marginEstimate: undefined,
+      marginVerifiedAt: undefined,
+    });
+    const p = activeProduct({ variants: [v] });
+    const result = checkVariantPurchasable(p, v);
+    expect(result.ok).toBe(false);
+    expect(result.reasons).toEqual(expect.arrayContaining([
+      "Square mapping is not active",
+      "missing APLIIQ SKU",
+      "missing APLIIQ decoration snapshot",
+      "missing verified APLIIQ fulfillment cost",
+      "missing verified APLIIQ margin",
+      "missing APLIIQ region availability",
+      "missing APLIIQ size-guide reference",
+      "APLIIQ mapping is not approved",
+      "APLIIQ sample is not approved",
+    ]));
+  });
+
+  it("passes a structurally approved APLIIQ variant without Printful fields", () => {
+    const v = fullyMappedVariant({
+      fulfillmentProvider: "apliiq",
+      printfulCatalogVariantId: undefined,
+      printfulPlacements: undefined,
+      apliiqSku: "APQ-TEE-BLK-M",
+      apliiqProductId: "apq-product-1",
+      apliiqVariantId: "apq-variant-1",
+      apliiqDecorationSnapshot: { front: { artworkId: "art-1" } },
+      apliiqRegionAvailability: ["US"],
+      apliiqSizeGuideReference: "sg-tee",
+      apliiqMappingApproval: "approved",
+      apliiqSampleApproval: "approved",
+      squareMappingStatus: "active",
+      costEstimate: 2500,
+      costVerifiedAt: "2026-08-16T00:00:00.000Z",
+      marginEstimate: 2300,
+      marginVerifiedAt: "2026-08-16T00:00:00.000Z",
+    });
+    const p = activeProduct({ variants: [v] });
+    expect(checkVariantPurchasable(p, v)).toEqual({ ok: true, reasons: [] });
+  });
 });
