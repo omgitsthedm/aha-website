@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   assertLegacyCatalogCheckoutAllowed,
+  assertVariantSellable,
   isLegacyCatalogPublic,
 } from "@/lib/commerce/catalog-policy";
 import { catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
@@ -17,7 +18,14 @@ describe("legacy catalog migration hold", () => {
     expect(isLegacyCatalogPublic()).toBe(false);
   });
 
-  it("returns no legacy products or collections before any Square request", async () => {
+  it.skip("returns no legacy products or collections before any Square request", async () => {
+    // Superseded 2026-08-18. getAllProducts now proceeds to the provider layer
+    // because the APLIIQ capsule is live, so this can no longer assert "no
+    // Square request". The invariant it protected — legacy products stay dark —
+    // is enforced per variant in buildEligibleSquareIndex and asserted by
+    // "refuses a legacy Printful line even with the till open" above, plus the
+    // provider-catalog suite. Left skipped rather than deleted so the original
+    // intent stays discoverable.
     const { getAllCollections, getAllProducts } = await import("@/lib/square/catalog");
 
     await expect(getAllProducts()).resolves.toEqual([]);
@@ -45,17 +53,23 @@ describe("legacy catalog migration hold", () => {
     expect(squareRequest).not.toHaveBeenCalled();
   });
 
-  it("rejects saved Square cart lines before loading legacy mappings", async () => {
+  it("rejects a saved cart line that resolves to no sellable variant", async () => {
+    // The till is open for the APLIIQ capsule, so the guard no longer refuses
+    // every line outright. A stale variation id must still find nothing.
     const { revalidateCart } = await import("@/lib/commerce/orders");
-
-    expect(() => revalidateCart([{ squareVariationId: "stale-square-variation", quantity: 1 }]))
-      .toThrow("The store is being updated. Existing items cannot be purchased right now.");
-    expect(loadProducts).not.toHaveBeenCalled();
+    expect(() => revalidateCart([{ squareVariationId: "stale-square-variation", quantity: 1 }])).toThrow();
   });
 
-  it("keeps the checkout guard fail-closed", () => {
-    expect(() => assertLegacyCatalogCheckoutAllowed())
-      .toThrow("The store is being updated. Existing items cannot be purchased right now.");
+  it("refuses a legacy Printful line even with the till open", () => {
+    // THE invariant this whole file exists for. Opening the catalog globally was
+    // measured on 2026-08-18 to make 1,005 legacy Printful variants sellable
+    // again — archived Square items, deleted artwork, retired provider. The
+    // per-line provider guard is what stops it, so assert the guard directly.
+    expect(() => assertVariantSellable("printful", '"Legacy product" (M)'))
+      .toThrow('"Legacy product" (M) is no longer available.');
+    expect(() => assertVariantSellable(undefined, '"Unmapped" (M)')).toThrow("no longer available");
+    // ...and permits the capsule.
+    expect(() => assertVariantSellable("apliiq", '"Capsule tee" (M)')).not.toThrow();
   });
 
   it("does not strand fulfillment recovery for an order paid before the hold", async () => {

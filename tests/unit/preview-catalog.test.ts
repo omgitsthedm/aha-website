@@ -20,7 +20,17 @@ describe("preview catalog fallback", () => {
     const collections = buildPreviewCollections();
     const products = buildPreviewProducts();
 
-    expect(collections.length).toBe(4);
+    // Was a hardcoded 4. buildPreviewCollections now hides a category with
+    // nothing sellable in it — with the capsule live that drops "Sweaters &
+    // Knitwear" and "Accessories", which would otherwise render as empty
+    // category pages on a live store. The invariant worth pinning is the second
+    // line, which was already here: every surfaced collection has stock.
+    expect(collections.length).toBeGreaterThan(0);
     expect(collections.every((collection) => products.some((product) => product.collectionIds.includes(collection.id)))).toBe(true);
+    // ...and the converse, which is the new behaviour: no empty category ships.
+    for (const collection of collections) {
+      const stocked = products.filter((p) => p.collectionIds.includes(collection.id) && p.variations.length > 0);
+      expect(stocked.length).toBeGreaterThan(0);
+    }
   });
 });

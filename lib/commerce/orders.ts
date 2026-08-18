@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { loadProducts } from "@/lib/data/products";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import { INTERNATIONAL_SHIPPING_CENTS, isInternational } from "@/lib/commerce/policies";
-import { assertLegacyCatalogCheckoutAllowed } from "@/lib/commerce/catalog-policy";
+import { assertLegacyCatalogCheckoutAllowed, assertVariantSellable } from "@/lib/commerce/catalog-policy";
 import type { AhaProduct, AhaVariant } from "@/lib/types/product";
 
 export interface CheckoutLine {
@@ -125,6 +125,11 @@ function revalidateCatalogLines(lines: CheckoutLine[]): RevalidatedCart {
     const hit = idx.get(line.squareVariationId);
     if (!hit) throw new Error(`Item no longer available (${line.squareVariationId}).`);
     const { product, variant } = hit;
+    // NOTE: the sellable-provider guard deliberately does NOT live here.
+    // revalidateCatalogLines is shared by public checkout and by fulfillment
+    // recovery for orders paid BEFORE the hold; blocking legacy lines here
+    // would strand a customer who has already been charged. The guard belongs
+    // on the public path only — see revalidateCart.
     const readiness = checkVariantPurchasable(product, variant);
     if (!readiness.ok) {
       throw new Error(`"${product.title}" (${variant.size}) is not currently purchasable: ${readiness.reasons.join(", ")}.`);
@@ -191,7 +196,14 @@ export function revalidateCart(lines: CheckoutLine[]): RevalidatedCart {
   // This is intentionally the first checkout guard. A stale local cart must
   // fail before its Square variation can be priced or attached to an order.
   assertLegacyCatalogCheckoutAllowed();
-  return revalidateCatalogLines(lines);
+  const cart = revalidateCatalogLines(lines);
+  // Then per line: the till being open for the APLIIQ capsule does not make a
+  // legacy Printful line sellable, and a browser cart saved before the reset
+  // still holds them.
+  for (const item of cart.items) {
+    assertVariantSellable(item.fulfillmentProvider, `"${item.title}" (${item.size})`);
+  }
+  return cart;
 }
 
 /**

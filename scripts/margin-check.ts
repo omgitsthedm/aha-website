@@ -43,8 +43,17 @@ for (const p of loadProducts()) {
         const proven = underwater.some((code: string) => warning.includes(code)) && !warning.includes("not modelled");
         (proven ? errors : warnings).push(`[${id}] ${warning}`);
       }
-      if (margin.contributionMarginRatio < MIN_MARGIN_RATIO) {
-        errors.push(`[${id}] landed margin ${(margin.contributionMarginRatio * 100).toFixed(1)}% below ${(MIN_MARGIN_RATIO * 100).toFixed(0)}% floor (retail ${v.retailPrice}, item ${itemCostCents}, freight ${freightCents}, fee ${fulfillmentFeeCents}, tax ${destinationTaxCents}, square ${margin.squareFee})`);
+      // Honour the same per-variant exception purchasable.ts does, or this
+      // script and the runtime gate disagree and the build fails on a variant
+      // the storefront would happily sell.
+      const override = v.marginFloorOverride;
+      const floor = override ? Math.max(0, override.minRatio) : MIN_MARGIN_RATIO;
+      if (margin.contributionMargin <= 0) {
+        errors.push(`[${id}] landed cost exceeds retail price (retail ${v.retailPrice}, landed ${itemCostCents + freightCents + fulfillmentFeeCents + destinationTaxCents})`);
+      } else if (margin.contributionMarginRatio < floor) {
+        errors.push(`[${id}] landed margin ${(margin.contributionMarginRatio * 100).toFixed(1)}% below ${(floor * 100).toFixed(0)}% ${override ? "override " : ""}floor (retail ${v.retailPrice}, item ${itemCostCents}, freight ${freightCents}, fee ${fulfillmentFeeCents}, tax ${destinationTaxCents}, square ${margin.squareFee})`);
+      } else if (override) {
+        warnings.push(`[${id}] shipping under a ${(floor * 100).toFixed(0)}% override floor at ${(margin.contributionMarginRatio * 100).toFixed(1)}% — ${override.reason}`);
       }
       continue;
     }
