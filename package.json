@@ -45,6 +45,9 @@
     "archive:square-final-reset": "tsx scripts/archive-square-final-reset.ts",
     "rederive:apliiq-costs": "tsx scripts/rederive-apliiq-costs.ts",
     "apliiq:capsule": "tsx scripts/apliiq-capsule.ts",
+    "square:capsule": "node scripts/square-capsule.mjs",
+    "imagery:products": "python3 scripts/imagery/render-product-imagery.py",
+    "imagery:tiles": "python3 scripts/imagery/render-campaign-tiles.py",
     "generate:sellable-slugs": "tsx scripts/generate-sellable-slugs.ts"
   },
   "dependencies": {

@@ -1,0 +1,252 @@
+{
+  "_note": "Every editorial image slot on the storefront. Swap an image by replacing the file at `src` (same aspect) or pointing `src` at a new file, then flip `placeholder` to false. Product imagery is NOT here — it lives in Square (see docs/content-swap-guide.md).",
+  "hero": {
+    "src": "/editorial/hero-rooftop.jpg",
+    "alt": "A young person in a plain black hoodie on a Brooklyn rooftop at night, the Manhattan skyline behind them",
+    "aspect": "16:9",
+    "placeholder": true,
+    "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot.",
+    "swap": "Campaign hero. Keep 16:9 or wider, subject on the right third, dark space on the left for the headline."
+  },
+  "maker": {
+    "src": "/editorial/subway-platform.jpg",
+    "alt": "Someone in a plain black tee waiting alone on an empty subway platform late at night, coffee in hand",
+    "aspect": "16:9",
+    "placeholder": true,
+    "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot.",
+    "swap": "The 'after hours' story image on the home page and about page. Any candid night-in-the-city frame works."
+  },
+  "categories": {
+    "t-shirts": {
+      "src": "/editorial/subway-platform.jpg",
+      "alt": "Tees — worn late, in the city",
+      "placeholder": true,
+      "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
+    },
+    "hoodies-sweatshirts": {
+      "src": "/editorial/rooftop-portrait.jpg",
+      "alt": "Hoods and crews — heavyweight, for the roof at 2am",
+      "placeholder": true,
+      "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
+    }
+  },
+  "lookbook": [
+    {
+      "src": "/editorial/hero-rooftop.jpg",
+      "alt": "Rooftop, 2am, plain black hood",
+      "caption": "Rooftop. 2am. The city does the talking.",
+      "aspect": "16:9",
+      "placeholder": true,
+      "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
+    },
+    {
+      "src": "/editorial/tiles/no-kings-tee.jpg",
+      "alt": "No Kings graphic on a sage ground",
+      "caption": "No Kings",
+      "productSlug": "no-kings-tee",
+      "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile, scripts/imagery/render-campaign-tiles.py"
+    },
+    {
+      "src": "/editorial/subway-platform.jpg",
+      "alt": "Subway platform, last train, plain black tee",
+      "caption": "Last train. First idea.",
+      "aspect": "16:9",
+      "placeholder": true,
+      "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
+    },
+    {
+      "src": "/editorial/tiles/sheep-min-hoodie.jpg",
+      "alt": "Sheep Min graphic on a rose ground",
+      "caption": "Sheep Min",
+      "productSlug": "sheep-min-hoodie",
+      "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile"
+    },
+    {
+      "src": "/editorial/sheep-agave-womens-front.jpg",
+      "alt": "The Black Sheep sweatshirt in agave, worn",
+      "caption": "The signature — the Black Sheep, previous run",
+      "aspect": "4:5",
+      "placeholder": true,
+      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
+    },
+    {
+      "src": "/editorial/tiles/read-banned-books-tee.jpg",
+      "alt": "Read Banned Books graphic on a sky ground",
+      "caption": "Read Banned Books",
+      "productSlug": "read-banned-books-tee",
+      "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile"
+    },
+    {
+      "src": "/editorial/rooftop-portrait.jpg",
+      "alt": "Rooftop portrait in a plain black hood",
+      "caption": "Built for the roof.",
+      "aspect": "4:5",
+      "placeholder": true,
+      "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
+    },
+    {
+      "src": "/editorial/tiles/enemy-of-the-state-hoodie.jpg",
+      "alt": "Enemy Of The State graphic on a sage ground",
+      "caption": "Enemy Of The State",
+      "productSlug": "enemy-of-the-state-hoodie",
+      "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile"
+    },
+    {
+      "src": "/editorial/sheep-bone-mens-front.jpg",
+      "alt": "The Black Sheep sweatshirt in bone, worn",
+      "caption": "The Black Sheep in bone, previous run",
+      "aspect": "4:5",
+      "placeholder": true,
+      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
+    },
+    {
+      "src": "/editorial/tiles/no-place-like-new-york-sweatshirt.jpg",
+      "alt": "No Place Like New York graphic on a sky ground",
+      "caption": "No Place Like New York",
+      "productSlug": "no-place-like-new-york-sweatshirt",
+      "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile"
+    },
+    {
+      "src": "/editorial/tiles/dont-lick-the-boot-tee.jpg",
+      "alt": "Don’t Lick The Boot graphic on a cream ground",
+      "caption": "Don’t Lick The Boot",
+      "productSlug": "dont-lick-the-boot-tee",
+      "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile"
+    },
+    {
+      "src": "/editorial/tiles/dont-fuck-fascists-tee.jpg",
+      "alt": "Don’t Fuck Fascists graphic on paper",
+      "caption": "Don’t Fuck Fascists",
+      "productSlug": "dont-fuck-fascists-tee",
+      "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile"
+    },
+    {
+      "src": "/editorial/sheep-agave-mens-side.jpg",
+      "alt": "The Black Sheep sweatshirt in agave, side",
+      "caption": "Previous run, agave",
+      "aspect": "4:5",
+      "placeholder": true,
+      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
+    },
+    {
+      "src": "/editorial/tiles/black-sheep-tee.jpg",
+      "alt": "Black Sheep graphic on a rose ground",
+      "caption": "Black Sheep",
+      "productSlug": "black-sheep-tee",
+      "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile"
+    }
+  ],
+  "signature": [
+    {
+      "src": "/editorial/sheep-agave-womens-front.jpg",
+      "alt": "The Black Sheep sweatshirt in agave, worn",
+      "placeholder": true,
+      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
+    },
+    {
+      "src": "/editorial/sheep-bone-mens-front.jpg",
+      "alt": "The Black Sheep sweatshirt in bone, worn",
+      "placeholder": true,
+      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
+    }
+  ],
+  "archive": [
+    {
+      "src": "/editorial/archive/2012-the-prologue.jpg",
+      "alt": "The typed 2012 prologue as it ran on the first site",
+      "year": "2012",
+      "caption": "The Prologue. Typed, crumpled, and posted as the whole home page.",
+      "aspect": "4:3",
+      "placeholder": false,
+      "source": "Brand archive, 2012"
+    },
+    {
+      "src": "/editorial/archive/2012-the-after-hours-agenda-tee.jpg",
+      "alt": "The first After Hours Agenda wordmark tee",
+      "year": "2012",
+      "caption": "The first wordmark tee.",
+      "aspect": "3:4",
+      "placeholder": false,
+      "source": "Brand archive, 2012"
+    },
+    {
+      "src": "/editorial/archive/2012-nothing-good-happens-after-2am.jpg",
+      "alt": "Nothing / Everything Good Happens After 2AM tee",
+      "year": "2012",
+      "caption": "Nothing — everything — good happens after 2am.",
+      "aspect": "3:4",
+      "placeholder": false,
+      "source": "Brand archive, 2012"
+    },
+    {
+      "src": "/editorial/archive/2012-aha-nyc-coming-fall.jpg",
+      "alt": "AHA NYC subway-bullet promo, coming fall 2012",
+      "year": "2012",
+      "caption": "Coming fall 2012.",
+      "aspect": "3:4",
+      "placeholder": false,
+      "source": "Brand archive, 2012"
+    },
+    {
+      "src": "/editorial/archive/2012-never-give-up-poster.jpg",
+      "alt": "Never Give Up poster",
+      "year": "2012",
+      "caption": "Never Give Up. Perseverance, printed.",
+      "aspect": "3:2",
+      "placeholder": false,
+      "source": "Brand archive, 2012"
+    },
+    {
+      "src": "/editorial/archive/2012-problems-dont-exist-after-5pm.jpg",
+      "alt": "Problems Don’t Exist After 5PM poster",
+      "year": "2012",
+      "caption": "Problems don’t exist after 5pm.",
+      "aspect": "1:1",
+      "placeholder": false,
+      "source": "Brand archive, 2012"
+    },
+    {
+      "src": "/editorial/archive/2013-the-best-is-yet-to-come.jpg",
+      "alt": "The Best Is Yet To Come, letterpress pink",
+      "year": "2013",
+      "caption": "The best is yet to come.",
+      "aspect": "3:4",
+      "placeholder": false,
+      "source": "Brand archive, 2013"
+    },
+    {
+      "src": "/editorial/archive/2013-rise-and-grind.jpg",
+      "alt": "Rise & Grind / Party & Shine tee",
+      "year": "2013",
+      "caption": "Rise & grind. Party & shine.",
+      "aspect": "3:4",
+      "placeholder": false,
+      "source": "Brand archive, 2013"
+    },
+    {
+      "src": "/editorial/archive/2013-love-vanity.jpg",
+      "alt": "Love / Vanity tee",
+      "year": "2013",
+      "caption": "Love / Vanity.",
+      "aspect": "3:4",
+      "placeholder": false,
+      "source": "Brand archive, 2013"
+    }
+  ]
+}
