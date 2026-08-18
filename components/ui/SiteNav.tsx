@@ -91,7 +91,7 @@ export function SiteNav() {
 
   return (
     <header className="safe-top safe-x fixed inset-x-0 top-0 z-[100] border-b border-border/10 bg-void">
-      <nav aria-label="Primary navigation" className="mx-auto grid h-14 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6">
+      <nav aria-label="Primary navigation" className="mx-auto flex h-14 max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         <div className="hidden items-center lg:flex">
           {catalogIsPublic && shopLinks.map((link) => (
             <Link
@@ -106,7 +106,7 @@ export function SiteNav() {
           ))}
         </div>
 
-        <Link href="/" prefetch={false} className="inline-flex h-14 items-center justify-center font-display text-sm font-bold uppercase tracking-[-0.02em] text-cream hover:text-accent focus-visible:outline-offset-4">
+        <Link href="/" prefetch={false} className="inline-flex h-14 items-center justify-center whitespace-nowrap font-display text-sm font-bold uppercase tracking-[-0.02em] text-cream hover:text-accent focus-visible:outline-offset-4">
           After Hours Agenda
         </Link>
 
