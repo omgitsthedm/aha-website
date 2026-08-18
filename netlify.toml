@@ -18,9 +18,8 @@
   PRINTFUL_API_BASE_URL = "https://api.printful.com/v2"
   PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
   PRINTFUL_LIVE_MODE = "false"
-  # APLIIQ infrastructure ships fail-closed. Production order submission stays
-  # disabled until credentials, approved APQ mappings, samples, and the live
-  # pilot have all been verified separately.
+  # APLIIQ infrastructure ships fail-closed everywhere except the production
+  # context below, which enables order submission for the live capsule.
   APLIIQ_API_BASE_URL = "https://api.apliiq.com/v1"
   APLIIQ_DEFAULT_SHIPPING = "standard"
   APLIIQ_ALLOW_CREATE_ORDERS = "false"
@@ -38,8 +37,11 @@
   AHA_FULFILLMENT_MODE = "auto"
   PRINTFUL_ALLOW_CONFIRM_ORDERS = "true"
   PRINTFUL_LIVE_MODE = "true"
-  APLIIQ_ALLOW_CREATE_ORDERS = "false"
-  APLIIQ_LIVE_MODE = "false"
+  # APLIIQ is the live provider for the capsule (2026-08-18). netlify.toml wins
+  # over the UI, so these two rails MUST be set here — the UI values alone left
+  # production fail-closed. Every other context below stays false.
+  APLIIQ_ALLOW_CREATE_ORDERS = "true"
+  APLIIQ_LIVE_MODE = "true"
 
 # ── Staging (persistent branch deploy) ───────────────────────────────────────
 [context."staging".environment]
