@@ -133,6 +133,19 @@ export interface AhaVariant {
   /** Destination sales tax on the provider invoice, minor units. Overrides the modelled rate. */
   apliiqDestinationTaxCents?: number;
   /**
+   * Which APLIIQ price tier apliiqItemCost was captured at.
+   *
+   * VIP is a flat 20% off products and services. Buying it AFTER cost capture
+   * makes every captured cost wrong by 20%, and purchasable.ts reconciles the
+   * stored marginEstimate against the recomputed landed figure by exact
+   * equality — so the day VIP lands, every APLIIQ variant fails validation.
+   * Recording the basis makes that a scripted re-derive instead of a manual
+   * pass, and stops a re-derive run twice from double-discounting.
+   *
+   * Absent is read as "standard" for backward compatibility.
+   */
+  apliiqCostBasis?: "standard" | "vip";
+  /**
    * Shipped weight in ounces (2dp). Addresses the irregular APLIIQ rate ladder,
    * whose tier ceilings (7.9, 11.9 … 143.99, 159.84) are not whole ounces.
    */

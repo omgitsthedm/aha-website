@@ -139,3 +139,23 @@ describe("APLIIQ map runtime parser", () => {
       .toThrow("finite nonnegative integer");
   });
 });
+
+describe("apliiqCostBasis — the VIP re-derive guard", () => {
+  it("accepts standard and vip, rejects anything else", () => {
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqCostBasis: "standard" })))).not.toThrow();
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqCostBasis: "vip" })))).not.toThrow();
+    // Absent must stay legal — entries written before this field existed keep validating.
+    expect(() => parseApliiqMapDocument(document(validEntry()))).not.toThrow();
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqCostBasis: "gold" }))))
+      .toThrow(/must be "standard" or "vip"/);
+  });
+
+  it("reads an absent basis as standard, so a re-derive cannot double-discount", () => {
+    const doc = parseApliiqMapDocument(document(validEntry()));
+    const entry = doc.map["apliiq-tee-m"];
+    // scripts/rederive-apliiq-costs.ts treats undefined as "standard". If that
+    // ever changed, a map captured before this field existed would take the 20%
+    // VIP discount a second time.
+    expect(entry.apliiqCostBasis ?? "standard").toBe("standard");
+  });
+});

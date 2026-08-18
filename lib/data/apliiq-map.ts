@@ -25,6 +25,7 @@ export type ApliiqMapEntry = Pick<AhaVariant,
   | "apliiqShippingCost"
   | "apliiqFulfillmentFeeCents"
   | "apliiqDestinationTaxCents"
+  | "apliiqCostBasis"
 >;
 
 export interface ApliiqMapDocument {
@@ -37,8 +38,18 @@ const ALLOWED_ENTRY_FIELDS = new Set<keyof ApliiqMapEntry>([
   "apliiqSizeGuideReference", "apliiqMappingApproval", "apliiqSampleApproval",
   "squareMappingStatus", "costEstimate", "marginEstimate", "costVerifiedAt", "marginVerifiedAt",
   "weightOz", "apliiqItemCost", "apliiqShippingCost", "apliiqFulfillmentFeeCents",
-  "apliiqDestinationTaxCents",
+  "apliiqDestinationTaxCents", "apliiqCostBasis",
 ]);
+
+/**
+ * Which APLIIQ price tier a captured cost came from. Absent means "standard",
+ * so entries written before VIP existed keep validating.
+ */
+function costBasis(value: unknown, path: string): "standard" | "vip" | undefined {
+  if (value === undefined) return undefined;
+  if (value !== "standard" && value !== "vip") fail(path, 'must be "standard" or "vip"');
+  return value;
+}
 
 function fail(path: string, message: string): never {
   throw new Error(`Invalid data/apliiq-map.json at ${path}: ${message}`);
@@ -213,6 +224,7 @@ function parseEntry(value: unknown, path: string): ApliiqMapEntry {
     apliiqShippingCost: optionalCents(value.apliiqShippingCost, `${path}.apliiqShippingCost`),
     apliiqFulfillmentFeeCents: optionalCents(value.apliiqFulfillmentFeeCents, `${path}.apliiqFulfillmentFeeCents`),
     apliiqDestinationTaxCents: optionalCents(value.apliiqDestinationTaxCents, `${path}.apliiqDestinationTaxCents`),
+    apliiqCostBasis: costBasis(value.apliiqCostBasis, `${path}.apliiqCostBasis`),
   };
 }
 
