@@ -5,6 +5,7 @@ import { ResilientImage } from "@/components/ui/ResilientImage";
 import { QuickAdd } from "@/components/shop/QuickAdd";
 import { ColorSwatches } from "@/components/shop/ColorSwatches";
 import Link from "next/link";
+import { splitProductName } from "@/lib/utils/product-name";
 import type { Product } from "@/lib/utils/types";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { trackCommerceEvent } from "@/lib/analytics/events";
@@ -193,7 +194,7 @@ function OpenCategoryShopContent({
             </div>
             <div className="flex flex-wrap gap-2 xl:pt-6" role="group" aria-label="Catalog view">
               {(["grid", "index"] as const).map((mode) => (
-                <button key={mode} type="button" onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode} className={`${toggle} ${viewMode === mode ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}>
+                <button key={mode} type="button" onClick={() => setViewMode(mode)} aria-pressed={viewMode === mode} className={`${toggle} ${viewMode === mode ? "border-cream bg-cream text-void" : "border-border/60 text-cream hover:border-cream"}`}>
                   {mode}
                 </button>
               ))}
@@ -206,7 +207,7 @@ function OpenCategoryShopContent({
               <Link
                 href={categoryHref("all")}
                 aria-current={activeCategory === undefined ? "page" : undefined}
-                className={`${toggle} inline-flex shrink-0 items-center ${activeCategory === undefined ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
+                className={`${toggle} inline-flex shrink-0 items-center ${activeCategory === undefined ? "border-cream bg-cream text-void" : "border-border/60 text-cream hover:border-cream"}`}
               >
                 All <span aria-hidden="true">{products.length}</span>
               </Link>
@@ -219,7 +220,7 @@ function OpenCategoryShopContent({
                     href={categoryHref(category.slug)}
                     aria-current={activeCategory === category.slug ? "page" : undefined}
                     aria-label={`${category.name}, ${count} products`}
-                    className={`${toggle} inline-flex shrink-0 items-center gap-2 ${activeCategory === category.slug ? "border-accent bg-surface text-cream" : "border-border/60 text-muted hover:border-accent hover:text-cream"}`}
+                    className={`${toggle} inline-flex shrink-0 items-center gap-2 ${activeCategory === category.slug ? "border-cream bg-cream text-void" : "border-border/60 text-muted hover:border-cream hover:text-cream"}`}
                   >
                     {category.name} <span aria-hidden="true">{count}</span>
                   </Link>
@@ -263,16 +264,19 @@ function OpenCategoryShopContent({
           {visibleProducts.map((product, index) => {
             const image = product.images[0];
             return (
-              <div key={product.id} className="group paper-lift">
+              <div key={product.id} className="group">
                 <Link href={`/product/${product.slug}`} prefetch={false} className="block focus-visible:outline-offset-4">
-                  <div className="fold-surface relative aspect-[4/5] overflow-hidden">
+                  <div className="frame image-hover-zoom relative aspect-[4/5] overflow-hidden">
                     {image ? <ResilientImage src={image} alt={product.name} fill priority={index < 2} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                     {product.images[1] && <ResilientImage src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
                   </div>
-                  <div className="border-b border-border/40 py-3 transition-colors group-hover:border-accent">
-                    <h2 className="line-clamp-2 font-display text-lg font-bold uppercase leading-[0.95] tracking-[-0.025em] text-cream group-hover:text-accent">{product.name}</h2>
-                    <div className="mt-2 flex items-center justify-between gap-2 text-xs font-bold">
-                      <span>{product.priceFormatted}</span>
+                  <div className="py-3">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <h2 className="font-editorial text-xl leading-none text-cream group-hover:text-accent">{splitProductName(product.name).name}</h2>
+                      <span className="font-mono text-xs font-bold text-cream">{product.priceFormatted}</span>
+                    </div>
+                    <div className="mt-1.5 flex items-center justify-between gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
+                      <span>{splitProductName(product.name).garment ?? ""}</span>
                       <ColorSwatches colors={colorNames?.[product.slug] ?? []} fallback={<span className="text-muted">{colorCounts?.[product.slug] && colorCounts[product.slug] > 1 ? `${colorCounts[product.slug]} colors` : "Made to order"}</span>} />
                     </div>
                   </div>
@@ -309,7 +313,7 @@ function OpenCategoryShopContent({
               href={page === 1 ? `${paginationPath}` : `${paginationPath}?page=${page}`}
               aria-current={page === safePage ? "page" : undefined}
               aria-label={`Page ${page} of ${pageCount}`}
-              className={`inline-flex min-h-11 min-w-11 items-center justify-center border px-3 text-xs font-bold ${page === safePage ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}
+              className={`inline-flex min-h-11 min-w-11 items-center justify-center border px-3 text-xs font-bold ${page === safePage ? "border-cream bg-cream text-void" : "border-border/60 text-cream hover:border-cream"}`}
             >
               {page}
             </Link>

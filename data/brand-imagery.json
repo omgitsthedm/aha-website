@@ -1,20 +1,20 @@
 {
-  "_note": "Every editorial image slot on the storefront. Swap an image by replacing the file at `src` (same aspect) or pointing `src` at a new file, then flip `placeholder` to false. Product imagery is NOT here — it lives in Square (see docs/content-swap-guide.md).",
+  "_note": "Every editorial image slot on the storefront. Swap an image by replacing the file at `src` (same aspect) or pointing `src` at a new file, then flip `placeholder` to false. Product imagery is NOT here — it lives in Square (see docs/content-swap-guide.md). Direction (2026-08-18): the brand is shot and written for women first — she is the buyer, for herself and for the people she buys for. Lead every slot with her; men appear as the gift, never the hero.",
   "hero": {
-    "src": "/editorial/hero-rooftop.jpg",
-    "alt": "A young person in a plain black hoodie on a Brooklyn rooftop at night, the Manhattan skyline behind them",
+    "src": "/editorial/subway-platform.jpg",
+    "alt": "A woman in a plain black tee waiting alone on an empty subway platform late at night, coffee in hand",
     "aspect": "16:9",
     "placeholder": true,
     "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot.",
-    "swap": "Campaign hero. Keep 16:9 or wider, subject on the right third, dark space on the left for the headline."
+    "swap": "Campaign hero. Keep 16:9 or wider; she is the subject; leave dark space on one side for the headline."
   },
   "maker": {
-    "src": "/editorial/subway-platform.jpg",
-    "alt": "Someone in a plain black tee waiting alone on an empty subway platform late at night, coffee in hand",
-    "aspect": "16:9",
-    "placeholder": true,
-    "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot.",
-    "swap": "The 'after hours' story image on the home page and about page. Any candid night-in-the-city frame works."
+    "src": "/editorial/archive/2012-the-prologue.jpg",
+    "alt": "The typed 2012 Prologue as it ran on the first site",
+    "aspect": "4:3",
+    "placeholder": false,
+    "source": "Brand archive, 2012",
+    "swap": "The story image. A frame of her drawing at night replaces this when the shoot happens."
   },
   "categories": {
     "t-shirts": {
@@ -24,17 +24,17 @@
       "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
     },
     "hoodies-sweatshirts": {
-      "src": "/editorial/rooftop-portrait.jpg",
-      "alt": "Hoods and crews — heavyweight, for the roof at 2am",
+      "src": "/editorial/sheep-agave-womens-front.jpg",
+      "alt": "Hoods and crews — the Black Sheep, worn",
       "placeholder": true,
-      "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
+      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
     }
   },
   "lookbook": [
     {
-      "src": "/editorial/hero-rooftop.jpg",
-      "alt": "Rooftop, 2am, plain black hood",
-      "caption": "Rooftop. 2am. The city does the talking.",
+      "src": "/editorial/subway-platform.jpg",
+      "alt": "Subway platform, last train, plain black tee",
+      "caption": "Last train. First idea.",
       "aspect": "16:9",
       "placeholder": true,
       "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
@@ -47,23 +47,6 @@
       "aspect": "4:5",
       "placeholder": false,
       "source": "Campaign tile, scripts/imagery/render-campaign-tiles.py"
-    },
-    {
-      "src": "/editorial/subway-platform.jpg",
-      "alt": "Subway platform, last train, plain black tee",
-      "caption": "Last train. First idea.",
-      "aspect": "16:9",
-      "placeholder": true,
-      "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
-    },
-    {
-      "src": "/editorial/tiles/sheep-min-hoodie.jpg",
-      "alt": "Sheep Min graphic on a rose ground",
-      "caption": "Sheep Min",
-      "productSlug": "sheep-min-hoodie",
-      "aspect": "4:5",
-      "placeholder": false,
-      "source": "Campaign tile"
     },
     {
       "src": "/editorial/sheep-agave-womens-front.jpg",
@@ -83,10 +66,36 @@
       "source": "Campaign tile"
     },
     {
-      "src": "/editorial/rooftop-portrait.jpg",
-      "alt": "Rooftop portrait in a plain black hood",
-      "caption": "Built for the roof.",
+      "src": "/editorial/tiles/sheep-min-hoodie.jpg",
+      "alt": "Sheep Min graphic on a rose ground",
+      "caption": "Sheep Min",
+      "productSlug": "sheep-min-hoodie",
       "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile"
+    },
+    {
+      "src": "/editorial/sheep-bone-womens-back.jpg",
+      "alt": "The Black Sheep sweatshirt in bone, from behind",
+      "caption": "Bone, from behind",
+      "aspect": "4:5",
+      "placeholder": true,
+      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
+    },
+    {
+      "src": "/editorial/tiles/dont-lick-the-boot-tee.jpg",
+      "alt": "Don’t Lick The Boot graphic on a cream ground",
+      "caption": "Don’t Lick The Boot",
+      "productSlug": "dont-lick-the-boot-tee",
+      "aspect": "4:5",
+      "placeholder": false,
+      "source": "Campaign tile"
+    },
+    {
+      "src": "/editorial/hero-rooftop.jpg",
+      "alt": "Rooftop, 2am, plain black hood",
+      "caption": "For him — the roof at 2am",
+      "aspect": "16:9",
       "placeholder": true,
       "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
     },
@@ -100,14 +109,6 @@
       "source": "Campaign tile"
     },
     {
-      "src": "/editorial/sheep-bone-mens-front.jpg",
-      "alt": "The Black Sheep sweatshirt in bone, worn",
-      "caption": "The Black Sheep in bone, previous run",
-      "aspect": "4:5",
-      "placeholder": true,
-      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
-    },
-    {
       "src": "/editorial/tiles/no-place-like-new-york-sweatshirt.jpg",
       "alt": "No Place Like New York graphic on a sky ground",
       "caption": "No Place Like New York",
@@ -117,13 +118,12 @@
       "source": "Campaign tile"
     },
     {
-      "src": "/editorial/tiles/dont-lick-the-boot-tee.jpg",
-      "alt": "Don’t Lick The Boot graphic on a cream ground",
-      "caption": "Don’t Lick The Boot",
-      "productSlug": "dont-lick-the-boot-tee",
+      "src": "/editorial/sheep-agave-mens-side.jpg",
+      "alt": "The Black Sheep sweatshirt in agave, side",
+      "caption": "His — previous run, agave",
       "aspect": "4:5",
-      "placeholder": false,
-      "source": "Campaign tile"
+      "placeholder": true,
+      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
     },
     {
       "src": "/editorial/tiles/dont-fuck-fascists-tee.jpg",
@@ -133,14 +133,6 @@
       "aspect": "4:5",
       "placeholder": false,
       "source": "Campaign tile"
-    },
-    {
-      "src": "/editorial/sheep-agave-mens-side.jpg",
-      "alt": "The Black Sheep sweatshirt in agave, side",
-      "caption": "Previous run, agave",
-      "aspect": "4:5",
-      "placeholder": true,
-      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
     },
     {
       "src": "/editorial/tiles/black-sheep-tee.jpg",
@@ -160,8 +152,8 @@
       "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
     },
     {
-      "src": "/editorial/sheep-bone-mens-front.jpg",
-      "alt": "The Black Sheep sweatshirt in bone, worn",
+      "src": "/editorial/sheep-bone-womens-back.jpg",
+      "alt": "The Black Sheep sweatshirt in bone, from behind",
       "placeholder": true,
       "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
     }

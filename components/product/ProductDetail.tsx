@@ -19,6 +19,7 @@ import {
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { hapticTap } from "@/lib/utils/haptics";
 import { extractVariationSize, extractVariationColor, groupVariationsByColor, sortVariationsBySize } from "@/lib/utils/variation";
+import { splitProductName } from "@/lib/utils/product-name";
 import { swatchHex } from "@/lib/data/color-swatches";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 import { ImageLightbox } from "@/components/product/ImageLightbox";
@@ -108,7 +109,10 @@ function ProductIdentity({ as: Heading = "h1", product, reviews, price, classNam
     Heading === "p" ? { role: "heading", "aria-level": 1 } : {};
   return (
     <div className={className}>
-      <Heading {...headingRole} className="max-w-2xl font-display text-[clamp(1.85rem,5.5vw,5.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-cream sm:leading-[0.86]">{product.name}</Heading>
+      {splitProductName(product.name).garment && (
+        <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted">{splitProductName(product.name).garment}</p>
+      )}
+      <Heading {...headingRole} className="editorial-title max-w-2xl text-[clamp(2.25rem,5.5vw,5rem)] text-cream">{splitProductName(product.name).name}</Heading>
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
         <p className="font-mono text-2xl font-bold text-cream">{price}</p>
         {reviews && reviews.count > 0 && (
@@ -397,7 +401,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
         <div className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-16">
           <section aria-label="Product images" className="min-w-0 lg:sticky lg:top-28 lg:self-start">
             <div
-              className="fold-surface relative aspect-[5/4] touch-pan-y overflow-hidden sm:aspect-[4/3] lg:aspect-[4/5]"
+              className="frame relative aspect-[5/4] touch-pan-y overflow-hidden sm:aspect-[4/3] lg:aspect-[4/5]"
               onTouchStart={onImageTouchStart}
               onTouchEnd={onImageTouchEnd}
             >
@@ -439,7 +443,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               className="hidden lg:block"
             />
 
-            {enrichment?.colors && enrichment.colors.length > 0 && (
+            {enrichment?.colors && enrichment.colors.length > 1 && (
               <div className="mt-8 border-t border-border/40 pt-6">
                 <p className="mb-3 text-xs font-bold uppercase tracking-[0.08em] text-muted">{enrichment.colors.length > 1 ? "Colors" : "Color"}</p>
                 <div className="flex flex-wrap gap-2">
@@ -640,18 +644,27 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted">{RETURNS_SUMMARY}</p>
 
-            <div className="mt-8 border-y border-border/40 py-5">
-              <dl className="grid gap-5 text-sm leading-relaxed sm:grid-cols-2">
-                <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Production</dt><dd className="mt-1 text-cream">{getFulfillmentSummary()}</dd></div>
-                <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Returns</dt><dd className="mt-1 text-cream">{RETURNS_WINDOW} for unworn pieces. <Link href="/returns" className="text-accent underline underline-offset-4">Read policy</Link></dd></div>
-                <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Fabric</dt><dd className="mt-1 text-cream">{enrichment?.fabricDescription ? cleanDisplayText(enrichment.fabricDescription) : "Printed to order."}</dd></div>
-                <div><dt className="text-xs font-bold uppercase tracking-[0.08em] text-muted">Care</dt><dd className="mt-1 text-cream">{enrichment?.careInstructions ? cleanDisplayText(enrichment.careInstructions) : "Machine wash cold, inside out. Do not iron the print."}</dd></div>
-              </dl>
+            {/* Details fold away. The page leads with the piece; the spec is one
+                tap for the person who wants it. */}
+            <div className="mt-8 border-t border-border/40">
+              {[
+                ["Fabric", enrichment?.fabricDescription ? cleanDisplayText(enrichment.fabricDescription) : "Printed to order."],
+                ["Production & delivery", getFulfillmentSummary()],
+                ["Returns", <>{RETURNS_WINDOW} for unworn pieces, return shipping on us. <Link href="/returns" className="text-accent underline underline-offset-4">Read policy</Link></>],
+                ["Care", enrichment?.careInstructions ? cleanDisplayText(enrichment.careInstructions) : "Machine wash cold, inside out. Do not iron the print."],
+              ].map(([label, body]) => (
+                <details key={String(label)} className="group border-b border-border/40">
+                  <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-cream">
+                    <span>{label}</span><span aria-hidden="true" className="text-muted transition-transform group-open:rotate-45">+</span>
+                  </summary>
+                  <div className="pb-5 text-sm leading-relaxed text-muted">{body}</div>
+                </details>
+              ))}
             </div>
 
             {description.length > 0 && (
               <div className="mt-10 border-t border-border/40 pt-7">
-                <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Product details</h2>
+                <h2 className="font-editorial text-3xl text-cream">The piece</h2>
                 <div className="product-story mt-4 space-y-3 font-body leading-relaxed text-cream/85">
                   {description.map((block, index) => <p key={`${index}-${block.slice(0, 24)}`}>{block}</p>)}
                 </div>
@@ -699,7 +712,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
         {related.length > 0 && (
           <section aria-labelledby="related-title" className="mt-24 border-t border-border/40 pt-10">
             <div className="mb-7 flex items-end justify-between gap-4">
-              <h2 id="related-title" className="font-display text-[clamp(2rem,5vw,4rem)] font-black uppercase leading-none tracking-[-0.05em]">Related pieces</h2>
+              <h2 id="related-title" className="editorial-title text-[clamp(2rem,4.5vw,3.5rem)] text-cream">More from the collection</h2>
               <Link href="/shop" className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Shop all</Link>
             </div>
             <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-5">

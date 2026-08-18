@@ -32,7 +32,7 @@ export default function LookbookPage() {
             const wide = shot.aspect === "16:9";
             const frame = (
               <>
-                <div className={`fold-surface relative overflow-hidden ${wide ? "aspect-[16/10]" : "aspect-[4/5]"}`}>
+                <div className={`frame relative overflow-hidden ${wide ? "aspect-[16/10]" : "aspect-[4/5]"}`}>
                   <Image src={shot.src} alt={shot.alt} fill loading={index < 2 ? "eager" : "lazy"} className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
                 </div>
                 {shot.caption && (
@@ -44,7 +44,7 @@ export default function LookbookPage() {
               </>
             );
             return shot.productSlug ? (
-              <Link key={shot.src + index} href={`/product/${shot.productSlug}`} className="paper-lift image-hover-zoom group block break-inside-avoid focus-visible:outline-offset-4">
+              <Link key={shot.src + index} href={`/product/${shot.productSlug}`} className="frame image-hover-zoom group block break-inside-avoid focus-visible:outline-offset-4">
                 {frame}
               </Link>
             ) : (

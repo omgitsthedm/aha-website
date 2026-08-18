@@ -37,7 +37,7 @@ export default function ManifestoPage() {
       <section aria-label="What the label stands for" className="border-y border-border/40 bg-surface"><div className="mx-auto max-w-[1280px] divide-y divide-border/40 px-4 sm:px-6">{tenets.map(([title, body], index) => <article key={title} className="m-rise grid gap-3 py-7 md:grid-cols-[5rem_minmax(12rem,0.65fr)_minmax(0,1.35fr)] md:items-baseline md:gap-8 md:py-9"><p className="font-mono text-[10px] font-bold tracking-[0.12em] text-accent">0{index + 1}</p><h2 className="font-display text-xl font-bold uppercase tracking-[-0.025em] text-cream">{title}</h2><p className="max-w-2xl text-sm leading-relaxed text-muted md:text-base">{body}</p></article>)}</div></section>
       <section aria-labelledby="prologue-heading" className="mx-auto max-w-[1280px] px-4 py-20 sm:px-6 lg:py-28">
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
-          <figure className="fold-surface relative aspect-[4/3] overflow-hidden bg-charcoal">
+          <figure className="frame relative aspect-[4/3] overflow-hidden bg-charcoal">
             <Image src={prologue.src} alt={prologue.alt} fill loading="lazy" className="object-cover" sizes="(max-width: 1024px) 100vw, 45vw" />
             <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-white">The Prologue, as it ran on the first site · January 2012</figcaption>
           </figure>

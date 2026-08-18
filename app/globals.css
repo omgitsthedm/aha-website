@@ -709,6 +709,23 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
   }
 }
 
+/* Frame: the quiet surface for product and editorial imagery. A hairline and
+   nothing else — no fold, no shadow, no tint — so the photograph is the only
+   thing that reads. Pair with .image-hover-zoom for the slow reveal. */
+.frame {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--aha-line) 60%, transparent);
+  background: var(--aha-surface);
+}
+
+/* Editorial headline: the serif at display size, sentence case, tight. */
+.editorial-title {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.96;
+}
+
 /* Paper-lift: product cards rise like a picked-up sheet. Hover devices only,
    and only when the user allows motion. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
