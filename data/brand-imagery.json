@@ -1,12 +1,12 @@
 {
   "_note": "Every editorial image slot on the storefront. Swap an image by replacing the file at `src` (same aspect) or pointing `src` at a new file, then flip `placeholder` to false. Product imagery is NOT here — it lives in Square (see docs/content-swap-guide.md). Direction (2026-08-18): the brand is shot and written for women first — she is the buyer, for herself and for the people she buys for. Lead every slot with her; men appear as the gift, never the hero.",
   "hero": {
-    "src": "/editorial/subway-platform.jpg",
+    "src": "/editorial/hero-her.jpg",
     "alt": "A woman in a plain black tee waiting alone on an empty subway platform late at night, coffee in hand",
-    "aspect": "16:9",
+    "aspect": "4:5",
     "placeholder": true,
     "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot.",
-    "swap": "Campaign hero. Keep 16:9 or wider; she is the subject; leave dark space on one side for the headline."
+    "swap": "Left hero panel: her. Portrait, 4:5, subject centred with headroom — the crop must hold from a phone to a 27-inch display."
   },
   "maker": {
     "src": "/editorial/archive/2012-the-prologue.jpg",
@@ -18,7 +18,7 @@
   },
   "categories": {
     "t-shirts": {
-      "src": "/editorial/subway-platform.jpg",
+      "src": "/editorial/hero-her.jpg",
       "alt": "Tees — worn late, in the city",
       "placeholder": true,
       "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
@@ -242,11 +242,18 @@
     }
   ],
   "gift": {
-    "src": "/editorial/hero-rooftop.jpg",
+    "src": "/editorial/hero-him.jpg",
     "alt": "A young man in a plain black hoodie on a Brooklyn rooftop at night — the person she buys for",
-    "aspect": "16:9",
+    "aspect": "4:5",
     "placeholder": true,
     "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot.",
-    "swap": "The right hero panel: the gift. Him, or the kids, or the friend — never the lead."
+    "swap": "Right hero panel: the person she buys for. Portrait, 4:5, subject centred."
+  },
+  "lookbookCover": {
+    "src": "/editorial/subway-platform.jpg",
+    "alt": "Subway platform, last train, plain black tee",
+    "aspect": "16:9",
+    "placeholder": true,
+    "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
   }
 }

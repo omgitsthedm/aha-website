@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, JetBrains_Mono, Oswald, Poppins } from "next/font/google";
+import { JetBrains_Mono, Oswald, Poppins } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { SiteNav } from "@/components/ui/SiteNav";
@@ -33,23 +33,11 @@ const littleFightOswald = Oswald({
   weight: ["700"],
 });
 
-// The editorial voice: one quiet serif for headlines, product names and
-// pull-quotes. Poppins Black stays for the wordmark and utility labels — the
-// brutal block needs a soft counterpart the same way heavy type needs a soft
-// ground (Brand Kit 2026-07). Preloaded because it paints the home hero.
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  variable: "--font-editorial",
-  display: "swap",
-  weight: ["400"],
-  style: ["normal", "italic"],
-});
-
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-poppins",
   display: "swap",
-  weight: ["400", "700"], // Only weights used by the storefront; avoid two unnecessary preloads.
+  weight: ["400", "700", "900"], // Body, bold, and the Black display cut the brand kit specifies.
 });
 
 export const metadata: Metadata = {
@@ -115,7 +103,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${jetBrainsMono.variable} ${littleFightOswald.variable} ${poppins.variable} ${instrumentSerif.variable}`}
+      className={`${jetBrainsMono.variable} ${littleFightOswald.variable} ${poppins.variable}`}
     >
       <head>
         <script id="aha-consent-bootstrap" dangerouslySetInnerHTML={{ __html: CONSENT_BOOTSTRAP }} />
