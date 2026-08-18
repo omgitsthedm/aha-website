@@ -110,9 +110,9 @@ function ProductIdentity({ as: Heading = "h1", product, reviews, price, classNam
   return (
     <div className={className}>
       {splitProductName(product.name).garment && (
-        <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted">{splitProductName(product.name).garment}</p>
+        <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted">{splitProductName(product.name).garment}</p>
       )}
-      <Heading {...headingRole} className="editorial-title max-w-2xl text-[clamp(1.85rem,3.4vw,2.75rem)] text-cream">{splitProductName(product.name).name}</Heading>
+      <Heading {...headingRole} className="editorial-title max-w-2xl text-[clamp(2.25rem,4.5vw,4rem)] text-cream">{splitProductName(product.name).name}</Heading>
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
         <p className="font-mono text-2xl font-bold text-cream">{price}</p>
         {reviews && reviews.count > 0 && (
@@ -664,7 +664,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
 
             {description.length > 0 && (
               <div className="mt-10 border-t border-border/40 pt-7">
-                <h2 className="font-editorial text-3xl text-cream">The piece</h2>
+                <h2 className="editorial-title text-3xl text-cream">The piece</h2>
                 <div className="product-story mt-4 space-y-3 font-body leading-relaxed text-cream/85">
                   {description.map((block, index) => <p key={`${index}-${block.slice(0, 24)}`}>{block}</p>)}
                 </div>
@@ -712,7 +712,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
         {related.length > 0 && (
           <section aria-labelledby="related-title" className="mt-24 border-t border-border/40 pt-10">
             <div className="mb-7 flex items-end justify-between gap-4">
-              <h2 id="related-title" className="editorial-title text-[clamp(2rem,4.5vw,3.5rem)] text-cream">More from the collection</h2>
+              <h2 id="related-title" className="editorial-title text-[clamp(2rem,4.5vw,3.75rem)] text-cream">More from the collection</h2>
               <Link href="/shop" className="min-h-11 py-3 text-xs font-bold uppercase text-accent underline underline-offset-4">Shop all</Link>
             </div>
             <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-5">

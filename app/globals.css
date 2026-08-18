@@ -717,13 +717,17 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
   background: var(--aha-surface);
 }
 
-/* Editorial headline: the serif at display size, sentence case, tight. */
+/* Editorial headline: the brand kit's display voice — Poppins Black, uppercase,
+   tracking −4.5%, leading 0.9 — at real display size. Emphasis inside a
+   headline is a colour, never an italic. */
 .editorial-title {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 0.96;
+  font-family: var(--font-poppins), Arial, sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
 }
+.editorial-title em { font-style: normal; color: var(--aha-accent); }
 
 /* Paper-lift: product cards rise like a picked-up sheet. Hover devices only,
    and only when the user allows motion. */

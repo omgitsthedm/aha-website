@@ -97,7 +97,7 @@ export function SiteNav() {
             <Link
               key={link.href}
               href={link.href}
-              className={`nav-link inline-flex h-14 items-center pr-6 font-mono text-[10px] font-bold uppercase tracking-[0.16em] transition-colors ${
+              className={`nav-link inline-flex h-14 items-center pr-6 font-mono text-xs font-bold uppercase tracking-[0.14em] transition-colors ${
                 (link.href === "/shop" ? pathname.startsWith("/shop") : isActive(pathname, link.href)) ? "text-cream" : "text-muted hover:text-cream"
               }`}
             >
@@ -116,7 +116,7 @@ export function SiteNav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`nav-link inline-flex h-14 items-center px-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] transition-colors ${
+                className={`nav-link inline-flex h-14 items-center px-3 font-mono text-xs font-bold uppercase tracking-[0.14em] transition-colors ${
                   isActive(pathname, link.href) ? "text-cream" : "text-muted hover:text-cream"
                 }`}
               >
@@ -129,7 +129,7 @@ export function SiteNav() {
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            className="inline-flex h-14 min-w-11 items-center justify-center px-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted transition-colors hover:text-cream sm:px-3"
+            className="inline-flex h-14 min-w-11 items-center justify-center px-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted transition-colors hover:text-cream sm:px-3"
             aria-label="Search products"
           >
             <span className="hidden sm:inline">Search</span>
@@ -142,7 +142,7 @@ export function SiteNav() {
           <button
             type="button"
             onClick={() => setCartOpen(true)}
-            className="inline-flex h-14 items-center px-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-cream transition-colors hover:text-accent"
+            className="inline-flex h-14 items-center px-4 font-mono text-xs font-bold uppercase tracking-[0.14em] text-cream transition-colors hover:text-accent"
             aria-label={`Open bag${totalItems ? `, ${totalItems} item${totalItems === 1 ? "" : "s"}` : ""}`}
           >
             Bag{totalItems ? ` ${totalItems}` : ""}
@@ -152,7 +152,7 @@ export function SiteNav() {
           <button
             type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
-            className="inline-flex h-14 items-center justify-center px-2 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted transition-colors hover:text-cream lg:hidden"
+            className="inline-flex h-14 items-center justify-center px-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted transition-colors hover:text-cream lg:hidden"
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -190,7 +190,7 @@ export function SiteNav() {
                 <Link
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex h-12 w-full items-center font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted hover:text-accent"
+                  className="inline-flex h-12 w-full items-center font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted hover:text-accent"
                 >
                   {link.label}
                 </Link>

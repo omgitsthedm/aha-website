@@ -12,16 +12,16 @@ export const metadata = buildMetadata({
 });
 
 export default function LookbookPage() {
-  const { lookbook, hero } = loadBrandImagery();
+  const { lookbook, lookbookCover } = loadBrandImagery();
 
   return (
     <div className="pb-12">
       <section aria-label="Lookbook cover" className="relative isolate min-h-[60vh] overflow-hidden bg-[#0b0b0c] text-white">
-        <Image src={hero.src} alt={hero.alt} fill priority sizes="100vw" className="object-cover object-[70%_center]" />
+        <Image src={lookbookCover.src} alt={lookbookCover.alt} fill priority sizes="100vw" className="object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" aria-hidden="true" />
         <div className="relative mx-auto flex min-h-[60vh] max-w-[1280px] flex-col justify-end px-4 pb-12 pt-32 sm:px-6">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">Lookbook · New York · After hours</p>
-          <h1 className="editorial-title mt-4 text-[clamp(2.25rem,5vw,4rem)] text-white">Worn like you mean it</h1>
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/80">Lookbook · New York · After hours</p>
+          <h1 className="editorial-title mt-4 text-[clamp(2.75rem,7vw,6rem)] text-white">Worn like <em>you</em> mean it</h1>
         </div>
       </section>
 
@@ -36,7 +36,7 @@ export default function LookbookPage() {
                   <Image src={shot.src} alt={shot.alt} fill loading={index < 2 ? "eager" : "lazy"} className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
                 </div>
                 {shot.caption && (
-                  <p className="mt-2 flex items-baseline justify-between gap-3 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
+                  <p className="mt-2 flex items-baseline justify-between gap-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted">
                     <span>{shot.caption}</span>
                     {shot.productSlug && <span className="text-accent">View piece →</span>}
                   </p>

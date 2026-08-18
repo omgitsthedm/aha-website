@@ -25,6 +25,8 @@ export interface BrandImagery {
   hero: EditorialImage;
   /** The right hero panel: the person she buys for. */
   gift: EditorialImage;
+  /** Landscape cover for the lookbook page. */
+  lookbookCover: EditorialImage;
   maker: EditorialImage;
   categories: Record<string, EditorialImage>;
   lookbook: EditorialImage[];

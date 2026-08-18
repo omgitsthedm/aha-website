@@ -50,7 +50,7 @@ export default function AboutPage() {
             <Image src={maker.src} alt={maker.alt} fill priority className="object-cover" sizes="(max-width: 1024px) 100vw, 55vw" />
           </div>
           <div>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">The after-hours maker</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">The after-hours maker</p>
             <h2 id="maker-heading" className="mt-3 font-display text-3xl font-bold uppercase leading-[0.95] tracking-[-0.03em] text-cream sm:text-4xl">For the people still building a life after everyone else clocks out</h2>
             <p className="mt-5 text-sm leading-relaxed text-muted md:text-base">The after-hours character is the maker — the person still building after everyone clocked out. Not a customer segment, not a scene. It is the last train home with a sketchbook, the kitchen table at midnight, the roof at 2am. That is where the graphics come from, and it is who they are for.</p>
           </div>
@@ -61,7 +61,7 @@ export default function AboutPage() {
             <Image src={prologueImage.src} alt={prologueImage.alt} fill loading="lazy" className="object-cover" sizes="(max-width: 1024px) 100vw, 45vw" />
           </figure>
           <div>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">The Prologue · January 2012</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">The Prologue · January 2012</p>
             <h2 id="prologue-heading" className="mt-3 font-display text-3xl font-bold uppercase leading-[0.95] tracking-[-0.03em] text-cream sm:text-4xl">Last call.</h2>
             <div className="mt-5 space-y-4 font-mono text-sm leading-relaxed text-cream/90">
               {PROLOGUE.map((paragraph) => <p key={paragraph.slice(0, 24)}>{paragraph}</p>)}
@@ -71,7 +71,7 @@ export default function AboutPage() {
         </section>
 
         <section aria-labelledby="timeline-heading" className="mt-20 border-t border-border/40 pt-8">
-          <p id="timeline-heading" className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">Fifteen years, in five lines</p>
+          <p id="timeline-heading" className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">Fifteen years, in five lines</p>
           <ol className="mt-8 border-t border-border/40">
             {TIMELINE.map(([year, title, body]) => (
               <li key={year} className="grid gap-3 border-b border-border/40 py-7 sm:grid-cols-[5rem_minmax(0,0.6fr)_minmax(0,1.4fr)] sm:gap-8">
@@ -87,7 +87,7 @@ export default function AboutPage() {
           <section aria-labelledby="archive-heading" className="mt-20">
             <div className="mb-6 flex items-end justify-between gap-6">
               <div>
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">From the archive</p>
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">From the archive</p>
                 <h2 id="archive-heading" className="mt-3 font-display text-3xl font-bold uppercase leading-none tracking-[-0.03em] text-cream sm:text-4xl">2012 – 2014</h2>
               </div>
               <p className="hidden max-w-xs text-right text-xs leading-relaxed text-muted md:block">Retired designs, kept for the record. None of these are for sale — the current eight are on the shop.</p>
@@ -106,7 +106,7 @@ export default function AboutPage() {
         )}
 
         <section aria-labelledby="values-heading" className="mt-20 border-t border-border/40 pt-8">
-          <p id="values-heading" className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent">What we stand for</p>
+          <p id="values-heading" className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">What we stand for</p>
           <div className="mt-8 border-t border-border/40">
             {VALUES.map(([number, title, body]) => <article key={title} className="grid gap-4 border-b border-border/40 py-7 sm:grid-cols-[3rem_minmax(0,0.65fr)_minmax(0,1.35fr)] sm:gap-8"><span className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-accent">{number}</span><h2 className="font-display text-2xl font-bold uppercase tracking-[-0.03em] sm:text-3xl">{title}</h2><p className="max-w-2xl text-sm leading-relaxed text-muted md:text-base">{body}</p></article>)}
           </div>
@@ -116,7 +116,7 @@ export default function AboutPage() {
           <section aria-labelledby="signature-heading" className="mt-20">
             <div className="mb-8 flex items-end justify-between gap-6">
               <div>
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">The signature · The Black Sheep</p>
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent">The signature · The Black Sheep</p>
                 <h2 id="signature-heading" className="mt-3 font-display text-3xl font-bold uppercase leading-none tracking-[-0.03em] text-cream sm:text-4xl">Worn, not just shown</h2>
                 <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">The friendly rebel the label is named for, from the previous run. The current cut is the <Link href="/product/black-sheep-tee" className="m-underline font-bold text-accent">Black Sheep tee</Link> and the <Link href="/product/sheep-min-hoodie" className="m-underline font-bold text-accent">Sheep Min hood</Link>.</p>
               </div>

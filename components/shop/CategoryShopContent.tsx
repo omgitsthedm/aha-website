@@ -272,10 +272,10 @@ function OpenCategoryShopContent({
                   </div>
                   <div className="py-3">
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="font-editorial text-lg leading-none text-cream group-hover:text-accent">{splitProductName(product.name).name}</h2>
+                      <h2 className="font-display text-base font-black uppercase leading-tight tracking-[-0.03em] text-cream group-hover:text-accent md:text-lg">{splitProductName(product.name).name}</h2>
                       <span className="font-mono text-xs font-bold text-cream">{product.priceFormatted}</span>
                     </div>
-                    <div className="mt-1.5 flex items-center justify-between gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
+                    <div className="mt-1.5 flex items-center justify-between gap-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
                       <span>{splitProductName(product.name).garment ?? ""}</span>
                       <ColorSwatches colors={colorNames?.[product.slug] ?? []} fallback={<span className="text-muted">{colorCounts?.[product.slug] && colorCounts[product.slug] > 1 ? `${colorCounts[product.slug]} colors` : "Made to order"}</span>} />
                     </div>
