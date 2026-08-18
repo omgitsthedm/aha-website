@@ -6,7 +6,7 @@ export function GetOnTheList() {
       <div className="reveal-block mx-auto grid max-w-5xl gap-8 border-t border-accent pt-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
         <div>
           <h2 className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">Stay close</h2>
-          <p className="mt-4 max-w-md font-mono text-sm leading-relaxed text-muted">New pieces, the occasional note, and first word on releases.</p>
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">New pieces, the occasional note, and first word on releases.</p>
         </div>
 
         <NewsletterForm
@@ -18,7 +18,7 @@ export function GetOnTheList() {
           buttonLabel="Get email updates"
           placeholder="name@example.com"
           helpText="We use this address only for After Hours Agenda email updates. Leave anytime from the unsubscribe link in a message."
-          helpClassName="mt-3 font-mono text-xs leading-relaxed text-muted"
+          helpClassName="mt-3 text-xs leading-relaxed text-muted"
           messageClassName="mt-3 font-mono text-sm"
           successClassName="border border-success p-5"
           successFontClassName="font-mono"

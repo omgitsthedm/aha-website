@@ -1,0 +1,45 @@
+{
+  "/editorial/hero-her.jpg": {
+    "name": "hero-her",
+    "widths": [
+      480,
+      640,
+      750,
+      900
+    ],
+    "width": 900,
+    "height": 1125
+  },
+  "/editorial/hero-him.jpg": {
+    "name": "hero-him",
+    "widths": [
+      480,
+      640,
+      750,
+      900
+    ],
+    "width": 900,
+    "height": 1125
+  },
+  "/editorial/subway-platform.jpg": {
+    "name": "subway-platform",
+    "widths": [
+      640,
+      828,
+      1080,
+      1440,
+      1600
+    ],
+    "width": 1600,
+    "height": 893
+  },
+  "/editorial/archive/2012-the-prologue.jpg": {
+    "name": "2012-the-prologue",
+    "widths": [
+      480,
+      640
+    ],
+    "width": 730,
+    "height": 530
+  }
+}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EditorialPicture } from "@/components/ui/EditorialPicture";
 import Image from "next/image";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -47,7 +48,7 @@ export default function AboutPage() {
 
         <section aria-labelledby="maker-heading" className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-14">
           <div className="frame relative aspect-[16/10] overflow-hidden">
-            <Image src={maker.src} alt={maker.alt} fill priority className="object-cover" sizes="(max-width: 1024px) 100vw, 55vw" />
+            <EditorialPicture src={maker.src} alt={maker.alt} priority className="object-cover" sizes="(max-width: 1024px) 100vw, 55vw" />
           </div>
           <div>
             <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">What the name means</p>
@@ -96,7 +97,7 @@ export default function AboutPage() {
               {archiveStrip.map((item) => (
                 <figure key={item.src} className="w-56 shrink-0 snap-start md:w-auto">
                   <div className="frame relative aspect-[3/4] overflow-hidden bg-charcoal">
-                    <Image src={item.src} alt={item.alt} fill loading="lazy" className="object-cover" sizes="(max-width: 768px) 60vw, 25vw" />
+                    <Image src={item.src} alt={item.alt} fill loading="lazy" className="object-cover" sizes="(max-width: 768px) 224px, 25vw" />
                   </div>
                   <figcaption className="mt-2 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-muted"><span className="text-accent">{item.year}</span> · {item.caption}</figcaption>
                 </figure>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ResilientImage } from "@/components/ui/ResilientImage";
 import { QuickAdd } from "@/components/shop/QuickAdd";
 import { ColorSwatches } from "@/components/shop/ColorSwatches";
@@ -21,7 +22,7 @@ interface CategoryShopContentProps {
   activeCategory?: CategorySlug;
   categories?: CategoryMeta[];
   basePath: string;
-  /** Current page taken from `?page=N` on the server. Only read alongside `paginationPath`. */
+  /** Optional server-side page override. `?page=N` is read on the client via ShopPageParamSync. */
   initialPage?: number;
   /**
    * Destination for the numbered `?page=N` links. Supplying it swaps the grid from
@@ -159,6 +160,7 @@ function OpenCategoryShopContent({
 
   return (
     <section aria-label="Product catalog">
+      {paginationPath && <ShopPageParamSync onPage={setCurrentPage} />}
       {/* Below lg the filter block cost the whole first viewport, so the page whose
           job is showing products showed none. One control opens it; desktop is
           unchanged and always expanded.
@@ -370,4 +372,23 @@ function OpenCategoryShopContent({
       )}
     </section>
   );
+}
+
+/**
+ * Reads `?page=N` on the client so the listing pages can stay static (ISR) —
+ * awaiting `searchParams` on the server made every /shop request dynamic, which
+ * bypassed the edge cache and put a live Square round-trip in front of LCP.
+ * Rendered inside Suspense so `useSearchParams` never forces a client render.
+ */
+function PageParamSync({ onPage }: { onPage: (page: number) => void }) {
+  const searchParams = useSearchParams();
+  const raw = searchParams.get("page");
+  useEffect(() => {
+    onPage(Math.max(1, Number.parseInt(raw ?? "1", 10) || 1));
+  }, [raw, onPage]);
+  return null;
+}
+
+export function ShopPageParamSync({ onPage }: { onPage: (page: number) => void }) {
+  return <Suspense fallback={null}><PageParamSync onPage={onPage} /></Suspense>;
 }

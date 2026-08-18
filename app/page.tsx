@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getAllProducts } from "@/lib/square/catalog";
 import { NeonSheep } from "@/components/brand/NeonSheep";
 import { ResilientImage } from "@/components/ui/ResilientImage";
+import { EditorialPicture } from "@/components/ui/EditorialPicture";
 import { SocialProofWall } from "@/components/homepage/SocialProofWall";
 import { GetOnTheList } from "@/components/homepage/GetOnTheList";
 import { buildMetadata } from "@/components/seo/buildMetadata";
@@ -43,14 +44,12 @@ export default async function HomePage() {
       <section aria-label="Enter" className="grid bg-[#0b0b0c] text-white lg:h-[calc(100svh-3.5rem)] lg:min-h-[640px] lg:grid-cols-2">
         {panels.map((panel) => (
           <Link key={panel.href} href={panel.href} className="group relative block aspect-[4/5] overflow-hidden sm:aspect-[5/6] lg:aspect-auto lg:h-full">
-            <Image
+            <EditorialPicture
               src={panel.image.src}
               alt={panel.image.alt}
-              fill
               priority={panel.priority}
-              fetchPriority={panel.priority ? "high" : "auto"}
+              deprioritize={!panel.priority}
               sizes="(max-width: 1024px) 100vw, 50vw"
-              quality={panel.priority ? 58 : 66}
               className="object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.03]"
             />
             <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/40 to-transparent" aria-hidden="true" />

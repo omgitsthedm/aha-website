@@ -22,7 +22,6 @@ export const revalidate = 300;
 
 interface MenPageProps {
   params: Promise<{ slug?: string[] }>;
-  searchParams: Promise<{ page?: string }>;
 }
 
 const GENDER = "men";
@@ -48,6 +47,13 @@ const CATEGORY_DESCRIPTIONS: Record<CategorySlug, string> = {
   outerwear:
     "Jackets and coats are not in the After Hours Agenda catalog yet. Browse the hoodies, sweatshirts, and knitwear After Hours Agenda prints to order.",
 };
+
+// Prerender the index and every category path (ISR, `revalidate` above). Without
+// this the optional catch-all is rendered on demand and the CDN bypasses its
+// cache, so every visit paid a server render + Square round-trip before LCP.
+export function generateStaticParams() {
+  return [{ slug: [] }, ...CATEGORIES.map((category) => ({ slug: [category.slug] }))];
+}
 
 export async function generateMetadata({ params }: MenPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -82,10 +88,9 @@ export async function generateMetadata({ params }: MenPageProps): Promise<Metada
   });
 }
 
-export default async function MenPage({ params, searchParams }: MenPageProps) {
+export default async function MenPage({ params }: MenPageProps) {
   if (!isStorefrontPublic()) return <CatalogMigrationPage />;
   const { slug } = await params;
-  const { page } = await searchParams;
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
 
@@ -102,7 +107,6 @@ export default async function MenPage({ params, searchParams }: MenPageProps) {
   const categorySlugs = getCategorySlugsForGender(GENDER);
   const categoryOptions = CATEGORIES.filter((c) => categorySlugs.includes(c.slug));
   const listPath = category ? `${BASE_PATH}/${category.slug}` : BASE_PATH;
-  const initialPage = Math.max(1, Number.parseInt(page ?? "1", 10) || 1);
 
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
@@ -130,7 +134,6 @@ export default async function MenPage({ params, searchParams }: MenPageProps) {
           activeCategory={category?.slug}
           categories={categoryOptions}
           basePath={BASE_PATH}
-          initialPage={initialPage}
           paginationPath={listPath}
         />
       </div>

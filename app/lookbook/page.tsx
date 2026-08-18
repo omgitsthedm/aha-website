@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EditorialPicture } from "@/components/ui/EditorialPicture";
 import Image from "next/image";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -17,7 +18,7 @@ export default function LookbookPage() {
   return (
     <div className="pb-12">
       <section aria-label="Lookbook cover" className="relative isolate min-h-[60vh] overflow-hidden bg-[#0b0b0c] text-white">
-        <Image src={lookbookCover.src} alt={lookbookCover.alt} fill priority sizes="100vw" className="object-cover object-center" />
+        <EditorialPicture src={lookbookCover.src} alt={lookbookCover.alt} priority sizes="100vw" className="object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" aria-hidden="true" />
         <div className="relative mx-auto flex min-h-[60vh] max-w-[1280px] flex-col justify-end px-4 pb-12 pt-32 sm:px-6">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/80">Lookbook · The collection, worn</p>
@@ -33,7 +34,7 @@ export default function LookbookPage() {
             const frame = (
               <>
                 <div className={`frame relative overflow-hidden ${wide ? "aspect-[16/10]" : "aspect-[4/5]"}`}>
-                  <Image src={shot.src} alt={shot.alt} fill loading={index < 2 ? "eager" : "lazy"} className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
+                  <Image src={shot.src} alt={shot.alt} fill loading="lazy" className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
                 </div>
                 {shot.caption && (
                   <p className="mt-2 flex items-baseline justify-between gap-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted">

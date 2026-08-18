@@ -12,16 +12,20 @@ import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 import { ORIGIN_CLAIM_SENTENCE, SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 
 export const revalidate = 300;
-// force-static was correct while every shop path returned the same migration
-// screen — it removed a cold start on a page with no data. It is WRONG now the
-// capsule is live: the page reads searchParams for pagination and real catalog
-// data, and force-static prerendered it into the empty state while the sitemap
-// and PDPs advertised six products. revalidate=300 keeps the ISR caching that
-// made the mobile LCP budget without freezing the catalog.
+// ISR, not force-static: the grid reads the live Square-backed catalog. The page
+// must NOT read `searchParams` — awaiting them made every request dynamic, which
+// bypassed the edge cache and put a Square round-trip in front of LCP. `?page=N`
+// is read on the client (ShopPageParamSync) so this route stays cacheable.
 
 interface ShopPageProps {
   params: Promise<{ slug?: string[] }>;
-  searchParams: Promise<{ page?: string }>;
+}
+
+// Prerender the index and every category path (ISR, `revalidate` above). Without
+// this the optional catch-all is rendered on demand and the CDN bypasses its
+// cache, so every visit paid a server render + Square round-trip before LCP.
+export function generateStaticParams() {
+  return [{ slug: [] }, ...CATEGORIES.map((category) => ({ slug: [category.slug] }))];
 }
 
 export async function generateMetadata({ params }: ShopPageProps): Promise<Metadata> {
@@ -49,10 +53,9 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
   });
 }
 
-export default async function ShopPage({ params, searchParams }: ShopPageProps) {
+export default async function ShopPage({ params }: ShopPageProps) {
   if (!isStorefrontPublic()) return <CatalogMigrationPage />;
   const { slug } = await params;
-  const { page } = await searchParams;
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
   if (categorySlug && !category) notFound();
@@ -60,7 +63,6 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
   const products = await getAllProducts();
   const displayProducts = category ? filterProductsByCategory(products, category.slug) : products;
   const listPath = category ? `/shop/${category.slug}` : "/shop";
-  const initialPage = Math.max(1, Number.parseInt(page ?? "1", 10) || 1);
 
   return (
     <div className="px-4 pb-16 pt-24 sm:px-6 lg:pt-28">
@@ -109,7 +111,6 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
           categories={CATEGORIES}
           activeCategory={category?.slug}
           basePath="/shop"
-          initialPage={initialPage}
           paginationPath={listPath}
         />
       </div>
