@@ -1068,7 +1068,7 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
   color: #a1a1aa;
   font-family: var(--font-jetbrains-mono), Menlo, monospace;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.35;
   letter-spacing: 0.08em;
   overflow-wrap: anywhere;

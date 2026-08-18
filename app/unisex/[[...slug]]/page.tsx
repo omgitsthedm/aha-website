@@ -21,7 +21,6 @@ export const revalidate = 300;
 
 interface UnisexPageProps {
   params: Promise<{ slug?: string[] }>;
-  searchParams: Promise<{ page?: string }>;
 }
 
 const GENDER = "unisex";
@@ -60,10 +59,9 @@ export async function generateMetadata({ params }: UnisexPageProps): Promise<Met
   });
 }
 
-export default async function UnisexPage({ params, searchParams }: UnisexPageProps) {
+export default async function UnisexPage({ params }: UnisexPageProps) {
   if (!isStorefrontPublic()) return <CatalogMigrationPage />;
   const { slug } = await params;
-  const { page } = await searchParams;
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
 
@@ -80,7 +78,6 @@ export default async function UnisexPage({ params, searchParams }: UnisexPagePro
   const categorySlugs = getCategorySlugsForGender(GENDER);
   const categoryOptions = CATEGORIES.filter((c) => categorySlugs.includes(c.slug));
   const listPath = category ? `${BASE_PATH}/${category.slug}` : BASE_PATH;
-  const initialPage = Math.max(1, Number.parseInt(page ?? "1", 10) || 1);
 
   return (
     <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
@@ -105,7 +102,6 @@ export default async function UnisexPage({ params, searchParams }: UnisexPagePro
           activeCategory={category?.slug}
           categories={categoryOptions}
           basePath={BASE_PATH}
-          initialPage={initialPage}
           paginationPath={listPath}
         />
       </div>

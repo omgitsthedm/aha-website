@@ -138,7 +138,7 @@ export function SiteFooter() {
       </div>
 
       <div className="mx-auto mt-10 max-w-[1280px] border-t border-border/40 pt-5">
-        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted">© 2026 After Hours Agenda</p>
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-muted">© 2026 After Hours Agenda</p>
       </div>
     </footer>
   );
