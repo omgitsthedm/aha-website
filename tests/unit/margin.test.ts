@@ -183,22 +183,31 @@ describe("destination tax term is coupled to every stored marginEstimate", () =>
       .toBe(INVOICED_TAX_CENTS - modelledTax);
   });
 
-  it("blends the CA rate by the measured CA order share rather than charging it on every order", () => {
-    // The gate has no destination, so it cannot charge the CA rate outright.
-    // Both inputs are load-bearing: move either and every stored marginEstimate
-    // has to be re-derived through this same path.
+  it("carries NO destination tax on the gate, by merchant decision", () => {
+    // David's call, 2026-08-17, reaffirmed after I flagged that APLIIQ's tax
+    // keys on the CUSTOMER's shipping address rather than AHA's nexus — a
+    // CA-destined order is invoiced 9.5% wherever AHA sits. He accepts that
+    // exposure rather than carrying a tax term on the cost side.
+    expect(APLIIQ_DESTINATION_TAX_BASIS_POINTS).toBe(0);
+    expect(modelDestinationTaxCents(2225)).toBe(0);
+  });
+
+  it("keeps the real CA rate and the measured share available for per-order costing", () => {
+    // Zeroing the gate must not delete the arithmetic. These two constants are
+    // what a per-order cost calculation or a future revisit needs, and the
+    // honest blended figure is one multiplication away.
+    expect(APLIIQ_CA_DESTINATION_TAX_BASIS_POINTS).toBe(950);
     expect(modelDestinationTaxCents(2225, APLIIQ_CA_DESTINATION_TAX_BASIS_POINTS))
       .toBe(INVOICED_TAX_CENTS);
-    expect(APLIIQ_DESTINATION_TAX_BASIS_POINTS).toBe(
-      Math.round((APLIIQ_CA_DESTINATION_TAX_BASIS_POINTS * APLIIQ_CA_ORDER_SHARE_BASIS_POINTS) / 10_000),
+
+    const blended = Math.round(
+      (APLIIQ_CA_DESTINATION_TAX_BASIS_POINTS * APLIIQ_CA_ORDER_SHARE_BASIS_POINTS) / 10_000,
     );
-    // The blend sits strictly between "no tax at all" and "CA rate on everything",
-    // which is the only defensible place for a destination-blind estimate.
-    expect(APLIIQ_DESTINATION_TAX_BASIS_POINTS).toBeGreaterThan(0);
-    expect(APLIIQ_DESTINATION_TAX_BASIS_POINTS).toBeLessThan(APLIIQ_CA_DESTINATION_TAX_BASIS_POINTS);
-    expect(modelDestinationTaxCents(2225)).toBe(
-      Math.round(2225 * (APLIIQ_DESTINATION_TAX_BASIS_POINTS / 10_000)),
-    );
+    // 76 bp — what the gate WOULD carry if the decision were reversed. Pinned so
+    // the size of the accepted exposure stays visible rather than becoming folklore.
+    expect(blended).toBe(76);
+    expect(blended).toBeGreaterThan(APLIIQ_DESTINATION_TAX_BASIS_POINTS);
+    expect(blended).toBeLessThan(APLIIQ_CA_DESTINATION_TAX_BASIS_POINTS);
   });
 
   it("rejects a marginEstimate derived with a tax term the model does not hold", () => {

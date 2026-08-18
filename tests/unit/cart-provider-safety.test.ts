@@ -1,3 +1,4 @@
+import { resolveApliiqLandedCost } from "@/lib/commerce/landed-cost";
 import { describe, expect, it, vi } from "vitest";
 import type { AhaProduct } from "@/lib/types/product";
 
@@ -31,16 +32,32 @@ function approvedApliiqProduct(): AhaProduct {
       apliiqDecorationSnapshot: { front: { art: "art-1" } }, apliiqRegionAvailability: ["US"],
       apliiqPrivateLabelSnapshot: { neckLabel: { art: "label-1" } },
       apliiqSizeGuideReference: "sg-tee", apliiqMappingApproval: "approved", apliiqSampleApproval: "approved",
-      // Landed margin on 4800 retail: 1500 item + 596 freight (7.9 oz tier)
-      // + 100 per-product fee + 12 modelled destination tax + 169 Square fee.
-      // The tax term is the blended CA rate (APLIIQ_DESTINATION_TAX_BASIS_POINTS,
-      // 76 bp); this literal moves the day that constant does. See margin.ts.
-      weightOz: 7.9, costEstimate: 1500, marginEstimate: 2423,
+      weightOz: 7.9, costEstimate: 1500,
+      // Derived, not hardcoded. purchasable.ts compares the stored
+      // marginEstimate to the recomputed landed figure by EXACT equality, so any
+      // move in freight, the per-unit fee or the destination-tax term (which
+      // went 1025bp -> 76bp -> 0 on 2026-08-17) invalidates a literal here.
+      // Computing it from the same resolver keeps this a cart/provider test
+      // rather than a margin-arithmetic test that breaks on every pricing change.
+      marginEstimate: EXPECTED_LANDED_MARGIN,
       costVerifiedAt: "2026-08-16T00:00:00.000Z", marginVerifiedAt: "2026-08-16T00:00:00.000Z",
       printfulSource: "catalog",
     }],
   };
 }
+
+
+/**
+ * The landed contribution margin for the fixture below, computed through the
+ * same resolver the purchasability gate uses so the two cannot disagree.
+ */
+const EXPECTED_LANDED_MARGIN = (() => {
+  const resolved = resolveApliiqLandedCost({
+    retailPrice: 4800, costEstimate: 1500, weightOz: 7.9, apliiqRegionAvailability: ["US"],
+  } as never);
+  if (!resolved.ok) throw new Error(`fixture is not resolvable: ${resolved.reasons.join("; ")}`);
+  return resolved.landed.margin.contributionMargin;
+})();
 
 describe("server cart provider safety", () => {
   it("refuses an APLIIQ line that loses structural approval before payment", () => {

@@ -104,14 +104,29 @@ export const DEFAULT_SQUARE_FIXED_FEE_CENTS = 30;
  * the per-unit fulfillment fee. See tests/unit/margin.test.ts
  * ("destination tax term is coupled to every stored marginEstimate").
  */
+/**
+ * APLIIQ's published CA rate, kept for reference and for exact per-order
+ * costing. NOT applied to the build-time gate — see the decision below.
+ */
 export const APLIIQ_CA_DESTINATION_TAX_BASIS_POINTS = 950;
 
 /** Measured CA share of AHA shipments, in basis points. Square history 2026-08-17. */
 export const APLIIQ_CA_ORDER_SHARE_BASIS_POINTS = 797;
 
-export const APLIIQ_DESTINATION_TAX_BASIS_POINTS = Math.round(
-  (APLIIQ_CA_DESTINATION_TAX_BASIS_POINTS * APLIIQ_CA_ORDER_SHARE_BASIS_POINTS) / 10_000
-);
+/**
+ * ZERO by merchant decision (David, 2026-08-17), reaffirmed after review.
+ *
+ * I flagged that APLIIQ's tax keys on the customer's shipping address rather
+ * than AHA's nexus, so CA-destined orders are invoiced 9.5% regardless of where
+ * AHA sits. David's call is to carry no tax term on the cost side anyway. That
+ * is his to make and the exposure is small: at the measured 7.97% CA share, the
+ * blended understatement is 950 x 797 / 10,000 = 76 bp, about $0.17 on a $21.25
+ * tee averaged across all orders — roughly $2.11 on an actual CA order.
+ *
+ * If CA volume grows materially, revisit: the honest blended figure is already
+ * computed above and is one multiplication away.
+ */
+export const APLIIQ_DESTINATION_TAX_BASIS_POINTS = 0;
 
 /**
  * Freight is not part of the taxable base when it is separately stated on the
