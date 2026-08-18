@@ -31,37 +31,38 @@ export default async function HomePage() {
 
   return (
     <div className="pb-20 lg:pb-28">
-      {/* One photograph, one sentence, one door. This is the only dark surface
-          on the site — the tokens are inverted (void = paper), so the colours
-          here are literal. */}
-      <section aria-labelledby="hero-heading" className="relative isolate min-h-[82vh] overflow-hidden bg-[#0b0b0c] text-white lg:min-h-[90vh]">
-        <Image
-          src={imagery.hero.src}
-          alt={imagery.hero.alt}
-          fill
-          priority
-          fetchPriority="high"
-          sizes="100vw"
-          className="object-cover object-[35%_center]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" aria-hidden="true" />
-        <div className="relative mx-auto flex min-h-[82vh] max-w-[1440px] flex-col justify-end px-5 pb-14 pt-32 sm:px-8 lg:min-h-[90vh] lg:pb-20">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">After Hours Agenda · New York · Est. 2011</p>
-          <h1 id="hero-heading" className="editorial-title mt-5 max-w-4xl text-[clamp(2.75rem,7.5vw,7rem)] text-white">
-            For the people still building a life <em className="text-rose">after everyone else clocks out.</em>
-          </h1>
-          <div className="mt-9 flex flex-wrap items-center gap-6">
-            <Link href="/shop" className="btn-primary px-8">Shop the collection</Link>
-            <Link href="/lookbook" className="inline-flex min-h-11 items-center font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-white underline decoration-white/40 underline-offset-8 transition-colors hover:decoration-white">The lookbook</Link>
-          </div>
-        </div>
+      {/* Two photographs, two words each — the way a label opens a page (Toteme,
+          O.A.D., Acne all open on a split image with a small caption and no
+          headline). She is the left panel; the people she buys for are the
+          right. The only dark surface on the site: tokens are inverted (void =
+          paper), so the colours here are literal. */}
+      <section aria-label="Enter" className="grid bg-[#0b0b0c] text-white md:h-[calc(100vh-3.5rem)] md:min-h-[560px] md:grid-cols-2">
+        {[
+          { image: imagery.hero, title: "The collection", sub: "Eight pieces, printed to order", href: "/shop", position: "object-[35%_center]", priority: true },
+          { image: imagery.gift, title: "The lookbook", sub: "For you, and the people you buy for", href: "/lookbook", position: "object-[70%_center]", priority: false },
+        ].map((panel) => (
+          <Link key={panel.href} href={panel.href} className="group relative block aspect-[4/5] overflow-hidden md:aspect-auto md:h-full">
+            <Image src={panel.image.src} alt={panel.image.alt} fill priority={panel.priority} fetchPriority={panel.priority ? "high" : "auto"} sizes="(max-width: 768px) 100vw, 50vw" className={`object-cover ${panel.position} transition-transform duration-[1400ms] ease-out group-hover:scale-[1.03]`} />
+            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/70 to-transparent" aria-hidden="true" />
+            <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-10 text-center">
+              <span className="font-editorial text-2xl text-white md:text-3xl">{panel.title}</span>
+              <span className="mt-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/75 underline decoration-white/0 underline-offset-8 transition-colors group-hover:decoration-white/70">{panel.sub}</span>
+            </div>
+          </Link>
+        ))}
       </section>
 
-      <section aria-labelledby="collection-heading" className="mx-auto mt-24 max-w-[1320px] px-5 sm:px-8 lg:mt-32">
+      {/* The line. Set as a statement, not a headline — the photographs already spoke. */}
+      <section aria-labelledby="hero-heading" className="mx-auto max-w-[1320px] px-5 pt-20 sm:px-8 lg:pt-28">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted">After Hours Agenda · New York · Est. 2011</p>
+        <h1 id="hero-heading" className="editorial-title mt-5 max-w-3xl text-[clamp(2rem,4.2vw,3.5rem)] text-cream">
+          For the people still building a life <em className="text-accent">after everyone else clocks out.</em>
+        </h1>
+      </section>
+
+      <section aria-labelledby="collection-heading" className="mx-auto mt-16 max-w-[1320px] px-5 sm:px-8 lg:mt-24">
         <div className="mb-10 flex items-end justify-between gap-6">
-          <h2 id="collection-heading" className="editorial-title text-[clamp(2rem,4.5vw,3.75rem)] text-cream">
-            The collection <span className="text-muted">— eight pieces, printed to order.</span>
-          </h2>
+          <h2 id="collection-heading" className="font-editorial text-2xl text-cream md:text-3xl">The collection</h2>
           <Link href="/shop" className="hidden font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-cream underline decoration-border underline-offset-8 hover:decoration-cream md:block">See all</Link>
         </div>
         {products.length > 0 ? (
@@ -73,7 +74,7 @@ export default async function HomePage() {
               return (
                 <li key={product.id}>
                   <Link href={`/product/${product.slug}`} className="group block focus-visible:outline-offset-4">
-                    <div className="frame image-hover-zoom relative aspect-[4/5] overflow-hidden">
+                    <div className="image-hover-zoom relative aspect-[4/5] overflow-hidden bg-surface">
                       {image ? (
                         <>
                           <ResilientImage src={image} alt={product.name} fill loading="lazy" className={`object-cover product-art ${hover ? "transition-opacity duration-500 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, 25vw" />
@@ -85,7 +86,7 @@ export default async function HomePage() {
                     </div>
                     <div className="mt-4 flex items-baseline justify-between gap-3">
                       <div>
-                        <h3 className="font-editorial text-xl leading-none text-cream group-hover:text-accent">{name}</h3>
+                        <h3 className="font-editorial text-lg leading-none text-cream group-hover:text-accent">{name}</h3>
                         {garment && <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">{garment}</p>}
                       </div>
                       <p className="font-mono text-xs font-bold text-cream">{product.priceFormatted}</p>
@@ -111,7 +112,7 @@ export default async function HomePage() {
           </div>
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted">The Prologue · January 2012</p>
-            <blockquote id="story-heading" className="editorial-title mt-5 text-[clamp(1.75rem,3.6vw,3rem)] text-cream">
+            <blockquote id="story-heading" className="editorial-title mt-5 text-[clamp(1.5rem,3vw,2.5rem)] text-cream">
               “We create, and we build. When everyone says <em>no,</em> we scream <em>yes.</em> We didn’t break the mold — we’re just here to create a new one.”
             </blockquote>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-muted">The name is literal. Every graphic gets drawn after the day job ends — the last train, the kitchen table, the roof at 2am — then printed one at a time when you order it. Nothing waits in a warehouse to be discounted.</p>
@@ -126,7 +127,7 @@ export default async function HomePage() {
       {lookbookTeaser.length > 0 && (
         <section aria-labelledby="lookbook-heading" className="mx-auto mt-28 max-w-[1320px] px-5 sm:px-8 lg:mt-36">
           <div className="mb-10 flex items-end justify-between gap-6">
-            <h2 id="lookbook-heading" className="editorial-title text-[clamp(2rem,4.5vw,3.75rem)] text-cream">Worn like you mean it.</h2>
+            <h2 id="lookbook-heading" className="font-editorial text-2xl text-cream md:text-3xl">Worn like you mean it</h2>
             <Link href="/lookbook" className="hidden font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-cream underline decoration-border underline-offset-8 hover:decoration-cream md:block">The lookbook</Link>
           </div>
           <div className="grid grid-cols-3 gap-4 md:gap-6">
@@ -152,7 +153,7 @@ export default async function HomePage() {
           </div>
           <div className="m-rise">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted">The Black Sheep</p>
-            <blockquote id="statement-heading" className="editorial-title mt-5 text-[clamp(2.25rem,5.5vw,4.75rem)] text-cream">Drawn when the day goes quiet. <em>Made with intention.</em></blockquote>
+            <blockquote id="statement-heading" className="editorial-title mt-5 text-[clamp(1.75rem,3.6vw,3rem)] text-cream">Drawn when the day goes quiet. <em>Made with intention.</em></blockquote>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-muted">Loud, quiet, funny, defiant. Printed one at a time, never asking permission.</p>
           </div>
         </div>

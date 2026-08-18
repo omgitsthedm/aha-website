@@ -15,17 +15,16 @@ const SearchOverlay = dynamic(() => import("@/components/ui/SearchOverlay").then
 // Accessories / New Arrivals — five doors into the same room read as a
 // template, and two of them opened on empty pages. Shop, then the two garment
 // families, then the brand.
+// One capsule, one cut. Left of the wordmark: where to go. Right: what to do.
+// Tees / Hoods & Crews live as pills on the shop; Manifesto and Track order in
+// the footer. The wordmark sits centred, the way a label signs a page.
 const shopLinks = [
   { label: "Shop", href: "/shop" },
-  { label: "Tees", href: "/shop/t-shirts" },
-  { label: "Hoods & Crews", href: "/shop/hoodies-sweatshirts" },
+  { label: "Lookbook", href: "/lookbook" },
+  { label: "About", href: "/about" },
 ];
 
-const utilityLinks = [
-  { label: "Manifesto", href: "/manifesto" },
-  { label: "About", href: "/about" },
-  { label: "Track order", href: "/track-order" },
-];
+const utilityLinks: { label: string; href: string }[] = [];
 
 function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -92,29 +91,27 @@ export function SiteNav() {
 
   return (
     <header className="safe-top safe-x fixed inset-x-0 top-0 z-[100] border-b border-border/10 bg-void">
-      <nav aria-label="Primary navigation" className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-6">
-        <Link href="/" prefetch={false} className="inline-flex h-14 items-center font-display text-sm font-bold uppercase tracking-[-0.02em] text-cream hover:text-accent focus-visible:outline-offset-4">
+      <nav aria-label="Primary navigation" className="mx-auto grid h-14 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-4 sm:px-6">
+        <div className="hidden items-center lg:flex">
+          {catalogIsPublic && shopLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`nav-link inline-flex h-14 items-center pr-6 font-mono text-[10px] font-bold uppercase tracking-[0.16em] transition-colors ${
+                (link.href === "/shop" ? pathname.startsWith("/shop") : isActive(pathname, link.href)) ? "text-cream" : "text-muted hover:text-cream"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+
+        <Link href="/" prefetch={false} className="inline-flex h-14 items-center justify-center font-display text-sm font-bold uppercase tracking-[-0.02em] text-cream hover:text-accent focus-visible:outline-offset-4">
           After Hours Agenda
         </Link>
 
-        <div className="flex items-center">
+        <div className="flex items-center justify-end">
           <div className="hidden items-center lg:flex">
-            {catalogIsPublic && <>
-            {shopLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`nav-link inline-flex h-14 items-center px-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] transition-colors ${
-                  (link.href === "/shop" ? pathname === "/shop" : isActive(pathname, link.href)) ? "text-cream" : "text-muted hover:text-cream"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-
-            <span className="mx-2 h-4 w-px bg-border/10" aria-hidden="true" />
-            </>}
-
             {utilityLinks.map((link) => (
               <Link
                 key={link.href}
@@ -188,7 +185,7 @@ export function SiteNav() {
             <li className="border-t border-border/10 pt-2" aria-hidden="true" />
             </>}
 
-            {utilityLinks.map((link) => (
+            {[{ label: "Manifesto", href: "/manifesto" }, { label: "Track order", href: "/track-order" }, ...utilityLinks].map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}

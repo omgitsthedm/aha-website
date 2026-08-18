@@ -20,8 +20,8 @@ export default function LookbookPage() {
         <Image src={hero.src} alt={hero.alt} fill priority sizes="100vw" className="object-cover object-[70%_center]" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" aria-hidden="true" />
         <div className="relative mx-auto flex min-h-[60vh] max-w-[1280px] flex-col justify-end px-4 pb-12 pt-32 sm:px-6">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-rose">Lookbook · New York · After hours</p>
-          <h1 className="mt-4 font-display text-[clamp(2.75rem,8vw,6.5rem)] font-black uppercase leading-[0.86] tracking-[-0.05em]">Worn like you mean it</h1>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">Lookbook · New York · After hours</p>
+          <h1 className="editorial-title mt-4 text-[clamp(2.25rem,5vw,4rem)] text-white">Worn like you mean it</h1>
         </div>
       </section>
 

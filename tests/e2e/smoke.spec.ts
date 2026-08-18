@@ -28,7 +28,8 @@ test("@catalog home renders the brand hero without retired shopping controls", a
   // way into the shop. "The previous collection is archived" was the holding
   // page; a live store must not open on it.
   await expect(page.getByTestId("home-collection-grid").locator('a[href^="/product/"]')).toHaveCount(CAPSULE_PDP_LINKS.length);
-  await expect(page.getByRole("link", { name: "Shop the collection" }).first()).toBeVisible();
+  // The hero is two photographs; the left panel is the door into the shop.
+  await expect(page.getByRole("link", { name: /The collection/ }).first()).toHaveAttribute("href", "/shop");
   await expect(page.getByText("The previous collection is archived")).toHaveCount(0);
 
   await expect(page.locator("symbol#aha-sheep-mark")).toHaveCount(1);

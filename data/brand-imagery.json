@@ -240,5 +240,13 @@
       "placeholder": false,
       "source": "Brand archive, 2013"
     }
-  ]
+  ],
+  "gift": {
+    "src": "/editorial/hero-rooftop.jpg",
+    "alt": "A young man in a plain black hoodie on a Brooklyn rooftop at night — the person she buys for",
+    "aspect": "16:9",
+    "placeholder": true,
+    "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot.",
+    "swap": "The right hero panel: the gift. Him, or the kids, or the friend — never the lead."
+  }
 }
