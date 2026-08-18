@@ -150,6 +150,12 @@ function OpenCategoryShopContent({
 
   const emptyCategory = activeCategory ? getCategoryBySlug(activeCategory) : undefined;
 
+  // A capsule does not need discovery chrome. Under a dozen pieces, search, a
+  // size filter, sort and an index view are furniture in an empty room — they
+  // read as a template and push the product below the fold. The category pills
+  // stay because they are the only navigation the range actually has.
+  const compact = products.length <= 12;
+
   return (
     <section aria-label="Product catalog">
       {/* Below lg the filter block cost the whole first viewport, so the page whose
@@ -161,7 +167,7 @@ function OpenCategoryShopContent({
           filter wrapper (height ≈ the trigger itself) pinned it for zero pixels and it
           scrolled away with the first swipe. The section spans the whole grid, so the
           control stays reachable for the length of the list. */}
-      <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-30 border-y border-border/40 bg-void py-2 lg:hidden">
+      {!compact && <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-30 border-y border-border/40 bg-void py-2 lg:hidden">
         <button
           type="button"
           onClick={() => setFiltersOpen((open) => !open)}
@@ -176,11 +182,11 @@ function OpenCategoryShopContent({
             {refinementCount > 0 ? `${refinementCount} active` : <span aria-hidden="true">{filtersOpen ? "Close" : "Open"}</span>}
           </span>
         </button>
-      </div>
+      </div>}
 
-      <div className="mb-8 lg:border-y lg:border-border/40 lg:py-5">
-        <div id="catalog-filters" className={`${filtersOpen ? "block" : "hidden"} border-b border-border/40 py-5 lg:block lg:border-b-0 lg:py-0`}>
-          <div className="grid gap-4 xl:grid-cols-[minmax(15rem,1fr)_auto] xl:items-start">
+      <div className={compact ? "mb-8 border-b border-border/40 pb-5" : "mb-8 lg:border-y lg:border-border/40 lg:py-5"}>
+        <div id="catalog-filters" className={compact ? "block" : `${filtersOpen ? "block" : "hidden"} border-b border-border/40 py-5 lg:block lg:border-b-0 lg:py-0`}>
+          {!compact && <div className="grid gap-4 xl:grid-cols-[minmax(15rem,1fr)_auto] xl:items-start">
             <div>
               <label htmlFor="category-search" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Search</label>
               <input id="category-search" type="search" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Product name" className={`${control} w-full`} />
@@ -192,10 +198,10 @@ function OpenCategoryShopContent({
                 </button>
               ))}
             </div>
-          </div>
+          </div>}
 
-          <div className="mt-5">
-            <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-muted">Category</p>
+          <div className={compact ? "" : "mt-5"}>
+            {!compact && <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-muted">Category</p>}
             <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by category">
               <Link
                 href={categoryHref("all")}
@@ -222,7 +228,7 @@ function OpenCategoryShopContent({
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
+          {!compact && <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
             {sizeOptions.length > 0 && (
               <div>
                 <label htmlFor="category-size" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Size</label>
@@ -241,7 +247,7 @@ function OpenCategoryShopContent({
                 <option value="price-desc">Price, high to low</option>
               </select>
             </div>
-          </div>
+          </div>}
         </div>
       </div>
 
@@ -253,13 +259,13 @@ function OpenCategoryShopContent({
       </div>
 
       {viewMode === "grid" && filtered.length > 0 && (
-        <div className="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4">
+        <div className={`grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 ${compact ? "lg:gap-x-6" : "lg:grid-cols-4"}`}>
           {visibleProducts.map((product, index) => {
             const image = product.images[0];
             return (
               <div key={product.id} className="group paper-lift">
                 <Link href={`/product/${product.slug}`} prefetch={false} className="block focus-visible:outline-offset-4">
-                  <div className="fold-surface relative aspect-[3/4] overflow-hidden">
+                  <div className="fold-surface relative aspect-[4/5] overflow-hidden">
                     {image ? <ResilientImage src={image} alt={product.name} fill priority={index < 2} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                     {product.images[1] && <ResilientImage src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
                   </div>
@@ -352,9 +358,9 @@ function OpenCategoryShopContent({
               : "This part of the catalog is empty right now. The rest is printed to order and ready now."}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/shop/hoodies-sweatshirts" className={`${toggle} inline-flex items-center border-border/60 text-cream hover:border-accent`}>Hoodies &amp; sweatshirts</Link>
+            <Link href="/shop/hoodies-sweatshirts" className={`${toggle} inline-flex items-center border-border/60 text-cream hover:border-accent`}>Hoods &amp; crews</Link>
             <Link href="/shop/sweaters-knitwear" className={`${toggle} inline-flex items-center border-border/60 text-cream hover:border-accent`}>Sweaters &amp; knitwear</Link>
-            <Link href="/shop" className={`${toggle} inline-flex items-center border-accent bg-rose text-cream`}>The whole catalog</Link>
+            <Link href="/shop" className={`${toggle} inline-flex items-center border-accent bg-rose text-cream`}>The collection</Link>
           </div>
         </div>
       )}

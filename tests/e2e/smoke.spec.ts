@@ -164,7 +164,7 @@ test("@privacy the consent choice owns mobile bottom surfaces while commerce is 
 test("@catalog shop lists the APLIIQ capsule and nothing retired", async ({ page }) => {
   const response = await page.goto("/shop");
   expect(response?.status()).toBe(200);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("The whole catalog, printed to order");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("The collection");
 
   // The grid hydrates client-side, so wait for a real PDP link rather than
   // reading the server HTML — that is what made the old assertion pass
