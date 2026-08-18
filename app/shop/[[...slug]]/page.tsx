@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
   }
   return buildMetadata({
     title: "Shop the Collection — Graphic Tees, Hoods & Crews",
-    description: "The After Hours Agenda collection: graphic tees, heavyweight pullover hoods and crewnecks, designed in NYC and printed to order in 2–5 days.",
+    description: "The After Hours Agenda collection: graphic tees, heavyweight pullover hoods and crewnecks, made to order in 2–5 days for you and the people you love.",
     path: "/shop",
   });
 }
@@ -75,7 +75,7 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
           title={category ? category.name : "The collection"}
           description={category
             ? `${category.description} ${ORIGIN_CLAIM_SENTENCE}`
-            : `Graphic tees, heavyweight hoods and crewnecks. One cut, worn your way. ${ORIGIN_CLAIM_SENTENCE}`}
+            : `Graphic tees, heavyweight hoods and crewnecks. One cut, every size, everyone welcome. ${ORIGIN_CLAIM_SENTENCE}`}
         />
 
         {/* Purchase-surface trust row. Two rules hold here:

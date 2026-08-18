@@ -60,7 +60,7 @@ const truncateAtWord = (value: string, max: number) => {
 };
 
 const productMetaTitle = (name: string) => {
-  const stem = name.length < 22 ? `${name} Streetwear` : name;
+  const stem = name;
   // Prefer the full product name (keyword-complete). Only truncate — at a word
   // boundary — when "<name> | After Hours Agenda" would exceed ~60 chars.
   const budget = 60 - TITLE_SUFFIX.length;

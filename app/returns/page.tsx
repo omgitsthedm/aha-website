@@ -12,7 +12,7 @@ export const metadata = buildMetadata({
 export default function ReturnsPage() {
   return (
     <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl">
-      <PageHeader eyebrow="Returns" title="Returns and issue review" description={`Unworn items can be returned within ${RETURNS_WINDOW}, and we cover return shipping. Made-to-order production fees may be non-refundable once printing starts.`} />
+      <PageHeader eyebrow="Returns" title="Returns, made easy" description={`Unworn items can be returned within ${RETURNS_WINDOW}, and we cover return shipping. Made-to-order production fees may be non-refundable once printing starts.`} />
       <div className="grid gap-px border border-border/40 bg-border/40 md:grid-cols-3">
         <section className="bg-void p-6"><h2 className="font-display text-xl font-bold uppercase">Start with the order</h2><p className="mt-3 text-sm leading-relaxed text-muted">Email {SUPPORT_EMAIL} with the order number, item, and reason for the request.</p></section>
         <section className="bg-void p-6"><h2 className="font-display text-xl font-bold uppercase">Include the details</h2><p className="mt-3 text-sm leading-relaxed text-muted">For damage, an incorrect item, or a quality issue, include clear photographs of the item and packaging when relevant.</p></section>

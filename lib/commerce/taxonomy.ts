@@ -46,13 +46,13 @@ export const CATEGORIES: CategoryMeta[] = [
     slug: "t-shirts",
     name: "Tees",
     shortName: "Tees",
-    description: "Graphic tees and statement prints on premium ringspun cotton.",
+    description: "Graphic tees on soft ringspun cotton — the ones you reach for first.",
   },
   {
     slug: "hoodies-sweatshirts",
     name: "Hoods & Crews",
     shortName: "Hoods & Crews",
-    description: "Heavyweight pullover hoods and crewnecks.",
+    description: "Heavyweight pullover hoods and crewnecks, built to be borrowed.",
   },
   {
     slug: "sweaters-knitwear",

@@ -9,6 +9,7 @@ import { GetOnTheList } from "@/components/homepage/GetOnTheList";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 import { loadBrandImagery } from "@/lib/content/brand-imagery";
 import { splitProductName } from "@/lib/utils/product-name";
+import { BRAND_LINE_EMPHASIS, BRAND_LINE_LEAD, BRAND_META, BRAND_SINCE, BRAND_SUB } from "@/lib/content/brand-copy";
 
 // Same ISR window as /shop: the grid below reads the live Square-backed
 // catalog, so the front door and the shop can never disagree about what sells.
@@ -16,21 +17,20 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   ...buildMetadata({
-    title: "Independent NYC Label",
-    shareTitle: "After Hours Agenda | New York",
-    description:
-      "Independent New York label, est. 2011. Graphic tees, heavyweight hoods and crewnecks, drawn after hours and printed one at a time when you order.",
+    title: "For the dreamers and the doers",
+    shareTitle: "After Hours Agenda",
+    description: BRAND_META,
     path: "/",
   }),
-  title: { absolute: "After Hours Agenda | New York" },
+  title: { absolute: "After Hours Agenda | For the dreamers and the doers" },
 };
 
 export default async function HomePage() {
   const [products, imagery] = await Promise.all([getAllProducts(), Promise.resolve(loadBrandImagery())]);
   const lookbookTeaser = imagery.lookbook.filter((shot) => shot.aspect === "4:5").slice(0, 3);
   const panels = [
-    { image: imagery.hero, title: "The collection", sub: "Eight pieces. Printed to order.", href: "/shop", priority: true },
-    { image: imagery.gift, title: "The lookbook", sub: "For you, and the people you buy for.", href: "/lookbook", priority: false },
+    { image: imagery.hero, title: "The collection", sub: "Eight pieces. Made to order.", href: "/shop", priority: true },
+    { image: imagery.gift, title: "The lookbook", sub: "For you, and the people you love.", href: "/lookbook", priority: false },
   ];
 
   return (
@@ -65,11 +65,11 @@ export default async function HomePage() {
 
       {/* The line. Set large, in the brand's own voice. */}
       <section aria-labelledby="hero-heading" className="mx-auto max-w-[1440px] px-5 pt-20 sm:px-8 lg:pt-28">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted">After Hours Agenda · New York · Est. 2011</p>
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted">After Hours Agenda · {BRAND_SINCE}</p>
         <h1 id="hero-heading" className="editorial-title mt-6 max-w-5xl text-[clamp(2.5rem,6.5vw,6rem)] text-cream">
-          For the people still building a life <em>after everyone else clocks out.</em>
+          {BRAND_LINE_LEAD} <em>{BRAND_LINE_EMPHASIS}</em>
         </h1>
-        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted md:text-xl">Graphic tees, heavyweight hoods and crewnecks — drawn when the day quiets down, printed one at a time when you order.</p>
+        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted md:text-xl">{BRAND_SUB}</p>
       </section>
 
       <section aria-labelledby="collection-heading" className="mx-auto mt-20 max-w-[1440px] px-5 sm:px-8 lg:mt-28">
@@ -125,9 +125,9 @@ export default async function HomePage() {
           <div>
             <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted">The Prologue · January 2012</p>
             <blockquote id="story-heading" className="editorial-title mt-5 text-[clamp(1.75rem,3.6vw,3.25rem)] text-cream">
-              “When everyone says <em>no,</em> we scream <em>yes.</em> We didn’t break the mold — we’re here to create a new one.”
+              “We are dreamers. We are believers that life is a <em>celebration.</em> We create, and we build.”
             </blockquote>
-            <p className="mt-7 max-w-lg text-lg leading-relaxed text-muted">The name is literal. Every graphic gets drawn after the day job ends — the last train, the kitchen table, the roof at 2am — then printed one at a time when you order it. Nothing waits in a warehouse to be discounted.</p>
+            <p className="mt-7 max-w-lg text-lg leading-relaxed text-muted">That was the first thing we ever wrote down, in 2012, and it still holds. After hours is the part of the day that’s yours — the time you give to the people and the ideas you love once the work is done. We make clothes for the people who spend it well.</p>
             <div className="mt-9 flex flex-wrap items-center gap-6">
               <Link href="/about" className="btn-primary px-8">The story since 2011</Link>
               <Link href="/manifesto" className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-cream underline decoration-border underline-offset-8 hover:decoration-cream">Manifesto</Link>
@@ -139,7 +139,7 @@ export default async function HomePage() {
       {lookbookTeaser.length > 0 && (
         <section aria-labelledby="lookbook-heading" className="mx-auto mt-28 max-w-[1440px] px-5 sm:px-8 lg:mt-36">
           <div className="mb-10 flex items-end justify-between gap-6">
-            <h2 id="lookbook-heading" className="editorial-title text-[clamp(2rem,4.5vw,3.75rem)] text-cream">Worn like <em>you</em> mean it</h2>
+            <h2 id="lookbook-heading" className="editorial-title text-[clamp(2rem,4.5vw,3.75rem)] text-cream">Worn by <em>good people</em></h2>
             <Link href="/lookbook" className="hidden font-mono text-xs font-bold uppercase tracking-[0.16em] text-cream underline decoration-border underline-offset-8 hover:decoration-cream md:block">The lookbook</Link>
           </div>
           <div className="grid grid-cols-3 gap-4 md:gap-6">
@@ -165,8 +165,8 @@ export default async function HomePage() {
           </div>
           <div className="m-rise">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted">The Black Sheep</p>
-            <blockquote id="statement-heading" className="editorial-title mt-5 text-[clamp(2.25rem,5.5vw,5rem)] text-cream">Drawn when the day goes quiet. <em>Made with intention.</em></blockquote>
-            <p className="mt-7 max-w-lg text-lg leading-relaxed text-muted">Loud, quiet, funny, defiant. Printed one at a time, never asking permission.</p>
+            <blockquote id="statement-heading" className="editorial-title mt-5 text-[clamp(2.25rem,5.5vw,5rem)] text-cream">Work hard. Love hard. <em>Celebrate the life you’re building.</em></blockquote>
+            <p className="mt-7 max-w-lg text-lg leading-relaxed text-muted">The black sheep isn’t the outsider. It’s the one who does things its own way and brings everyone along. Made to order, one at a time, with care.</p>
           </div>
         </div>
       </section>

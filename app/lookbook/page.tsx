@@ -7,7 +7,7 @@ import { loadBrandImagery } from "@/lib/content/brand-imagery";
 
 export const metadata = buildMetadata({
   title: "Lookbook",
-  description: "The After Hours Agenda collection, worn in New York after hours — graphic tees, heavyweight hoods and crewnecks, printed to order.",
+  description: "The After Hours Agenda collection, worn by the people it was made for — graphic tees, heavyweight hoods and crewnecks, made to order.",
   path: "/lookbook",
 });
 
@@ -20,13 +20,13 @@ export default function LookbookPage() {
         <Image src={lookbookCover.src} alt={lookbookCover.alt} fill priority sizes="100vw" className="object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" aria-hidden="true" />
         <div className="relative mx-auto flex min-h-[60vh] max-w-[1280px] flex-col justify-end px-4 pb-12 pt-32 sm:px-6">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/80">Lookbook · New York · After hours</p>
-          <h1 className="editorial-title mt-4 text-[clamp(2.75rem,7vw,6rem)] text-white">Worn like <em>you</em> mean it</h1>
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/80">Lookbook · The collection, worn</p>
+          <h1 className="editorial-title mt-4 text-[clamp(2.75rem,7vw,6rem)] text-white">Worn by <em>good people</em></h1>
         </div>
       </section>
 
       <section aria-label="Lookbook" className="mx-auto max-w-[1280px] px-4 pt-12 sm:px-6 lg:pt-16">
-        <PageHeader eyebrow="The collection, out in the city" title="Eight graphics. One cut. Every hour after five." description="Drawn on the last train and the kitchen table, printed one at a time when you order. Tap any frame to see the piece." />
+        <PageHeader eyebrow="The collection" title="Eight graphics. One cut. Everyone welcome." description="For the dreamers and the doers — and for the people they buy for. Made to order, one at a time. Tap any frame to see the piece." />
         <div className="mt-10 columns-2 gap-3 md:columns-3 md:gap-4 [&>*]:mb-3 md:[&>*]:mb-4">
           {lookbook.map((shot, index) => {
             const wide = shot.aspect === "16:9";
@@ -54,7 +54,7 @@ export default function LookbookPage() {
         </div>
         <div className="mt-12 flex flex-wrap gap-4">
           <Link href="/shop" className="btn-primary px-7">Shop the collection</Link>
-          <Link href="/about" className="btn-secondary px-7">The story since 2011</Link>
+          <Link href="/about" className="btn-secondary px-7">Our story</Link>
         </div>
       </section>
 

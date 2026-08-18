@@ -84,7 +84,7 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
             {summary.count > 0
               ? "Reviews come from buyers. Every one is read and approved by a person before it publishes, and a Verified badge means the review was matched to a real order. We do not write, buy, or edit reviews."
-              : "Reviews come from buyers and are read by a person before they publish. Wear it first, then tell us how it wears."}
+              : "Reviews come from real customers and are read by a person before they publish. Wear it first, then tell us how it wears."}
           </p>
         </div>
         <button type="button" onClick={() => setOpen((v) => !v)}

@@ -631,7 +631,7 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               <span aria-hidden="true" className="text-border">·</span>
               <span>{SHIPPING_CLAIM_SHORT}</span>
               <span aria-hidden="true" className="text-border">·</span>
-              <span>Designed in NYC</span>
+              <span>Made with care</span>
             </p>
 
             {/* Mounted on every render so a state change is announced. A status
@@ -681,11 +681,9 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             <div className="mt-10 flex items-start gap-4 border-t border-border/40 pt-7">
               <SheepMark className="mt-1 w-12 shrink-0 text-cream" title="The After Hours Agenda black sheep" />
               <div>
-                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent">Made after hours</p>
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent">For the dreamers and the doers</p>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Every After Hours Agenda design is drawn in New York, after the day quiets down. Each piece is then printed to order, one at a time. Expressive everyday clothing for anyone who never needed permission to belong to the city.{" "}
-                  <Link href="/about" className="font-bold text-accent underline underline-offset-4 hover:text-cream">The story</Link>.
-                </p>
+                  After Hours Agenda makes clothes for the dreamers and the doers — good people who work hard, love hard, and celebrate the life they’re building. Every piece is made to order, one at a time, for you or for someone you love. Nothing is made before it’s wanted, and nothing is wasted.</p>
               </div>
             </div>
           </section>

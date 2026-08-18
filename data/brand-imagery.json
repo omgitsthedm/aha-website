@@ -2,7 +2,7 @@
   "_note": "Every editorial image slot on the storefront. Swap an image by replacing the file at `src` (same aspect) or pointing `src` at a new file, then flip `placeholder` to false. Product imagery is NOT here — it lives in Square (see docs/content-swap-guide.md). Direction (2026-08-18): the brand is shot and written for women first — she is the buyer, for herself and for the people she buys for. Lead every slot with her; men appear as the gift, never the hero.",
   "hero": {
     "src": "/editorial/hero-her.jpg",
-    "alt": "A woman in a plain black tee waiting alone on an empty subway platform late at night, coffee in hand",
+    "alt": "A woman in a plain black tee, coffee in hand, on her way somewhere that matters",
     "aspect": "4:5",
     "placeholder": true,
     "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot.",
@@ -14,18 +14,18 @@
     "aspect": "4:3",
     "placeholder": false,
     "source": "Brand archive, 2012",
-    "swap": "The story image. A frame of her drawing at night replaces this when the shoot happens."
+    "swap": "The story image. A frame of her with the people she loves replaces this when the shoot happens."
   },
   "categories": {
     "t-shirts": {
       "src": "/editorial/hero-her.jpg",
-      "alt": "Tees — worn late, in the city",
+      "alt": "Tees — the ones you reach for first",
       "placeholder": true,
       "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
     },
     "hoodies-sweatshirts": {
       "src": "/editorial/sheep-agave-womens-front.jpg",
-      "alt": "Hoods and crews — the Black Sheep, worn",
+      "alt": "Hoods and crews — built to be borrowed",
       "placeholder": true,
       "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
     }
@@ -33,8 +33,8 @@
   "lookbook": [
     {
       "src": "/editorial/subway-platform.jpg",
-      "alt": "Subway platform, last train, plain black tee",
-      "caption": "Last train. First idea.",
+      "alt": "A woman in a plain black tee, coffee in hand, on her way",
+      "caption": "On her way. Coffee first.",
       "aspect": "16:9",
       "placeholder": true,
       "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
@@ -93,8 +93,8 @@
     },
     {
       "src": "/editorial/hero-rooftop.jpg",
-      "alt": "Rooftop, 2am, plain black hood",
-      "caption": "For him — the roof at 2am",
+      "alt": "A young man in a plain black hood at dusk",
+      "caption": "For him — the one who borrows the hood",
       "aspect": "16:9",
       "placeholder": true,
       "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."
@@ -120,7 +120,7 @@
     {
       "src": "/editorial/sheep-agave-mens-side.jpg",
       "alt": "The Black Sheep sweatshirt in agave, side",
-      "caption": "His — previous run, agave",
+      "caption": "His — the Black Sheep, previous run",
       "aspect": "4:5",
       "placeholder": true,
       "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
@@ -243,7 +243,7 @@
   ],
   "gift": {
     "src": "/editorial/hero-him.jpg",
-    "alt": "A young man in a plain black hoodie on a Brooklyn rooftop at night — the person she buys for",
+    "alt": "A young man in a plain black hoodie at dusk — the person she buys for",
     "aspect": "4:5",
     "placeholder": true,
     "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot.",
@@ -251,7 +251,7 @@
   },
   "lookbookCover": {
     "src": "/editorial/subway-platform.jpg",
-    "alt": "Subway platform, last train, plain black tee",
+    "alt": "A woman in a plain black tee, coffee in hand, on her way somewhere that matters",
     "aspect": "16:9",
     "placeholder": true,
     "source": "AI-generated placeholder (FLUX 2 Pro, 2026-08-18) — plain black garment, no graphic. Replace with the shoot."

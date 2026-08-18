@@ -13,7 +13,7 @@ export const revalidate = 300;
 export const metadata = isStorefrontPublic() ? buildMetadata({
   title: "Totes, Hats, Socks & Stickers",
   description:
-    "Counting Sheep totes, embroidered black sheep socks, hats, pins, and stickers — small pieces from an independent NYC label, made to order.",
+    "Counting Sheep totes, embroidered black sheep socks, hats, pins, and stickers — small pieces from After Hours Agenda, made to order.",
   path: "/accessories",
 }) : catalogMigrationMetadata("/accessories");
 

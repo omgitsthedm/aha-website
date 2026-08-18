@@ -115,19 +115,18 @@ export const SHIPPING_CLAIM_DETAIL = "$25 flat rate international";
 export const SHIPPING_CLAIM_SENTENCE = "Free in the US; $25 flat rate everywhere else we ship.";
 
 // Truth-in-advertising, origin edition. Print-on-demand production runs in
-// Huntington Park, CA or Philadelphia, PA — never New York — and the fulfilling
-// city is printed on the shipping label the customer receives. Design is the
-// only part of the process that happens in NYC, so no surface may pair a city
-// name with "printed", "made", or "shipped from". Route every marketing, SEO,
-// and email surface through one of these three constants instead of writing
-// its own string.
+// Huntington Park, CA or Philadelphia, PA, and the fulfilling city is printed
+// on the shipping label the customer receives — so no surface may pair a city
+// with "printed", "made", or "shipped from". The brand also does not lean on a
+// city at all: the claim is the way the piece is made, not where. Route every
+// marketing, SEO, and email surface through one of these three constants.
 
 /** Badge / trust-strip length. Mirrors components/ui/TrustStrip.tsx. */
-export const ORIGIN_CLAIM_SHORT = "Designed in NYC";
+export const ORIGIN_CLAIM_SHORT = "Made to order";
 /** Mid-sentence clause. Lowercase lead so it can follow a comma. */
-export const ORIGIN_CLAIM_CLAUSE = "designed in NYC, printed to order";
+export const ORIGIN_CLAIM_CLAUSE = "made to order, printed one at a time";
 /** Standalone sentence for body copy, category headers, and meta descriptions. */
-export const ORIGIN_CLAIM_SENTENCE = "Designed in NYC and printed to order.";
+export const ORIGIN_CLAIM_SENTENCE = "Made to order, printed one at a time.";
 
 /**
  * Cart-stage copy. The cart runs before a shipping address exists, so it states
