@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 import { trackCommerceEvent } from "@/lib/analytics/events";
-import { INTERNATIONAL_SHIPPING_CENTS, SHIPPING_CLAIM_SENTENCE, isInternational } from "@/lib/commerce/policies";
+import { INTERNATIONAL_SHIPPING_CENTS, SHIPPING_CLAIM_SENTENCE, SHIPPING_COUNTRY_OPTIONS, isInternational } from "@/lib/commerce/policies";
 import { ExpressCheckout } from "@/components/checkout/ExpressCheckout";
 import {
   parseZippopotamPlaces, postalLookupCode, postalLookupUrl, verifyPostalCode,
@@ -801,10 +801,9 @@ export function CheckoutForm({ squareConfig }: Props) {
                     <label className={labelC} htmlFor="country">Country</label>
                     <select id="country" autoComplete="country" className={field}
                       value={contact.country} onChange={(e) => setContact({ ...contact, country: e.target.value })}>
-                      <option value="US">United States</option>
-                      <option value="CA">Canada</option>
-                      <option value="GB">United Kingdom</option>
-                      <option value="AU">Australia</option>
+                      {SHIPPING_COUNTRY_OPTIONS.map((option) => (
+                        <option key={option.code} value={option.code}>{option.name}</option>
+                      ))}
                     </select>
                   </div>
                 </div>

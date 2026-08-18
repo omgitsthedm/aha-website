@@ -2,6 +2,7 @@ import { createApliiqClient } from "@/lib/apliiq/client";
 import { createApliiqOrder } from "@/lib/apliiq/orders";
 import type { ApliiqAddress, ApliiqClient, ApliiqShippingCode, CreateApliiqOrderInput } from "@/lib/apliiq/types";
 import type { OrderContact, RevalidatedItem } from "@/lib/commerce/orders";
+import { SHIPPING_COUNTRY_NAMES } from "@/lib/commerce/policies";
 
 export interface ApliiqFulfillmentRequest {
   orderId: number;
@@ -65,13 +66,10 @@ function personName(name: string | undefined, fallback: string): { firstName: st
 
 function countryName(countryCode: string, country: string | undefined): string {
   if (country && country.toUpperCase() !== countryCode) return country;
-  const knownNames: Record<string, string> = {
-    US: "United States",
-    CA: "Canada",
-    GB: "United Kingdom",
-    AU: "Australia",
-  };
-  if (knownNames[countryCode]) return knownNames[countryCode];
+  // Every enabled shipping market is nameable from the one policy table, so a
+  // checkout in Germany or Japan does not dead-end here with a code-only address.
+  const knownName = (SHIPPING_COUNTRY_NAMES as Record<string, string>)[countryCode];
+  if (knownName) return knownName;
   if (country && country.length > 2) return country;
   throw new Error("APLIIQ fulfillment requires a shipping country name for non-US destinations.");
 }

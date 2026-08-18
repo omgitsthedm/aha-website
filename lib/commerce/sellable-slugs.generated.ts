@@ -5,9 +5,11 @@
 // saved bag line for a product that is no longer sold.
 export const SELLABLE_PRODUCT_SLUGS: ReadonlySet<string> = new Set([
   "black-sheep-tee",
+  "dont-fuck-fascists-tee",
   "dont-lick-the-boot-tee",
   "enemy-of-the-state-hoodie",
   "no-kings-tee",
+  "no-place-like-new-york-sweatshirt",
   "read-banned-books-tee",
   "sheep-min-hoodie",
 ]);

@@ -1,0 +1,132 @@
+{
+  "_note": "APLIIQ capsule spec. `npm run apliiq:capsule -- create --apply` creates artwork+designs; `-- map` rebuilds data/apliiq-map.json entries. Retail in cents; sizeRetail overrides per size.",
+  "colorId": 50,
+  "service": "transfer_print",
+  "privateLabel": "SB-2-155690",
+  "products": [
+    {
+      "slug": "black-sheep-tee",
+      "title": "Black Sheep",
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "frontLocationId": 4548,
+      "productType": "tee",
+      "sizeGuideId": "sg-tee",
+      "fabricDescription": "Next Level 3600 Premium Crew — 100% combed ringspun cotton, 4.3 oz.",
+      "retailPrice": 4000,
+      "sizeRetail": {},
+      "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+      "mockupUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/41061c98389d74d02bd1230edfc71a628237bd0b/original.png",
+      "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+      "squareItemId": "644VB3BOQTRG5G6QMOOSXUT4"
+    },
+    {
+      "slug": "no-kings-tee",
+      "title": "No Kings",
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "frontLocationId": 4548,
+      "productType": "tee",
+      "sizeGuideId": "sg-tee",
+      "fabricDescription": "Next Level 3600 Premium Crew — 100% combed ringspun cotton, 4.3 oz.",
+      "retailPrice": 4000,
+      "sizeRetail": {},
+      "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+      "mockupUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/59b1a41692e39db31da96d75a45449d1cdf02d9e/original.png",
+      "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+      "squareItemId": "F7CXJXZDPNCFWYP5524QVJD3"
+    },
+    {
+      "slug": "read-banned-books-tee",
+      "title": "Read Banned Books",
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "frontLocationId": 4548,
+      "productType": "tee",
+      "sizeGuideId": "sg-tee",
+      "fabricDescription": "Next Level 3600 Premium Crew — 100% combed ringspun cotton, 4.3 oz.",
+      "retailPrice": 4000,
+      "sizeRetail": {},
+      "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+      "mockupUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/867b1061a46aa3fc44633d4e44d6aa1a8383cbae/original.png",
+      "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+      "squareItemId": "VDDLW7MIHQ6KOEOFKCBL7APN"
+    },
+    {
+      "slug": "dont-lick-the-boot-tee",
+      "title": "Don’t Lick The Boot",
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "frontLocationId": 4548,
+      "productType": "tee",
+      "sizeGuideId": "sg-tee",
+      "fabricDescription": "Next Level 3600 Premium Crew — 100% combed ringspun cotton, 4.3 oz.",
+      "retailPrice": 4000,
+      "sizeRetail": {},
+      "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+      "mockupUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/e6454a562e289dd1a03c488583b4af2661327beb/original.png",
+      "printNote": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment.",
+      "squareItemId": "K5LWMWT6TLWIQJ3W2KEVPFCI"
+    },
+    {
+      "slug": "dont-fuck-fascists-tee",
+      "title": "Don’t Fuck Fascists",
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "frontLocationId": 4548,
+      "productType": "tee",
+      "sizeGuideId": "sg-tee",
+      "fabricDescription": "Next Level 3600 Premium Crew — 100% combed ringspun cotton, 4.3 oz.",
+      "retailPrice": 4000,
+      "sizeRetail": {},
+      "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+      "mockupUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/673c7f93d3e7d432121e86202c4390fcd55e145d/original.png",
+      "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+      "squareItemId": "SHNK2ZYKXIK7NS4OPZQWL6YJ"
+    },
+    {
+      "slug": "sheep-min-hoodie",
+      "title": "Sheep Min",
+      "productCode": "mens_independent-heavyweight-pullover-hoodie",
+      "frontLocationId": 6399,
+      "productType": "hoodie",
+      "sizeGuideId": "sg-hoodie",
+      "fabricDescription": "Independent Trading Co. IND4000 heavyweight pullover hood — 10 oz. 80/20 cotton/poly fleece.",
+      "retailPrice": 6000,
+      "sizeRetail": {
+        "5XL": 7000
+      },
+      "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+      "mockupUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png",
+      "printNote": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment.",
+      "squareItemId": "OFIXCJHZD2ERIBWZH5QB5ISJ"
+    },
+    {
+      "slug": "enemy-of-the-state-hoodie",
+      "title": "Enemy Of The State",
+      "productCode": "mens_independent-heavyweight-pullover-hoodie",
+      "frontLocationId": 6399,
+      "productType": "hoodie",
+      "sizeGuideId": "sg-hoodie",
+      "fabricDescription": "Independent Trading Co. IND4000 heavyweight pullover hood — 10 oz. 80/20 cotton/poly fleece.",
+      "retailPrice": 6000,
+      "sizeRetail": {
+        "5XL": 7000
+      },
+      "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+      "mockupUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png",
+      "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+      "squareItemId": "QGE3WGZAPBF645HVVEDHAQUP"
+    },
+    {
+      "slug": "no-place-like-new-york-sweatshirt",
+      "title": "No Place Like New York",
+      "productCode": "mens_Heavyweight-Crewneck-Sweatshirt",
+      "frontLocationId": 8455,
+      "productType": "sweater",
+      "sizeGuideId": "sg-hoodie",
+      "fabricDescription": "Independent Trading Co. IND3000 heavyweight crewneck — 10 oz. 70/30 ring-spun cotton/poly fleece.",
+      "retailPrice": 6000,
+      "sizeRetail": {},
+      "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+      "mockupUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/947be40fe28ef77975599c8e921f96edc5163fa1/original.png",
+      "printNote": "Front center chest, transfer print (DTF), 8.5\" wide, top edge ~3in below collar. Black garment.",
+      "squareItemId": "R2D55CM6I6AJVH3ZPJ3MWXBL"
+    }
+  ]
+}
