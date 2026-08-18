@@ -1,3 +1,4 @@
+import { INTERNATIONAL_SHIPPING_CENTS } from "@/lib/commerce/policies";
 import { afterEach, describe, expect, it } from "vitest";
 import { resolveApliiqLandedCost, type LandedCostVariant } from "@/lib/commerce/landed-cost";
 import { APLIIQ_DESTINATION_TAX_BASIS_POINTS, modelDestinationTaxCents } from "@/lib/commerce/margin";
@@ -133,7 +134,7 @@ describe("resolveApliiqLandedCost", () => {
   });
 
   it("surfaces the real exposure ceiling for modelled destinations", () => {
-    // Sourced sheet 2026-08-11 at a 7.9 oz unit against the 2000c flat charge:
+    // Sourced sheet 2026-08-11 at a 7.9 oz unit against the live flat charge:
     // the flat rate covers a small basket to CA and GB but stops covering well
     // inside the 20-per-line cart limit, which is the exposure that matters.
     const landed = landedOf({ apliiqRegionAvailability: ["US", "CA", "GB"] });
@@ -178,7 +179,7 @@ describe("resolveApliiqLandedCost", () => {
     ]));
     const landed = landedOf({ apliiqRegionAvailability: ["US", "GB"] });
     expect(landed.warnings).toEqual([
-      "flat international charge 2000c per order covers at most 2 unit(s) to GB but the cart allows 20 per line: a 3-unit order (23.7 oz) costs 3900c",
+      `flat international charge ${INTERNATIONAL_SHIPPING_CENTS}c per order covers at most 2 unit(s) to GB but the cart allows 20 per line: a 3-unit order (23.7 oz) costs 3900c`,
     ]);
     expect(landed.underwaterInternationalDestinations).toEqual(["GB"]);
   });
@@ -198,7 +199,7 @@ describe("resolveApliiqLandedCost", () => {
     expect(coverage.breakEvenUnitsPerOrder).toBe(2);
     expect(coverage.exposure).toBe("uncovered_within_cart_limit");
     expect(coverage.maxUnitsPerOrder).toBe(FLAT_RATE_MAX_UNITS_PER_ORDER);
-    expect(coverage.chargedCentsPerOrder).toBe(2000);
+    expect(coverage.chargedCentsPerOrder).toBe(INTERNATIONAL_SHIPPING_CENTS);
   });
 
   it("assumes no basket size at all — it asks for the ceiling, not a verdict", () => {
@@ -220,7 +221,7 @@ describe("resolveApliiqLandedCost", () => {
     // THIS TEST USED TO PIN THE DEFECT. Its GB fixture tops out at 15.9 oz, so a
     // 3-unit order of a 7.9 oz tee is already past the top of the ladder and
     // cannot be quoted at all — yet it asserted `warnings: []`, on the grounds
-    // that the assumed 2-unit order came in at 1500c against the 2000c charge.
+    // that the assumed 2-unit order came in at 1500c against the flat charge.
     // "Covered at the basket we chose to look at" was being reported as covered.
     __setApliiqShippingRateTableForTest(internationalFixture([
       { zone: "eu", countries: ["GB"], tiers: [
@@ -230,7 +231,7 @@ describe("resolveApliiqLandedCost", () => {
     ]));
     const landed = landedOf({ apliiqRegionAvailability: ["US", "GB"] });
     expect(landed.warnings).toEqual([
-      "flat international charge 2000c per order covers at most 2 unit(s) to GB but the cart allows 20 per line: a 3-unit order (23.7 oz) is past the top of the zone ladder and cannot be quoted",
+      `flat international charge ${INTERNATIONAL_SHIPPING_CENTS}c per order covers at most 2 unit(s) to GB but the cart allows 20 per line: a 3-unit order (23.7 oz) is past the top of the zone ladder and cannot be quoted`,
     ]);
     expect(landed.underwaterInternationalDestinations).toEqual(["GB"]);
   });

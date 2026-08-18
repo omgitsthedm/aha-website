@@ -298,7 +298,7 @@ export function getApliiqShippingCents(countryCode: string, weightOz: number): n
 //
 // Comparing the per-order charge against ONE unit's freight is not a
 // conservative shortcut, it is the optimistic direction: a heavier order costs
-// more to ship while the charge stays at $20, so the single-unit comparison
+// more to ship while the flat charge does not move, so the single-unit comparison
 // understates the loss on exactly the multi-unit orders the flat rate is most
 // exposed to. (The single-unit basis IS conservative for the domestic margin
 // gate above, because there both sides — freight and retail revenue — are

@@ -246,13 +246,14 @@ describe("international flat-rate coverage", () => {
   });
 
   it("flags a destination whose freight beats the flat charge on the very first unit", () => {
-    // Japan, 3 tees: 4011c freight against 2000c collected. The single worst
-    // international case found in the sheet at apparel weights.
+    // Japan, 3 tees: 4011c freight against the 2500c flat charge. The worst
+    // international case in the sheet at apparel weights. Break-even is 2 —
+    // 2 tees (15.8 oz) cost 2386c and still fit under the charge.
     const coverage = checkInternationalFlatRateCoverage("JP", { unitWeightOz: TEE_OZ, unitsPerOrder: 3 });
     expect(coverage.modelled).toBe(true);
     expect(coverage.modelledOrderFreightCents).toBe(4011);
     expect(coverage.coveredAtUnitsPerOrder).toBe(false);
-    expect(coverage.breakEvenUnitsPerOrder).toBe(1);
+    expect(coverage.breakEvenUnitsPerOrder).toBe(2);
     expect(isInternationalFlatRateUnderwater(coverage)).toBe(true);
   });
 
@@ -263,8 +264,8 @@ describe("international flat-rate coverage", () => {
     __setApliiqShippingRateTableForTest(fixture([REVIEWER_GB_ZONE]));
 
     // The optimistic answers that used to be the whole story.
-    const oneUp = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, unitsPerOrder: 1 });
-    const twoUp = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, unitsPerOrder: 2 });
+    const oneUp = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, chargedCentsPerOrder: 2000, unitsPerOrder: 1 });
+    const twoUp = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, chargedCentsPerOrder: 2000, unitsPerOrder: 2 });
     expect(oneUp.coveredAtUnitsPerOrder).toBe(true);
     expect(twoUp.coveredAtUnitsPerOrder).toBe(true);
     expect(twoUp.modelledOrderFreightCents).toBe(1900);
@@ -279,7 +280,7 @@ describe("international flat-rate coverage", () => {
       ]);
     }
 
-    const fourUp = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, unitsPerOrder: 4 });
+    const fourUp = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, chargedCentsPerOrder: 2000, unitsPerOrder: 4 });
     expect(fourUp.orderWeightOz).toBe(31.6);
     expect(fourUp.modelledOrderFreightCents).toBe(3900);
     expect(fourUp.coveredAtUnitsPerOrder).toBe(false);
@@ -290,7 +291,7 @@ describe("international flat-rate coverage", () => {
 
   it("answers the break-even ceiling without being told a basket size at all", () => {
     __setApliiqShippingRateTableForTest(fixture([REVIEWER_GB_ZONE]));
-    const coverage = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, unitsPerOrder: null });
+    const coverage = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, chargedCentsPerOrder: 2000, unitsPerOrder: null });
     expect(coverage).toMatchObject({
       modelled: true,
       exposure: "uncovered_within_cart_limit",
@@ -316,7 +317,7 @@ describe("international flat-rate coverage", () => {
     // The old per-unit basis: $20 >= $18, "covered", no warning. That is the bug.
     expect(getApliiqInternationalShippingCents("GB", TEE_OZ)).toBeLessThan(INTERNATIONAL_SHIPPING_CENTS);
 
-    const twoUp = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, unitsPerOrder: 2 });
+    const twoUp = checkInternationalFlatRateCoverage("GB", { unitWeightOz: TEE_OZ, chargedCentsPerOrder: 2000, unitsPerOrder: 2 });
     expect(twoUp.orderWeightOz).toBe(15.8);
     expect(twoUp.modelledOrderFreightCents).toBe(2600);
     expect(twoUp.coveredAtUnitsPerOrder).toBe(false);
@@ -366,7 +367,7 @@ describe("international flat-rate coverage", () => {
         { maxWeightOz: 47.9, rateCents: 2500 },
       ] },
     ]));
-    const coverage = checkInternationalFlatRateCoverage("CA", { unitWeightOz: TEE_OZ, unitsPerOrder: 2 });
+    const coverage = checkInternationalFlatRateCoverage("CA", { unitWeightOz: TEE_OZ, chargedCentsPerOrder: 2000, unitsPerOrder: 2 });
     expect(coverage.coveredAtUnitsPerOrder).toBe(true);
     expect(coverage.breakEvenUnitsPerOrder).toBe(4);
     expect(coverage.exposure).toBe("uncovered_within_cart_limit");
@@ -382,7 +383,7 @@ describe("international flat-rate coverage", () => {
         { maxWeightOz: 15.9, rateCents: 1500 },
       ] },
     ]));
-    const coverage = checkInternationalFlatRateCoverage("AU", { unitWeightOz: TEE_OZ, unitsPerOrder: 4 });
+    const coverage = checkInternationalFlatRateCoverage("AU", { unitWeightOz: TEE_OZ, chargedCentsPerOrder: 2000, unitsPerOrder: 4 });
     expect(coverage.modelled).toBe(true);
     expect(coverage.orderWeightOz).toBe(31.6);
     expect(coverage.modelledOrderFreightCents).toBeNull();
@@ -422,7 +423,7 @@ describe("international flat-rate coverage", () => {
     __setApliiqShippingRateTableForTest(fixture([REVIEWER_GB_ZONE]));
     const capped = checkInternationalFlatRateCoverage("GB", {
       unitWeightOz: TEE_OZ,
-      unitsPerOrder: null,
+      chargedCentsPerOrder: 2000, unitsPerOrder: null,
       maxUnitsPerOrder: 2,
     });
     expect(capped).toMatchObject({
@@ -439,7 +440,7 @@ describe("international flat-rate coverage", () => {
     ]));
     // 7.9 * 3 drifts to 23.700000000000003, which would fall off a 23.7 ceiling.
     expect(7.9 * 3).not.toBe(23.7);
-    const coverage = checkInternationalFlatRateCoverage("GB", { unitWeightOz: 7.8 + 0.1, unitsPerOrder: 3 });
+    const coverage = checkInternationalFlatRateCoverage("GB", { unitWeightOz: 7.8 + 0.1, chargedCentsPerOrder: 2000, unitsPerOrder: 3 });
     expect(coverage.orderWeightOz).toBe(23.7);
     expect(coverage.modelledOrderFreightCents).toBe(1200);
     expect(coverage.coveredAtUnitsPerOrder).toBe(true);
@@ -453,7 +454,7 @@ describe("international flat-rate coverage", () => {
     __setApliiqShippingRateTableForTest(fixture([
       { zone: "eu", countries: ["GB"], tiers: [{ maxWeightOz: 15.98, rateCents: 1200 }] },
     ]));
-    const coverage = checkInternationalFlatRateCoverage("GB", { unitWeightOz: 7.994, unitsPerOrder: 2 });
+    const coverage = checkInternationalFlatRateCoverage("GB", { unitWeightOz: 7.994, chargedCentsPerOrder: 2000, unitsPerOrder: 2 });
     expect(coverage.orderWeightOz).toBe(15.98);
     expect(coverage.modelledOrderFreightCents).toBe(1200);
     expect(coverage.coveredAtUnitsPerOrder).toBe(true);
@@ -468,7 +469,7 @@ describe("international flat-rate coverage", () => {
   it.each([0, -1, 2.5, Number.NaN])("refuses the non-cap %s for the exposure walk", (maxUnitsPerOrder) => {
     expect(() => checkInternationalFlatRateCoverage("GB", {
       unitWeightOz: TEE_OZ,
-      unitsPerOrder: null,
+      chargedCentsPerOrder: 2000, unitsPerOrder: null,
       maxUnitsPerOrder,
     })).toThrow("positive integer maxUnitsPerOrder");
   });
@@ -477,7 +478,7 @@ describe("international flat-rate coverage", () => {
     __setApliiqShippingRateTableForTest(fixture([
       { zone: "eu", countries: ["GB"], tiers: [{ maxWeightOz: 15.9, rateCents: 1200 }] },
     ]));
-    const coverage = checkInternationalFlatRateCoverage("GB", { unitWeightOz: 0, unitsPerOrder: 2 });
+    const coverage = checkInternationalFlatRateCoverage("GB", { unitWeightOz: 0, chargedCentsPerOrder: 2000, unitsPerOrder: 2 });
     expect(coverage).toMatchObject({
       modelled: false,
       exposure: "unpriceable",
@@ -495,7 +496,7 @@ describe("international flat-rate coverage", () => {
     __setApliiqShippingRateTableForTest(fixture([
       { zone: "oceania", countries: ["AU"], tiers: [{ maxWeightOz: 31.9, rateCents: 3500 }] },
     ]));
-    const coverage = checkInternationalFlatRateCoverage("AU", { unitWeightOz: TEE_OZ, unitsPerOrder: 2 });
+    const coverage = checkInternationalFlatRateCoverage("AU", { unitWeightOz: TEE_OZ, chargedCentsPerOrder: 2000, unitsPerOrder: 2 });
     expect(coverage.coveredAtUnitsPerOrder).toBe(false);
     expect(coverage.modelledOrderFreightCents).toBe(3500);
     expect(coverage.breakEvenUnitsPerOrder).toBe(0);
@@ -534,12 +535,12 @@ describe("international flat-rate coverage", () => {
       (_label, tiers) => {
         for (const unitWeightOz of UNIT_WEIGHTS) {
           __setApliiqShippingRateTableForTest(fixture([{ zone: "z", countries: ["GB"], tiers: [...tiers] }]));
-          const ceiling = checkInternationalFlatRateCoverage("GB", { unitWeightOz, unitsPerOrder: null });
+          const ceiling = checkInternationalFlatRateCoverage("GB", { unitWeightOz, chargedCentsPerOrder: 2000, unitsPerOrder: null });
           expect(ceiling.breakEvenUnitsPerOrder).not.toBeNull();
           const breakEven = ceiling.breakEvenUnitsPerOrder!;
 
           for (let units = 1; units <= FLAT_RATE_MAX_UNITS_PER_ORDER; units += 1) {
-            const at = checkInternationalFlatRateCoverage("GB", { unitWeightOz, unitsPerOrder: units });
+            const at = checkInternationalFlatRateCoverage("GB", { unitWeightOz, chargedCentsPerOrder: 2000, unitsPerOrder: units });
             // 1. covered and the ceiling can never disagree.
             expect(at.coveredAtUnitsPerOrder).toBe(units <= breakEven);
             // 2. the ceiling does not move with the basket the caller asks about.

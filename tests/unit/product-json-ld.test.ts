@@ -1,3 +1,4 @@
+import { INTERNATIONAL_SHIPPING_CENTS } from "@/lib/commerce/policies";
 import { describe, expect, it } from "vitest";
 import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
@@ -82,9 +83,9 @@ describe("ProductJsonLd", () => {
         })),
       ).toEqual([
         { country: "US", rate: 0, currency: "USD" },
-        { country: "CA", rate: 20, currency: "USD" },
-        { country: "GB", rate: 20, currency: "USD" },
-        { country: "AU", rate: 20, currency: "USD" },
+        { country: "CA", rate: INTERNATIONAL_SHIPPING_CENTS / 100, currency: "USD" },
+        { country: "GB", rate: INTERNATIONAL_SHIPPING_CENTS / 100, currency: "USD" },
+        { country: "AU", rate: INTERNATIONAL_SHIPPING_CENTS / 100, currency: "USD" },
       ]);
       expect(offer.shippingDetails[0].deliveryTime).toEqual({
         "@type": "ShippingDeliveryTime",

@@ -78,7 +78,7 @@ export type LandedCostResolution =
 /**
  * DECIDED: this module states NO basket size at all.
  *
- * The flat $20 international charge is levied once per ORDER while freight is
+ * The flat international charge is levied once per ORDER while freight is
  * rated on the whole shipment's weight, so coverage is a curve, not a boolean.
  * Every fixed basket size this file could pick is wrong in the same way: it was
  * 1, which called any multi-unit order covered; then 2, which still reported

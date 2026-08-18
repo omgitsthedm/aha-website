@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
+  INTERNATIONAL_SHIPPING_CENTS,
   ORIGIN_CLAIM_CLAUSE, ORIGIN_CLAIM_SENTENCE, ORIGIN_CLAIM_SHORT,
   SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT,
 } from "@/lib/commerce/policies";
@@ -170,13 +171,16 @@ describe("H11 shop purchase-surface claims", () => {
   it("qualifies the shipping badge instead of claiming free shipping on every order", () => {
     // The sub-line is `sm:block`, so on mobile only the label renders. The label
     // has to be true standing alone, and "Free shipping" is not: CA/GB/AU orders
-    // carry a real $20 Square service charge.
+    // carry a real Square service charge at INTERNATIONAL_SHIPPING_CENTS.
     expect(body).not.toMatch(/>Free shipping</);
     expect(body).not.toContain("On every order. No code needed.");
     expect(body).toContain("{SHIPPING_CLAIM_SHORT}");
     expect(body).toContain("{SHIPPING_CLAIM_DETAIL}");
     expect(SHIPPING_CLAIM_SHORT).toBe("Free US shipping");
-    expect(SHIPPING_CLAIM_DETAIL).toBe("$20 flat rate international");
+    // Derived, not literal: the rate is a business decision that moves (it went
+    // $20 -> $25 on 2026-08-17). What must never drift is the badge stating the
+    // real charged amount, so assert the relationship rather than the number.
+    expect(SHIPPING_CLAIM_DETAIL).toBe(`$${INTERNATIONAL_SHIPPING_CENTS / 100} flat rate international`);
   });
 
   it("routes the category header origin claim through the shared constant", () => {

@@ -120,7 +120,7 @@ function ProductIdentity({ as: Heading = "h1", product, reviews, price, classNam
         )}
       </div>
       {/* Shipping wording comes from lib/commerce/policies.ts — international
-          orders carry a real $20 Square service charge, so "free shipping"
+          orders carry a real $25 Square service charge, so "free shipping"
           unqualified is not a claim this page is allowed to make. */}
       <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">Made to order in {PRODUCTION_WINDOW}. {SHIPPING_CLAIM_SHORT}, {SHIPPING_CLAIM_DETAIL.toLowerCase()}. Returns accepted within {RETURNS_WINDOW} on unworn items, and we cover return shipping.</p>
     </div>
