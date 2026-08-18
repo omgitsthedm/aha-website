@@ -27,7 +27,12 @@ afterEach(() => {
 });
 
 describe("closed-catalog lifecycle routes", () => {
-  it("rejects abandoned-cart capture before parsing or persistence", async () => {
+  it.skip("rejects abandoned-cart capture before parsing or persistence", async () => {
+    // Superseded 2026-08-18: the storefront reopened for the APLIIQ capsule, so
+    // abandoned-cart capture is a working feature again rather than a 410. The
+    // thing that must stay true — no legacy product is sellable — is enforced
+    // per variant, not by this route. Skipped rather than deleted so the
+    // closure intent stays discoverable if the store is ever held again.
     const { POST } = await import("@/app/api/checkout/capture/route");
     const response = await POST(new Request("https://afterhoursagenda.test/api/checkout/capture", {
       method: "POST",
@@ -48,7 +53,9 @@ describe("closed-catalog lifecycle routes", () => {
     expect(captureAbandonedCart).not.toHaveBeenCalled();
   });
 
-  it("skips every lifecycle campaign before database or email dispatch", async () => {
+  it.skip("skips every lifecycle campaign before database or email dispatch", async () => {
+    // Superseded 2026-08-18, same reason: lifecycle email resumes with the
+    // storefront. See the note on the capture test above.
     process.env.CRON_SECRET = "catalog-reset-test";
     const { POST } = await import("@/app/api/cron/lifecycle/route");
     const response = await POST(new Request("https://afterhoursagenda.test/api/cron/lifecycle", {

@@ -12,7 +12,7 @@ import { getProductReviews } from "@/lib/commerce/reviews";
 import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 import { ORIGIN_CLAIM_CLAUSE, SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 import { swatchHex } from "@/lib/data/color-swatches";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 export const revalidate = 300;
 // dynamicParams=false: only slugs present in generateStaticParams (every product
@@ -30,7 +30,7 @@ export const dynamicParams = false;
 // refresh every 300s via `revalidate`, and the charge is re-priced live, so this
 // changes nothing about how orders are priced.
 export function generateStaticParams() {
-  if (!isLegacyCatalogPublic()) return [];
+  if (!isStorefrontPublic()) return [];
   try {
     return loadProducts().map((p) => ({ slug: p.slug }));
   } catch {
@@ -272,7 +272,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   // Do this before enrichment or stock work. A direct legacy PDP URL must not
   // fetch provider data while the migration hold is active.
-  if (!isLegacyCatalogPublic()) notFound();
+  if (!isStorefrontPublic()) notFound();
   const { slug } = await params;
   let product: Product | null = null;
   let products: Product[] = [];

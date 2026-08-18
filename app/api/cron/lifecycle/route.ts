@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { dispatchAbandonedCarts } from "@/lib/commerce/abandoned-cart";
 import { dispatchReviewRequests } from "@/lib/commerce/review-request";
 import { dispatchWinback } from "@/lib/commerce/winback";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +18,7 @@ function authorized(req: Request): boolean {
 
 async function run(req: Request) {
   if (!authorized(req)) return new NextResponse("Not found", { status: 404 });
-  if (!isLegacyCatalogPublic()) {
+  if (!isStorefrontPublic()) {
     return NextResponse.json(
       { ok: true, skipped: "catalog_closed" },
       { headers: { "Cache-Control": "no-store" } },

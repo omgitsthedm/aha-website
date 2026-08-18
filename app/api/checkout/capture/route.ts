@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { captureAbandonedCart, type CaptureLine } from "@/lib/commerce/abandoned-cart";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 // Best-effort capture of an in-progress checkout for abandoned-cart recovery.
 // While the legacy catalog is closed, return before reading or storing the
 // request. When open, capture remains best-effort and never throws to checkout.
 export async function POST(req: Request) {
-  if (!isLegacyCatalogPublic()) {
+  if (!isStorefrontPublic()) {
     return NextResponse.json(
       {
         ok: false,

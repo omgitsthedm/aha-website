@@ -35,6 +35,19 @@ export const APLIIQ_CATALOG_POLICY = Object.freeze({
   reason: "Apliiq capsule live; order submission still gated by APLIIQ_ALLOW_CREATE_ORDERS",
 } as const);
 
+/**
+ * Is the storefront open at all?
+ *
+ * Distinct from isLegacyCatalogPublic, which answers the narrower "may LEGACY
+ * products be shown". Route-level gates want this one: the shop, category, PDP
+ * and checkout pages should render whenever anything is sellable. What keeps the
+ * retired catalog out is not the route gate — it is the per-variant provider
+ * filter in buildEligibleSquareIndex and buildPreviewProducts.
+ */
+export function isStorefrontPublic(): boolean {
+  return LEGACY_CATALOG_POLICY.publicCatalogEnabled || APLIIQ_CATALOG_POLICY.publicCatalogEnabled;
+}
+
 /** True only for a variant on the APLIIQ path. Printful variants are never sellable. */
 export function isSellableProvider(fulfillmentProvider: string | undefined): boolean {
   return fulfillmentProvider === "apliiq" && APLIIQ_CATALOG_POLICY.publicCatalogEnabled;
