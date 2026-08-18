@@ -2,19 +2,40 @@
 
 import { useEffect, useState } from "react";
 import type { SizeTable } from "@/lib/printful/size-table";
+import type { SizeGuide } from "@/lib/types/product";
 
 interface SizeGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
   fitDescription?: string;
   careInstructions?: string;
-  /** A representative Printful catalog variant id — used to fetch real measurements. */
+  /** A representative Printful catalog variant id — used to fetch real measurements (legacy). */
   catalogVariantId?: number;
+  /** The committed size guide for this product (data/size-guides.json). Preferred over a provider fetch. */
+  sizeGuide?: SizeGuide;
 }
 
-export function SizeGuideModal({ isOpen, onClose, fitDescription, careInstructions, catalogVariantId }: SizeGuideModalProps) {
-  const [table, setTable] = useState<SizeTable | null>(null);
+/** Turn a committed size guide into the same table shape the legacy provider fetch returned. */
+export function sizeGuideToTable(guide: SizeGuide | undefined): SizeTable | null {
+  if (!guide || guide.measurements.length === 0) return null;
+  const rows: SizeTable["rows"] = [];
+  const has = (key: "chestIn" | "lengthIn" | "sleeveIn" | "shoulderIn" | "waistIn" | "inseamIn") =>
+    guide.measurements.some((m) => typeof m[key] === "number");
+  const fmt = (value: number | undefined) => (typeof value === "number" ? String(value) : "—");
+  if (has("chestIn")) rows.push({ label: "Chest width", values: guide.measurements.map((m) => fmt(m.chestIn)) });
+  if (has("lengthIn")) rows.push({ label: "Body length", values: guide.measurements.map((m) => fmt(m.lengthIn)) });
+  if (has("sleeveIn")) rows.push({ label: "Sleeve", values: guide.measurements.map((m) => fmt(m.sleeveIn)) });
+  if (has("shoulderIn")) rows.push({ label: "Shoulder", values: guide.measurements.map((m) => fmt(m.shoulderIn)) });
+  if (has("waistIn")) rows.push({ label: "Waist", values: guide.measurements.map((m) => fmt(m.waistIn)) });
+  if (has("inseamIn")) rows.push({ label: "Inseam", values: guide.measurements.map((m) => fmt(m.inseamIn)) });
+  return { unit: "in", sizes: guide.measurements.map((m) => m.size), rows };
+}
+
+export function SizeGuideModal({ isOpen, onClose, fitDescription, careInstructions, catalogVariantId, sizeGuide }: SizeGuideModalProps) {
+  const committed = sizeGuideToTable(sizeGuide);
+  const [fetched, setFetched] = useState<SizeTable | null>(null);
   const [loading, setLoading] = useState(false);
+  const table = committed ?? fetched;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -29,18 +50,18 @@ export function SizeGuideModal({ isOpen, onClose, fitDescription, careInstructio
     };
   }, [isOpen, onClose]);
 
-  // Load real measurements the first time the guide opens (cached server-side).
+  // Legacy provider fetch, only when the product has no committed measurements.
   useEffect(() => {
-    if (!isOpen || !catalogVariantId || table) return;
+    if (!isOpen || !catalogVariantId || committed || fetched) return;
     let active = true;
     setLoading(true);
     fetch(`/api/size-table?variant=${catalogVariantId}`)
       .then((r) => (r.ok ? r.json() : { table: null }))
-      .then((data) => { if (active) setTable(data.table ?? null); })
+      .then((data) => { if (active) setFetched(data.table ?? null); })
       .catch(() => { /* fall back to fit description */ })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [isOpen, catalogVariantId, table]);
+  }, [isOpen, catalogVariantId, committed, fetched]);
 
   if (!isOpen) return null;
 
@@ -85,7 +106,10 @@ export function SizeGuideModal({ isOpen, onClose, fitDescription, careInstructio
                   </tbody>
                 </table>
               </div>
-              <p className="mt-2 text-[11px] leading-relaxed text-muted">Measurements are of the garment, laid flat, from the manufacturer.</p>
+              <p className="mt-2 text-[11px] leading-relaxed text-muted">{sizeGuide?.note ?? "Measurements are of the garment, laid flat, from the manufacturer."}</p>
+              {sizeGuide?.howToMeasure && <p className="mt-2 text-[11px] leading-relaxed text-muted">{sizeGuide.howToMeasure}</p>}
+              {sizeGuide?.sizeUpIf && <p className="mt-2 text-[11px] leading-relaxed text-muted">Size up if: {sizeGuide.sizeUpIf}</p>}
+              {sizeGuide?.sizeDownIf && <p className="mt-2 text-[11px] leading-relaxed text-muted">Size down if: {sizeGuide.sizeDownIf}</p>}
             </div>
           )}
 

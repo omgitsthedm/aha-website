@@ -45,13 +45,13 @@ export const metadata: Metadata = {
     default: "After Hours Agenda | New York Label",
     template: "%s | After Hours Agenda",
   },
-  description: "After Hours Agenda is an independent New York label. The previous collection is archived while the next release is in development.",
+  description: "After Hours Agenda is an independent New York label. Graphic tees, heavyweight hoods and crewnecks, drawn after hours and printed one at a time when you order.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com"
   ),
   openGraph: {
     title: "After Hours Agenda | New York Label",
-    description: "The previous collection is archived while the next After Hours Agenda release is in development.",
+    description: "Independent New York label. Graphic tees, heavyweight hoods and crewnecks, printed to order.",
     type: "website",
     // Deliberately NO `url` here. Next only overwrites the keys a child segment
     // actually declares (`resolve-metadata.js` iterates `for (const key in
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "After Hours Agenda | New York Label",
-    description: "The previous collection is archived while the next After Hours Agenda release is in development.",
+    description: "Independent New York label. Graphic tees, heavyweight hoods and crewnecks, printed to order.",
     images: ["/brand/og-image.png"],
   },
   // Installed-app polish: standalone window with the brand-rose chrome
