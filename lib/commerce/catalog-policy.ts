@@ -60,6 +60,19 @@ export function isStorefrontPublic(): boolean {
   return LEGACY_CATALOG_POLICY.publicCatalogEnabled || APLIIQ_CATALOG_POLICY.publicCatalogEnabled;
 }
 
+/**
+ * May money be taken right now?
+ *
+ * Separate from isStorefrontPublic on purpose. The catalog being browsable and
+ * the till being open are different states, and conflating them renders the
+ * full checkout form over an API that refuses — the customer fills in an
+ * address and a card and only then hits a wall. Anything that collects payment
+ * details must gate on THIS.
+ */
+export function isCheckoutOpen(): boolean {
+  return LEGACY_CATALOG_POLICY.checkoutEnabled || APLIIQ_CATALOG_POLICY.checkoutEnabled;
+}
+
 /** True only for a variant on the APLIIQ path. Printful variants are never sellable. */
 export function isSellableProvider(fulfillmentProvider: string | undefined): boolean {
   return fulfillmentProvider === "apliiq" && APLIIQ_CATALOG_POLICY.publicCatalogEnabled;

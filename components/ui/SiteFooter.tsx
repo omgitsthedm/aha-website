@@ -3,7 +3,7 @@ import { SheepMark } from "@/components/ui/SheepMark";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { ConsentSettingsLink } from "@/components/consent/ConsentSettingsLink";
 import { isGiftCardsEnabled } from "@/lib/square/giftcards";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 // Gift cards are gated (GIFT_CARDS_ENABLED); until they ship, the /gift-cards
 // route is a "coming soon" stub — don't link a dead-end from every page.
@@ -40,7 +40,7 @@ const brandLinks = [
 ];
 
 export function SiteFooter() {
-  const catalogIsPublic = isLegacyCatalogPublic();
+  const catalogIsPublic = isStorefrontPublic();
   return (
     <footer className="relative border-t border-border/60 bg-void px-4 py-12 sm:px-6 lg:py-16">
       <div className="mx-auto grid max-w-[1280px] gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)_minmax(18rem,0.5fr)]">

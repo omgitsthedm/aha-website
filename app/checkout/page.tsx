@@ -1,6 +1,6 @@
 import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
-import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
+import { isCheckoutOpen } from "@/lib/commerce/catalog-policy";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 export default function CheckoutPage() {
-  if (!isStorefrontPublic()) {
+  if (!isCheckoutOpen()) {
     return (
       <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
         <div className="mx-auto max-w-3xl border-t-2 border-accent pt-6">

@@ -10,7 +10,7 @@ import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { useInfiniteList } from "@/lib/hooks/useInfiniteScroll";
 import { APPAREL_SIZE_ORDER, extractVariationSize } from "@/lib/utils/variation";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 interface ShopContentProps {
   products: Product[];
@@ -37,7 +37,7 @@ function CatalogMigrationNotice() {
 }
 
 export function ShopContent(props: ShopContentProps) {
-  return isLegacyCatalogPublic() ? <OpenShopContent {...props} /> : <CatalogMigrationNotice />;
+  return isStorefrontPublic() ? <OpenShopContent {...props} /> : <CatalogMigrationNotice />;
 }
 
 function OpenShopContent({ products, collections, initialPage = 1, paginationPath, purchasableSizes, colorCounts, colorNames }: ShopContentProps) {

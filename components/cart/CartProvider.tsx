@@ -11,7 +11,8 @@ import {
 } from "react";
 import dynamic from "next/dynamic";
 import type { CartItem, Product } from "@/lib/utils/types";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
+import { SELLABLE_PRODUCT_SLUGS } from "@/lib/commerce/sellable-slugs.generated";
 // Only shown on open/add — keep them out of the initial bundle on every page.
 const CartDrawer = dynamic(() => import("./CartDrawer").then((m) => m.CartDrawer), { ssr: false });
 const AddToCartModal = dynamic(() => import("./AddToCartModal").then((m) => m.AddToCartModal), { ssr: false });
@@ -59,10 +60,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Load from localStorage on mount
   useEffect(() => {
     try {
-      // A saved browser bag is not a catalog source of truth. Drop legacy
-      // entries during the provider cutover so it cannot surface dead PDP links
-      // or encourage a checkout that the server will reject.
-      if (!isLegacyCatalogPublic()) {
+      // A saved browser bag is not a catalog source of truth. Drop anything no
+      // longer sold so it cannot surface a dead PDP link or encourage a checkout
+      // the server will reject.
+      //
+      // This used to key on the catalog being closed, which meant reopening the
+      // storefront silently stopped purging and a bag saved before the reset
+      // rendered a retired product again. It keys on the LINE now, so it holds
+      // in both states.
+      if (!isStorefrontPublic()) {
         localStorage.removeItem("aha-cart");
         return;
       }
@@ -76,7 +82,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
           const clean = parsed.filter(
             (i) =>
               i && typeof i.variationId === "string" &&
-              Number.isFinite(i.price) && Number.isFinite(i.quantity) && i.quantity > 0
+              Number.isFinite(i.price) && Number.isFinite(i.quantity) && i.quantity > 0 &&
+              // Still sold? A line for a retired product is dropped rather than
+              // rendered with a 404 PDP link and a total the server will refuse.
+              typeof i.slug === "string" && SELLABLE_PRODUCT_SLUGS.has(i.slug)
           );
           if (clean.length) setItems(clean);
         }

@@ -11,11 +11,17 @@ test("@catalog home renders the brand hero without retired shopping controls", a
   await expect(page.getByRole("heading", { level: 1 })).toContainText("After Hours");
   // Rose browser chrome: light theme-color is the brand rose fill.
   await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')).toHaveAttribute("content", "#FF6B6B");
-  await expect(page.getByRole("link", { name: "Get the next release first", exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Shop Men", exact: true })).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Shop Women", exact: true })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Open bag" })).toHaveCount(0);
-  await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
+  // The capsule is live, so the home page carries shopping controls again. What
+  // must NOT come back is a link to anything retired — the 1,005-variant legacy
+  // reopen would have surfaced here first.
+  const homePdpLinks = await page.locator('a[href^="/product/"]').evaluateAll(
+    (nodes) => [...new Set(nodes.map((n) => n.getAttribute("href")!))],
+  );
+  const capsule = [
+    "/product/black-sheep-tee", "/product/no-kings-tee", "/product/read-banned-books-tee",
+    "/product/dont-lick-the-boot-tee", "/product/sheep-min-hoodie", "/product/enemy-of-the-state-hoodie",
+  ];
+  for (const href of homePdpLinks) expect(capsule, `retired PDP linked from home: ${href}`).toContain(href);
 
   await expect(page.locator("symbol#aha-sheep-mark")).toHaveCount(1);
   const filledMark = page.locator('svg[fill="currentColor"]:has(use[href="#aha-sheep-mark"])').first();
@@ -147,12 +153,27 @@ test("@privacy the consent choice owns mobile bottom surfaces while commerce is 
   await expect(page.getByTestId("sticky-checkout-bar")).toHaveCount(0);
 });
 
-test("@catalog shop presents the archived collection hold without PDP links", async ({ page }) => {
+test("@catalog shop lists the APLIIQ capsule and nothing retired", async ({ page }) => {
   const response = await page.goto("/shop");
   expect(response?.status()).toBe(200);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("The previous collection is archived");
-  await expect(page.getByRole("link", { name: "Get release updates", exact: true })).toBeVisible();
-  await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("The whole catalog, printed to order");
+
+  // The grid hydrates client-side, so wait for a real PDP link rather than
+  // reading the server HTML — that is what made the old assertion pass
+  // vacuously once the products came back.
+  await expect(page.locator('a[href="/product/no-kings-tee"]')).toBeVisible();
+  const links = await page.locator('a[href^="/product/"]').evaluateAll(
+    (nodes) => [...new Set(nodes.map((n) => n.getAttribute("href")!))],
+  );
+  expect(links.length).toBeGreaterThan(0);
+
+  // Every link is a capsule product. This is the assertion that would have
+  // caught the 1,005-variant legacy reopen.
+  const capsule = [
+    "/product/black-sheep-tee", "/product/no-kings-tee", "/product/read-banned-books-tee",
+    "/product/dont-lick-the-boot-tee", "/product/sheep-min-hoodie", "/product/enemy-of-the-state-hoodie",
+  ];
+  for (const href of links) expect(capsule, `unexpected PDP link ${href}`).toContain(href);
 });
 
 test("@product archived product routes return a noindex 404 without buy controls", async ({ page }) => {
@@ -356,10 +377,13 @@ test("@catalog best-sellers redirects to the shop", async ({ page }) => {
   await expect(page).toHaveURL(/\/shop$/);
 });
 
-test("@catalog archived shop exposes no product imagery or PDP links", async ({ page }) => {
+test("@catalog shop serves capsule art and none of the deleted legacy imagery", async ({ page }) => {
   await page.goto("/shop");
-  await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
+  // /products/ was deleted in the reset; capsule art lives under /art/. The old
+  // assertion only checked /products/, so it kept passing after the products
+  // came back — it was measuring a path nothing uses any more.
   await expect(page.locator('img[src*="/products/"]')).toHaveCount(0);
+  await expect(page.locator('a[href="/product/sheep-min-hoodie"]')).toBeVisible();
 });
 
 test("@brand manifesto page renders the flag and the signup", async ({ page }) => {

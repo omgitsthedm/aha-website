@@ -6,7 +6,7 @@ import Link from "next/link";
 import { isPrintfulImage } from "@/lib/utils/image-helpers";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SheepMark } from "@/components/ui/SheepMark";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 interface SavedProduct { name: string; slug: string; priceFormatted: string; image: string }
 
@@ -27,7 +27,7 @@ export function WishlistContent() {
   const [items, setItems] = useState<SavedProduct[]>([]);
 
   useEffect(() => {
-    if (!isLegacyCatalogPublic()) {
+    if (!isStorefrontPublic()) {
       try { localStorage.removeItem(KEY); } catch { /* storage may be unavailable */ }
       setReady(true);
       return;
@@ -65,7 +65,7 @@ export function WishlistContent() {
         <PageHeader eyebrow="Saved" title="Your wishlist" description="The wishlist will return with the next release." />
         <div className="mt-2 flex flex-col items-start gap-4">
           <SheepMark className="w-16 text-muted" />
-          {isLegacyCatalogPublic() && <Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Browse the shop</Link>}
+          {isStorefrontPublic() && <Link href="/shop" className="primary-action inline-flex min-h-11 items-center px-5 py-3 text-xs">Browse the shop</Link>}
         </div>
       </div></div>
     );

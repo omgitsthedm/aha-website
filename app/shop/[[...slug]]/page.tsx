@@ -12,11 +12,12 @@ import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 import { ORIGIN_CLAIM_SENTENCE, SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 
 export const revalidate = 300;
-// The committed catalog policy currently returns the same migration screen for
-// every shop path. Prerender it so a store reset never pays an avoidable edge
-// function cold start. Remove this override only when a replacement catalog is
-// intentionally activated and query-driven pagination is restored.
-export const dynamic = "force-static";
+// force-static was correct while every shop path returned the same migration
+// screen — it removed a cold start on a page with no data. It is WRONG now the
+// capsule is live: the page reads searchParams for pagination and real catalog
+// data, and force-static prerendered it into the empty state while the sitemap
+// and PDPs advertised six products. revalidate=300 keeps the ISR caching that
+// made the mobile LCP budget without freezing the catalog.
 
 interface ShopPageProps {
   params: Promise<{ slug?: string[] }>;
