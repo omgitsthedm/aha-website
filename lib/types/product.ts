@@ -146,6 +146,18 @@ export interface AhaVariant {
    */
   apliiqCostBasis?: "standard" | "vip";
   /**
+   * A knowing exception to the margin floor for THIS variant.
+   *
+   * The 35% floor is AHA's own rule, not a law, and a merchant may legitimately
+   * choose to run an anchor product thin. What must never happen is the floor
+   * being quietly lowered for the whole catalog to let one product through, so
+   * the exception is per-variant, carries a required reason, and is visible in
+   * margin-check output rather than silent.
+   *
+   * `minRatio` still floors at zero: this permits a thin margin, never a loss.
+   */
+  marginFloorOverride?: { minRatio: number; reason: string; approvedAt: string };
+  /**
    * Shipped weight in ounces (2dp). Addresses the irregular APLIIQ rate ladder,
    * whose tier ceilings (7.9, 11.9 … 143.99, 159.84) are not whole ounces.
    */

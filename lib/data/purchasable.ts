@@ -64,8 +64,25 @@ export function checkVariantPurchasable(
         reasons.push(...landed.reasons);
       } else if (variant.marginEstimate !== landed.landed.margin.contributionMargin) {
         reasons.push(`APLIIQ margin does not match landed cost (expected ${landed.landed.margin.contributionMargin})`);
-      } else if (landed.landed.margin.contributionMarginRatio < MIN_PRODUCT_MARGIN_RATIO) {
-        reasons.push(`landed-cost margin below ${MIN_MARGIN_PERCENT}% floor`);
+      } else {
+        // A variant may carry a reasoned, per-variant exception. The global floor
+        // is never lowered to admit one product — see marginFloorOverride on
+        // AhaVariant. The exception can permit a thin margin, never a loss.
+        const override = variant.marginFloorOverride;
+        const floor = override ? Math.max(0, override.minRatio) : MIN_PRODUCT_MARGIN_RATIO;
+        const ratio = landed.landed.margin.contributionMarginRatio;
+        // Diagnose a loss as a loss. Checked BEFORE the floor because
+        // "margin -78.0% below the 0% override floor" sends an operator hunting
+        // for a threshold when the actual problem is that the garment costs
+        // more than it sells for. An override permits a thin margin; nothing
+        // permits selling below cost.
+        if (landed.landed.margin.contributionMargin <= 0) {
+          reasons.push("landed cost exceeds retail price");
+        } else if (ratio < floor) {
+          reasons.push(override
+            ? `landed-cost margin ${(ratio * 100).toFixed(1)}% below the ${(floor * 100).toFixed(0)}% override floor (${override.reason})`
+            : `landed-cost margin below ${MIN_MARGIN_PERCENT}% floor`);
+        }
       }
     }
     if ((variant.apliiqRegionAvailability?.length ?? 0) === 0) reasons.push("missing APLIIQ region availability");

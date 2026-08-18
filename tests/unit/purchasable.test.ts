@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import { modelDestinationTaxCents } from "@/lib/commerce/margin";
+import { resolveApliiqLandedCost } from "@/lib/commerce/landed-cost";
 import type { AhaProduct, AhaVariant } from "@/lib/types/product";
 
 function fullyMappedVariant(overrides: Partial<AhaVariant> = {}): AhaVariant {
@@ -182,5 +183,73 @@ describe("checkVariantPurchasable", () => {
     const v = approvedApliiqVariant({ weightOz: 600 });
     const p = activeProduct({ variants: [v] });
     expect(checkVariantPurchasable(p, v).reasons.join(" ")).toContain("no shipping rate above 479.84 oz");
+  });
+});
+
+describe("marginFloorOverride — a knowing, per-variant exception", () => {
+  // David's call: IND4000 hoodie stays at $60. Item $36.94 + $2.50 private
+  // label, 16 oz. That lands at ~9.5% — under the 35% floor, but $5.72 profit
+  // a unit, so it is thin rather than a loss.
+  function hoodie(overrides: Partial<AhaVariant> = {}): AhaVariant {
+    return fullyMappedVariant({
+      fulfillmentProvider: "apliiq",
+      retailPrice: 6000,
+      costEstimate: 3944,
+      apliiqItemCost: 3944,
+      weightOz: 16,
+      apliiqSku: "APQ-1998244S7A1",
+      apliiqDecorationSnapshot: { front: { art: "a" } },
+      apliiqPrivateLabelSnapshot: { neckLabel: { art: "l" } },
+      apliiqRegionAvailability: ["US"],
+      apliiqSizeGuideReference: "sg-hoodie",
+      apliiqMappingApproval: "approved",
+      apliiqSampleApproval: "approved",
+      squareMappingStatus: "active",
+      costVerifiedAt: "2026-08-18T00:00:00.000Z",
+      marginVerifiedAt: "2026-08-18T00:00:00.000Z",
+      ...overrides,
+    });
+  }
+  const product = activeProduct({ productType: "hoodie", retailPrice: 6000 });
+
+  function marginOf(v: AhaVariant): number {
+    const landed = resolveApliiqLandedCost(v);
+    if (!landed.ok) throw new Error(landed.reasons.join("; "));
+    return landed.landed.margin.contributionMargin;
+  }
+
+  it("refuses the sub-floor margin when no override is present", () => {
+    const v = hoodie();
+    const reasons = checkVariantPurchasable(product, { ...v, marginEstimate: marginOf(v) }).reasons;
+    expect(reasons.some((r) => r.includes("below") && r.includes("floor"))).toBe(true);
+  });
+
+  it("admits it when the override names a floor and a reason", () => {
+    const v = hoodie({
+      marginFloorOverride: { minRatio: 0.09, reason: "anchor hoodie, merchant-approved 2026-08-18", approvedAt: "2026-08-18" },
+    });
+    const res = checkVariantPurchasable(product, { ...v, marginEstimate: marginOf(v) });
+    expect(res.reasons.filter((r) => r.includes("floor"))).toEqual([]);
+  });
+
+  it("still refuses when the override floor is set above the real margin", () => {
+    const v = hoodie({
+      marginFloorOverride: { minRatio: 0.25, reason: "too optimistic", approvedAt: "2026-08-18" },
+    });
+    const reasons = checkVariantPurchasable(product, { ...v, marginEstimate: marginOf(v) }).reasons;
+    // The message must name the override, so nobody hunts for a global floor
+    // that was never the thing rejecting it.
+    expect(reasons.some((r) => r.includes("override floor") && r.includes("too optimistic"))).toBe(true);
+  });
+
+  it("permits a thin margin but never a loss, even at a zero floor", () => {
+    // Retail below landed cost: a 0 floor must not read as permission to sell
+    // at a loss.
+    const v = hoodie({
+      retailPrice: 3000,
+      marginFloorOverride: { minRatio: 0, reason: "loss leader", approvedAt: "2026-08-18" },
+    });
+    const reasons = checkVariantPurchasable(product, { ...v, marginEstimate: marginOf(v) }).reasons;
+    expect(reasons).toContain("landed cost exceeds retail price");
   });
 });

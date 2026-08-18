@@ -26,6 +26,7 @@ export type ApliiqMapEntry = Pick<AhaVariant,
   | "apliiqFulfillmentFeeCents"
   | "apliiqDestinationTaxCents"
   | "apliiqCostBasis"
+  | "marginFloorOverride"
 >;
 
 export interface ApliiqMapDocument {
@@ -38,7 +39,7 @@ const ALLOWED_ENTRY_FIELDS = new Set<keyof ApliiqMapEntry>([
   "apliiqSizeGuideReference", "apliiqMappingApproval", "apliiqSampleApproval",
   "squareMappingStatus", "costEstimate", "marginEstimate", "costVerifiedAt", "marginVerifiedAt",
   "weightOz", "apliiqItemCost", "apliiqShippingCost", "apliiqFulfillmentFeeCents",
-  "apliiqDestinationTaxCents", "apliiqCostBasis",
+  "apliiqDestinationTaxCents", "apliiqCostBasis", "marginFloorOverride",
 ]);
 
 /**
@@ -49,6 +50,23 @@ function costBasis(value: unknown, path: string): "standard" | "vip" | undefined
   if (value === undefined) return undefined;
   if (value !== "standard" && value !== "vip") fail(path, 'must be "standard" or "vip"');
   return value;
+}
+
+/**
+ * A per-variant margin-floor exception. Every field is required: an override
+ * without a reason is how a temporary exception becomes permanent folklore.
+ * A negative floor is refused — this permits a thin margin, never a loss.
+ */
+function marginFloorOverride(value: unknown, path: string) {
+  if (value === undefined) return undefined;
+  if (!isRecord(value)) fail(path, "must be an object");
+  const minRatio = value.minRatio;
+  if (typeof minRatio !== "number" || !Number.isFinite(minRatio) || minRatio < 0 || minRatio > 1) {
+    fail(`${path}.minRatio`, "must be a number between 0 and 1");
+  }
+  const reason = requiredString(value.reason, `${path}.reason`);
+  const approvedAt = requiredString(value.approvedAt, `${path}.approvedAt`);
+  return { minRatio, reason, approvedAt };
 }
 
 function fail(path: string, message: string): never {
@@ -225,6 +243,7 @@ function parseEntry(value: unknown, path: string): ApliiqMapEntry {
     apliiqFulfillmentFeeCents: optionalCents(value.apliiqFulfillmentFeeCents, `${path}.apliiqFulfillmentFeeCents`),
     apliiqDestinationTaxCents: optionalCents(value.apliiqDestinationTaxCents, `${path}.apliiqDestinationTaxCents`),
     apliiqCostBasis: costBasis(value.apliiqCostBasis, `${path}.apliiqCostBasis`),
+    marginFloorOverride: marginFloorOverride(value.marginFloorOverride, `${path}.marginFloorOverride`),
   };
 }
 
