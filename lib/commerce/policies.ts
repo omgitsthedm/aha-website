@@ -33,7 +33,38 @@ export const TAX_LINE_COPY =
  * within the cart's own unit limit, so this stays visible rather than silent.
  */
 export const DOMESTIC_COUNTRY = "US";
-export const INTERNATIONAL_COUNTRIES = ["CA", "GB", "AU"] as const;
+/**
+ * Every country the storefront will ship to besides the US.
+ *
+ * Expanded 2026-08-17 to the markets David named — Canada, the UK, Europe,
+ * Turkey and Japan — plus Australia, which was already enabled. Australia is not
+ * in his stated market list but is left in place; removing a country a customer
+ * could previously order from is a separate decision.
+ *
+ * Every entry here was verified to resolve a real freight rate against
+ * data/apliiq-shipping-rates.json before being added. Never add a country
+ * without that check: getApliiqInternationalShippingCents throws
+ * unmodelled_destination for anything absent, which surfaces to the customer as
+ * a failed quote at checkout.
+ *
+ * Shipping is DDU (see the international block in the rate table). The customer
+ * pays import VAT and duties on delivery, and for EU destinations that means a
+ * carrier handling fee on top. AHA is not IOSS-registered, so EU buyers WILL be
+ * charged at the door — that must be stated plainly on the shipping page before
+ * these markets are advertised.
+ */
+export const INTERNATIONAL_COUNTRIES = [
+  // North America
+  "CA",
+  // UK and Ireland
+  "GB", "IE",
+  // EU
+  "DE", "FR", "IT", "ES", "NL", "BE", "AT", "PT", "SE", "DK", "FI", "PL", "CZ", "GR",
+  // Non-EU Europe
+  "CH", "NO",
+  // Rest of world
+  "TR", "JP", "AU",
+] as const;
 export const SHIPPING_COUNTRIES = [DOMESTIC_COUNTRY, ...INTERNATIONAL_COUNTRIES] as const;
 export const INTERNATIONAL_SHIPPING_CENTS = 2500;
 export const INTERNATIONAL_SHIPPING_LABEL = "International shipping";

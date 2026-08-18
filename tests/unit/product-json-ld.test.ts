@@ -1,4 +1,4 @@
-import { INTERNATIONAL_SHIPPING_CENTS } from "@/lib/commerce/policies";
+import { INTERNATIONAL_SHIPPING_CENTS, SHIPPING_COUNTRIES } from "@/lib/commerce/policies";
 import { describe, expect, it } from "vitest";
 import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
@@ -74,19 +74,26 @@ describe("ProductJsonLd", () => {
 
     expect(data.offers).toHaveLength(2);
     for (const offer of data.offers) {
-      expect(offer.shippingDetails).toHaveLength(4);
+      expect(offer.shippingDetails).toHaveLength(SHIPPING_COUNTRIES.length);
       expect(
         offer.shippingDetails.map((details) => ({
           country: details.shippingDestination.addressCountry,
           rate: details.shippingRate.value,
           currency: details.shippingRate.currency,
         })),
-      ).toEqual([
-        { country: "US", rate: 0, currency: "USD" },
-        { country: "CA", rate: INTERNATIONAL_SHIPPING_CENTS / 100, currency: "USD" },
-        { country: "GB", rate: INTERNATIONAL_SHIPPING_CENTS / 100, currency: "USD" },
-        { country: "AU", rate: INTERNATIONAL_SHIPPING_CENTS / 100, currency: "USD" },
-      ]);
+      // Derived from the shipping list, not a fixed set: the list grew 3 -> 22
+      // on 2026-08-17 and an enumerated expectation would have to be rewritten
+      // every time a market opens. What must hold is the RULE — US free,
+      // everywhere else the flat rate, one entry per shippable country, in the
+      // declared order.
+      ).toEqual(
+        SHIPPING_COUNTRIES.map((country) => ({
+          country,
+          rate: country === "US" ? 0 : INTERNATIONAL_SHIPPING_CENTS / 100,
+          currency: "USD",
+        })),
+      );
+      expect(offer.shippingDetails).toHaveLength(SHIPPING_COUNTRIES.length);
       expect(offer.shippingDetails[0].deliveryTime).toEqual({
         "@type": "ShippingDeliveryTime",
         handlingTime: {
@@ -103,7 +110,7 @@ describe("ProductJsonLd", () => {
         },
       });
       expect(offer.hasMerchantReturnPolicy).toMatchObject({
-        applicableCountry: ["US", "CA", "GB", "AU"],
+        applicableCountry: [...SHIPPING_COUNTRIES],
         returnPolicyCategory:
           "https://schema.org/MerchantReturnFiniteReturnWindow",
         merchantReturnDays: 30,
