@@ -12,7 +12,8 @@ import { getProductReviews } from "@/lib/commerce/reviews";
 import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 import { ORIGIN_CLAIM_CLAUSE, SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 import { swatchHex } from "@/lib/data/color-swatches";
-import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
+import { isSellableProvider, isStorefrontPublic } from "@/lib/commerce/catalog-policy";
+import { checkVariantPurchasable } from "@/lib/data/purchasable";
 
 export const revalidate = 300;
 // dynamicParams=false: only slugs present in generateStaticParams (every product
@@ -32,7 +33,15 @@ export const dynamicParams = false;
 export function generateStaticParams() {
   if (!isStorefrontPublic()) return [];
   try {
-    return loadProducts().map((p) => ({ slug: p.slug }));
+    // Only products with at least one SELLABLE variant. Mapping the whole
+    // manifest here published every retired product as a real 200 page —
+    // verified on the deploy preview, /product/dont-fuck-fascists-shirt served
+    // fine. dynamicParams=false means this list IS the set of live PDPs, so the
+    // provider filter has to be applied here and not only in the grid.
+    return loadProducts()
+      .filter((p) => p.variants.some((v) =>
+        isSellableProvider(v.fulfillmentProvider) && checkVariantPurchasable(p, v).ok))
+      .map((p) => ({ slug: p.slug }));
   } catch {
     return [];
   }

@@ -138,3 +138,28 @@ describe("legacy catalog migration hold", () => {
     expect(metadata.alternates?.canonical).toBe("/shop");
   });
 });
+
+describe("REGRESSION: no legacy product may be published as a live page", () => {
+  it("publishes a PDP only for a product with a sellable variant", async () => {
+    // Found on the deploy preview 2026-08-18: swapping the route gate to
+    // isStorefrontPublic() made generateStaticParams map the WHOLE manifest, so
+    // /product/dont-fuck-fascists-shirt served HTTP 200 — a withdrawn product,
+    // live, with archived Square items behind it. dynamicParams=false means that
+    // list IS the set of published pages, so the provider filter must be applied
+    // there and not only in the grid.
+    vi.doUnmock("@/lib/data/products");
+    vi.resetModules();
+    const [{ loadProducts: realLoad }, { checkVariantPurchasable }, { isSellableProvider }] = await Promise.all([
+      import("@/lib/data/products"),
+      import("@/lib/data/purchasable"),
+      import("@/lib/commerce/catalog-policy"),
+    ]);
+
+    const published = realLoad().filter((p) =>
+      p.variants.some((v) => isSellableProvider(v.fulfillmentProvider) && checkVariantPurchasable(p, v).ok));
+
+    expect(published.length).toBeGreaterThan(0);
+    for (const p of published) expect(p.variants.some((v) => v.fulfillmentProvider === "apliiq")).toBe(true);
+    expect(published.map((p) => p.slug)).not.toContain("dont-fuck-fascists-shirt");
+  });
+});
