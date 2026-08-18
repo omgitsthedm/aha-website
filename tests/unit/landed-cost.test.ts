@@ -118,16 +118,50 @@ describe("resolveApliiqLandedCost", () => {
   });
 
   it("warns, without blocking, when an offered country has no verified freight zone", () => {
-    const landed = landedOf({ apliiqRegionAvailability: ["US", "CA", "GB"] });
-    expect(landed.warnings).toHaveLength(2);
-    expect(landed.warnings[0]).toContain("international freight to CA is not modelled");
-    expect(landed.warnings[1]).toContain("GB");
+    // AQ is genuinely absent from the APLIIQ sheet. CA and GB became modelled on
+    // 2026-08-17 when the merchant-supplied rate sheet was imported, so they can
+    // no longer stand in for an unmodelled destination.
+    const landed = landedOf({ apliiqRegionAvailability: ["US", "AQ"] });
+    expect(landed.warnings).toHaveLength(1);
+    expect(landed.warnings[0]).toContain("international freight to AQ is not modelled");
     // An unmodelled zone is a MISSING RATE, not a demonstrated loss, so it must
     // not land in the array a build gate fails on.
     expect(landed.underwaterInternationalDestinations).toEqual([]);
-    expect(landed.internationalCoverage.map((entry) => entry.exposure)).toEqual(["unmodelled", "unmodelled"]);
+    expect(landed.internationalCoverage.map((entry) => entry.exposure)).toEqual(["unmodelled"]);
     // The margin itself is still gated on domestic freight only.
     expect(landed.freightCents).toBe(596);
+  });
+
+  it("surfaces the real exposure ceiling for modelled destinations", () => {
+    // Sourced sheet 2026-08-11 at a 7.9 oz unit against the 2000c flat charge:
+    // the flat rate covers a small basket to CA and GB but stops covering well
+    // inside the 20-per-line cart limit, which is the exposure that matters.
+    const landed = landedOf({ apliiqRegionAvailability: ["US", "CA", "GB"] });
+    const byCountry = Object.fromEntries(landed.internationalCoverage.map((e) => [e.countryCode, e]));
+
+    // A variant carries no basket size, so unitsPerOrder / orderWeightOz stay
+    // null by design. The exposure ceiling is still reported — that is the whole
+    // point of breakEvenUnitsPerOrder being a first-class field rather than
+    // something only computed when a basket is supplied.
+    expect(byCountry.CA).toMatchObject({
+      modelled: true,
+      unitsPerOrder: null,
+      modelledOrderFreightCents: null,
+      breakEvenUnitsPerOrder: 4,
+      exposure: "uncovered_within_cart_limit",
+    });
+    expect(byCountry.GB).toMatchObject({
+      modelled: true,
+      breakEvenUnitsPerOrder: 2,
+      exposure: "uncovered_within_cart_limit",
+    });
+    // The ceiling must be in the warning text an operator actually reads.
+    expect(byCountry.GB.warnings[0]).toContain("covers at most 2 unit(s) to GB");
+
+    // Domestic freight is still what gates the margin.
+    expect(landed.freightCents).toBe(596);
+    // Both are priced, so neither is "unmodelled" any more.
+    expect(landed.internationalCoverage.every((e) => e.exposure !== "unmodelled")).toBe(true);
   });
 
   it("REGRESSION: reports the 4-unit basket the two-unit basis came back silent about", () => {

@@ -56,9 +56,22 @@ describe("APLIIQ shipping rate table", () => {
     expect(getApliiqFulfillmentFeeCentsPerUnit()).toBe(APLIIQ_FULFILLMENT_FEE_CENTS_DEFAULT);
   });
 
-  it("ships no invented international rates", () => {
-    expect(loadApliiqShippingRates().international.zones).toEqual([]);
-    expect(findApliiqInternationalZone("CA")).toBeUndefined();
+  it("ships only sourced international rates, never an invented or zero one", () => {
+    const { zones } = loadApliiqShippingRates().international;
+    // Populated 2026-08-17 from the merchant-supplied APLIIQ sheet
+    // 2026-08-11_ShippingRates.csv. Before that this asserted an empty list,
+    // because inventing a rate is worse than refusing to quote one.
+    expect(zones.length).toBeGreaterThan(200);
+    expect(findApliiqInternationalZone("CA")).toBeDefined();
+
+    // A $0.00 row in the source means APLIIQ has no service at that weight, not
+    // free shipping. Those rows are dropped at import; none may survive here.
+    for (const zone of zones) {
+      for (const tier of zone.tiers) {
+        expect(tier.rateCents).toBeGreaterThan(0);
+        expect(Number.isInteger(tier.rateCents)).toBe(true);
+      }
+    }
   });
 });
 
@@ -127,14 +140,30 @@ describe("irregular-tier lookup", () => {
 
 describe("international freight", () => {
   it("refuses to quote a destination with no verified zone", () => {
+    // AQ (Antarctica) is genuinely absent from the APLIIQ sheet. CA and GB are
+    // now modelled, so they can no longer stand in for an unmodelled country.
     try {
-      getApliiqInternationalShippingCents("CA", 7.9);
+      getApliiqInternationalShippingCents("AQ", 7.9);
       expect.unreachable("an unmodelled destination must not resolve to a rate");
     } catch (error) {
       expect((error as ApliiqShippingRateError).kind).toBe("unmodelled_destination");
-      expect((error as Error).message).toContain("CA");
+      expect((error as Error).message).toContain("AQ");
     }
-    expect(() => getApliiqShippingCents("GB", 7.9)).toThrow(ApliiqShippingRateError);
+  });
+
+  it("quotes a modelled destination from the sourced ladder", () => {
+    expect(getApliiqInternationalShippingCents("GB", 7.9)).toBe(1489);
+    expect(getApliiqShippingCents("GB", 7.9)).toBe(1489);
+  });
+
+  it("tolerates a carrier service break where a heavier tier is cheaper", () => {
+    // Austria: 70.4 oz = $74.84, then 80.0 oz = $56.05. Real APLIIQ pricing —
+    // a different service takes over. The parser must not reject it.
+    const at = findApliiqInternationalZone("AT");
+    expect(at).toBeDefined();
+    const heavier = at!.tiers.find((t) => t.maxWeightOz === 80);
+    const lighter = at!.tiers.find((t) => t.maxWeightOz === 70.4);
+    expect(heavier!.rateCents).toBeLessThan(lighter!.rateCents);
   });
 
   it("routes a US destination to the domestic ladder", () => {
@@ -176,10 +205,11 @@ describe("international flat-rate coverage", () => {
     expect(Number(declared![1])).toBe(FLAT_RATE_MAX_UNITS_PER_ORDER);
   });
 
-  it("reports the flat charge as unverified while the committed zone list is empty", () => {
-    const coverage = checkInternationalFlatRateCoverage("CA", { unitWeightOz: TEE_OZ, unitsPerOrder: 2 });
+  it("reports an unmodelled destination as unknown, never as covered", () => {
+    // AQ is genuinely absent from the APLIIQ sheet.
+    const coverage = checkInternationalFlatRateCoverage("AQ", { unitWeightOz: TEE_OZ, unitsPerOrder: 2 });
     expect(coverage).toMatchObject({
-      countryCode: "CA",
+      countryCode: "AQ",
       modelled: false,
       exposure: "unmodelled",
       unitsPerOrder: 2,
@@ -192,8 +222,38 @@ describe("international flat-rate coverage", () => {
       coveredAtUnitsPerOrder: null,
     });
     expect(coverage.warnings).toHaveLength(1);
-    expect(coverage.warnings[0]).toContain("international freight to CA is not modelled");
+    expect(coverage.warnings[0]).toContain("international freight to AQ is not modelled");
     expect(isInternationalFlatRateUnderwater(coverage)).toBe(false);
+  });
+
+  it("prices a modelled destination and exposes the real break-even unit count", () => {
+    // Canada, sourced sheet 2026-08-11: 15.8 oz = 1395c against a 2000c flat
+    // charge, so this basket is covered — but the cart allows 20 per line and
+    // the charge stops covering at 5 units. The exposure ceiling must be visible
+    // even though this particular basket is fine.
+    const coverage = checkInternationalFlatRateCoverage("CA", { unitWeightOz: TEE_OZ, unitsPerOrder: 2 });
+    expect(coverage).toMatchObject({
+      countryCode: "CA",
+      modelled: true,
+      unitsPerOrder: 2,
+      orderWeightOz: 15.8,
+      modelledOrderFreightCents: 1395,
+      coveredAtUnitsPerOrder: true,
+      breakEvenUnitsPerOrder: 4,
+      exposure: "uncovered_within_cart_limit",
+    });
+    expect(coverage.warnings[0]).toContain("covers at most 4 unit(s) to CA");
+  });
+
+  it("flags a destination whose freight beats the flat charge on the very first unit", () => {
+    // Japan, 3 tees: 4011c freight against 2000c collected. The single worst
+    // international case found in the sheet at apparel weights.
+    const coverage = checkInternationalFlatRateCoverage("JP", { unitWeightOz: TEE_OZ, unitsPerOrder: 3 });
+    expect(coverage.modelled).toBe(true);
+    expect(coverage.modelledOrderFreightCents).toBe(4011);
+    expect(coverage.coveredAtUnitsPerOrder).toBe(false);
+    expect(coverage.breakEvenUnitsPerOrder).toBe(1);
+    expect(isInternationalFlatRateUnderwater(coverage)).toBe(true);
   });
 
   it("REGRESSION: reports the underwater 4-unit basket the 2-unit basis stayed silent about", () => {

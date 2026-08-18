@@ -78,12 +78,30 @@ function nonEmptyString(value: unknown, path: string): string {
 }
 
 /**
- * A tier table is only usable if it is strictly increasing in weight and
- * non-decreasing in price. A table that fails either check would make the
- * "first tier at or above the weight" search return a wrong or arbitrary row,
- * so this refuses to load rather than quietly mis-price freight.
+ * A tier table must be strictly increasing in WEIGHT — the "first tier at or
+ * above the weight" search depends on it, and a table that breaks it would
+ * return an arbitrary row.
+ *
+ * Price is a different matter. APLIIQ's international rates are NOT monotonic in
+ * weight: in 31 of 213 destinations a heavier tier is CHEAPER because a different
+ * carrier service takes over at a weight break (Austria 70.4oz = $74.84 then
+ * 80.0oz = $56.05; Brazil breaks at 80oz and again at 1072oz). Verified against
+ * the merchant-supplied 2026-08-11 rate sheet. Rejecting those would discard real
+ * pricing, so `allowServiceBreaks` opts international out of the price check.
+ *
+ * The domestic US ladder IS monotonic and stays strict — a cheaper-heavier US
+ * tier really would indicate a corrupt table.
+ *
+ * Consequence for anything estimating a WORST CASE across a weight RANGE: you
+ * must take the max rate over the tiers spanned, not the rate at the heaviest
+ * point, because the heaviest point can be cheaper than one in the middle. Use
+ * `maxTierRateUpToWeight`.
  */
-function parseTiers(value: unknown, path: string): ApliiqShippingTier[] {
+function parseTiers(
+  value: unknown,
+  path: string,
+  options: { allowServiceBreaks?: boolean } = {}
+): ApliiqShippingTier[] {
   if (!Array.isArray(value) || value.length === 0) fail(path, "must be a nonempty tier array");
   const tiers = value.map((entry, index) => {
     const tierPath = `${path}[${index}]`;
@@ -97,7 +115,7 @@ function parseTiers(value: unknown, path: string): ApliiqShippingTier[] {
     if (tiers[index].maxWeightOz <= tiers[index - 1].maxWeightOz) {
       fail(`${path}[${index}].maxWeightOz`, "must be strictly greater than the previous tier ceiling");
     }
-    if (tiers[index].rateCents < tiers[index - 1].rateCents) {
+    if (!options.allowServiceBreaks && tiers[index].rateCents < tiers[index - 1].rateCents) {
       fail(`${path}[${index}].rateCents`, "must not be cheaper than a lighter tier");
     }
   }
@@ -133,7 +151,8 @@ export function parseApliiqShippingRateTable(value: unknown): ApliiqShippingRate
     return {
       zone: nonEmptyString(entry.zone, `${zonePath}.zone`),
       countries,
-      tiers: parseTiers(entry.tiers, `${zonePath}.tiers`),
+      // International only: real carrier service breaks make heavier cheaper.
+      tiers: parseTiers(entry.tiers, `${zonePath}.tiers`, { allowServiceBreaks: true }),
     };
   });
 
