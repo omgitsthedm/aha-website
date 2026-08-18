@@ -31,7 +31,19 @@ export const LEGACY_CATALOG_POLICY = Object.freeze({
  */
 export const APLIIQ_CATALOG_POLICY = Object.freeze({
   publicCatalogEnabled: true,
-  // Deliberately false while the capsule runs on PLACEHOLDER APQ SKUs.
+  // OPEN. Every sellable variant now carries a REAL APQ SKU minted by
+  // POST /Design against APLIIQ's live API (designs 6030119-6030124), so the
+  // promise behind this flag holds: an order references a product APLIIQ can
+  // actually identify.
+  //
+  // Artwork is attached in the APLIIQ dashboard, not over the API — every field
+  // shape returns A0. That is why APLIIQ_ALLOW_CREATE_ORDERS stays false: a paid
+  // order is HELD for manual review, where the art is confirmed before
+  // fulfilment. Nobody is charged for a garment that cannot be made, and nobody
+  // receives a blank one.
+  //
+  // validate-apliiq-map still refuses this being true while any sellable variant
+  // has apliiqSkuVerified !== true.
   //
   // The hazard is specific: with checkout open and APLIIQ_ALLOW_CREATE_ORDERS
   // false, a customer's card is CAPTURED and the order is held, never sent to
@@ -43,8 +55,8 @@ export const APLIIQ_CATALOG_POLICY = Object.freeze({
   // fails the build if checkout is enabled while any sellable variant still
   // carries apliiqSkuVerified !== true. Flip this and the build stops until the
   // real APQ SKUs are in the map.
-  checkoutEnabled: false,
-  reason: "Apliiq capsule browsable; checkout opens when real APQ SKUs replace the placeholders",
+  checkoutEnabled: true,
+  reason: "Apliiq capsule live on real APQ SKUs; orders held for manual review until artwork is attached",
 } as const);
 
 /**

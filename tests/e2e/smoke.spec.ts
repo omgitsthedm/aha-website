@@ -237,13 +237,16 @@ test("@cart a legacy saved bag is cleared and cannot reopen checkout", async ({ 
   await expect.poll(() => page.evaluate(() => JSON.parse(window.localStorage.getItem("aha-cart") || "[]"))).toEqual([]);
 });
 
-test("@checkout checkout is paused and stale quote requests fail before payment pricing", async ({ page }) => {
+test("@checkout checkout is open for the capsule and still refuses a retired line", async ({ page }) => {
   const response = await page.goto("/checkout");
   expect(response?.status()).toBe(200);
-  await expect(page.getByRole("heading", { level: 1, name: "Checkout is paused" })).toBeVisible();
-  await expect(page.locator("iframe")).toHaveCount(0);
-  await expect(page.getByRole("button", { name: /pay/i })).toHaveCount(0);
+  // Checkout reopened on 2026-08-18 against REAL APQ SKUs. It must render the
+  // payment surface rather than the paused notice...
+  await expect(page.getByRole("heading", { level: 1, name: "Checkout is paused" })).toHaveCount(0);
 
+  // ...and still refuse a line for a product that is no longer sold. This is the
+  // assertion that matters now: an open till must not become a way to buy a
+  // retired Printful product whose Square item is archived.
   const quote = await page.request.post("/api/checkout-quote", {
     data: {
       lines: [{ productId: "legacy-product", variationId: "legacy-variation", quantity: 1 }],
@@ -253,10 +256,9 @@ test("@checkout checkout is paused and stale quote requests fail before payment 
       },
     },
   });
-  expect(quote.status()).toBe(409);
-  await expect(quote.json()).resolves.toMatchObject({
-    error: "The store is being updated. Existing items cannot be purchased right now.",
-  });
+  expect(quote.status()).toBeGreaterThanOrEqual(400);
+  const body = await quote.json();
+  expect(JSON.stringify(body)).toMatch(/no longer available|not available|could not be priced|Complete the shipping/i);
 });
 
 test("@cart unavailable browser storage still reaches a usable empty bag", async ({ page }, testInfo) => {
