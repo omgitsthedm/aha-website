@@ -48,6 +48,13 @@ const CATEGORY_DESCRIPTIONS: Record<CategorySlug, string> = {
     "Jackets and coats are not in the After Hours Agenda catalog yet. Browse the hoodies, sweatshirts, and knitwear After Hours Agenda prints to order.",
 };
 
+// Prerender the index and every category path (ISR, `revalidate` above). Without
+// this the optional catch-all is rendered on demand and the CDN bypasses its
+// cache, so every visit paid a server render + Square round-trip before LCP.
+export function generateStaticParams() {
+  return [{ slug: [] }, ...CATEGORIES.map((category) => ({ slug: [category.slug] }))];
+}
+
 export async function generateMetadata({ params }: MenPageProps): Promise<Metadata> {
   const { slug } = await params;
   if (!isStorefrontPublic()) return catalogMigrationMetadata(slug?.length ? `${BASE_PATH}/${slug.join("/")}` : BASE_PATH);
