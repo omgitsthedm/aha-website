@@ -50,7 +50,7 @@ export default async function HomePage() {
               priority={panel.priority}
               fetchPriority={panel.priority ? "high" : "auto"}
               sizes="(max-width: 1024px) 100vw, 50vw"
-              quality={72}
+              quality={panel.priority ? 58 : 66}
               className="object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.03]"
             />
             <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/40 to-transparent" aria-hidden="true" />
