@@ -266,13 +266,13 @@ function OpenCategoryShopContent({
             return (
               <div key={product.id} className="group">
                 <Link href={`/product/${product.slug}`} prefetch={false} className="block focus-visible:outline-offset-4">
-                  <div className="frame image-hover-zoom relative aspect-[4/5] overflow-hidden">
+                  <div className="image-hover-zoom relative aspect-[4/5] overflow-hidden bg-surface">
                     {image ? <ResilientImage src={image} alt={product.name} fill priority={index < 2} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                     {product.images[1] && <ResilientImage src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
                   </div>
                   <div className="py-3">
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="font-editorial text-xl leading-none text-cream group-hover:text-accent">{splitProductName(product.name).name}</h2>
+                      <h2 className="font-editorial text-lg leading-none text-cream group-hover:text-accent">{splitProductName(product.name).name}</h2>
                       <span className="font-mono text-xs font-bold text-cream">{product.priceFormatted}</span>
                     </div>
                     <div className="mt-1.5 flex items-center justify-between gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">

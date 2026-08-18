@@ -714,7 +714,6 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
    thing that reads. Pair with .image-hover-zoom for the slow reveal. */
 .frame {
   position: relative;
-  border: 1px solid color-mix(in srgb, var(--aha-line) 60%, transparent);
   background: var(--aha-surface);
 }
 

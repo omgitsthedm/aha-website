@@ -23,6 +23,8 @@ export interface EditorialImage {
 
 export interface BrandImagery {
   hero: EditorialImage;
+  /** The right hero panel: the person she buys for. */
+  gift: EditorialImage;
   maker: EditorialImage;
   categories: Record<string, EditorialImage>;
   lookbook: EditorialImage[];

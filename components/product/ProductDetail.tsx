@@ -112,7 +112,7 @@ function ProductIdentity({ as: Heading = "h1", product, reviews, price, classNam
       {splitProductName(product.name).garment && (
         <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted">{splitProductName(product.name).garment}</p>
       )}
-      <Heading {...headingRole} className="editorial-title max-w-2xl text-[clamp(2.25rem,5.5vw,5rem)] text-cream">{splitProductName(product.name).name}</Heading>
+      <Heading {...headingRole} className="editorial-title max-w-2xl text-[clamp(1.85rem,3.4vw,2.75rem)] text-cream">{splitProductName(product.name).name}</Heading>
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
         <p className="font-mono text-2xl font-bold text-cream">{price}</p>
         {reviews && reviews.count > 0 && (
