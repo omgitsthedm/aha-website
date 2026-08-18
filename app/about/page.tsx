@@ -46,7 +46,7 @@ export default function AboutPage() {
         <PageHeader eyebrow="About the label · Est. 2011" title="Made after hours" description="After Hours Agenda is an independent New York label. The name is literal: every graphic gets drawn when the day quiets down, then printed one at a time when you order it. This is the story so far." />
 
         <section aria-labelledby="maker-heading" className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-14">
-          <div className="fold-surface relative aspect-[16/10] overflow-hidden">
+          <div className="frame relative aspect-[16/10] overflow-hidden">
             <Image src={maker.src} alt={maker.alt} fill priority className="object-cover" sizes="(max-width: 1024px) 100vw, 55vw" />
           </div>
           <div>
@@ -57,7 +57,7 @@ export default function AboutPage() {
         </section>
 
         <section aria-labelledby="prologue-heading" className="mt-20 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-14">
-          <figure className="fold-surface relative aspect-[4/3] overflow-hidden bg-charcoal">
+          <figure className="frame relative aspect-[4/3] overflow-hidden bg-charcoal">
             <Image src={prologueImage.src} alt={prologueImage.alt} fill loading="lazy" className="object-cover" sizes="(max-width: 1024px) 100vw, 45vw" />
           </figure>
           <div>
@@ -95,7 +95,7 @@ export default function AboutPage() {
             <div className="flex snap-x gap-3 overflow-x-auto pb-3 md:grid md:grid-cols-4 md:gap-4 md:overflow-visible">
               {archiveStrip.map((item) => (
                 <figure key={item.src} className="w-56 shrink-0 snap-start md:w-auto">
-                  <div className="fold-surface relative aspect-[3/4] overflow-hidden bg-charcoal">
+                  <div className="frame relative aspect-[3/4] overflow-hidden bg-charcoal">
                     <Image src={item.src} alt={item.alt} fill loading="lazy" className="object-cover" sizes="(max-width: 768px) 60vw, 25vw" />
                   </div>
                   <figcaption className="mt-2 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-muted"><span className="text-accent">{item.year}</span> · {item.caption}</figcaption>
@@ -124,7 +124,7 @@ export default function AboutPage() {
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {signature.map((shot) => (
-                <div key={shot.src} className="fold-surface relative aspect-[4/5] overflow-hidden">
+                <div key={shot.src} className="frame relative aspect-[4/5] overflow-hidden">
                   <Image src={shot.src} alt={shot.alt} fill loading="lazy" className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
                 </div>
               ))}

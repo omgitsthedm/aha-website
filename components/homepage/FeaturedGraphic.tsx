@@ -13,7 +13,7 @@ export function FeaturedGraphic({ product, eyebrow, story }: { product: Product;
   return (
     <section aria-labelledby="spotlight-heading" className="mx-auto mt-20 max-w-[1280px] px-4 sm:px-6 lg:mt-28">
       <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
-        <Link href={`/product/${product.slug}`} className="fold-surface paper-lift image-hover-zoom group relative block aspect-square overflow-hidden">
+        <Link href={`/product/${product.slug}`} className="frame image-hover-zoom group relative block aspect-square overflow-hidden">
           {image && (
             <ResilientImage src={image} alt={product.name} fill className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} p-8 product-art`} sizes="(max-width: 1024px) 100vw, 50vw" />
           )}

@@ -65,6 +65,7 @@ module.exports = {
       },
       fontFamily: {
         display: ["var(--font-poppins)", "Arial", "sans-serif"],
+        editorial: ["var(--font-editorial)", "Georgia", "serif"],
         body: ["var(--font-poppins)", "Arial", "sans-serif"],
         mono: ["var(--font-jetbrains-mono)", "Menlo", "monospace"],
       },

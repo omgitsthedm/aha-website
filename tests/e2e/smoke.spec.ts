@@ -14,7 +14,7 @@ test("@catalog home renders the brand hero without retired shopping controls", a
   const response = await page.goto("/");
   expect(response?.status()).toBe(200);
   await expect(page).toHaveTitle(/After Hours Agenda \| New York/i);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("After Hours");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/after everyone else clocks out/i);
   // Rose browser chrome: light theme-color is the brand rose fill.
   await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')).toHaveAttribute("content", "#FF6B6B");
   // The capsule is live, so the home page carries shopping controls again. What

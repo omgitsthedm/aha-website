@@ -70,7 +70,7 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
     <section id="reviews" aria-labelledby="reviews-title" className="mt-16 scroll-mt-28 border-t border-border/40 pt-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 id="reviews-title" className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Reviews</h2>
+          <h2 id="reviews-title" className="font-editorial text-3xl text-cream">Reviews</h2>
           {summary.count > 0 ? (
             <p className="mt-2 flex items-center gap-2 text-sm font-bold text-cream">
               <Stars rating={summary.average} /> <span>{summary.average.toFixed(1)}</span>
