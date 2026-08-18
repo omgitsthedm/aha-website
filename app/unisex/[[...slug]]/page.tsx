@@ -40,10 +40,10 @@ export async function generateMetadata({ params }: UnisexPageProps): Promise<Met
 
   const title = category
     ? `Unisex ${category.name}`
-    : "Unisex Streetwear, Printed to Order";
+    : "Unisex, Made to Order";
   const description = category
     ? `${category.description} Shop made-to-order unisex ${category.name.toLowerCase()}.`
-    : "Unisex tees, hoodies, and sweatshirts from an independent NYC label. One cut, deep size runs, exact measurements listed on every product.";
+    : "Unisex tees, hoodies, and sweatshirts from After Hours Agenda. One cut, deep size runs, exact measurements listed on every product.";
 
   // A category we stock nothing in is a real URL with no product on it. Keep it
   // reachable but out of the index rather than letting a placeholder description

@@ -38,15 +38,15 @@ const BASE_PATH = "/men";
 // not. Rewrite the outerwear entry in the same commit that stocks the category.
 const CATEGORY_DESCRIPTIONS: Record<CategorySlug, string> = {
   "t-shirts":
-    "Men's graphic tees, staple shirts, and statement prints in ringspun cotton — unisex cuts, designed in NYC and printed when you order. Size guide on every page.",
+    "Men's graphic tees, staple shirts, and statement prints in ringspun cotton — unisex cuts, made to order. Size guide on every page.",
   "hoodies-sweatshirts":
-    "Men's layer-ready hoodies and heavyweight sweatshirts in cotton-poly fleece — unisex cuts, designed in NYC and printed when you order. Size guide on every page.",
+    "Men's layer-ready hoodies and heavyweight sweatshirts in cotton-poly fleece — unisex cuts, made to order. Size guide on every page.",
   "sweaters-knitwear":
-    "Men's crewnecks, cardigans, and knitted pieces in cotton-blend knit — unisex cuts, designed in NYC and made when you order. Full measurements on every page.",
+    "Men's crewnecks, cardigans, and knitted pieces in cotton-blend knit — unisex cuts, made to order. Full measurements on every page.",
   accessories:
-    "Hats, totes, socks, pins, and stickers in the men's edit from After Hours Agenda — small pieces that finish the fit, designed in NYC and made to order.",
+    "Hats, totes, socks, pins, and stickers in the men's edit from After Hours Agenda — small pieces that finish the fit, made to order and made to order.",
   outerwear:
-    "Jackets and coats are not in the After Hours Agenda catalog yet. Browse the hoodies, sweatshirts, and knitwear the independent NYC label prints to order.",
+    "Jackets and coats are not in the After Hours Agenda catalog yet. Browse the hoodies, sweatshirts, and knitwear After Hours Agenda prints to order.",
 };
 
 export async function generateMetadata({ params }: MenPageProps): Promise<Metadata> {
@@ -62,10 +62,10 @@ export async function generateMetadata({ params }: MenPageProps): Promise<Metada
 
   const title = category
     ? `${category.name} for Men`
-    : "Men's Graphic Tees & Hoodies NYC";
+    : "Men's Graphic Tees & Hoodies";
   const description = category
     ? CATEGORY_DESCRIPTIONS[category.slug]
-    : "Men's graphic tees, hoodies, sweatshirts, and knitwear in unisex cuts — designed in NYC, printed when you order. Size guide on every product page.";
+    : "Men's graphic tees, hoodies, sweatshirts, and knitwear in unisex cuts — made to order. Size guide on every product page.";
 
   // A category we stock nothing in is a real URL with no product on it. Keep it
   // reachable but out of the index rather than letting a placeholder description

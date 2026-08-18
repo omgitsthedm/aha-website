@@ -12,7 +12,7 @@ export const metadata = buildMetadata({
 export default function ShippingPage() {
   return (
     <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl">
-      <PageHeader eyebrow="Shipping" title="Shipping information" description={`${SHIPPING_CLAIM_SENTENCE} Every piece is printed to order — production takes ${PRODUCTION_WINDOW}, and delivery is ${DELIVERY_WINDOW}.`} />
+      <PageHeader eyebrow="Shipping" title="Shipping information" description={`${SHIPPING_CLAIM_SENTENCE} Every piece is made to order — production takes ${PRODUCTION_WINDOW}, and delivery is ${DELIVERY_WINDOW}.`} />
       <dl className="border-t border-border/40">
         <div className="grid gap-3 border-b border-border/40 py-7 md:grid-cols-[12rem_1fr]"><dt className="font-display text-xl font-bold uppercase">Rates</dt><dd className="text-sm leading-relaxed text-muted">{SHIPPING_CLAIM_SENTENCE} We ship to the US, Canada, the UK, Ireland, most of the EU, Switzerland, Norway, Türkiye, Japan and Australia. International orders ship DDU: any import VAT or duties are collected by the carrier on delivery.</dd></div>
         <div className="grid gap-3 border-b border-border/40 py-7 md:grid-cols-[12rem_1fr]"><dt className="font-display text-xl font-bold uppercase">Timing</dt><dd className="text-sm leading-relaxed text-muted">Production takes {PRODUCTION_WINDOW} because nothing is printed until you order it. Delivery is {DELIVERY_WINDOW}.</dd></div>

@@ -89,18 +89,20 @@ describe("origin claim constants", () => {
     }
   });
 
-  it("scopes the city to design and leaves production unlocated", () => {
+  it("names no city at all and states the way the piece is made", () => {
+    // The brand is not hung up on a place. The claim is made-to-order, full stop.
     for (const claim of [ORIGIN_CLAIM_SHORT, ORIGIN_CLAIM_CLAUSE, ORIGIN_CLAIM_SENTENCE]) {
-      expect(claim).toMatch(/designed in NYC/i);
+      expect(claim).not.toMatch(new RegExp(CITY, "i"));
+      expect(claim.toLowerCase()).toContain("made to order");
     }
-    expect(ORIGIN_CLAIM_CLAUSE).toContain("printed to order");
-    expect(ORIGIN_CLAIM_SENTENCE).toContain("printed to order");
+    expect(ORIGIN_CLAIM_CLAUSE).toContain("printed one at a time");
+    expect(ORIGIN_CLAIM_SENTENCE).toContain("printed one at a time");
   });
 
-  it("matches the voice already shipping in TrustStrip", () => {
-    // TrustStrip was the one surface that got this right. The constant exists so
-    // the other surfaces borrow that wording instead of inventing a new claim.
-    expect(read(TRUST_STRIP)).toContain(`"${ORIGIN_CLAIM_SHORT}"`);
+  it("is the wording TrustStrip shows", () => {
+    // TrustStrip reads the constant rather than restating it, so the two can
+    // never drift apart.
+    expect(read(TRUST_STRIP)).toContain("ORIGIN_CLAIM_SHORT");
   });
 });
 
@@ -149,12 +151,12 @@ describe("H10 print-location claims", () => {
     }
   });
 
-  it("splits the PDP brand story so the city cannot govern the printing", () => {
+  it("keeps the PDP brand story free of any print city", () => {
     const source = read(PRODUCT_DETAIL);
     const body = stripComments(source, false);
 
-    expect(body).toContain("drawn in New York, after the day quiets down.");
-    expect(body).toContain("Each piece is then printed to order, one at a time.");
+    expect(body).toContain("made to order, one at a time");
+    expect(body).not.toMatch(FALSE_ORIGIN_CLAIM);
     expect(body).not.toContain("in New York, then printed");
   });
 });

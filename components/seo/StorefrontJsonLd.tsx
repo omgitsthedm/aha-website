@@ -9,7 +9,7 @@ export function StorefrontJsonLd() {
         "@id": `${SITE_URL}/#store`,
         name: "After Hours Agenda",
         url: SITE_URL,
-        description: "Independent New York label. The next After Hours Agenda release is in development.",
+        description: "After Hours Agenda is a clothing brand for the dreamers and the doers — graphic tees, heavyweight hoods and crewnecks, made to order.",
         email: "info@afterhoursagenda.com",
         logo: `${SITE_URL}/brand/icons/icon-512.png`,
         sameAs: [

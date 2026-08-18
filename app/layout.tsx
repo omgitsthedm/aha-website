@@ -42,16 +42,16 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: "After Hours Agenda | New York Label",
+    default: "After Hours Agenda | For the dreamers and the doers",
     template: "%s | After Hours Agenda",
   },
-  description: "After Hours Agenda is an independent New York label. Graphic tees, heavyweight hoods and crewnecks, drawn after hours and printed one at a time when you order.",
+  description: "After Hours Agenda is a clothing brand for the dreamers and the doers — graphic tees, heavyweight hoods and crewnecks, made to order, one at a time.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com"
   ),
   openGraph: {
-    title: "After Hours Agenda | New York Label",
-    description: "Independent New York label. Graphic tees, heavyweight hoods and crewnecks, printed to order.",
+    title: "After Hours Agenda | For the dreamers and the doers",
+    description: "Graphic tees, heavyweight hoods and crewnecks, made to order — for you and the people you love.",
     type: "website",
     // Deliberately NO `url` here. Next only overwrites the keys a child segment
     // actually declares (`resolve-metadata.js` iterates `for (const key in
@@ -65,8 +65,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "After Hours Agenda | New York Label",
-    description: "Independent New York label. Graphic tees, heavyweight hoods and crewnecks, printed to order.",
+    title: "After Hours Agenda | For the dreamers and the doers",
+    description: "Graphic tees, heavyweight hoods and crewnecks, made to order — for you and the people you love.",
     images: ["/brand/og-image.png"],
   },
   // Installed-app polish: standalone window with the brand-rose chrome

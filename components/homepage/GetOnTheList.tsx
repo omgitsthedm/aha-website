@@ -5,8 +5,8 @@ export function GetOnTheList() {
     <section id="newsletter" className="relative z-[2] scroll-mt-28 px-4 py-16 md:px-6 md:py-24">
       <div className="reveal-block mx-auto grid max-w-5xl gap-8 border-t border-accent pt-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
         <div>
-          <h2 className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">What comes next</h2>
-          <p className="mt-4 max-w-md font-mono text-sm leading-relaxed text-muted">Next-release news and design notes by email.</p>
+          <h2 className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-bold uppercase leading-[0.82] tracking-[-0.055em]">Stay close</h2>
+          <p className="mt-4 max-w-md font-mono text-sm leading-relaxed text-muted">New pieces, the occasional note, and first word on releases.</p>
         </div>
 
         <NewsletterForm

@@ -46,8 +46,8 @@ export function SiteFooter() {
           <div className="flex flex-wrap items-end gap-6"><SheepMark className="w-20 text-cream" title="After Hours Agenda black sheep" /><p className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold uppercase leading-[0.9] tracking-[-0.05em]">After Hours Agenda</p></div>
           <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">
             {catalogIsPublic
-              ? "Expressive everyday clothing from New York. Tees, hoodies, sweatshirts, and accessories, printed to order. Questions? Email info@afterhoursagenda.com."
-              : "Independent New York label. The previous collection is archived while the next release is prepared. Questions? Email info@afterhoursagenda.com."}
+              ? "Clothing for the dreamers and the doers. Graphic tees, heavyweight hoods and crewnecks, made to order — one at a time, for you and the people you love. Questions? Email info@afterhoursagenda.com."
+              : "Clothing for the dreamers and the doers. Questions? Email info@afterhoursagenda.com."}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <a href="mailto:info@afterhoursagenda.com" className="btn-secondary">Email support</a>
@@ -67,7 +67,7 @@ export function SiteFooter() {
 
           <div className="mt-8 border-t border-border/40 pt-6">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Newsletter</p>
-            <p className="mt-2 max-w-sm text-sm text-muted">Release news and the occasional studio note. No spam, unsubscribe anytime.</p>
+            <p className="mt-2 max-w-sm text-sm text-muted">New pieces and the occasional note. No noise, unsubscribe anytime.</p>
             {/* Shared implementation — one submission path, one honeypot, one
                 validation rule set. The old inline form posted to /newsletter,
                 which bounced footer subscribers off whatever page they were on. */}

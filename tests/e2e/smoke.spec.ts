@@ -13,8 +13,8 @@ const CAPSULE_PDP_LINKS = [...SELLABLE_PRODUCT_SLUGS].map((slug) => `/product/${
 test("@catalog home renders the brand hero without retired shopping controls", async ({ page }) => {
   const response = await page.goto("/");
   expect(response?.status()).toBe(200);
-  await expect(page).toHaveTitle(/After Hours Agenda \| New York/i);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(/after everyone else clocks out/i);
+  await expect(page).toHaveTitle(/After Hours Agenda \| For the dreamers and the doers/i);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/dreamers and the doers/i);
   // Rose browser chrome: light theme-color is the brand rose fill.
   await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')).toHaveAttribute("content", "#FF6B6B");
   // The capsule is live, so the home page carries shopping controls again. What
@@ -404,7 +404,7 @@ test("@catalog shop serves capsule art and none of the deleted legacy imagery", 
 test("@brand manifesto page renders the flag and the signup", async ({ page }) => {
   const response = await page.goto("/manifesto");
   expect(response?.status()).toBe(200);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(/permission/i);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/dreamers/i);
   await expect(page.getByRole("link", { name: "Get the next release first" })).toBeVisible();
   await expect(page.locator('input[type="email"]').first()).toBeVisible();
 });

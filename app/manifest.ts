@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "After Hours Agenda",
     short_name: "After Hours",
-    description: "Independent New York label. The next release is in development.",
+    description: "Clothing for the dreamers and the doers. Made to order, one at a time.",
     id: "/",
     start_url: "/",
     scope: "/",
