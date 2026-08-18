@@ -43,6 +43,21 @@ export const SHIPPING_CLAIM_DETAIL = "$20 flat rate international";
 /** Full sentence for body copy, FAQ answers, meta descriptions, and emails. */
 export const SHIPPING_CLAIM_SENTENCE = "Free in the US; $20 flat rate to Canada, the UK, and Australia.";
 
+// Truth-in-advertising, origin edition. Print-on-demand production runs in
+// Huntington Park, CA or Philadelphia, PA — never New York — and the fulfilling
+// city is printed on the shipping label the customer receives. Design is the
+// only part of the process that happens in NYC, so no surface may pair a city
+// name with "printed", "made", or "shipped from". Route every marketing, SEO,
+// and email surface through one of these three constants instead of writing
+// its own string.
+
+/** Badge / trust-strip length. Mirrors components/ui/TrustStrip.tsx. */
+export const ORIGIN_CLAIM_SHORT = "Designed in NYC";
+/** Mid-sentence clause. Lowercase lead so it can follow a comma. */
+export const ORIGIN_CLAIM_CLAUSE = "designed in NYC, printed to order";
+/** Standalone sentence for body copy, category headers, and meta descriptions. */
+export const ORIGIN_CLAIM_SENTENCE = "Designed in NYC and printed to order.";
+
 /**
  * Cart-stage copy. The cart runs before a shipping address exists, so it states
  * both rates rather than guessing which one applies.

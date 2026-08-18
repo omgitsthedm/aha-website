@@ -3,13 +3,47 @@
 // Rules (§14): external IDs stored; purchase-time snapshots; payment vs fulfillment status
 // SEPARATE; raw webhook payloads stored + deduped; no card data; no API tokens; minimize PII.
 import {
-  pgTable, serial, bigserial, bigint, text, integer, boolean, timestamp, jsonb, unique, uniqueIndex, index, check,
+  pgTable, serial, bigserial, bigint, text, integer, numeric, boolean, timestamp, jsonb, unique, uniqueIndex, index, check,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 const cents = (name: string) => integer(name);
 const createdAt = () => timestamp("created_at", { withTimezone: true }).defaultNow().notNull();
 const updatedAt = () => timestamp("updated_at", { withTimezone: true }).defaultNow().notNull();
+
+/**
+ * APLIIQ bills a $1.00 fulfillment fee PER PRODUCT (not per order), on top of
+ * product cost and separately-billed freight. Exported so the database default
+ * and the landed-cost calculator cannot drift apart.
+ */
+export const APLIIQ_FULFILLMENT_FEE_CENTS_DEFAULT = 100;
+
+// ── Status vocabularies ──────────────────────────────────────────────────────
+// These columns are plain `text` in Postgres with NO check constraint (verified
+// against netlify/database/migrations/20260709071003_init_aha/migration.sql).
+// The vocabulary is therefore enforced in TypeScript, not in DDL: widening it is
+// a code change, never a migration, and an older server that still writes an
+// earlier value keeps running unchanged against the new schema.
+export const PAYMENT_STATUS = [
+  "created", "paid", "payment_failed", "partially_refunded", "refunded",
+] as const;
+export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
+
+// Internal spelling is "canceled" (one L). APLIIQ sends "cancelled" and
+// lib/commerce/apliiq-webhook-events.ts already normalizes it to "canceled";
+// matching that here keeps item state directly comparable with
+// orders.fulfillment_status and aggregateFulfillmentStatus().
+export const ORDER_ITEM_FULFILLMENT_STATUS = [
+  "not_started", "queued", "draft_creating", "draft_created", "confirmed",
+  "partially_shipped", "shipped", "delivered", "manual_review", "canceled", "refunded",
+] as const;
+export type OrderItemFulfillmentStatus = (typeof ORDER_ITEM_FULFILLMENT_STATUS)[number];
+
+// APLIIQ cancellation ladder: 100% refund pre-garment; 100% shipping + 20% of
+// product post-garment; shipping only post-print. Determines how much of a
+// customer refund we can recover from the provider.
+export const PROVIDER_RECOVERY_TIER = ["pre_garment", "post_garment", "post_print"] as const;
+export type ProviderRecoveryTier = (typeof PROVIDER_RECOVERY_TIER)[number];
 
 // ── Catalog (mirror of internal manifest for joins/queries) ──────────────────
 export const products = pgTable("products", {
@@ -49,6 +83,32 @@ export const productVariants = pgTable("product_variants", {
   printfulCatalogVariantId: integer("printful_catalog_variant_id"),
   printfulPlacementsJson: jsonb("printful_placements_json"),
   costEstimate: cents("cost_estimate"),
+  // ── APLIIQ landed-cost inputs (margin gating) ──────────────────────────────
+  // All nullable: legacy Printful variants have no APLIIQ cost record and must
+  // stay valid. NULL means "not costed yet" — the margin gate must treat that as
+  // unknown and refuse to bless the SKU, never as zero.
+  apliiqItemCostCents: cents("apliiq_item_cost_cents"),
+  // APLIIQ bills freight SEPARATELY from product cost, by weight tier and
+  // destination. ASSUMPTION (decided): this column holds the CONSERVATIVE
+  // single-unit tier rate for this variant's weight. A multi-item order
+  // amortises freight better, so gating on the single-unit rate can never bless
+  // an underwater SKU.
+  apliiqShippingCostCents: cents("apliiq_shipping_cost_cents"),
+  // $1.00 per PRODUCT (not per order). Defaulted in DDL so existing rows and
+  // any older server that does not yet write this column still read a sane fee.
+  apliiqFulfillmentFeeCents: cents("apliiq_fulfillment_fee_cents").default(APLIIQ_FULFILLMENT_FEE_CENTS_DEFAULT),
+  // Destination sales tax APLIIQ actually invoiced AHA on this line. APLIIQ
+  // bills it per DESTINATION (9.5% on CA shipping addresses only), which a
+  // per-variant gate cannot know, so the model uses a blended expected rate —
+  // see APLIIQ_DESTINATION_TAX_BASIS_POINTS in lib/commerce/margin.ts. This
+  // column is the exact-invoice override, not a rate: NULL means "use the
+  // modelled term", 0 means "APLIIQ invoiced no tax on this line".
+  apliiqDestinationTaxCents: cents("apliiq_destination_tax_cents"),
+  // Shipped weight in ounces, 2dp. NOT an integer: the APLIIQ rate ladder has
+  // irregular fractional tier ceilings (7.9, 11.9, 15.9, 31.9 … 143.99, 159.84),
+  // so whole ounces cannot address the ladder correctly. numeric (not float)
+  // keeps a stored 7.90 exactly equal to the 7.9 tier ceiling.
+  weightOz: numeric("weight_oz", { precision: 8, scale: 2, mode: "number" }),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 }, (t) => ({
@@ -136,7 +196,13 @@ export const orders = pgTable("orders", {
   subtotalAmount: cents("subtotal_amount").notNull().default(0), shippingAmount: cents("shipping_amount").notNull().default(0),
   taxAmount: cents("tax_amount").notNull().default(0), discountAmount: cents("discount_amount").notNull().default(0),
   totalAmount: cents("total_amount").notNull().default(0),
-  paymentStatus: text("payment_status").notNull().default("created"),
+  // Running total actually refunded to the shopper. Kept separate from
+  // totalAmount so the captured amount is never rewritten, and defaulted to 0 so
+  // partial-refund arithmetic never has to coalesce a NULL.
+  refundedAmountCents: cents("refunded_amount_cents").notNull().default(0),
+  // See PAYMENT_STATUS: unconstrained text in Postgres, so 'partially_refunded'
+  // needs no DDL change; the union is enforced at compile time only.
+  paymentStatus: text("payment_status").$type<PaymentStatus>().notNull().default("created"),
   fulfillmentStatus: text("fulfillment_status").notNull().default("not_started"),
   customerStatus: text("customer_status").notNull().default("Order received"),
   squarePaymentId: text("square_payment_id"), squareOrderId: text("square_order_id"),
@@ -159,7 +225,14 @@ export const orderItems = pgTable("order_items", {
   providerVariantId: text("provider_variant_id"), providerSku: text("provider_sku"),
   providerSnapshotJson: jsonb("provider_snapshot_json"),
   printfulPlacementSnapshotJson: jsonb("printful_placement_snapshot_json"), printfulFileSnapshotJson: jsonb("printful_file_snapshot_json"),
-  fulfillmentStatus: text("fulfillment_status").notNull().default("not_started"),
+  // Was dead until the refund/cancellation work: it now carries per-line
+  // 'canceled' / 'refunded'. Plain text in Postgres (no CHECK), so the
+  // vocabulary lives in ORDER_ITEM_FULFILLMENT_STATUS.
+  fulfillmentStatus: text("fulfillment_status").$type<OrderItemFulfillmentStatus>().notNull().default("not_started"),
+  // Value of this line cancelled/refunded so far, in cents. A partial cancel
+  // ships a subset of the line, so this is an amount, not a flag. Never exceeds
+  // lineTotal; 0 means nothing cancelled.
+  cancelledAmountCents: cents("cancelled_amount_cents").notNull().default(0),
   createdAt: createdAt(), updatedAt: updatedAt(),
 }, (t) => ({
   byOrder: index("idx_order_items_order").on(t.orderId),
@@ -173,6 +246,35 @@ export const payments = pgTable("payments", {
   amount: cents("amount").notNull(), currency: text("currency").notNull().default("USD"),
   idempotencyKey: text("idempotency_key").unique(), createdAt: createdAt(),
 });
+// One row per Square refund we issue, plus what (if anything) we recovered from
+// the fulfillment provider for the same event. Square refund id is the natural
+// idempotency key: a replayed refund webhook must not double-log.
+export const refundAuditLog = pgTable("refund_audit_log", {
+  id: bigserial("id", { mode: "number" }).primaryKey(),
+  orderId: bigint("order_id", { mode: "number" }).notNull().references(() => orders.id),
+  squarePaymentId: text("square_payment_id").notNull(),
+  squareRefundId: text("square_refund_id").notNull().unique(),
+  amountCents: cents("amount_cents").notNull(),
+  currency: text("currency").notNull().default("USD"),
+  reason: text("reason").notNull(),
+  // Who issued it, e.g. "webhook:square" or an ops identity. Required — an
+  // unattributed refund is not an audit record.
+  actor: text("actor").notNull(),
+  // Which APLIIQ cancellation tier applied. NULL until the provider
+  // cancellation is attempted, or when the refund had no provider leg at all.
+  providerRecoveryTier: text("provider_recovery_tier").$type<ProviderRecoveryTier>(),
+  // NULL = provider recovery not reconciled yet. 0 = reconciled and recovered
+  // nothing (post-print). The distinction drives the ops attention queue, so do
+  // not collapse it to a 0 default.
+  recoveredAmountCents: cents("recovered_amount_cents"),
+  createdAt: createdAt(),
+}, (t) => ({
+  byOrder: index("idx_refund_audit_log_order").on(t.orderId, t.createdAt),
+  // Passes for NULL by SQL three-valued logic, which is what "not reconciled
+  // yet" needs.
+  validRecoveryTier: check("chk_refund_audit_log_recovery_tier",
+    sql`${t.providerRecoveryTier} in ('pre_garment', 'post_garment', 'post_print')`),
+}));
 export const fulfillments = pgTable("fulfillments", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
   orderId: bigint("order_id", { mode: "number" }).references(() => orders.id),
@@ -185,12 +287,27 @@ export const fulfillments = pgTable("fulfillments", {
   providerOrderId: text("provider_order_id"), providerDataJson: jsonb("provider_data_json"),
   printfulOrderId: text("printful_order_id").unique(), status: text("status").notNull().default("not_started"),
   lastError: text("last_error"),
+  // ── Provider receipt reconciliation ────────────────────────────────────────
+  // APLIIQ charges the merchant card at order PROCESSING, not at shipment, and
+  // an insufficient-funds hold parks the order in their "unprocessed" tab with
+  // NO notification and NO auto-retry. A receipt that never arrives is the only
+  // signal we get, so providerReceiptAt is indexed alongside createdAt for the
+  // aged sweep.
+  providerTotalQty: integer("provider_total_qty"),
+  providerTotalCents: cents("provider_total_cents"),
+  providerReceiptAt: timestamp("provider_receipt_at", { withTimezone: true }),
+  // Attention marker, set by the aged sweep or by a receipt/quantity mismatch.
+  // Separate from status so flagging a row never rewrites fulfillment state.
+  attentionAt: timestamp("attention_at", { withTimezone: true }),
+  attentionReason: text("attention_reason"),
   createdAt: createdAt(), updatedAt: updatedAt(),
 }, (t) => ({
   uniqOrderStore: unique("uniq_fulfillment_order_store").on(t.orderId, t.providerStoreId),
   uniqOrderClaim: unique("uniq_fulfillment_order_claim").on(t.orderId, t.providerClaimKey),
   uniqProviderRequest: unique("uniq_fulfillment_provider_request").on(t.fulfillmentProvider, t.providerRequestId),
   uniqProviderOrder: unique("uniq_fulfillment_provider_order").on(t.fulfillmentProvider, t.providerOrderId),
+  byAttention: index("idx_fulfillments_attention").on(t.attentionAt),
+  byProviderReceipt: index("idx_fulfillments_provider_receipt").on(t.fulfillmentProvider, t.providerReceiptAt, t.createdAt),
   validProvider: check("chk_fulfillments_fulfillment_provider", sql`${t.fulfillmentProvider} in ('printful', 'apliiq')`),
 }));
 export const shipments = pgTable("shipments", {

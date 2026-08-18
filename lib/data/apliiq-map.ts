@@ -17,6 +17,14 @@ export type ApliiqMapEntry = Pick<AhaVariant,
   | "marginEstimate"
   | "costVerifiedAt"
   | "marginVerifiedAt"
+  // Landed-cost inputs. Freight and the per-product fulfillment fee are billed
+  // separately from product cost, so a registry entry that carries only
+  // costEstimate cannot be margin-gated honestly.
+  | "weightOz"
+  | "apliiqItemCost"
+  | "apliiqShippingCost"
+  | "apliiqFulfillmentFeeCents"
+  | "apliiqDestinationTaxCents"
 >;
 
 export interface ApliiqMapDocument {
@@ -28,6 +36,8 @@ const ALLOWED_ENTRY_FIELDS = new Set<keyof ApliiqMapEntry>([
   "apliiqPrivateLabelSnapshot", "apliiqAssetUrls", "apliiqRegionAvailability",
   "apliiqSizeGuideReference", "apliiqMappingApproval", "apliiqSampleApproval",
   "squareMappingStatus", "costEstimate", "marginEstimate", "costVerifiedAt", "marginVerifiedAt",
+  "weightOz", "apliiqItemCost", "apliiqShippingCost", "apliiqFulfillmentFeeCents",
+  "apliiqDestinationTaxCents",
 ]);
 
 function fail(path: string, message: string): never {
@@ -51,6 +61,33 @@ function optionalString(value: unknown, path: string): string | undefined {
 function cents(value: unknown, path: string): number {
   if (typeof value !== "number" || !Number.isFinite(value) || !Number.isInteger(value) || value < 0) {
     fail(path, "must be a finite nonnegative integer number of cents");
+  }
+  return value;
+}
+
+function optionalCents(value: unknown, path: string): number | undefined {
+  if (value === undefined) return undefined;
+  return cents(value, path);
+}
+
+/**
+ * Shipped weight in ounces, capped at two decimals to match the
+ * product_variants.weight_oz numeric(8,2) column and the fractional tier
+ * ceilings of the APLIIQ rate ladder (7.9, 11.9, 143.99, 159.84 …).
+ */
+function weightOunces(value: unknown, path: string): number {
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
+    fail(path, "must be a finite positive number of ounces");
+  }
+  // Compare the ROUND-TRIPPED value, never `Math.round(v * 100) !== v * 100`.
+  // `v * 100` is not exact in binary floating point — 4.35 * 100 is
+  // 434.99999999999994 — so the naive form rejected 4,587 of the 48,000 legal
+  // two-decimal weights between 0.01 and 480.00 oz, including everyday garment
+  // weights like 4.35 and 4.40 oz. Dividing back by 100 is the same
+  // normalization normalizeWeightOz() in lib/commerce/apliiq-shipping-rates.ts
+  // applies before a tier lookup, and it still rejects a third decimal.
+  if (Math.round(value * 100) / 100 !== value) {
+    fail(path, "must have at most two decimal places");
   }
   return value;
 }
@@ -167,6 +204,15 @@ function parseEntry(value: unknown, path: string): ApliiqMapEntry {
     marginEstimate: cents(value.marginEstimate, `${path}.marginEstimate`),
     costVerifiedAt: isoTimestamp(value.costVerifiedAt, `${path}.costVerifiedAt`),
     marginVerifiedAt: isoTimestamp(value.marginVerifiedAt, `${path}.marginVerifiedAt`),
+    // Required: freight is billed by weight tier, so an entry with no weight
+    // cannot be margin-gated at all. The remaining landed-cost terms are
+    // optional overrides — the rate ladder, the $1.00 per-product fee, and the
+    // modelled destination tax supply the defaults.
+    weightOz: weightOunces(value.weightOz, `${path}.weightOz`),
+    apliiqItemCost: optionalCents(value.apliiqItemCost, `${path}.apliiqItemCost`),
+    apliiqShippingCost: optionalCents(value.apliiqShippingCost, `${path}.apliiqShippingCost`),
+    apliiqFulfillmentFeeCents: optionalCents(value.apliiqFulfillmentFeeCents, `${path}.apliiqFulfillmentFeeCents`),
+    apliiqDestinationTaxCents: optionalCents(value.apliiqDestinationTaxCents, `${path}.apliiqDestinationTaxCents`),
   };
 }
 

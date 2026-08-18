@@ -58,3 +58,15 @@ next-env.d.ts
 # Local QA/audit artifacts (screenshots, captures) — never committed.
 # Matches the convention in Venue Circuit and PHC Cockpit.
 _qa/
+
+# APLIIQ setup artifacts (contain secrets)
+.apliiq-callback-token.txt
+aha-setup-log.txt
+
+# iCloud Drive conflict copies — "page 2.tsx", "client 2.ts", "types 3.d.ts".
+# Inert: never imported, never built. They pollute git status and have caused
+# agents to edit a file that does nothing. Never commit them.
+* 2.*
+* 3.*
+* 4.*
+*\ 2/

@@ -666,13 +666,18 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
             )}
 
             {/* Brand story on every PDP — the ownable narrative that otherwise
-                only lived on the home + about pages. Honest; never niches the wearer. */}
+                only lived on the home + about pages. Honest; never niches the wearer.
+                The city and the printing are deliberately in separate sentences: a
+                single "drawn ... in New York, then printed to order" clause reads as
+                a New York print claim, and production actually runs in Huntington
+                Park CA or Philadelphia PA — the city the customer sees on the label.
+                Design is the only NYC step (lib/commerce/policies.ts). */}
             <div className="mt-10 flex items-start gap-4 border-t border-border/40 pt-7">
               <SheepMark className="mt-1 w-12 shrink-0 text-cream" title="The After Hours Agenda black sheep" />
               <div>
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent">Made after hours</p>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Every After Hours Agenda design is drawn when the day quiets down in New York, then printed to order one at a time. Expressive everyday clothing for anyone who never needed permission to belong to the city.{" "}
+                  Every After Hours Agenda design is drawn in New York, after the day quiets down. Each piece is then printed to order, one at a time. Expressive everyday clothing for anyone who never needed permission to belong to the city.{" "}
                   <Link href="/about" className="font-bold text-accent underline underline-offset-4 hover:text-cream">The story</Link>.
                 </p>
               </div>

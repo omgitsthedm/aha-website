@@ -7,6 +7,8 @@ export interface ExpressContact {
   shippingName: string;
   shippingAddress: {
     address1: string;
+    /** Apartment / suite / floor. Omitted when the wallet has none. */
+    address2?: string;
     city: string;
     state: string;
     zip: string;
@@ -38,7 +40,12 @@ export function extractExpressContact(tokenDetails: unknown): ExpressContact | n
   const familyName = str(shipContact.familyName, shipContact.lastName, billContact.familyName);
   const shippingName = str(shipContact.name, `${givenName} ${familyName}`);
 
-  const line1 = str(shipContact.addressLine1, shipContact.address1, shipContact.line1);
+  // Apple Pay's native contact carries the street as an `addressLines` array;
+  // Square's normalised shape uses addressLine1/2. Read both, or an apartment
+  // number is silently dropped and the parcel is undeliverable.
+  const lines = Array.isArray(shipContact.addressLines) ? shipContact.addressLines : [];
+  const line1 = str(shipContact.addressLine1, shipContact.address1, shipContact.line1, lines[0]);
+  const line2 = str(shipContact.addressLine2, shipContact.address2, shipContact.line2, lines[1]);
   const city = str(shipContact.city, shipContact.locality);
   const state = str(shipContact.state, shipContact.administrativeDistrictLevel1, shipContact.region);
   const zip = str(shipContact.postalCode, shipContact.zip, shipContact.postal);
@@ -49,7 +56,7 @@ export function extractExpressContact(tokenDetails: unknown): ExpressContact | n
   return {
     email,
     shippingName: shippingName || "Customer",
-    shippingAddress: { address1: line1, city, state, zip, country },
+    shippingAddress: { address1: line1, ...(line2 ? { address2: line2 } : {}), city, state, zip, country },
   };
 }
 

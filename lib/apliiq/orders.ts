@@ -64,7 +64,10 @@ export function validateCreateApliiqOrder(input: CreateApliiqOrderInput): string
     if (!Number.isInteger(item.quantity) || item.quantity <= 0) issues.push(`${label}.quantity must be a positive integer`);
     if (!MONEY_PATTERN.test(item.price)) issues.push(`${label}.price must be a non-negative decimal amount`);
     if (!isApliiqSku(item.sku)) issues.push(`${label}.sku must be an Apliiq APQ SKU`);
-    if (item.grams !== undefined && (!Number.isFinite(item.grams) || item.grams < 0)) issues.push(`${label}.grams must be non-negative`);
+    // Omitted means "weight unknown"; present means a real per-unit weight. A
+    // zero or fractional gram value is neither, so it is rejected rather than
+    // forwarded to the provider.
+    if (item.grams !== undefined && (!Number.isInteger(item.grams) || item.grams <= 0)) issues.push(`${label}.grams must be a positive integer`);
   });
 
   issues.push(...validateApliiqAddress(input.shippingAddress));
@@ -108,7 +111,10 @@ export function buildApliiqOrderPayload(input: CreateApliiqOrderInput): ApliiqOr
       ...(item.name ? { name: item.name } : {}),
       quantity: item.quantity,
       price: item.price,
-      grams: item.grams ?? 0,
+      // Weight is per unit and OMITTED when unknown. This used to emit
+      // `grams: 0` on every line, which asserted a weightless garment to the
+      // provider; an absent field is the honest signal.
+      ...(item.grams === undefined ? {} : { grams: item.grams }),
       sku: item.sku,
     })),
     ...(input.billingAddress ? { billing_address: toApliiqAddressPayload(input.billingAddress) } : {}),
@@ -158,10 +164,19 @@ export async function listApliiqOrders(
   return client.request<ApliiqOrderRecord[]>(`/Order${query}`);
 }
 
+/**
+ * Provider status vocabulary only. `pending` means APLIIQ has accepted the order
+ * and nobody has touched a garment — it is NOT production, and the internal
+ * mapping in lib/commerce/apliiq-webhook-events.ts keeps it out of `confirmed`
+ * for exactly that reason. `payment pending` is the merchant-card hold: APLIIQ
+ * charges at order processing and parks an underfunded order with no
+ * notification and no auto-retry, so it is an attention state, not a wait.
+ */
 function normalizedStatus(value: string | undefined): ApliiqFulfillmentStatus {
   switch (value?.trim().toLowerCase().replace(/\s+/g, " ")) {
     case "new":
       return "pending";
+    // Real work on the garment begins here.
     case "preparing to release":
     case "ready to release":
     case "in production":

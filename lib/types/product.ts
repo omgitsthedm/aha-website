@@ -120,6 +120,24 @@ export interface AhaVariant {
   /** A Square mapping is not sale-ready until its operator-confirmed state is active. */
   squareMappingStatus?: "active" | "pending" | "archived";
 
+  // ── APLIIQ landed cost (see lib/commerce/landed-cost.ts) ───────────────────
+  // APLIIQ bills product cost, freight, and a per-product fulfillment fee as
+  // three separate lines, so a margin gate that only knows product cost is
+  // wrong by roughly a quarter of the retail price on a tee.
+  /** Provider product cost for one unit, minor units. Must agree with costEstimate when both are set. */
+  apliiqItemCost?: number;
+  /** Conservative single-unit tier freight, minor units. May only ever exceed the published tier rate. */
+  apliiqShippingCost?: number;
+  /** Per-PRODUCT fulfillment fee, minor units. Defaults to the rate sheet's $1.00 per unit. */
+  apliiqFulfillmentFeeCents?: number;
+  /** Destination sales tax on the provider invoice, minor units. Overrides the modelled rate. */
+  apliiqDestinationTaxCents?: number;
+  /**
+   * Shipped weight in ounces (2dp). Addresses the irregular APLIIQ rate ladder,
+   * whose tier ceilings (7.9, 11.9 … 143.99, 159.84) are not whole ounces.
+   */
+  weightOz?: number;
+
   costEstimate?: number; // minor units — from Printful, for margin
   marginEstimate?: number; // minor units
   costVerifiedAt?: string;

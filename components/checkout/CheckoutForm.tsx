@@ -9,6 +9,14 @@ import type { SquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 import { trackCommerceEvent } from "@/lib/analytics/events";
 import { INTERNATIONAL_SHIPPING_CENTS, SHIPPING_CLAIM_SENTENCE, isInternational } from "@/lib/commerce/policies";
 import { ExpressCheckout } from "@/components/checkout/ExpressCheckout";
+import {
+  parseZippopotamPlaces, postalLookupCode, postalLookupUrl, verifyPostalCode,
+  type PostalLookup,
+} from "@/lib/checkout/postal-verification";
+import {
+  STATE_REQUIRED, getAddressError, getSubmissionBlockReason,
+  type ShippingContact,
+} from "@/lib/checkout/shipping-contact";
 
 type TokenResult = { status: string; token: string };
 type SquareCard = { attach: (selector: string) => Promise<void>; tokenize: () => Promise<TokenResult> };
@@ -37,15 +45,6 @@ interface CheckoutQuote {
   total: number;
   currency: string;
 }
-interface ShippingContact {
-  email: string;
-  shippingName: string;
-  address1: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-}
 declare global {
   interface Window {
     Square?: { payments: (appId: string, locationId: string) => SquarePaymentsApi };
@@ -53,7 +52,56 @@ declare global {
 }
 
 const money = (cents: number) => `$${(cents / 100).toFixed(2)}`;
-const STATE_REQUIRED = new Set(["US", "CA", "AU"]);
+
+// ZIP lookup timings. The debounce keeps a keystroke from firing a request; the
+// hard abort guarantees the "checking" state can never wedge the Pay button on
+// a stalled connection — it falls through to "unverified", which never blocks.
+const POSTAL_LOOKUP_DEBOUNCE_MS = 500;
+const POSTAL_LOOKUP_TIMEOUT_MS = 6_000;
+
+// One api.zippopotam.us response is classified into ONE `PostalLookup` value —
+// status and "was it a 404" travel together rather than as two fields that a
+// render could catch half-updated.
+const POSTAL_IDLE: PostalLookup = { status: "idle" };
+const POSTAL_CHECKING: PostalLookup = { status: "checking" };
+const POSTAL_UNAVAILABLE: PostalLookup = { status: "unavailable" };
+/** 404 = absent from this dataset, NOT "this ZIP does not exist". Soft copy only. */
+const POSTAL_NOT_IN_DATASET: PostalLookup = { status: "not-in-dataset" };
+
+/**
+ * Run one ZIP lookup and classify the result. Exported — and taking its fetch —
+ * so the whole failure taxonomy is unit-testable without a browser, because
+ * this function is the line between "we couldn't confirm" and "you can't pay".
+ *
+ * ONLY a 2xx whose body parses into at least one place is a positive answer,
+ * and only that answer can go on to contradict the typed city/state. Every
+ * other outcome → verdict "unverified" → the sale proceeds.
+ *
+ * A 404 in particular must not block: api.zippopotam.us is a free GeoNames
+ * extract, not USPS. Probed live, 09021 (APO/AE), 00901 (San Juan, PR) and
+ * 96799 (Pago Pago, AS) all 404 while being perfectly deliverable US ZIPs, so
+ * blocking on 404 refuses money from military families and territory customers
+ * — strictly worse than the return-to-sender it was meant to prevent.
+ */
+export async function lookupPostalPlaces(
+  url: string,
+  init?: RequestInit,
+  fetchImpl: typeof fetch = fetch,
+): Promise<PostalLookup> {
+  try {
+    const res = await fetchImpl(url, init);
+    // Not in the dataset. Soft signal only.
+    if (res.status === 404) return POSTAL_NOT_IN_DATASET;
+    // 5xx, 429, anything else non-2xx: the service's problem, never the shopper's.
+    if (!res.ok) return POSTAL_UNAVAILABLE;
+    // A malformed body throws out of json() and lands in the catch below.
+    const places = parseZippopotamPlaces(await res.json());
+    if (places.length === 0) return POSTAL_UNAVAILABLE;
+    return { status: "resolved", places };
+  } catch {
+    return POSTAL_UNAVAILABLE; // offline / CSP / abort / unreadable body — fail open
+  }
+}
 
 // Shipping/contact PII must not sit in this browser forever — on a shared machine
 // an old entry silently prefills the next person's checkout. Keep the resume
@@ -77,13 +125,6 @@ const JOURNEY_STEPS = [
   { label: "Yours to wear", detail: "Made after hours. Worn all day." },
 ];
 
-function getAddressError(contact: ShippingContact): string | null {
-  if (!contact.shippingName) return "Enter the name for shipping.";
-  if (!contact.address1 || !contact.city || !contact.zip) return "Complete your shipping address.";
-  if (STATE_REQUIRED.has(contact.country) && !contact.state) return "State/province is required.";
-  return null;
-}
-
 interface Props {
   squareConfig: SquareWebPaymentsConfig;
 }
@@ -104,9 +145,12 @@ export function CheckoutForm({ squareConfig }: Props) {
   const [appliedPromo, setAppliedPromo] = useState("");  // code actually sent to the server
   const [promoInfo, setPromoInfo] = useState<{ label: string; percentage: string | null } | null>(null);
   const [promoInvalid, setPromoInvalid] = useState(false);
-  const [contact, setContact] = useState({
-    email: "", shippingName: "", address1: "", city: "", state: "", zip: "", country: "US",
+  const [contact, setContact] = useState<ShippingContact>({
+    email: "", shippingName: "", address1: "", address2: "", city: "", state: "", zip: "", country: "US",
   });
+  // One atom for the whole lookup: status and "absent from the dataset" cannot
+  // be observed in an inconsistent pairing because there is no second field.
+  const [postal, setPostal] = useState<PostalLookup>(POSTAL_IDLE);
 
   const paymentsRef = useRef<SquarePaymentsApi | null>(null);
   const cardRef = useRef<SquareCard | null>(null);
@@ -207,34 +251,63 @@ export function CheckoutForm({ squareConfig }: Props) {
     } catch { /* ignore */ }
   }, [contact]);
 
-  // Keyless ZIP → city/state autofill: one friction cut Shopify gets from
-  // address autocomplete. Fills ONLY empty fields, is fully non-blocking, and
-  // never touches the charge — a failure (offline / 404 / CSP) silently no-ops
-  // and manual entry is unaffected. Full-street autocomplete (Google Places)
-  // is a follow-up gated on an API key.
+  // Keyless ZIP → city/state lookup. It still fills empty fields (the friction
+  // cut Shopify gets from address autocomplete), but its real job is now to
+  // VERIFY: a ZIP the service resolves to a different city/state ships the
+  // parcel to the wrong place, fails delivery, and returns to AHA at AHA's
+  // cost. That — and only that — is a blocking error (see `postalVerdict`).
+  //
+  // The request is keyed on (country, ZIP) only — the verdict is derived from
+  // the typed city/state during render, so editing the city never re-fetches.
+  // The one thing that can stop a sale from here is a SUCCESSFUL lookup that
+  // positively contradicts the typed address; every other outcome (404, 5xx,
+  // timeout, unreadable body, unreachable host) is classified as
+  // "not-in-dataset" or "unavailable" by lookupPostalPlaces above, both of
+  // which verify to "unverified" and never block. Full-street autocomplete
+  // (Google Places) is a follow-up gated on an API key.
   useEffect(() => {
-    const zip = contact.zip.trim();
-    const country = contact.country.toLowerCase();
-    if (zip.length < 4) return;
+    const code = postalLookupCode(contact.country, contact.zip);
+    // Unverifiable country, empty, or a locally-invalid format: no request to
+    // make. A bad format is still reported by the verdict, offline.
+    if (!code) { setPostal(POSTAL_IDLE); return; }
+    setPostal(POSTAL_CHECKING);
+    let cancelled = false;
+    let abortTimer = 0;
     const controller = new AbortController();
     const timer = window.setTimeout(async () => {
-      try {
-        const res = await fetch(`https://api.zippopotam.us/${country}/${encodeURIComponent(zip)}`, { signal: controller.signal });
-        if (!res.ok) return;
-        const data = await res.json();
-        const place = Array.isArray(data?.places) ? data.places[0] : null;
-        if (!place) return;
-        const city = place["place name"];
-        const state = place["state abbreviation"] || place["state"];
-        setContact((prev) => ({
-          ...prev,
-          city: prev.city.trim() ? prev.city : (city || prev.city),
-          state: prev.state.trim() ? prev.state : (state || prev.state),
-        }));
-      } catch { /* offline / 404 / CSP — silently skip */ }
-    }, 500);
-    return () => { window.clearTimeout(timer); controller.abort(); };
+      abortTimer = window.setTimeout(() => controller.abort(), POSTAL_LOOKUP_TIMEOUT_MS);
+      const outcome = await lookupPostalPlaces(
+        postalLookupUrl(contact.country, code), { signal: controller.signal },
+      );
+      window.clearTimeout(abortTimer);
+      if (cancelled) return;
+      setPostal(outcome);
+      if (outcome.status !== "resolved") return;
+      const [place] = outcome.places;
+      setContact((prev) => ({
+        ...prev,
+        city: prev.city.trim() ? prev.city : place.city,
+        state: prev.state.trim() ? prev.state : (place.stateCode || place.state),
+      }));
+    }, POSTAL_LOOKUP_DEBOUNCE_MS);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      window.clearTimeout(abortTimer);
+      controller.abort();
+    };
   }, [contact.zip, contact.country]);
+
+  // Derived, not stored: the pure verdict for what is typed right now.
+  const postalVerdict = verifyPostalCode({
+    country: contact.country, zip: contact.zip, city: contact.city, state: contact.state, lookup: postal,
+  });
+  // Soft nudge for a code the lookup has never heard of. Read off the same
+  // single value as the verdict, so the copy can never disagree with the gate.
+  // Deliberately not a verdict and deliberately not wired to
+  // validate()/payBlocked: plenty of real ZIPs are missing from a free
+  // dataset, so this asks and never refuses.
+  const postalNotFound = postal.status === "not-in-dataset" && postalVerdict.status === "unverified";
 
   useEffect(() => {
     if (items.length > 0) {
@@ -287,7 +360,7 @@ export function CheckoutForm({ squareConfig }: Props) {
       contact: {
         shippingName: contact.shippingName,
         shippingAddress: {
-          address1: contact.address1, city: contact.city, state: contact.state,
+          address1: contact.address1, address2: contact.address2, city: contact.city, state: contact.state,
           zip: contact.zip, country: contact.country,
         },
       },
@@ -434,10 +507,13 @@ export function CheckoutForm({ squareConfig }: Props) {
     void cashAppRef.current.attach("#aha-cashapp", { shape: "semiround", width: "full" }).catch(() => setCashAppReady(false));
   }, [cashAppReady]);
 
-  const validate = (): string | null => {
-    if (!contact.email || !/.+@.+\..+/.test(contact.email)) return "Enter a valid email for your receipt.";
-    return getAddressError(contact);
-  };
+  // Two things block the charge, both of them proven contradictions: a postal
+  // code that fails its country's format offline, and a resolved lookup that
+  // disagrees with the typed city/state — a return-to-sender parcel billed back
+  // to AHA. "Unverified" (404, 5xx, timeout, offline, unreadable body) never
+  // blocks: a free service with no SLA cannot stop us taking money. See
+  // lookupPostalPlaces above and shipping-contact.ts.
+  const validate = (): string | null => getSubmissionBlockReason(contact, postalVerdict);
 
   // Shared charge path for card + wallet tokens.
   const submitWithToken = async (
@@ -465,7 +541,7 @@ export function CheckoutForm({ squareConfig }: Props) {
             email: contact.email,
             shippingName: contact.shippingName,
             shippingAddress: {
-              address1: contact.address1, city: contact.city, state: contact.state,
+              address1: contact.address1, address2: contact.address2, city: contact.city, state: contact.state,
               zip: contact.zip, country: contact.country,
             },
           },
@@ -511,6 +587,7 @@ export function CheckoutForm({ squareConfig }: Props) {
         shippingName: contact.shippingName,
         shippingAddress: {
           address1: contact.address1,
+          address2: contact.address2,
           city: contact.city,
           state: contact.state,
           zip: contact.zip,
@@ -560,7 +637,9 @@ export function CheckoutForm({ squareConfig }: Props) {
             givenName: firstName,
             familyName: lastNameParts.join(" ") || "Customer",
             email: contact.email,
-            addressLines: [contact.address1],
+            // Both lines: an issuer's AVS check on an apartment address fails
+            // more often when the unit number is missing from the verification.
+            addressLines: [contact.address1, contact.address2].filter(Boolean),
             city: contact.city,
             state: contact.state,
             countryCode: contact.country,
@@ -627,7 +706,7 @@ export function CheckoutForm({ squareConfig }: Props) {
   // it is never dropped from the tab order mid-checkout. pay() already returns
   // early with a user-facing message for each blocked state, so an activatable
   // button can't fire a charge before the quote is ready.
-  const payBlocked = status === "paying" || quoteStatus !== "ready" || !sdkReady;
+  const payBlocked = status === "paying" || quoteStatus !== "ready" || !sdkReady || postalVerdict.status === "blocked";
   // Persistently mounted below, so the transition into "calculating" and into
   // "ready" is actually announced — a live region that mounts with its text is not.
   const quoteAnnouncement =
@@ -692,6 +771,13 @@ export function CheckoutForm({ squareConfig }: Props) {
                   <input id="addr" autoComplete="address-line1" required className={field}
                     value={contact.address1} onChange={(e) => setContact({ ...contact, address1: e.target.value })} />
                 </div>
+                {/* Without this line a New York apartment order is undeliverable
+                    and the parcel comes back to us at our cost. */}
+                <div>
+                  <label className={labelC} htmlFor="addr2">Apartment, suite, floor (optional)</label>
+                  <input id="addr2" autoComplete="address-line2" className={field} placeholder="Apt 4B"
+                    value={contact.address2} onChange={(e) => setContact({ ...contact, address2: e.target.value })} />
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className={labelC} htmlFor="city">City</label>
@@ -708,6 +794,7 @@ export function CheckoutForm({ squareConfig }: Props) {
                   <div>
                     <label className={labelC} htmlFor="zip">ZIP / Postal</label>
                     <input id="zip" autoComplete="postal-code" required className={field}
+                      aria-describedby="zip-status" aria-invalid={postalVerdict.status === "blocked"}
                       value={contact.zip} onChange={(e) => setContact({ ...contact, zip: e.target.value })} />
                   </div>
                   <div>
@@ -720,6 +807,36 @@ export function CheckoutForm({ squareConfig }: Props) {
                       <option value="AU">Australia</option>
                     </select>
                   </div>
+                </div>
+                {/* Persistently mounted so the transition into an error is
+                    actually announced — a live region that mounts with its text
+                    is not. Blocking states also gate Pay via validate(). */}
+                <div id="zip-status" aria-live="polite" className="min-h-4">
+                  {postalVerdict.status === "blocked" && (
+                    <>
+                      <p className="font-body text-xs font-bold text-danger">{postalVerdict.message}</p>
+                      {postalVerdict.suggestion && (
+                        <button type="button"
+                          onClick={() => setContact({ ...contact, city: postalVerdict.suggestion!.city, state: postalVerdict.suggestion!.state })}
+                          className="mt-2 min-h-11 border border-border/60 px-3 text-[11px] font-bold uppercase tracking-wide text-cream hover:border-accent hover:text-accent">
+                          Use {postalVerdict.suggestion.city}, {postalVerdict.suggestion.state}
+                        </button>
+                      )}
+                    </>
+                  )}
+                  {postalVerdict.status === "ok" && postalVerdict.place && (
+                    <p className="font-body text-xs font-bold text-success">
+                      Confirmed — {postalVerdict.place.city}, {postalVerdict.place.state}.
+                    </p>
+                  )}
+                  {/* Soft only. Our lookup misses APO/FPO, Puerto Rico, Samoa
+                      and newer allocations, so this asks the shopper to look
+                      twice and leaves the Pay button alone. */}
+                  {postalNotFound && (
+                    <p className="font-body text-xs text-muted">
+                      We couldn&rsquo;t confirm {contact.zip.trim()} — give it a second look. If it&rsquo;s right, go ahead and pay.
+                    </p>
+                  )}
                 </div>
               </div>
             </fieldset>

@@ -23,4 +23,29 @@ describe("Square order pricing", () => {
     expect(order.line_items).toEqual([{ catalog_object_id: "SQ_VARIATION", quantity: "2" }]);
     expect(order.fulfillments[0].shipment_details.recipient.address.postal_code).toBe("10118");
   });
+
+  it("puts the apartment line on the Square shipment recipient", () => {
+    const withUnit = buildSquareOrder({
+      lineItems: [{ catalogObjectId: "SQ_VARIATION", quantity: "1" }],
+      shippingAddress: {
+        addressLine1: "1 Main Street", addressLine2: "Apt 4B", locality: "Brooklyn",
+        administrativeDistrictLevel1: "NY", postalCode: "11201", country: "US",
+        firstName: "Taylor", lastName: "Customer",
+      },
+    });
+    expect(withUnit.fulfillments[0].shipment_details.recipient.address.address_line_2).toBe("Apt 4B");
+
+    // An address with no unit must not ship an empty line to Square.
+    const withoutUnit = buildSquareOrder({
+      lineItems: [{ catalogObjectId: "SQ_VARIATION", quantity: "1" }],
+      shippingAddress: {
+        addressLine1: "1 Main Street", locality: "Brooklyn",
+        administrativeDistrictLevel1: "NY", postalCode: "11201", country: "US",
+        firstName: "Taylor", lastName: "Customer",
+      },
+    });
+    expect(withoutUnit.fulfillments[0].shipment_details.recipient.address.address_line_2).toBeUndefined();
+    expect(JSON.parse(JSON.stringify(withoutUnit)).fulfillments[0].shipment_details.recipient.address)
+      .not.toHaveProperty("address_line_2");
+  });
 });

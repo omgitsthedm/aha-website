@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 import { CatalogMigrationPage, catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
 import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { ORIGIN_CLAIM_SENTENCE, SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 
 export const revalidate = 300;
 // The committed catalog policy currently returns the same migration screen for
@@ -72,14 +73,22 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
           eyebrow="Shop"
           title={category ? category.name : "The whole catalog, printed to order"}
           description={category
-            ? `${category.description} Designed in NYC and printed to order.`
+            ? `${category.description} ${ORIGIN_CLAIM_SENTENCE}`
             : "Every design in one place — graphic tees, hoodies, sweatshirts, knitwear, and accessories. Graphic-led, unisex cuts, designed in New York."}
         />
 
+        {/* Purchase-surface trust row. Two rules hold here:
+            1. The sub-line is `sm:block`, so it is invisible on mobile — the
+               label alone has to be true. "Free shipping" was not: CA/GB/AU
+               orders carry a real $20 Square service charge
+               (lib/commerce/policies.ts). SHIPPING_CLAIM_SHORT is safe alone.
+            2. No provider name and no print city. Apliiq prints in Huntington
+               Park CA or Philadelphia PA, Printful is legacy-only, and naming
+               either one on a shopping page dates the moment fulfillment moves. */}
         <div className="mb-8 grid grid-cols-3 divide-x divide-border/40 border-y border-border/40 py-4">
           <div className="flex items-start gap-2 px-2 sm:gap-3 sm:px-4">
             <span className="mt-0.5 hidden h-2 w-2 shrink-0 bg-accent sm:block" aria-hidden="true" />
-            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">Free shipping</p><p className="mt-1 hidden text-xs text-muted sm:block">On every order. No code needed.</p></div>
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">{SHIPPING_CLAIM_SHORT}</p><p className="mt-1 hidden text-xs text-muted sm:block">{SHIPPING_CLAIM_DETAIL}. No code needed.</p></div>
           </div>
           <div className="flex items-start gap-2 px-2 sm:gap-3 sm:px-4">
             <span className="mt-0.5 hidden h-2 w-2 shrink-0 bg-accent sm:block" aria-hidden="true" />
@@ -87,7 +96,7 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
           </div>
           <div className="flex items-start gap-2 px-2 sm:gap-3 sm:px-4">
             <span className="mt-0.5 hidden h-2 w-2 shrink-0 bg-accent sm:block" aria-hidden="true" />
-            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">Made to order</p><p className="mt-1 hidden text-xs text-muted sm:block">Printed and shipped by Printful.</p></div>
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">Made to order</p><p className="mt-1 hidden text-xs text-muted sm:block">Nothing is printed until you order it.</p></div>
           </div>
         </div>
 

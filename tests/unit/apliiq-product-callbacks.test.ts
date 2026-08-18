@@ -102,7 +102,12 @@ describe("APLIIQ Add to Store callback validation", () => {
         apliiqSku: "APQ-1998244S7A1", apliiqDecorationSnapshot: { front: { artworkId: "front" } },
         apliiqPrivateLabelSnapshot: { neck: { artworkId: "neck" } }, apliiqRegionAvailability: ["US"],
         apliiqSizeGuideReference: "sg-tee", apliiqMappingApproval: "approved", apliiqSampleApproval: "approved",
-        costEstimate: 2500, marginEstimate: 2300, costVerifiedAt: "2026-08-16T00:00:00.000Z",
+        // Landed margin on 4800 retail: 1500 item + 596 freight (7.9 oz tier)
+        // + 100 per-product fee + 12 modelled destination tax + 169 Square fee.
+        // The tax term is the blended CA rate (APLIIQ_DESTINATION_TAX_BASIS_POINTS,
+        // 76 bp); this literal moves the day that constant does. See margin.ts.
+        weightOz: 7.9, costEstimate: 1500, marginEstimate: 2423,
+        costVerifiedAt: "2026-08-16T00:00:00.000Z",
         marginVerifiedAt: "2026-08-16T00:00:00.000Z", printfulSource: "catalog",
       }],
     };

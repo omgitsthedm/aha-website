@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "source": "APLIIQ help center shipping rate sheet (US standard)",
+  "effectiveDate": "2026-05-12",
+  "repricingNote": "APLIIQ reprices when USPS does. Re-verify this table against the APLIIQ help center whenever USPS announces a rate change, then bump effectiveDate. Never edit a rate without moving the date with it.",
+  "currency": "USD",
+  "billing": {
+    "note": "Freight is billed SEPARATELY from product cost. APLIIQ also charges a fulfillment fee PER PRODUCT (per unit), not per order.",
+    "fulfillmentFeeCentsPerUnit": 100,
+    "printFacilities": ["Huntington Park, CA", "Philadelphia, PA"]
+  },
+  "domestic": {
+    "destinationCountry": "US",
+    "service": "standard",
+    "lookupNote": "Tier steps are IRREGULAR — never assume a uniform step and never interpolate. Select the first tier whose maxWeightOz is greater than or equal to the shipped weight. A weight above the last tier has no published rate and must be an explicit error, never a clamp to the last row.",
+    "tiers": [
+      { "maxWeightOz": 7.9, "rateCents": 596 },
+      { "maxWeightOz": 11.9, "rateCents": 692 },
+      { "maxWeightOz": 15.9, "rateCents": 885 },
+      { "maxWeightOz": 31.9, "rateCents": 1180 },
+      { "maxWeightOz": 47.9, "rateCents": 1565 },
+      { "maxWeightOz": 63.9, "rateCents": 1885 },
+      { "maxWeightOz": 79.9, "rateCents": 2224 },
+      { "maxWeightOz": 95.9, "rateCents": 2896 },
+      { "maxWeightOz": 111.9, "rateCents": 3005 },
+      { "maxWeightOz": 127.9, "rateCents": 3225 },
+      { "maxWeightOz": 143.99, "rateCents": 3405 },
+      { "maxWeightOz": 159.84, "rateCents": 3585 },
+      { "maxWeightOz": 239.84, "rateCents": 4055 },
+      { "maxWeightOz": 319.84, "rateCents": 5295 },
+      { "maxWeightOz": 399.84, "rateCents": 6150 },
+      { "maxWeightOz": 479.84, "rateCents": 7899 }
+    ]
+  },
+  "international": {
+    "incoterms": "DDU",
+    "dutiesNote": "International stays DDU: the customer pays duties and import taxes on delivery. The storefront charges one flat international shipping fee per order (lib/commerce/policies.ts INTERNATIONAL_SHIPPING_CENTS).",
+    "todo": "NO verified APLIIQ international rate sheet exists yet. Rates below are deliberately EMPTY rather than invented. Populate `zones` from APLIIQ's published international table before selling outside the US; until then the landed-cost engine reports international freight as unmodelled and the flat-rate coverage check cannot pass.",
+    "zoneFields": ["zone", "countries", "tiers"],
+    "zoneTierFields": ["maxWeightOz", "rateCents"],
+    "zones": []
+  }
+}

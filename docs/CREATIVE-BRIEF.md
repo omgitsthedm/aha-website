@@ -1,7 +1,9 @@
 # After Hours Agenda — Brand Photoshoot Creative Brief
 
 ## Brand summary
-After Hours Agenda is an independent NYC streetwear label built for people who keep working after the day job ends. Every piece is made to order, printed on demand, and shipped from the city — no warehouses of unsold stock.
+After Hours Agenda is an independent NYC streetwear label built for people who keep working after the day job ends. Every piece is designed in New York, then printed on demand and shipped when you order it — no warehouses of unsold stock.
+
+> Copy guardrail: the label is NYC, the printing is not. Production runs at the print partner's facility (Huntington Park CA or Philadelphia PA) and that city appears on the shipping label. Never write "printed in NYC", "made in New York", or "shipped from the city". Use the constants in `lib/commerce/policies.ts` (`ORIGIN_CLAIM_SHORT`, `ORIGIN_CLAIM_CLAUSE`, `ORIGIN_CLAIM_SENTENCE`).
 
 ## The story to tell
 Clothing for the second shift. Not a side hustle costume, but the uniform of people who make things at night, show up early, and build something their own way.

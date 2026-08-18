@@ -10,7 +10,7 @@ import { buildProductStory, isAuthoredSquareDescription } from "@/lib/content/pr
 import { loadProducts } from "@/lib/data/products";
 import { getProductReviews } from "@/lib/commerce/reviews";
 import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
-import { SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
+import { ORIGIN_CLAIM_CLAUSE, SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 import { swatchHex } from "@/lib/data/color-swatches";
 import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
 
@@ -100,7 +100,11 @@ function buildProductMetaDescription(
   const typeLabel = META_TYPE_LABEL[enrichment?.productType ?? ""] ?? "piece";
   // Truth-in-advertising: the one shipping claim, from lib/commerce/policies.ts.
   const claim = `${SHIPPING_CLAIM_SHORT}, ${SHIPPING_CLAIM_DETAIL.toLowerCase()}.`;
-  const lead = `${product.name}: ${typeLabel} printed to order in NYC.`;
+  // ...and the one origin claim. This lead sentence opens every PDP snippet, so
+  // "printed to order in NYC" put a false print location in front of the whole
+  // catalog. Production is Huntington Park CA / Philadelphia PA; only the design
+  // is NYC, which is exactly what ORIGIN_CLAIM_CLAUSE says.
+  const lead = `${product.name}: ${typeLabel} ${ORIGIN_CLAIM_CLAUSE}.`;
 
   const sentences = [lead];
   const seen = new Set([lead.toLowerCase()]);
