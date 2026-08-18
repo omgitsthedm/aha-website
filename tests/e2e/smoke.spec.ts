@@ -1,4 +1,10 @@
 import { test, expect } from "@playwright/test";
+import { SELLABLE_PRODUCT_SLUGS } from "../../lib/commerce/sellable-slugs.generated";
+
+// The one committed answer to "what is sellable" — the same set the storefront
+// and the cart purge read, so a product cannot be added without this pack
+// seeing it and nothing retired can sneak in beside it.
+const CAPSULE_PDP_LINKS = [...SELLABLE_PRODUCT_SLUGS].map((slug) => `/product/${slug}`);
 
 // Smoke pack for the catalog migration hold. Runs against a local production
 // build (see e2e.yml) and proves the public storefront cannot expose the
@@ -17,11 +23,7 @@ test("@catalog home renders the brand hero without retired shopping controls", a
   const homePdpLinks = await page.locator('a[href^="/product/"]').evaluateAll(
     (nodes) => [...new Set(nodes.map((n) => n.getAttribute("href")!))],
   );
-  const capsule = [
-    "/product/black-sheep-tee", "/product/no-kings-tee", "/product/read-banned-books-tee",
-    "/product/dont-lick-the-boot-tee", "/product/sheep-min-hoodie", "/product/enemy-of-the-state-hoodie",
-  ];
-  for (const href of homePdpLinks) expect(capsule, `retired PDP linked from home: ${href}`).toContain(href);
+  for (const href of homePdpLinks) expect(CAPSULE_PDP_LINKS, `retired PDP linked from home: ${href}`).toContain(href);
 
   await expect(page.locator("symbol#aha-sheep-mark")).toHaveCount(1);
   const filledMark = page.locator('svg[fill="currentColor"]:has(use[href="#aha-sheep-mark"])').first();
@@ -169,11 +171,9 @@ test("@catalog shop lists the APLIIQ capsule and nothing retired", async ({ page
 
   // Every link is a capsule product. This is the assertion that would have
   // caught the 1,005-variant legacy reopen.
-  const capsule = [
-    "/product/black-sheep-tee", "/product/no-kings-tee", "/product/read-banned-books-tee",
-    "/product/dont-lick-the-boot-tee", "/product/sheep-min-hoodie", "/product/enemy-of-the-state-hoodie",
-  ];
-  for (const href of links) expect(capsule, `unexpected PDP link ${href}`).toContain(href);
+  for (const href of links) expect(CAPSULE_PDP_LINKS, `unexpected PDP link ${href}`).toContain(href);
+  // And every capsule product is actually listed.
+  for (const href of CAPSULE_PDP_LINKS) expect(links, `capsule product missing from /shop: ${href}`).toContain(href);
 });
 
 test("@product archived product routes return a noindex 404 without buy controls", async ({ page }) => {
@@ -381,11 +381,17 @@ test("@catalog best-sellers redirects to the shop", async ({ page }) => {
 
 test("@catalog shop serves capsule art and none of the deleted legacy imagery", async ({ page }) => {
   await page.goto("/shop");
-  // /products/ was deleted in the reset; capsule art lives under /art/. The old
-  // assertion only checked /products/, so it kept passing after the products
-  // came back — it was measuring a path nothing uses any more.
-  await expect(page.locator('img[src*="/products/"]')).toHaveCount(0);
   await expect(page.locator('a[href="/product/sheep-min-hoodie"]')).toBeVisible();
+  // Capsule mockups live at /products/<capsule-slug>/…; the legacy Printful
+  // mockup tree under /products/<retired-slug>/ was deleted in the reset. Any
+  // /products/ image that is not a capsule slug is that tree coming back.
+  const productImages = await page.locator('img[src*="/products/"]').evaluateAll(
+    (nodes) => nodes.map((n) => decodeURIComponent(n.getAttribute("src") ?? "")),
+  );
+  for (const src of productImages) {
+    const slug = src.match(/\/products\/([^/]+)\//)?.[1];
+    expect(slug && SELLABLE_PRODUCT_SLUGS.has(slug), `legacy imagery served: ${src}`).toBe(true);
+  }
 });
 
 test("@brand manifesto page renders the flag and the signup", async ({ page }) => {
