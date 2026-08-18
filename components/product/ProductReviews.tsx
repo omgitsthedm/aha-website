@@ -67,10 +67,13 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
   const labelC = "mb-2 block text-[11px] font-bold uppercase tracking-[0.08em] text-muted";
 
   return (
-    <section id="reviews" aria-labelledby="reviews-title" className="mt-16 scroll-mt-28 border-t border-border/40 pt-10">
+    <section id="reviews" aria-labelledby="reviews-title" className={`scroll-mt-28 border-t border-border/40 ${summary.count > 0 || open ? "mt-16 pt-10" : "mt-10 pt-6"}`}>
+      {/* A brand-new piece does not open a big empty "Reviews" room. Until real
+          reviews exist this is one quiet line and a button (peak–end: the last
+          thing on the page should not be an absence). */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 id="reviews-title" className="editorial-title text-3xl text-cream">Reviews</h2>
+          <h2 id="reviews-title" className={summary.count > 0 || open ? "editorial-title text-3xl text-cream" : "font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted"}>{summary.count > 0 || open ? "Reviews" : "Bought this piece?"}</h2>
           {summary.count > 0 ? (
             <p className="mt-2 flex items-center gap-2 text-sm font-bold text-cream">
               <Stars rating={summary.average} /> <span>{summary.average.toFixed(1)}</span>
@@ -84,7 +87,7 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
             {summary.count > 0
               ? "Reviews come from buyers. Every one is read and approved by a person before it publishes, and a Verified badge means the review was matched to a real order. We do not write, buy, or edit reviews."
-              : "Reviews come from real customers and are read by a person before they publish. Wear it first, then tell us how it wears."}
+              : "Wear it first, then tell us how it wears. Reviews are read by a person before they publish."}
           </p>
         </div>
         <button type="button" onClick={() => setOpen((v) => !v)}

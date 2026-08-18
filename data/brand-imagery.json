@@ -49,9 +49,9 @@
       "source": "Campaign tile, scripts/imagery/render-campaign-tiles.py"
     },
     {
-      "src": "/editorial/sheep-agave-womens-front.jpg",
-      "alt": "The Black Sheep sweatshirt in agave, worn",
-      "caption": "The signature — the Black Sheep, previous run",
+      "src": "/editorial/sheep-bone-womens-back.jpg",
+      "alt": "The Black Sheep sweatshirt in bone, from behind",
+      "caption": "Bone, from behind",
       "aspect": "4:5",
       "placeholder": true,
       "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
@@ -75,12 +75,13 @@
       "source": "Campaign tile"
     },
     {
-      "src": "/editorial/sheep-bone-womens-back.jpg",
-      "alt": "The Black Sheep sweatshirt in bone, from behind",
-      "caption": "Bone, from behind",
+      "src": "/editorial/tiles/black-sheep-tee.jpg",
+      "alt": "Black Sheep graphic on a rose ground",
+      "caption": "Black Sheep",
+      "productSlug": "black-sheep-tee",
       "aspect": "4:5",
-      "placeholder": true,
-      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
+      "placeholder": false,
+      "source": "Campaign tile"
     },
     {
       "src": "/editorial/tiles/dont-lick-the-boot-tee.jpg",
@@ -135,13 +136,12 @@
       "source": "Campaign tile"
     },
     {
-      "src": "/editorial/tiles/black-sheep-tee.jpg",
-      "alt": "Black Sheep graphic on a rose ground",
-      "caption": "Black Sheep",
-      "productSlug": "black-sheep-tee",
+      "src": "/editorial/sheep-agave-womens-front.jpg",
+      "alt": "The Black Sheep sweatshirt in agave, worn",
+      "caption": "The signature — the Black Sheep, previous run",
       "aspect": "4:5",
-      "placeholder": false,
-      "source": "Campaign tile"
+      "placeholder": true,
+      "source": "Print-provider on-model render of the previous Black Sheep sweatshirt run (brand-owned, 2026-07 kit). Replace with the shoot."
     }
   ],
   "signature": [

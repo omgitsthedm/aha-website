@@ -15,7 +15,10 @@ import { swatchHex } from "@/lib/data/color-swatches";
 import { isSellableProvider, isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
 
-export const revalidate = 300;
+// 15 minutes: the PDP is served from the ISR cache and re-priced live at charge,
+// so a longer window costs nothing in correctness and keeps first paint under the
+// Doherty threshold for cold visits.
+export const revalidate = 900;
 // dynamicParams=false: only slugs present in generateStaticParams (every product
 // in the local manifest) are valid. Any other slug — a deleted or never-existent
 // product — returns a real HTTP 404 (Next's not-found) instead of the ISR
@@ -28,7 +31,7 @@ export const dynamicParams = false;
 // Prebuild every known PDP from the LOCAL manifest (no Square calls at build) so
 // product pages are served from the ISR cache instead of a cold on-demand render
 // (which re-paginated the whole Square catalog — the ~1.8s TTFB). Prices still
-// refresh every 300s via `revalidate`, and the charge is re-priced live, so this
+// refresh every 900s via `revalidate`, and the charge is re-priced live, so this
 // changes nothing about how orders are priced.
 export function generateStaticParams() {
   if (!isStorefrontPublic()) return [];

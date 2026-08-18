@@ -52,9 +52,13 @@ export default function LookbookPage() {
             );
           })}
         </div>
-        <div className="mt-12 flex flex-wrap gap-4">
-          <Link href="/shop" className="btn-primary px-7">Shop the collection</Link>
-          <Link href="/about" className="btn-secondary px-7">Our story</Link>
+        {/* The ending. The last thing on the page is the line, not a grid edge. */}
+        <div className="mt-16 border-t border-border/40 pt-12 lg:mt-20">
+          <p className="editorial-title max-w-4xl text-[clamp(2rem,5vw,4.5rem)] text-cream">Made for you, <em>and the people you love.</em></p>
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Link href="/shop" className="btn-primary px-7">Shop the collection</Link>
+            <Link href="/about" className="btn-secondary px-7">Our story</Link>
+          </div>
         </div>
       </section>
 

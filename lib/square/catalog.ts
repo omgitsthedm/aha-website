@@ -192,11 +192,28 @@ export const getAllProducts = cache(async function getAllProducts(): Promise<Pro
   // The preview flag is an explicit isolation boundary, not merely a fallback
   // for missing credentials. Even if a host or local shell exposes a Square
   // token accidentally, preview/branch/CI builds stay on the committed catalog.
-  if (isPreviewCatalogEnabled()) {
-    return buildPreviewProducts().filter(isCurrentStorefrontProduct);
-  }
-  return fetchAllProductsCached();
+  const products = isPreviewCatalogEnabled()
+    ? buildPreviewProducts().filter(isCurrentStorefrontProduct)
+    : await fetchAllProductsCached();
+  return sortByMerchandising(products);
 });
+
+/**
+ * Deliberate shelf order. The manifest's sortPriority is the merchandiser's hand:
+ * the signature piece opens the shelf and the strongest hood closes it (serial
+ * position — first and last are what people remember). Products without a
+ * priority keep provider order after the ranked ones.
+ */
+function sortByMerchandising(products: Product[]): Product[] {
+  const rank = new Map<string, number>();
+  for (const [slug, ahaProduct] of loadProductMap()) {
+    if (typeof ahaProduct.sortPriority === "number" && ahaProduct.sortPriority > 0) rank.set(slug, ahaProduct.sortPriority);
+  }
+  return products
+    .map((product, index) => ({ product, index, rank: rank.get(product.slug) ?? Number.MAX_SAFE_INTEGER }))
+    .sort((a, b) => a.rank - b.rank || a.index - b.index)
+    .map((entry) => entry.product);
+}
 
 export async function getProduct(slug: string): Promise<Product | null> {
   const products = await getAllProducts();
