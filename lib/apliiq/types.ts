@@ -72,7 +72,8 @@ export interface ApliiqOrderPayload {
     name?: string;
     quantity: number;
     price: string;
-    grams: number;
+    /** Per-unit shipped weight. Omitted when unknown — never sent as a false 0. */
+    grams?: number;
     sku: string;
   }>;
   billing_address?: ApliiqAddressPayload;

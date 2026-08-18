@@ -134,6 +134,8 @@ describe("Apliiq order payloads", () => {
   });
 
   it("emits the documented create-order snake_case payload without invented fields", () => {
+    // grams is absent, not 0. The payload used to assert `grams: 0` on every
+    // line, which told the provider each garment was weightless.
     expect(buildApliiqOrderPayload({ ...validOrder, shippingCode: "upgraded" })).toEqual({
       id: "square-order-uuid",
       number: "1006",
@@ -144,7 +146,6 @@ describe("Apliiq order payloads", () => {
         title: "After Hours Tee",
         quantity: 1,
         price: "45.50",
-        grams: 0,
         sku: "APQ-1998244S7A1",
       }],
       shipping_address: {
@@ -165,6 +166,27 @@ describe("Apliiq order payloads", () => {
   it("omits shipping_lines so Apliiq applies its documented standard default", () => {
     const payload = buildApliiqOrderPayload(validOrder);
     expect(payload.shipping_lines).toBeUndefined();
+  });
+
+  it("forwards a known per-unit weight and omits the field entirely when it is unknown", () => {
+    const weighed = buildApliiqOrderPayload({
+      ...validOrder,
+      lineItems: [{ ...validOrder.lineItems[0], grams: 224 }],
+    });
+    expect(weighed.line_items[0].grams).toBe(224);
+    const unweighed = buildApliiqOrderPayload(validOrder);
+    expect(unweighed.line_items[0]).not.toHaveProperty("grams");
+  });
+
+  it.each([
+    ["zero", 0],
+    ["negative", -1],
+    ["fractional", 224.5],
+  ])("rejects a %s grams value rather than sending it to the provider", (_label, grams) => {
+    expect(() => buildApliiqOrderPayload({
+      ...validOrder,
+      lineItems: [{ ...validOrder.lineItems[0], grams }],
+    })).toThrow("grams must be a positive integer");
   });
 
   it("preserves the difference between processed and accepted create-order responses", async () => {

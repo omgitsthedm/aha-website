@@ -7,7 +7,7 @@ import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { buildPreviewCollections, buildPreviewProducts } from "@/lib/data/preview-catalog";
 import { isPreviewCatalogEnabled } from "@/lib/commerce/runtime";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { APLIIQ_CATALOG_POLICY, isLegacyCatalogPublic, isSellableProvider } from "@/lib/commerce/catalog-policy";
 
 const LEGACY_COLLECTION_ID = "57JPU5ZDHXGWVPRQQZMWVR5Q";
 
@@ -76,6 +76,11 @@ function buildEligibleSquareIndex(): Map<string, EligibleSquareItem> {
   for (const product of loadProducts()) {
     for (const variant of product.variants) {
       if (!variant.squareCatalogObjectId || !variant.squareVariationId) continue;
+      // Provider gate FIRST. checkVariantPurchasable alone is not enough: the
+      // 1,005 legacy Printful variants still satisfy their own branch of it, so
+      // opening the storefront without this line puts every retired product
+      // back on sale with archived Square items and deleted artwork.
+      if (!isSellableProvider(variant.fulfillmentProvider)) continue;
       if (!checkVariantPurchasable(product, variant).ok) continue;
       const entry = index.get(variant.squareCatalogObjectId) ?? {
         slug: product.slug,
@@ -181,7 +186,9 @@ const fetchAllProductsCached = unstable_cache(
 export const getAllProducts = cache(async function getAllProducts(): Promise<Product[]> {
   // The migration policy precedes preview and provider access so old products
   // cannot leak through any catalog, product, search, feed, or sitemap caller.
-  if (!isLegacyCatalogPublic()) return [];
+  // The APLIIQ capsule is allowed through here and then narrowed per variant by
+  // buildEligibleSquareIndex; the legacy catalog remains dark either way.
+  if (!isLegacyCatalogPublic() && !APLIIQ_CATALOG_POLICY.publicCatalogEnabled) return [];
   // The preview flag is an explicit isolation boundary, not merely a fallback
   // for missing credentials. Even if a host or local shell exposes a Square
   // token accidentally, preview/branch/CI builds stay on the committed catalog.
@@ -197,7 +204,7 @@ export async function getProduct(slug: string): Promise<Product | null> {
 }
 
 export const getAllCollections = cache(async function getAllCollections(): Promise<Collection[]> {
-  if (!isLegacyCatalogPublic()) return [];
+  if (!isLegacyCatalogPublic() && !APLIIQ_CATALOG_POLICY.publicCatalogEnabled) return [];
   if (isPreviewCatalogEnabled()) {
     return buildPreviewCollections();
   }

@@ -42,7 +42,9 @@
     "product:new": "node scripts/product-new.mjs",
     "audit:provider-liveness": "node scripts/audit-provider-liveness.mjs",
     "archive:square-legacy": "tsx scripts/archive-square-legacy-catalog.ts",
-    "archive:square-final-reset": "tsx scripts/archive-square-final-reset.ts"
+    "archive:square-final-reset": "tsx scripts/archive-square-final-reset.ts",
+    "rederive:apliiq-costs": "tsx scripts/rederive-apliiq-costs.ts",
+    "generate:sellable-slugs": "tsx scripts/generate-sellable-slugs.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",

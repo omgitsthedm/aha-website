@@ -12,7 +12,7 @@ import type { CategoryMeta, CategorySlug, GenderSlug } from "@/lib/commerce/taxo
 import { CATEGORIES, getCategoryBySlug, productMatchesCategory, productMatchesGender } from "@/lib/commerce/taxonomy";
 import { useInfiniteList } from "@/lib/hooks/useInfiniteScroll";
 import { APPAREL_SIZE_ORDER, extractVariationSize } from "@/lib/utils/variation";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 interface CategoryShopContentProps {
   products: Product[];
@@ -50,7 +50,7 @@ function CatalogMigrationNotice() {
 }
 
 export function CategoryShopContent(props: CategoryShopContentProps) {
-  return isLegacyCatalogPublic() ? <OpenCategoryShopContent {...props} /> : <CatalogMigrationNotice />;
+  return isStorefrontPublic() ? <OpenCategoryShopContent {...props} /> : <CatalogMigrationNotice />;
 }
 
 function OpenCategoryShopContent({

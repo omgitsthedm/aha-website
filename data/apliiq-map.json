@@ -1,3 +1,1904 @@
 {
-  "map": {}
+  "map": {
+    "black-sheep-tee-xs": {
+      "apliiqSku": "APQ-6030119S5A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030119",
+      "apliiqVariantId": "6030119-xs",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/black-sheep-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.209Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginEstimate": 1409
+    },
+    "black-sheep-tee-s": {
+      "apliiqSku": "APQ-6030119S6A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030119",
+      "apliiqVariantId": "6030119-s",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/black-sheep-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginEstimate": 1409
+    },
+    "black-sheep-tee-m": {
+      "apliiqSku": "APQ-6030119S7A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030119",
+      "apliiqVariantId": "6030119-m",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/black-sheep-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginEstimate": 1409
+    },
+    "black-sheep-tee-l": {
+      "apliiqSku": "APQ-6030119S8A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030119",
+      "apliiqVariantId": "6030119-l",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/black-sheep-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginEstimate": 1409
+    },
+    "black-sheep-tee-xl": {
+      "apliiqSku": "APQ-6030119S1A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030119",
+      "apliiqVariantId": "6030119-xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/black-sheep-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginEstimate": 1409
+    },
+    "black-sheep-tee-2xl": {
+      "apliiqSku": "APQ-6030119S2A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030119",
+      "apliiqVariantId": "6030119-xxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/black-sheep-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1949,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1949,
+      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginEstimate": 1209,
+      "marginFloorOverride": {
+        "minRatio": 0.3,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "black-sheep-tee-3xl": {
+      "apliiqSku": "APQ-6030119S21A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030119",
+      "apliiqVariantId": "6030119-xxxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/black-sheep-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2049,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2049,
+      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginEstimate": 1109,
+      "marginFloorOverride": {
+        "minRatio": 0.27,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "black-sheep-tee-4xl": {
+      "apliiqSku": "APQ-6030119S61A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030119",
+      "apliiqVariantId": "6030119-4xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/black-sheep-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2149,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2149,
+      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "marginEstimate": 1009,
+      "marginFloorOverride": {
+        "minRatio": 0.25,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-kings-tee-xs": {
+      "apliiqSku": "APQ-6030120S5A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030120",
+      "apliiqVariantId": "6030120-xs",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/no-kings-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginEstimate": 1409
+    },
+    "no-kings-tee-s": {
+      "apliiqSku": "APQ-6030120S6A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030120",
+      "apliiqVariantId": "6030120-s",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/no-kings-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginEstimate": 1409
+    },
+    "no-kings-tee-m": {
+      "apliiqSku": "APQ-6030120S7A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030120",
+      "apliiqVariantId": "6030120-m",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/no-kings-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginEstimate": 1409
+    },
+    "no-kings-tee-l": {
+      "apliiqSku": "APQ-6030120S8A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030120",
+      "apliiqVariantId": "6030120-l",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/no-kings-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginEstimate": 1409
+    },
+    "no-kings-tee-xl": {
+      "apliiqSku": "APQ-6030120S1A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030120",
+      "apliiqVariantId": "6030120-xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/no-kings-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginEstimate": 1409
+    },
+    "no-kings-tee-2xl": {
+      "apliiqSku": "APQ-6030120S2A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030120",
+      "apliiqVariantId": "6030120-xxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/no-kings-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1949,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1949,
+      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginEstimate": 1209,
+      "marginFloorOverride": {
+        "minRatio": 0.3,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-kings-tee-3xl": {
+      "apliiqSku": "APQ-6030120S21A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030120",
+      "apliiqVariantId": "6030120-xxxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/no-kings-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2049,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2049,
+      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginEstimate": 1109,
+      "marginFloorOverride": {
+        "minRatio": 0.27,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-kings-tee-4xl": {
+      "apliiqSku": "APQ-6030120S61A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030120",
+      "apliiqVariantId": "6030120-4xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/no-kings-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2149,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2149,
+      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "marginEstimate": 1009,
+      "marginFloorOverride": {
+        "minRatio": 0.25,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "read-banned-books-tee-xs": {
+      "apliiqSku": "APQ-6030121S5A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030121",
+      "apliiqVariantId": "6030121-xs",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "marginEstimate": 1409
+    },
+    "read-banned-books-tee-s": {
+      "apliiqSku": "APQ-6030121S6A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030121",
+      "apliiqVariantId": "6030121-s",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "marginEstimate": 1409
+    },
+    "read-banned-books-tee-m": {
+      "apliiqSku": "APQ-6030121S7A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030121",
+      "apliiqVariantId": "6030121-m",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "marginEstimate": 1409
+    },
+    "read-banned-books-tee-l": {
+      "apliiqSku": "APQ-6030121S8A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030121",
+      "apliiqVariantId": "6030121-l",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "marginEstimate": 1409
+    },
+    "read-banned-books-tee-xl": {
+      "apliiqSku": "APQ-6030121S1A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030121",
+      "apliiqVariantId": "6030121-xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "marginEstimate": 1409
+    },
+    "read-banned-books-tee-2xl": {
+      "apliiqSku": "APQ-6030121S2A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030121",
+      "apliiqVariantId": "6030121-xxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1949,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1949,
+      "costVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "marginEstimate": 1209,
+      "marginFloorOverride": {
+        "minRatio": 0.3,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "read-banned-books-tee-3xl": {
+      "apliiqSku": "APQ-6030121S21A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030121",
+      "apliiqVariantId": "6030121-xxxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2049,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2049,
+      "costVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "marginEstimate": 1109,
+      "marginFloorOverride": {
+        "minRatio": 0.27,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "read-banned-books-tee-4xl": {
+      "apliiqSku": "APQ-6030121S61A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030121",
+      "apliiqVariantId": "6030121-4xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2149,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2149,
+      "costVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "marginEstimate": 1009,
+      "marginFloorOverride": {
+        "minRatio": 0.25,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "dont-lick-the-boot-tee-xs": {
+      "apliiqSku": "APQ-6030122S5A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030122",
+      "apliiqVariantId": "6030122-xs",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginEstimate": 1409
+    },
+    "dont-lick-the-boot-tee-s": {
+      "apliiqSku": "APQ-6030122S6A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030122",
+      "apliiqVariantId": "6030122-s",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginEstimate": 1409
+    },
+    "dont-lick-the-boot-tee-m": {
+      "apliiqSku": "APQ-6030122S7A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030122",
+      "apliiqVariantId": "6030122-m",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginEstimate": 1409
+    },
+    "dont-lick-the-boot-tee-l": {
+      "apliiqSku": "APQ-6030122S8A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030122",
+      "apliiqVariantId": "6030122-l",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginEstimate": 1409
+    },
+    "dont-lick-the-boot-tee-xl": {
+      "apliiqSku": "APQ-6030122S1A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030122",
+      "apliiqVariantId": "6030122-xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginEstimate": 1409
+    },
+    "dont-lick-the-boot-tee-2xl": {
+      "apliiqSku": "APQ-6030122S2A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030122",
+      "apliiqVariantId": "6030122-xxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1949,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1949,
+      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginEstimate": 1209,
+      "marginFloorOverride": {
+        "minRatio": 0.3,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "dont-lick-the-boot-tee-3xl": {
+      "apliiqSku": "APQ-6030122S21A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030122",
+      "apliiqVariantId": "6030122-xxxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2049,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2049,
+      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginEstimate": 1109,
+      "marginFloorOverride": {
+        "minRatio": 0.27,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "dont-lick-the-boot-tee-4xl": {
+      "apliiqSku": "APQ-6030122S61A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030122",
+      "apliiqVariantId": "6030122-4xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2149,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2149,
+      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "marginEstimate": 1009,
+      "marginFloorOverride": {
+        "minRatio": 0.25,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "sheep-min-hoodie-xs": {
+      "apliiqSku": "APQ-6030123S5A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030123",
+      "apliiqVariantId": "6030123-xs",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15.9,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginEstimate": 867,
+      "marginFloorOverride": {
+        "minRatio": 0.14,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "sheep-min-hoodie-s": {
+      "apliiqSku": "APQ-6030123S6A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030123",
+      "apliiqVariantId": "6030123-s",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15.9,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginEstimate": 867,
+      "marginFloorOverride": {
+        "minRatio": 0.14,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "sheep-min-hoodie-m": {
+      "apliiqSku": "APQ-6030123S7A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030123",
+      "apliiqVariantId": "6030123-m",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 19,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginEstimate": 572,
+      "marginFloorOverride": {
+        "minRatio": 0.09,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "sheep-min-hoodie-l": {
+      "apliiqSku": "APQ-6030123S8A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030123",
+      "apliiqVariantId": "6030123-l",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 20,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginEstimate": 572,
+      "marginFloorOverride": {
+        "minRatio": 0.09,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "sheep-min-hoodie-xl": {
+      "apliiqSku": "APQ-6030123S1A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030123",
+      "apliiqVariantId": "6030123-xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 21,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginEstimate": 572,
+      "marginFloorOverride": {
+        "minRatio": 0.09,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "sheep-min-hoodie-2xl": {
+      "apliiqSku": "APQ-6030123S2A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030123",
+      "apliiqVariantId": "6030123-xxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 23,
+      "apliiqItemCost": 4144,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 4144,
+      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginEstimate": 372,
+      "marginFloorOverride": {
+        "minRatio": 0.06,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "sheep-min-hoodie-3xl": {
+      "apliiqSku": "APQ-6030123S21A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030123",
+      "apliiqVariantId": "6030123-xxxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 25,
+      "apliiqItemCost": 4344,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 4344,
+      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginEstimate": 172,
+      "marginFloorOverride": {
+        "minRatio": 0.02,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "sheep-min-hoodie-4xl": {
+      "apliiqSku": "APQ-6030123S61A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030123",
+      "apliiqVariantId": "6030123-4xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 25,
+      "apliiqItemCost": 4444,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 4444,
+      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginEstimate": 72,
+      "marginFloorOverride": {
+        "minRatio": 0.01,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "sheep-min-hoodie-5xl": {
+      "apliiqSku": "APQ-6030123S62A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030123",
+      "apliiqVariantId": "6030123-5xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 25,
+      "apliiqItemCost": 4544,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 4544,
+      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "marginEstimate": 943,
+      "marginFloorOverride": {
+        "minRatio": 0.13,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "enemy-of-the-state-hoodie-xs": {
+      "apliiqSku": "APQ-6030124S5A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030124",
+      "apliiqVariantId": "6030124-xs",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15.9,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginEstimate": 867,
+      "marginFloorOverride": {
+        "minRatio": 0.14,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "enemy-of-the-state-hoodie-s": {
+      "apliiqSku": "APQ-6030124S6A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030124",
+      "apliiqVariantId": "6030124-s",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15.9,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginEstimate": 867,
+      "marginFloorOverride": {
+        "minRatio": 0.14,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "enemy-of-the-state-hoodie-m": {
+      "apliiqSku": "APQ-6030124S7A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030124",
+      "apliiqVariantId": "6030124-m",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 19,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginEstimate": 572,
+      "marginFloorOverride": {
+        "minRatio": 0.09,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "enemy-of-the-state-hoodie-l": {
+      "apliiqSku": "APQ-6030124S8A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030124",
+      "apliiqVariantId": "6030124-l",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 20,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginEstimate": 572,
+      "marginFloorOverride": {
+        "minRatio": 0.09,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "enemy-of-the-state-hoodie-xl": {
+      "apliiqSku": "APQ-6030124S1A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030124",
+      "apliiqVariantId": "6030124-xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 21,
+      "apliiqItemCost": 3944,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3944,
+      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginEstimate": 572,
+      "marginFloorOverride": {
+        "minRatio": 0.09,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "enemy-of-the-state-hoodie-2xl": {
+      "apliiqSku": "APQ-6030124S2A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030124",
+      "apliiqVariantId": "6030124-xxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 23,
+      "apliiqItemCost": 4144,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 4144,
+      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginEstimate": 372,
+      "marginFloorOverride": {
+        "minRatio": 0.06,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "enemy-of-the-state-hoodie-3xl": {
+      "apliiqSku": "APQ-6030124S21A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030124",
+      "apliiqVariantId": "6030124-xxxl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 25,
+      "apliiqItemCost": 4344,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 4344,
+      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginEstimate": 172,
+      "marginFloorOverride": {
+        "minRatio": 0.02,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "enemy-of-the-state-hoodie-4xl": {
+      "apliiqSku": "APQ-6030124S61A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030124",
+      "apliiqVariantId": "6030124-4xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 25,
+      "apliiqItemCost": 4444,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 4444,
+      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginEstimate": 72,
+      "marginFloorOverride": {
+        "minRatio": 0.01,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "enemy-of-the-state-hoodie-5xl": {
+      "apliiqSku": "APQ-6030124S62A0",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030124",
+      "apliiqVariantId": "6030124-5xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 25,
+      "apliiqItemCost": 4544,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 4544,
+      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "marginEstimate": 943,
+      "marginFloorOverride": {
+        "minRatio": 0.13,
+        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    }
+  }
 }

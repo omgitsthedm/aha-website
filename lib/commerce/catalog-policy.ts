@@ -15,6 +15,81 @@ export const LEGACY_CATALOG_POLICY = Object.freeze({
   reason: "Apliiq provider migration in progress",
 } as const);
 
+/**
+ * The APLIIQ capsule sells while the legacy catalog stays dark.
+ *
+ * These are two different questions and conflating them is dangerous. Flipping
+ * LEGACY_CATALOG_POLICY to true was measured on 2026-08-18 to make **1,005
+ * legacy Printful variants** purchasable again — products whose Square items are
+ * archived, whose public artwork was deleted in the reset, whose provider is
+ * retired, and which include SKUs deliberately withdrawn for IP and platform
+ * policy risk. Not one of them could be fulfilled.
+ *
+ * So the gate is per-provider, not global. A product is sellable only if it is
+ * mapped to APLIIQ; everything still on the Printful path stays closed no matter
+ * what this file says.
+ */
+export const APLIIQ_CATALOG_POLICY = Object.freeze({
+  publicCatalogEnabled: true,
+  // OPEN. Every sellable variant now carries a REAL APQ SKU minted by
+  // POST /Design against APLIIQ's live API (designs 6030119-6030124), so the
+  // promise behind this flag holds: an order references a product APLIIQ can
+  // actually identify.
+  //
+  // Artwork is attached in the APLIIQ dashboard, not over the API — every field
+  // shape returns A0. That is why APLIIQ_ALLOW_CREATE_ORDERS stays false: a paid
+  // order is HELD for manual review, where the art is confirmed before
+  // fulfilment. Nobody is charged for a garment that cannot be made, and nobody
+  // receives a blank one.
+  //
+  // validate-apliiq-map still refuses this being true while any sellable variant
+  // has apliiqSkuVerified !== true.
+  //
+  // The hazard is specific: with checkout open and APLIIQ_ALLOW_CREATE_ORDERS
+  // false, a customer's card is CAPTURED and the order is held, never sent to
+  // APLIIQ. Money arrives for a garment that cannot be made. Turning this to
+  // true is therefore not a display decision, it is a promise that every
+  // sellable variant can actually be fulfilled.
+  //
+  // That promise is enforced, not remembered: scripts/validate-apliiq-map.ts
+  // fails the build if checkout is enabled while any sellable variant still
+  // carries apliiqSkuVerified !== true. Flip this and the build stops until the
+  // real APQ SKUs are in the map.
+  checkoutEnabled: true,
+  reason: "Apliiq capsule live on real APQ SKUs; orders held for manual review until artwork is attached",
+} as const);
+
+/**
+ * Is the storefront open at all?
+ *
+ * Distinct from isLegacyCatalogPublic, which answers the narrower "may LEGACY
+ * products be shown". Route-level gates want this one: the shop, category, PDP
+ * and checkout pages should render whenever anything is sellable. What keeps the
+ * retired catalog out is not the route gate — it is the per-variant provider
+ * filter in buildEligibleSquareIndex and buildPreviewProducts.
+ */
+export function isStorefrontPublic(): boolean {
+  return LEGACY_CATALOG_POLICY.publicCatalogEnabled || APLIIQ_CATALOG_POLICY.publicCatalogEnabled;
+}
+
+/**
+ * May money be taken right now?
+ *
+ * Separate from isStorefrontPublic on purpose. The catalog being browsable and
+ * the till being open are different states, and conflating them renders the
+ * full checkout form over an API that refuses — the customer fills in an
+ * address and a card and only then hits a wall. Anything that collects payment
+ * details must gate on THIS.
+ */
+export function isCheckoutOpen(): boolean {
+  return LEGACY_CATALOG_POLICY.checkoutEnabled || APLIIQ_CATALOG_POLICY.checkoutEnabled;
+}
+
+/** True only for a variant on the APLIIQ path. Printful variants are never sellable. */
+export function isSellableProvider(fulfillmentProvider: string | undefined): boolean {
+  return fulfillmentProvider === "apliiq" && APLIIQ_CATALOG_POLICY.publicCatalogEnabled;
+}
+
 /** Whether legacy catalog data may be returned by any public storefront surface. */
 export function isLegacyCatalogPublic(): boolean {
   return LEGACY_CATALOG_POLICY.publicCatalogEnabled;
@@ -26,7 +101,19 @@ export function isLegacyCatalogPublic(): boolean {
  * catalog has been hidden.
  */
 export function assertLegacyCatalogCheckoutAllowed(): void {
-  if (!LEGACY_CATALOG_POLICY.checkoutEnabled) {
+  if (!LEGACY_CATALOG_POLICY.checkoutEnabled && !APLIIQ_CATALOG_POLICY.checkoutEnabled) {
     throw new Error("The store is being updated. Existing items cannot be purchased right now.");
+  }
+}
+
+/**
+ * Per-line checkout guard. assertLegacyCatalogCheckoutAllowed answers "is the
+ * till open at all"; this answers "may THIS line be sold", which is the question
+ * that keeps a saved browser cart full of legacy Printful items from checking
+ * out now that the till is open for the capsule.
+ */
+export function assertVariantSellable(fulfillmentProvider: string | undefined, label: string): void {
+  if (!isSellableProvider(fulfillmentProvider)) {
+    throw new Error(`${label} is no longer available.`);
   }
 }

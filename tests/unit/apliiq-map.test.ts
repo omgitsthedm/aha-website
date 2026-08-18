@@ -18,6 +18,7 @@ function validEntry(overrides: Record<string, unknown> = {}): Record<string, unk
     marginEstimate: 2300,
     costVerifiedAt: "2026-08-16T00:00:00.000Z",
     marginVerifiedAt: "2026-08-16T00:00:00.000Z",
+    weightOz: 7.9,
     ...overrides,
   };
 }
@@ -66,5 +67,120 @@ describe("APLIIQ map runtime parser", () => {
   it("rejects a label-like value that is not an APLIIQ production SKU", () => {
     expect(() => parseApliiqMapDocument(document(validEntry({ apliiqSku: "APQ-TEE-M" }))))
       .toThrow("must be an APLIIQ APQ production SKU");
+  });
+
+  it("requires a shipped weight, because freight is billed by weight tier", () => {
+    expect(() => parseApliiqMapDocument(document(validEntry({ weightOz: undefined }))))
+      .toThrow("must be a finite positive number of ounces");
+  });
+
+  it.each([
+    ["zero", 0],
+    ["negative", -1],
+    ["three decimals", 7.999],
+  ])("rejects a %s weight", (_label, weightOz) => {
+    expect(() => parseApliiqMapDocument(document(validEntry({ weightOz }))))
+      .toThrow(/ounces|two decimal places/);
+  });
+
+  it("keeps the fractional tier ceilings of the rate ladder representable", () => {
+    for (const weightOz of [7.9, 11.9, 143.99, 159.84]) {
+      expect(parseApliiqMapDocument(document(validEntry({ weightOz }))).map["apliiq-tee-m"].weightOz)
+        .toBe(weightOz);
+    }
+  });
+
+  // Regression: the two-decimal check used to be `Math.round(v * 100) !== v * 100`,
+  // and `v * 100` is not exact in binary floating point (4.35 * 100 is
+  // 434.99999999999994). That rejected 4,587 of the 48,000 legal two-decimal
+  // weights up to 480 oz — every one of these, all ordinary garment weights.
+  it.each([4.35, 4.4, 8.15, 1.1, 0.07, 16.35])(
+    "accepts %s oz, which the naive two-decimal float check wrongly rejected",
+    (weightOz) => {
+      expect(parseApliiqMapDocument(document(validEntry({ weightOz }))).map["apliiq-tee-m"].weightOz)
+        .toBe(weightOz);
+    }
+  );
+
+  it("still rejects a third decimal place after the float fix", () => {
+    for (const weightOz of [1.005, 7.895, 12.345]) {
+      expect(() => parseApliiqMapDocument(document(validEntry({ weightOz }))))
+        .toThrow("two decimal places");
+    }
+  });
+
+  it("accepts the optional landed-cost overrides as integer cents", () => {
+    const entry = parseApliiqMapDocument(document(validEntry({
+      apliiqItemCost: 2500,
+      apliiqShippingCost: 596,
+      apliiqFulfillmentFeeCents: 100,
+      apliiqDestinationTaxCents: 0,
+    }))).map["apliiq-tee-m"];
+    expect(entry).toMatchObject({
+      apliiqItemCost: 2500, apliiqShippingCost: 596, apliiqFulfillmentFeeCents: 100, apliiqDestinationTaxCents: 0,
+    });
+  });
+
+  it("leaves the landed-cost overrides undefined so the rate sheet supplies defaults", () => {
+    const entry = parseApliiqMapDocument(document(validEntry())).map["apliiq-tee-m"];
+    expect(entry.apliiqItemCost).toBeUndefined();
+    expect(entry.apliiqShippingCost).toBeUndefined();
+    expect(entry.apliiqFulfillmentFeeCents).toBeUndefined();
+    expect(entry.apliiqDestinationTaxCents).toBeUndefined();
+  });
+
+  it.each([
+    ["apliiqItemCost", { apliiqItemCost: 25.5 }],
+    ["apliiqShippingCost", { apliiqShippingCost: -1 }],
+    ["apliiqFulfillmentFeeCents", { apliiqFulfillmentFeeCents: "100" }],
+    ["apliiqDestinationTaxCents", { apliiqDestinationTaxCents: 1.5 }],
+  ])("rejects a non-integer-cents %s", (_label, override) => {
+    expect(() => parseApliiqMapDocument(document(validEntry(override))))
+      .toThrow("finite nonnegative integer");
+  });
+});
+
+describe("apliiqCostBasis — the VIP re-derive guard", () => {
+  it("accepts standard and vip, rejects anything else", () => {
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqCostBasis: "standard" })))).not.toThrow();
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqCostBasis: "vip" })))).not.toThrow();
+    // Absent must stay legal — entries written before this field existed keep validating.
+    expect(() => parseApliiqMapDocument(document(validEntry()))).not.toThrow();
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqCostBasis: "gold" }))))
+      .toThrow(/must be "standard" or "vip"/);
+  });
+
+  it("reads an absent basis as standard, so a re-derive cannot double-discount", () => {
+    const doc = parseApliiqMapDocument(document(validEntry()));
+    const entry = doc.map["apliiq-tee-m"];
+    // scripts/rederive-apliiq-costs.ts treats undefined as "standard". If that
+    // ever changed, a map captured before this field existed would take the 20%
+    // VIP discount a second time.
+    expect(entry.apliiqCostBasis ?? "standard").toBe("standard");
+  });
+});
+
+describe("the money guard — checkout may not open on unverified SKUs", () => {
+  it("treats an absent apliiqSkuVerified as unverified, never as safe", () => {
+    // Omission must fail closed. A variant cannot become sellable-for-money by
+    // leaving the flag out of the map.
+    const doc = parseApliiqMapDocument(document(validEntry()));
+    expect(doc.map["apliiq-tee-m"].apliiqSkuVerified).toBeUndefined();
+    expect(doc.map["apliiq-tee-m"].apliiqSkuVerified === true).toBe(false);
+  });
+
+  it("accepts an explicit boolean and rejects anything else", () => {
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqSkuVerified: true })))).not.toThrow();
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqSkuVerified: false })))).not.toThrow();
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqSkuVerified: "yes" }))))
+      .toThrow(/must be a boolean/);
+  });
+
+  it("cannot be inferred from the SKU shape, which is why the flag exists", async () => {
+    // A placeholder is pattern-valid by construction — it has to be, or the map
+    // would not validate — so isApliiqSku can never distinguish the two.
+    const { isApliiqSku } = await import("@/lib/apliiq/orders");
+    expect(isApliiqSku("APQ-1998241S1A1")).toBe(true);  // placeholder in use today
+    expect(isApliiqSku("APQ-1998244S7A1")).toBe(true);  // real-shaped
   });
 });

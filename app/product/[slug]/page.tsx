@@ -10,9 +10,10 @@ import { buildProductStory, isAuthoredSquareDescription } from "@/lib/content/pr
 import { loadProducts } from "@/lib/data/products";
 import { getProductReviews } from "@/lib/commerce/reviews";
 import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
-import { SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
+import { ORIGIN_CLAIM_CLAUSE, SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 import { swatchHex } from "@/lib/data/color-swatches";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isSellableProvider, isStorefrontPublic } from "@/lib/commerce/catalog-policy";
+import { checkVariantPurchasable } from "@/lib/data/purchasable";
 
 export const revalidate = 300;
 // dynamicParams=false: only slugs present in generateStaticParams (every product
@@ -30,9 +31,17 @@ export const dynamicParams = false;
 // refresh every 300s via `revalidate`, and the charge is re-priced live, so this
 // changes nothing about how orders are priced.
 export function generateStaticParams() {
-  if (!isLegacyCatalogPublic()) return [];
+  if (!isStorefrontPublic()) return [];
   try {
-    return loadProducts().map((p) => ({ slug: p.slug }));
+    // Only products with at least one SELLABLE variant. Mapping the whole
+    // manifest here published every retired product as a real 200 page —
+    // verified on the deploy preview, /product/dont-fuck-fascists-shirt served
+    // fine. dynamicParams=false means this list IS the set of live PDPs, so the
+    // provider filter has to be applied here and not only in the grid.
+    return loadProducts()
+      .filter((p) => p.variants.some((v) =>
+        isSellableProvider(v.fulfillmentProvider) && checkVariantPurchasable(p, v).ok))
+      .map((p) => ({ slug: p.slug }));
   } catch {
     return [];
   }
@@ -100,7 +109,11 @@ function buildProductMetaDescription(
   const typeLabel = META_TYPE_LABEL[enrichment?.productType ?? ""] ?? "piece";
   // Truth-in-advertising: the one shipping claim, from lib/commerce/policies.ts.
   const claim = `${SHIPPING_CLAIM_SHORT}, ${SHIPPING_CLAIM_DETAIL.toLowerCase()}.`;
-  const lead = `${product.name}: ${typeLabel} printed to order in NYC.`;
+  // ...and the one origin claim. This lead sentence opens every PDP snippet, so
+  // "printed to order in NYC" put a false print location in front of the whole
+  // catalog. Production is Huntington Park CA / Philadelphia PA; only the design
+  // is NYC, which is exactly what ORIGIN_CLAIM_CLAUSE says.
+  const lead = `${product.name}: ${typeLabel} ${ORIGIN_CLAIM_CLAUSE}.`;
 
   const sentences = [lead];
   const seen = new Set([lead.toLowerCase()]);
@@ -268,7 +281,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   // Do this before enrichment or stock work. A direct legacy PDP URL must not
   // fetch provider data while the migration hold is active.
-  if (!isLegacyCatalogPublic()) notFound();
+  if (!isStorefrontPublic()) notFound();
   const { slug } = await params;
   let product: Product | null = null;
   let products: Product[] = [];

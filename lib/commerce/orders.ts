@@ -1,12 +1,12 @@
 // Order layer: server-side cart revalidation (never trust client prices) + DB persistence.
 // Payment status and fulfillment status are tracked separately (§14/§28).
 import { db, isDbConfigured } from "@/lib/db/client";
-import { orders, orderItems, payments, auditLog } from "@/db/schema";
+import { orders, orderItems, payments, auditLog, type OrderItemFulfillmentStatus } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { loadProducts } from "@/lib/data/products";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import { INTERNATIONAL_SHIPPING_CENTS, isInternational } from "@/lib/commerce/policies";
-import { assertLegacyCatalogCheckoutAllowed } from "@/lib/commerce/catalog-policy";
+import { assertLegacyCatalogCheckoutAllowed, assertVariantSellable } from "@/lib/commerce/catalog-policy";
 import type { AhaProduct, AhaVariant } from "@/lib/types/product";
 
 export interface CheckoutLine {
@@ -47,6 +47,13 @@ export interface RevalidatedCart {
 }
 
 /**
+ * Per-line fulfillment starts where the order does. This used to be left to the
+ * column default, which is how it read as "a value nobody writes"; the APLIIQ
+ * reconciler now advances it, so the starting point is stated here on purpose.
+ */
+const INITIAL_ORDER_ITEM_STATUS: OrderItemFulfillmentStatus = "not_started";
+
+/**
  * Build the immutable order-item records used by both the initial fulfillment
  * call and every later reconciliation. Keeping this projection pure makes the
  * paid snapshot contract directly testable without touching a database.
@@ -54,6 +61,7 @@ export interface RevalidatedCart {
 export function buildOrderItemRecords(orderId: number, items: readonly RevalidatedItem[]) {
   return items.map((it) => ({
     orderId, ahaProductId: it.ahaProductId, ahaVariantId: it.ahaVariantId, sku: it.sku,
+    fulfillmentStatus: INITIAL_ORDER_ITEM_STATUS,
     titleSnapshot: it.title, sizeSnapshot: it.size, colorSnapshot: it.color ?? null,
     quantity: it.quantity, unitPrice: it.unitPrice, lineTotal: it.lineTotal,
     squareVariationId: it.squareVariationId,
@@ -117,6 +125,11 @@ function revalidateCatalogLines(lines: CheckoutLine[]): RevalidatedCart {
     const hit = idx.get(line.squareVariationId);
     if (!hit) throw new Error(`Item no longer available (${line.squareVariationId}).`);
     const { product, variant } = hit;
+    // NOTE: the sellable-provider guard deliberately does NOT live here.
+    // revalidateCatalogLines is shared by public checkout and by fulfillment
+    // recovery for orders paid BEFORE the hold; blocking legacy lines here
+    // would strand a customer who has already been charged. The guard belongs
+    // on the public path only — see revalidateCart.
     const readiness = checkVariantPurchasable(product, variant);
     if (!readiness.ok) {
       throw new Error(`"${product.title}" (${variant.size}) is not currently purchasable: ${readiness.reasons.join(", ")}.`);
@@ -150,6 +163,15 @@ function revalidateCatalogLines(lines: CheckoutLine[]): RevalidatedCart {
           marginEstimate: variant.marginEstimate,
           costVerifiedAt: variant.costVerifiedAt,
           marginVerifiedAt: variant.marginVerifiedAt,
+          // Purchase-time landed-cost evidence. weightOz is what the APLIIQ
+          // adapter turns into the wire `grams` field, so it has to be frozen
+          // with the order rather than re-read from a catalog that may have
+          // been re-weighed since.
+          weightOz: variant.weightOz,
+          apliiqItemCost: variant.apliiqItemCost,
+          apliiqShippingCost: variant.apliiqShippingCost,
+          apliiqFulfillmentFeeCents: variant.apliiqFulfillmentFeeCents,
+          apliiqDestinationTaxCents: variant.apliiqDestinationTaxCents,
         }
         : {
           printfulCatalogVariantId: variant.printfulCatalogVariantId,
@@ -174,7 +196,14 @@ export function revalidateCart(lines: CheckoutLine[]): RevalidatedCart {
   // This is intentionally the first checkout guard. A stale local cart must
   // fail before its Square variation can be priced or attached to an order.
   assertLegacyCatalogCheckoutAllowed();
-  return revalidateCatalogLines(lines);
+  const cart = revalidateCatalogLines(lines);
+  // Then per line: the till being open for the APLIIQ capsule does not make a
+  // legacy Printful line sellable, and a browser cart saved before the reset
+  // still holds them.
+  for (const item of cart.items) {
+    assertVariantSellable(item.fulfillmentProvider, `"${item.title}" (${item.size})`);
+  }
+  return cart;
 }
 
 /**

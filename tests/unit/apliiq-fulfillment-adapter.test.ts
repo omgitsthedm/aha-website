@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  apliiqLineGramsFromSnapshot,
   buildApliiqFulfillmentOrder,
   getApliiqDefaultShipping,
   isApliiqSubmissionAllowed,
@@ -111,6 +112,35 @@ describe("APLIIQ fulfillment adapter", () => {
       },
       shipping_lines: [{ code: "standard" }],
     });
+  });
+
+  it("converts the frozen purchase-time weight into per-unit grams", () => {
+    const weighed = {
+      ...request,
+      items: [item("apliiq", {
+        providerSnapshot: {
+          apliiqSku: "APQ-1998244S7A1",
+          mappingApproval: "approved",
+          sampleApproval: "approved",
+          decoration: { front: { artworkId: "front-art" } },
+          privateLabel: { neck: { artworkId: "neck-art" } },
+          weightOz: 7.9,
+        },
+      })],
+    };
+    // 7.9 oz x 28.349523125 g/oz, rounded. Per unit, not per line.
+    expect(apliiqLineGramsFromSnapshot({ weightOz: 7.9 })).toBe(224);
+    expect(buildApliiqOrderPayload(buildApliiqFulfillmentOrder(weighed)).line_items[0].grams).toBe(224);
+  });
+
+  it("omits grams for an order placed before weights were captured", () => {
+    // The snapshot is immutable, so a pre-weight order must not be back-filled
+    // from the current catalog — and must not claim a weightless garment.
+    expect(apliiqLineGramsFromSnapshot({})).toBeUndefined();
+    expect(apliiqLineGramsFromSnapshot({ weightOz: 0 })).toBeUndefined();
+    expect(apliiqLineGramsFromSnapshot({ weightOz: "7.9" })).toBeUndefined();
+    expect(buildApliiqOrderPayload(buildApliiqFulfillmentOrder(request)).line_items[0])
+      .not.toHaveProperty("grams");
   });
 
   it("uses standard by default and validates a configured APLIIQ shipping code", () => {

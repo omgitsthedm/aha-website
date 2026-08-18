@@ -237,12 +237,107 @@ export function groupSourceItemsByPrintfulStore(
   return groups;
 }
 
+/**
+ * APLIIQ's "New" state means the print shop has the order in its queue and
+ * nobody has touched a garment yet. It used to collapse straight into
+ * `confirmed`, which tells the shopper "In production" about a blank still on
+ * the shelf. It gets its own state so `confirmed` can mean what it says:
+ * preparing to release, ready to release, in production, ready to ship.
+ */
+export const ACCEPTED_UNPROCESSED_STATUS = "accepted_unprocessed";
+
+/**
+ * Part of the order was cancelled while the rest kept moving. This used to fall
+ * through to `partially_shipped`, which erased the cancelled portion entirely —
+ * and a cancelled line is money owed back to the shopper, so it must never be
+ * summarised away by the lines that are still shipping.
+ */
+export const PARTIALLY_CANCELED_STATUS = "partially_canceled";
+
+/**
+ * The terminal resolution of PARTIALLY_CANCELED_STATUS: the cancelled portion
+ * is settled and every line that survived the cancellation has shipped.
+ *
+ * Without it, PARTIALLY_CANCELED_STATUS was a permanent latch. The surviving
+ * lines shipped, a shipment row and an order_shipped email went out, and the
+ * only status the shopper could actually read still said "Partially canceled" —
+ * forever, because nothing downstream of a partial cancel could ever move the
+ * order again. This state is still cancellation-bearing (the refund owed is
+ * never summarised away by the lines that shipped) but it is DONE, so the
+ * shopper copy and the ops queue can both tell the truth.
+ */
+export const PARTIALLY_CANCELED_SHIPPED_STATUS = "partially_canceled_shipped";
+
+/**
+ * Order-level states that carry a cancelled portion. Any of these present in a
+ * batch means the order can never be summarised as plain shipped/partially
+ * shipped: that is how a cancelled line got erased with no refund and no flag.
+ */
+const CANCELLATION_BEARING_STATUSES: ReadonlySet<string> = new Set([
+  "canceled", PARTIALLY_CANCELED_STATUS, PARTIALLY_CANCELED_SHIPPED_STATUS,
+]);
+
+/**
+ * Row states that mean "whatever survived here is out the door". A row that is
+ * itself partially-canceled-shipped counts: its own surviving lines shipped.
+ */
+const TERMINAL_SURVIVING_STATUSES: ReadonlySet<string> = new Set([
+  "shipped", "delivered", PARTIALLY_CANCELED_SHIPPED_STATUS,
+]);
+
+/**
+ * Shopper-facing copy for an order-level fulfillment status. Single source of
+ * truth: the same map is read by the fulfillment engine and by the APLIIQ
+ * webhook reconciler, so a new status cannot gain honest copy in one path and
+ * silently fall back to "Payment confirmed" in the other.
+ */
+export function customerStatusFor(status: string): string {
+  switch (status) {
+    case "draft_created": return "Preparing your order";
+    case ACCEPTED_UNPROCESSED_STATUS: return "Received by our print shop";
+    case "confirmed": return "In production";
+    case "partially_shipped": return "Partially shipped";
+    case "shipped": return "Shipped";
+    case "delivered": return "Delivered";
+    case PARTIALLY_CANCELED_STATUS: return "Partially canceled";
+    // Both halves of the truth, in the order the shopper cares about: their
+    // surviving items are on the way, and part of the order is not coming.
+    // "Partially canceled" alone hid a shipment they had already been emailed
+    // about; "Shipped" alone would hide money we still owe them.
+    case PARTIALLY_CANCELED_SHIPPED_STATUS: return "Shipped (part of your order was canceled)";
+    case "canceled": return "Canceled";
+    case "manual_review": return "Action needed";
+    default: return "Payment confirmed";
+  }
+}
+
 export function aggregateFulfillmentStatus(statuses: string[]): string {
   if (statuses.length === 0) return "not_started";
   if (statuses.some((status) => ["manual_review", "confirmation_failed", "failed", "on_hold"].includes(status))) {
     return "manual_review";
   }
   if (statuses.every((status) => status === "canceled")) return "canceled";
+  // A cancellation mixed with anything else is reported BEFORE the shipped
+  // arithmetic below. ["canceled", "shipped"] used to return partially_shipped,
+  // which is how a cancelled line got erased with no refund and no flag.
+  //
+  // A provider row that is ITSELF partially canceled carries the same meaning
+  // and has to be honoured here too: there is exactly one APLIIQ fulfillment
+  // row per order, so a subset cancel has nowhere else to live, and without
+  // this clause a lone partially_canceled row fell through every branch below
+  // and aggregated to "queued" — customer copy "Payment confirmed".
+  //
+  // Cancellation-bearing is not the same as unfinished. Once every batch that
+  // is NOT wholly cancelled has shipped, the order is over and has to say so:
+  // holding it at PARTIALLY_CANCELED_STATUS left the shopper reading "Partially
+  // canceled" after the surviving items had been shipped and emailed to them,
+  // with no later event able to move it.
+  if (statuses.some((status) => CANCELLATION_BEARING_STATUSES.has(status))) {
+    const surviving = statuses.filter((status) => status !== "canceled");
+    return surviving.every((status) => TERMINAL_SURVIVING_STATUSES.has(status))
+      ? PARTIALLY_CANCELED_SHIPPED_STATUS
+      : PARTIALLY_CANCELED_STATUS;
+  }
 
   const shipped = statuses.filter((status) => ["shipped", "delivered"].includes(status)).length;
   if (shipped === statuses.length) {
@@ -250,7 +345,30 @@ export function aggregateFulfillmentStatus(statuses: string[]): string {
   }
   if (shipped > 0) return "partially_shipped";
   if (statuses.every((status) => status === "confirmed")) return "confirmed";
-  if (statuses.every((status) => ["draft_created", "confirmed"].includes(status))) return "draft_created";
+  // Least-progressed provider batch wins: one batch APLIIQ has not started yet
+  // holds the whole order back from claiming production.
+  if (statuses.every((status) => [ACCEPTED_UNPROCESSED_STATUS, "confirmed"].includes(status))) {
+    return ACCEPTED_UNPROCESSED_STATUS;
+  }
+  if (statuses.every((status) => ["draft_created", ACCEPTED_UNPROCESSED_STATUS, "confirmed"].includes(status))) return "draft_created";
   if (statuses.some((status) => status === "draft_creating")) return "draft_creating";
   return "queued";
+}
+
+/**
+ * Index provider fulfillment rows by their owning order for the ops table. The
+ * provider order id is the only identifier APLIIQ support will act on, so it
+ * has to be renderable, not SQL-only.
+ */
+export function groupFulfillmentsByOrder<T extends { orderId: number | null }>(
+  rows: readonly T[]
+): Map<number, T[]> {
+  const grouped = new Map<number, T[]>();
+  for (const row of rows) {
+    if (row.orderId === null) continue;
+    const bucket = grouped.get(row.orderId) ?? [];
+    bucket.push(row);
+    grouped.set(row.orderId, bucket);
+  }
+  return grouped;
 }

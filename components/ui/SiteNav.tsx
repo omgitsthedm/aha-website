@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 import { type SearchIndexItem } from "@/components/ui/SearchOverlay";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 // Portal overlay that only renders when opened — load it on demand.
 const SearchOverlay = dynamic(() => import("@/components/ui/SearchOverlay").then((m) => m.SearchOverlay), { ssr: false });
@@ -54,7 +54,7 @@ function isActive(pathname: string, href: string): boolean {
 }
 
 export function SiteNav() {
-  const catalogIsPublic = isLegacyCatalogPublic();
+  const catalogIsPublic = isStorefrontPublic();
   const { totalItems, setCartOpen } = useCart();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);

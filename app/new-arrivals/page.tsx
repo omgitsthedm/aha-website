@@ -5,17 +5,17 @@ import type { Product, Collection } from "@/lib/utils/types";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 import { CatalogMigrationPage, catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 export const revalidate = 300;
-export const metadata = isLegacyCatalogPublic() ? buildMetadata({
+export const metadata = isStorefrontPublic() ? buildMetadata({
   title: "New Arrivals",
   description: "The latest After Hours Agenda designs, added as they're finished — new graphic tees, hoodies, and accessories, printed to order.",
   path: "/new-arrivals",
 }) : catalogMigrationMetadata("/new-arrivals");
 
 export default async function NewArrivalsPage() {
-  if (!isLegacyCatalogPublic()) return <CatalogMigrationPage />;
+  if (!isStorefrontPublic()) return <CatalogMigrationPage />;
   let products: Product[] = [];
   let collections: Collection[] = [];
   let isCuratedList = false;

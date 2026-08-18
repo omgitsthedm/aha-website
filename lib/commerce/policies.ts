@@ -20,11 +20,53 @@ export const WALLET_CHECKOUT_COPY =
 export const TAX_LINE_COPY =
   "Estimated by shipping address in Square before you pay";
 
-/** Domestic ships free; every other country the storefront sells to is a $20 flat rate per order. */
+/**
+ * Domestic ships free; every other country the storefront sells to is a flat
+ * rate per order.
+ *
+ * Set to $25 by merchant decision (David, 2026-08-17), knowingly accepting a
+ * loss on larger baskets. Measured against APLIIQ's 2026-08-11 rate sheet at a
+ * 7.9 oz tee, $25 covers: Canada and Germany to 4 units, the UK, France, Italy,
+ * Spain, Netherlands, Turkey and Japan to 2, Ireland to 1. Beyond that AHA
+ * absorbs the difference — a 4-tee order to Ireland costs $40.54 to ship.
+ * scripts/margin-check.ts fails the build on a variant that is underwater
+ * within the cart's own unit limit, so this stays visible rather than silent.
+ */
 export const DOMESTIC_COUNTRY = "US";
-export const INTERNATIONAL_COUNTRIES = ["CA", "GB", "AU"] as const;
+/**
+ * Every country the storefront will ship to besides the US.
+ *
+ * Expanded 2026-08-17 to the markets David named — Canada, the UK, Europe,
+ * Turkey and Japan — plus Australia, which was already enabled. Australia is not
+ * in his stated market list but is left in place; removing a country a customer
+ * could previously order from is a separate decision.
+ *
+ * Every entry here was verified to resolve a real freight rate against
+ * data/apliiq-shipping-rates.json before being added. Never add a country
+ * without that check: getApliiqInternationalShippingCents throws
+ * unmodelled_destination for anything absent, which surfaces to the customer as
+ * a failed quote at checkout.
+ *
+ * Shipping is DDU (see the international block in the rate table). The customer
+ * pays import VAT and duties on delivery, and for EU destinations that means a
+ * carrier handling fee on top. AHA is not IOSS-registered, so EU buyers WILL be
+ * charged at the door — that must be stated plainly on the shipping page before
+ * these markets are advertised.
+ */
+export const INTERNATIONAL_COUNTRIES = [
+  // North America
+  "CA",
+  // UK and Ireland
+  "GB", "IE",
+  // EU
+  "DE", "FR", "IT", "ES", "NL", "BE", "AT", "PT", "SE", "DK", "FI", "PL", "CZ", "GR",
+  // Non-EU Europe
+  "CH", "NO",
+  // Rest of world
+  "TR", "JP", "AU",
+] as const;
 export const SHIPPING_COUNTRIES = [DOMESTIC_COUNTRY, ...INTERNATIONAL_COUNTRIES] as const;
-export const INTERNATIONAL_SHIPPING_CENTS = 2000;
+export const INTERNATIONAL_SHIPPING_CENTS = 2500;
 export const INTERNATIONAL_SHIPPING_LABEL = "International shipping";
 
 export function isInternational(country: string | undefined | null): boolean {
@@ -32,16 +74,36 @@ export function isInternational(country: string | undefined | null): boolean {
 }
 
 // Truth-in-advertising. INTERNATIONAL_SHIPPING_CENTS is charged as a real Square
-// service charge on CA/GB/AU orders, so no surface may claim unqualified free
+// service charge on every non-US order, so no surface may claim unqualified free
 // shipping. Every marketing, SEO, and email surface routes through one of these
 // three constants instead of writing its own string.
+//
+// The sentence deliberately does NOT enumerate countries. It named "Canada, the
+// UK, and Australia" while INTERNATIONAL_COUNTRIES said the same three, and both
+// would have had to change together every time the list moved. Derive the list
+// where you need it; state the rate here.
 
 /** Badge / trust-strip length. Use where only two or three words fit. */
 export const SHIPPING_CLAIM_SHORT = "Free US shipping";
 /** The qualifier that goes under or beside SHIPPING_CLAIM_SHORT, where a full sentence will not fit. */
-export const SHIPPING_CLAIM_DETAIL = "$20 flat rate international";
+export const SHIPPING_CLAIM_DETAIL = "$25 flat rate international";
 /** Full sentence for body copy, FAQ answers, meta descriptions, and emails. */
-export const SHIPPING_CLAIM_SENTENCE = "Free in the US; $20 flat rate to Canada, the UK, and Australia.";
+export const SHIPPING_CLAIM_SENTENCE = "Free in the US; $25 flat rate everywhere else we ship.";
+
+// Truth-in-advertising, origin edition. Print-on-demand production runs in
+// Huntington Park, CA or Philadelphia, PA — never New York — and the fulfilling
+// city is printed on the shipping label the customer receives. Design is the
+// only part of the process that happens in NYC, so no surface may pair a city
+// name with "printed", "made", or "shipped from". Route every marketing, SEO,
+// and email surface through one of these three constants instead of writing
+// its own string.
+
+/** Badge / trust-strip length. Mirrors components/ui/TrustStrip.tsx. */
+export const ORIGIN_CLAIM_SHORT = "Designed in NYC";
+/** Mid-sentence clause. Lowercase lead so it can follow a comma. */
+export const ORIGIN_CLAIM_CLAUSE = "designed in NYC, printed to order";
+/** Standalone sentence for body copy, category headers, and meta descriptions. */
+export const ORIGIN_CLAIM_SENTENCE = "Designed in NYC and printed to order.";
 
 /**
  * Cart-stage copy. The cart runs before a shipping address exists, so it states
@@ -49,12 +111,12 @@ export const SHIPPING_CLAIM_SENTENCE = "Free in the US; $20 flat rate to Canada,
  */
 export function getShippingLineCopy(totalCents: number): string {
   void totalCents;
-  return "Free in the US, $20 international";
+  return "Free in the US, $25 international";
 }
 
 /** Checkout-stage copy, once the country is known. */
 export function getShippingCopyForCountry(country: string | undefined | null): string {
-  return isInternational(country) ? "$20 flat rate" : "Free standard shipping";
+  return isInternational(country) ? "$25 flat rate" : "Free standard shipping";
 }
 
 export function getFulfillmentSummary(): string {

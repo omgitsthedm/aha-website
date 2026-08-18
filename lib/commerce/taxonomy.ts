@@ -69,7 +69,13 @@ export const CATEGORIES: CategoryMeta[] = [
     // made-to-order outerwear." The empty-category state already tells a
     // visitor there is nothing here yet; the description should not also
     // try to, in a sentence that then gets a shopping CTA appended to it.
-    description: "Jackets and coats, printed and made to order in New York.",
+    //
+    // It also must not name a city next to "printed"/"made": production runs in
+    // Huntington Park CA or Philadelphia PA, not New York. Every consumer of
+    // this field already appends its own origin and made-to-order claim (see
+    // ORIGIN_CLAIM_SENTENCE in lib/commerce/policies.ts), so the description
+    // stays a plain noun phrase like every sibling category.
+    description: "Jackets and coats, built to layer.",
   },
   {
     slug: "accessories",

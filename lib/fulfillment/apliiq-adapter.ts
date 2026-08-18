@@ -89,6 +89,10 @@ export function buildApliiqAddress(contact: OrderContact): ApliiqAddress {
     ?? (rawProvince && /^[A-Za-z]{2}$/.test(rawProvince) ? rawProvince.toUpperCase() : undefined);
   const name = personName(contact.shippingName, contact.email);
   const address1 = addressValue(address, "address1", "address_1");
+  // Apartment / suite / floor. Optional by design — a house has none — but when
+  // the shopper typed one it MUST reach the label, or the courier returns the
+  // parcel to sender at AHA's cost.
+  const address2 = addressValue(address, "address2", "address_2");
   const city = addressValue(address, "city");
   const zip = addressValue(address, "zip", "postalCode", "postal_code");
   if (!address1 || !city || !zip || !rawProvince) {
@@ -97,7 +101,7 @@ export function buildApliiqAddress(contact: OrderContact): ApliiqAddress {
   return {
     ...name,
     address1,
-    ...(addressValue(address, "address2", "address_2") ? { address2: addressValue(address, "address2", "address_2") } : {}),
+    ...(address2 ? { address2 } : {}),
     ...(contact.phone ? { phone: contact.phone } : {}),
     city,
     zip,
@@ -106,6 +110,21 @@ export function buildApliiqAddress(contact: OrderContact): ApliiqAddress {
     country: countryName(countryCode, addressValue(address, "countryName", "country_name", "country")),
     countryCode,
   };
+}
+
+/** Exact international-avoirdupois conversion; no rounded shortcut. */
+const GRAMS_PER_OUNCE = 28.349523125;
+
+/**
+ * Per-unit shipped weight from the immutable purchase-time snapshot. Returns
+ * undefined when the order was placed before weights were captured, so the
+ * payload omits `grams` rather than declaring a weightless garment.
+ */
+export function apliiqLineGramsFromSnapshot(snapshot: Record<string, unknown>): number | undefined {
+  const weightOz = snapshot.weightOz;
+  if (typeof weightOz !== "number" || !Number.isFinite(weightOz) || weightOz <= 0) return undefined;
+  const grams = Math.round(weightOz * GRAMS_PER_OUNCE);
+  return grams > 0 ? grams : undefined;
 }
 
 function centsToDecimal(cents: number): string {
@@ -177,11 +196,13 @@ export function buildApliiqFulfillmentOrder(
       assertApliiqPurchaseSnapshot(item);
       const sku = stringValue(item.providerSku);
       if (!sku) throw new Error(`APLIIQ fulfillment is missing a provider SKU for ${item.ahaVariantId}.`);
+      const grams = apliiqLineGramsFromSnapshot(item.providerSnapshot as Record<string, unknown>);
       return {
         id: `${request.providerRequestId}:${index + 1}`,
         title: item.title,
         quantity: item.quantity,
         price: centsToDecimal(item.unitPrice),
+        ...(grams === undefined ? {} : { grams }),
         sku,
       };
     }),

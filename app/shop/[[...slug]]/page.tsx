@@ -8,14 +8,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { buildMetadata } from "@/components/seo/buildMetadata";
 import { CatalogMigrationPage, catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
-import { isLegacyCatalogPublic } from "@/lib/commerce/catalog-policy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
+import { ORIGIN_CLAIM_SENTENCE, SHIPPING_CLAIM_DETAIL, SHIPPING_CLAIM_SHORT } from "@/lib/commerce/policies";
 
 export const revalidate = 300;
-// The committed catalog policy currently returns the same migration screen for
-// every shop path. Prerender it so a store reset never pays an avoidable edge
-// function cold start. Remove this override only when a replacement catalog is
-// intentionally activated and query-driven pagination is restored.
-export const dynamic = "force-static";
+// force-static was correct while every shop path returned the same migration
+// screen — it removed a cold start on a page with no data. It is WRONG now the
+// capsule is live: the page reads searchParams for pagination and real catalog
+// data, and force-static prerendered it into the empty state while the sitemap
+// and PDPs advertised six products. revalidate=300 keeps the ISR caching that
+// made the mobile LCP budget without freezing the catalog.
 
 interface ShopPageProps {
   params: Promise<{ slug?: string[] }>;
@@ -24,7 +26,7 @@ interface ShopPageProps {
 
 export async function generateMetadata({ params }: ShopPageProps): Promise<Metadata> {
   const { slug } = await params;
-  if (!isLegacyCatalogPublic()) return catalogMigrationMetadata(slug?.length ? `/shop/${slug.join("/")}` : "/shop");
+  if (!isStorefrontPublic()) return catalogMigrationMetadata(slug?.length ? `/shop/${slug.join("/")}` : "/shop");
   const categorySlug = slug?.[0];
   const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
   if (categorySlug && !category) return { title: "Category Not Found | After Hours Agenda" };
@@ -48,7 +50,7 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
 }
 
 export default async function ShopPage({ params, searchParams }: ShopPageProps) {
-  if (!isLegacyCatalogPublic()) return <CatalogMigrationPage />;
+  if (!isStorefrontPublic()) return <CatalogMigrationPage />;
   const { slug } = await params;
   const { page } = await searchParams;
   const categorySlug = slug?.[0];
@@ -72,14 +74,22 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
           eyebrow="Shop"
           title={category ? category.name : "The whole catalog, printed to order"}
           description={category
-            ? `${category.description} Designed in NYC and printed to order.`
+            ? `${category.description} ${ORIGIN_CLAIM_SENTENCE}`
             : "Every design in one place — graphic tees, hoodies, sweatshirts, knitwear, and accessories. Graphic-led, unisex cuts, designed in New York."}
         />
 
+        {/* Purchase-surface trust row. Two rules hold here:
+            1. The sub-line is `sm:block`, so it is invisible on mobile — the
+               label alone has to be true. "Free shipping" was not: CA/GB/AU
+               orders carry a real $20 Square service charge
+               (lib/commerce/policies.ts). SHIPPING_CLAIM_SHORT is safe alone.
+            2. No provider name and no print city. Apliiq prints in Huntington
+               Park CA or Philadelphia PA, Printful is legacy-only, and naming
+               either one on a shopping page dates the moment fulfillment moves. */}
         <div className="mb-8 grid grid-cols-3 divide-x divide-border/40 border-y border-border/40 py-4">
           <div className="flex items-start gap-2 px-2 sm:gap-3 sm:px-4">
             <span className="mt-0.5 hidden h-2 w-2 shrink-0 bg-accent sm:block" aria-hidden="true" />
-            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">Free shipping</p><p className="mt-1 hidden text-xs text-muted sm:block">On every order. No code needed.</p></div>
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">{SHIPPING_CLAIM_SHORT}</p><p className="mt-1 hidden text-xs text-muted sm:block">{SHIPPING_CLAIM_DETAIL}. No code needed.</p></div>
           </div>
           <div className="flex items-start gap-2 px-2 sm:gap-3 sm:px-4">
             <span className="mt-0.5 hidden h-2 w-2 shrink-0 bg-accent sm:block" aria-hidden="true" />
@@ -87,7 +97,7 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
           </div>
           <div className="flex items-start gap-2 px-2 sm:gap-3 sm:px-4">
             <span className="mt-0.5 hidden h-2 w-2 shrink-0 bg-accent sm:block" aria-hidden="true" />
-            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">Made to order</p><p className="mt-1 hidden text-xs text-muted sm:block">Printed and shipped by Printful.</p></div>
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.06em] text-cream sm:text-xs sm:tracking-[0.08em]">Made to order</p><p className="mt-1 hidden text-xs text-muted sm:block">Nothing is printed until you order it.</p></div>
           </div>
         </div>
 

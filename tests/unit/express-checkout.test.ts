@@ -22,6 +22,30 @@ describe("extractExpressContact — defensive wallet parsing", () => {
     expect(c?.shippingAddress.country).toBe("US");
   });
 
+  it("keeps the wallet's apartment line — dropping it makes the parcel undeliverable", () => {
+    const squareShape = extractExpressContact({
+      shipping: { contact: { email: "a@b.com", name: "Ada", addressLine1: "1 Main St", addressLine2: "Apt 4B", city: "Brooklyn", state: "NY", postalCode: "11201" } },
+    });
+    expect(squareShape?.shippingAddress.address2).toBe("Apt 4B");
+
+    // Apple Pay's native contact carries the street as an array.
+    const appleShape = extractExpressContact({
+      shipping: { contact: { email: "a@b.com", name: "Ada", addressLines: ["1 Main St", "Apt 4B"], city: "Brooklyn", state: "NY", postalCode: "11201" } },
+    });
+    expect(appleShape?.shippingAddress).toMatchObject({ address1: "1 Main St", address2: "Apt 4B" });
+
+    expect(extractExpressContact({
+      shipping: { contact: { email: "a@b.com", name: "Ada", line1: "1 Main St", line2: "Unit 7", city: "Brooklyn", postalCode: "11201" } },
+    })?.shippingAddress.address2).toBe("Unit 7");
+  });
+
+  it("omits address2 entirely when the wallet has no second line", () => {
+    const c = extractExpressContact({
+      shipping: { contact: { email: "a@b.com", name: "Ada", addressLine1: "1 Main St", addressLine2: "  ", city: "Brooklyn", postalCode: "11201" } },
+    });
+    expect(c?.shippingAddress).not.toHaveProperty("address2");
+  });
+
   it("returns null when required fields are missing (→ caller falls back to /checkout)", () => {
     expect(extractExpressContact({ shipping: { contact: { givenName: "No", familyName: "Address" } } })).toBeNull();
     expect(extractExpressContact({})).toBeNull();

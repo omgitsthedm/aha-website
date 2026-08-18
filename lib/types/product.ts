@@ -120,6 +120,59 @@ export interface AhaVariant {
   /** A Square mapping is not sale-ready until its operator-confirmed state is active. */
   squareMappingStatus?: "active" | "pending" | "archived";
 
+  // ── APLIIQ landed cost (see lib/commerce/landed-cost.ts) ───────────────────
+  // APLIIQ bills product cost, freight, and a per-product fulfillment fee as
+  // three separate lines, so a margin gate that only knows product cost is
+  // wrong by roughly a quarter of the retail price on a tee.
+  /** Provider product cost for one unit, minor units. Must agree with costEstimate when both are set. */
+  apliiqItemCost?: number;
+  /** Conservative single-unit tier freight, minor units. May only ever exceed the published tier rate. */
+  apliiqShippingCost?: number;
+  /** Per-PRODUCT fulfillment fee, minor units. Defaults to the rate sheet's $1.00 per unit. */
+  apliiqFulfillmentFeeCents?: number;
+  /** Destination sales tax on the provider invoice, minor units. Overrides the modelled rate. */
+  apliiqDestinationTaxCents?: number;
+  /**
+   * Which APLIIQ price tier apliiqItemCost was captured at.
+   *
+   * VIP is a flat 20% off products and services. Buying it AFTER cost capture
+   * makes every captured cost wrong by 20%, and purchasable.ts reconciles the
+   * stored marginEstimate against the recomputed landed figure by exact
+   * equality — so the day VIP lands, every APLIIQ variant fails validation.
+   * Recording the basis makes that a scripted re-derive instead of a manual
+   * pass, and stops a re-derive run twice from double-discounting.
+   *
+   * Absent is read as "standard" for backward compatibility.
+   */
+  apliiqCostBasis?: "standard" | "vip";
+  /**
+   * True only when this variant's apliiqSku is a REAL APLIIQ product id,
+   * confirmed against APLIIQ — normally by the add-to-store callback.
+   *
+   * Deliberately an explicit flag rather than a pattern check on the SKU: a
+   * placeholder is pattern-valid by construction (it has to be, or the map
+   * would not validate), so shape can never distinguish the two. Absent means
+   * unverified, so a variant cannot become sellable-for-money by omission.
+   */
+  apliiqSkuVerified?: boolean;
+  /**
+   * A knowing exception to the margin floor for THIS variant.
+   *
+   * The 35% floor is AHA's own rule, not a law, and a merchant may legitimately
+   * choose to run an anchor product thin. What must never happen is the floor
+   * being quietly lowered for the whole catalog to let one product through, so
+   * the exception is per-variant, carries a required reason, and is visible in
+   * margin-check output rather than silent.
+   *
+   * `minRatio` still floors at zero: this permits a thin margin, never a loss.
+   */
+  marginFloorOverride?: { minRatio: number; reason: string; approvedAt: string };
+  /**
+   * Shipped weight in ounces (2dp). Addresses the irregular APLIIQ rate ladder,
+   * whose tier ceilings (7.9, 11.9 … 143.99, 159.84) are not whole ounces.
+   */
+  weightOz?: number;
+
   costEstimate?: number; // minor units — from Printful, for margin
   marginEstimate?: number; // minor units
   costVerifiedAt?: string;

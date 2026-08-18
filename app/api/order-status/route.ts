@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { db, isDbConfigured } from "@/lib/db/client";
 import { orderItems, orders, shipments } from "@/db/schema";
+import { shopperOrderStatus } from "@/lib/commerce/customer-status";
 
 async function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -35,5 +36,10 @@ export async function POST(request: Request) {
     db().select({ title: orderItems.titleSnapshot, size: orderItems.sizeSnapshot, quantity: orderItems.quantity }).from(orderItems).where(eq(orderItems.orderId, order.id)),
     db().select({ carrier: shipments.carrier, trackingUrl: shipments.trackingUrl, status: shipments.status }).from(shipments).where(eq(shipments.orderId, order.id)),
   ]);
-  return NextResponse.json({ ok: true, order: { orderNumber, paymentStatus: order.paymentStatus, fulfillmentStatus: order.fulfillmentStatus, customerStatus: order.customerStatus, total: order.totalAmount, currency: order.currency, placedAt: order.createdAt, items, shipments: tracking } }, { headers: { "Cache-Control": "no-store" } });
+  // Derived, not read from orders.customer_status: that column has eight
+  // writers and no precedence rule, so a shipping callback landing after a
+  // refund erased the refund from the only string this page renders. See
+  // lib/commerce/customer-status.ts.
+  const customerStatus = shopperOrderStatus(order);
+  return NextResponse.json({ ok: true, order: { orderNumber, paymentStatus: order.paymentStatus, fulfillmentStatus: order.fulfillmentStatus, customerStatus, total: order.totalAmount, currency: order.currency, placedAt: order.createdAt, items, shipments: tracking } }, { headers: { "Cache-Control": "no-store" } });
 }

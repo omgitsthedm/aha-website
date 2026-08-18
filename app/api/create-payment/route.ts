@@ -36,6 +36,18 @@ function splitName(name?: string): { firstName: string; lastName: string } {
 }
 
 /**
+ * Apartment / suite / floor. Most addresses have none, so it is forwarded only
+ * when the shopper actually typed one — an empty string on a shipping label is
+ * noise for the courier. The same snapshot is what APLIIQ reads back at
+ * fulfillment time (buildApliiqAddress), so dropping it here is a
+ * return-to-sender parcel at AHA's cost.
+ */
+function addressLine2(address: Record<string, string> | undefined): string | undefined {
+  const value = address?.address2;
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+/**
  * POST /api/create-payment
  * 1) revalidate cart server-side (never trust client prices)
  * 2) create a Square Order so SQUARE computes price + location tax authoritatively
@@ -84,6 +96,7 @@ export async function POST(request: Request) {
 
   // 2) Square prices the order (price + location tax). Shipping address drives destination tax.
   const addr = body.contact.shippingAddress as Record<string, string> | undefined;
+  const line2 = addressLine2(addr);
   const { firstName, lastName } = splitName(body.contact.shippingName);
   // CRM: link the order to a Square Customer profile. Best-effort — never blocks payment.
   const customerId = await findOrCreateCustomer(body.contact.email, body.contact.shippingName).catch(() => null);
@@ -99,7 +112,8 @@ export async function POST(request: Request) {
         currency: cart.currency,
       }),
       shippingAddress: addr ? {
-        addressLine1: addr.address1, locality: addr.city,
+        addressLine1: addr.address1, ...(line2 ? { addressLine2: line2 } : {}),
+        locality: addr.city,
         administrativeDistrictLevel1: addr.state, postalCode: addr.zip, country: addr.country,
         firstName, lastName,
       } : undefined,

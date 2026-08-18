@@ -1,4 +1,5 @@
 import { loadProducts } from "@/lib/data/products";
+import { isSellableProvider } from "@/lib/commerce/catalog-policy";
 import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import type { Collection, Product } from "@/lib/utils/types";
 
@@ -10,7 +11,15 @@ const previewCollections: Collection[] = [
 ];
 
 export function buildPreviewCollections(): Collection[] {
-  return previewCollections.map((collection) => ({ ...collection }));
+  // Only surface a category that actually has something sellable in it. With the
+  // capsule live, "Sweaters & Knitwear" and "Accessories" are both empty, and an
+  // empty category page on a live store reads as a broken shop.
+  const stocked = new Set(
+    buildPreviewProducts()
+      .filter((product) => product.variations.length > 0)
+      .flatMap((product) => product.collectionIds ?? []),
+  );
+  return previewCollections.filter((c) => stocked.has(c.slug)).map((c) => ({ ...c }));
 }
 
 /** Validated, versioned catalog projection for credential-free non-production previews. */
@@ -20,6 +29,13 @@ export function buildPreviewProducts(): Product[] {
     .map((product) => {
       const seenSizes = new Set<string>();
       const variations = product.variants
+        // Provider gate FIRST, exactly as in buildEligibleSquareIndex. Without
+        // it this path returned 117 products including retired stickers and
+        // withdrawn SKUs: the legacy Printful variants still satisfy their own
+        // branch of checkVariantPurchasable, so purchasability alone does not
+        // keep them out. Deploy previews render from here, so a leak here is a
+        // leak a reviewer sees and believes.
+        .filter((variant) => isSellableProvider(variant.fulfillmentProvider))
         .filter((variant) => checkVariantPurchasable(product, variant).ok)
         .filter((variant) => {
           const size = variant.size.toUpperCase();
