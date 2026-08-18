@@ -31,8 +31,20 @@ export const LEGACY_CATALOG_POLICY = Object.freeze({
  */
 export const APLIIQ_CATALOG_POLICY = Object.freeze({
   publicCatalogEnabled: true,
-  checkoutEnabled: true,
-  reason: "Apliiq capsule live; order submission still gated by APLIIQ_ALLOW_CREATE_ORDERS",
+  // Deliberately false while the capsule runs on PLACEHOLDER APQ SKUs.
+  //
+  // The hazard is specific: with checkout open and APLIIQ_ALLOW_CREATE_ORDERS
+  // false, a customer's card is CAPTURED and the order is held, never sent to
+  // APLIIQ. Money arrives for a garment that cannot be made. Turning this to
+  // true is therefore not a display decision, it is a promise that every
+  // sellable variant can actually be fulfilled.
+  //
+  // That promise is enforced, not remembered: scripts/validate-apliiq-map.ts
+  // fails the build if checkout is enabled while any sellable variant still
+  // carries apliiqSkuVerified !== true. Flip this and the build stops until the
+  // real APQ SKUs are in the map.
+  checkoutEnabled: false,
+  reason: "Apliiq capsule browsable; checkout opens when real APQ SKUs replace the placeholders",
 } as const);
 
 /**

@@ -159,3 +159,28 @@ describe("apliiqCostBasis — the VIP re-derive guard", () => {
     expect(entry.apliiqCostBasis ?? "standard").toBe("standard");
   });
 });
+
+describe("the money guard — checkout may not open on unverified SKUs", () => {
+  it("treats an absent apliiqSkuVerified as unverified, never as safe", () => {
+    // Omission must fail closed. A variant cannot become sellable-for-money by
+    // leaving the flag out of the map.
+    const doc = parseApliiqMapDocument(document(validEntry()));
+    expect(doc.map["apliiq-tee-m"].apliiqSkuVerified).toBeUndefined();
+    expect(doc.map["apliiq-tee-m"].apliiqSkuVerified === true).toBe(false);
+  });
+
+  it("accepts an explicit boolean and rejects anything else", () => {
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqSkuVerified: true })))).not.toThrow();
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqSkuVerified: false })))).not.toThrow();
+    expect(() => parseApliiqMapDocument(document(validEntry({ apliiqSkuVerified: "yes" }))))
+      .toThrow(/must be a boolean/);
+  });
+
+  it("cannot be inferred from the SKU shape, which is why the flag exists", async () => {
+    // A placeholder is pattern-valid by construction — it has to be, or the map
+    // would not validate — so isApliiqSku can never distinguish the two.
+    const { isApliiqSku } = await import("@/lib/apliiq/orders");
+    expect(isApliiqSku("APQ-1998241S1A1")).toBe(true);  // placeholder in use today
+    expect(isApliiqSku("APQ-1998244S7A1")).toBe(true);  // real-shaped
+  });
+});

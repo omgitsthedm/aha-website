@@ -146,6 +146,16 @@ export interface AhaVariant {
    */
   apliiqCostBasis?: "standard" | "vip";
   /**
+   * True only when this variant's apliiqSku is a REAL APLIIQ product id,
+   * confirmed against APLIIQ — normally by the add-to-store callback.
+   *
+   * Deliberately an explicit flag rather than a pattern check on the SKU: a
+   * placeholder is pattern-valid by construction (it has to be, or the map
+   * would not validate), so shape can never distinguish the two. Absent means
+   * unverified, so a variant cannot become sellable-for-money by omission.
+   */
+  apliiqSkuVerified?: boolean;
+  /**
    * A knowing exception to the margin floor for THIS variant.
    *
    * The 35% floor is AHA's own rule, not a law, and a merchant may legitimately

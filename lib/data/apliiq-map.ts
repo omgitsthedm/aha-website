@@ -27,6 +27,7 @@ export type ApliiqMapEntry = Pick<AhaVariant,
   | "apliiqDestinationTaxCents"
   | "apliiqCostBasis"
   | "marginFloorOverride"
+  | "apliiqSkuVerified"
 >;
 
 export interface ApliiqMapDocument {
@@ -39,7 +40,7 @@ const ALLOWED_ENTRY_FIELDS = new Set<keyof ApliiqMapEntry>([
   "apliiqSizeGuideReference", "apliiqMappingApproval", "apliiqSampleApproval",
   "squareMappingStatus", "costEstimate", "marginEstimate", "costVerifiedAt", "marginVerifiedAt",
   "weightOz", "apliiqItemCost", "apliiqShippingCost", "apliiqFulfillmentFeeCents",
-  "apliiqDestinationTaxCents", "apliiqCostBasis", "marginFloorOverride",
+  "apliiqDestinationTaxCents", "apliiqCostBasis", "marginFloorOverride", "apliiqSkuVerified",
 ]);
 
 /**
@@ -67,6 +68,12 @@ function marginFloorOverride(value: unknown, path: string) {
   const reason = requiredString(value.reason, `${path}.reason`);
   const approvedAt = requiredString(value.approvedAt, `${path}.approvedAt`);
   return { minRatio, reason, approvedAt };
+}
+
+function optionalBoolean(value: unknown, path: string): boolean | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== "boolean") fail(path, "must be a boolean");
+  return value;
 }
 
 function fail(path: string, message: string): never {
@@ -244,6 +251,7 @@ function parseEntry(value: unknown, path: string): ApliiqMapEntry {
     apliiqDestinationTaxCents: optionalCents(value.apliiqDestinationTaxCents, `${path}.apliiqDestinationTaxCents`),
     apliiqCostBasis: costBasis(value.apliiqCostBasis, `${path}.apliiqCostBasis`),
     marginFloorOverride: marginFloorOverride(value.marginFloorOverride, `${path}.marginFloorOverride`),
+    apliiqSkuVerified: optionalBoolean(value.apliiqSkuVerified, `${path}.apliiqSkuVerified`),
   };
 }
 
