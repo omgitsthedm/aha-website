@@ -11,19 +11,11 @@ const BASE_URL =
 const publicPages: Array<{ path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }> = [
   { path: "/", priority: 1, changeFrequency: "monthly" },
   { path: "/shop", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/men", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/men/t-shirts", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/men/hoodies-sweatshirts", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/men/sweaters-knitwear", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/men/accessories", priority: 0.7, changeFrequency: "weekly" },
-  { path: "/women", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/women/t-shirts", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/women/hoodies-sweatshirts", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/women/sweaters-knitwear", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/women/accessories", priority: 0.7, changeFrequency: "weekly" },
-  { path: "/unisex", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/accessories", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/new-arrivals", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/shop/t-shirts", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/shop/hoodies-sweatshirts", priority: 0.8, changeFrequency: "weekly" },
+  // The gender and empty-category routes still resolve, but they are not linked
+  // from the storefront and describe a range the capsule does not have; a
+  // sitemap should advertise the doors people are meant to use.
   { path: "/manifesto", priority: 0.7, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },
   { path: "/newsletter", priority: 0.5, changeFrequency: "monthly" },
@@ -31,6 +23,7 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
   { path: "/shipping", priority: 0.6, changeFrequency: "monthly" },
   { path: "/returns", priority: 0.6, changeFrequency: "monthly" },
   { path: "/care", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/size-guide", priority: 0.6, changeFrequency: "monthly" },
   { path: "/track-order", priority: 0.6, changeFrequency: "monthly" },
   // /gift-cards is intentionally omitted while GIFT_CARDS_ENABLED is off (the
   // route is a "coming soon" stub). Add it back when the flow ships.
@@ -55,7 +48,7 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
 //   - static pages: the git commit date for each route's source file, captured
 //     at build time — the deployed serverless bundle has no `.git`.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const catalogPaths = new Set(["/shop", "/men", "/men/t-shirts", "/men/hoodies-sweatshirts", "/men/sweaters-knitwear", "/men/accessories", "/women", "/women/t-shirts", "/women/hoodies-sweatshirts", "/women/sweaters-knitwear", "/women/accessories", "/unisex", "/accessories", "/new-arrivals"]);
+  const catalogPaths = new Set(["/shop", "/shop/t-shirts", "/shop/hoodies-sweatshirts"]);
   const staticEntries: MetadataRoute.Sitemap = publicPages
     .filter((page) => isStorefrontPublic() || !catalogPaths.has(page.path))
     .map((page) => ({

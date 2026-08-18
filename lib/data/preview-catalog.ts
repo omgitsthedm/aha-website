@@ -4,8 +4,8 @@ import { checkVariantPurchasable } from "@/lib/data/purchasable";
 import type { Collection, Product } from "@/lib/utils/types";
 
 const previewCollections: Collection[] = [
-  { id: "t-shirts", slug: "t-shirts", name: "T-Shirts", description: "Graphic tees and staple shirts from the current catalog.", accent: "mint" },
-  { id: "hoodies-sweatshirts", slug: "hoodies-sweatshirts", name: "Hoodies & Sweatshirts", description: "Layer-ready hoodies and sweatshirts from the current catalog.", accent: "blue" },
+  { id: "t-shirts", slug: "t-shirts", name: "Tees", description: "Graphic tees and statement prints on premium ringspun cotton.", accent: "mint" },
+  { id: "hoodies-sweatshirts", slug: "hoodies-sweatshirts", name: "Hoods & Crews", description: "Heavyweight pullover hoods and crewnecks.", accent: "blue" },
   { id: "sweaters-knitwear", slug: "sweaters-knitwear", name: "Sweaters & Knitwear", description: "Knit sweaters and premium crewnecks from the current catalog.", accent: "sunrise" },
   { id: "accessories", slug: "accessories", name: "Accessories", description: "Hats, bags, stickers, pins, and finishing pieces from the current catalog.", accent: "cream" },
 ];

@@ -44,15 +44,15 @@ const GENDERS: GenderMeta[] = [
 export const CATEGORIES: CategoryMeta[] = [
   {
     slug: "t-shirts",
-    name: "T-Shirts",
+    name: "Tees",
     shortName: "Tees",
-    description: "Graphic tees, staple shirts, and statement prints.",
+    description: "Graphic tees and statement prints on premium ringspun cotton.",
   },
   {
     slug: "hoodies-sweatshirts",
-    name: "Hoodies & Sweatshirts",
-    shortName: "Hoodies",
-    description: "Layer-ready hoodies and heavyweight sweatshirts.",
+    name: "Hoods & Crews",
+    shortName: "Hoods & Crews",
+    description: "Heavyweight pullover hoods and crewnecks.",
   },
   {
     slug: "sweaters-knitwear",

@@ -122,10 +122,16 @@ function OpenShopContent({ products, collections, initialPage = 1, paginationPat
     setCurrentPage(initialPage);
   }, [initialPage]);
 
+  // A capsule does not need discovery chrome. Under a dozen pieces, search, a
+  // size filter, sort and an index view are furniture in an empty room — they
+  // read as a template and push the product below the fold. The collection
+  // pills stay because they are the only navigation the range actually has.
+  const compact = products.length <= 12;
+
   return (
     <section aria-label="Product catalog">
-      <div className="mb-8 border-y border-border/40 py-5">
-        <div className="grid gap-4 xl:grid-cols-[minmax(15rem,1fr)_auto] xl:items-start">
+      <div className={compact ? "mb-8 border-b border-border/40 pb-5" : "mb-8 border-y border-border/40 py-5"}>
+        {!compact && <div className="grid gap-4 xl:grid-cols-[minmax(15rem,1fr)_auto] xl:items-start">
           <div>
             <label htmlFor="shop-search" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Search</label>
             <input id="shop-search" type="search" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Product name" className={`${control} w-full`} />
@@ -137,10 +143,10 @@ function OpenShopContent({ products, collections, initialPage = 1, paginationPat
               </button>
             ))}
           </div>
-        </div>
+        </div>}
 
-        <div className="mt-5">
-          <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-muted">Collection</p>
+        <div className={compact ? "" : "mt-5"}>
+          {!compact && <p className="mb-2 text-xs font-bold uppercase tracking-[0.08em] text-muted">Collection</p>}
           <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by collection">
             <button type="button" onClick={() => setActiveFilter("all")} aria-pressed={activeFilter === "all"} className={`${toggle} inline-flex shrink-0 items-center gap-2 ${activeFilter === "all" ? "border-accent bg-rose text-cream" : "border-border/60 text-cream hover:border-accent"}`}>All <span aria-hidden="true">{products.length}</span></button>
             {collections.filter((collection) => collectionCounts.get(collection.id)).map((collection) => (
@@ -151,7 +157,7 @@ function OpenShopContent({ products, collections, initialPage = 1, paginationPat
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
+        {!compact && <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
           {sizeOptions.length > 0 && (
             <div>
               <label htmlFor="shop-size" className="mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-muted">Size</label>
@@ -170,7 +176,7 @@ function OpenShopContent({ products, collections, initialPage = 1, paginationPat
               <option value="price-desc">Price, high to low</option>
             </select>
           </div>
-        </div>
+        </div>}
       </div>
 
       <div className="mb-6 flex min-h-11 flex-wrap items-center justify-between gap-3 text-xs font-bold uppercase tracking-[0.08em] text-muted">
@@ -179,14 +185,14 @@ function OpenShopContent({ products, collections, initialPage = 1, paginationPat
       </div>
 
       {viewMode === "grid" && filtered.length > 0 && (
-        <div className="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4">
+        <div className={`grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 ${compact ? "lg:gap-x-6" : "lg:grid-cols-4"}`}>
           {visibleProducts.map((product, index) => {
             const image = product.images[0];
             const collection = collectionFor(product);
             return (
               <div key={product.id} className="group paper-lift">
                 <Link href={`/product/${product.slug}`} className="block focus-visible:outline-offset-4">
-                  <div className="fold-surface relative aspect-[3/4] overflow-hidden">
+                  <div className="fold-surface relative aspect-[4/5] overflow-hidden">
                     {image ? <ResilientImage src={image} alt={product.name} fill priority={index < 2} className={`${isPrintfulImage(image) ? "object-contain" : "object-cover"} product-art ${product.images[1] ? "transition-opacity duration-300 group-hover:opacity-0" : ""}`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" /> : <div className="absolute inset-0 flex items-center justify-center text-xs uppercase text-muted">Image unavailable</div>}
                     {product.images[1] && <ResilientImage src={product.images[1]} alt="" aria-hidden="true" fill className={`${isPrintfulImage(product.images[1]) ? "object-contain" : "object-cover"} product-art opacity-0 transition-opacity duration-300 group-hover:opacity-100`} sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />}
                   </div>
@@ -273,7 +279,7 @@ function OpenShopContent({ products, collections, initialPage = 1, paginationPat
         <div className="border border-border/40 bg-surface px-5 py-16 text-center">
           <h2 className="font-display text-2xl font-black uppercase">Nothing here yet</h2>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">This list is empty right now. The rest of the catalog is printed to order and ready now.</p>
-          <Link href="/shop" className={`${toggle} mt-6 inline-flex items-center border-accent bg-rose text-cream`}>The whole catalog</Link>
+          <Link href="/shop" className={`${toggle} mt-6 inline-flex items-center border-accent bg-rose text-cream`}>The collection</Link>
         </div>
       )}
     </section>

@@ -11,41 +11,19 @@ import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 // Portal overlay that only renders when opened — load it on demand.
 const SearchOverlay = dynamic(() => import("@/components/ui/SearchOverlay").then((m) => m.SearchOverlay), { ssr: false });
 
-const genderLinks = [
-  {
-    label: "Men",
-    href: "/men",
-    subLinks: [
-      { label: "Shop All", href: "/men" },
-      { label: "T-Shirts", href: "/men/t-shirts" },
-      { label: "Hoodies & Sweatshirts", href: "/men/hoodies-sweatshirts" },
-      { label: "Sweaters & Knitwear", href: "/men/sweaters-knitwear" },
-      { label: "Accessories", href: "/men/accessories" },
-    ],
-  },
-  {
-    label: "Women",
-    href: "/women",
-    subLinks: [
-      { label: "Shop All", href: "/women" },
-      { label: "T-Shirts", href: "/women/t-shirts" },
-      { label: "Hoodies & Sweatshirts", href: "/women/hoodies-sweatshirts" },
-      { label: "Sweaters & Knitwear", href: "/women/sweaters-knitwear" },
-      { label: "Accessories", href: "/women/accessories" },
-    ],
-  },
-];
-
-const topLinks = [
-  { label: "Unisex", href: "/unisex" },
-  { label: "Accessories", href: "/accessories" },
-  { label: "New Arrivals", href: "/new-arrivals" },
+// One capsule, one cut. Eight pieces do not need Men / Women / Unisex /
+// Accessories / New Arrivals — five doors into the same room read as a
+// template, and two of them opened on empty pages. Shop, then the two garment
+// families, then the brand.
+const shopLinks = [
+  { label: "Shop", href: "/shop" },
+  { label: "Tees", href: "/shop/t-shirts" },
+  { label: "Hoods & Crews", href: "/shop/hoodies-sweatshirts" },
 ];
 
 const utilityLinks = [
   { label: "Manifesto", href: "/manifesto" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
   { label: "Track order", href: "/track-order" },
 ];
 
@@ -58,7 +36,6 @@ export function SiteNav() {
   const { totalItems, setCartOpen } = useCart();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [openMobileSection, setOpenMobileSection] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   // Search index is fetched lazily the first time search opens, so it no longer
   // blocks (or bloats) every page render.
@@ -66,7 +43,6 @@ export function SiteNav() {
 
   useEffect(() => {
     setMobileOpen(false);
-    setOpenMobileSection(null);
   }, [pathname]);
 
   useEffect(() => {
@@ -124,44 +100,12 @@ export function SiteNav() {
         <div className="flex items-center">
           <div className="hidden items-center lg:flex">
             {catalogIsPublic && <>
-            {genderLinks.map((gender) => (
-              <div key={gender.label} className="group relative">
-                <Link
-                  href={gender.href}
-                  className={`nav-link inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
-                    isActive(pathname, gender.href) ? "text-cream" : "text-muted hover:text-cream"
-                  }`}
-                >
-                  {gender.label}
-                </Link>
-                <div className="invisible absolute left-0 top-full min-w-[24rem] border border-border/10 bg-void opacity-0 shadow-xl transition-opacity duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                  <div>
-                    <ul className="space-y-0.5 px-2 py-2">
-                      {gender.subLinks.map((link) => (
-                        <li key={link.href}>
-                          <Link
-                            href={link.href}
-                            aria-label={`${gender.label}: ${link.label}`}
-                            className={`inline-flex h-10 w-full items-center px-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
-                              isActive(pathname, link.href) ? "text-accent" : "text-muted hover:bg-charcoal hover:text-cream"
-                            }`}
-                          >
-                            {link.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            {topLinks.map((link) => (
+            {shopLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={`nav-link inline-flex h-14 items-center px-4 font-mono text-[11px] font-bold uppercase tracking-[0.08em] transition-colors ${
-                  isActive(pathname, link.href) ? "text-cream" : "text-muted hover:text-cream"
+                  (link.href === "/shop" ? pathname === "/shop" : isActive(pathname, link.href)) ? "text-cream" : "text-muted hover:text-cream"
                 }`}
               >
                 {link.label}
@@ -229,41 +173,12 @@ export function SiteNav() {
         <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6">
           <ul className="space-y-1">
             {catalogIsPublic && <>
-            {genderLinks.map((gender) => (
-              <li key={gender.label}>
-                <button
-                  type="button"
-                  onClick={() => setOpenMobileSection(openMobileSection === gender.label ? null : gender.label)}
-                  className="inline-flex h-12 w-full items-center justify-between font-mono text-xs font-bold uppercase tracking-[0.08em] text-cream"
-                  aria-expanded={openMobileSection === gender.label}
-                >
-                  {gender.label}
-                  <span aria-hidden="true">{openMobileSection === gender.label ? "−" : "+"}</span>
-                </button>
-                {openMobileSection === gender.label && (
-                  <ul className="ml-3 space-y-0.5 border-l border-border/10 pl-3">
-                    {gender.subLinks.map((link) => (
-                      <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          onClick={() => setMobileOpen(false)}
-                          className="inline-flex h-10 w-full items-center font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted hover:text-accent"
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-
-            {topLinks.map((link) => (
+            {shopLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex h-12 w-full items-center font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted hover:text-accent"
+                  className="inline-flex h-12 w-full items-center font-mono text-xs font-bold uppercase tracking-[0.08em] text-cream hover:text-accent"
                 >
                   {link.label}
                 </Link>

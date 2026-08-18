@@ -25,11 +25,9 @@ const legalLinks = [
 ];
 
 const shopLinks = [
-  { label: "Men", href: "/men" },
-  { label: "Women", href: "/women" },
-  { label: "Unisex", href: "/unisex" },
-  { label: "Accessories", href: "/accessories" },
-  { label: "New Arrivals", href: "/new-arrivals" },
+  { label: "The collection", href: "/shop" },
+  { label: "Tees", href: "/shop/t-shirts" },
+  { label: "Hoods & Crews", href: "/shop/hoodies-sweatshirts" },
 ];
 
 const brandLinks = [

@@ -76,14 +76,15 @@ export function ProductReviews({ productSlug, initial }: { productSlug: string; 
               <Stars rating={summary.average} /> <span>{summary.average.toFixed(1)}</span>
               <span className="text-muted">· {summary.count} {summary.count === 1 ? "review" : "reviews"}</span>
             </p>
-          ) : (
-            <p className="mt-2 text-sm text-muted">No reviews yet — be the first to share how it wears.</p>
-          )}
+          ) : null}
           {/* States what this system actually is, in the same terms as the FAQ
               answer, so the two surfaces agree. Honest moderation is a stronger
-              trust signal than a review count. */}
+              trust signal than a review count — and a new release does not need
+              to announce that nobody has reviewed it yet. */}
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
-            Reviews come from buyers. Every one is read and approved by a person before it publishes, and a Verified badge means the review was matched to a real order. We do not write, buy, or edit reviews.
+            {summary.count > 0
+              ? "Reviews come from buyers. Every one is read and approved by a person before it publishes, and a Verified badge means the review was matched to a real order. We do not write, buy, or edit reviews."
+              : "Reviews come from buyers and are read by a person before they publish. Wear it first, then tell us how it wears."}
           </p>
         </div>
         <button type="button" onClick={() => setOpen((v) => !v)}

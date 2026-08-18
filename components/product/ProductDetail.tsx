@@ -649,13 +649,6 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               </dl>
             </div>
 
-            <ul className="mt-5 grid gap-x-5 gap-y-3 text-xs font-bold uppercase tracking-[0.05em] text-muted sm:grid-cols-2" aria-label="Purchase assurances">
-              <li className="border-t border-border/40 pt-2">Secure Square checkout</li>
-              <li className="border-t border-border/40 pt-2">{SHIPPING_CLAIM_SHORT} · {SHIPPING_CLAIM_DETAIL}</li>
-              <li className="border-t border-border/40 pt-2">Made to order</li>
-              <li className="border-t border-border/40 pt-2">Returns within {RETURNS_WINDOW}</li>
-            </ul>
-
             {description.length > 0 && (
               <div className="mt-10 border-t border-border/40 pt-7">
                 <h2 className="font-display text-2xl font-black uppercase tracking-[-0.035em] text-cream">Product details</h2>
