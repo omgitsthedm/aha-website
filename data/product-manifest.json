@@ -16564,7 +16564,7 @@
       "seoDescription": "The mark the brand is named for. One white line \u2014 ears, face, nothing else \u2014 for the one who does things their own way and brings everyone along. The ",
       "ogImage": "/products/black-sheep-tee/front.jpg",
       "badges": [],
-      "sortPriority": 0,
+      "sortPriority": 1,
       "variants": [
         {
           "ahaVariantId": "black-sheep-tee-xs",
@@ -16717,7 +16717,7 @@
       "seoDescription": "No crowns. No thrones. No kings. Nobody above anybody \u2014 not at work, not at home, not in the group chat. Set in illuminated capitals and blackletter, ",
       "ogImage": "/products/no-kings-tee/front.jpg",
       "badges": [],
-      "sortPriority": 0,
+      "sortPriority": 3,
       "variants": [
         {
           "ahaVariantId": "no-kings-tee-xs",
@@ -16870,7 +16870,7 @@
       "seoDescription": "A rainbow and three words. For the readers, the teachers, the librarians, and everyone who was handed a book at the right moment by someone who cared.",
       "ogImage": "/products/read-banned-books-tee/front.jpg",
       "badges": [],
-      "sortPriority": 0,
+      "sortPriority": 4,
       "variants": [
         {
           "ahaVariantId": "read-banned-books-tee-xs",
@@ -17023,7 +17023,7 @@
       "seoDescription": "A poster for the chest: the boot, the tongue, the OBEY! bubble, and one gentle instruction \u2014 resist with style. Full-color print, front and center. F",
       "ogImage": "/products/dont-lick-the-boot-tee/front.jpg",
       "badges": [],
-      "sortPriority": 0,
+      "sortPriority": 6,
       "variants": [
         {
           "ahaVariantId": "dont-lick-the-boot-tee-xs",
@@ -17176,7 +17176,7 @@
       "seoDescription": "The black sheep stripped to a single line, on the heaviest hood we could find. Quiet from across the room, unmistakable up close \u2014 and warm enough for",
       "ogImage": "/products/sheep-min-hoodie/front.jpg",
       "badges": [],
-      "sortPriority": 0,
+      "sortPriority": 2,
       "variants": [
         {
           "ahaVariantId": "sheep-min-hoodie-xs",
@@ -17343,7 +17343,7 @@
       "seoDescription": "Flowers, a peace sign, a rainbow, and a title in seventies bubble letters. The softest possible way to say you\u2019ll always take the side of people over ",
       "ogImage": "/products/enemy-of-the-state-hoodie/front.jpg",
       "badges": [],
-      "sortPriority": 0,
+      "sortPriority": 8,
       "variants": [
         {
           "ahaVariantId": "enemy-of-the-state-hoodie-xs",
@@ -17510,7 +17510,7 @@
       "seoDescription": "Three words. Pink. Said plainly, the way you\u2019d say it to a friend. Kindness has a spine.",
       "ogImage": "/products/dont-fuck-fascists-tee/front.jpg",
       "badges": [],
-      "sortPriority": 0,
+      "sortPriority": 7,
       "variants": [
         {
           "ahaVariantId": "dont-fuck-fascists-tee-xs",
@@ -17663,7 +17663,7 @@
       "seoDescription": "There\u2019s no place like home \u2014 and home is the people. A pair of ruby heels for everyone who clicked them three times and stayed exactly where they were",
       "ogImage": "/products/no-place-like-new-york-sweatshirt/front.jpg",
       "badges": [],
-      "sortPriority": 0,
+      "sortPriority": 5,
       "variants": [
         {
           "ahaVariantId": "no-place-like-new-york-sweatshirt-xs",

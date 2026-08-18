@@ -45,25 +45,28 @@ export function CookieConsent() {
       aria-label="Cookie preferences"
       data-aha-consent-banner=""
       data-reopened={reopened ? "true" : undefined}
-      className="safe-bottom safe-x fixed inset-x-0 bottom-0 z-[400] border-t border-border/60 bg-void"
+      className="safe-bottom safe-x fixed inset-x-0 bottom-0 z-[400] sm:inset-x-auto sm:bottom-4 sm:left-4 sm:max-w-sm"
     >
-      <div className="mx-auto flex max-w-4xl flex-col gap-2 px-3 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-4">
-        <p className="min-w-0 flex-1 text-xs leading-snug text-cream sm:text-sm">
+      {/* Calm on purpose. This is a legal notice, not the brand's opening line:
+          ink on paper, one line, two equal buttons, tucked into a corner on
+          desktop so the photograph stays the loudest thing on the page. */}
+      <div className="border-t border-border/60 bg-void px-4 py-3 shadow-[0_-8px_24px_rgb(0_0_0/0.06)] sm:border sm:shadow-[0_12px_32px_rgb(0_0_0/0.10)]">
+        <p className="text-xs leading-snug text-muted">
           {globalPrivacyControl
-            ? "Your browser sent a Global Privacy Control signal. Optional analytics and advertising stay off while it is active."
+            ? "Your browser sent a Global Privacy Control signal. Optional analytics stay off while it is active."
             : "Optional analytics stay off until you accept."}{" "}
-          <Link href="/privacy" prefetch={false} className="font-bold text-accent underline underline-offset-2 hover:text-cream">Details</Link>
+          <Link href="/privacy" prefetch={false} className="font-bold text-cream underline underline-offset-2 hover:text-accent">Details</Link>
         </p>
-        <div className={`grid shrink-0 gap-2 sm:flex ${globalPrivacyControl ? "grid-cols-1" : "grid-cols-2"}`}>
+        <div className={`mt-2.5 grid gap-2 ${globalPrivacyControl ? "grid-cols-1" : "grid-cols-2"}`}>
           <button
             type="button"
             onClick={() => choose("denied")}
-            className="min-h-11 whitespace-nowrap border border-border/60 px-4 text-xs font-bold uppercase tracking-wide text-cream transition-colors hover:border-accent hover:text-accent"
+            className="min-h-11 whitespace-nowrap border border-border/60 px-3 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-cream transition-colors hover:border-cream"
           >
             {globalPrivacyControl ? "Keep tracking off" : "Reject"}
           </button>
           {!globalPrivacyControl && (
-            <button type="button" onClick={() => choose("granted")} className="btn-primary whitespace-nowrap">
+            <button type="button" onClick={() => choose("granted")} className="min-h-11 whitespace-nowrap border border-cream bg-cream px-3 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-void transition-colors hover:bg-charcoal hover:border-charcoal">
               Accept
             </button>
           )}

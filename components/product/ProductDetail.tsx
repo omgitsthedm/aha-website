@@ -572,28 +572,6 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
               >
                 {!currentVariation ? "Choose a size" : !canBuy ? "Unavailable" : addedFeedback ? "Added to bag" : `Add to bag - ${currentVariation.priceFormatted}`}
               </button>
-              <button
-                type="button"
-                onClick={toggleWishlist}
-                aria-pressed={wishlisted}
-                aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                className={`inline-flex h-14 w-14 items-center justify-center border transition-colors ${wishlisted ? "border-accent bg-rose text-cream" : "border-border/10 text-muted hover:border-accent hover:text-cream"}`}
-              >
-                <svg className="h-5 w-5" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                onClick={handleShare}
-                aria-label={`Share ${product.name}`}
-                className="inline-flex h-14 w-14 items-center justify-center border border-border/10 text-muted transition-colors hover:border-accent hover:text-cream"
-              >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
-                </svg>
-              </button>
-              <span className="sr-only" aria-live="polite">{shareFeedback}</span>
             </div>
 
             {/* One-tap wallet, above the fold. Lazy-loads the Square SDK only on
@@ -624,6 +602,35 @@ export function ProductDetail({ product, related, collection, enrichment, stockB
                 Buy it now
               </button>
             )}
+
+            {/* Secondary actions live apart from the buy row (proximity): saving
+                and sharing are not siblings of paying. */}
+            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
+              <button
+                type="button"
+                onClick={toggleWishlist}
+                aria-pressed={wishlisted}
+                aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                className={`inline-flex min-h-11 items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.1em] transition-colors ${wishlisted ? "text-accent" : "text-muted hover:text-cream"}`}
+              >
+                <svg className="h-4 w-4" fill={wishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <span>{wishlisted ? "Saved" : "Save for later"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleShare}
+                aria-label={`Share ${product.name}`}
+                className="inline-flex min-h-11 items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted transition-colors hover:text-cream"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+                </svg>
+                <span>{shareFeedback || "Share"}</span>
+              </button>
+              <span className="sr-only" aria-live="polite">{shareFeedback}</span>
+            </div>
 
             {/* Trust signal at the decision point. */}
             <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
