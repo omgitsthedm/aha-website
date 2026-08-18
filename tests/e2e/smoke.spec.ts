@@ -24,6 +24,12 @@ test("@catalog home renders the brand hero without retired shopping controls", a
     (nodes) => [...new Set(nodes.map((n) => n.getAttribute("href")!))],
   );
   for (const href of homePdpLinks) expect(CAPSULE_PDP_LINKS, `retired PDP linked from home: ${href}`).toContain(href);
+  // And the front door actually sells: every capsule product is on it, with a
+  // way into the shop. "The previous collection is archived" was the holding
+  // page; a live store must not open on it.
+  await expect(page.getByTestId("home-collection-grid").locator('a[href^="/product/"]')).toHaveCount(CAPSULE_PDP_LINKS.length);
+  await expect(page.getByRole("link", { name: "Shop the collection" }).first()).toBeVisible();
+  await expect(page.getByText("The previous collection is archived")).toHaveCount(0);
 
   await expect(page.locator("symbol#aha-sheep-mark")).toHaveCount(1);
   const filledMark = page.locator('svg[fill="currentColor"]:has(use[href="#aha-sheep-mark"])').first();

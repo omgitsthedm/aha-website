@@ -3,9 +3,52 @@
     {
       "id": "sg-tee",
       "productType": "tee",
-      "fit": "Standard unisex fit — true to size.",
-      "measurements": [],
-      "note": "Product-specific measurements pending."
+      "fit": "Modern unisex fit — true to size.",
+      "measurements": [
+        {
+          "size": "XS",
+          "chestIn": 16.5,
+          "lengthIn": 27
+        },
+        {
+          "size": "S",
+          "chestIn": 18,
+          "lengthIn": 28
+        },
+        {
+          "size": "M",
+          "chestIn": 20,
+          "lengthIn": 29
+        },
+        {
+          "size": "L",
+          "chestIn": 22,
+          "lengthIn": 30
+        },
+        {
+          "size": "XL",
+          "chestIn": 24,
+          "lengthIn": 31
+        },
+        {
+          "size": "2XL",
+          "chestIn": 26,
+          "lengthIn": 32
+        },
+        {
+          "size": "3XL",
+          "chestIn": 28,
+          "lengthIn": 33
+        },
+        {
+          "size": "4XL",
+          "chestIn": 30,
+          "lengthIn": 34
+        }
+      ],
+      "note": "Next Level 3600 Premium Crew — manufacturer garment specs, ±1 in.",
+      "howToMeasure": "Chest is measured across the front, one inch below the armhole; length from the high point of the shoulder to the hem. Compare with a tee you already wear.",
+      "sizeUpIf": "You are between sizes or want a looser fit."
     },
     {
       "id": "sg-accessory",
@@ -17,9 +60,102 @@
     {
       "id": "sg-hoodie",
       "productType": "hoodie",
-      "fit": "Relaxed, midweight fleece — true to size.",
-      "measurements": [],
-      "note": "Product-specific measurements pending."
+      "fit": "Relaxed heavyweight fit — true to size.",
+      "measurements": [
+        {
+          "size": "XS",
+          "chestIn": 19,
+          "lengthIn": 26
+        },
+        {
+          "size": "S",
+          "chestIn": 20,
+          "lengthIn": 27
+        },
+        {
+          "size": "M",
+          "chestIn": 22,
+          "lengthIn": 28
+        },
+        {
+          "size": "L",
+          "chestIn": 24,
+          "lengthIn": 29
+        },
+        {
+          "size": "XL",
+          "chestIn": 26,
+          "lengthIn": 30
+        },
+        {
+          "size": "2XL",
+          "chestIn": 28,
+          "lengthIn": 31
+        },
+        {
+          "size": "3XL",
+          "chestIn": 30,
+          "lengthIn": 32
+        },
+        {
+          "size": "4XL",
+          "chestIn": 32,
+          "lengthIn": 33
+        },
+        {
+          "size": "5XL",
+          "chestIn": 34,
+          "lengthIn": 34
+        }
+      ],
+      "note": "Independent Trading Co. IND4000 heavyweight pullover hood — manufacturer garment specs, ±1 in.",
+      "howToMeasure": "Chest is measured across the front, one inch below the armhole; length from the high point of the shoulder to the hem. Compare with a hood you already wear.",
+      "sizeDownIf": "You want a closer fit; the cut runs generous."
+    },
+    {
+      "id": "sg-crewneck",
+      "productType": "hoodie",
+      "fit": "Relaxed heavyweight fit — true to size.",
+      "measurements": [
+        {
+          "size": "XS",
+          "chestIn": 19,
+          "lengthIn": 26
+        },
+        {
+          "size": "S",
+          "chestIn": 20,
+          "lengthIn": 27
+        },
+        {
+          "size": "M",
+          "chestIn": 22,
+          "lengthIn": 28
+        },
+        {
+          "size": "L",
+          "chestIn": 24,
+          "lengthIn": 29
+        },
+        {
+          "size": "XL",
+          "chestIn": 26,
+          "lengthIn": 30
+        },
+        {
+          "size": "2XL",
+          "chestIn": 28,
+          "lengthIn": 31
+        },
+        {
+          "size": "3XL",
+          "chestIn": 30,
+          "lengthIn": 32
+        }
+      ],
+      "howToMeasure": "Chest is measured across the front, one inch below the armhole; length from the high point of the shoulder to the hem.",
+      "note": "Independent Trading Co. IND3000 heavyweight crewneck — manufacturer garment specs, ±1 in.",
+      "sizeDownIf": "You want a closer fit; the cut runs generous."
     },
     {
       "id": "sg-sweater",

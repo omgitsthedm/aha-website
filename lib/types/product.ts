@@ -243,4 +243,6 @@ export interface SizeGuide {
   modelSizing?: string;
   sizeUpIf?: string;
   sizeDownIf?: string;
+  /** Source of the measurements (e.g. the blank's manufacturer spec) — shown under the table. */
+  note?: string;
 }
