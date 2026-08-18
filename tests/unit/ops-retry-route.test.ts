@@ -131,3 +131,40 @@ describe("ops retry fulfillment route", () => {
     expect(mocks.retry).toHaveBeenCalledWith(77);
   });
 });
+
+describe("regression: the submitted-but-unacknowledged hold (round-3 judge probe)", () => {
+  beforeEach(() => {
+    vi.stubEnv("AHA_OPS_SESSION_SECRET", "test-ops-secret");
+    mocks.cookieValue = createOpsSessionToken();
+    mocks.configured.mockReturnValue(true);
+    mocks.retry.mockResolvedValue(undefined);
+  });
+  afterEach(() => { vi.unstubAllEnvs(); vi.clearAllMocks(); mocks.cookieValue = undefined; });
+
+  it("warns against blind resubmission when a create POST already went out", async () => {
+    // Round 3 detected a hold only when providerRequestId AND providerOrderId
+    // were both NULL. A claim whose POST went out but which APLIIQ never
+    // acknowledged (requestId set, orderId NULL) fell through to a bare 303 —
+    // the retry looked successful and nothing had happened. Blind-resubmitting
+    // that shape ships the customer two garments.
+    mocks.claimLookup.mockResolvedValue([
+      { status: "manual_review", lastError: null, providerRequestId: "aha-apliiq-77" },
+    ]);
+    const res = await call();
+    expect(res.status).toBe(409);
+    const payload = await res.json();
+    expect(payload.submitted).toBe(true);
+    expect(payload.error).toContain("Do NOT blind-resubmit");
+    expect(payload.error).not.toContain("Nothing was submitted");
+  });
+
+  it("still offers release, and does not warn, when nothing was ever POSTed", async () => {
+    mocks.claimLookup.mockResolvedValue([
+      { status: "manual_review", lastError: null, providerRequestId: null },
+    ]);
+    const payload = await (await call()).json();
+    expect(payload.submitted).toBe(false);
+    expect(payload.error).toContain("Release APLIIQ hold");
+    expect(payload.error).not.toContain("Do NOT blind-resubmit");
+  });
+});

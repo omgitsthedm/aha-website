@@ -20,6 +20,8 @@ export const dynamic = "force-dynamic";
 interface HeldApliiqClaim {
   status: string;
   lastError: string | null;
+  /** NULL = never POSTed (safe to release). Set = POSTed, unacknowledged (prove absence first). */
+  providerRequestId: string | null;
 }
 
 /**
@@ -35,14 +37,29 @@ interface HeldApliiqClaim {
  * false positive: any submission the retry did perform would have stamped the
  * request id before its first remote call.
  */
+/**
+ * An APLIIQ claim a plain retry cannot move.
+ *
+ * Keyed on providerOrderId IS NULL alone — deliberately NOT on
+ * providerRequestId too. Requiring both missed the more dangerous shape: a
+ * claim whose create POST already went out (requestId stamped) but which APLIIQ
+ * never acknowledged (orderId still NULL). That row is exactly the one an
+ * operator needs told about, and it used to fall through to a success-shaped
+ * bare 303 — the retry looked like it worked and nothing happened. Confirmed by
+ * probe against the real compiled SQL, 2026-08-17.
+ *
+ * providerRequestId is still selected so the caller can distinguish "never
+ * submitted" (release it) from "submitted, unacknowledged" (prove absence at
+ * APLIIQ before resubmitting, or the customer gets two garments).
+ */
 async function heldApliiqClaim(orderId: number): Promise<HeldApliiqClaim | null> {
   const [row] = await db().select({
     status: fulfillments.status,
     lastError: fulfillments.lastError,
+    providerRequestId: fulfillments.providerRequestId,
   }).from(fulfillments).where(and(
     eq(fulfillments.orderId, orderId),
     eq(fulfillments.fulfillmentProvider, "apliiq"),
-    isNull(fulfillments.providerRequestId),
     isNull(fulfillments.providerOrderId),
   )).limit(1);
   return row ?? null;
@@ -62,6 +79,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
   if (held) {
     const releaseEndpoint = `/api/ops/orders/${orderId}/apliiq-resubmit`;
+    // A column the row never carried reads back undefined, not null. Both mean
+    // "no create POST was made" — collapse them before branching, or a
+    // never-submitted hold gets the do-not-resubmit warning by accident.
+    const submittedRequestId = held.providerRequestId ?? null;
     return NextResponse.json({
       ok: false,
       orderId,
@@ -69,7 +90,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       status: held.status,
       holdReason: held.lastError,
       releaseEndpoint,
-      error: `Nothing was submitted. The APLIIQ claim for order ${orderId} is held (${held.status})${held.lastError ? `: ${held.lastError}` : ""}. Retry cannot release a hold — use "Release APLIIQ hold" (POST ${releaseEndpoint}), which authorizes exactly one submission for this order.`,
+      submitted: submittedRequestId !== null,
+      // "Nothing was submitted" was false on two counts: a mixed cart can create
+      // a Printful draft before the APLIIQ line is reached, and a stamped
+      // providerRequestId means a create POST already went out.
+      error: submittedRequestId === null
+        ? `The APLIIQ claim for order ${orderId} is held (${held.status})${held.lastError ? `: ${held.lastError}` : ""} and was not submitted. Retry cannot release a hold — use "Release APLIIQ hold" (POST ${releaseEndpoint}), which authorizes exactly one submission. Any non-APLIIQ lines on this order may still have been processed.`
+        : `The APLIIQ claim for order ${orderId} was already POSTed (request ${submittedRequestId}) but APLIIQ has not acknowledged an order id (${held.status})${held.lastError ? `: ${held.lastError}` : ""}. Do NOT blind-resubmit — confirm at APLIIQ whether the order exists first, or the customer receives two. POST ${releaseEndpoint} proves absence before it resubmits.`,
     }, { status: 409 });
   }
 

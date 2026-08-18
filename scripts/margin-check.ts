@@ -30,7 +30,19 @@ for (const p of loadProducts()) {
         continue;
       }
       const { margin, itemCostCents, freightCents, fulfillmentFeeCents, destinationTaxCents } = landed.landed;
-      for (const warning of landed.landed.warnings) warnings.push(`[${id}] ${warning}`);
+      // Proven loss and missing data are NOT the same signal and must not share
+      // an exit code. underwaterInternationalDestinations is quantified: a real
+      // rate says the flat charge does not cover this destination inside the
+      // cart's own limits. That fails. An unmodelled zone only means "no rate to
+      // compare against" and stays a warning.
+      const underwater = landed.landed.underwaterInternationalDestinations ?? [];
+      if (underwater.length) {
+        errors.push(`[${id}] flat international charge is underwater to ${underwater.join(", ")} within the cart's unit limit`);
+      }
+      for (const warning of landed.landed.warnings) {
+        const proven = underwater.some((code: string) => warning.includes(code)) && !warning.includes("not modelled");
+        (proven ? errors : warnings).push(`[${id}] ${warning}`);
+      }
       if (margin.contributionMarginRatio < MIN_MARGIN_RATIO) {
         errors.push(`[${id}] landed margin ${(margin.contributionMarginRatio * 100).toFixed(1)}% below ${(MIN_MARGIN_RATIO * 100).toFixed(0)}% floor (retail ${v.retailPrice}, item ${itemCostCents}, freight ${freightCents}, fee ${fulfillmentFeeCents}, tax ${destinationTaxCents}, square ${margin.squareFee})`);
       }
@@ -50,7 +62,10 @@ for (const p of loadProducts()) {
 }
 // Modelling gaps are reported but do not fail the build: an unmodelled
 // international zone means "no verified rate to compare against", not a proven
-// loss. It must still be visible on every run.
+// loss. It must still be visible on every run. A QUANTIFIED loss against a real
+// rate is an error above, not a warning here — before 2026-08-17 both landed in
+// this array and the run exited 0 either way, which was only harmless because
+// the catalog had zero active APLIIQ variants.
 if (warnings.length) console.warn(`! margin-check: ${warnings.length} modelling warning(s):\n  - ${warnings.join("\n  - ")}`);
 if (errors.length) {
   console.error(`✗ margin-check: ${errors.length} issue(s):\n  - ${errors.join("\n  - ")}`);

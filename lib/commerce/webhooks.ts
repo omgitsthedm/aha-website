@@ -443,9 +443,40 @@ function normalizeParkedLeg(row: { actor: string | null; metadataJson: unknown }
   };
 }
 
-/** A leg that actually says something about the provider money, NULL/NULL does not. */
+/**
+ * A leg that carries the RECEIPT — an actual recovered amount.
+ *
+ * This deliberately does NOT accept "tier is set". A tier is an intention
+ * ("this should be recoverable at the post-garment rate"); the amount is the
+ * money. Treating tier-or-amount as reconciled loses real money: with rows
+ * {post_garment, 1041} older and {post_garment, null} newer, a newest-first
+ * scan picked the newer tier-only row and booked recovered_amount_cents NULL,
+ * writing off the $10.41 APLIIQ actually returned. Confirmed by probe
+ * 2026-08-17. Requiring the amount makes the receipt win regardless of which
+ * row was written last.
+ *
+ * Note 0 is a real receipt (post-print recovers nothing) and must qualify —
+ * hence an explicit null check, never a truthiness test.
+ */
 function isReconciledLeg(leg: PendingRefundProviderLeg): boolean {
-  return leg.providerRecoveryTier !== null || leg.recoveredAmountCents !== null;
+  return leg.recoveredAmountCents !== null;
+}
+
+/** A leg carrying an intended tier but no receipt yet. Ranks below a receipt. */
+function hasProviderIntent(leg: PendingRefundProviderLeg): boolean {
+  return leg.providerRecoveryTier !== null;
+}
+
+/**
+ * Pure ranking over already-read rows, newest-first on input.
+ * Exported as a test seam: the db mock in order-refunds.test.ts evaluates
+ * neither WHERE nor ORDER BY, so a test that went through it could not prove
+ * this ordering. This can be pinned directly, with no mock at all.
+ */
+export function __rankParkedLegsForTest(
+  legs: PendingRefundProviderLeg[],
+): PendingRefundProviderLeg {
+  return legs.find(isReconciledLeg) ?? legs.find(hasProviderIntent) ?? legs[0];
 }
 
 /**
@@ -473,7 +504,9 @@ export async function readPendingRefundProviderLeg(
   const legs = rows.map(normalizeParkedLeg);
   // The winner owns tier + amount + outcome as ONE unit: pairing an amount from
   // one row with a tier from another would invent a reconciliation nobody made.
-  const winner = legs.find(isReconciledLeg) ?? legs[0];
+  // Receipt beats intent beats empty. Before this ordering a newer tier-only row
+  // outranked an older row holding the actual recovered amount.
+  const winner = __rankParkedLegsForTest(legs);
   // reason and actor are free to fall back, so a later blank note cannot erase
   // the operator's words.
   return {

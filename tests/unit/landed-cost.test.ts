@@ -271,3 +271,24 @@ describe("resolveApliiqLandedCost", () => {
     expect(landed.margin.contributionMargin).toBeGreaterThan(0);
   });
 });
+
+describe("regressions confirmed by round-3 judge probes", () => {
+  it("ranks a receipt above a newer tier-only row when reading a parked refund leg", async () => {
+    // Judge probe 2026-08-17: rows {post_garment, 1041} older and
+    // {post_garment, null} newer. isReconciledLeg accepted tier OR amount, so a
+    // newest-first scan picked the tier-only row and booked NULL, writing off
+    // the $10.41 APLIIQ actually returned. The receipt must win.
+    const { __rankParkedLegsForTest } = await import("@/lib/commerce/webhooks");
+    const leg = (tier: string | null, amount: number | null) =>
+      ({ providerRecoveryTier: tier, recoveredAmountCents: amount, providerOutcome: null, reason: null, actor: null }) as never;
+
+    // newest-first input, receipt is the OLDER row
+    expect(__rankParkedLegsForTest([leg("post_garment", null), leg("post_garment", 1041)]).recoveredAmountCents).toBe(1041);
+    // 0 is a real receipt (post-print recovers nothing) and must outrank intent
+    expect(__rankParkedLegsForTest([leg("post_print", null), leg("post_print", 0)]).recoveredAmountCents).toBe(0);
+    // intent still beats an empty row
+    expect(__rankParkedLegsForTest([leg(null, null), leg("post_garment", null)]).providerRecoveryTier).toBe("post_garment");
+    // nothing parked anywhere -> first row, not a crash
+    expect(__rankParkedLegsForTest([leg(null, null)]).recoveredAmountCents).toBeNull();
+  });
+});
