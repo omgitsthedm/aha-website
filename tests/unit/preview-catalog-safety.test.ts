@@ -1,3 +1,4 @@
+import { SELLABLE_PRODUCT_SLUGS } from "@/lib/commerce/sellable-slugs.generated";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 const squareRequest = vi.fn(() => {
@@ -39,11 +40,8 @@ describe("preview catalog isolation", () => {
     // The projection is no longer empty — the APLIIQ capsule is live. What must
     // still hold is that NOTHING legacy comes through it, and that the preview
     // boundary still keeps a stray Square token from reaching the provider.
-    const capsule = new Set([
-      "black-sheep-tee", "no-kings-tee", "read-banned-books-tee",
-      "dont-lick-the-boot-tee", "sheep-min-hoodie", "enemy-of-the-state-hoodie",
-    ]);
-    for (const product of products) expect(capsule.has(product.slug)).toBe(true);
+    for (const product of products) expect(SELLABLE_PRODUCT_SLUGS.has(product.slug)).toBe(true);
+    expect(products.length).toBe(SELLABLE_PRODUCT_SLUGS.size);
     // Collections come from the category taxonomy, not from products, so they
     // still list legacy categories. That is a display concern (an empty
     // "Sweaters" page), not a leak — no legacy PRODUCT is reachable through

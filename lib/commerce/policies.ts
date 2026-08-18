@@ -66,6 +66,30 @@ export const INTERNATIONAL_COUNTRIES = [
   "TR", "JP", "AU",
 ] as const;
 export const SHIPPING_COUNTRIES = [DOMESTIC_COUNTRY, ...INTERNATIONAL_COUNTRIES] as const;
+
+/**
+ * English display names for every country the storefront ships to. The
+ * checkout country <select> and the APLIIQ order payload (which needs the
+ * country NAME as well as the ISO code) both read from here, so a market cannot
+ * be enabled in INTERNATIONAL_COUNTRIES without also being nameable.
+ */
+export const SHIPPING_COUNTRY_NAMES: Readonly<Record<(typeof SHIPPING_COUNTRIES)[number], string>> = {
+  US: "United States",
+  CA: "Canada",
+  GB: "United Kingdom", IE: "Ireland",
+  DE: "Germany", FR: "France", IT: "Italy", ES: "Spain", NL: "Netherlands", BE: "Belgium", AT: "Austria",
+  PT: "Portugal", SE: "Sweden", DK: "Denmark", FI: "Finland", PL: "Poland", CZ: "Czechia", GR: "Greece",
+  CH: "Switzerland", NO: "Norway",
+  TR: "Türkiye", JP: "Japan", AU: "Australia",
+};
+
+/** Ordered options for the checkout country select: US first, then the rest by name. */
+export const SHIPPING_COUNTRY_OPTIONS: ReadonlyArray<{ code: (typeof SHIPPING_COUNTRIES)[number]; name: string }> = [
+  { code: DOMESTIC_COUNTRY, name: SHIPPING_COUNTRY_NAMES[DOMESTIC_COUNTRY] },
+  ...INTERNATIONAL_COUNTRIES
+    .map((code) => ({ code, name: SHIPPING_COUNTRY_NAMES[code] }))
+    .sort((a, b) => a.name.localeCompare(b.name, "en")),
+];
 export const INTERNATIONAL_SHIPPING_CENTS = 2500;
 export const INTERNATIONAL_SHIPPING_LABEL = "International shipping";
 

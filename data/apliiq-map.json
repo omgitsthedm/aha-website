@@ -1,24 +1,28 @@
 {
   "map": {
     "black-sheep-tee-xs": {
-      "apliiqSku": "APQ-6030119S5A0",
+      "apliiqSku": "APQ-6030204S5A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030119",
-      "apliiqVariantId": "6030119-xs",
+      "apliiqProductId": "6030204",
+      "apliiqVariantId": "6030204-xs",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068144,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/black-sheep-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/41061c98389d74d02bd1230edfc71a628237bd0b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -31,29 +35,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.209Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "black-sheep-tee-s": {
-      "apliiqSku": "APQ-6030119S6A0",
+      "apliiqSku": "APQ-6030204S6A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030119",
-      "apliiqVariantId": "6030119-s",
+      "apliiqProductId": "6030204",
+      "apliiqVariantId": "6030204-s",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068144,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/black-sheep-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/41061c98389d74d02bd1230edfc71a628237bd0b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -66,29 +74,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "black-sheep-tee-m": {
-      "apliiqSku": "APQ-6030119S7A0",
+      "apliiqSku": "APQ-6030204S7A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030119",
-      "apliiqVariantId": "6030119-m",
+      "apliiqProductId": "6030204",
+      "apliiqVariantId": "6030204-m",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068144,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/black-sheep-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/41061c98389d74d02bd1230edfc71a628237bd0b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -101,29 +113,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "black-sheep-tee-l": {
-      "apliiqSku": "APQ-6030119S8A0",
+      "apliiqSku": "APQ-6030204S8A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030119",
-      "apliiqVariantId": "6030119-l",
+      "apliiqProductId": "6030204",
+      "apliiqVariantId": "6030204-l",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068144,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/black-sheep-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/41061c98389d74d02bd1230edfc71a628237bd0b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -136,29 +152,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "black-sheep-tee-xl": {
-      "apliiqSku": "APQ-6030119S1A0",
+      "apliiqSku": "APQ-6030204S1A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030119",
-      "apliiqVariantId": "6030119-xl",
+      "apliiqProductId": "6030204",
+      "apliiqVariantId": "6030204-xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068144,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/black-sheep-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/41061c98389d74d02bd1230edfc71a628237bd0b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -171,29 +191,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "black-sheep-tee-2xl": {
-      "apliiqSku": "APQ-6030119S2A0",
+      "apliiqSku": "APQ-6030204S2A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030119",
-      "apliiqVariantId": "6030119-xxl",
+      "apliiqProductId": "6030204",
+      "apliiqVariantId": "6030204-2xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068144,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/black-sheep-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/41061c98389d74d02bd1230edfc71a628237bd0b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -206,8 +230,8 @@
       "apliiqItemCost": 1949,
       "apliiqCostBasis": "standard",
       "costEstimate": 1949,
-      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1209,
       "marginFloorOverride": {
         "minRatio": 0.3,
@@ -216,24 +240,28 @@
       }
     },
     "black-sheep-tee-3xl": {
-      "apliiqSku": "APQ-6030119S21A0",
+      "apliiqSku": "APQ-6030204S21A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030119",
-      "apliiqVariantId": "6030119-xxxl",
+      "apliiqProductId": "6030204",
+      "apliiqVariantId": "6030204-3xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068144,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/black-sheep-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/41061c98389d74d02bd1230edfc71a628237bd0b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -246,8 +274,8 @@
       "apliiqItemCost": 2049,
       "apliiqCostBasis": "standard",
       "costEstimate": 2049,
-      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1109,
       "marginFloorOverride": {
         "minRatio": 0.27,
@@ -256,24 +284,28 @@
       }
     },
     "black-sheep-tee-4xl": {
-      "apliiqSku": "APQ-6030119S61A0",
+      "apliiqSku": "APQ-6030204S61A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030119",
-      "apliiqVariantId": "6030119-4xl",
+      "apliiqProductId": "6030204",
+      "apliiqVariantId": "6030204-4xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068144,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/black-sheep-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/930b6aa060648f78ed0eae0ae457c6f2fbcb243d/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/41061c98389d74d02bd1230edfc71a628237bd0b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -286,8 +318,8 @@
       "apliiqItemCost": 2149,
       "apliiqCostBasis": "standard",
       "costEstimate": 2149,
-      "costVerifiedAt": "2026-08-18T05:48:45.210Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.210Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1009,
       "marginFloorOverride": {
         "minRatio": 0.25,
@@ -296,24 +328,28 @@
       }
     },
     "no-kings-tee-xs": {
-      "apliiqSku": "APQ-6030120S5A0",
+      "apliiqSku": "APQ-6030205S5A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030120",
-      "apliiqVariantId": "6030120-xs",
+      "apliiqProductId": "6030205",
+      "apliiqVariantId": "6030205-xs",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068145,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/no-kings-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59b1a41692e39db31da96d75a45449d1cdf02d9e/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -326,29 +362,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "no-kings-tee-s": {
-      "apliiqSku": "APQ-6030120S6A0",
+      "apliiqSku": "APQ-6030205S6A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030120",
-      "apliiqVariantId": "6030120-s",
+      "apliiqProductId": "6030205",
+      "apliiqVariantId": "6030205-s",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068145,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/no-kings-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59b1a41692e39db31da96d75a45449d1cdf02d9e/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -361,29 +401,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "no-kings-tee-m": {
-      "apliiqSku": "APQ-6030120S7A0",
+      "apliiqSku": "APQ-6030205S7A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030120",
-      "apliiqVariantId": "6030120-m",
+      "apliiqProductId": "6030205",
+      "apliiqVariantId": "6030205-m",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068145,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/no-kings-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59b1a41692e39db31da96d75a45449d1cdf02d9e/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -396,29 +440,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "no-kings-tee-l": {
-      "apliiqSku": "APQ-6030120S8A0",
+      "apliiqSku": "APQ-6030205S8A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030120",
-      "apliiqVariantId": "6030120-l",
+      "apliiqProductId": "6030205",
+      "apliiqVariantId": "6030205-l",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068145,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/no-kings-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59b1a41692e39db31da96d75a45449d1cdf02d9e/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -431,29 +479,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "no-kings-tee-xl": {
-      "apliiqSku": "APQ-6030120S1A0",
+      "apliiqSku": "APQ-6030205S1A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030120",
-      "apliiqVariantId": "6030120-xl",
+      "apliiqProductId": "6030205",
+      "apliiqVariantId": "6030205-xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068145,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/no-kings-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59b1a41692e39db31da96d75a45449d1cdf02d9e/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -466,29 +518,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "no-kings-tee-2xl": {
-      "apliiqSku": "APQ-6030120S2A0",
+      "apliiqSku": "APQ-6030205S2A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030120",
-      "apliiqVariantId": "6030120-xxl",
+      "apliiqProductId": "6030205",
+      "apliiqVariantId": "6030205-2xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068145,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/no-kings-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59b1a41692e39db31da96d75a45449d1cdf02d9e/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -501,8 +557,8 @@
       "apliiqItemCost": 1949,
       "apliiqCostBasis": "standard",
       "costEstimate": 1949,
-      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1209,
       "marginFloorOverride": {
         "minRatio": 0.3,
@@ -511,24 +567,28 @@
       }
     },
     "no-kings-tee-3xl": {
-      "apliiqSku": "APQ-6030120S21A0",
+      "apliiqSku": "APQ-6030205S21A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030120",
-      "apliiqVariantId": "6030120-xxxl",
+      "apliiqProductId": "6030205",
+      "apliiqVariantId": "6030205-3xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068145,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/no-kings-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59b1a41692e39db31da96d75a45449d1cdf02d9e/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -541,8 +601,8 @@
       "apliiqItemCost": 2049,
       "apliiqCostBasis": "standard",
       "costEstimate": 2049,
-      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1109,
       "marginFloorOverride": {
         "minRatio": 0.27,
@@ -551,24 +611,28 @@
       }
     },
     "no-kings-tee-4xl": {
-      "apliiqSku": "APQ-6030120S61A0",
+      "apliiqSku": "APQ-6030205S61A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030120",
-      "apliiqVariantId": "6030120-4xl",
+      "apliiqProductId": "6030205",
+      "apliiqVariantId": "6030205-4xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068145,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/no-kings-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/da5331b41ad5757a342e2524c4bf3e8a3604d577/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59b1a41692e39db31da96d75a45449d1cdf02d9e/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -581,8 +645,8 @@
       "apliiqItemCost": 2149,
       "apliiqCostBasis": "standard",
       "costEstimate": 2149,
-      "costVerifiedAt": "2026-08-18T05:48:45.327Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.327Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1009,
       "marginFloorOverride": {
         "minRatio": 0.25,
@@ -591,24 +655,28 @@
       }
     },
     "read-banned-books-tee-xs": {
-      "apliiqSku": "APQ-6030121S5A0",
+      "apliiqSku": "APQ-6030206S5A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030121",
-      "apliiqVariantId": "6030121-xs",
+      "apliiqProductId": "6030206",
+      "apliiqVariantId": "6030206-xs",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068146,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/867b1061a46aa3fc44633d4e44d6aa1a8383cbae/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -621,29 +689,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.494Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "read-banned-books-tee-s": {
-      "apliiqSku": "APQ-6030121S6A0",
+      "apliiqSku": "APQ-6030206S6A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030121",
-      "apliiqVariantId": "6030121-s",
+      "apliiqProductId": "6030206",
+      "apliiqVariantId": "6030206-s",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068146,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/867b1061a46aa3fc44633d4e44d6aa1a8383cbae/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -656,29 +728,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.494Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "read-banned-books-tee-m": {
-      "apliiqSku": "APQ-6030121S7A0",
+      "apliiqSku": "APQ-6030206S7A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030121",
-      "apliiqVariantId": "6030121-m",
+      "apliiqProductId": "6030206",
+      "apliiqVariantId": "6030206-m",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068146,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/867b1061a46aa3fc44633d4e44d6aa1a8383cbae/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -691,29 +767,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.494Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "read-banned-books-tee-l": {
-      "apliiqSku": "APQ-6030121S8A0",
+      "apliiqSku": "APQ-6030206S8A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030121",
-      "apliiqVariantId": "6030121-l",
+      "apliiqProductId": "6030206",
+      "apliiqVariantId": "6030206-l",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068146,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/867b1061a46aa3fc44633d4e44d6aa1a8383cbae/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -726,29 +806,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.494Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.494Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "read-banned-books-tee-xl": {
-      "apliiqSku": "APQ-6030121S1A0",
+      "apliiqSku": "APQ-6030206S1A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030121",
-      "apliiqVariantId": "6030121-xl",
+      "apliiqProductId": "6030206",
+      "apliiqVariantId": "6030206-xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068146,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/867b1061a46aa3fc44633d4e44d6aa1a8383cbae/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -761,29 +845,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.495Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "read-banned-books-tee-2xl": {
-      "apliiqSku": "APQ-6030121S2A0",
+      "apliiqSku": "APQ-6030206S2A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030121",
-      "apliiqVariantId": "6030121-xxl",
+      "apliiqProductId": "6030206",
+      "apliiqVariantId": "6030206-2xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068146,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/867b1061a46aa3fc44633d4e44d6aa1a8383cbae/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -796,8 +884,8 @@
       "apliiqItemCost": 1949,
       "apliiqCostBasis": "standard",
       "costEstimate": 1949,
-      "costVerifiedAt": "2026-08-18T05:48:45.495Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1209,
       "marginFloorOverride": {
         "minRatio": 0.3,
@@ -806,24 +894,28 @@
       }
     },
     "read-banned-books-tee-3xl": {
-      "apliiqSku": "APQ-6030121S21A0",
+      "apliiqSku": "APQ-6030206S21A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030121",
-      "apliiqVariantId": "6030121-xxxl",
+      "apliiqProductId": "6030206",
+      "apliiqVariantId": "6030206-3xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068146,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/867b1061a46aa3fc44633d4e44d6aa1a8383cbae/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -836,8 +928,8 @@
       "apliiqItemCost": 2049,
       "apliiqCostBasis": "standard",
       "costEstimate": 2049,
-      "costVerifiedAt": "2026-08-18T05:48:45.495Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1109,
       "marginFloorOverride": {
         "minRatio": 0.27,
@@ -846,24 +938,28 @@
       }
     },
     "read-banned-books-tee-4xl": {
-      "apliiqSku": "APQ-6030121S61A0",
+      "apliiqSku": "APQ-6030206S61A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030121",
-      "apliiqVariantId": "6030121-4xl",
+      "apliiqProductId": "6030206",
+      "apliiqVariantId": "6030206-4xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068146,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/read-banned-books-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6acfda859253c07d0d0b7470861d2cd01bc19916/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/867b1061a46aa3fc44633d4e44d6aa1a8383cbae/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -876,8 +972,8 @@
       "apliiqItemCost": 2149,
       "apliiqCostBasis": "standard",
       "costEstimate": 2149,
-      "costVerifiedAt": "2026-08-18T05:48:45.495Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.495Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1009,
       "marginFloorOverride": {
         "minRatio": 0.25,
@@ -886,24 +982,28 @@
       }
     },
     "dont-lick-the-boot-tee-xs": {
-      "apliiqSku": "APQ-6030122S5A0",
+      "apliiqSku": "APQ-6030207S5A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030122",
-      "apliiqVariantId": "6030122-xs",
+      "apliiqProductId": "6030207",
+      "apliiqVariantId": "6030207-xs",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068147,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/e6454a562e289dd1a03c488583b4af2661327beb/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -916,29 +1016,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "dont-lick-the-boot-tee-s": {
-      "apliiqSku": "APQ-6030122S6A0",
+      "apliiqSku": "APQ-6030207S6A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030122",
-      "apliiqVariantId": "6030122-s",
+      "apliiqProductId": "6030207",
+      "apliiqVariantId": "6030207-s",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068147,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/e6454a562e289dd1a03c488583b4af2661327beb/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -951,29 +1055,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "dont-lick-the-boot-tee-m": {
-      "apliiqSku": "APQ-6030122S7A0",
+      "apliiqSku": "APQ-6030207S7A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030122",
-      "apliiqVariantId": "6030122-m",
+      "apliiqProductId": "6030207",
+      "apliiqVariantId": "6030207-m",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068147,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/e6454a562e289dd1a03c488583b4af2661327beb/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -986,29 +1094,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "dont-lick-the-boot-tee-l": {
-      "apliiqSku": "APQ-6030122S8A0",
+      "apliiqSku": "APQ-6030207S8A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030122",
-      "apliiqVariantId": "6030122-l",
+      "apliiqProductId": "6030207",
+      "apliiqVariantId": "6030207-l",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068147,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/e6454a562e289dd1a03c488583b4af2661327beb/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1021,29 +1133,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "dont-lick-the-boot-tee-xl": {
-      "apliiqSku": "APQ-6030122S1A0",
+      "apliiqSku": "APQ-6030207S1A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030122",
-      "apliiqVariantId": "6030122-xl",
+      "apliiqProductId": "6030207",
+      "apliiqVariantId": "6030207-xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068147,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/e6454a562e289dd1a03c488583b4af2661327beb/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1056,29 +1172,33 @@
       "apliiqItemCost": 1749,
       "apliiqCostBasis": "standard",
       "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1409
     },
     "dont-lick-the-boot-tee-2xl": {
-      "apliiqSku": "APQ-6030122S2A0",
+      "apliiqSku": "APQ-6030207S2A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030122",
-      "apliiqVariantId": "6030122-xxl",
+      "apliiqProductId": "6030207",
+      "apliiqVariantId": "6030207-2xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068147,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/e6454a562e289dd1a03c488583b4af2661327beb/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1091,8 +1211,8 @@
       "apliiqItemCost": 1949,
       "apliiqCostBasis": "standard",
       "costEstimate": 1949,
-      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1209,
       "marginFloorOverride": {
         "minRatio": 0.3,
@@ -1101,24 +1221,28 @@
       }
     },
     "dont-lick-the-boot-tee-3xl": {
-      "apliiqSku": "APQ-6030122S21A0",
+      "apliiqSku": "APQ-6030207S21A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030122",
-      "apliiqVariantId": "6030122-xxxl",
+      "apliiqProductId": "6030207",
+      "apliiqVariantId": "6030207-3xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068147,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/e6454a562e289dd1a03c488583b4af2661327beb/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1131,8 +1255,8 @@
       "apliiqItemCost": 2049,
       "apliiqCostBasis": "standard",
       "costEstimate": 2049,
-      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1109,
       "marginFloorOverride": {
         "minRatio": 0.27,
@@ -1141,24 +1265,28 @@
       }
     },
     "dont-lick-the-boot-tee-4xl": {
-      "apliiqSku": "APQ-6030122S61A0",
+      "apliiqSku": "APQ-6030207S61A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030122",
-      "apliiqVariantId": "6030122-4xl",
+      "apliiqProductId": "6030207",
+      "apliiqVariantId": "6030207-4xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068147,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4dd3d550aabcaef0385b848b93574dcaeab5fbf7/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/e6454a562e289dd1a03c488583b4af2661327beb/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1171,8 +1299,335 @@
       "apliiqItemCost": 2149,
       "apliiqCostBasis": "standard",
       "costEstimate": 2149,
-      "costVerifiedAt": "2026-08-18T05:48:45.618Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.618Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1009,
+      "marginFloorOverride": {
+        "minRatio": 0.25,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "dont-fuck-fascists-tee-xs": {
+      "apliiqSku": "APQ-6030208S5A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030208",
+      "apliiqVariantId": "6030208-xs",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068148,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/673c7f93d3e7d432121e86202c4390fcd55e145d/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1409
+    },
+    "dont-fuck-fascists-tee-s": {
+      "apliiqSku": "APQ-6030208S6A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030208",
+      "apliiqVariantId": "6030208-s",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068148,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/673c7f93d3e7d432121e86202c4390fcd55e145d/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1409
+    },
+    "dont-fuck-fascists-tee-m": {
+      "apliiqSku": "APQ-6030208S7A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030208",
+      "apliiqVariantId": "6030208-m",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068148,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/673c7f93d3e7d432121e86202c4390fcd55e145d/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1409
+    },
+    "dont-fuck-fascists-tee-l": {
+      "apliiqSku": "APQ-6030208S8A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030208",
+      "apliiqVariantId": "6030208-l",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068148,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/673c7f93d3e7d432121e86202c4390fcd55e145d/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1409
+    },
+    "dont-fuck-fascists-tee-xl": {
+      "apliiqSku": "APQ-6030208S1A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030208",
+      "apliiqVariantId": "6030208-xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068148,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/673c7f93d3e7d432121e86202c4390fcd55e145d/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1749,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1749,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1409
+    },
+    "dont-fuck-fascists-tee-2xl": {
+      "apliiqSku": "APQ-6030208S2A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030208",
+      "apliiqVariantId": "6030208-2xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068148,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/673c7f93d3e7d432121e86202c4390fcd55e145d/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 1949,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 1949,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1209,
+      "marginFloorOverride": {
+        "minRatio": 0.3,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "dont-fuck-fascists-tee-3xl": {
+      "apliiqSku": "APQ-6030208S21A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030208",
+      "apliiqVariantId": "6030208-3xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068148,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/673c7f93d3e7d432121e86202c4390fcd55e145d/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2049,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2049,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1109,
+      "marginFloorOverride": {
+        "minRatio": 0.27,
+        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "dont-fuck-fascists-tee-4xl": {
+      "apliiqSku": "APQ-6030208S61A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030208",
+      "apliiqVariantId": "6030208-4xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068148,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/b8d04f265abc42902f25a872ec0d2b083654cffa/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/673c7f93d3e7d432121e86202c4390fcd55e145d/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-tee",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 3.9,
+      "apliiqItemCost": 2149,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 2149,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 1009,
       "marginFloorOverride": {
         "minRatio": 0.25,
@@ -1181,24 +1636,28 @@
       }
     },
     "sheep-min-hoodie-xs": {
-      "apliiqSku": "APQ-6030123S5A0",
+      "apliiqSku": "APQ-6030209S5A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030123",
-      "apliiqVariantId": "6030123-xs",
+      "apliiqProductId": "6030209",
+      "apliiqVariantId": "6030209-xs",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068149,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1211,34 +1670,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 867,
       "marginFloorOverride": {
         "minRatio": 0.14,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "sheep-min-hoodie-s": {
-      "apliiqSku": "APQ-6030123S6A0",
+      "apliiqSku": "APQ-6030209S6A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030123",
-      "apliiqVariantId": "6030123-s",
+      "apliiqProductId": "6030209",
+      "apliiqVariantId": "6030209-s",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068149,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1251,34 +1714,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 867,
       "marginFloorOverride": {
         "minRatio": 0.14,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "sheep-min-hoodie-m": {
-      "apliiqSku": "APQ-6030123S7A0",
+      "apliiqSku": "APQ-6030209S7A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030123",
-      "apliiqVariantId": "6030123-m",
+      "apliiqProductId": "6030209",
+      "apliiqVariantId": "6030209-m",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068149,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1291,34 +1758,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 572,
       "marginFloorOverride": {
         "minRatio": 0.09,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "sheep-min-hoodie-l": {
-      "apliiqSku": "APQ-6030123S8A0",
+      "apliiqSku": "APQ-6030209S8A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030123",
-      "apliiqVariantId": "6030123-l",
+      "apliiqProductId": "6030209",
+      "apliiqVariantId": "6030209-l",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068149,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1331,34 +1802,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 572,
       "marginFloorOverride": {
         "minRatio": 0.09,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "sheep-min-hoodie-xl": {
-      "apliiqSku": "APQ-6030123S1A0",
+      "apliiqSku": "APQ-6030209S1A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030123",
-      "apliiqVariantId": "6030123-xl",
+      "apliiqProductId": "6030209",
+      "apliiqVariantId": "6030209-xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068149,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1371,34 +1846,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 572,
       "marginFloorOverride": {
         "minRatio": 0.09,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "sheep-min-hoodie-2xl": {
-      "apliiqSku": "APQ-6030123S2A0",
+      "apliiqSku": "APQ-6030209S2A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030123",
-      "apliiqVariantId": "6030123-xxl",
+      "apliiqProductId": "6030209",
+      "apliiqVariantId": "6030209-2xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068149,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1411,34 +1890,38 @@
       "apliiqItemCost": 4144,
       "apliiqCostBasis": "standard",
       "costEstimate": 4144,
-      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 372,
       "marginFloorOverride": {
         "minRatio": 0.06,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "sheep-min-hoodie-3xl": {
-      "apliiqSku": "APQ-6030123S21A0",
+      "apliiqSku": "APQ-6030209S21A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030123",
-      "apliiqVariantId": "6030123-xxxl",
+      "apliiqProductId": "6030209",
+      "apliiqVariantId": "6030209-3xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068149,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1451,34 +1934,38 @@
       "apliiqItemCost": 4344,
       "apliiqCostBasis": "standard",
       "costEstimate": 4344,
-      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 172,
       "marginFloorOverride": {
         "minRatio": 0.02,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "sheep-min-hoodie-4xl": {
-      "apliiqSku": "APQ-6030123S61A0",
+      "apliiqSku": "APQ-6030209S61A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030123",
-      "apliiqVariantId": "6030123-4xl",
+      "apliiqProductId": "6030209",
+      "apliiqVariantId": "6030209-4xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068149,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1491,34 +1978,38 @@
       "apliiqItemCost": 4444,
       "apliiqCostBasis": "standard",
       "costEstimate": 4444,
-      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 72,
       "marginFloorOverride": {
         "minRatio": 0.01,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "sheep-min-hoodie-5xl": {
-      "apliiqSku": "APQ-6030123S62A0",
+      "apliiqSku": "APQ-6030209S62A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030123",
-      "apliiqVariantId": "6030123-5xl",
+      "apliiqProductId": "6030209",
+      "apliiqVariantId": "6030209-5xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068149,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+          "note": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/0f90a0d5ae86331b5046e278572b3b357ea32c7b/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/4b131f15144de23c6e39038f228262c8e923cc7b/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1531,34 +2022,38 @@
       "apliiqItemCost": 4544,
       "apliiqCostBasis": "standard",
       "costEstimate": 4544,
-      "costVerifiedAt": "2026-08-18T05:48:45.732Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.732Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 943,
       "marginFloorOverride": {
         "minRatio": 0.13,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "enemy-of-the-state-hoodie-xs": {
-      "apliiqSku": "APQ-6030124S5A0",
+      "apliiqSku": "APQ-6030210S5A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030124",
-      "apliiqVariantId": "6030124-xs",
+      "apliiqProductId": "6030210",
+      "apliiqVariantId": "6030210-xs",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068150,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1571,34 +2066,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 867,
       "marginFloorOverride": {
         "minRatio": 0.14,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "enemy-of-the-state-hoodie-s": {
-      "apliiqSku": "APQ-6030124S6A0",
+      "apliiqSku": "APQ-6030210S6A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030124",
-      "apliiqVariantId": "6030124-s",
+      "apliiqProductId": "6030210",
+      "apliiqVariantId": "6030210-s",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068150,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1611,34 +2110,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 867,
       "marginFloorOverride": {
         "minRatio": 0.14,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "enemy-of-the-state-hoodie-m": {
-      "apliiqSku": "APQ-6030124S7A0",
+      "apliiqSku": "APQ-6030210S7A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030124",
-      "apliiqVariantId": "6030124-m",
+      "apliiqProductId": "6030210",
+      "apliiqVariantId": "6030210-m",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068150,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1651,34 +2154,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 572,
       "marginFloorOverride": {
         "minRatio": 0.09,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "enemy-of-the-state-hoodie-l": {
-      "apliiqSku": "APQ-6030124S8A0",
+      "apliiqSku": "APQ-6030210S8A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030124",
-      "apliiqVariantId": "6030124-l",
+      "apliiqProductId": "6030210",
+      "apliiqVariantId": "6030210-l",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068150,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1691,34 +2198,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 572,
       "marginFloorOverride": {
         "minRatio": 0.09,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "enemy-of-the-state-hoodie-xl": {
-      "apliiqSku": "APQ-6030124S1A0",
+      "apliiqSku": "APQ-6030210S1A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030124",
-      "apliiqVariantId": "6030124-xl",
+      "apliiqProductId": "6030210",
+      "apliiqVariantId": "6030210-xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068150,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1731,34 +2242,38 @@
       "apliiqItemCost": 3944,
       "apliiqCostBasis": "standard",
       "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 572,
       "marginFloorOverride": {
         "minRatio": 0.09,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "enemy-of-the-state-hoodie-2xl": {
-      "apliiqSku": "APQ-6030124S2A0",
+      "apliiqSku": "APQ-6030210S2A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030124",
-      "apliiqVariantId": "6030124-xxl",
+      "apliiqProductId": "6030210",
+      "apliiqVariantId": "6030210-2xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068150,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1771,34 +2286,38 @@
       "apliiqItemCost": 4144,
       "apliiqCostBasis": "standard",
       "costEstimate": 4144,
-      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 372,
       "marginFloorOverride": {
         "minRatio": 0.06,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "enemy-of-the-state-hoodie-3xl": {
-      "apliiqSku": "APQ-6030124S21A0",
+      "apliiqSku": "APQ-6030210S21A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030124",
-      "apliiqVariantId": "6030124-xxxl",
+      "apliiqProductId": "6030210",
+      "apliiqVariantId": "6030210-3xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068150,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1811,34 +2330,38 @@
       "apliiqItemCost": 4344,
       "apliiqCostBasis": "standard",
       "costEstimate": 4344,
-      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 172,
       "marginFloorOverride": {
         "minRatio": 0.02,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "enemy-of-the-state-hoodie-4xl": {
-      "apliiqSku": "APQ-6030124S61A0",
+      "apliiqSku": "APQ-6030210S61A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030124",
-      "apliiqVariantId": "6030124-4xl",
+      "apliiqProductId": "6030210",
+      "apliiqVariantId": "6030210-4xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068150,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1851,34 +2374,38 @@
       "apliiqItemCost": 4444,
       "apliiqCostBasis": "standard",
       "costEstimate": 4444,
-      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 72,
       "marginFloorOverride": {
         "minRatio": 0.01,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     },
     "enemy-of-the-state-hoodie-5xl": {
-      "apliiqSku": "APQ-6030124S62A0",
+      "apliiqSku": "APQ-6030210S62A1",
       "apliiqSkuVerified": true,
-      "apliiqProductId": "6030124",
-      "apliiqVariantId": "6030124-5xl",
+      "apliiqProductId": "6030210",
+      "apliiqVariantId": "6030210-5xl",
       "apliiqDecorationSnapshot": {
         "front": {
           "method": "DTF",
-          "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png"
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068150,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+          "note": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment."
         }
       },
       "apliiqPrivateLabelSnapshot": {
         "neckLabel": {
+          "subscription": "SB-2-155690",
           "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
         }
       },
       "apliiqAssetUrls": [
-        "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
-        "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6737a612f4f57d8393d67bd2efd711c435395b48/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/59896f4f2d20db229b7a41a57030bd388cc3d242/original.png"
       ],
       "apliiqRegionAvailability": [
         "US"
@@ -1891,12 +2418,320 @@
       "apliiqItemCost": 4544,
       "apliiqCostBasis": "standard",
       "costEstimate": 4544,
-      "costVerifiedAt": "2026-08-18T05:48:45.846Z",
-      "marginVerifiedAt": "2026-08-18T05:48:45.846Z",
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
       "marginEstimate": 943,
       "marginFloorOverride": {
         "minRatio": 0.13,
-        "reason": "IND4000 anchor hoodie held at merchant price 2026-08-18; profitable, under the 35% floor",
+        "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-place-like-new-york-sweatshirt-xs": {
+      "apliiqSku": "APQ-6030211S5A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030211",
+      "apliiqVariantId": "6030211-xs",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068151,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+          "note": "Front center chest, transfer print (DTF), 8.5\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/947be40fe28ef77975599c8e921f96edc5163fa1/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 14,
+      "apliiqItemCost": 3654,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3654,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1157,
+      "marginFloorOverride": {
+        "minRatio": 0.19,
+        "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-place-like-new-york-sweatshirt-s": {
+      "apliiqSku": "APQ-6030211S6A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030211",
+      "apliiqVariantId": "6030211-s",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068151,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+          "note": "Front center chest, transfer print (DTF), 8.5\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/947be40fe28ef77975599c8e921f96edc5163fa1/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15,
+      "apliiqItemCost": 3654,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3654,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1157,
+      "marginFloorOverride": {
+        "minRatio": 0.19,
+        "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-place-like-new-york-sweatshirt-m": {
+      "apliiqSku": "APQ-6030211S7A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030211",
+      "apliiqVariantId": "6030211-m",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068151,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+          "note": "Front center chest, transfer print (DTF), 8.5\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/947be40fe28ef77975599c8e921f96edc5163fa1/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15.9,
+      "apliiqItemCost": 3654,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3654,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1157,
+      "marginFloorOverride": {
+        "minRatio": 0.19,
+        "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-place-like-new-york-sweatshirt-l": {
+      "apliiqSku": "APQ-6030211S8A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030211",
+      "apliiqVariantId": "6030211-l",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068151,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+          "note": "Front center chest, transfer print (DTF), 8.5\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/947be40fe28ef77975599c8e921f96edc5163fa1/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15.9,
+      "apliiqItemCost": 3654,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3654,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1157,
+      "marginFloorOverride": {
+        "minRatio": 0.19,
+        "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-place-like-new-york-sweatshirt-xl": {
+      "apliiqSku": "APQ-6030211S1A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030211",
+      "apliiqVariantId": "6030211-xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068151,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+          "note": "Front center chest, transfer print (DTF), 8.5\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/947be40fe28ef77975599c8e921f96edc5163fa1/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15.9,
+      "apliiqItemCost": 3654,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3654,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 1157,
+      "marginFloorOverride": {
+        "minRatio": 0.19,
+        "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-place-like-new-york-sweatshirt-2xl": {
+      "apliiqSku": "APQ-6030211S2A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030211",
+      "apliiqVariantId": "6030211-2xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068151,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+          "note": "Front center chest, transfer print (DTF), 8.5\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/947be40fe28ef77975599c8e921f96edc5163fa1/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15.9,
+      "apliiqItemCost": 3854,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 3854,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 957,
+      "marginFloorOverride": {
+        "minRatio": 0.15,
+        "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
+        "approvedAt": "2026-08-18"
+      }
+    },
+    "no-place-like-new-york-sweatshirt-3xl": {
+      "apliiqSku": "APQ-6030211S21A1",
+      "apliiqSkuVerified": true,
+      "apliiqProductId": "6030211",
+      "apliiqVariantId": "6030211-3xl",
+      "apliiqDecorationSnapshot": {
+        "front": {
+          "method": "DTF",
+          "service": "transfer_print",
+          "apliiqArtworkId": 8068151,
+          "artworkUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+          "note": "Front center chest, transfer print (DTF), 8.5\" wide, top edge ~3in below collar. Black garment."
+        }
+      },
+      "apliiqPrivateLabelSnapshot": {
+        "neckLabel": {
+          "subscription": "SB-2-155690",
+          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
+        }
+      },
+      "apliiqAssetUrls": [
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/6ff2bdd418bf3d1c759f83f6ebf12009e4450d94/original.png",
+        "https://items-images-production.s3.us-west-2.amazonaws.com/files/947be40fe28ef77975599c8e921f96edc5163fa1/original.png"
+      ],
+      "apliiqRegionAvailability": [
+        "US"
+      ],
+      "apliiqSizeGuideReference": "sg-hoodie",
+      "apliiqMappingApproval": "approved",
+      "apliiqSampleApproval": "approved",
+      "squareMappingStatus": "active",
+      "weightOz": 15.9,
+      "apliiqItemCost": 4054,
+      "apliiqCostBasis": "standard",
+      "costEstimate": 4054,
+      "costVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginVerifiedAt": "2026-08-18T07:18:01.706Z",
+      "marginEstimate": 757,
+      "marginFloorOverride": {
+        "minRatio": 0.12,
+        "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
     }

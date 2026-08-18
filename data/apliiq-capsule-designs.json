@@ -1,0 +1,467 @@
+{
+  "_generated": "2026-08-18",
+  "designs": {
+    "no-kings-tee": {
+      "artworkId": 8068145,
+      "designId": 6030205,
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "colorId": 50,
+      "apliiqMockupPath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6030205_45482026-08-18-07-15-37Zoriginal.png",
+      "variants": [
+        {
+          "sku": "APQ-6030205S5A1",
+          "size": "xs",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030205S6A1",
+          "size": "s",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030205S7A1",
+          "size": "m",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030205S8A1",
+          "size": "l",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030205S1A1",
+          "size": "xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030205S2A1",
+          "size": "xxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 2
+        },
+        {
+          "sku": "APQ-6030205S21A1",
+          "size": "xxxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 3
+        },
+        {
+          "sku": "APQ-6030205S61A1",
+          "size": "4xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 4
+        }
+      ]
+    },
+    "sheep-min-hoodie": {
+      "artworkId": 8068149,
+      "designId": 6030209,
+      "productCode": "mens_independent-heavyweight-pullover-hoodie",
+      "colorId": 50,
+      "apliiqMockupPath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6030209_63992026-08-18-07-15-45Zoriginal.png",
+      "variants": [
+        {
+          "sku": "APQ-6030209S5A1",
+          "size": "xs",
+          "weight": "15.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030209S6A1",
+          "size": "s",
+          "weight": "15.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030209S7A1",
+          "size": "m",
+          "weight": "19 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030209S8A1",
+          "size": "l",
+          "weight": "20 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030209S1A1",
+          "size": "xl",
+          "weight": "21 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030209S2A1",
+          "size": "xxl",
+          "weight": "23 oz",
+          "plusSizeFee": 2
+        },
+        {
+          "sku": "APQ-6030209S21A1",
+          "size": "xxxl",
+          "weight": "25 oz",
+          "plusSizeFee": 4
+        },
+        {
+          "sku": "APQ-6030209S61A1",
+          "size": "4xl",
+          "weight": "25 oz",
+          "plusSizeFee": 5
+        },
+        {
+          "sku": "APQ-6030209S62A1",
+          "size": "5xl",
+          "weight": "25 oz",
+          "plusSizeFee": 6
+        }
+      ]
+    },
+    "no-place-like-new-york-sweatshirt": {
+      "artworkId": 8068151,
+      "designId": 6030211,
+      "productCode": "mens_Heavyweight-Crewneck-Sweatshirt",
+      "colorId": 50,
+      "apliiqMockupPath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6030211_84552026-08-18-07-15-50Zoriginal.png",
+      "variants": [
+        {
+          "sku": "APQ-6030211S5A1",
+          "size": "xs",
+          "weight": "14 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030211S6A1",
+          "size": "s",
+          "weight": "15 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030211S7A1",
+          "size": "m",
+          "weight": "15.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030211S8A1",
+          "size": "l",
+          "weight": "15.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030211S1A1",
+          "size": "xl",
+          "weight": "15.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030211S2A1",
+          "size": "xxl",
+          "weight": "15.9 oz",
+          "plusSizeFee": 2
+        },
+        {
+          "sku": "APQ-6030211S21A1",
+          "size": "xxxl",
+          "weight": "15.9 oz",
+          "plusSizeFee": 4
+        }
+      ]
+    },
+    "dont-fuck-fascists-tee": {
+      "artworkId": 8068148,
+      "designId": 6030208,
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "colorId": 50,
+      "apliiqMockupPath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6030208_45482026-08-18-07-15-43Zoriginal.png",
+      "variants": [
+        {
+          "sku": "APQ-6030208S5A1",
+          "size": "xs",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030208S6A1",
+          "size": "s",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030208S7A1",
+          "size": "m",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030208S8A1",
+          "size": "l",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030208S1A1",
+          "size": "xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030208S2A1",
+          "size": "xxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 2
+        },
+        {
+          "sku": "APQ-6030208S21A1",
+          "size": "xxxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 3
+        },
+        {
+          "sku": "APQ-6030208S61A1",
+          "size": "4xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 4
+        }
+      ]
+    },
+    "read-banned-books-tee": {
+      "artworkId": 8068146,
+      "designId": 6030206,
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "colorId": 50,
+      "apliiqMockupPath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6030206_45482026-08-18-07-15-39Zoriginal.png",
+      "variants": [
+        {
+          "sku": "APQ-6030206S5A1",
+          "size": "xs",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030206S6A1",
+          "size": "s",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030206S7A1",
+          "size": "m",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030206S8A1",
+          "size": "l",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030206S1A1",
+          "size": "xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030206S2A1",
+          "size": "xxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 2
+        },
+        {
+          "sku": "APQ-6030206S21A1",
+          "size": "xxxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 3
+        },
+        {
+          "sku": "APQ-6030206S61A1",
+          "size": "4xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 4
+        }
+      ]
+    },
+    "black-sheep-tee": {
+      "artworkId": 8068144,
+      "designId": 6030204,
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "colorId": 50,
+      "apliiqMockupPath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6030204_45482026-08-18-07-15-28Zoriginal.png",
+      "variants": [
+        {
+          "sku": "APQ-6030204S5A1",
+          "size": "xs",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030204S6A1",
+          "size": "s",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030204S7A1",
+          "size": "m",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030204S8A1",
+          "size": "l",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030204S1A1",
+          "size": "xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030204S2A1",
+          "size": "xxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 2
+        },
+        {
+          "sku": "APQ-6030204S21A1",
+          "size": "xxxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 3
+        },
+        {
+          "sku": "APQ-6030204S61A1",
+          "size": "4xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 4
+        }
+      ]
+    },
+    "dont-lick-the-boot-tee": {
+      "artworkId": 8068147,
+      "designId": 6030207,
+      "productCode": "mens_Next-Level-Premium-Crew",
+      "colorId": 50,
+      "apliiqMockupPath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6030207_45482026-08-18-07-15-41Zoriginal.png",
+      "variants": [
+        {
+          "sku": "APQ-6030207S5A1",
+          "size": "xs",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030207S6A1",
+          "size": "s",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030207S7A1",
+          "size": "m",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030207S8A1",
+          "size": "l",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030207S1A1",
+          "size": "xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030207S2A1",
+          "size": "xxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 2
+        },
+        {
+          "sku": "APQ-6030207S21A1",
+          "size": "xxxl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 3
+        },
+        {
+          "sku": "APQ-6030207S61A1",
+          "size": "4xl",
+          "weight": "3.9 oz",
+          "plusSizeFee": 4
+        }
+      ]
+    },
+    "enemy-of-the-state-hoodie": {
+      "artworkId": 8068150,
+      "designId": 6030210,
+      "productCode": "mens_independent-heavyweight-pullover-hoodie",
+      "colorId": 50,
+      "apliiqMockupPath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6030210_63992026-08-18-07-15-48Zoriginal.png",
+      "variants": [
+        {
+          "sku": "APQ-6030210S5A1",
+          "size": "xs",
+          "weight": "15.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030210S6A1",
+          "size": "s",
+          "weight": "15.9 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030210S7A1",
+          "size": "m",
+          "weight": "19 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030210S8A1",
+          "size": "l",
+          "weight": "20 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030210S1A1",
+          "size": "xl",
+          "weight": "21 oz",
+          "plusSizeFee": 0
+        },
+        {
+          "sku": "APQ-6030210S2A1",
+          "size": "xxl",
+          "weight": "23 oz",
+          "plusSizeFee": 2
+        },
+        {
+          "sku": "APQ-6030210S21A1",
+          "size": "xxxl",
+          "weight": "25 oz",
+          "plusSizeFee": 4
+        },
+        {
+          "sku": "APQ-6030210S61A1",
+          "size": "4xl",
+          "weight": "25 oz",
+          "plusSizeFee": 5
+        },
+        {
+          "sku": "APQ-6030210S62A1",
+          "size": "5xl",
+          "weight": "25 oz",
+          "plusSizeFee": 6
+        }
+      ]
+    }
+  }
+}

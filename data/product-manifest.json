@@ -16554,13 +16554,14 @@
       "shippingNote": "Free US shipping; $25 flat rate international.",
       "returnsNote": "30 days.",
       "sizeGuideId": "sg-tee",
-      "featuredImage": "/art/black-sheep-tee.png",
+      "featuredImage": "/products/black-sheep-tee/front.png",
       "galleryImages": [
+        "/products/black-sheep-tee/front.png",
         "/art/black-sheep-tee.png"
       ],
       "seoTitle": "Black Sheep | After Hours Agenda",
       "seoDescription": "Black Sheep. Designed in NYC and printed to order.",
-      "ogImage": "/art/black-sheep-tee.png",
+      "ogImage": "/products/black-sheep-tee/front.png",
       "badges": [],
       "sortPriority": 0,
       "variants": [
@@ -16705,13 +16706,14 @@
       "shippingNote": "Free US shipping; $25 flat rate international.",
       "returnsNote": "30 days.",
       "sizeGuideId": "sg-tee",
-      "featuredImage": "/art/no-kings-tee.png",
+      "featuredImage": "/products/no-kings-tee/front.png",
       "galleryImages": [
+        "/products/no-kings-tee/front.png",
         "/art/no-kings-tee.png"
       ],
       "seoTitle": "No Kings | After Hours Agenda",
       "seoDescription": "No Kings. Designed in NYC and printed to order.",
-      "ogImage": "/art/no-kings-tee.png",
+      "ogImage": "/products/no-kings-tee/front.png",
       "badges": [],
       "sortPriority": 0,
       "variants": [
@@ -16856,13 +16858,14 @@
       "shippingNote": "Free US shipping; $25 flat rate international.",
       "returnsNote": "30 days.",
       "sizeGuideId": "sg-tee",
-      "featuredImage": "/art/read-banned-books-tee.png",
+      "featuredImage": "/products/read-banned-books-tee/front.png",
       "galleryImages": [
+        "/products/read-banned-books-tee/front.png",
         "/art/read-banned-books-tee.png"
       ],
       "seoTitle": "Read Banned Books | After Hours Agenda",
       "seoDescription": "Read Banned Books. Designed in NYC and printed to order.",
-      "ogImage": "/art/read-banned-books-tee.png",
+      "ogImage": "/products/read-banned-books-tee/front.png",
       "badges": [],
       "sortPriority": 0,
       "variants": [
@@ -17007,13 +17010,14 @@
       "shippingNote": "Free US shipping; $25 flat rate international.",
       "returnsNote": "30 days.",
       "sizeGuideId": "sg-tee",
-      "featuredImage": "/art/dont-lick-the-boot-tee.png",
+      "featuredImage": "/products/dont-lick-the-boot-tee/front.png",
       "galleryImages": [
+        "/products/dont-lick-the-boot-tee/front.png",
         "/art/dont-lick-the-boot-tee.png"
       ],
       "seoTitle": "Don\u2019t Lick The Boot | After Hours Agenda",
       "seoDescription": "Don\u2019t Lick The Boot. Designed in NYC and printed to order.",
-      "ogImage": "/art/dont-lick-the-boot-tee.png",
+      "ogImage": "/products/dont-lick-the-boot-tee/front.png",
       "badges": [],
       "sortPriority": 0,
       "variants": [
@@ -17158,13 +17162,14 @@
       "shippingNote": "Free US shipping; $25 flat rate international.",
       "returnsNote": "30 days.",
       "sizeGuideId": "sg-hoodie",
-      "featuredImage": "/art/sheep-min-hoodie.png",
+      "featuredImage": "/products/sheep-min-hoodie/front.png",
       "galleryImages": [
+        "/products/sheep-min-hoodie/front.png",
         "/art/sheep-min-hoodie.png"
       ],
       "seoTitle": "Sheep Min | After Hours Agenda",
       "seoDescription": "Sheep Min. Designed in NYC and printed to order.",
-      "ogImage": "/art/sheep-min-hoodie.png",
+      "ogImage": "/products/sheep-min-hoodie/front.png",
       "badges": [],
       "sortPriority": 0,
       "variants": [
@@ -17323,13 +17328,14 @@
       "shippingNote": "Free US shipping; $25 flat rate international.",
       "returnsNote": "30 days.",
       "sizeGuideId": "sg-hoodie",
-      "featuredImage": "/art/enemy-of-the-state-hoodie.png",
+      "featuredImage": "/products/enemy-of-the-state-hoodie/front.png",
       "galleryImages": [
+        "/products/enemy-of-the-state-hoodie/front.png",
         "/art/enemy-of-the-state-hoodie.png"
       ],
       "seoTitle": "Enemy Of The State | After Hours Agenda",
       "seoDescription": "Enemy Of The State. Designed in NYC and printed to order.",
-      "ogImage": "/art/enemy-of-the-state-hoodie.png",
+      "ogImage": "/products/enemy-of-the-state-hoodie/front.png",
       "badges": [],
       "sortPriority": 0,
       "variants": [
@@ -17458,6 +17464,296 @@
           "fulfillmentProvider": "apliiq",
           "squareCatalogObjectId": "QGE3WGZAPBF645HVVEDHAQUP",
           "squareVariationId": "UT3W5RAJZTNMMI7O3TS3FKTP"
+        }
+      ]
+    },
+    {
+      "ahaProductId": "dont-fuck-fascists-tee",
+      "slug": "dont-fuck-fascists-tee",
+      "title": "Don\u2019t Fuck Fascists",
+      "shortDescription": "Don\u2019t Fuck Fascists on a premium ringspun crew.",
+      "fullDescription": "Don\u2019t Fuck Fascists. Next Level 3600 Premium Crew \u2014 100% combed ringspun cotton, 4.3 oz. Designed in NYC and printed to order.",
+      "productType": "tee",
+      "category": "t-shirts",
+      "gender": [
+        "men",
+        "women",
+        "unisex"
+      ],
+      "collectionIds": [
+        "capsule-2026"
+      ],
+      "status": "active",
+      "retailPrice": 4000,
+      "currency": "USD",
+      "fitDescription": "Modern fit, true to size.",
+      "fabricDescription": "Next Level 3600 Premium Crew \u2014 100% combed ringspun cotton, 4.3 oz.",
+      "printMethod": "DTF",
+      "careInstructions": "Machine wash cold inside out, tumble dry low.",
+      "productionNote": "Made to order.",
+      "shippingNote": "Free US shipping; $25 flat rate international.",
+      "returnsNote": "30 days.",
+      "sizeGuideId": "sg-tee",
+      "featuredImage": "/products/dont-fuck-fascists-tee/front.png",
+      "galleryImages": [
+        "/products/dont-fuck-fascists-tee/front.png",
+        "/art/dont-fuck-fascists-tee.png"
+      ],
+      "seoTitle": "Don\u2019t Fuck Fascists | After Hours Agenda",
+      "seoDescription": "Don\u2019t Fuck Fascists. Designed in NYC and printed to order.",
+      "ogImage": "/products/dont-fuck-fascists-tee/front.png",
+      "badges": [],
+      "sortPriority": 0,
+      "variants": [
+        {
+          "ahaVariantId": "dont-fuck-fascists-tee-xs",
+          "ahaProductId": "dont-fuck-fascists-tee",
+          "sku": "AHA-DONT-FUCK-FASCISTS-TEE-XS",
+          "size": "XS",
+          "color": "Black",
+          "retailPrice": 4000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 0,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "SHNK2ZYKXIK7NS4OPZQWL6YJ",
+          "squareVariationId": "LTJTKN2G6PRQJW73T6P74ANO"
+        },
+        {
+          "ahaVariantId": "dont-fuck-fascists-tee-s",
+          "ahaProductId": "dont-fuck-fascists-tee",
+          "sku": "AHA-DONT-FUCK-FASCISTS-TEE-S",
+          "size": "S",
+          "color": "Black",
+          "retailPrice": 4000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 1,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "SHNK2ZYKXIK7NS4OPZQWL6YJ",
+          "squareVariationId": "A7WYXFWVFFJ5CRZMPD2KPWAT"
+        },
+        {
+          "ahaVariantId": "dont-fuck-fascists-tee-m",
+          "ahaProductId": "dont-fuck-fascists-tee",
+          "sku": "AHA-DONT-FUCK-FASCISTS-TEE-M",
+          "size": "M",
+          "color": "Black",
+          "retailPrice": 4000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 2,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "SHNK2ZYKXIK7NS4OPZQWL6YJ",
+          "squareVariationId": "7WHVERJI3SDDH6JQQP5H42ME"
+        },
+        {
+          "ahaVariantId": "dont-fuck-fascists-tee-l",
+          "ahaProductId": "dont-fuck-fascists-tee",
+          "sku": "AHA-DONT-FUCK-FASCISTS-TEE-L",
+          "size": "L",
+          "color": "Black",
+          "retailPrice": 4000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 3,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "SHNK2ZYKXIK7NS4OPZQWL6YJ",
+          "squareVariationId": "UZRGWAZ4QUAQJNNVULEER4BK"
+        },
+        {
+          "ahaVariantId": "dont-fuck-fascists-tee-xl",
+          "ahaProductId": "dont-fuck-fascists-tee",
+          "sku": "AHA-DONT-FUCK-FASCISTS-TEE-XL",
+          "size": "XL",
+          "color": "Black",
+          "retailPrice": 4000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 4,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "SHNK2ZYKXIK7NS4OPZQWL6YJ",
+          "squareVariationId": "3Q6ZQS47XBHTKYLQTWUOM74W"
+        },
+        {
+          "ahaVariantId": "dont-fuck-fascists-tee-2xl",
+          "ahaProductId": "dont-fuck-fascists-tee",
+          "sku": "AHA-DONT-FUCK-FASCISTS-TEE-2XL",
+          "size": "2XL",
+          "color": "Black",
+          "retailPrice": 4000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 5,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "SHNK2ZYKXIK7NS4OPZQWL6YJ",
+          "squareVariationId": "YLFA2SC6VWK7OMYCYSW4B7IF"
+        },
+        {
+          "ahaVariantId": "dont-fuck-fascists-tee-3xl",
+          "ahaProductId": "dont-fuck-fascists-tee",
+          "sku": "AHA-DONT-FUCK-FASCISTS-TEE-3XL",
+          "size": "3XL",
+          "color": "Black",
+          "retailPrice": 4000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 6,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "SHNK2ZYKXIK7NS4OPZQWL6YJ",
+          "squareVariationId": "KDQSDSBQH6GFP5PCND5LLT4L"
+        },
+        {
+          "ahaVariantId": "dont-fuck-fascists-tee-4xl",
+          "ahaProductId": "dont-fuck-fascists-tee",
+          "sku": "AHA-DONT-FUCK-FASCISTS-TEE-4XL",
+          "size": "4XL",
+          "color": "Black",
+          "retailPrice": 4000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 7,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "SHNK2ZYKXIK7NS4OPZQWL6YJ",
+          "squareVariationId": "XE742YRS27MSR6MH47AIFGIL"
+        }
+      ]
+    },
+    {
+      "ahaProductId": "no-place-like-new-york-sweatshirt",
+      "slug": "no-place-like-new-york-sweatshirt",
+      "title": "No Place Like New York",
+      "shortDescription": "There\u2019s No Place Like New York on a 10 oz heavyweight crewneck.",
+      "fullDescription": "There\u2019s No Place Like New York. Independent Trading IND3000 heavyweight crewneck \u2014 10 oz fleece, 70% cotton / 30% polyester. Designed in NYC and printed to order.",
+      "productType": "hoodie",
+      "category": "hoodies-sweatshirts",
+      "gender": [
+        "men",
+        "women",
+        "unisex"
+      ],
+      "collectionIds": [
+        "capsule-2026"
+      ],
+      "status": "active",
+      "retailPrice": 6000,
+      "currency": "USD",
+      "fitDescription": "Relaxed fit, true to size.",
+      "fabricDescription": "Independent Trading IND3000 heavyweight crewneck \u2014 10 oz fleece, 70% cotton / 30% polyester.",
+      "printMethod": "DTF",
+      "careInstructions": "Machine wash cold inside out, tumble dry low.",
+      "productionNote": "Made to order.",
+      "shippingNote": "Free US shipping; $25 flat rate international.",
+      "returnsNote": "30 days.",
+      "sizeGuideId": "sg-hoodie",
+      "featuredImage": "/products/no-place-like-new-york-sweatshirt/front.png",
+      "galleryImages": [
+        "/products/no-place-like-new-york-sweatshirt/front.png",
+        "/art/no-place-like-new-york-sweatshirt.png"
+      ],
+      "seoTitle": "No Place Like New York | After Hours Agenda",
+      "seoDescription": "No Place Like New York. Designed in NYC and printed to order.",
+      "ogImage": "/products/no-place-like-new-york-sweatshirt/front.png",
+      "badges": [],
+      "sortPriority": 0,
+      "variants": [
+        {
+          "ahaVariantId": "no-place-like-new-york-sweatshirt-xs",
+          "ahaProductId": "no-place-like-new-york-sweatshirt",
+          "sku": "AHA-NO-PLACE-LIKE-NEW-YORK-SWEATSHIRT-XS",
+          "size": "XS",
+          "color": "Black",
+          "retailPrice": 6000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 0,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "R2D55CM6I6AJVH3ZPJ3MWXBL",
+          "squareVariationId": "BAPBGIQCDVYWAUJTFV5WQMIL"
+        },
+        {
+          "ahaVariantId": "no-place-like-new-york-sweatshirt-s",
+          "ahaProductId": "no-place-like-new-york-sweatshirt",
+          "sku": "AHA-NO-PLACE-LIKE-NEW-YORK-SWEATSHIRT-S",
+          "size": "S",
+          "color": "Black",
+          "retailPrice": 6000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 1,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "R2D55CM6I6AJVH3ZPJ3MWXBL",
+          "squareVariationId": "GRSMR7XTKUFSSWEWNTIIUM7Q"
+        },
+        {
+          "ahaVariantId": "no-place-like-new-york-sweatshirt-m",
+          "ahaProductId": "no-place-like-new-york-sweatshirt",
+          "sku": "AHA-NO-PLACE-LIKE-NEW-YORK-SWEATSHIRT-M",
+          "size": "M",
+          "color": "Black",
+          "retailPrice": 6000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 2,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "R2D55CM6I6AJVH3ZPJ3MWXBL",
+          "squareVariationId": "KUJCAFHL7U6M67SXPYKS7TVB"
+        },
+        {
+          "ahaVariantId": "no-place-like-new-york-sweatshirt-l",
+          "ahaProductId": "no-place-like-new-york-sweatshirt",
+          "sku": "AHA-NO-PLACE-LIKE-NEW-YORK-SWEATSHIRT-L",
+          "size": "L",
+          "color": "Black",
+          "retailPrice": 6000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 3,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "R2D55CM6I6AJVH3ZPJ3MWXBL",
+          "squareVariationId": "I7K653CNR7HDPJBHFRK4RS3G"
+        },
+        {
+          "ahaVariantId": "no-place-like-new-york-sweatshirt-xl",
+          "ahaProductId": "no-place-like-new-york-sweatshirt",
+          "sku": "AHA-NO-PLACE-LIKE-NEW-YORK-SWEATSHIRT-XL",
+          "size": "XL",
+          "color": "Black",
+          "retailPrice": 6000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 4,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "R2D55CM6I6AJVH3ZPJ3MWXBL",
+          "squareVariationId": "AHVZP6BJPSO4QMYOL5RBWE7H"
+        },
+        {
+          "ahaVariantId": "no-place-like-new-york-sweatshirt-2xl",
+          "ahaProductId": "no-place-like-new-york-sweatshirt",
+          "sku": "AHA-NO-PLACE-LIKE-NEW-YORK-SWEATSHIRT-2XL",
+          "size": "2XL",
+          "color": "Black",
+          "retailPrice": 6000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 5,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "R2D55CM6I6AJVH3ZPJ3MWXBL",
+          "squareVariationId": "NGJSYV7WSZ65FYUCPDNWHXNG"
+        },
+        {
+          "ahaVariantId": "no-place-like-new-york-sweatshirt-3xl",
+          "ahaProductId": "no-place-like-new-york-sweatshirt",
+          "sku": "AHA-NO-PLACE-LIKE-NEW-YORK-SWEATSHIRT-3XL",
+          "size": "3XL",
+          "color": "Black",
+          "retailPrice": 6000,
+          "currency": "USD",
+          "status": "active",
+          "sortOrder": 6,
+          "fulfillmentProvider": "apliiq",
+          "squareCatalogObjectId": "R2D55CM6I6AJVH3ZPJ3MWXBL",
+          "squareVariationId": "XQXYRE5KQLZNUVBNHDOUQLFR"
         }
       ]
     }

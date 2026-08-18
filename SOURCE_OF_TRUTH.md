@@ -1,6 +1,6 @@
 # After Hours Agenda source of truth
 
-Last verified: August 17, 2026 from local Git, GitHub, the Netlify application programming interface (API), public Hypertext Transfer Protocol Secure (HTTPS) checks, and a read-only Square catalog reconciliation.
+Last verified: August 18, 2026 from local Git, GitHub, the Netlify application programming interface (API), public Hypertext Transfer Protocol Secure (HTTPS) checks, the Square catalog, and the APLIIQ Design API.
 
 This file contains the current routing and operational contract. Detailed design, commerce, legal, and historical evidence remains available on demand under `docs/` and in Git history.
 
@@ -22,35 +22,25 @@ This file contains the current routing and operational contract. Detailed design
 
 The retired iCloud backup family is not an active source and must remain untouched. A visible compatibility path is valid only when `pwd -P` resolves to the canonical physical checkout above.
 
-## Fresh catalog reset and APLIIQ staging baseline
+## APLIIQ capsule — live storefront
 
-- **Production deploy ID**: `6a82c62774e9be00087ab0a0`
-- **Deployed source commit**: `58c2dd58b540dae0cf579ff32d8d00cff74f5ebe`
-- **Artifact state**: `ready`
-- **Published**: August 17, 2026 at 08:29:05.951 UTC
-- **Netlify production branch**: `main`
-- **Release title**: `Fresh catalog reset (#41)`
-- **Current availability**: HTTP 200 on the primary, default, branch, and deploy-specific domains
-- **Release state**: live deploy and `/release.json` parity verified for the current production release
-
-The primary, branch, and immutable deploy URLs returned the exact production commit from `/release.json`, and the exact-site live guard passed. Dynamic commerce data can change independently, so compare the deploy ID, source commit, representative routes, `/release.json`, and behavior before declaring drift.
-
-- The previous public collection is fully reset. Product-listing routes show the archive notice; retired product detail, product-media, Printful-art, and campaign-asset URLs return `404`; catalog search is empty; saved legacy carts are cleared; and checkout rejects legacy lines before Square pricing or payment.
-- Square contains all 120 known After Hours Agenda catalog `ITEM` objects in archived, non-deleted state, with zero active items and zero outstanding archive writes. The final archive used full-object Square upserts and no delete operation; a fresh August 17 dry run reconfirmed the terminal state.
-- Gift-card purchase, cart capture, cart restore, quote, and lifecycle-marketing paths fail closed while the catalog is dark. Existing-order tracking, returns, shipping support, payment history, and fulfillment history remain available; no order, payment, customer, or database record was deleted by the reset.
-- Public Printful art was removed from the current site. Historical fulfillment requests that still reference the retired host path are rewritten server-side to the immutable Git source at commit `d255aa403b6bf4a978cb5f9af969a72cdc5c2488`, preserving existing-order recovery without republishing old art on the storefront.
-- The provider-neutral fulfillment, reconciliation, webhook, and product-intake foundation for APLIIQ is deployed. `APLIIQ_ALLOW_CREATE_ORDERS` and `APLIIQ_LIVE_MODE` both resolve to `false` in production, the committed APLIIQ product map is empty, and the public product callback fails closed while unconfigured.
-- No replacement APLIIQ products, new Square merchandise, APLIIQ provider order, payment, customer, fulfillment, shipment, or transactional message was created as part of this staging release.
-- Do not activate APLIIQ until production credentials pass readiness checks, callback authentication is proven with APLIIQ, each replacement variant has an approved APQ SKU and immutable decoration/private-label/cost/sample evidence, the corresponding Square object is reviewed, and an explicitly authorized paid pilot and cancellation procedure are ready.
+- **Storefront**: eight capsule products sell on `afterhoursagenda.com` — Black Sheep, No Kings, Read Banned Books, Don’t Lick The Boot, Don’t Fuck Fascists (Next Level 3600 tees, $40), Sheep Min and Enemy Of The State (Independent IND4000 hoods, $60; 5XL $70), and No Place Like New York (Independent IND3000 crewneck, $60). All black, all sizes the blank offers.
+- **APLIIQ designs carry the artwork.** Each product is a real APLIIQ design created through the documented Design API with the print file attached (`POST /Artwork` then `POST /Design`; SKUs end in `A1`, never `A0`). Design ids, artwork ids and per-size APQ SKUs are recorded in `data/apliiq-capsule-designs.json`; the sellable registry is `data/apliiq-map.json`; the product spec is `data/apliiq-capsule.json`. `npm run apliiq:capsule -- create|map` is the only path from art to a sellable variant.
+- **Square** holds one active `REGULAR` item per capsule product with a size variation per APQ SKU and the garment mockup as its primary image; the 120 legacy items remain archived.
+- **Order path**: Cart → Square payment → internal order → APLIIQ order submission is **live** in production: `AHA_FULFILLMENT_MODE=auto`, `APLIIQ_ALLOW_CREATE_ORDERS=true`, `APLIIQ_LIVE_MODE=true`, `SQUARE_ENVIRONMENT=production`, `CONTEXT=production`. A paid order is POSTed once to APLIIQ; ambiguous outcomes park in manual review; the scheduled `reconcile-orders` function polls APLIIQ order status every 15 minutes because the APLIIQ fulfillment callback URL is not yet registered in the APLIIQ dashboard.
+- **APLIIQ account state**: auto-processing is OFF in the APLIIQ dashboard, so APLIIQ holds each submitted order for their release; the saved fulfillment card is charged at processing. Private label `SB-2-155690` is requested in the production note; the label subscription is not attached to the API designs.
+- **Shipping markets**: US free; the 22 international markets in `INTERNATIONAL_COUNTRIES` at the $25 flat rate. The checkout country select and the APLIIQ country name both derive from `SHIPPING_COUNTRY_NAMES`.
+- **Legacy catalog** stays dark and unsellable, enforced per provider. Retired product, product-media, Printful-art and campaign URLs return `404`.
+- Read the deployed commit from `https://afterhoursagenda.com/release.json`; compare it with `git rev-parse origin/main` before declaring drift.
 
 ## Runtime ownership
 
 - **Storefront**: Next.js 16.3.0 App Router, React 19.2.8, and TypeScript on Netlify
 - **Payments and transaction records**: Square
-- **Fulfillment and shipping lifecycle**: the provider-neutral repository dispatcher; APLIIQ is staged but disabled, while Printful records and routing remain available for historical paid orders and rollback safety
+- **Fulfillment and shipping lifecycle**: the provider-neutral repository dispatcher; APLIIQ is the live provider for the capsule, while Printful records and routing remain available for historical paid orders only
 - **Operational records**: Netlify Database
 - **Transactional email**: the existing Resend outbox and templates
-- **Product presentation and provider mappings**: this repository plus verified provider data; no APLIIQ variant is sellable without a committed approved mapping and active Square variation
+- **Product presentation and provider mappings**: this repository plus verified provider data; no APLIIQ variant is sellable without a committed approved mapping (real `A1` APQ SKU, verified landed cost) and an active Square variation
 
 Never infer price, inventory, product availability, order state, or provider status from an old handoff. Read the current code and authorized provider state for the task.
 
@@ -63,7 +53,7 @@ Never infer price, inventory, product availability, order state, or provider sta
 - Keep preview, branch, local, and continuous integration contexts non-transactional
 - Require all five APLIIQ submission rails: Netlify production context, Square production, automatic fulfillment mode, explicit APLIIQ create-order permission, and APLIIQ live mode
 - Never automatically resubmit an APLIIQ request after a timeout, acceptance without a provider order ID, or any other ambiguous outcome; route it to manual review
-- Do not register the APLIIQ product callbacks until their URL-token behavior has been proven in a controlled provider test
+- Do not register the APLIIQ product callbacks until their URL-token behavior has been proven in a controlled provider test; the fulfillment callback should be registered in the APLIIQ dashboard so tracking pushes instead of polls
 - Preserve exact-site verification because this property previously experienced a wrong-site deployment
 - Require clear scoped authorization for product, commerce, provider, database, Domain Name System (DNS), Netlify, email, analytics, or live-system changes
 
