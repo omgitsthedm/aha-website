@@ -18,5 +18,8 @@ function response(body: unknown, status = 200): NextResponse {
 export function GET(request: Request) {
   if (!isApliiqProductCallbackConfigured()) return response({ error: "Product callback is not configured." }, 503);
   if (!isAuthorizedApliiqProductCallback(request)) return response({ error: "Unauthorized product callback." }, 401);
-  return response(searchApprovedApliiqProducts(new URL(request.url).searchParams.get("search") || ""));
+  const params = new URL(request.url).searchParams;
+  // APLIIQ's dashboard HTML-encodes the saved Search URL, so the term arrives
+  // as `token=…&amp;search=TERM` — i.e. under the key `amp;search`. Accept both.
+  return response(searchApprovedApliiqProducts(params.get("search") || params.get("amp;search") || ""));
 }
