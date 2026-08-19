@@ -48,6 +48,12 @@ const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-poppins",
   display: "swap",
+  // No <link rel=preload>: Chrome treats preloaded fonts as render-blocking
+  // for a window after discovery, and under Lighthouse's frame cadence that
+  // pushed first paint of static routes to the next 1 s tick (measured
+  // FCP 1.3–2.4 s with fonts finished by 0.45 s). The @font-face is inlined in
+  // the document CSS, so the fetch still starts during the first parse.
+  preload: false,
   weight: ["400", "700", "900"], // Body, bold, and the Black display cut the brand kit specifies.
 });
 
