@@ -1,6 +1,8 @@
 import { getSquareWebPaymentsConfig } from "@/lib/commerce/runtime";
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
+import { MetaCheckoutPrefill } from "@/components/checkout/MetaCheckoutPrefill";
 import { isCheckoutOpen } from "@/lib/commerce/catalog-policy";
+import { resolveMetaCheckoutItems } from "@/lib/commerce/meta-checkout";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -8,7 +10,11 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function CheckoutPage() {
+export default async function CheckoutPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   if (!isCheckoutOpen()) {
     return (
       <div className="px-4 pb-16 pt-28 md:px-6 md:pt-32">
@@ -20,7 +26,19 @@ export default function CheckoutPage() {
       </div>
     );
   }
+  // Meta Shop hand-off: /checkout?products=SKU:QTY,… (retailer ids from
+  // /feeds/meta). Resolved against the live catalog server-side; anything
+  // unknown is skipped and a plain visit renders checkout unchanged.
+  const params = await searchParams;
+  const productsParam = Array.isArray(params.products) ? params.products[0] : params.products;
+  const prefillItems = productsParam ? await resolveMetaCheckoutItems(productsParam) : [];
+
   // Public Web Payments config resolved server-side. This is app and location metadata only.
   const squareConfig = getSquareWebPaymentsConfig();
-  return <CheckoutForm squareConfig={squareConfig} />;
+  return (
+    <>
+      {prefillItems.length > 0 ? <MetaCheckoutPrefill items={prefillItems} /> : null}
+      <CheckoutForm squareConfig={squareConfig} />
+    </>
+  );
 }
