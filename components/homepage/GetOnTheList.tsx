@@ -13,7 +13,7 @@ export function GetOnTheList() {
           instanceId="newsletter"
           labelText="Email address (required)"
           labelClassName="mb-2 block font-mono text-xs font-bold uppercase tracking-[0.06em] text-cream"
-          inputClassName="min-h-12 min-w-0 flex-1 border border-border/60 bg-void px-4 py-3 font-mono text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none"
+          inputClassName="min-h-12 min-w-0 flex-1 border border-border/60 bg-void px-4 py-3 text-base text-cream placeholder:text-muted focus:border-accent focus:outline-none"
           buttonClassName="primary-action min-h-12 px-6 py-3 text-sm aria-disabled:cursor-wait aria-disabled:opacity-60"
           buttonLabel="Get email updates"
           placeholder="name@example.com"

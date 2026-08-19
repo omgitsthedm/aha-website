@@ -364,6 +364,15 @@
     content-visibility: auto;
     contain-intrinsic-size: auto 800px;
   }
+
+  /* The footer and the care bar are never in the first viewport. Skipping
+     their render until they approach also defers the two fonts only they use
+     (JetBrains Mono 400, Oswald 700) off the critical path. */
+  main ~ footer,
+  .lf-care-bar {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
 }
 
 .nav-link {
