@@ -64,11 +64,13 @@ const contentSecurityPolicy = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
-  // Inline the small route stylesheet into the initial document. The primary
-  // LCP on the storefront is text, so removing the render-blocking CSS request
-  // shortens the critical path without changing the rendered design.
+  // The stylesheet stays external. Inlining it (experimental.inlineCss) put the
+  // 56 KB sheet into the document three times — once as <style>, twice inside
+  // the RSC flight payload — which grew every HTML response by ~25 KB gzipped
+  // and, on the slow-4G model, delayed the LCP image more than the one extra
+  // (cached, immutable) request costs. Measured on the storefront, Aug-2026.
   experimental: {
-    inlineCss: true,
+    inlineCss: false,
   },
   // Keep route metadata in <head> for crawlers and link unfurlers. Netlify's
   // streaming response otherwise places dynamic metadata after <body>.
