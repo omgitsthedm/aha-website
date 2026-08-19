@@ -48,7 +48,8 @@
     "square:capsule": "node scripts/square-capsule.mjs",
     "imagery:products": "python3 scripts/imagery/render-product-imagery.py",
     "imagery:tiles": "python3 scripts/imagery/render-campaign-tiles.py",
-    "generate:sellable-slugs": "tsx scripts/generate-sellable-slugs.ts"
+    "generate:sellable-slugs": "tsx scripts/generate-sellable-slugs.ts",
+    "seo:indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",

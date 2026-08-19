@@ -6,8 +6,6 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://afterhoursagenda.com";
 
 // Only routes that resolve to a real, canonical page belong here.
-// Routes that currently redirect to "/" (about, lookbook, newsletter, restock)
-// are added back when their pages go live.
 const publicPages: Array<{ path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }> = [
   { path: "/", priority: 1, changeFrequency: "monthly" },
   { path: "/shop", priority: 0.9, changeFrequency: "weekly" },
@@ -16,6 +14,7 @@ const publicPages: Array<{ path: string; priority: number; changeFrequency: Meta
   // The gender and empty-category routes still resolve, but they are not linked
   // from the storefront and describe a range the capsule does not have; a
   // sitemap should advertise the doors people are meant to use.
+  { path: "/lookbook", priority: 0.8, changeFrequency: "weekly" },
   { path: "/manifesto", priority: 0.7, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },
   { path: "/newsletter", priority: 0.5, changeFrequency: "monthly" },
