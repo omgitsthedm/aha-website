@@ -1,5 +1,7 @@
 import type { Product } from "@/lib/utils/types";
 import type { ReviewSummary } from "@/lib/commerce/reviews";
+import type { ProductEnrichment } from "@/lib/data/enrichment";
+import { extractVariationSize } from "@/lib/utils/variation";
 import {
   DELIVERY_MAX_BUSINESS_DAYS_AFTER_PRODUCTION,
   DELIVERY_MIN_BUSINESS_DAYS_AFTER_PRODUCTION,
@@ -64,6 +66,36 @@ interface ProductJsonLdProps {
   product: Product;
   description?: string;
   reviews?: ReviewSummary;
+  /** Fabric, colours and garment type from the manifest — feeds Merchant-listing attributes. */
+  enrichment?: ProductEnrichment | null;
+}
+
+/**
+ * Google product category (taxonomy) per garment type — Merchant Center reads
+ * `category` from structured data when it crawls the site as a feed.
+ */
+const GOOGLE_CATEGORY: Record<string, string> = {
+  tee: "Apparel & Accessories > Clothing > Shirts & Tops",
+  hoodie: "Apparel & Accessories > Clothing > Shirts & Tops",
+  sweater: "Apparel & Accessories > Clothing > Shirts & Tops",
+  jacket: "Apparel & Accessories > Clothing > Outerwear > Coats & Jackets",
+  hat: "Apparel & Accessories > Clothing Accessories > Hats",
+  accessory: "Apparel & Accessories > Clothing Accessories",
+  sticker: "Arts & Entertainment > Hobbies & Creative Arts > Arts & Crafts",
+};
+
+/** Product-level SKU: the shared prefix of the variation SKUs (`AHA-BLACK-SHEEP-TEE-M` → `AHA-BLACK-SHEEP-TEE`). */
+function productSku(product: Product): string | undefined {
+  const skus = product.variations.map((v) => v.sku).filter((v): v is string => Boolean(v));
+  if (skus.length === 0) return undefined;
+  if (skus.length === 1) return skus[0];
+  const parts = skus.map((sku) => sku.split("-"));
+  const common: string[] = [];
+  for (let i = 0; i < parts[0].length; i += 1) {
+    const segment = parts[0][i];
+    if (parts.every((part) => part[i] === segment)) common.push(segment); else break;
+  }
+  return common.length > 0 ? common.join("-") : undefined;
 }
 
 /**
@@ -72,7 +104,7 @@ interface ProductJsonLdProps {
  * and serialized with JSON.stringify which safely escapes special characters,
  * preventing script injection in the JSON-LD output.
  */
-export function ProductJsonLd({ product, description, reviews }: ProductJsonLdProps) {
+export function ProductJsonLd({ product, description, reviews, enrichment }: ProductJsonLdProps) {
   // Guard against products with no variations (would crash Math.min/max)
   if (product.variations.length === 0) return null;
 
@@ -85,6 +117,11 @@ export function ProductJsonLd({ product, description, reviews }: ProductJsonLdPr
   const shippingDetails = buildShippingDetails(offerCurrency);
   const returnPolicy = buildReturnPolicy();
 
+  const sku = productSku(product);
+  const colors = enrichment?.colors ?? [];
+  const category = GOOGLE_CATEGORY[enrichment?.productType ?? ""];
+  const sizes = product.variations.map((variation) => extractVariationSize(variation.name)).filter((size): size is string => Boolean(size));
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -92,16 +129,27 @@ export function ProductJsonLd({ product, description, reviews }: ProductJsonLdPr
     description: cleanDescription,
     image: product.images.map((src) => absolutizeImage(src, BASE_URL)),
     url: `${BASE_URL}/product/${product.slug}`,
+    ...(sku ? { sku, productID: sku } : {}),
     brand: {
       "@type": "Brand",
       name: "After Hours Agenda",
     },
+    // Merchant-listing attributes. Only truthful, manifest-backed values: no
+    // GTIN (made-to-order apparel has none), no fabricated ratings.
+    ...(colors.length > 0 ? { color: colors.join(", ") } : {}),
+    ...(enrichment?.fabricDescription ? { material: enrichment.fabricDescription } : {}),
+    ...(category ? { category } : {}),
+    ...(sizes.length > 0 ? { size: sizes } : {}),
+    itemCondition: "https://schema.org/NewCondition",
+    audience: { "@type": "PeopleAudience", suggestedGender: "unisex" },
     offers: product.variations.map((variation) => ({
       "@type": "Offer",
       sku: variation.sku || variation.id,
+      name: variation.name,
       price: (variation.price / 100).toFixed(2),
       priceCurrency: offerCurrency,
       availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
       url: `${BASE_URL}/product/${product.slug}`,
       shippingDetails,
       hasMerchantReturnPolicy: returnPolicy,

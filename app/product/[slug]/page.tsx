@@ -401,7 +401,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <ProductJsonLd product={galleryProduct} description={plainDescription} reviews={reviews} />
+      <ProductJsonLd product={galleryProduct} description={plainDescription} reviews={reviews} enrichment={enrichment} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c") }}
