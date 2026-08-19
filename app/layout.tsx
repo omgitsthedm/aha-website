@@ -58,6 +58,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  // Search-engine ownership proofs. Google is the HTML file in /public
+  // (googleb80e08d782fcdd45.html); Bing takes the meta tag AND /BingSiteAuth.xml.
+  verification: { other: { "msvalidate.01": "75B4CF20C76C9DB9E6B4220748A9E67E" } },
   title: {
     default: "After Hours Agenda | For the dreamers and the doers",
     template: "%s | After Hours Agenda",

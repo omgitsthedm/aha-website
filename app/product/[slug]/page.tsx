@@ -1,5 +1,6 @@
 import { getAllProducts, getProduct } from "@/lib/square/catalog";
 import { getProductEnrichment, type ProductEnrichment } from "@/lib/data/enrichment";
+import { splitProductName } from "@/lib/utils/product-name";
 import { getStockByCatId } from "@/lib/data/stock";
 import { ProductDetail, type ColorwayOption } from "@/components/product/ProductDetail";
 import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
@@ -62,10 +63,25 @@ const truncateAtWord = (value: string, max: number) => {
   return `${(lastSpace > max * 0.5 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`;
 };
 
-const productMetaTitle = (name: string) => {
-  const stem = name;
-  // Prefer the full product name (keyword-complete). Only truncate — at a word
-  // boundary — when "<name> | After Hours Agenda" would exceed ~60 chars.
+/** How people actually search for the garment — the <title> noun, per manifest productType. */
+const TITLE_GARMENT: Record<string, string> = {
+  tee: "Graphic Tee",
+  hoodie: "Hoodie",
+  sweater: "Sweatshirt",
+  jacket: "Jacket",
+  hat: "Hat",
+  sticker: "Sticker",
+  accessory: "Accessory",
+};
+
+const productMetaTitle = (name: string, productType?: string) => {
+  // "Black Sheep — Tee" → "Black Sheep Graphic Tee | After Hours Agenda": the
+  // design name first (brand searches), then the garment as it is searched for
+  // (generic searches), no em dash. Truncate at a word boundary only when the
+  // whole thing would exceed ~60 chars.
+  const { name: design, garment } = splitProductName(name);
+  const noun = TITLE_GARMENT[productType ?? ""] ?? garment ?? "";
+  const stem = noun ? `${design} ${noun}` : design;
   const budget = 60 - TITLE_SUFFIX.length;
   return `${truncateAtWord(stem, budget)}${TITLE_SUFFIX}`;
 };
@@ -240,7 +256,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       : buildProductStory(product, enrichment);
     const description = buildProductMetaDescription(product, enrichment, rawDescription);
     const image = product.images[0];
-    const title = productMetaTitle(product.name);
+    const title = productMetaTitle(product.name, enrichment?.productType);
     // Curated mockups under /products/ are all rendered at 800x800, so scrapers
     // can be told the box up front. Provider CDN images are not a known size —
     // omit the dimensions there rather than assert a wrong one.

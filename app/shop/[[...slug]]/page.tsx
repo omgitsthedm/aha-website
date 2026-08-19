@@ -40,8 +40,8 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
     // rank. `getAllProducts` is request-deduped with the page body below.
     const isEmpty = filterProductsByCategory(await getAllProducts(), category.slug).length === 0;
     return buildMetadata({
-      title: `${category.name}`,
-      description: `${category.description} Shop made-to-order ${category.name.toLowerCase()} at After Hours Agenda.`,
+      title: category.seoTitle ?? category.name,
+      description: category.seoIntro ?? `${category.description} Shop made-to-order ${category.name.toLowerCase()} at After Hours Agenda.`,
       path: `/shop/${category.slug}`,
       ...(isEmpty ? { robots: { index: false, follow: true } } : {}),
     });
@@ -76,7 +76,7 @@ export default async function ShopPage({ params }: ShopPageProps) {
           eyebrow="Shop"
           title={category ? category.name : "The collection"}
           description={category
-            ? `${category.description} ${ORIGIN_CLAIM_SENTENCE}`
+            ? `${category.description} ${category.seoIntro ?? ORIGIN_CLAIM_SENTENCE}`
             : `Graphic tees, heavyweight hoods and crewnecks. One cut, every size, everyone welcome. ${ORIGIN_CLAIM_SENTENCE}`}
         />
 

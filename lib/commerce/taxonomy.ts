@@ -14,6 +14,10 @@ export interface CategoryMeta {
   shortName: string;
   description: string;
   image?: string;
+  /** Search-facing <title> stem, e.g. "Graphic Tees, Made to Order". Falls back to `name`. */
+  seoTitle?: string;
+  /** Second sentence for the category header — what the range is, in search language. */
+  seoIntro?: string;
 }
 
 export interface GenderMeta {
@@ -47,12 +51,16 @@ export const CATEGORIES: CategoryMeta[] = [
     name: "Tees",
     shortName: "Tees",
     description: "Graphic tees on soft ringspun cotton — the ones you reach for first.",
+    seoTitle: "Graphic Tees, Made to Order",
+    seoIntro: "Unisex graphic t-shirts on 100% combed ringspun cotton, XS to 4XL, printed one at a time — for you, and for the people you buy for.",
   },
   {
     slug: "hoodies-sweatshirts",
     name: "Hoods & Crews",
     shortName: "Hoods & Crews",
     description: "Heavyweight pullover hoods and crewnecks, built to be borrowed.",
+    seoTitle: "Heavyweight Hoodies & Crewneck Sweatshirts",
+    seoIntro: "Unisex pullover hoodies and crewneck sweatshirts, made to order in every size — the ones that get borrowed and never come back.",
   },
   {
     slug: "sweaters-knitwear",
