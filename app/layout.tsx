@@ -14,7 +14,7 @@ import { CookieConsent } from "@/components/consent/CookieConsent";
 import { LazyFeedbackWidget } from "@/components/feedback/LazyFeedbackWidget";
 import { LittleFightCareBar } from "@/components/ui/LittleFightCareBar";
 import { SheepMarkSprite } from "@/components/ui/SheepMark";
-import { CONSENT_BOOTSTRAP, FONT_PAINT_KICK } from "@/lib/consent/bootstrap";
+import { CONSENT_BOOTSTRAP } from "@/lib/consent/bootstrap";
 
 // Self-hosted subsets (app/fonts/README.md). The mono face is supporting UI copy
 // and the Oswald cut is the footer care bar, so neither is preloaded — but they
@@ -124,7 +124,6 @@ export default function RootLayout({
     >
       <head>
         <script id="aha-consent-bootstrap" dangerouslySetInnerHTML={{ __html: CONSENT_BOOTSTRAP }} />
-        <script id="aha-font-paint" dangerouslySetInnerHTML={{ __html: FONT_PAINT_KICK }} />
       </head>
       <body className="origami-shell font-body text-cream antialiased">
         <SheepMarkSprite />
