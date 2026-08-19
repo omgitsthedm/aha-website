@@ -4,6 +4,7 @@ import {
   INTERNATIONAL_SHIPPING_CENTS,
   INTERNATIONAL_SHIPPING_LABEL,
   isInternational,
+  salesTaxRuleFor,
 } from "@/lib/commerce/policies";
 
 interface LineItem {
@@ -38,6 +39,8 @@ export interface SquareOrderInput {
     | { name: string; percentage: string; scope: "ORDER" }
     | { name: string; amount_money: { amount: number; currency: string }; scope: "ORDER" }
   >;
+  /** Destination sales tax (Arizona only today) — see SALES_TAX_RULES. */
+  taxes?: Array<{ uid: string; name: string; type: "ADDITIVE"; percentage: string; scope: "ORDER" }>;
   service_charges?: Array<{
     name: string;
     amount_money: { amount: number; currency: string };
@@ -85,6 +88,19 @@ export function buildSquareOrder(request: CreateOrderRequest): SquareOrderInput 
           ],
         }
       : {}),
+    // Sales tax only where AHA collects it (Arizona, at the Peoria origin rate).
+    // An ORDER-scope additive tax: Square applies it to the discounted subtotal
+    // and never to the TOTAL_PHASE freight below, and books it as tax collected.
+    ...(() => {
+      const rule = salesTaxRuleFor(request.shippingAddress && {
+        country: request.shippingAddress.country,
+        state: request.shippingAddress.administrativeDistrictLevel1,
+        postalCode: request.shippingAddress.postalCode,
+      });
+      return rule
+        ? { taxes: [{ uid: `aha-tax-${rule.state.toLowerCase()}`, name: rule.name, type: "ADDITIVE" as const, percentage: rule.percentage, scope: "ORDER" as const }] }
+        : {};
+    })(),
     // Flat international shipping. Added as a TOTAL_PHASE service charge so Square
     // stays the single authority on total_money: the quote and the final charge both
     // run through buildSquareOrder, so they can never disagree and trip QUOTE_CHANGED.

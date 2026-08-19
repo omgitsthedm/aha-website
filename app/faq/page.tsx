@@ -12,6 +12,7 @@ export const metadata = buildMetadata({
 const faqs = [
   ["How does ordering work?", `Every piece is made to order. Production takes ${PRODUCTION_WINDOW}; delivery is ${DELIVERY_WINDOW}. ${SHIPPING_CLAIM_SENTENCE}`],
   ["Can I return something?", `Unworn items can be returned within ${RETURNS_WINDOW}, and we cover return shipping. Made-to-order production fees may be non-refundable once printing starts.`],
+  ["Is there sales tax?", "Only on orders shipping to Arizona, where we’re based — Arizona sales tax is added at checkout and shown before you pay. Every other US state and every international order carries no sales tax from us; international parcels ship DDU, so any import VAT or duties are collected by the carrier on delivery."],
   ["How do I track an order?", "Use the order number and checkout email on the Track Order page. If a carrier link is available, it appears once the shipment is in transit."],
   ["Can I update an address or cancel an order?", "Contact support as soon as possible with the order number and corrected details. Because each piece is printed to order, changes are only possible before production starts."],
   ["How do returns or damaged-item requests work?", "Contact support with the order number, a clear description of the issue, and photographs when relevant. Requests are reviewed under the terms that applied when the order was placed."],
