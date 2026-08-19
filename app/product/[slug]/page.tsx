@@ -4,6 +4,7 @@ import { splitProductName } from "@/lib/utils/product-name";
 import { getStockByCatId } from "@/lib/data/stock";
 import { ProductDetail, type ColorwayOption } from "@/components/product/ProductDetail";
 import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
+import { ProductOpenGraph } from "@/components/seo/ProductOpenGraph";
 import { notFound } from "next/navigation";
 import type { Product } from "@/lib/utils/types";
 import type { Metadata } from "next";
@@ -275,7 +276,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       openGraph: {
         title,
         description,
-        type: "website",
         // Re-stated per page: a page-level openGraph object replaces the root
         // one wholesale, so omitting these dropped the site-name attribution
         // line and the locale from every product card.
@@ -418,6 +418,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <ProductJsonLd product={galleryProduct} description={plainDescription} reviews={reviews} enrichment={enrichment} />
+      <ProductOpenGraph product={galleryProduct} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c") }}
