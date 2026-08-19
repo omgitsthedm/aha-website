@@ -35,8 +35,18 @@ export default async function CheckoutPage({
 
   // Public Web Payments config resolved server-side. This is app and location metadata only.
   const squareConfig = getSquareWebPaymentsConfig();
+  // Seed the bag BEFORE the app bundle hydrates so the very first hydrated
+  // paint shows the hand-off items. Meta's checkout-URL checker inspects the
+  // page early; an effect-time seed leaves a first paint with an empty bag,
+  // which their test reads as "the number of products was incorrect".
+  const seedScript =
+    prefillItems.length > 0
+      ? `try{localStorage.setItem("aha-cart",${JSON.stringify(JSON.stringify(prefillItems)).replace(/</g, "\\u003c")});history.replaceState({},"","/checkout");}catch(e){}`
+      : null;
+
   return (
     <>
+      {seedScript ? <script dangerouslySetInnerHTML={{ __html: seedScript }} /> : null}
       {prefillItems.length > 0 ? <MetaCheckoutPrefill items={prefillItems} /> : null}
       <CheckoutForm squareConfig={squareConfig} />
     </>
