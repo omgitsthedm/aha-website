@@ -18,7 +18,7 @@ export const WALLET_CHECKOUT_COPY =
   "Square shows supported wallets before card entry when Apple Pay or Google Pay is available on your device.";
 
 export const TAX_LINE_COPY =
-  "Estimated by shipping address in Square before you pay";
+  "Arizona orders carry sales tax; calculated by shipping address before you pay";
 
 /**
  * Domestic ships free; every other country the storefront sells to is a flat
@@ -92,6 +92,45 @@ export const SHIPPING_COUNTRY_OPTIONS: ReadonlyArray<{ code: (typeof SHIPPING_CO
 ];
 export const INTERNATIONAL_SHIPPING_CENTS = 2500;
 export const INTERNATIONAL_SHIPPING_LABEL = "International shipping";
+
+/**
+ * Sales tax. Merchant decision (David, 2026-08-19): collect only on orders
+ * shipping to Arizona. AHA's Square location is Peoria, AZ 85381; Arizona is
+ * origin-sourced for in-state retailers, so every AZ-bound order carries the
+ * Peoria retail TPT rate — 5.6% state + 0.7% Maricopa + 1.8% city = 8.1%
+ * (salestaxhandbook / Avalara, rates current Aug-2026). Applied as an ORDER
+ * scope additive tax on the Square order (both the quote and the charge go
+ * through buildSquareOrder), so Square computes it on the discounted subtotal,
+ * never on the international freight service charge, and reports it as tax
+ * collected. Non-AZ US destinations and international orders carry no tax.
+ * Change the number here when the city rate changes; nothing else moves.
+ */
+export const SALES_TAX_RULES: ReadonlyArray<{ country: "US"; state: string; zipPrefixes: string[]; name: string; percentage: string }> = [
+  { country: "US", state: "AZ", zipPrefixes: ["85", "86"], name: "Arizona TPT (Peoria 8.1%)", percentage: "8.1" },
+];
+
+const STATE_ALIASES: Record<string, string> = { ARIZONA: "AZ" };
+
+/** Two-letter state for a free-text state field ("az", "Arizona", "AZ" → "AZ"). */
+export function normalizeUsState(state: string | undefined | null): string {
+  const raw = (state ?? "").trim().toUpperCase().replace(/\.$/, "");
+  return STATE_ALIASES[raw] ?? raw;
+}
+
+/**
+ * The tax rule for a shipping destination, or null when the order is untaxed.
+ * The state field is free text on the checkout form, so a ZIP in the state's
+ * range also qualifies — a Phoenix address typed as "Az." or left blank after
+ * autofill still gets taxed; a typo can never remove tax from an AZ order.
+ */
+export function salesTaxRuleFor(address: { country?: string | null; state?: string | null; postalCode?: string | null } | undefined | null) {
+  if (!address) return null;
+  const country = (address.country ?? "US").trim().toUpperCase();
+  if (country !== "US") return null;
+  const state = normalizeUsState(address.state);
+  const zip = (address.postalCode ?? "").trim();
+  return SALES_TAX_RULES.find((rule) => rule.state === state || rule.zipPrefixes.some((prefix) => zip.startsWith(prefix))) ?? null;
+}
 
 export function isInternational(country: string | undefined | null): boolean {
   return Boolean(country) && country!.toUpperCase() !== DOMESTIC_COUNTRY;
