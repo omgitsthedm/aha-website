@@ -3,14 +3,24 @@ import { createHash } from "node:crypto";
 import { getFulfillmentMode } from "@/lib/commerce/runtime";
 import { verifyPrintfulWebhookSignature } from "@/lib/printful/webhooks";
 import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
+import { readBoundedRequestBody } from "@/lib/http/read-bounded-request-body";
 import {
   recordWebhookEvent, applyPrintfulEvent, markWebhookProcessed, markWebhookFailed,
 } from "@/lib/commerce/webhooks";
 
 export const runtime = "nodejs";
 
+const MAX_WEBHOOK_BODY_BYTES = 512 * 1024;
+
 export async function POST(request: Request) {
-  const rawBody = await request.text();
+  const body = await readBoundedRequestBody(request, MAX_WEBHOOK_BODY_BYTES);
+  if (!body.ok) {
+    if (body.reason === "invalid-content-length") {
+      return NextResponse.json({ error: "Invalid Content-Length" }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Webhook payload is too large" }, { status: 413 });
+  }
+  const { rawBody } = body;
   const signature = request.headers.get("x-pf-webhook-signature");
   const publicKey = request.headers.get("x-pf-webhook-public-key");
   const expectedPublicKey = process.env.PRINTFUL_WEBHOOK_PUBLIC_KEY;

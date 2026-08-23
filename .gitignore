@@ -54,6 +54,9 @@ next-env.d.ts
 
 # product-factory temp specs
 .tmp/
+# Durable local Square create checkpoints. These may describe an ambiguous
+# provider write and must never be shipped or committed.
+/data/.square-capsule-pending/
 
 # Local QA/audit artifacts (screenshots, captures) — never committed.
 # Matches the convention in Venue Circuit and PHC Cockpit.

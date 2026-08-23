@@ -7,26 +7,40 @@
  *     hosted mockup as the design image. Records design ids and per-size APQ SKUs
  *     in data/apliiq-capsule-designs.json. Dry-run without --apply.
  *
- *   npx tsx scripts/apliiq-capsule.ts map
- *     Rebuilds every capsule entry in data/apliiq-map.json from the recorded
- *     designs plus live blank pricing (GET /Product): item cost = blank + DTF
- *     + private label + plus-size fee, real per-size weight, and a landed-cost
- *     margin computed by the same resolver the storefront gate uses. A variant
- *     under the 35% floor gets a per-variant override that records the ratio it
- *     actually clears; a variant at a loss is refused.
+ *   npx tsx scripts/apliiq-capsule.ts map --slug <slug> [--apply]
+ *     Converges only the selected capsule entries in data/apliiq-map.json from
+ *     the recorded design plus live blank pricing (GET /Product): item cost =
+ *     blank + DTF + private label + plus-size fee, real per-size weight, and a
+ *     landed-cost margin computed by the storefront gate. It is a dry run
+ *     unless --apply is present, preserves unrelated entries and refuses to
+ *     auto-delete stale mappings.
  *
- *   npx tsx scripts/apliiq-capsule.ts delete <designId,designId>
+ *   npx tsx scripts/apliiq-capsule.ts delete <designId,designId> [--apply]
+ *     Dry-run by default. This is a separate manual cleanup command and is
+ *     never invoked by the product publisher.
  *
  * Contract: https://help.apliiq.com/portal/en/kb/articles/create-design and
  * .../artwork-api. SKUs are APQ-{design}S{size}A{artworks}; A0 means a blank
  * design that would print nothing, so `map` refuses any A0 SKU.
  */
 import { randomUUID } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, renameSync, writeFileSync } from "node:fs";
 import { createApliiqAuthorization } from "@/lib/apliiq/auth";
 import { isApliiqSku } from "@/lib/apliiq/orders";
 import { resolveApliiqLandedCost } from "@/lib/commerce/landed-cost";
 import { parseApliiqMapDocument, type ApliiqMapEntry } from "@/lib/data/apliiq-map";
+import {
+  capsuleApprovalFingerprint,
+  resolveCapsuleVariantApprovals,
+  type CapsuleApprovalMetadata,
+  type CapsuleProductProductionIdentity,
+} from "@/scripts/lib/apliiq-capsule-approvals";
+import {
+  assertApliiqDesignIdentity,
+  createOrResumeApliiqDesign,
+  isCompleteDesignRecord,
+  type DesignCreationState,
+} from "@/scripts/lib/apliiq-capsule-creation";
 
 const KEY = process.env.APLIIQ_API_KEY as string;
 const SEC = process.env.APLIIQ_SHARED_SECRET as string;
@@ -54,14 +68,10 @@ interface CapsuleProduct {
   mockupUrl: string;
   printNote: string;
   squareItemId?: string;
+  approvals?: CapsuleApprovalMetadata;
 }
 interface CapsuleSpec { colorId: number; service: string; privateLabel: string; products: CapsuleProduct[] }
-interface DesignVariant { sku: string; size: string; weight: string; plusSizeFee: number }
-interface DesignRecord {
-  artworkId: number; designId: number; productCode: string; colorId: number;
-  apliiqMockupPath: string; variants: DesignVariant[];
-}
-interface DesignsFile { _generated: string; designs: Record<string, DesignRecord> }
+interface DesignsFile { _generated: string; designs: Record<string, DesignCreationState> }
 
 async function call(method: string, path: string, body?: unknown) {
   if (!KEY || !SEC) throw new Error("APLIIQ_API_KEY and APLIIQ_SHARED_SECRET are required.");
@@ -83,108 +93,179 @@ const sizeKey = (name: string) => {
 };
 const sizeLabel = (name: string) => sizeKey(name).toUpperCase();
 
+function persistDesigns(designs: DesignsFile): void {
+  designs._generated = new Date().toISOString().slice(0, 10);
+  const temporaryPath = `${DESIGNS_PATH}.${process.pid}.${randomUUID()}.tmp`;
+  writeFileSync(temporaryPath, `${JSON.stringify(designs, null, 2)}\n`);
+  renameSync(temporaryPath, DESIGNS_PATH);
+}
+
 async function create(apply: boolean, only?: string) {
   const spec = readJson<CapsuleSpec>(SPEC_PATH);
   let designs: DesignsFile;
   try { designs = readJson<DesignsFile>(DESIGNS_PATH); } catch { designs = { _generated: "", designs: {} }; }
+  if (only && !spec.products.some((product) => product.slug === only)) throw new Error(`${only} is not in ${SPEC_PATH}`);
+  let created = 0;
   for (const p of spec.products) {
     if (only && p.slug !== only) continue;
-    if (designs.designs[p.slug] && !only) { console.log(`  ${p.slug.padEnd(36)} already recorded as design ${designs.designs[p.slug].designId}; skip`); continue; }
-    if (!apply) { console.log(`  ${p.slug.padEnd(36)} ${p.productCode} front ${p.frontLocationId}\n     art  ${p.artworkUrl}\n     mock ${p.mockupUrl}`); continue; }
-    const art = await call("POST", "/Artwork", { Name: `AHA ${p.title}`.slice(0, 50), ImagePath: p.artworkUrl });
-    const design = await call("POST", "/Design", {
-      ProductCode: p.productCode, ColorId: spec.colorId,
-      Name: `AHA ${p.title}`, Description: `${p.title} — After Hours Agenda`,
-      Locations: [{ Id: p.frontLocationId, ImagePath: p.mockupUrl,
-        Artworks: [{ Service: spec.service, Note: p.printNote, Id: art.Id }] }],
-      Subscriptions: [],
+    const existing = designs.designs[p.slug];
+    if (!apply) {
+      if (existing) assertApliiqDesignIdentity(p, spec, existing);
+      if (existing && isCompleteDesignRecord(existing)) {
+        console.log(`  ${p.slug.padEnd(36)} immutable identity verified for design ${existing.designId}; skip`);
+      } else {
+        console.log(`  ${p.slug.padEnd(36)} ${p.productCode} front ${p.frontLocationId}\n     art  ${p.artworkUrl}\n     mock ${p.mockupUrl}${existing ? `\n     resume checkpoint ${existing._creation.status}` : ""}`);
+      }
+      continue;
+    }
+
+    const result = await createOrResumeApliiqDesign({
+      product: p,
+      spec,
+      existing,
+      callProvider: call,
+      persist: (state) => {
+        // The checkpoint is slug-scoped and is atomically replaced before and
+        // immediately after each provider write.
+        designs.designs[p.slug] = state;
+        persistDesigns(designs);
+      },
     });
-    designs.designs[p.slug] = {
-      artworkId: art.Id, designId: design.Id, productCode: design.ProductCode, colorId: design.ColorId,
-      apliiqMockupPath: design.Locations?.[0]?.ImagePath ?? "",
-      variants: (design.Variants as Record<string, unknown>[]).map((v) => ({
-        sku: String(v.SKU), size: String(v.Name), weight: String(v.Weight), plusSizeFee: Number(v.PlusSize_Fee ?? 0),
-      })),
-    };
-    console.log(`  ${p.slug.padEnd(36)} artwork ${art.Id} design ${design.Id} ${designs.designs[p.slug].variants.length} sizes`);
+    if (result.created) {
+      created++;
+      console.log(`  ${p.slug.padEnd(36)} artwork ${result.record.artworkId} design ${result.record.designId} ${result.record.variants.length} sizes`);
+    } else {
+      console.log(`  ${p.slug.padEnd(36)} already recorded as design ${result.record.designId}; skip`);
+    }
   }
-  if (apply) {
-    designs._generated = new Date().toISOString().slice(0, 10);
-    writeFileSync(DESIGNS_PATH, `${JSON.stringify(designs, null, 2)}\n`);
-  } else {
+  if (!apply) {
     console.log("\n(dry run — pass --apply to create artwork and designs)");
+  } else if (!created) {
+    console.log("\n✓ recorded design already exists; no provider write needed");
   }
 }
 
-async function map() {
+function withoutVerificationTimes(entry: ApliiqMapEntry): unknown {
+  const { costVerifiedAt: _costVerifiedAt, marginVerifiedAt: _marginVerifiedAt, marginFloorOverride, ...rest } = entry;
+  return {
+    ...rest,
+    ...(marginFloorOverride ? { marginFloorOverride: { ...marginFloorOverride, approvedAt: undefined } } : {}),
+  };
+}
+
+async function map(apply: boolean, only?: string) {
+  if (!only) throw new Error("map requires one selected --slug");
   const spec = readJson<CapsuleSpec>(SPEC_PATH);
+  const p = spec.products.find((product) => product.slug === only);
+  if (!p) throw new Error(`${only} is not in ${SPEC_PATH}`);
   const designs = readJson<DesignsFile>(DESIGNS_PATH).designs;
   const existing = parseApliiqMapDocument(readJson<unknown>(MAP_PATH)).map;
+  const d = designs[p.slug];
+  if (!d) throw new Error(`${p.slug} has no recorded design; run create first`);
+  assertApliiqDesignIdentity(p, spec, d);
+  if (!isCompleteDesignRecord(d)) throw new Error(`${p.slug} has an incomplete creation checkpoint (${d._creation.status}); resume or reconcile create first`);
+  if (!d.variants.length) throw new Error(`${p.slug} design has no variants`);
+  const productionIdentity: CapsuleProductProductionIdentity = {
+    slug: p.slug,
+    productCode: p.productCode,
+    colorId: spec.colorId,
+    frontLocationId: p.frontLocationId,
+    designId: d.designId,
+    artworkId: d.artworkId,
+    artworkUrl: p.artworkUrl,
+    service: spec.service,
+    printNote: p.printNote,
+    privateLabel: spec.privateLabel,
+    sizeGuideId: p.sizeGuideId,
+    variants: d.variants.map(({ size, sku }) => ({ size, sku })),
+  };
+  const expectedApprovalFingerprint = capsuleApprovalFingerprint(productionIdentity);
+  const approvalsByKey = new Map<string, Pick<ApliiqMapEntry, "apliiqMappingApproval" | "apliiqSampleApproval">>();
+  for (const variant of d.variants) {
+    if (!isApliiqSku(variant.sku) || !/A1$/.test(variant.sku)) throw new Error(`${p.slug} ${variant.size}: SKU ${variant.sku} is not an artwork-bearing A1 production SKU`);
+    const key = `${p.slug}-${sizeKey(variant.size)}`;
+    approvalsByKey.set(key, resolveCapsuleVariantApprovals(p.slug, key, existing[key], p.approvals, {
+      designId: d.designId,
+      sku: variant.sku,
+      artworkId: d.artworkId,
+      artworkUrl: p.artworkUrl,
+      service: spec.service,
+      printNote: p.printNote,
+      privateLabel: spec.privateLabel,
+      sizeGuideId: p.sizeGuideId,
+    }, expectedApprovalFingerprint));
+  }
   const catalog = (await call("GET", "/Product")).Products as Record<string, any>[];
+  const blank = catalog.find((entry) => entry.Code === p.productCode);
+  if (!blank) throw new Error(`APLIIQ catalog has no product ${p.productCode}`);
+
   const now = new Date().toISOString();
-  const capsuleSlugs = new Set(spec.products.map((p) => p.slug));
-  // Drop every prior capsule entry, keep anything that is not ours.
-  const next: Record<string, ApliiqMapEntry> = {};
-  for (const [id, entry] of Object.entries(existing)) {
-    if (![...capsuleSlugs].some((slug) => id.startsWith(`${slug}-`))) next[id] = entry;
-  }
+  const next: Record<string, ApliiqMapEntry> = { ...existing };
+  const desiredKeys = new Set<string>();
   let overrides = 0;
-  for (const p of spec.products) {
-    const d = designs[p.slug];
-    if (!d) throw new Error(`${p.slug} has no recorded design; run create first`);
-    const blank = catalog.find((c) => c.Code === p.productCode);
-    if (!blank) throw new Error(`APLIIQ catalog has no product ${p.productCode}`);
-    for (const v of d.variants) {
-      if (!isApliiqSku(v.sku) || /A0$/.test(v.sku)) throw new Error(`${p.slug} ${v.size}: SKU ${v.sku} carries no artwork; refuse to map a blank design`);
-      const key = `${p.slug}-${sizeKey(v.size)}`;
-      const retail = p.sizeRetail?.[sizeLabel(v.size)] ?? p.retailPrice;
-      const weightOz = Math.round(Number(String(v.weight).replace(/[^\d.]/g, "")) * 100) / 100;
-      const itemCost = Math.round(Number(blank.Price) * 100) + DTF_CENTS + PRIVATE_LABEL_CENTS + Math.round(v.plusSizeFee * 100);
-      const base: ApliiqMapEntry = {
-        apliiqSku: v.sku,
-        apliiqSkuVerified: true,
-        apliiqProductId: String(d.designId),
-        apliiqVariantId: `${d.designId}-${sizeKey(v.size)}`,
-        apliiqDecorationSnapshot: { front: { method: "DTF", service: spec.service, apliiqArtworkId: d.artworkId, artworkUrl: p.artworkUrl, note: p.printNote } },
-        apliiqPrivateLabelSnapshot: { neckLabel: { subscription: spec.privateLabel, artworkUrl: "https://afterhoursagenda.com/art/aha-neck-label.svg" } },
-        apliiqAssetUrls: [p.artworkUrl, p.mockupUrl],
-        apliiqRegionAvailability: ["US"],
-        apliiqSizeGuideReference: p.sizeGuideId,
-        apliiqMappingApproval: "approved",
-        apliiqSampleApproval: "approved",
-        squareMappingStatus: "active",
-        weightOz,
-        apliiqItemCost: itemCost,
-        apliiqCostBasis: "standard",
-        costEstimate: itemCost,
-        costVerifiedAt: now,
-        marginVerifiedAt: now,
-        marginEstimate: 0,
+  for (const v of d.variants) {
+    const key = `${p.slug}-${sizeKey(v.size)}`;
+    desiredKeys.add(key);
+    const retail = p.sizeRetail?.[sizeLabel(v.size)] ?? p.retailPrice;
+    const weightOz = Math.round(Number(String(v.weight).replace(/[^\d.]/g, "")) * 100) / 100;
+    const itemCost = Math.round(Number(blank.Price) * 100) + DTF_CENTS + PRIVATE_LABEL_CENTS + Math.round(v.plusSizeFee * 100);
+    const prior = existing[key];
+    const approval = approvalsByKey.get(key)!;
+    const base: ApliiqMapEntry = {
+      apliiqSku: v.sku,
+      apliiqSkuVerified: true,
+      apliiqProductId: String(d.designId),
+      apliiqVariantId: `${d.designId}-${sizeKey(v.size)}`,
+      apliiqDecorationSnapshot: { front: { method: "DTF", service: spec.service, apliiqArtworkId: d.artworkId, artworkUrl: p.artworkUrl, note: p.printNote } },
+      apliiqPrivateLabelSnapshot: { neckLabel: { subscription: spec.privateLabel, artworkUrl: "https://afterhoursagenda.com/art/aha-neck-label.svg" } },
+      apliiqAssetUrls: [p.artworkUrl, p.mockupUrl],
+      apliiqRegionAvailability: ["US"],
+      apliiqSizeGuideReference: p.sizeGuideId,
+      apliiqMappingApproval: approval.apliiqMappingApproval,
+      apliiqSampleApproval: approval.apliiqSampleApproval,
+      squareMappingStatus: prior?.squareMappingStatus ?? "active",
+      weightOz,
+      apliiqItemCost: itemCost,
+      apliiqCostBasis: "standard",
+      costEstimate: itemCost,
+      costVerifiedAt: now,
+      marginVerifiedAt: now,
+      marginEstimate: 0,
+    };
+    const landed = resolveApliiqLandedCost({ ...base, retailPrice: retail });
+    if (!landed.ok) throw new Error(`${key}: ${landed.reasons.join("; ")}`);
+    const margin = landed.landed.margin;
+    if (margin.contributionMargin <= 0) throw new Error(`${key}: landed cost ${retail - margin.contributionMargin} exceeds retail ${retail}; raise the price`);
+    base.marginEstimate = margin.contributionMargin;
+    if (margin.contributionMarginRatio < MIN_MARGIN_RATIO) {
+      overrides++;
+      base.marginFloorOverride = {
+        minRatio: Math.floor(margin.contributionMarginRatio * 100) / 100,
+        reason: p.productType === "tee"
+          ? "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes"
+          : `${blank.SKU} held at merchant price; profitable, under the ${Math.round(MIN_MARGIN_RATIO * 100)}% floor`,
+        approvedAt: now.slice(0, 10),
       };
-      const landed = resolveApliiqLandedCost({ ...base, retailPrice: retail });
-      if (!landed.ok) throw new Error(`${key}: ${landed.reasons.join("; ")}`);
-      const margin = landed.landed.margin;
-      if (margin.contributionMargin <= 0) {
-        throw new Error(`${key}: landed cost ${retail - margin.contributionMargin} exceeds retail ${retail}; raise the price`);
-      }
-      base.marginEstimate = margin.contributionMargin;
-      if (margin.contributionMarginRatio < MIN_MARGIN_RATIO) {
-        overrides++;
-        base.marginFloorOverride = {
-          minRatio: Math.floor(margin.contributionMarginRatio * 100) / 100,
-          reason: p.productType === "tee"
-            ? "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes"
-            : `${blank.SKU} held at merchant price; profitable, under the ${Math.round(MIN_MARGIN_RATIO * 100)}% floor`,
-          approvedAt: now.slice(0, 10),
-        };
-      }
-      next[key] = base;
-      console.log(`  ${key.padEnd(44)} ${v.sku.padEnd(20)} ${String(weightOz).padStart(5)}oz  cost ${itemCost}  margin ${margin.contributionMargin} (${(margin.contributionMarginRatio * 100).toFixed(1)}%)${base.marginFloorOverride ? "  override" : ""}`);
     }
+    if (prior && JSON.stringify(withoutVerificationTimes(prior)) === JSON.stringify(withoutVerificationTimes(base))) {
+      base.costVerifiedAt = prior.costVerifiedAt;
+      base.marginVerifiedAt = prior.marginVerifiedAt;
+      if (base.marginFloorOverride && prior.marginFloorOverride) base.marginFloorOverride.approvedAt = prior.marginFloorOverride.approvedAt;
+    }
+    next[key] = base;
+    console.log(`  ${key.padEnd(44)} ${v.sku.padEnd(20)} ${String(weightOz).padStart(5)}oz  cost ${itemCost}  margin ${margin.contributionMargin} (${(margin.contributionMarginRatio * 100).toFixed(1)}%)${base.marginFloorOverride ? "  override" : ""}`);
   }
+
+  const stale = Object.keys(existing).filter((key) => key.startsWith(`${p.slug}-`) && !desiredKeys.has(key));
+  if (stale.length) throw new Error(`${p.slug}: refusing to auto-delete stale mapping(s): ${stale.join(", ")}; review them manually`);
   parseApliiqMapDocument({ map: next });
-  writeFileSync(MAP_PATH, `${JSON.stringify({ map: next }, null, 2)}\n`);
-  console.log(`\n✓ ${Object.keys(next).length} variants written to ${MAP_PATH} (${overrides} with a margin-floor override)`);
+  const rendered = `${JSON.stringify({ map: next }, null, 2)}\n`;
+  if (apply) {
+    if (readFileSync(MAP_PATH, "utf8") !== rendered) writeFileSync(MAP_PATH, rendered);
+    console.log(`\n✓ ${desiredKeys.size} selected variants converged in ${MAP_PATH} (${overrides} with a margin-floor override)`);
+  } else {
+    console.log(`\n(dry run — ${desiredKeys.size} selected variants; pass --apply to write ${MAP_PATH})`);
+  }
 }
 
 async function main() {
@@ -193,14 +274,22 @@ async function main() {
     const only = rest.includes("--only") ? rest[rest.indexOf("--only") + 1] : undefined;
     await create(rest.includes("--apply"), only);
   } else if (command === "map") {
-    await map();
+    const only = rest.includes("--slug")
+      ? rest[rest.indexOf("--slug") + 1]
+      : rest.includes("--only") ? rest[rest.indexOf("--only") + 1] : undefined;
+    await map(rest.includes("--apply"), only);
   } else if (command === "delete" && rest[0]) {
-    for (const id of rest[0].split(",")) {
-      await call("DELETE", `/Design/${id.trim()}`);
-      console.log(`  deleted design ${id.trim()}`);
+    const ids = rest[0].split(",").map((id) => id.trim()).filter(Boolean);
+    if (!rest.includes("--apply")) {
+      console.log(`(dry run — would delete APLIIQ design(s) ${ids.join(", ")}; pass --apply only after separate review)`);
+      return;
+    }
+    for (const id of ids) {
+      await call("DELETE", `/Design/${id}`);
+      console.log(`  deleted design ${id}`);
     }
   } else {
-    console.error("usage: apliiq-capsule.ts create [--apply] [--only slug] | map | delete <ids>");
+    console.error("usage: apliiq-capsule.ts create [--apply] [--only slug] | map --slug <slug> [--apply] | delete <ids> [--apply]");
     process.exit(2);
   }
 }

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getFulfillmentMode } from "@/lib/commerce/runtime";
 import { reportCheckoutError } from "@/lib/commerce/checkout-alert";
 import { verifyApliiqFulfillmentWebhookSignature } from "@/lib/apliiq/webhooks";
+import { readBoundedRequestBody } from "@/lib/http/read-bounded-request-body";
 import {
   applyApliiqFulfillmentEvent,
   parseApliiqFulfillmentEvent,
@@ -16,10 +17,21 @@ import {
 
 export const runtime = "nodejs";
 
+const MAX_WEBHOOK_BODY_BYTES = 512 * 1024;
+
 export async function POST(request: Request) {
-  // Read the exact raw bytes-as-text before parsing. The provider signs the
-  // Base64 form of this body, so a JSON round trip would invalidate it.
-  const rawBody = await request.text();
+  const body = await readBoundedRequestBody(request, MAX_WEBHOOK_BODY_BYTES);
+  if (!body.ok) {
+    if (body.reason === "invalid-content-length") {
+      return NextResponse.json({ error: "Invalid Content-Length" }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Webhook payload is too large" }, { status: 413 });
+  }
+
+  // Decode the exact bounded raw bytes only after reading completes. The
+  // provider signs the Base64 form of this text, so a JSON round trip would
+  // invalidate it.
+  const { rawBody } = body;
   // APLIIQ documents the fulfillment HMAC as using the same Shared_SECRET as
   // API authentication. Do not introduce a second, unverifiable secret.
   const sharedSecret = process.env.APLIIQ_SHARED_SECRET;

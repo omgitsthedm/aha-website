@@ -56,7 +56,59 @@
           "weight": "3.9 oz",
           "plusSizeFee": 4
         }
-      ]
+      ],
+      "_creation": {
+        "version": 2,
+        "specFingerprint": "81d1b17e79526f542263d0bb5bb3e328e5c541f0ba4ba88dac4cee5a96f0fe51",
+        "status": "design-created"
+      },
+      "_identity": {
+        "version": 1,
+        "slug": "no-kings-tee",
+        "productCode": "mens_Next-Level-Premium-Crew",
+        "colorId": 50,
+        "frontLocationId": 4548,
+        "artworkUrl": "https://afterhoursagenda.com/art/no-kings-tee.png",
+        "artworkId": 8068145,
+        "service": "transfer_print",
+        "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+        "designId": 6030205,
+        "variants": [
+          {
+            "size": "4xl",
+            "sku": "APQ-6030205S61A1"
+          },
+          {
+            "size": "l",
+            "sku": "APQ-6030205S8A1"
+          },
+          {
+            "size": "m",
+            "sku": "APQ-6030205S7A1"
+          },
+          {
+            "size": "s",
+            "sku": "APQ-6030205S6A1"
+          },
+          {
+            "size": "xl",
+            "sku": "APQ-6030205S1A1"
+          },
+          {
+            "size": "xs",
+            "sku": "APQ-6030205S5A1"
+          },
+          {
+            "size": "xxl",
+            "sku": "APQ-6030205S2A1"
+          },
+          {
+            "size": "xxxl",
+            "sku": "APQ-6030205S21A1"
+          }
+        ],
+        "fingerprint": "baf9be3ce9b5c6d6676ac927772bf25f62f9652f8f3e6d4c3d4ef705f3a7b774"
+      }
     },
     "sheep-min-hoodie": {
       "artworkId": 8068149,
@@ -119,7 +171,63 @@
           "weight": "25 oz",
           "plusSizeFee": 6
         }
-      ]
+      ],
+      "_creation": {
+        "version": 2,
+        "specFingerprint": "618a6a9d8143fa9ddcb28c784f863aff94b92971c3115c8b9c8242623b6a67ae",
+        "status": "design-created"
+      },
+      "_identity": {
+        "version": 1,
+        "slug": "sheep-min-hoodie",
+        "productCode": "mens_independent-heavyweight-pullover-hoodie",
+        "colorId": 50,
+        "frontLocationId": 6399,
+        "artworkUrl": "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
+        "artworkId": 8068149,
+        "service": "transfer_print",
+        "printNote": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment.",
+        "designId": 6030209,
+        "variants": [
+          {
+            "size": "4xl",
+            "sku": "APQ-6030209S61A1"
+          },
+          {
+            "size": "5xl",
+            "sku": "APQ-6030209S62A1"
+          },
+          {
+            "size": "l",
+            "sku": "APQ-6030209S8A1"
+          },
+          {
+            "size": "m",
+            "sku": "APQ-6030209S7A1"
+          },
+          {
+            "size": "s",
+            "sku": "APQ-6030209S6A1"
+          },
+          {
+            "size": "xl",
+            "sku": "APQ-6030209S1A1"
+          },
+          {
+            "size": "xs",
+            "sku": "APQ-6030209S5A1"
+          },
+          {
+            "size": "xxl",
+            "sku": "APQ-6030209S2A1"
+          },
+          {
+            "size": "xxxl",
+            "sku": "APQ-6030209S21A1"
+          }
+        ],
+        "fingerprint": "d6b7dd4922579708907b91961885df9bec83e1e473c159a95c8abc4ee8411f07"
+      }
     },
     "no-place-like-new-york-sweatshirt": {
       "artworkId": 8068151,
@@ -170,7 +278,55 @@
           "weight": "15.9 oz",
           "plusSizeFee": 4
         }
-      ]
+      ],
+      "_creation": {
+        "version": 2,
+        "specFingerprint": "ba27d431222571556b4537d90814cc1fea12d0536507d8c0a6877ffd265cd5f6",
+        "status": "design-created"
+      },
+      "_identity": {
+        "version": 1,
+        "slug": "no-place-like-new-york-sweatshirt",
+        "productCode": "mens_Heavyweight-Crewneck-Sweatshirt",
+        "colorId": 50,
+        "frontLocationId": 8455,
+        "artworkUrl": "https://afterhoursagenda.com/art/no-place-like-new-york-sweatshirt.png",
+        "artworkId": 8068151,
+        "service": "transfer_print",
+        "printNote": "Front center chest, transfer print (DTF), 8.5\" wide, top edge ~3in below collar. Black garment.",
+        "designId": 6030211,
+        "variants": [
+          {
+            "size": "l",
+            "sku": "APQ-6030211S8A1"
+          },
+          {
+            "size": "m",
+            "sku": "APQ-6030211S7A1"
+          },
+          {
+            "size": "s",
+            "sku": "APQ-6030211S6A1"
+          },
+          {
+            "size": "xl",
+            "sku": "APQ-6030211S1A1"
+          },
+          {
+            "size": "xs",
+            "sku": "APQ-6030211S5A1"
+          },
+          {
+            "size": "xxl",
+            "sku": "APQ-6030211S2A1"
+          },
+          {
+            "size": "xxxl",
+            "sku": "APQ-6030211S21A1"
+          }
+        ],
+        "fingerprint": "40f2a15958b0d306832b74553bcab7903872bf5bd412882c746c108f3570f0c7"
+      }
     },
     "dont-fuck-fascists-tee": {
       "artworkId": 8068148,
@@ -227,7 +383,59 @@
           "weight": "3.9 oz",
           "plusSizeFee": 4
         }
-      ]
+      ],
+      "_creation": {
+        "version": 2,
+        "specFingerprint": "6dbac6a99336737d822f0422804ac335c2f03bd6239686c9feb98e46499f5df7",
+        "status": "design-created"
+      },
+      "_identity": {
+        "version": 1,
+        "slug": "dont-fuck-fascists-tee",
+        "productCode": "mens_Next-Level-Premium-Crew",
+        "colorId": 50,
+        "frontLocationId": 4548,
+        "artworkUrl": "https://afterhoursagenda.com/art/dont-fuck-fascists-tee.png",
+        "artworkId": 8068148,
+        "service": "transfer_print",
+        "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+        "designId": 6030208,
+        "variants": [
+          {
+            "size": "4xl",
+            "sku": "APQ-6030208S61A1"
+          },
+          {
+            "size": "l",
+            "sku": "APQ-6030208S8A1"
+          },
+          {
+            "size": "m",
+            "sku": "APQ-6030208S7A1"
+          },
+          {
+            "size": "s",
+            "sku": "APQ-6030208S6A1"
+          },
+          {
+            "size": "xl",
+            "sku": "APQ-6030208S1A1"
+          },
+          {
+            "size": "xs",
+            "sku": "APQ-6030208S5A1"
+          },
+          {
+            "size": "xxl",
+            "sku": "APQ-6030208S2A1"
+          },
+          {
+            "size": "xxxl",
+            "sku": "APQ-6030208S21A1"
+          }
+        ],
+        "fingerprint": "187b49942f1680e957552e7792a45764e989f1e8284f1834d5ebdacb8b4a17ad"
+      }
     },
     "read-banned-books-tee": {
       "artworkId": 8068146,
@@ -284,7 +492,59 @@
           "weight": "3.9 oz",
           "plusSizeFee": 4
         }
-      ]
+      ],
+      "_creation": {
+        "version": 2,
+        "specFingerprint": "32bc0af47e60b0c3efa273bc97e304d174f4bef3c9a7dbd959c7866ae5025942",
+        "status": "design-created"
+      },
+      "_identity": {
+        "version": 1,
+        "slug": "read-banned-books-tee",
+        "productCode": "mens_Next-Level-Premium-Crew",
+        "colorId": 50,
+        "frontLocationId": 4548,
+        "artworkUrl": "https://afterhoursagenda.com/art/read-banned-books-tee.png",
+        "artworkId": 8068146,
+        "service": "transfer_print",
+        "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+        "designId": 6030206,
+        "variants": [
+          {
+            "size": "4xl",
+            "sku": "APQ-6030206S61A1"
+          },
+          {
+            "size": "l",
+            "sku": "APQ-6030206S8A1"
+          },
+          {
+            "size": "m",
+            "sku": "APQ-6030206S7A1"
+          },
+          {
+            "size": "s",
+            "sku": "APQ-6030206S6A1"
+          },
+          {
+            "size": "xl",
+            "sku": "APQ-6030206S1A1"
+          },
+          {
+            "size": "xs",
+            "sku": "APQ-6030206S5A1"
+          },
+          {
+            "size": "xxl",
+            "sku": "APQ-6030206S2A1"
+          },
+          {
+            "size": "xxxl",
+            "sku": "APQ-6030206S21A1"
+          }
+        ],
+        "fingerprint": "eed09c32ed02ce01014124e1e7d5cbaa678b59101d6f9d9fc8b1387b2d14d24c"
+      }
     },
     "black-sheep-tee": {
       "artworkId": 8068144,
@@ -341,7 +601,59 @@
           "weight": "3.9 oz",
           "plusSizeFee": 4
         }
-      ]
+      ],
+      "_creation": {
+        "version": 2,
+        "specFingerprint": "d4488a5cf7fee91b2323b4e140676a9c4fe5d1b78533e06732f4f33e44916056",
+        "status": "design-created"
+      },
+      "_identity": {
+        "version": 1,
+        "slug": "black-sheep-tee",
+        "productCode": "mens_Next-Level-Premium-Crew",
+        "colorId": 50,
+        "frontLocationId": 4548,
+        "artworkUrl": "https://afterhoursagenda.com/art/black-sheep-tee.png",
+        "artworkId": 8068144,
+        "service": "transfer_print",
+        "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+        "designId": 6030204,
+        "variants": [
+          {
+            "size": "4xl",
+            "sku": "APQ-6030204S61A1"
+          },
+          {
+            "size": "l",
+            "sku": "APQ-6030204S8A1"
+          },
+          {
+            "size": "m",
+            "sku": "APQ-6030204S7A1"
+          },
+          {
+            "size": "s",
+            "sku": "APQ-6030204S6A1"
+          },
+          {
+            "size": "xl",
+            "sku": "APQ-6030204S1A1"
+          },
+          {
+            "size": "xs",
+            "sku": "APQ-6030204S5A1"
+          },
+          {
+            "size": "xxl",
+            "sku": "APQ-6030204S2A1"
+          },
+          {
+            "size": "xxxl",
+            "sku": "APQ-6030204S21A1"
+          }
+        ],
+        "fingerprint": "49bb6200e3248e4fbf66b8452bddb4a1f8b8b41109fff6499ca8aed1c4eb2911"
+      }
     },
     "dont-lick-the-boot-tee": {
       "artworkId": 8068147,
@@ -398,7 +710,59 @@
           "weight": "3.9 oz",
           "plusSizeFee": 4
         }
-      ]
+      ],
+      "_creation": {
+        "version": 2,
+        "specFingerprint": "65f1ddbb1f0e2683d39c2e543845295f5e2db8cb85bd37ca2eedf9518532a586",
+        "status": "design-created"
+      },
+      "_identity": {
+        "version": 1,
+        "slug": "dont-lick-the-boot-tee",
+        "productCode": "mens_Next-Level-Premium-Crew",
+        "colorId": 50,
+        "frontLocationId": 4548,
+        "artworkUrl": "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
+        "artworkId": 8068147,
+        "service": "transfer_print",
+        "printNote": "Front center chest, transfer print (DTF), 9\" wide, top edge ~3in below collar. Black garment.",
+        "designId": 6030207,
+        "variants": [
+          {
+            "size": "4xl",
+            "sku": "APQ-6030207S61A1"
+          },
+          {
+            "size": "l",
+            "sku": "APQ-6030207S8A1"
+          },
+          {
+            "size": "m",
+            "sku": "APQ-6030207S7A1"
+          },
+          {
+            "size": "s",
+            "sku": "APQ-6030207S6A1"
+          },
+          {
+            "size": "xl",
+            "sku": "APQ-6030207S1A1"
+          },
+          {
+            "size": "xs",
+            "sku": "APQ-6030207S5A1"
+          },
+          {
+            "size": "xxl",
+            "sku": "APQ-6030207S2A1"
+          },
+          {
+            "size": "xxxl",
+            "sku": "APQ-6030207S21A1"
+          }
+        ],
+        "fingerprint": "4bb6178b43af0eb7880975c6f7c7ad2780378c7d1c1ade4eeb43a3590d2734d4"
+      }
     },
     "enemy-of-the-state-hoodie": {
       "artworkId": 8068150,
@@ -461,7 +825,63 @@
           "weight": "25 oz",
           "plusSizeFee": 6
         }
-      ]
+      ],
+      "_creation": {
+        "version": 2,
+        "specFingerprint": "12aff533aebeea0dc7071ee8a39267aee4b19b99ba15679bda03dafcaa3b36b3",
+        "status": "design-created"
+      },
+      "_identity": {
+        "version": 1,
+        "slug": "enemy-of-the-state-hoodie",
+        "productCode": "mens_independent-heavyweight-pullover-hoodie",
+        "colorId": 50,
+        "frontLocationId": 6399,
+        "artworkUrl": "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
+        "artworkId": 8068150,
+        "service": "transfer_print",
+        "printNote": "Front center chest, transfer print (DTF), 10\" wide, top edge ~3in below collar. Black garment.",
+        "designId": 6030210,
+        "variants": [
+          {
+            "size": "4xl",
+            "sku": "APQ-6030210S61A1"
+          },
+          {
+            "size": "5xl",
+            "sku": "APQ-6030210S62A1"
+          },
+          {
+            "size": "l",
+            "sku": "APQ-6030210S8A1"
+          },
+          {
+            "size": "m",
+            "sku": "APQ-6030210S7A1"
+          },
+          {
+            "size": "s",
+            "sku": "APQ-6030210S6A1"
+          },
+          {
+            "size": "xl",
+            "sku": "APQ-6030210S1A1"
+          },
+          {
+            "size": "xs",
+            "sku": "APQ-6030210S5A1"
+          },
+          {
+            "size": "xxl",
+            "sku": "APQ-6030210S2A1"
+          },
+          {
+            "size": "xxxl",
+            "sku": "APQ-6030210S21A1"
+          }
+        ],
+        "fingerprint": "94d55c0e8f77f8fc492ceac5995208ece845d5f61ab0db8cb4132e5b48893aec"
+      }
     }
   }
 }

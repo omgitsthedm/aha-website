@@ -1,8 +1,6 @@
 import { getAllProducts } from "@/lib/square/catalog";
 import { buildChannelListings, buildGoogleProductFeed } from "@/lib/seo/product-feed";
 
-// Legacy public endpoint retained for existing Merchant Center scheduled fetches.
-// Keep its freshness identical to the canonical Google endpoint.
 export const revalidate = 300;
 
 export async function GET() {
@@ -16,7 +14,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("Product feed generation failed:", error);
+    console.error("Google product feed generation failed:", error);
     return new Response("Product feed is temporarily unavailable.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
   }
 }
