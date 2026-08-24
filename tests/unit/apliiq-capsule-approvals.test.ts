@@ -18,7 +18,7 @@ const productIdentity: CapsuleProductProductionIdentity = {
   artworkUrl: "https://example.com/art.png",
   service: "transfer_print",
   printNote: "Centered",
-  privateLabel: "SB-2-155690",
+  privateLabelStatus: "not-attached",
   sizeGuideId: "sg-test",
   variants: [
     { size: "m", sku: "APQ-22S7A1" },
@@ -38,7 +38,7 @@ const identity: CapsuleVariantProductionIdentity = {
   artworkUrl: "https://example.com/art.png",
   service: "transfer_print",
   printNote: "Centered",
-  privateLabel: "SB-2-155690",
+  privateLabelStatus: "not-attached",
   sizeGuideId: "sg-test",
 };
 const prior = {
@@ -53,7 +53,7 @@ const prior = {
       note: "Centered",
     },
   },
-  apliiqPrivateLabelSnapshot: { neckLabel: { subscription: "SB-2-155690" } },
+  apliiqPrivateLabelSnapshot: { status: "not-attached" },
   apliiqSizeGuideReference: "sg-test",
   apliiqMappingApproval: "approved",
   apliiqSampleApproval: "approved",
@@ -68,11 +68,20 @@ describe("APLIIQ capsule approval provenance", () => {
   });
 
   it.each([
-    ["private label", { privateLabel: "SB-DIFFERENT" }],
     ["size guide", { sizeGuideId: "sg-different" }],
   ])("does not carry prior approval after a %s mismatch", (_label, changed) => {
     expect(() => resolveCapsuleVariantApprovals(
       "test-tee", "test-tee-m", prior, undefined, { ...identity, ...changed }, fingerprint,
+    )).toThrow(/prior approval identity.*identity-bound mapping and sample approvals/);
+  });
+
+  it("does not carry a legacy claim that an unattached private label was active", () => {
+    const claimedLabel = {
+      ...prior,
+      apliiqPrivateLabelSnapshot: { neckLabel: { subscription: "SB-2-155690" } },
+    } as ApliiqMapEntry;
+    expect(() => resolveCapsuleVariantApprovals(
+      "test-tee", "test-tee-m", claimedLabel, undefined, identity, fingerprint,
     )).toThrow(/prior approval identity.*identity-bound mapping and sample approvals/);
   });
 

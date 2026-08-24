@@ -58,7 +58,7 @@ The first implementation must be additive and provider-neutral. Do not replace P
 | Saved designs | Empty by design until the fall/winter products are selected. |
 | Approvals | Empty; no mock approval is pending. |
 | Orders | Empty; no accidental test or paid order was placed. |
-| Subscriptions | One active private-label design (`SB-2-155690`) with 10 free tags remaining. No inactive subscriptions. VIP, unlimited digitization, neck prints, patches, printed labels, and woven-label services were not purchased because they are optional or product-dependent. |
+| Subscriptions | One active private-label account subscription (`SB-2-155690`) with 10 free tags remaining; it is not attached to the current API designs or order payload. No inactive subscriptions. VIP, unlimited digitization, neck prints, patches, printed labels, and woven-label services were not purchased because they are optional or product-dependent. |
 | Pay methods | One saved fulfillment card is present. |
 | Stores | `After Hours Agenda` custom store exists and API credentials are generated. Credentials are present only in protected, gitignored local environment storage. |
 | Profile | `info@afterhoursagenda.com` is set. Public design slug is intentionally blank so designs remain private. Password reset fields are intentionally blank. |

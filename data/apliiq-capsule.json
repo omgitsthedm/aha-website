@@ -2,7 +2,7 @@
   "_note": "APLIIQ capsule spec — the product list the storefront sells. Final path: `npm run publish:apliiq -- --slug <slug>` for a local-only dry run, then add `--apply` only after approval. Lower-level commands require an explicit slug and are documented in docs/content-swap-guide.md. `python3 scripts/imagery/render-product-imagery.py <slug>` creates studio imagery. Retail is in cents; sizeRetail overrides per size; story is the PDP copy (HTML).",
   "colorId": 50,
   "service": "transfer_print",
-  "privateLabel": "SB-2-155690",
+  "privateLabelStatus": "not-attached",
   "products": [
     {
       "slug": "black-sheep-tee",

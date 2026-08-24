@@ -354,6 +354,16 @@ async function verifySquareMapping(p, expectedSizes) {
   return validateSquareMapping(p.slug, p.square, expectedSizes, current.object, expectedSquareCommerce(p, expectedSizes));
 }
 
+/**
+ * Read-only provider proof for any workflow that would activate local Square
+ * mappings. This deliberately performs a fresh Square GET; local ids alone are
+ * never evidence that the mapped item and variations exist or still match.
+ */
+export async function verifySquareCapsuleMapping(slug) {
+  const { product: p } = product(slug);
+  return verifySquareMapping(p, sizesFor(p));
+}
+
 async function convergeAndVerifySquareMapping(p, expectedSizes) {
   const current = await sq(`/catalog/object/${p.square?.itemId}`, { method: "GET" });
   const expected = expectedSquareCommerce(p, expectedSizes);

@@ -61,7 +61,7 @@ interface CapsuleProduct {
 interface CapsuleSpec {
   colorId?: number;
   service?: string;
-  privateLabel?: string;
+  privateLabelStatus?: "not-attached";
   products?: CapsuleProduct[];
 }
 interface PublisherArgs {
@@ -162,10 +162,12 @@ export function preflightApliiqProduct(
     ["printNote", product.printNote],
     ["story", product.story],
     ["service", spec.service],
-    ["privateLabel", spec.privateLabel],
   ];
   for (const [field, value] of requiredText) {
     if (!nonempty(value)) throw new Error(`${slug}: missing ${field} in the capsule spec`);
+  }
+  if (spec.privateLabelStatus !== "not-attached") {
+    throw new Error(`${slug}: privateLabelStatus must be explicitly \"not-attached\" until APLIIQ design attachment is implemented and provider-verified`);
   }
   for (const [field, value] of [["artworkUrl", product.artworkUrl], ["mockupUrl", product.mockupUrl]] as const) {
     try {
@@ -228,7 +230,7 @@ export function preflightApliiqProduct(
     artworkUrl: product.artworkUrl!,
     service: spec.service!,
     printNote: product.printNote!,
-    privateLabel: spec.privateLabel!,
+    privateLabelStatus: spec.privateLabelStatus,
     sizeGuideId: product.sizeGuideId!,
     variants: design.variants.map(({ size, sku }) => ({ size, sku })),
   };
@@ -256,7 +258,7 @@ export function preflightApliiqProduct(
       artworkUrl: product.artworkUrl!,
       service: spec.service!,
       printNote: product.printNote!,
-      privateLabel: spec.privateLabel!,
+      privateLabelStatus: spec.privateLabelStatus,
       sizeGuideId: product.sizeGuideId!,
     }, expectedApprovalFingerprint);
   }
@@ -321,7 +323,7 @@ export function buildStagedPublishPlan(
     `validate spec, ${source.images.length} required images, story, price, and size guide ${source.sizeGuideId}`,
     design
       ? `run APLIIQ create safely; recorded design ${design.designId} will be skipped`
-      : "create the missing APLIIQ artwork/design with create --apply --only <slug>",
+      : "create the missing APLIIQ artwork/design with create --slug <slug> --apply",
     design
       ? `require and revalidate ${design.variantCount} production A1 design variant(s)`
       : "require and revalidate production A1 design variants after creation",
@@ -390,6 +392,13 @@ async function runSquareCapsule(root: string, command: "create" | "manifest", sl
   console.log(`\n$ npm run square:capsule -- ${command} ${slug} --apply`);
   const { applySquareCapsuleCommand } = await import("./square-capsule.mjs");
   await applySquareCapsuleCommand(command, slug, continuation);
+}
+
+async function runApliiqCapsule(root: string, command: "create" | "map", slug: string, continuation: PublisherContinuation): Promise<void> {
+  console.log(`\n$ npm run apliiq:capsule -- ${command} --slug ${slug} --apply`);
+  const { applyApliiqCapsuleCommand } = await import("./apliiq-capsule");
+  if (resolve(root) !== resolve(process.cwd())) throw new Error("APLIIQ publisher must run from the repository root.");
+  await applyApliiqCapsuleCommand(command, slug, continuation);
 }
 
 function changedPaths(root: string): string[] {
@@ -473,7 +482,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  run(root, "npm", ["run", "apliiq:capsule", "--", "create", "--apply", "--only", args.slug]);
+  await runApliiqCapsule(root, "create", args.slug, continuation!);
   preflightApliiqProduct(root, args.slug, "design");
   // Price, freight, margin, and approval validation must pass before creating
   // any Square record. This dry map makes only the provider catalog read.
@@ -482,7 +491,7 @@ async function main(): Promise<void> {
   preflightApliiqProduct(root, args.slug, "complete");
   // Write the sale-ready map only after the Square item and every variation
   // exist, so `squareMappingStatus: active` is never fabricated.
-  run(root, "npm", ["run", "apliiq:capsule", "--", "map", "--slug", args.slug, "--apply"]);
+  await runApliiqCapsule(root, "map", args.slug, continuation!);
   await runSquareCapsule(root, "manifest", args.slug, continuation!);
   run(root, "npm", ["run", "generate:sellable-slugs"]);
   run(root, "npm", ["run", "validate:all"]);

@@ -15,10 +15,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/black-sheep-tee.png",
@@ -32,12 +29,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "black-sheep-tee-s": {
       "apliiqSku": "APQ-6030204S6A1",
@@ -54,10 +51,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/black-sheep-tee.png",
@@ -71,12 +65,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "black-sheep-tee-m": {
       "apliiqSku": "APQ-6030204S7A1",
@@ -93,10 +87,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/black-sheep-tee.png",
@@ -110,12 +101,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "black-sheep-tee-l": {
       "apliiqSku": "APQ-6030204S8A1",
@@ -132,10 +123,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/black-sheep-tee.png",
@@ -149,12 +137,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "black-sheep-tee-xl": {
       "apliiqSku": "APQ-6030204S1A1",
@@ -171,10 +159,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/black-sheep-tee.png",
@@ -188,12 +173,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "black-sheep-tee-2xl": {
       "apliiqSku": "APQ-6030204S2A1",
@@ -210,10 +195,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/black-sheep-tee.png",
@@ -227,17 +209,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1949,
+      "apliiqItemCost": 1699,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1949,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1209,
-      "marginFloorOverride": {
-        "minRatio": 0.3,
-        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
-        "approvedAt": "2026-08-18"
-      }
+      "costEstimate": 1699,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1459
     },
     "black-sheep-tee-3xl": {
       "apliiqSku": "APQ-6030204S21A1",
@@ -254,10 +231,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/black-sheep-tee.png",
@@ -271,14 +245,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2049,
+      "apliiqItemCost": 1799,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2049,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1109,
+      "costEstimate": 1799,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1359,
       "marginFloorOverride": {
-        "minRatio": 0.27,
+        "minRatio": 0.33,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -298,10 +272,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/black-sheep-tee.png",
@@ -315,14 +286,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2149,
+      "apliiqItemCost": 1899,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2149,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1009,
+      "costEstimate": 1899,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1259,
       "marginFloorOverride": {
-        "minRatio": 0.25,
+        "minRatio": 0.31,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -342,10 +313,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-kings-tee.png",
@@ -359,12 +327,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "no-kings-tee-s": {
       "apliiqSku": "APQ-6030205S6A1",
@@ -381,10 +349,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-kings-tee.png",
@@ -398,12 +363,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "no-kings-tee-m": {
       "apliiqSku": "APQ-6030205S7A1",
@@ -420,10 +385,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-kings-tee.png",
@@ -437,12 +399,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "no-kings-tee-l": {
       "apliiqSku": "APQ-6030205S8A1",
@@ -459,10 +421,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-kings-tee.png",
@@ -476,12 +435,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "no-kings-tee-xl": {
       "apliiqSku": "APQ-6030205S1A1",
@@ -498,10 +457,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-kings-tee.png",
@@ -515,12 +471,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "no-kings-tee-2xl": {
       "apliiqSku": "APQ-6030205S2A1",
@@ -537,10 +493,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-kings-tee.png",
@@ -554,17 +507,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1949,
+      "apliiqItemCost": 1699,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1949,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1209,
-      "marginFloorOverride": {
-        "minRatio": 0.3,
-        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
-        "approvedAt": "2026-08-18"
-      }
+      "costEstimate": 1699,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1459
     },
     "no-kings-tee-3xl": {
       "apliiqSku": "APQ-6030205S21A1",
@@ -581,10 +529,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-kings-tee.png",
@@ -598,14 +543,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2049,
+      "apliiqItemCost": 1799,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2049,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1109,
+      "costEstimate": 1799,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1359,
       "marginFloorOverride": {
-        "minRatio": 0.27,
+        "minRatio": 0.33,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -625,10 +570,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-kings-tee.png",
@@ -642,14 +584,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2149,
+      "apliiqItemCost": 1899,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2149,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1009,
+      "costEstimate": 1899,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1259,
       "marginFloorOverride": {
-        "minRatio": 0.25,
+        "minRatio": 0.31,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -669,10 +611,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/read-banned-books-tee.png",
@@ -686,12 +625,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "read-banned-books-tee-s": {
       "apliiqSku": "APQ-6030206S6A1",
@@ -708,10 +647,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/read-banned-books-tee.png",
@@ -725,12 +661,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "read-banned-books-tee-m": {
       "apliiqSku": "APQ-6030206S7A1",
@@ -747,10 +683,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/read-banned-books-tee.png",
@@ -764,12 +697,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "read-banned-books-tee-l": {
       "apliiqSku": "APQ-6030206S8A1",
@@ -786,10 +719,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/read-banned-books-tee.png",
@@ -803,12 +733,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "read-banned-books-tee-xl": {
       "apliiqSku": "APQ-6030206S1A1",
@@ -825,10 +755,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/read-banned-books-tee.png",
@@ -842,12 +769,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "read-banned-books-tee-2xl": {
       "apliiqSku": "APQ-6030206S2A1",
@@ -864,10 +791,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/read-banned-books-tee.png",
@@ -881,17 +805,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1949,
+      "apliiqItemCost": 1699,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1949,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1209,
-      "marginFloorOverride": {
-        "minRatio": 0.3,
-        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
-        "approvedAt": "2026-08-18"
-      }
+      "costEstimate": 1699,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1459
     },
     "read-banned-books-tee-3xl": {
       "apliiqSku": "APQ-6030206S21A1",
@@ -908,10 +827,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/read-banned-books-tee.png",
@@ -925,14 +841,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2049,
+      "apliiqItemCost": 1799,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2049,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1109,
+      "costEstimate": 1799,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1359,
       "marginFloorOverride": {
-        "minRatio": 0.27,
+        "minRatio": 0.33,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -952,10 +868,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/read-banned-books-tee.png",
@@ -969,14 +882,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2149,
+      "apliiqItemCost": 1899,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2149,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1009,
+      "costEstimate": 1899,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1259,
       "marginFloorOverride": {
-        "minRatio": 0.25,
+        "minRatio": 0.31,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -996,10 +909,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
@@ -1013,12 +923,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-lick-the-boot-tee-s": {
       "apliiqSku": "APQ-6030207S6A1",
@@ -1035,10 +945,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
@@ -1052,12 +959,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-lick-the-boot-tee-m": {
       "apliiqSku": "APQ-6030207S7A1",
@@ -1074,10 +981,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
@@ -1091,12 +995,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-lick-the-boot-tee-l": {
       "apliiqSku": "APQ-6030207S8A1",
@@ -1113,10 +1017,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
@@ -1130,12 +1031,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-lick-the-boot-tee-xl": {
       "apliiqSku": "APQ-6030207S1A1",
@@ -1152,10 +1053,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
@@ -1169,12 +1067,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-lick-the-boot-tee-2xl": {
       "apliiqSku": "APQ-6030207S2A1",
@@ -1191,10 +1089,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
@@ -1208,17 +1103,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1949,
+      "apliiqItemCost": 1699,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1949,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1209,
-      "marginFloorOverride": {
-        "minRatio": 0.3,
-        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
-        "approvedAt": "2026-08-18"
-      }
+      "costEstimate": 1699,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1459
     },
     "dont-lick-the-boot-tee-3xl": {
       "apliiqSku": "APQ-6030207S21A1",
@@ -1235,10 +1125,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
@@ -1252,14 +1139,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2049,
+      "apliiqItemCost": 1799,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2049,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1109,
+      "costEstimate": 1799,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1359,
       "marginFloorOverride": {
-        "minRatio": 0.27,
+        "minRatio": 0.33,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -1279,10 +1166,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-lick-the-boot-tee.png",
@@ -1296,14 +1180,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2149,
+      "apliiqItemCost": 1899,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2149,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1009,
+      "costEstimate": 1899,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1259,
       "marginFloorOverride": {
-        "minRatio": 0.25,
+        "minRatio": 0.31,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -1323,10 +1207,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-fuck-fascists-tee.png",
@@ -1340,12 +1221,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-fuck-fascists-tee-s": {
       "apliiqSku": "APQ-6030208S6A1",
@@ -1362,10 +1243,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-fuck-fascists-tee.png",
@@ -1379,12 +1257,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-fuck-fascists-tee-m": {
       "apliiqSku": "APQ-6030208S7A1",
@@ -1401,10 +1279,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-fuck-fascists-tee.png",
@@ -1418,12 +1293,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-fuck-fascists-tee-l": {
       "apliiqSku": "APQ-6030208S8A1",
@@ -1440,10 +1315,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-fuck-fascists-tee.png",
@@ -1457,12 +1329,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-fuck-fascists-tee-xl": {
       "apliiqSku": "APQ-6030208S1A1",
@@ -1479,10 +1351,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-fuck-fascists-tee.png",
@@ -1496,12 +1365,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1749,
+      "apliiqItemCost": 1499,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1749,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1409
+      "costEstimate": 1499,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1659
     },
     "dont-fuck-fascists-tee-2xl": {
       "apliiqSku": "APQ-6030208S2A1",
@@ -1518,10 +1387,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-fuck-fascists-tee.png",
@@ -1535,17 +1401,12 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 1949,
+      "apliiqItemCost": 1699,
       "apliiqCostBasis": "standard",
-      "costEstimate": 1949,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1209,
-      "marginFloorOverride": {
-        "minRatio": 0.3,
-        "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
-        "approvedAt": "2026-08-18"
-      }
+      "costEstimate": 1699,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1459
     },
     "dont-fuck-fascists-tee-3xl": {
       "apliiqSku": "APQ-6030208S21A1",
@@ -1562,10 +1423,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-fuck-fascists-tee.png",
@@ -1579,14 +1437,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2049,
+      "apliiqItemCost": 1799,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2049,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1109,
+      "costEstimate": 1799,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1359,
       "marginFloorOverride": {
-        "minRatio": 0.27,
+        "minRatio": 0.33,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -1606,10 +1464,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/dont-fuck-fascists-tee.png",
@@ -1623,14 +1478,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 3.9,
-      "apliiqItemCost": 2149,
+      "apliiqItemCost": 1899,
       "apliiqCostBasis": "standard",
-      "costEstimate": 2149,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1009,
+      "costEstimate": 1899,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1259,
       "marginFloorOverride": {
-        "minRatio": 0.25,
+        "minRatio": 0.31,
         "reason": "APLIIQ plus-size fee against a flat tee price; merchant holds one price across sizes",
         "approvedAt": "2026-08-18"
       }
@@ -1650,10 +1505,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
@@ -1667,14 +1519,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15.9,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 867,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1117,
       "marginFloorOverride": {
-        "minRatio": 0.14,
+        "minRatio": 0.18,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -1694,10 +1546,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
@@ -1711,14 +1560,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15.9,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 867,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1117,
       "marginFloorOverride": {
-        "minRatio": 0.14,
+        "minRatio": 0.18,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -1738,10 +1587,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
@@ -1755,14 +1601,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 19,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 572,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 822,
       "marginFloorOverride": {
-        "minRatio": 0.09,
+        "minRatio": 0.13,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -1782,10 +1628,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
@@ -1799,14 +1642,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 20,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 572,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 822,
       "marginFloorOverride": {
-        "minRatio": 0.09,
+        "minRatio": 0.13,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -1826,10 +1669,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
@@ -1843,14 +1683,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 21,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 572,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 822,
       "marginFloorOverride": {
-        "minRatio": 0.09,
+        "minRatio": 0.13,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -1870,10 +1710,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
@@ -1887,14 +1724,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 23,
-      "apliiqItemCost": 4144,
+      "apliiqItemCost": 3894,
       "apliiqCostBasis": "standard",
-      "costEstimate": 4144,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 372,
+      "costEstimate": 3894,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 622,
       "marginFloorOverride": {
-        "minRatio": 0.06,
+        "minRatio": 0.1,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -1914,10 +1751,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
@@ -1931,14 +1765,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 25,
-      "apliiqItemCost": 4344,
+      "apliiqItemCost": 4094,
       "apliiqCostBasis": "standard",
-      "costEstimate": 4344,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 172,
+      "costEstimate": 4094,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 422,
       "marginFloorOverride": {
-        "minRatio": 0.02,
+        "minRatio": 0.07,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -1958,10 +1792,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
@@ -1975,14 +1806,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 25,
-      "apliiqItemCost": 4444,
+      "apliiqItemCost": 4194,
       "apliiqCostBasis": "standard",
-      "costEstimate": 4444,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 72,
+      "costEstimate": 4194,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 322,
       "marginFloorOverride": {
-        "minRatio": 0.01,
+        "minRatio": 0.05,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2002,10 +1833,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/sheep-min-hoodie.png",
@@ -2019,14 +1847,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 25,
-      "apliiqItemCost": 4544,
+      "apliiqItemCost": 4294,
       "apliiqCostBasis": "standard",
-      "costEstimate": 4544,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 943,
+      "costEstimate": 4294,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1193,
       "marginFloorOverride": {
-        "minRatio": 0.13,
+        "minRatio": 0.17,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2046,10 +1874,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
@@ -2063,14 +1888,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15.9,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 867,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1117,
       "marginFloorOverride": {
-        "minRatio": 0.14,
+        "minRatio": 0.18,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2090,10 +1915,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
@@ -2107,14 +1929,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15.9,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 867,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1117,
       "marginFloorOverride": {
-        "minRatio": 0.14,
+        "minRatio": 0.18,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2134,10 +1956,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
@@ -2151,14 +1970,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 19,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 572,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 822,
       "marginFloorOverride": {
-        "minRatio": 0.09,
+        "minRatio": 0.13,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2178,10 +1997,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
@@ -2195,14 +2011,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 20,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 572,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 822,
       "marginFloorOverride": {
-        "minRatio": 0.09,
+        "minRatio": 0.13,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2222,10 +2038,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
@@ -2239,14 +2052,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 21,
-      "apliiqItemCost": 3944,
+      "apliiqItemCost": 3694,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3944,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 572,
+      "costEstimate": 3694,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 822,
       "marginFloorOverride": {
-        "minRatio": 0.09,
+        "minRatio": 0.13,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2266,10 +2079,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
@@ -2283,14 +2093,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 23,
-      "apliiqItemCost": 4144,
+      "apliiqItemCost": 3894,
       "apliiqCostBasis": "standard",
-      "costEstimate": 4144,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 372,
+      "costEstimate": 3894,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 622,
       "marginFloorOverride": {
-        "minRatio": 0.06,
+        "minRatio": 0.1,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2310,10 +2120,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
@@ -2327,14 +2134,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 25,
-      "apliiqItemCost": 4344,
+      "apliiqItemCost": 4094,
       "apliiqCostBasis": "standard",
-      "costEstimate": 4344,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 172,
+      "costEstimate": 4094,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 422,
       "marginFloorOverride": {
-        "minRatio": 0.02,
+        "minRatio": 0.07,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2354,10 +2161,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
@@ -2371,14 +2175,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 25,
-      "apliiqItemCost": 4444,
+      "apliiqItemCost": 4194,
       "apliiqCostBasis": "standard",
-      "costEstimate": 4444,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 72,
+      "costEstimate": 4194,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 322,
       "marginFloorOverride": {
-        "minRatio": 0.01,
+        "minRatio": 0.05,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2398,10 +2202,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/enemy-of-the-state-hoodie.png",
@@ -2415,14 +2216,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 25,
-      "apliiqItemCost": 4544,
+      "apliiqItemCost": 4294,
       "apliiqCostBasis": "standard",
-      "costEstimate": 4544,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 943,
+      "costEstimate": 4294,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1193,
       "marginFloorOverride": {
-        "minRatio": 0.13,
+        "minRatio": 0.17,
         "reason": "ind4000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2442,10 +2243,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-place-like-new-york-sweatshirt.png",
@@ -2459,14 +2257,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 14,
-      "apliiqItemCost": 3654,
+      "apliiqItemCost": 3404,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3654,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1157,
+      "costEstimate": 3404,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1407,
       "marginFloorOverride": {
-        "minRatio": 0.19,
+        "minRatio": 0.23,
         "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2486,10 +2284,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-place-like-new-york-sweatshirt.png",
@@ -2503,14 +2298,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15,
-      "apliiqItemCost": 3654,
+      "apliiqItemCost": 3404,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3654,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1157,
+      "costEstimate": 3404,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1407,
       "marginFloorOverride": {
-        "minRatio": 0.19,
+        "minRatio": 0.23,
         "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2530,10 +2325,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-place-like-new-york-sweatshirt.png",
@@ -2547,14 +2339,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15.9,
-      "apliiqItemCost": 3654,
+      "apliiqItemCost": 3404,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3654,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1157,
+      "costEstimate": 3404,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1407,
       "marginFloorOverride": {
-        "minRatio": 0.19,
+        "minRatio": 0.23,
         "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2574,10 +2366,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-place-like-new-york-sweatshirt.png",
@@ -2591,14 +2380,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15.9,
-      "apliiqItemCost": 3654,
+      "apliiqItemCost": 3404,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3654,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1157,
+      "costEstimate": 3404,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1407,
       "marginFloorOverride": {
-        "minRatio": 0.19,
+        "minRatio": 0.23,
         "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2618,10 +2407,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-place-like-new-york-sweatshirt.png",
@@ -2635,14 +2421,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15.9,
-      "apliiqItemCost": 3654,
+      "apliiqItemCost": 3404,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3654,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 1157,
+      "costEstimate": 3404,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1407,
       "marginFloorOverride": {
-        "minRatio": 0.19,
+        "minRatio": 0.23,
         "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2662,10 +2448,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-place-like-new-york-sweatshirt.png",
@@ -2679,14 +2462,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15.9,
-      "apliiqItemCost": 3854,
+      "apliiqItemCost": 3604,
       "apliiqCostBasis": "standard",
-      "costEstimate": 3854,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 957,
+      "costEstimate": 3604,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1207,
       "marginFloorOverride": {
-        "minRatio": 0.15,
+        "minRatio": 0.2,
         "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
@@ -2706,10 +2489,7 @@
         }
       },
       "apliiqPrivateLabelSnapshot": {
-        "neckLabel": {
-          "subscription": "SB-2-155690",
-          "artworkUrl": "https://afterhoursagenda.com/art/aha-neck-label.svg"
-        }
+        "status": "not-attached"
       },
       "apliiqAssetUrls": [
         "https://afterhoursagenda.com/art/no-place-like-new-york-sweatshirt.png",
@@ -2723,14 +2503,14 @@
       "apliiqSampleApproval": "approved",
       "squareMappingStatus": "active",
       "weightOz": 15.9,
-      "apliiqItemCost": 4054,
+      "apliiqItemCost": 3804,
       "apliiqCostBasis": "standard",
-      "costEstimate": 4054,
-      "costVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginVerifiedAt": "2026-08-18T08:24:07.276Z",
-      "marginEstimate": 757,
+      "costEstimate": 3804,
+      "costVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginVerifiedAt": "2026-08-24T09:54:18.527Z",
+      "marginEstimate": 1007,
       "marginFloorOverride": {
-        "minRatio": 0.12,
+        "minRatio": 0.16,
         "reason": "IND3000 held at merchant price; profitable, under the 35% floor",
         "approvedAt": "2026-08-18"
       }
