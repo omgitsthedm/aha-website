@@ -12,7 +12,6 @@ import { StorefrontJsonLd } from "@/components/seo/StorefrontJsonLd";
 import { ConsentIdentifierCleanup } from "@/components/seo/ConsentIdentifierCleanup";
 import { CookieConsent } from "@/components/consent/CookieConsent";
 import { LazyFeedbackWidget } from "@/components/feedback/LazyFeedbackWidget";
-import { LittleFightCareBar } from "@/components/ui/LittleFightCareBar";
 import { SheepMarkSprite } from "@/components/ui/SheepMark";
 import { CONSENT_BOOTSTRAP } from "@/lib/consent/bootstrap";
 
@@ -128,7 +127,6 @@ export default function RootLayout({
           <SiteNav />
           <main id="main-content" className="min-h-[100dvh]">{children}</main>
           <SiteFooter />
-          <LittleFightCareBar />
           <CookieConsent />
           <LazyFeedbackWidget />
         </CartProvider>
