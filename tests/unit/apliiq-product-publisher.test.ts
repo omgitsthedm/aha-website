@@ -10,11 +10,15 @@ import {
 import { capsuleApprovalFingerprint } from "@/scripts/lib/apliiq-capsule-approvals";
 import {
   assertGitPublishSafety,
+  assertGitPublishContinuationSafety,
+  createPublisherContinuation,
   buildPublishPlan,
   buildStagedPublishPlan,
   parsePublisherArgs,
   preflightApliiqProduct,
+  publisherContinuationForArgs,
 } from "@/scripts/apliiq-product-publisher";
+import { assertSquareApplyApproval, assertSquareExecutionSafety } from "@/scripts/square-capsule.mjs";
 
 const roots: string[] = [];
 
@@ -158,6 +162,14 @@ describe("APLIIQ product publisher preflight", () => {
       .toThrow(/productionFingerprint is stale or missing.*Expected production fingerprint: [a-f0-9]{64}/);
   });
 
+  it("shares the exact design-stage approval gate with standalone Square apply commands", () => {
+    expect(assertSquareApplyApproval(fixture({ omitSquare: true }), "test-tee")).toMatchObject({ slug: "test-tee", designId: 22 });
+    expect(() => assertSquareApplyApproval(fixture({ omitSquare: true, omitApprovals: true }), "test-tee"))
+      .toThrow(/approvals\.mapping\.status/);
+    expect(() => assertSquareApplyApproval(fixture({ omitSquare: true, staleFingerprint: true }), "test-tee"))
+      .toThrow(/productionFingerprint is stale or missing/);
+  });
+
   it.each([
     ["artwork redesign", { redesign: "artwork" }, /different immutable production spec/],
     ["location redesign", { redesign: "location" }, /different immutable production spec/],
@@ -185,15 +197,28 @@ describe("publisher CLI safety", () => {
     expect(() => parsePublisherArgs(["--slug", "test-tee", "--apply", "--push"])).toThrow("requires --commit");
   });
 
-  it("allows release automation only from a clean non-main branch", () => {
+  it("allows provider writes only from a clean non-main branch", () => {
     const root = mkdtempSync(join(tmpdir(), "aha-apliiq-git-safety-"));
     roots.push(root);
     execFileSync("git", ["init", "-q", "-b", "feature/publish"], { cwd: root });
+    execFileSync("git", ["-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-q", "--allow-empty", "-m", "Initial"], { cwd: root });
     expect(assertGitPublishSafety(root)).toBe("feature/publish");
+    expect(publisherContinuationForArgs(root, parsePublisherArgs(["--slug", "test-tee"]))).toBeUndefined();
+    const continuation = createPublisherContinuation(root);
+    expect(continuation.branch).toBe("feature/publish");
+    mkdirSync(join(root, "data"), { recursive: true });
+    writeFileSync(join(root, "data", "apliiq-capsule-designs.json"), "{}");
+    expect(assertGitPublishContinuationSafety(root, continuation)).toBe("feature/publish");
+    expect(assertSquareExecutionSafety(root, continuation)).toBe("feature/publish");
+    expect(() => assertSquareExecutionSafety(root, { branch: continuation.branch, head: continuation.head })).toThrow(/in-process capability/);
+    rmSync(join(root, "data"), { recursive: true });
     writeFileSync(join(root, "dirty.txt"), "dirty");
-    expect(() => assertGitPublishSafety(root)).toThrow("completely clean");
+    expect(() => publisherContinuationForArgs(root, parsePublisherArgs(["--slug", "test-tee", "--apply"]))).toThrow("completely clean");
+    expect(() => assertSquareExecutionSafety(root)).toThrow("completely clean");
+    expect(() => assertGitPublishContinuationSafety(root, continuation)).toThrow(/unexpected changed files/);
     rmSync(join(root, "dirty.txt"));
     execFileSync("git", ["switch", "-q", "-c", "main"], { cwd: root });
-    expect(() => assertGitPublishSafety(root)).toThrow("main is forbidden");
+    expect(() => publisherContinuationForArgs(root, parsePublisherArgs(["--slug", "test-tee", "--apply"]))).toThrow(/main.*forbidden/);
+    expect(() => assertSquareExecutionSafety(root)).toThrow(/main.*forbidden/);
   });
 });

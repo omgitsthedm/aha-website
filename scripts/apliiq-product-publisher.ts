@@ -32,13 +32,14 @@ import {
 const REQUIRED_IMAGES = ["front", "detail", "art"] as const;
 const APQ_A1 = /^APQ-\d+S\d+A1$/;
 const SIZE_ALIASES: Record<string, string> = { XXL: "2XL", XXXL: "3XL" };
-const COMMITTABLE_PRODUCT_FILES = new Set([
+export const COMMITTABLE_PRODUCT_FILES = new Set([
   "data/apliiq-capsule.json",
   "data/apliiq-capsule-designs.json",
   "data/apliiq-map.json",
   "data/product-manifest.json",
   "lib/commerce/sellable-slugs.generated.ts",
 ]);
+const PUBLISHER_CONTINUATION: unique symbol = Symbol("aha-publisher-continuation");
 
 interface CapsuleProduct {
   slug: string;
@@ -68,6 +69,11 @@ interface PublisherArgs {
   apply: boolean;
   commit: boolean;
   push: boolean;
+}
+export interface PublisherContinuation {
+  readonly [PUBLISHER_CONTINUATION]: true;
+  readonly branch: string;
+  readonly head: string;
 }
 export interface PublishSourcePreflight {
   slug: string;
@@ -337,16 +343,53 @@ function git(root: string, args: string[], stdio: "pipe" | "inherit" = "pipe"): 
 
 export function assertGitPublishSafety(root: string): string {
   const branch = git(root, ["branch", "--show-current"]);
-  if (!branch) throw new Error("Commit/push requires a checked-out branch; detached HEAD is not allowed.");
-  if (branch === "main") throw new Error("Commit/push from main is forbidden; use a clean non-main branch.");
+  if (!branch) throw new Error("Provider/local writes require a checked-out branch; detached HEAD is not allowed.");
+  if (branch === "main") throw new Error("Provider/local writes from main are forbidden; use a clean non-main branch.");
   const status = git(root, ["status", "--porcelain", "--untracked-files=all"]);
-  if (status) throw new Error("Commit/push requires a completely clean non-main branch before publishing.");
+  if (status) throw new Error("Provider/local writes require a completely clean non-main branch before publishing.");
+  return branch;
+}
+
+export function createPublisherContinuation(root: string): PublisherContinuation {
+  const branch = assertGitPublishSafety(root);
+  const head = git(root, ["rev-parse", "HEAD"]);
+  return Object.freeze({ [PUBLISHER_CONTINUATION]: true as const, branch, head });
+}
+
+export function publisherContinuationForArgs(root: string, args: PublisherArgs): PublisherContinuation | undefined {
+  return args.apply ? createPublisherContinuation(root) : undefined;
+}
+
+export function assertGitPublishContinuationSafety(root: string, continuation: unknown): string {
+  if (!continuation || typeof continuation !== "object"
+    || (continuation as Partial<PublisherContinuation>)[PUBLISHER_CONTINUATION] !== true) {
+    throw new Error("Publisher continuation requires the in-process capability created by the initial clean-tree check.");
+  }
+  const { branch: expectedBranch, head: expectedHead } = continuation as PublisherContinuation;
+  const branch = git(root, ["branch", "--show-current"]);
+  const head = git(root, ["rev-parse", "HEAD"]);
+  if (!branch || branch === "main" || branch !== expectedBranch) {
+    throw new Error("Publisher continuation requires the same checked-out non-main branch that passed initial safety validation.");
+  }
+  if (!expectedHead || head !== expectedHead) {
+    throw new Error("Publisher continuation requires the unchanged starting commit; reconcile the branch before retrying.");
+  }
+  const unexpected = changedPaths(root).filter((file) => !COMMITTABLE_PRODUCT_FILES.has(file));
+  if (unexpected.length) {
+    throw new Error(`Publisher continuation found unexpected changed files: ${unexpected.join(", ")}`);
+  }
   return branch;
 }
 
 function run(root: string, command: string, args: string[]): void {
   console.log(`\n$ ${command} ${args.join(" ")}`);
   execFileSync(command, args, { cwd: root, stdio: "inherit", env: process.env });
+}
+
+async function runSquareCapsule(root: string, command: "create" | "manifest", slug: string, continuation: PublisherContinuation): Promise<void> {
+  console.log(`\n$ npm run square:capsule -- ${command} ${slug} --apply`);
+  const { applySquareCapsuleCommand } = await import("./square-capsule.mjs");
+  await applySquareCapsuleCommand(command, slug, continuation);
 }
 
 function changedPaths(root: string): string[] {
@@ -395,7 +438,8 @@ export function verifyLocalProductEligibility(root: string, slug: string): { var
 async function main(): Promise<void> {
   const root = process.cwd();
   const args = parsePublisherArgs(process.argv.slice(2));
-  const branch = args.commit || args.push ? assertGitPublishSafety(root) : "";
+  const continuation = publisherContinuationForArgs(root, args);
+  const branch = continuation?.branch ?? "";
   const source = preflightApliiqProduct(root, args.slug, "source");
   let design: PublishDesignPreflight | null = null;
   let complete: PublishPreflight | null = null;
@@ -434,12 +478,12 @@ async function main(): Promise<void> {
   // Price, freight, margin, and approval validation must pass before creating
   // any Square record. This dry map makes only the provider catalog read.
   run(root, "npm", ["run", "apliiq:capsule", "--", "map", "--slug", args.slug]);
-  run(root, "npm", ["run", "square:capsule", "--", "create", args.slug, "--apply"]);
+  await runSquareCapsule(root, "create", args.slug, continuation!);
   preflightApliiqProduct(root, args.slug, "complete");
   // Write the sale-ready map only after the Square item and every variation
   // exist, so `squareMappingStatus: active` is never fabricated.
   run(root, "npm", ["run", "apliiq:capsule", "--", "map", "--slug", args.slug, "--apply"]);
-  run(root, "npm", ["run", "square:capsule", "--", "manifest", args.slug, "--apply"]);
+  await runSquareCapsule(root, "manifest", args.slug, continuation!);
   run(root, "npm", ["run", "generate:sellable-slugs"]);
   run(root, "npm", ["run", "validate:all"]);
   const local = verifyLocalProductEligibility(root, args.slug);

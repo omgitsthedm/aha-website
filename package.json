@@ -46,7 +46,7 @@
     "rederive:apliiq-costs": "tsx scripts/rederive-apliiq-costs.ts",
     "apliiq:capsule": "tsx scripts/apliiq-capsule.ts",
     "publish:apliiq": "tsx scripts/apliiq-product-publisher.ts",
-    "square:capsule": "node scripts/square-capsule.mjs",
+    "square:capsule": "tsx scripts/square-capsule.mjs",
     "imagery:products": "python3 scripts/imagery/render-product-imagery.py",
     "imagery:tiles": "python3 scripts/imagery/render-campaign-tiles.py",
     "generate:sellable-slugs": "tsx scripts/generate-sellable-slugs.ts",

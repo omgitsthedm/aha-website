@@ -23,7 +23,7 @@ Owner: `data/apliiq-capsule.json` → APLIIQ → Square → `data/apliiq-map.jso
    ```
 
    Apply creates or skips the selected APLIIQ design, requires A1 SKUs, derives only the selected map entries, creates or resumes the Square item with its images/copy, requires all Square ids, writes the manifest and sellable slugs, runs `validate:all`, and verifies local product-route/feed eligibility. It never deletes or archives anything.
-6. **Review and release.** Open a pull request. The publisher never pushes `main`. On a completely clean non-main branch, `--apply --commit` may create the focused generated-product commit, including `data/apliiq-capsule-designs.json`, and `--apply --commit --push` may push that branch to `origin`. `--push` without `--commit`, a dirty starting tree, detached HEAD, and `main` are refused.
+6. **Review and release.** Open a pull request. The end-to-end publisher begins every `--apply` on a completely clean non-main branch, then allows only its known generated product files to change while the branch and starting commit remain fixed. Standalone Square `--apply` commands also require a clean non-main branch. The publisher never pushes `main`. `--apply --commit` may create the focused generated-product commit, including `data/apliiq-capsule-designs.json`, and `--apply --commit --push` may push that branch to `origin`. `--push` without `--commit`, a dirty starting tree, detached HEAD, and `main` are refused.
 
 Retirement is intentionally not part of this publisher. Removing, drafting, detaching, deleting, or archiving a product requires a separate, explicitly reviewed operation.
 
@@ -37,7 +37,7 @@ Owner: `data/brand-imagery.json`. Every non-product image slot on the site is li
 
 ## 3. Copy
 
-- **Product stories** are authored in the capsule spec and converged to Square `description_html`. Preview with `npm run square:capsule -- copy <slug>` and add `--apply` only for the intended live write; the PDP, JSON-LD, and previews read the resulting copy.
+- **Product stories** are authored in the capsule spec and converged to Square `description_html`. Preview with `npm run square:capsule -- copy <slug>` and add `--apply` only for the intended live write after the selected design's identity-bound approvals pass; the PDP, JSON-LD, and previews read the resulting copy.
 - **Site copy** (home, about, manifesto, FAQ, shipping, returns) is in the page files under `app/`; windows and claims come from `lib/commerce/policies.ts` (production days, returns window, shipping sentence, country list). Change a number once, there.
 - **Size guides**: `data/size-guides.json` — manufacturer garment specs per blank.
 

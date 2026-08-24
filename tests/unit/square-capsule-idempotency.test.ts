@@ -8,8 +8,13 @@ import {
   contentIdempotencyKey,
   convergeSquareCommerceObject,
   expectedSquareCommerce,
+  imageCaptionMatches,
   mergeCapsuleManifestRow,
+  planSquareImageConvergence,
+  prepareSquareImageCheckpoint,
   prepareSquareCreateCheckpoint,
+  recordSquareImageAttempt,
+  recordSquareImageResult,
   stableStringify,
   validateSquareMapping,
 } from "@/scripts/square-capsule.mjs";
@@ -136,6 +141,80 @@ describe("Square capsule create checkpoint", () => {
     fs.writeFileSync(legacy, JSON.stringify({ slug: "test-tee", idempotencyKey: "old" }));
     expect(() => prepareSquareCreateCheckpoint(legacy, details, new Date("2026-08-19T10:00:00Z")))
       .toThrow(/legacy or ambiguous.*reconciliation/i);
+  });
+});
+
+describe("Square capsule image checkpoint", () => {
+  const directories: string[] = [];
+  afterEach(() => directories.splice(0).forEach((directory) => fs.rmSync(directory, { recursive: true, force: true })));
+
+  function checkpointPath() {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), "square-capsule-images-"));
+    directories.push(directory);
+    return path.join(directory, "pending", "test-tee.images.json");
+  }
+
+  const images = [{
+    name: "test-tee front", isPrimary: true, digest: "a".repeat(64), idempotencyKey: "aha-capsule-image-a",
+  }];
+
+  it("reuses an exact existing image rather than planning another upload", () => {
+    const planned = planSquareImageConvergence(images, new Map([[images[0].idempotencyKey, "IMAGE-1"]]), undefined);
+    expect(planned).toEqual([expect.objectContaining({ providerImageId: "IMAGE-1" })]);
+  });
+
+  it("reuses full and legacy digest captions without weakening the image name binding", () => {
+    const digest = images[0].digest;
+    expect(imageCaptionMatches(`test-tee front [sha256:${digest}]`, "test-tee front", digest)).toBe(true);
+    expect(imageCaptionMatches(`test-tee front [sha256:${digest.slice(0, 16)}]`, "test-tee front", digest)).toBe(true);
+    expect(imageCaptionMatches(`test-tee detail [sha256:${digest}]`, "test-tee front", digest)).toBe(false);
+  });
+
+  it("keeps equal image bytes with different roles independently addressable", () => {
+    const detail = { ...images[0], name: "test-tee detail", isPrimary: false, idempotencyKey: "aha-capsule-image-b" };
+    const planned = planSquareImageConvergence(
+      [images[0], detail],
+      new Map([[images[0].idempotencyKey, "IMAGE-1"], [detail.idempotencyKey, "IMAGE-2"]]),
+      undefined,
+    );
+    expect(planned.map((entry: { providerImageId?: string }) => entry.providerImageId)).toEqual(["IMAGE-1", "IMAGE-2"]);
+    expect(() => planSquareImageConvergence(
+      [images[0]],
+      new Map([[images[0].idempotencyKey, "IMAGE-1"]]),
+      { images: [{ ...images[0], providerImageId: "IMAGE-OTHER" }] },
+    )).toThrow(/conflicting provider images.*reconcile/i);
+  });
+
+  it("persists intent before upload and resumes the same recent key", () => {
+    const file = checkpointPath();
+    const first = prepareSquareImageCheckpoint(file, { slug: "test-tee", itemId: "ITEM", images }, new Date("2026-08-19T10:00:00Z"));
+    expect(first.images[0].providerImageId).toBeUndefined();
+    recordSquareImageAttempt(file, images[0].idempotencyKey, new Date("2026-08-19T10:01:00Z"));
+    recordSquareImageAttempt(file, images[0].idempotencyKey, new Date("2026-08-19T10:04:00Z"));
+    const resumed = prepareSquareImageCheckpoint(file, { slug: "test-tee", itemId: "ITEM", images }, new Date("2026-08-19T10:05:00Z"));
+    expect(resumed.images[0]).toMatchObject({ idempotencyKey: "aha-capsule-image-a", attemptedAt: "2026-08-19T10:01:00.000Z" });
+
+    recordSquareImageResult(file, images[0].idempotencyKey, "IMAGE-1");
+    const complete = prepareSquareImageCheckpoint(file, { slug: "test-tee", itemId: "ITEM", images }, new Date("2026-08-20T12:00:00Z"));
+    expect(planSquareImageConvergence(images, new Map(), complete)).toEqual([
+      expect.objectContaining({ providerImageId: "IMAGE-1" }),
+    ]);
+    expect(() => recordSquareImageResult(file, images[0].idempotencyKey, "IMAGE-OTHER")).toThrow(/different provider image.*reconcile/i);
+  });
+
+  it("fails closed for stale, changed, or unreadable image-upload intent", () => {
+    const stale = checkpointPath();
+    prepareSquareImageCheckpoint(stale, { slug: "test-tee", itemId: "ITEM", images }, new Date("2026-08-19T10:00:00Z"));
+    recordSquareImageAttempt(stale, images[0].idempotencyKey, new Date("2026-08-19T10:00:00Z"));
+    recordSquareImageAttempt(stale, images[0].idempotencyKey, new Date("2026-08-20T09:59:00Z"));
+    expect(() => prepareSquareImageCheckpoint(stale, { slug: "test-tee", itemId: "ITEM", images }, new Date("2026-08-20T10:00:00Z")))
+      .toThrow(/outside the safe idempotency retry window.*reconcile/i);
+
+    const changed = checkpointPath();
+    prepareSquareImageCheckpoint(changed, { slug: "test-tee", itemId: "ITEM", images });
+    expect(() => prepareSquareImageCheckpoint(changed, {
+      slug: "test-tee", itemId: "ITEM", images: [{ ...images[0], digest: "b".repeat(64) }],
+    })).toThrow(/image source changed.*reconcile/i);
   });
 });
 
