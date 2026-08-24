@@ -328,18 +328,15 @@ function OpenCategoryShopContent({
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted" aria-live="polite">
             Showing {visibleProducts.length} of {filtered.length}
           </p>
-          {showLoadMore ? (
-            // After a few auto-loads, hand control back so the footer is reachable.
-            <button type="button" onClick={loadMore} className="min-h-12 border border-border/60 px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-cream transition-colors hover:border-accent">
-              Load more products
-            </button>
-          ) : (
-            // Auto-loading on scroll; button is the keyboard / no-JS fallback.
-            <button type="button" onClick={loadMore} aria-label="Load more products" className="inline-flex min-h-11 items-center gap-2 px-6 py-2 text-xs font-bold uppercase tracking-[0.06em] text-muted transition-colors hover:text-cream">
-              <span className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden="true" />
-              Loading more
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={loadMore}
+            className={showLoadMore
+              ? "min-h-12 border border-border/60 px-6 py-3 text-xs font-bold uppercase tracking-[0.06em] text-cream transition-colors hover:border-accent"
+              : "inline-flex min-h-11 items-center px-6 py-2 text-xs font-bold uppercase tracking-[0.06em] text-muted transition-colors hover:text-cream"}
+          >
+            Show more products
+          </button>
         </div>
       )}
 
@@ -364,8 +361,8 @@ function OpenCategoryShopContent({
               : "This part of the catalog is empty right now. The rest is printed to order and ready now."}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/shop/t-shirts" className={`${toggle} inline-flex items-center border-border/60 text-cream hover:border-accent`}>Tees</Link>
             <Link href="/shop/hoodies-sweatshirts" className={`${toggle} inline-flex items-center border-border/60 text-cream hover:border-accent`}>Hoods &amp; crews</Link>
-            <Link href="/shop/sweaters-knitwear" className={`${toggle} inline-flex items-center border-border/60 text-cream hover:border-accent`}>Sweaters &amp; knitwear</Link>
             <Link href="/shop" className={`${toggle} inline-flex items-center border-accent bg-rose text-cream`}>The collection</Link>
           </div>
         </div>

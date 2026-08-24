@@ -1,13 +1,13 @@
 # After Hours Agenda source of truth
 
-Last verified: August 18, 2026 from local Git, GitHub, the Netlify application programming interface (API), public Hypertext Transfer Protocol Secure (HTTPS) checks, the Square catalog, and the APLIIQ Design API.
+Last verified: August 24, 2026 from local Git, GitHub, the Netlify application programming interface (API), public Hypertext Transfer Protocol Secure (HTTPS) checks, the Square catalog, and the APLIIQ Design API.
 
 This file contains the current routing and operational contract. Detailed design, commerce, legal, and historical evidence remains available on demand under `docs/` and in Git history.
 
 ## Canonical source and production map
 
 - **Project**: After Hours Agenda production storefront
-- **Canonical local checkout**: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/aha-website`
+- **Canonical local checkout**: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/05 Store and Website/Website Code`
 - **GitHub repository**: `https://github.com/omgitsthedm/aha-website`
 - **Canonical and production branch**: `main`
 - **Netlify project**: `afterhoursagenda`

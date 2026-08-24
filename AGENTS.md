@@ -4,13 +4,13 @@ After Hours Agenda is a production commerce storefront. Read this file and `SOUR
 
 ## Canonical route
 
-- **Local root**: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/aha-website`
+- **Local root**: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/05 Store and Website/Website Code`
 - **GitHub**: `https://github.com/omgitsthedm/aha-website.git`
 - **Production branch**: `main`
 - **Primary site**: `https://afterhoursagenda.com`
 - **Current operational truth**: `SOURCE_OF_TRUTH.md`
 
-Run `pwd -P`, `git rev-parse --show-toplevel`, and `git status --short --branch` before editing. Preserve unrelated work. The compatibility path under `Website/aha-website` may resolve to this same physical checkout; never treat an alias as a second source.
+Run `pwd -P`, `git rev-parse --show-toplevel`, and `git status --short --branch` before editing. Preserve unrelated work. There is no compatibility checkout; use this physical root and never treat a copied directory as a second source.
 
 ## Safety boundaries
 
