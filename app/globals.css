@@ -969,19 +969,6 @@ html :where(.btn-secondary, .secondary-action, .btn-ghost) {
   transform-origin: left;
 }
 
-/* Little Fight NYC credit — one quiet line closing every page. */
-.lf-credit-strip {
-  display: flex;
-  justify-content: center;
-  padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid rgb(255 255 255 / 0.08);
-  background: #050507;
-  color: rgb(255 255 255 / 0.5);
-}
-
-.lf-credit-strip .lfc:hover {
-  color: var(--color-accent, #f97316);
-}
 
 
 @keyframes aha-m-rise { from { opacity: 0; transform: translateY(26px); } }

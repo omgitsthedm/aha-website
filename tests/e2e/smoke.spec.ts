@@ -43,17 +43,19 @@ test("@catalog home renders the brand hero without retired shopping controls", a
 test("@care Little Fight credit mark closes every page and respects reduced motion", async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const strip = page.locator(".lf-credit-strip");
-  const credit = strip.getByRole("link", { name: "Made by Little Fight NYC" });
+  // The credit closes the client's own footer, on the footer's own ground —
+  // it is not a separate strip with a colour of its own.
+  const footer = page.locator("footer").last();
+  const credit = footer.getByRole("link", { name: "Made by Little Fight NYC" });
 
-  await expect(strip).toBeVisible();
+  await expect(credit).toBeVisible();
   await expect(credit).toHaveAttribute("href", "https://littlefightnyc.com");
-  await expect(strip.locator(".lfc-beacon")).toHaveCount(1);
+  await expect(footer.locator(".lfc-beacon")).toHaveCount(1);
   // The mark draws itself — no image request, no webfont of its own.
-  await expect(strip.locator("img")).toHaveCount(0);
-  await expect(strip.locator(".lfc-hull")).toHaveCSS("animation-name", "none");
+  await expect(credit.locator("img")).toHaveCount(0);
+  await expect(footer.locator(".lfc-hull")).toHaveCSS("animation-name", "none");
 
-  const box = await strip.boundingBox();
+  const box = await credit.boundingBox();
   expect(box).not.toBeNull();
   expect(box?.width).toBeLessThanOrEqual(testInfo.project.use.viewport?.width ?? Infinity);
 });

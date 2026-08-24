@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SheepMark } from "@/components/ui/SheepMark";
+import LifiCredit from "@/components/ui/LifiCredit";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { ConsentSettingsLink } from "@/components/consent/ConsentSettingsLink";
 import { isGiftCardsEnabled } from "@/lib/square/giftcards";
@@ -137,8 +138,9 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="mx-auto mt-10 max-w-[1280px] border-t border-border/40 pt-5">
+      <div className="mx-auto mt-10 flex max-w-[1280px] flex-col items-start gap-4 border-t border-border/40 pt-5 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-muted">© 2026 After Hours Agenda</p>
+        <LifiCredit size="11px" className="text-muted transition-colors hover:text-accent" />
       </div>
     </footer>
   );
