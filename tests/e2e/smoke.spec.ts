@@ -40,23 +40,20 @@ test("@catalog home renders the brand hero without retired shopping controls", a
   expect(await filledMark.locator("use").evaluate((element) => (element as SVGGraphicsElement).getBBox().width)).toBeGreaterThan(0);
 });
 
-test("@care Little Fight care mark matches the approved responsive contract", async ({ page }, testInfo) => {
+test("@care Little Fight credit mark closes every page and respects reduced motion", async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const careBar = page.locator('aside[aria-label="Little Fight NYC design and care credit"]');
-  const credit = careBar.getByRole("link", {
-    name: "Designed, Built and Cared For By LittleFightNYC.com",
-  });
+  const strip = page.locator(".lf-credit-strip");
+  const credit = strip.getByRole("link", { name: "Made by Little Fight NYC" });
 
-  await expect(careBar).toBeVisible();
-  await expect(credit).toHaveAttribute("href", "https://littlefightnyc.com/");
-  await expect(credit).toHaveAttribute("rel", "author");
-  await expect(careBar.locator('img[alt=""]')).toHaveCount(1);
-  await expect(careBar).toHaveCSS("background-color", "rgb(5, 5, 7)");
-  await expect(careBar.locator(".lf-care-bar__brand")).toHaveCSS("color", "rgb(249, 115, 22)");
-  await expect(careBar.locator(".lf-tug-stage img")).toHaveCSS("animation-name", "none");
+  await expect(strip).toBeVisible();
+  await expect(credit).toHaveAttribute("href", "https://littlefightnyc.com");
+  await expect(strip.locator(".lfc-beacon")).toHaveCount(1);
+  // The mark draws itself — no image request, no webfont of its own.
+  await expect(strip.locator("img")).toHaveCount(0);
+  await expect(strip.locator(".lfc-hull")).toHaveCSS("animation-name", "none");
 
-  const box = await careBar.boundingBox();
+  const box = await strip.boundingBox();
   expect(box).not.toBeNull();
   expect(box?.width).toBeLessThanOrEqual(testInfo.project.use.viewport?.width ?? Infinity);
 });
