@@ -1,18 +1,21 @@
 # After Hours Agenda
 
-> Independent New York label. The previous collection is archived while the next release is in development.
+> Clothing for the dreamers and the doers. Made to order, one at a time.
 
-After Hours Agenda is preparing a new collection. There are no products for sale and checkout is unavailable. The customer-facing name is always "After Hours Agenda". Support: info@afterhoursagenda.com.
+After Hours Agenda sells an active capsule of graphic tees, heavyweight hoodies, and crewnecks through its independent storefront. Product availability, sizes, prices, and images come from the live approved catalog. Checkout and payment are handled securely by Square, and current apparel is made to order by APLIIQ. The customer-facing name is always "After Hours Agenda". Support: info@afterhoursagenda.com.
 
 ## Current pages
 
-- [Home](https://afterhoursagenda.com/): Release updates and the current studio note.
-- [About](https://afterhoursagenda.com/about): The label and what comes next.
+- [Home](https://afterhoursagenda.com/): The current campaign and brand story.
+- [Shop](https://afterhoursagenda.com/shop): The active product catalog.
+- [Lookbook](https://afterhoursagenda.com/lookbook): Current collection imagery.
+- [About](https://afterhoursagenda.com/about): The label and its made-to-order approach.
 - [Manifesto](https://afterhoursagenda.com/manifesto): What the brand stands for.
-- [Next release](https://afterhoursagenda.com/lookbook): Collection status and email updates.
-- [Track order](https://afterhoursagenda.com/track-order): Support for a completed order.
+- [Track order](https://afterhoursagenda.com/track-order): Order status and tracking support.
+- [Shipping](https://afterhoursagenda.com/shipping): Current delivery terms and markets.
+- [Returns](https://afterhoursagenda.com/returns): Current return terms.
 - [Contact](https://afterhoursagenda.com/contact): Reach support.
 
-## Existing-order support
+## Orders and support
 
-Historical customers can use the order number and checkout email to request order support, tracking, returns, or care guidance. Those pages support completed orders; they do not indicate current product availability.
+Customers can use their order number and checkout email to request order support, tracking, returns, or care guidance. Product pages are the authoritative source for current availability and pricing.

@@ -1,20 +1,31 @@
-# Content swap guide — from demo to launch
+# Content swap guide
 
-The storefront is live on eight demo pieces and placeholder editorial imagery. Everything below is the exact path to replace them with the real designs, real photography and real product copy without touching code. Each step names the one file or system that owns the content.
+The storefront is live on the APLIIQ capsule. This is the current path for a deliberately approved product or content replacement. Each step names the file or system that owns the content.
 
 ## 1. A new product (or a redesigned one)
 
 Owner: `data/apliiq-capsule.json` → APLIIQ → Square → `data/apliiq-map.json` → `data/product-manifest.json`.
 
-1. **Art.** Drop the print file at `public/art/<slug>.png` — transparent PNG, ≥ 300 DPI at print size (10 in wide ≈ 3000 px), under 12 MB.
-2. **Spec.** Add a product to `data/apliiq-capsule.json`: `slug`, `title`, `productCode` + `frontLocationId` (from APLIIQ `GET /Product`; NL3600 tee = `mens_Next-Level-Premium-Crew` / `4548`, IND4000 hood = `mens_independent-heavyweight-pullover-hoodie` / `6399`, IND3000 crew = `mens_Heavyweight-Crewneck-Sweatshirt` / `8455`), `retailPrice` in cents, `sizeGuideId`, `fabricDescription`, `printNote`, and the two hosted URLs (`artworkUrl`, `mockupUrl` — any public HTTPS; the storefront's own `/art/…` and `/products/…` paths work once deployed).
-3. **Imagery.** `python3 scripts/imagery/render-product-imagery.py <slug>` renders the studio front, print detail and flat-art images into `public/products/<slug>/`; `python3 scripts/imagery/render-campaign-tiles.py` refreshes the campaign tiles. Real photography goes in the same folder with the same three names (`front.jpg`, `detail.jpg`, `art.jpg`) — or more, in gallery order.
-4. **Square.** `node scripts/square-capsule.mjs create <slug>` makes the item, one variation per size, uploads the three images and writes the authored `description_html` from the spec's `story` field.
-5. **APLIIQ.** `npm run apliiq:capsule -- create --apply --only <slug>` uploads the artwork and creates the design (SKUs must end in `A1`); `npm run apliiq:capsule -- map` rebuilds the sellable registry with live blank costs and margins.
-6. **Manifest.** Add the product to `data/product-manifest.json` with the Square ids the create step printed (or run `node scripts/square-capsule.mjs manifest <slug>`), then `npm run generate:sellable-slugs`.
-7. **Gate.** `npm run validate:all && npm test && npm run build` — the build refuses an `A0` SKU, a variant at a loss, or a missing image. Open a PR; production deploys on merge.
+1. **Art.** Drop the print file at `public/art/<slug>.png`: transparent PNG, at least 300 DPI at print size (10 in wide is about 3000 px), under 12 MB.
+2. **Spec, story, and approval evidence.** Add exactly one product to `data/apliiq-capsule.json`: `slug`, `title`, `productCode`, `frontLocationId`, `retailPrice` in integer cents, `sizeGuideId`, `fabricDescription`, `printNote`, authored paragraph HTML in `story`, and valid HTTPS `artworkUrl` and `mockupUrl` values. A new design may be prepared before its provider ids exist. After design preparation, rerun the dry preflight and copy its exact expected SHA-256 into `approvals.productionFingerprint`; add `approvals.mapping` and `approvals.sample`, each with `status: "approved"` and a real `approvedAt` date in `YYYY-MM-DD` form. This evidence must be entered only after human review and is never written automatically.
+3. **Imagery.** `python3 scripts/imagery/render-product-imagery.py <slug>` renders `front.jpg`, `detail.jpg`, and `art.jpg` into `public/products/<slug>/`. All three nonempty files are required by the publisher. Real approved photography may replace those files.
+4. **Preview the complete publish.** Run the read-only preflight:
 
-To retire a piece: remove it from `data/apliiq-capsule.json`, run `map`, set its manifest status to `draft`, regenerate slugs, and archive the Square item.
+   ```bash
+   npm run publish:apliiq -- --slug <slug>
+   ```
+
+   It fails closed on an incomplete spec or missing image/story/price/size guide. Missing provider records are listed as planned steps; the dry run never calls APLIIQ or Square. Once a design exists, it also prints the exact expected production fingerprint and stops on missing or stale approval evidence. The fingerprint binds slug, blank/color/location, design, artwork, service/note, private label, size guide, and every sorted size/APQ SKU. No map, Square, manifest, site, or feed activation can run until both approvals match it. Existing mapped variants carry approval only while that committed production identity, including private label and size guide, is unchanged.
+5. **Apply the complete publish.** When the plan is correct and provider credentials are available, apply it explicitly:
+
+   ```bash
+   npm run publish:apliiq -- --slug <slug> --apply
+   ```
+
+   Apply creates or skips the selected APLIIQ design, requires A1 SKUs, derives only the selected map entries, creates or resumes the Square item with its images/copy, requires all Square ids, writes the manifest and sellable slugs, runs `validate:all`, and verifies local product-route/feed eligibility. It never deletes or archives anything.
+6. **Review and release.** Open a pull request. The end-to-end publisher begins every `--apply` on a completely clean non-main branch, then allows only its known generated product files to change while the branch and starting commit remain fixed. Standalone Square `--apply` commands also require a clean non-main branch. The publisher never pushes `main`. `--apply --commit` may create the focused generated-product commit, including `data/apliiq-capsule-designs.json`, and `--apply --commit --push` may push that branch to `origin`. `--push` without `--commit`, a dirty starting tree, detached HEAD, and `main` are refused.
+
+Retirement is intentionally not part of this publisher. Removing, drafting, detaching, deleting, or archiving a product requires a separate, explicitly reviewed operation.
 
 ## 2. Photography and editorial imagery
 
@@ -22,11 +33,11 @@ Owner: `data/brand-imagery.json`. Every non-product image slot on the site is li
 
 - Replace the file at `src` (same aspect) or point `src` at a new file under `public/editorial/`, update `alt`, set `placeholder: false`.
 - Slots: `hero` (home + lookbook cover, 16:9, subject on the right, dark left third), `maker` (home story + about, 16:9), `categories` (two tiles), `lookbook` (any number; `productSlug` links a frame to its piece), `signature` (the Black Sheep on-model pair), `archive` (history strip; keep the year and caption).
-- Product photos from the shoot go to Square as the item images (front first) — see step 1.4 — not into this file.
+- Product photos from the shoot go to Square as the item images (front first) through the step 1.5 apply command, not into this file.
 
 ## 3. Copy
 
-- **Product stories** live in Square `description_html` (per item) — edit there or via `scripts/square-capsule.mjs copy <slug>`; the PDP, JSON-LD and previews read it.
+- **Product stories** are authored in the capsule spec and converged to Square `description_html`. Preview with `npm run square:capsule -- copy <slug>` and add `--apply` only for the intended live write after the selected design's identity-bound approvals pass; the PDP, JSON-LD, and previews read the resulting copy.
 - **Site copy** (home, about, manifesto, FAQ, shipping, returns) is in the page files under `app/`; windows and claims come from `lib/commerce/policies.ts` (production days, returns window, shipping sentence, country list). Change a number once, there.
 - **Size guides**: `data/size-guides.json` — manufacturer garment specs per blank.
 

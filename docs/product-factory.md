@@ -1,17 +1,55 @@
 # Product factory: design in, product out
 
-## Current catalog hold and APLIIQ intake
+## Current APLIIQ publisher
 
-The legacy Printful factory below is retained for historical recovery only. It is not the APLIIQ publishing path, and the archived Square catalog must not be resurrected through it. The public catalog remains closed until a new APLIIQ assortment is deliberately approved.
+The legacy Printful factory below is retained for historical recovery only. It is not the APLIIQ publishing path, and the archived Square catalog must not be resurrected through it. The current path starts from one complete entry in `data/apliiq-capsule.json` plus the three required local product images. The publisher creates missing APLIIQ and Square records under explicit apply mode, then revalidates each result before continuing.
 
-APLIIQ product intake uses two review-only callbacks:
+The safe final command is dry-run by default and requires one selected slug:
+
+```bash
+npm run publish:apliiq -- --slug <slug>
+```
+
+The dry run makes no provider calls and writes no product files. It fails closed on missing spec fields, story, positive integer-cent price, required `front`/`detail`/`art` images, and real size-guide rows. A missing APLIIQ design or Square mapping is shown as a planned apply step rather than treated as a source error. Existing provider records are still validated strictly: the design must carry production `APQ-...A1` SKUs and every size must ultimately have a Square variation.
+
+After the provider credentials have been supplied through the approved environment wrapper, the explicit write mode is:
+
+```bash
+npm run publish:apliiq -- --slug <slug> --apply
+```
+
+Apply validates the local source, creates or skips the selected APLIIQ design, revalidates its A1 SKUs, and dry-validates that slug's landed cost, margin, and approval evidence before creating anything in Square. It then creates or resumes the Square item with deterministic content-based item/image keys. Image uploads reuse exact full or legacy hash captions; each missing image records atomic intent and provider result before the ordered item image list changes, and an ambiguous retry outside Square's safe idempotency window stops for reconciliation. An existing mapped item is version-upserted to the spec's item name, regular product type, taxability, live presence, and each expected variation's mapped id/parent/name/SKU/fixed USD price/inventory/live presence. A fresh provider GET must prove every field before the manifest can be written; stale provider price or SKU never passes merely because the local ids exist.
+
+Before the first Square item POST, the publisher atomically records a slug-scoped pending checkpoint under `data/.square-capsule-pending/` with the complete request fingerprint and the exact idempotency key. An unchanged recent retry reuses that key. Changed source while pending, malformed legacy checkpoints, and checkpoints outside the safe provider retention window fail closed and require catalog reconciliation rather than risk a duplicate. Only after a provider GET verifies the created item and every variation is the Square mapping atomically written to the capsule spec; the checkpoint is then removed.
+
+Manifest re-publishing updates capsule-owned commerce and copy fields while retaining existing merchandising choices, including badges, priority, collections, gender, fit/care/production/shipping/returns notes, lifestyle/drop/launch metadata, and gallery images beyond the generated front/detail/art set. New rows receive the standard defaults. The publisher then writes the sellable-slug registry, runs `validate:all`, and verifies local route/feed eligibility. No publisher path deletes or archives a provider or local catalog record.
+
+A new or redesigned mapped variant must not inherit approval from an older production identity. Its capsule product needs explicit reviewed evidence:
+
+```json
+"approvals": {
+  "productionFingerprint": "<exact SHA-256 printed by the post-design preflight>",
+  "mapping": { "status": "approved", "approvedAt": "2026-08-19" },
+  "sample": { "status": "approved", "approvedAt": "2026-08-19" }
+}
+```
+
+Both statuses must be `approved`, both dates must be real `YYYY-MM-DD` dates, and `productionFingerprint` must exactly equal the deterministic fingerprint printed by the failed post-design preflight. That fingerprint covers slug, blank product code/color/front location, design and artwork ids, artwork URL, service, print note, private-label subscription, size guide, and the sorted complete size/APQ-SKU set. Never copy an older fingerprint or have automation write approval evidence.
+
+Because provider design and SKU ids do not exist at source time, source preflight may prepare the APLIIQ artwork/design first. The next preflight stops and prints the exact expected fingerprint; map, Square, manifest, sellable-slug, site, and feed activation remain blocked until humans add matching mapping and sample approval evidence. An already-mapped variant preserves its committed approval only when design ID, APQ SKU, artwork ID/URL, service, print note, private-label subscription, and size guide still match. Any mismatch requires fresh dated, identity-bound approvals; the map command never manufactures either status or fingerprint.
+
+The end-to-end publisher starts every `--apply` from a completely clean non-main branch. Its internal continuation remains bound to the same branch and starting commit and permits only the known generated product files; standalone Square `--apply` commands also require a clean non-main branch. Optional `--commit` and `--push` are available only with `--apply`; `--push` also requires `--commit`. The command stages only those known generated files, including `data/apliiq-capsule-designs.json`, and pushes the current branch to `origin`, never `main`. Normal release remains a reviewed pull request.
+
+APLIIQ product intake also uses two review-only callbacks:
 
 - `POST /api/integrations/apliiq/products/upsert` validates the provider payload and stores one `pending_review` draft per APQ SKU.
 - `GET /api/integrations/apliiq/products/search` returns only products already represented by a committed, sale-ready `data/apliiq-map.json` mapping.
 
 Both require the dedicated `APLIIQ_PRODUCT_CALLBACK_TOKEN`; neither accepts the API shared secret. Intake never writes `data/product-manifest.json`, `data/apliiq-map.json`, Square, or active storefront state. Human review must establish the APQ production SKU, decoration and private-label snapshots, HTTPS assets, supported regions, size guide, verified cost/margin timestamps, physical sample approval, and active Square variation before a line can become purchasable. `npm run validate:apliiq-map` and `npm run validate:all` fail closed on incomplete committed mappings.
 
-This tool can create provider records, change catalog mappings, commit files, push `main`, and publish products. Start with a dry run. Use any live or push mode only when the current request explicitly authorizes those exact effects.
+## Legacy Printful publisher
+
+The legacy tool below can create provider records, change catalog mappings, commit files, push `main`, and publish products. It is not the APLIIQ publisher above and must not be used for the current capsule. Start with a dry run. Use any live or push mode only when the current request explicitly authorizes those exact effects.
 
 `npm run product:new` is the guided wrapper for garment presets and art hosting. Without `--live`, it prints a local preview and changes nothing. Its live mode creates provider records, commits, pushes `main`, and waits for production, so the same authorization boundary applies.
 
