@@ -16,11 +16,10 @@ import { LittleFightCareBar } from "@/components/ui/LittleFightCareBar";
 import { SheepMarkSprite } from "@/components/ui/SheepMark";
 import { CONSENT_BOOTSTRAP } from "@/lib/consent/bootstrap";
 
-// Self-hosted subsets (app/fonts/README.md). The mono face is supporting UI copy
-// and the Oswald cut is the footer care bar, so neither is preloaded — but they
-// are requested at top priority the moment their text lays out, so their bytes
-// are cut to what the storefront draws. Anything outside the subset falls through
-// to the system fallback via unicode-range.
+// Self-hosted subsets (app/fonts/README.md). The mono face is supporting UI copy,
+// so it is not preloaded — but it is requested at top priority the moment its
+// text lays out, so its bytes are cut to what the storefront draws. Anything
+// outside the subset falls through to the system fallback via unicode-range.
 const jetBrainsMono = localFont({
   src: [
     { path: "./fonts/JetBrainsMono-400-latin.woff2", weight: "400", style: "normal" },
@@ -31,17 +30,6 @@ const jetBrainsMono = localFont({
   preload: false,
   adjustFontFallback: false,
   declarations: [{ prop: "unicode-range", value: "U+0020-007E, U+00A0, U+00A9, U+00B7, U+00D7, U+00E9, U+2013-2014, U+2018-2019, U+201C-201D, U+2022, U+2026, U+2192" }],
-});
-
-const littleFightOswald = localFont({
-  src: "./fonts/Oswald-700-latin.woff2",
-  weight: "700",
-  style: "normal",
-  variable: "--font-lf-oswald",
-  display: "swap",
-  preload: false,
-  adjustFontFallback: false,
-  declarations: [{ prop: "unicode-range", value: "U+0020-007E" }],
 });
 
 const poppins = Poppins({
@@ -123,7 +111,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${jetBrainsMono.variable} ${littleFightOswald.variable} ${poppins.variable}`}
+      className={`${jetBrainsMono.variable} ${poppins.variable}`}
     >
       <head>
         <script id="aha-consent-bootstrap" dangerouslySetInnerHTML={{ __html: CONSENT_BOOTSTRAP }} />

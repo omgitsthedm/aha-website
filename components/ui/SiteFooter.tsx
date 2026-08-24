@@ -108,7 +108,7 @@ export function SiteFooter() {
           </nav>
         </div>
 
-        <div className="min-w-0 space-y-8 border-t border-accent pt-5">
+        <div className="grid min-w-0 grid-cols-2 gap-8 border-t border-accent pt-5 lg:grid-cols-1">
           <nav aria-label="Brand">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-accent">Brand</p>
             <ul className="mt-3 space-y-1">
