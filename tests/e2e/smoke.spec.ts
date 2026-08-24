@@ -183,6 +183,43 @@ test("@catalog shop lists the APLIIQ capsule and nothing retired", async ({ page
   for (const href of CAPSULE_PDP_LINKS) expect(links, `capsule product missing from /shop: ${href}`).toContain(href);
 });
 
+test("@product size and image modals keep keyboard users contained and informed", async ({ page }) => {
+  await page.goto("/product/black-sheep-tee");
+
+  const sizeGuideTrigger = page.getByRole("button", { name: "Size guide" });
+  await sizeGuideTrigger.focus();
+  await page.keyboard.press("Enter");
+  const sizeGuide = page.getByRole("dialog", { name: "Size & fit" });
+  const sizeGuideClose = sizeGuide.getByRole("button", { name: "Close" });
+  await expect(sizeGuideClose).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(sizeGuideClose).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(sizeGuide).toHaveCount(0);
+  await expect(sizeGuideTrigger).toBeFocused();
+
+  const viewerTrigger = page.getByRole("button", { name: "Zoom & view full" });
+  await viewerTrigger.focus();
+  await page.keyboard.press("Enter");
+  const viewer = page.getByRole("dialog", { name: "Black Sheep — image viewer" });
+  await expect(viewer.getByRole("button", { name: "Close image viewer" })).toBeFocused();
+  const zoom = viewer.locator('button[aria-pressed]');
+  // WebKit follows the host macOS full-keyboard-access preference for Tab.
+  // Focus the native button directly so every engine exercises its keyboard
+  // activation contract without making a machine preference part of the test.
+  await zoom.focus();
+  await expect(zoom).toBeFocused();
+  await expect(zoom).toHaveAccessibleName("Activate to zoom in to 200 percent");
+  await expect(zoom).toHaveAttribute("aria-pressed", "false");
+  await page.keyboard.press("Space");
+  await expect(zoom).toHaveAttribute("aria-pressed", "true");
+  await expect(zoom).toHaveAccessibleName("Image zoomed to 200 percent. Activate to zoom out");
+  await expect(viewer.getByText("Image zoomed to 200 percent.")).toHaveCount(1);
+  await page.keyboard.press("Escape");
+  await expect(viewer).toHaveCount(0);
+  await expect(viewerTrigger).toBeFocused();
+});
+
 test("@product archived product routes return a noindex 404 without buy controls", async ({ page }) => {
   const response = await page.goto("/product/dont-fuck-fascists-shirt");
   expect(response?.status()).toBe(404);

@@ -26,7 +26,7 @@
   APLIIQ_LIVE_MODE = "false"
 
 # ── Production (main) ────────────────────────────────────────────────────────
-# Production: a verified Square payment creates and confirms the mapped Printful order.
+# Production: a verified Square payment submits the mapped capsule order to APLIIQ.
 [context.production.environment]
   # Public container ID: consent and canonical-host gated by GoogleAnalytics.
   # With this set, the component never renders direct gtag.js, preventing duplicate GA4 pageviews.

@@ -14,15 +14,41 @@ interface ImageLightboxProps {
   onIndexChange: (index: number) => void;
 }
 
+export interface ZoomState {
+  on: boolean;
+  x: number;
+  y: number;
+}
+
+export function zoomOriginForActivation({ detail, clientX, clientY, rect }: {
+  detail: number;
+  clientX: number;
+  clientY: number;
+  rect: Pick<DOMRect, "left" | "top" | "width" | "height">;
+}) {
+  // Keyboard and assistive-technology activations report detail=0 and have no
+  // useful pointer coordinate. Centering keeps the result predictable.
+  if (detail === 0 || rect.width === 0 || rect.height === 0) return { x: 50, y: 50 };
+  return {
+    x: ((clientX - rect.left) / rect.width) * 100,
+    y: ((clientY - rect.top) / rect.height) * 100,
+  };
+}
+
+export function nextZoomState(current: ZoomState, origin: Pick<ZoomState, "x" | "y">): ZoomState {
+  return current.on ? { on: false, x: 50, y: 50 } : { on: true, ...origin };
+}
+
 /**
- * Full-screen product image viewer. Click/tap the image to zoom 2× toward the
- * pointer; arrow keys / on-screen controls move between images. Portal + focus
- * trap + ESC + backdrop close, mirroring the site's modal pattern. Mobile also
- * gets native pinch-zoom via touch-action on the zoom layer.
+ * Full-screen product image viewer. Activate the image to zoom 2× toward the
+ * pointer (or its center from a keyboard); arrow keys / on-screen controls move
+ * between images. Portal + focus trap + ESC + backdrop close, mirroring the
+ * site's modal pattern. Mobile also gets native pinch-zoom via touch-action on
+ * the zoom layer.
  */
 export function ImageLightbox({ images, index, alt, open, onClose, onIndexChange }: ImageLightboxProps) {
   const [mounted, setMounted] = useState(false);
-  const [zoom, setZoom] = useState<{ on: boolean; x: number; y: number }>({ on: false, x: 50, y: 50 });
+  const [zoom, setZoom] = useState<ZoomState>({ on: false, x: 50, y: 50 });
   const panelRef = useRef<HTMLDivElement>(null);
   useEffect(() => setMounted(true), []);
 
@@ -63,11 +89,10 @@ export function ImageLightbox({ images, index, alt, open, onClose, onIndexChange
   const src = images[index];
   if (!src) return null;
 
-  const toggleZoom = (e: React.MouseEvent<HTMLDivElement>) => {
+  const toggleZoom = (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setZoom((z) => (z.on ? { on: false, x: 50, y: 50 } : { on: true, x, y }));
+    const origin = zoomOriginForActivation({ detail: e.detail, clientX: e.clientX, clientY: e.clientY, rect });
+    setZoom((current) => nextZoomState(current, origin));
   };
 
   return createPortal(
@@ -83,9 +108,12 @@ export function ImageLightbox({ images, index, alt, open, onClose, onIndexChange
       </div>
 
       <div className="relative flex flex-1 items-center justify-center overflow-hidden px-4 pb-4">
-        <div
+        <button
+          type="button"
           onClick={toggleZoom}
-          className={`relative h-full w-full max-w-5xl ${zoom.on ? "cursor-zoom-out" : "cursor-zoom-in"}`}
+          aria-pressed={zoom.on}
+          aria-label={zoom.on ? "Image zoomed to 200 percent. Activate to zoom out" : "Activate to zoom in to 200 percent"}
+          className={`relative h-full w-full max-w-5xl border-0 bg-transparent p-0 text-left ${zoom.on ? "cursor-zoom-out" : "cursor-zoom-in"}`}
           style={{ touchAction: "pinch-zoom" }}
         >
           <ResilientImage
@@ -95,9 +123,11 @@ export function ImageLightbox({ images, index, alt, open, onClose, onIndexChange
             sizes="100vw"
             className={`${isPrintfulImage(src) ? "object-contain" : "object-contain"} transition-transform duration-200`}
             style={zoom.on ? { transform: "scale(2)", transformOrigin: `${zoom.x}% ${zoom.y}%` } : undefined}
-            priority
+            loading="eager"
+            fade={false}
           />
-        </div>
+        </button>
+        <p className="sr-only" aria-live="polite">{zoom.on ? "Image zoomed to 200 percent." : "Image zoom reset."}</p>
 
         {images.length > 1 && (
           <>

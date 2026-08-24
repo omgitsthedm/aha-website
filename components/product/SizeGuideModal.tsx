@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { SizeTable } from "@/lib/printful/size-table";
 import type { SizeGuide } from "@/lib/types/product";
 
@@ -31,22 +31,60 @@ export function sizeGuideToTable(guide: SizeGuide | undefined): SizeTable | null
   return { unit: "in", sizes: guide.measurements.map((m) => m.size), rows };
 }
 
+type Focusable = Pick<HTMLElement, "focus">;
+type TrapEvent = Pick<KeyboardEvent, "key" | "shiftKey" | "preventDefault">;
+
+/** Focus the first meaningful control when a dialog opens, and restore its trigger on close. */
+export function focusModalTarget(target: Focusable | null | undefined) {
+  target?.focus();
+}
+
+/** Keep Tab inside a modal without retaining stale nodes when its contents change. */
+export function trapModalFocus(event: TrapEvent, activeElement: unknown, focusable: readonly Focusable[]) {
+  if (event.key !== "Tab" || focusable.length === 0) return false;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && activeElement === first) {
+    event.preventDefault();
+    last.focus();
+    return true;
+  }
+  if (!event.shiftKey && activeElement === last) {
+    event.preventDefault();
+    first.focus();
+    return true;
+  }
+  return false;
+}
+
 export function SizeGuideModal({ isOpen, onClose, fitDescription, careInstructions, catalogVariantId, sizeGuide }: SizeGuideModalProps) {
   const committed = sizeGuideToTable(sizeGuide);
   const [fetched, setFetched] = useState<SizeTable | null>(null);
   const [loading, setLoading] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const table = committed ?? fetched;
 
   useEffect(() => {
     if (!isOpen) return;
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      const focusable = Array.from(panelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])') ?? []);
+      trapModalFocus(e, document.activeElement, focusable);
     };
     document.addEventListener("keydown", handleEscape);
     document.body.style.overflow = "hidden";
+    focusModalTarget(closeRef.current);
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      focusModalTarget(previouslyFocused);
     };
   }, [isOpen, onClose]);
 
@@ -66,12 +104,12 @@ export function SizeGuideModal({ isOpen, onClose, fitDescription, careInstructio
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Size and fit guide">
-      <div className="absolute inset-0 bg-void/80" onClick={onClose} />
-      <div className="relative z-10 max-h-[85vh] w-full max-w-lg overflow-y-auto border border-border/60 bg-void p-6 shadow-2xl sm:p-8">
+    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+      <button type="button" aria-label="Close size and fit guide" className="absolute inset-0 h-full w-full cursor-default bg-void/80" onClick={onClose} />
+      <div ref={panelRef} className="relative z-10 max-h-[85vh] w-full max-w-lg overscroll-contain overflow-y-auto border border-border/60 bg-void p-6 shadow-2xl sm:p-8" role="dialog" aria-modal="true" aria-labelledby="size-guide-title">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="font-display text-2xl font-bold uppercase tracking-[-0.03em] text-cream">Size &amp; fit</h2>
-          <button type="button" onClick={onClose} className="min-h-11 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted hover:text-cream">Close</button>
+          <h2 id="size-guide-title" className="font-display text-2xl font-bold uppercase tracking-[-0.03em] text-cream">Size &amp; fit</h2>
+          <button ref={closeRef} type="button" onClick={onClose} className="min-h-11 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted hover:text-cream">Close</button>
         </div>
         <div className="space-y-5 text-sm leading-relaxed text-muted">
           <div>
