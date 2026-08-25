@@ -83,7 +83,12 @@ const LFC_CSS = String.raw`/* ==================================================
   opacity: 0.75;
 }
 
+/* Both waves stack on the same waterline. Without position they are in-flow
+   block siblings, so the front wave lands a full box below the clipped .lfc-sea
+   and never renders — only the faint back wave shows. */
 .lfc-wave {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
