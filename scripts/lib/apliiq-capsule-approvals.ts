@@ -12,6 +12,8 @@ export interface CapsuleApprovalMetadata {
   sample?: CapsuleApprovalRecord;
 }
 
+export type CapsulePrivateLabelStatus = "not-attached";
+
 export interface CapsuleVariantProductionIdentity {
   designId: number;
   sku: string;
@@ -19,7 +21,7 @@ export interface CapsuleVariantProductionIdentity {
   artworkUrl: string;
   service: string;
   printNote: string;
-  privateLabel: string;
+  privateLabelStatus: CapsulePrivateLabelStatus;
   sizeGuideId: string;
 }
 
@@ -33,7 +35,7 @@ export interface CapsuleProductProductionIdentity {
   artworkUrl: string;
   service: string;
   printNote: string;
-  privateLabel: string;
+  privateLabelStatus: CapsulePrivateLabelStatus;
   sizeGuideId: string;
   variants: Array<{ size: string; sku: string }>;
 }
@@ -56,7 +58,7 @@ function approvedDate(value: unknown, path: string): string {
  */
 export function capsuleApprovalFingerprint(identity: CapsuleProductProductionIdentity): string {
   const canonical = {
-    version: 1,
+    version: 2,
     slug: identity.slug,
     productCode: identity.productCode,
     colorId: identity.colorId,
@@ -66,7 +68,7 @@ export function capsuleApprovalFingerprint(identity: CapsuleProductProductionIde
     artworkUrl: identity.artworkUrl,
     service: identity.service,
     printNote: identity.printNote,
-    privateLabel: identity.privateLabel,
+    privateLabelStatus: identity.privateLabelStatus,
     sizeGuideId: identity.sizeGuideId,
     variants: identity.variants
       .map(({ size, sku }) => ({ size, sku }))
@@ -118,16 +120,14 @@ export function mapEntryMatchesProductionIdentity(
     service?: string;
     note?: string;
   } | undefined;
-  const neckLabel = prior.apliiqPrivateLabelSnapshot?.neckLabel as {
-    subscription?: string;
-  } | undefined;
+  const privateLabelStatus = prior.apliiqPrivateLabelSnapshot?.status;
   return prior.apliiqProductId === String(current.designId)
     && prior.apliiqSku === current.sku
     && front?.apliiqArtworkId === current.artworkId
     && front?.artworkUrl === current.artworkUrl
     && front?.service === current.service
     && front?.note === current.printNote
-    && neckLabel?.subscription === current.privateLabel
+    && privateLabelStatus === current.privateLabelStatus
     && prior.apliiqSizeGuideReference === current.sizeGuideId;
 }
 

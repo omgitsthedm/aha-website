@@ -1,16 +1,17 @@
 /**
  * APLIIQ capsule tool — the one path from "art + blank" to a sellable variant.
  *
- *   npx tsx scripts/apliiq-capsule.ts create [--apply] [--only <slug>]
- *     For each product in data/apliiq-capsule.json: POST /Artwork (hosted PNG),
- *     then POST /Design with the artwork attached to the front location and the
- *     hosted mockup as the design image. Records design ids and per-size APQ SKUs
- *     in data/apliiq-capsule-designs.json. Dry-run without --apply.
+ *   npx tsx scripts/apliiq-capsule.ts create --slug <slug> [--apply]
+ *     For exactly one product in data/apliiq-capsule.json: POST /Artwork
+ *     (hosted PNG), then POST /Design with the artwork attached to the front
+ *     location and the hosted mockup as the design image. Records design ids
+ *     and per-size APQ SKUs in data/apliiq-capsule-designs.json. Dry-run
+ *     without --apply.
  *
  *   npx tsx scripts/apliiq-capsule.ts map --slug <slug> [--apply]
  *     Converges only the selected capsule entries in data/apliiq-map.json from
  *     the recorded design plus live blank pricing (GET /Product): item cost =
- *     blank + DTF + private label + plus-size fee, real per-size weight, and a
+ *     blank + DTF + plus-size fee, real per-size weight, and a
  *     landed-cost margin computed by the storefront gate. It is a dry run
  *     unless --apply is present, preserves unrelated entries and refuses to
  *     auto-delete stale mappings.
@@ -25,6 +26,7 @@
  */
 import { randomUUID } from "node:crypto";
 import { readFileSync, renameSync, writeFileSync } from "node:fs";
+import { basename } from "node:path";
 import { createApliiqAuthorization } from "@/lib/apliiq/auth";
 import { isApliiqSku } from "@/lib/apliiq/orders";
 import { resolveApliiqLandedCost } from "@/lib/commerce/landed-cost";
@@ -41,6 +43,11 @@ import {
   isCompleteDesignRecord,
   type DesignCreationState,
 } from "@/scripts/lib/apliiq-capsule-creation";
+import {
+  assertGitPublishContinuationSafety,
+  assertGitPublishSafety,
+  preflightApliiqProduct,
+} from "@/scripts/apliiq-product-publisher";
 
 const KEY = process.env.APLIIQ_API_KEY as string;
 const SEC = process.env.APLIIQ_SHARED_SECRET as string;
@@ -49,10 +56,10 @@ const DESIGNS_PATH = "data/apliiq-capsule-designs.json";
 const MAP_PATH = "data/apliiq-map.json";
 const MIN_MARGIN_RATIO = Number(process.env.AHA_MIN_MARGIN_RATIO ?? "0.35");
 
-// APLIIQ published add-ons, cents. DTF is $7.49 on every dropship garment; the
-// sewn private label is $2.50 per unit.
+// APLIIQ published add-ons, cents. DTF is $7.49 on every dropship garment.
+// The current API designs send Subscriptions: [] and therefore must not claim
+// or cost a private-label service.
 const DTF_CENTS = 749;
-const PRIVATE_LABEL_CENTS = 250;
 
 interface CapsuleProduct {
   slug: string;
@@ -70,8 +77,25 @@ interface CapsuleProduct {
   squareItemId?: string;
   approvals?: CapsuleApprovalMetadata;
 }
-interface CapsuleSpec { colorId: number; service: string; privateLabel: string; products: CapsuleProduct[] }
+interface CapsuleSpec { colorId: number; service: string; privateLabelStatus: "not-attached"; products: CapsuleProduct[] }
 interface DesignsFile { _generated: string; designs: Record<string, DesignCreationState> }
+
+export type ApliiqCapsuleCommand = "create" | "map";
+export type ParsedApliiqCapsuleArgs =
+  | { command: ApliiqCapsuleCommand; slug: string; apply: boolean }
+  | { command: "delete"; ids: string[]; apply: boolean };
+
+export function privateLabelSnapshot(status: CapsuleSpec["privateLabelStatus"]): Record<string, unknown> {
+  if (status !== "not-attached") throw new Error("Private-label attachment is not implemented or provider-verified.");
+  return { status };
+}
+
+export function apliiqProviderItemCostCents(blankPrice: number, plusSizeFee: number): number {
+  if (!Number.isFinite(blankPrice) || blankPrice < 0 || !Number.isFinite(plusSizeFee) || plusSizeFee < 0) {
+    throw new Error("APLIIQ blank and plus-size prices must be finite nonnegative amounts.");
+  }
+  return Math.round(blankPrice * 100) + DTF_CENTS + Math.round(plusSizeFee * 100);
+}
 
 async function call(method: string, path: string, body?: unknown) {
   if (!KEY || !SEC) throw new Error("APLIIQ_API_KEY and APLIIQ_SHARED_SECRET are required.");
@@ -101,13 +125,15 @@ function persistDesigns(designs: DesignsFile): void {
 }
 
 async function create(apply: boolean, only?: string) {
+  if (!only) throw new Error("create requires one selected --slug");
   const spec = readJson<CapsuleSpec>(SPEC_PATH);
+  privateLabelSnapshot(spec.privateLabelStatus);
   let designs: DesignsFile;
   try { designs = readJson<DesignsFile>(DESIGNS_PATH); } catch { designs = { _generated: "", designs: {} }; }
-  if (only && !spec.products.some((product) => product.slug === only)) throw new Error(`${only} is not in ${SPEC_PATH}`);
+  if (!spec.products.some((product) => product.slug === only)) throw new Error(`${only} is not in ${SPEC_PATH}`);
   let created = 0;
   for (const p of spec.products) {
-    if (only && p.slug !== only) continue;
+    if (p.slug !== only) continue;
     const existing = designs.designs[p.slug];
     if (!apply) {
       if (existing) assertApliiqDesignIdentity(p, spec, existing);
@@ -156,6 +182,7 @@ function withoutVerificationTimes(entry: ApliiqMapEntry): unknown {
 async function map(apply: boolean, only?: string) {
   if (!only) throw new Error("map requires one selected --slug");
   const spec = readJson<CapsuleSpec>(SPEC_PATH);
+  privateLabelSnapshot(spec.privateLabelStatus);
   const p = spec.products.find((product) => product.slug === only);
   if (!p) throw new Error(`${only} is not in ${SPEC_PATH}`);
   const designs = readJson<DesignsFile>(DESIGNS_PATH).designs;
@@ -175,7 +202,7 @@ async function map(apply: boolean, only?: string) {
     artworkUrl: p.artworkUrl,
     service: spec.service,
     printNote: p.printNote,
-    privateLabel: spec.privateLabel,
+    privateLabelStatus: spec.privateLabelStatus,
     sizeGuideId: p.sizeGuideId,
     variants: d.variants.map(({ size, sku }) => ({ size, sku })),
   };
@@ -191,7 +218,7 @@ async function map(apply: boolean, only?: string) {
       artworkUrl: p.artworkUrl,
       service: spec.service,
       printNote: p.printNote,
-      privateLabel: spec.privateLabel,
+      privateLabelStatus: spec.privateLabelStatus,
       sizeGuideId: p.sizeGuideId,
     }, expectedApprovalFingerprint));
   }
@@ -208,7 +235,7 @@ async function map(apply: boolean, only?: string) {
     desiredKeys.add(key);
     const retail = p.sizeRetail?.[sizeLabel(v.size)] ?? p.retailPrice;
     const weightOz = Math.round(Number(String(v.weight).replace(/[^\d.]/g, "")) * 100) / 100;
-    const itemCost = Math.round(Number(blank.Price) * 100) + DTF_CENTS + PRIVATE_LABEL_CENTS + Math.round(v.plusSizeFee * 100);
+    const itemCost = apliiqProviderItemCostCents(Number(blank.Price), v.plusSizeFee);
     const prior = existing[key];
     const approval = approvalsByKey.get(key)!;
     const base: ApliiqMapEntry = {
@@ -217,7 +244,7 @@ async function map(apply: boolean, only?: string) {
       apliiqProductId: String(d.designId),
       apliiqVariantId: `${d.designId}-${sizeKey(v.size)}`,
       apliiqDecorationSnapshot: { front: { method: "DTF", service: spec.service, apliiqArtworkId: d.artworkId, artworkUrl: p.artworkUrl, note: p.printNote } },
-      apliiqPrivateLabelSnapshot: { neckLabel: { subscription: spec.privateLabel, artworkUrl: "https://afterhoursagenda.com/art/aha-neck-label.svg" } },
+      apliiqPrivateLabelSnapshot: privateLabelSnapshot(spec.privateLabelStatus),
       apliiqAssetUrls: [p.artworkUrl, p.mockupUrl],
       apliiqRegionAvailability: ["US"],
       apliiqSizeGuideReference: p.sizeGuideId,
@@ -268,29 +295,96 @@ async function map(apply: boolean, only?: string) {
   }
 }
 
-async function main() {
-  const [command, ...rest] = process.argv.slice(2);
+export function parseApliiqCapsuleArgs(argv: string[]): ParsedApliiqCapsuleArgs {
+  const [command, ...rest] = argv;
+  if (command === "create" || command === "map") {
+    let slug = "";
+    let apply = false;
+    for (let index = 0; index < rest.length; index++) {
+      const arg = rest[index];
+      if (arg === "--slug" || arg === "--only") {
+        if (slug) throw new Error(`${command} accepts exactly one selected slug`);
+        slug = rest[++index] ?? "";
+      } else if (arg === "--apply") {
+        if (apply) throw new Error(`${command} accepts --apply only once`);
+        apply = true;
+      } else {
+        throw new Error(`Unknown ${command} argument: ${arg}`);
+      }
+    }
+    if (!slug || slug.startsWith("--")) throw new Error(`${command} requires one selected --slug`);
+    return { command, slug, apply };
+  }
+  if (command === "delete") {
+    const [rawIds, ...flags] = rest;
+    if (!rawIds || flags.some((flag) => flag !== "--apply") || flags.filter((flag) => flag === "--apply").length > 1) {
+      throw new Error("delete requires one comma-separated design-id list and optional --apply");
+    }
+    const ids = rawIds.split(",").map((id) => id.trim()).filter(Boolean);
+    if (ids.length === 0 || ids.some((id) => !/^\d+$/.test(id))) {
+      throw new Error("delete design ids must be positive numeric provider ids");
+    }
+    return { command, ids, apply: flags.includes("--apply") };
+  }
+  throw new Error("usage: apliiq-capsule.ts create|map --slug <slug> [--apply] | delete <ids> [--apply]");
+}
+
+export function assertApliiqExecutionSafety(root: string, continuation?: unknown): string {
+  return continuation === undefined
+    ? assertGitPublishSafety(root)
+    : assertGitPublishContinuationSafety(root, continuation);
+}
+
+export type SquareCapsuleMappingVerifier = (slug: string) => Promise<unknown>;
+
+/** A sale-ready map may be written only after a fresh provider GET verifies every Square id. */
+export async function assertApliiqMapActivationReady(
+  root: string,
+  slug: string,
+  verifySquare?: SquareCapsuleMappingVerifier,
+): Promise<void> {
+  preflightApliiqProduct(root, slug, "complete");
+  const verifier = verifySquare
+    ?? (await import("./square-capsule.mjs")).verifySquareCapsuleMapping;
+  await verifier(slug);
+}
+
+export async function applyApliiqCapsuleCommand(
+  command: ApliiqCapsuleCommand,
+  slug: string,
+  continuation?: unknown,
+): Promise<void> {
+  const root = process.cwd();
+  assertApliiqExecutionSafety(root, continuation);
+  preflightApliiqProduct(root, slug, "source");
   if (command === "create") {
-    const only = rest.includes("--only") ? rest[rest.indexOf("--only") + 1] : undefined;
-    await create(rest.includes("--apply"), only);
-  } else if (command === "map") {
-    const only = rest.includes("--slug")
-      ? rest[rest.indexOf("--slug") + 1]
-      : rest.includes("--only") ? rest[rest.indexOf("--only") + 1] : undefined;
-    await map(rest.includes("--apply"), only);
-  } else if (command === "delete" && rest[0]) {
-    const ids = rest[0].split(",").map((id) => id.trim()).filter(Boolean);
-    if (!rest.includes("--apply")) {
-      console.log(`(dry run — would delete APLIIQ design(s) ${ids.join(", ")}; pass --apply only after separate review)`);
-      return;
-    }
-    for (const id of ids) {
-      await call("DELETE", `/Design/${id}`);
-      console.log(`  deleted design ${id}`);
-    }
-  } else {
-    console.error("usage: apliiq-capsule.ts create [--apply] [--only slug] | map --slug <slug> [--apply] | delete <ids> [--apply]");
-    process.exit(2);
+    await create(true, slug);
+    return;
+  }
+  await assertApliiqMapActivationReady(root, slug);
+  await map(true, slug);
+}
+
+async function main() {
+  const args = parseApliiqCapsuleArgs(process.argv.slice(2));
+  if (args.command !== "delete") {
+    if (args.apply) await applyApliiqCapsuleCommand(args.command, args.slug);
+    else if (args.command === "create") await create(false, args.slug);
+    else await map(false, args.slug);
+    return;
+  }
+
+  if (!args.apply) {
+    console.log(`(dry run — would delete APLIIQ design(s) ${args.ids.join(", ")}; pass --apply only after separate review)`);
+    return;
+  }
+  assertApliiqExecutionSafety(process.cwd());
+  for (const id of args.ids) {
+    await call("DELETE", `/Design/${id}`);
+    console.log(`  deleted design ${id}`);
   }
 }
-main().catch((e) => { console.error(e.message); process.exit(1); });
+
+if (process.argv[1] && basename(process.argv[1]) === "apliiq-capsule.ts") {
+  main().catch((error) => { console.error(error instanceof Error ? error.message : error); process.exit(1); });
+}

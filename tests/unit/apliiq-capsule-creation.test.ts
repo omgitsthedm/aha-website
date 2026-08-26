@@ -63,6 +63,9 @@ describe("APLIIQ capsule creation checkpoints", () => {
       variants: [{ size: "m", sku: "APQ-202S7A1" }],
     });
     expect(callProvider.mock.calls.map((call) => call[1])).toEqual(["/Artwork", "/Design"]);
+    expect(callProvider).toHaveBeenNthCalledWith(2, "POST", "/Design", expect.objectContaining({
+      Subscriptions: [],
+    }));
   });
 
   it("reuses a persisted artwork after interruption instead of posting a duplicate", async () => {

@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildApliiqProductionIdentity,
   capsuleCreationFingerprint,
@@ -18,6 +18,13 @@ import {
   preflightApliiqProduct,
   publisherContinuationForArgs,
 } from "@/scripts/apliiq-product-publisher";
+import {
+  apliiqProviderItemCostCents,
+  assertApliiqExecutionSafety,
+  assertApliiqMapActivationReady,
+  parseApliiqCapsuleArgs,
+  privateLabelSnapshot,
+} from "@/scripts/apliiq-capsule";
 import { assertSquareApplyApproval, assertSquareExecutionSafety } from "@/scripts/square-capsule.mjs";
 
 const roots: string[] = [];
@@ -62,7 +69,7 @@ function fixture(overrides: {
     artworkUrl,
     service: "transfer_print",
     printNote: "Front print.",
-    privateLabel: "SB-2-155690",
+    privateLabelStatus: "not-attached",
     sizeGuideId: "sg-test",
     variants: [
       { sku: overrides.sku ?? "APQ-22S6A1", size: "s" },
@@ -100,7 +107,7 @@ function fixture(overrides: {
   writeFileSync(join(root, "data", "apliiq-capsule.json"), JSON.stringify({
     colorId: 50,
     service: "transfer_print",
-    privateLabel: "SB-2-155690",
+    privateLabelStatus: "not-attached",
     products: [product],
   }));
   const recordFields = {
@@ -186,6 +193,17 @@ describe("APLIIQ product publisher preflight", () => {
 describe("publisher CLI safety", () => {
   it("requires an explicit selected slug", () => {
     expect(() => parsePublisherArgs([])).toThrow("--slug");
+    expect(() => parseApliiqCapsuleArgs(["create", "--apply"])).toThrow("--slug");
+    expect(() => parseApliiqCapsuleArgs(["map", "--apply"])).toThrow("--slug");
+  });
+
+  it("keeps the lower-level APLIIQ CLI slug-scoped and truthful about unattached labels", () => {
+    expect(parseApliiqCapsuleArgs(["create", "--slug", "test-tee"])).toEqual({
+      command: "create", slug: "test-tee", apply: false,
+    });
+    expect(() => parseApliiqCapsuleArgs(["create", "--slug", "one", "--only", "two"])).toThrow("exactly one");
+    expect(privateLabelSnapshot("not-attached")).toEqual({ status: "not-attached" });
+    expect(apliiqProviderItemCostCents(10, 0)).toBe(1749);
   });
 
   it("is dry-run by default", () => {
@@ -203,22 +221,46 @@ describe("publisher CLI safety", () => {
     execFileSync("git", ["init", "-q", "-b", "feature/publish"], { cwd: root });
     execFileSync("git", ["-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-q", "--allow-empty", "-m", "Initial"], { cwd: root });
     expect(assertGitPublishSafety(root)).toBe("feature/publish");
+    expect(assertApliiqExecutionSafety(root)).toBe("feature/publish");
     expect(publisherContinuationForArgs(root, parsePublisherArgs(["--slug", "test-tee"]))).toBeUndefined();
     const continuation = createPublisherContinuation(root);
     expect(continuation.branch).toBe("feature/publish");
     mkdirSync(join(root, "data"), { recursive: true });
     writeFileSync(join(root, "data", "apliiq-capsule-designs.json"), "{}");
     expect(assertGitPublishContinuationSafety(root, continuation)).toBe("feature/publish");
+    expect(assertApliiqExecutionSafety(root, continuation)).toBe("feature/publish");
     expect(assertSquareExecutionSafety(root, continuation)).toBe("feature/publish");
     expect(() => assertSquareExecutionSafety(root, { branch: continuation.branch, head: continuation.head })).toThrow(/in-process capability/);
     rmSync(join(root, "data"), { recursive: true });
     writeFileSync(join(root, "dirty.txt"), "dirty");
     expect(() => publisherContinuationForArgs(root, parsePublisherArgs(["--slug", "test-tee", "--apply"]))).toThrow("completely clean");
+    expect(() => assertApliiqExecutionSafety(root)).toThrow("completely clean");
     expect(() => assertSquareExecutionSafety(root)).toThrow("completely clean");
     expect(() => assertGitPublishContinuationSafety(root, continuation)).toThrow(/unexpected changed files/);
     rmSync(join(root, "dirty.txt"));
     execFileSync("git", ["switch", "-q", "-c", "main"], { cwd: root });
     expect(() => publisherContinuationForArgs(root, parsePublisherArgs(["--slug", "test-tee", "--apply"]))).toThrow(/main.*forbidden/);
     expect(() => assertSquareExecutionSafety(root)).toThrow(/main.*forbidden/);
+    expect(() => assertApliiqExecutionSafety(root)).toThrow(/main.*forbidden/);
+  });
+
+  it("refuses to activate an APLIIQ map before a provider GET verifies Square mappings", async () => {
+    await expect(assertApliiqMapActivationReady(
+      fixture({ omitSquare: true }),
+      "test-tee",
+      async () => { throw new Error("provider verifier must not run before local preflight"); },
+    )).rejects.toThrow(/Square item and variation mappings/);
+
+    const forgedIds = fixture();
+    const rejectForgedIds = vi.fn(async () => {
+      throw new Error("Square item mapping SQUARE-ITEM is stale or does not resolve to the expected live item");
+    });
+    await expect(assertApliiqMapActivationReady(forgedIds, "test-tee", rejectForgedIds))
+      .rejects.toThrow(/Square item mapping SQUARE-ITEM is stale/);
+    expect(rejectForgedIds).toHaveBeenCalledExactlyOnceWith("test-tee");
+
+    const verifyProviderIds = vi.fn(async () => ({ id: "SQUARE-ITEM" }));
+    await expect(assertApliiqMapActivationReady(forgedIds, "test-tee", verifyProviderIds)).resolves.toBeUndefined();
+    expect(verifyProviderIds).toHaveBeenCalledExactlyOnceWith("test-tee");
   });
 });
