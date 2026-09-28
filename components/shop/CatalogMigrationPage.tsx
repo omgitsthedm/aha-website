@@ -14,18 +14,19 @@ export function CatalogMigrationPage() {
     <div className="px-4 pb-16 pt-28 sm:px-6 md:pt-32">
       <div className="mx-auto max-w-4xl">
         <PageHeader
-          eyebrow="Store update"
-          title="The previous collection is archived"
-          description="We’re preparing the next After Hours Agenda release. Shopping is paused while the new collection is set up."
+          eyebrow="Shop update"
+          title="Shop temporarily unavailable"
+          description="Shopping is temporarily unavailable. For help with an existing order, contact us."
           align="center"
         />
-        <section className="corner-cut crease-rule bg-charcoal px-6 py-12 text-center sm:px-10 md:py-16" aria-label="Next release">
+        <section className="corner-cut crease-rule bg-charcoal px-6 py-12 text-center sm:px-10 md:py-16" aria-label="Updates">
           <SheepMark className="mx-auto mb-5 w-16 text-accent" />
           <p className="mx-auto max-w-xl text-sm leading-relaxed text-muted md:text-base">
-            Join the Agenda for the next release while we get it ready.
+            Sign up for After Hours Agenda updates while the shop is unavailable.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
-            <Link href="/#dispatch-heading" className="btn-primary min-h-11 px-6 py-3 text-xs">Get release updates</Link>
+            <Link href="/#dispatch-heading" className="btn-primary min-h-11 px-6 py-3 text-xs">Get updates</Link>
+            <Link href="/contact" className="btn-secondary min-h-11 px-6 py-3 text-xs">Contact support</Link>
           </div>
         </section>
       </div>
@@ -36,8 +37,8 @@ export function CatalogMigrationPage() {
 /** Keep retired catalog URLs out of search while the store is intentionally dark. */
 export function catalogMigrationMetadata(path: string): Metadata {
   return buildMetadata({
-    title: "Store update",
-    description: "The previous After Hours Agenda collection is archived while the next release is prepared.",
+    title: "Shop temporarily unavailable",
+    description: "The After Hours Agenda shop is temporarily unavailable.",
     path,
     robots: { index: false, follow: true },
   });

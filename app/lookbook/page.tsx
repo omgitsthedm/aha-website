@@ -5,6 +5,7 @@ import { buildMetadata } from "@/components/seo/buildMetadata";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { GetOnTheList } from "@/components/homepage/GetOnTheList";
 import { loadBrandImagery } from "@/lib/content/brand-imagery";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 export const metadata = buildMetadata({
   title: "Lookbook",
@@ -14,6 +15,7 @@ export const metadata = buildMetadata({
 
 export default function LookbookPage() {
   const { lookbook, lookbookCover } = loadBrandImagery();
+  const storefrontOpen = isStorefrontPublic();
 
   return (
     <div className="pb-12">
@@ -39,12 +41,12 @@ export default function LookbookPage() {
                 {shot.caption && (
                   <p className="mt-2 flex items-baseline justify-between gap-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted">
                     <span>{shot.caption}</span>
-                    {shot.productSlug && <span className="text-accent">View piece →</span>}
+                    {storefrontOpen && shot.productSlug && <span className="text-accent">View piece →</span>}
                   </p>
                 )}
               </>
             );
-            return shot.productSlug ? (
+            return storefrontOpen && shot.productSlug ? (
               <Link key={shot.src + index} href={`/product/${shot.productSlug}`} className="frame image-hover-zoom group block break-inside-avoid focus-visible:outline-offset-4">
                 {frame}
               </Link>
@@ -57,7 +59,7 @@ export default function LookbookPage() {
         <div className="mt-16 border-t border-border/40 pt-12 lg:mt-20">
           <p className="editorial-title max-w-4xl text-[clamp(2rem,5vw,4.5rem)] text-cream">Made for you, <em>and the people you love.</em></p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/shop" className="btn-primary px-7">Shop the collection</Link>
+            <Link href={storefrontOpen ? "/shop" : "/#dispatch-heading"} className="btn-primary px-7">{storefrontOpen ? "Shop the collection" : "Get updates"}</Link>
             <Link href="/about" className="btn-secondary px-7">Our story</Link>
           </div>
         </div>
