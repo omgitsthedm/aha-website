@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { SELLABLE_PRODUCT_SLUGS } from "../../lib/commerce/sellable-slugs.generated";
+import { isStorefrontPublic } from "../../lib/commerce/catalog-policy";
 
 // The one committed answer to "what is sellable" — the same set the storefront
 // and the cart purge read, so a product cannot be added without this pack
@@ -13,7 +14,7 @@ const CAPSULE_PDP_LINKS = [...SELLABLE_PRODUCT_SLUGS].map((slug) => `/product/${
 test("@catalog home keeps acquisition paths open without shopping controls", async ({ page }) => {
   const response = await page.goto("/");
   expect(response?.status()).toBe(200);
-  await expect(page).toHaveTitle(/After Hours Agenda | For the dreamers and the doers/i);
+  await expect(page).toHaveTitle(/After Hours Agenda \| For the dreamers and the doers/i);
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/dreamers and the doers/i);
   await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')).toHaveAttribute("content", "#FF6B6B");
   await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
@@ -167,6 +168,49 @@ test("@catalog catalog product paths stay unavailable while the shop is closed",
   await expect(page.getByTestId("sticky-buy-bar")).toHaveCount(0);
 });
 
+// Keep this interaction regression ready for the deliberate reopening decision.
+// The committed policy, rather than an environment override, decides whether it runs.
+test.describe("enabled catalog accessibility regression", () => {
+  test.skip(!isStorefrontPublic(), "Requires the committed catalog policy to reopen commerce.");
+
+  test("@product size and image modals keep keyboard users contained and informed", async ({ page }) => {
+    await page.goto("/product/black-sheep-tee");
+
+    const sizeGuideTrigger = page.getByRole("button", { name: "Size guide" });
+    await sizeGuideTrigger.focus();
+    await page.keyboard.press("Enter");
+    const sizeGuide = page.getByRole("dialog", { name: "Size & fit" });
+    const sizeGuideClose = sizeGuide.getByRole("button", { name: "Close" });
+    await expect(sizeGuideClose).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(sizeGuideClose).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(sizeGuide).toHaveCount(0);
+    await expect(sizeGuideTrigger).toBeFocused();
+
+    const viewerTrigger = page.getByRole("button", { name: "Zoom & view full" });
+    await viewerTrigger.focus();
+    await page.keyboard.press("Enter");
+    const viewer = page.getByRole("dialog", { name: "Black Sheep — image viewer" });
+    await expect(viewer.getByRole("button", { name: "Close image viewer" })).toBeFocused();
+    const zoom = viewer.locator('button[aria-pressed]');
+    // WebKit follows the host macOS full-keyboard-access preference for Tab.
+    // Focus the native button directly so every engine exercises its keyboard
+    // activation contract without making a machine preference part of the test.
+    await zoom.focus();
+    await expect(zoom).toBeFocused();
+    await expect(zoom).toHaveAccessibleName("Activate to zoom in to 200 percent");
+    await expect(zoom).toHaveAttribute("aria-pressed", "false");
+    await page.keyboard.press("Space");
+    await expect(zoom).toHaveAttribute("aria-pressed", "true");
+    await expect(zoom).toHaveAccessibleName("Image zoomed to 200 percent. Activate to zoom out");
+    await expect(viewer.getByText("Image zoomed to 200 percent.")).toHaveCount(1);
+    await page.keyboard.press("Escape");
+    await expect(viewer).toHaveCount(0);
+    await expect(viewerTrigger).toBeFocused();
+  });
+});
+
 test("@product archived product routes return a noindex 404 without buy controls", async ({ page }) => {
   const response = await page.goto("/product/dont-fuck-fascists-shirt");
   expect(response?.status()).toBe(404);
@@ -223,6 +267,25 @@ test("@checkout checkout stays paused and rejects a saved legacy line before pay
   expect(quote.status()).toBeGreaterThanOrEqual(400);
   const body = await quote.json();
   expect(JSON.stringify(body)).toMatch(/store is being updated|cannot be purchased/i);
+});
+
+test("@cart unavailable browser storage still keeps the support surface usable", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "Storage failure handling is browser-independent.");
+  await page.addInitScript(() => {
+    const getItem = Storage.prototype.getItem;
+    const setItem = Storage.prototype.setItem;
+    Storage.prototype.getItem = function (key: string) {
+      if (key === "aha-cart") throw new DOMException("Storage unavailable", "SecurityError");
+      return getItem.call(this, key);
+    };
+    Storage.prototype.setItem = function (key: string, value: string) {
+      if (key === "aha-cart") throw new DOMException("Storage unavailable", "SecurityError");
+      return setItem.call(this, key, value);
+    };
+  });
+  await page.goto("/cart");
+  await expect(page.getByRole("heading", { level: 1, name: "Shop temporarily unavailable" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Get updates" })).toBeVisible();
 });
 
 test("@operations order tracking fails closed without a match", async ({ page }, testInfo) => {
