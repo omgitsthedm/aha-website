@@ -11,6 +11,7 @@ import { buildMetadata } from "@/components/seo/buildMetadata";
 import { loadBrandImagery } from "@/lib/content/brand-imagery";
 import { splitProductName } from "@/lib/utils/product-name";
 import { BRAND_LINE_EMPHASIS, BRAND_LINE_LEAD, BRAND_META, BRAND_SINCE, BRAND_SUB } from "@/lib/content/brand-copy";
+import { isStorefrontPublic } from "@/lib/commerce/catalog-policy";
 
 // Same ISR window as /shop: the grid below reads the live Square-backed
 // catalog, so the front door and the shop can never disagree about what sells.
@@ -27,10 +28,14 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
+  const storefrontOpen = isStorefrontPublic();
   const [products, imagery] = await Promise.all([getAllProducts(), Promise.resolve(loadBrandImagery())]);
   const lookbookTeaser = imagery.lookbook.filter((shot) => shot.aspect === "4:5").slice(0, 3);
-  const panels = [
-    { image: imagery.hero, title: "The collection", sub: "Eight pieces. Made to order.", href: "/shop", priority: true },
+  const panels = storefrontOpen ? [
+    { image: imagery.hero, title: "The collection", sub: "Made to order.", href: "/shop", priority: true },
+    { image: imagery.gift, title: "The lookbook", sub: "For you, and the people you love.", href: "/lookbook", priority: false },
+  ] : [
+    { image: imagery.hero, title: "The story", sub: "For the dreamers and the doers.", href: "/about", priority: true },
     { image: imagery.gift, title: "The lookbook", sub: "For you, and the people you love.", href: "/lookbook", priority: false },
   ];
 
@@ -73,8 +78,8 @@ export default async function HomePage() {
 
       <section aria-labelledby="collection-heading" className="mx-auto mt-20 max-w-[1440px] px-5 sm:px-8 lg:mt-28">
         <div className="mb-10 flex items-end justify-between gap-6">
-          <h2 id="collection-heading" className="editorial-title text-[clamp(2rem,4.5vw,3.75rem)] text-cream">The collection</h2>
-          <Link href="/shop" className="hidden font-mono text-xs font-bold uppercase tracking-[0.16em] text-cream underline decoration-border underline-offset-8 hover:decoration-cream md:block">See all eight</Link>
+          <h2 id="collection-heading" className="editorial-title text-[clamp(2rem,4.5vw,3.75rem)] text-cream">{storefrontOpen ? "The collection" : "Stay in the loop"}</h2>
+          <Link href={storefrontOpen ? "/shop" : "#dispatch-heading"} className="hidden font-mono text-xs font-bold uppercase tracking-[0.16em] text-cream underline decoration-border underline-offset-8 hover:decoration-cream md:block">{storefrontOpen ? "Shop all" : "Get updates"}</Link>
         </div>
         {products.length > 0 ? (
           <ul className="grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-4 md:gap-x-6" data-testid="home-collection-grid">
@@ -108,10 +113,10 @@ export default async function HomePage() {
             })}
           </ul>
         ) : (
-          <p className="text-base text-muted">The next release is on the press. <Link href="#dispatch-heading" className="font-bold text-accent underline underline-offset-4">Get it first</Link>.</p>
+          <p className="text-base text-muted">Get updates from After Hours Agenda. <Link href="#dispatch-heading" className="font-bold text-accent underline underline-offset-4">Stay in the loop</Link>.</p>
         )}
         <div className="mt-10 md:hidden">
-          <Link href="/shop" className="btn-primary w-full justify-center">See all eight</Link>
+            <Link href={storefrontOpen ? "/shop" : "#dispatch-heading"} className="btn-primary w-full justify-center">{storefrontOpen ? "Shop all" : "Get updates"}</Link>
         </div>
       </section>
 
@@ -143,7 +148,7 @@ export default async function HomePage() {
           </div>
           <div className="grid grid-cols-3 gap-4 md:gap-6">
             {lookbookTeaser.map((shot) => (
-              <Link key={shot.src} href={shot.productSlug ? `/product/${shot.productSlug}` : "/lookbook"} className="image-hover-zoom relative block aspect-[4/5] overflow-hidden bg-surface">
+              <Link key={shot.src} href={storefrontOpen && shot.productSlug ? `/product/${shot.productSlug}` : "/lookbook"} className="image-hover-zoom relative block aspect-[4/5] overflow-hidden bg-surface">
                 <Image src={shot.src} alt={shot.alt} fill loading="lazy" className="object-cover" sizes="33vw" />
               </Link>
             ))}

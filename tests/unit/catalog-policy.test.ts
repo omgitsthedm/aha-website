@@ -2,7 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import {
   assertLegacyCatalogCheckoutAllowed,
   assertVariantSellable,
+  isCheckoutOpen,
   isLegacyCatalogPublic,
+  isStorefrontPublic,
 } from "@/lib/commerce/catalog-policy";
 import { catalogMigrationMetadata } from "@/components/shop/CatalogMigrationPage";
 
@@ -18,14 +20,7 @@ describe("legacy catalog migration hold", () => {
     expect(isLegacyCatalogPublic()).toBe(false);
   });
 
-  it.skip("returns no legacy products or collections before any Square request", async () => {
-    // Superseded 2026-08-18. getAllProducts now proceeds to the provider layer
-    // because the APLIIQ capsule is live, so this can no longer assert "no
-    // Square request". The invariant it protected — legacy products stay dark —
-    // is enforced per variant in buildEligibleSquareIndex and asserted by
-    // "refuses a legacy Printful line even with the till open" above, plus the
-    // provider-catalog suite. Left skipped rather than deleted so the original
-    // intent stays discoverable.
+  it("returns no products or collections before any Square request while the shop is unavailable", async () => {
     const { getAllCollections, getAllProducts } = await import("@/lib/square/catalog");
 
     await expect(getAllProducts()).resolves.toEqual([]);
@@ -60,23 +55,20 @@ describe("legacy catalog migration hold", () => {
     expect(squareRequest).not.toHaveBeenCalled();
   });
 
-  it("rejects a saved cart line that resolves to no sellable variant", async () => {
-    // The till is open for the APLIIQ capsule, so the guard no longer refuses
-    // every line outright. A stale variation id must still find nothing.
+  it("closes checkout before a saved cart can be revalidated", async () => {
+    expect(isStorefrontPublic()).toBe(false);
+    expect(isCheckoutOpen()).toBe(false);
+    expect(() => assertLegacyCatalogCheckoutAllowed()).toThrow("The store is being updated");
     const { revalidateCart } = await import("@/lib/commerce/orders");
-    expect(() => revalidateCart([{ squareVariationId: "stale-square-variation", quantity: 1 }])).toThrow();
+    expect(() => revalidateCart([{ squareVariationId: "stale-square-variation", quantity: 1 }]))
+      .toThrow("The store is being updated");
   });
 
-  it("refuses a legacy Printful line even with the till open", () => {
-    // THE invariant this whole file exists for. Opening the catalog globally was
-    // measured on 2026-08-18 to make 1,005 legacy Printful variants sellable
-    // again — archived Square items, deleted artwork, retired provider. The
-    // per-line provider guard is what stops it, so assert the guard directly.
+  it("refuses every line while the shop is unavailable", () => {
     expect(() => assertVariantSellable("printful", '"Legacy product" (M)'))
       .toThrow('"Legacy product" (M) is no longer available.');
     expect(() => assertVariantSellable(undefined, '"Unmapped" (M)')).toThrow("no longer available");
-    // ...and permits the capsule.
-    expect(() => assertVariantSellable("apliiq", '"Capsule tee" (M)')).not.toThrow();
+    expect(() => assertVariantSellable("apliiq", '"Capsule tee" (M)')).toThrow("no longer available");
   });
 
   it("does not strand fulfillment recovery for an order paid before the hold", async () => {
@@ -139,8 +131,8 @@ describe("legacy catalog migration hold", () => {
   });
 });
 
-describe("REGRESSION: no legacy product may be published as a live page", () => {
-  it("publishes a PDP only for a product with a sellable variant", async () => {
+describe("REGRESSION: no product may be published while the shop is unavailable", () => {
+  it("publishes no PDP static paths", async () => {
     // Found on the deploy preview 2026-08-18: swapping the route gate to
     // isStorefrontPublic() made generateStaticParams map the WHOLE manifest, so
     // /product/dont-fuck-fascists-shirt served HTTP 200 — a withdrawn product,
@@ -158,8 +150,6 @@ describe("REGRESSION: no legacy product may be published as a live page", () => 
     const published = realLoad().filter((p) =>
       p.variants.some((v) => isSellableProvider(v.fulfillmentProvider) && checkVariantPurchasable(p, v).ok));
 
-    expect(published.length).toBeGreaterThan(0);
-    for (const p of published) expect(p.variants.some((v) => v.fulfillmentProvider === "apliiq")).toBe(true);
-    expect(published.map((p) => p.slug)).not.toContain("dont-fuck-fascists-shirt");
+    expect(published).toEqual([]);
   });
 });

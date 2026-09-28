@@ -1,13 +1,7 @@
 /**
- * The legacy Printful/Square catalog is deliberately dark while the Apliiq
- * migration is prepared. Keep this as a small, committed switch instead of
- * changing historical manifests or provider mappings: those records remain the
- * audit and rollback source until the replacement catalog is independently
- * verified.
- *
- * Re-opening sale requires an intentional replacement of this policy together
- * with the new provider's verified catalog mapping; do not toggle it from an
- * environment variable or a client-controlled value.
+ * The retired Printful/Square catalog remains dark during this temporary shop
+ * outage. Keep the gate committed: historical manifests and provider mappings
+ * stay available for audit and recovery, never as a client-controlled switch.
  */
 export const LEGACY_CATALOG_POLICY = Object.freeze({
   publicCatalogEnabled: false,
@@ -16,7 +10,8 @@ export const LEGACY_CATALOG_POLICY = Object.freeze({
 } as const);
 
 /**
- * The APLIIQ capsule sells while the legacy catalog stays dark.
+ * The APLIIQ capsule is the only catalog that may return when the shop is open;
+ * the legacy catalog stays dark in every state.
  *
  * These are two different questions and conflating them is dangerous. Flipping
  * LEGACY_CATALOG_POLICY to true was measured on 2026-08-18 to make **1,005
@@ -30,8 +25,9 @@ export const LEGACY_CATALOG_POLICY = Object.freeze({
  * what this file says.
  */
 export const APLIIQ_CATALOG_POLICY = Object.freeze({
-  publicCatalogEnabled: true,
-  // OPEN. Every sellable variant now carries a REAL APQ SKU minted by
+  publicCatalogEnabled: false,
+  // CLOSED while the authorized production catalog connection is restored.
+  // Every mapped variant carries a REAL APQ SKU minted by
   // POST /Design against APLIIQ's live API (designs 6030119-6030124), so the
   // promise behind this flag holds: an order references a product APLIIQ can
   // actually identify.
@@ -53,10 +49,9 @@ export const APLIIQ_CATALOG_POLICY = Object.freeze({
   //
   // That promise is enforced, not remembered: scripts/validate-apliiq-map.ts
   // fails the build if checkout is enabled while any sellable variant still
-  // carries apliiqSkuVerified !== true. Flip this and the build stops until the
-  // real APQ SKUs are in the map.
-  checkoutEnabled: true,
-  reason: "Apliiq capsule live on real APQ SKUs; orders held for manual review until artwork is attached",
+  // carries apliiqSkuVerified !== true.
+  checkoutEnabled: false,
+  reason: "Shop temporarily unavailable while the authorized catalog connection is restored",
 } as const);
 
 /**

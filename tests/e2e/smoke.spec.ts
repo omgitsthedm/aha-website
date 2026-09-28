@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { SELLABLE_PRODUCT_SLUGS } from "../../lib/commerce/sellable-slugs.generated";
+import { isStorefrontPublic } from "../../lib/commerce/catalog-policy";
 
 // The one committed answer to "what is sellable" — the same set the storefront
 // and the cart purge read, so a product cannot be added without this pack
@@ -10,28 +11,17 @@ const CAPSULE_PDP_LINKS = [...SELLABLE_PRODUCT_SLUGS].map((slug) => `/product/${
 // build (see e2e.yml) and proves the public storefront cannot expose the
 // retired catalog, restore a saved legacy bag, or start a new checkout.
 
-test("@catalog home renders the brand hero without retired shopping controls", async ({ page }) => {
+test("@catalog home keeps acquisition paths open without shopping controls", async ({ page }) => {
   const response = await page.goto("/");
   expect(response?.status()).toBe(200);
   await expect(page).toHaveTitle(/After Hours Agenda \| For the dreamers and the doers/i);
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/dreamers and the doers/i);
-  // Rose browser chrome: light theme-color is the brand rose fill.
   await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')).toHaveAttribute("content", "#FF6B6B");
-  // The capsule is live, so the home page carries shopping controls again. What
-  // must NOT come back is a link to anything retired — the 1,005-variant legacy
-  // reopen would have surfaced here first.
-  const homePdpLinks = await page.locator('a[href^="/product/"]').evaluateAll(
-    (nodes) => [...new Set(nodes.map((n) => n.getAttribute("href")!))],
-  );
-  for (const href of homePdpLinks) expect(CAPSULE_PDP_LINKS, `retired PDP linked from home: ${href}`).toContain(href);
-  // And the front door actually sells: every capsule product is on it, with a
-  // way into the shop. "The previous collection is archived" was the holding
-  // page; a live store must not open on it.
-  await expect(page.getByTestId("home-collection-grid").locator('a[href^="/product/"]')).toHaveCount(CAPSULE_PDP_LINKS.length);
-  // The hero is two photographs; the left panel is the door into the shop.
-  await expect(page.getByRole("link", { name: /The collection/ }).first()).toHaveAttribute("href", "/shop");
+  await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
+  await expect(page.getByTestId("home-collection-grid")).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "The story" }).first()).toHaveAttribute("href", "/about");
+  await expect(page.getByRole("link", { name: "Get updates" }).first()).toHaveAttribute("href", "#dispatch-heading");
   await expect(page.getByText("The previous collection is archived")).toHaveCount(0);
-
   await expect(page.locator("symbol#aha-sheep-mark")).toHaveCount(1);
   const filledMark = page.locator('svg[fill="currentColor"]:has(use[href="#aha-sheep-mark"])').first();
   const outlineMark = page.locator('svg[fill="none"]:has(use[href="#aha-sheep-mark"])').first();
@@ -161,62 +151,64 @@ test("@privacy the consent choice owns mobile bottom surfaces while commerce is 
   await expect(page.getByTestId("sticky-checkout-bar")).toHaveCount(0);
 });
 
-test("@catalog shop lists the APLIIQ capsule and nothing retired", async ({ page }) => {
+test("@catalog shop stays on the support-and-updates surface", async ({ page }) => {
   const response = await page.goto("/shop");
   expect(response?.status()).toBe(200);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("The collection");
-
-  // The grid hydrates client-side, so wait for a real PDP link rather than
-  // reading the server HTML — that is what made the old assertion pass
-  // vacuously once the products came back.
-  await expect(page.locator('a[href="/product/no-kings-tee"]')).toBeVisible();
-  const links = await page.locator('a[href^="/product/"]').evaluateAll(
-    (nodes) => [...new Set(nodes.map((n) => n.getAttribute("href")!))],
-  );
-  expect(links.length).toBeGreaterThan(0);
-
-  // Every link is a capsule product. This is the assertion that would have
-  // caught the 1,005-variant legacy reopen.
-  for (const href of links) expect(CAPSULE_PDP_LINKS, `unexpected PDP link ${href}`).toContain(href);
-  // And every capsule product is actually listed.
-  for (const href of CAPSULE_PDP_LINKS) expect(links, `capsule product missing from /shop: ${href}`).toContain(href);
+  await expect(page.getByRole("heading", { level: 1, name: "Shop temporarily unavailable" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Get updates" })).toHaveAttribute("href", "/#dispatch-heading");
+  await expect(page.getByRole("link", { name: "Contact support" })).toHaveAttribute("href", "/contact");
+  await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
 });
 
-test("@product size and image modals keep keyboard users contained and informed", async ({ page }) => {
-  await page.goto("/product/black-sheep-tee");
+test("@catalog catalog product paths stay unavailable while the shop is closed", async ({ page }) => {
+  const response = await page.goto(CAPSULE_PDP_LINKS[0]);
+  expect(response?.status()).toBe(404);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  await expect(page.getByRole("button", { name: /Add to bag/i })).toHaveCount(0);
+  await expect(page.getByTestId("sticky-buy-bar")).toHaveCount(0);
+});
 
-  const sizeGuideTrigger = page.getByRole("button", { name: "Size guide" });
-  await sizeGuideTrigger.focus();
-  await page.keyboard.press("Enter");
-  const sizeGuide = page.getByRole("dialog", { name: "Size & fit" });
-  const sizeGuideClose = sizeGuide.getByRole("button", { name: "Close" });
-  await expect(sizeGuideClose).toBeFocused();
-  await page.keyboard.press("Tab");
-  await expect(sizeGuideClose).toBeFocused();
-  await page.keyboard.press("Escape");
-  await expect(sizeGuide).toHaveCount(0);
-  await expect(sizeGuideTrigger).toBeFocused();
+// Keep this interaction regression ready for the deliberate reopening decision.
+// The committed policy, rather than an environment override, decides whether it runs.
+test.describe("enabled catalog accessibility regression", () => {
+  test.skip(!isStorefrontPublic(), "Requires the committed catalog policy to reopen commerce.");
 
-  const viewerTrigger = page.getByRole("button", { name: "Zoom & view full" });
-  await viewerTrigger.focus();
-  await page.keyboard.press("Enter");
-  const viewer = page.getByRole("dialog", { name: "Black Sheep — image viewer" });
-  await expect(viewer.getByRole("button", { name: "Close image viewer" })).toBeFocused();
-  const zoom = viewer.locator('button[aria-pressed]');
-  // WebKit follows the host macOS full-keyboard-access preference for Tab.
-  // Focus the native button directly so every engine exercises its keyboard
-  // activation contract without making a machine preference part of the test.
-  await zoom.focus();
-  await expect(zoom).toBeFocused();
-  await expect(zoom).toHaveAccessibleName("Activate to zoom in to 200 percent");
-  await expect(zoom).toHaveAttribute("aria-pressed", "false");
-  await page.keyboard.press("Space");
-  await expect(zoom).toHaveAttribute("aria-pressed", "true");
-  await expect(zoom).toHaveAccessibleName("Image zoomed to 200 percent. Activate to zoom out");
-  await expect(viewer.getByText("Image zoomed to 200 percent.")).toHaveCount(1);
-  await page.keyboard.press("Escape");
-  await expect(viewer).toHaveCount(0);
-  await expect(viewerTrigger).toBeFocused();
+  test("@product size and image modals keep keyboard users contained and informed", async ({ page }) => {
+    await page.goto("/product/black-sheep-tee");
+
+    const sizeGuideTrigger = page.getByRole("button", { name: "Size guide" });
+    await sizeGuideTrigger.focus();
+    await page.keyboard.press("Enter");
+    const sizeGuide = page.getByRole("dialog", { name: "Size & fit" });
+    const sizeGuideClose = sizeGuide.getByRole("button", { name: "Close" });
+    await expect(sizeGuideClose).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(sizeGuideClose).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(sizeGuide).toHaveCount(0);
+    await expect(sizeGuideTrigger).toBeFocused();
+
+    const viewerTrigger = page.getByRole("button", { name: "Zoom & view full" });
+    await viewerTrigger.focus();
+    await page.keyboard.press("Enter");
+    const viewer = page.getByRole("dialog", { name: "Black Sheep — image viewer" });
+    await expect(viewer.getByRole("button", { name: "Close image viewer" })).toBeFocused();
+    const zoom = viewer.locator('button[aria-pressed]');
+    // WebKit follows the host macOS full-keyboard-access preference for Tab.
+    // Focus the native button directly so every engine exercises its keyboard
+    // activation contract without making a machine preference part of the test.
+    await zoom.focus();
+    await expect(zoom).toBeFocused();
+    await expect(zoom).toHaveAccessibleName("Activate to zoom in to 200 percent");
+    await expect(zoom).toHaveAttribute("aria-pressed", "false");
+    await page.keyboard.press("Space");
+    await expect(zoom).toHaveAttribute("aria-pressed", "true");
+    await expect(zoom).toHaveAccessibleName("Image zoomed to 200 percent. Activate to zoom out");
+    await expect(viewer.getByText("Image zoomed to 200 percent.")).toHaveCount(1);
+    await page.keyboard.press("Escape");
+    await expect(viewer).toHaveCount(0);
+    await expect(viewerTrigger).toBeFocused();
+  });
 });
 
 test("@product archived product routes return a noindex 404 without buy controls", async ({ page }) => {
@@ -238,58 +230,31 @@ test("@catalog retired product and campaign assets return 404", async ({ page })
   }
 });
 
-test("@cart cart page renders its empty state during the catalog hold", async ({ page }) => {
+test("@cart cart paths render the support-and-updates surface", async ({ page }) => {
   await page.goto("/cart");
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByText("Saved items stay on this device.")).toBeVisible();
-  await expect(page.getByText("0 items", { exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Get release updates" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Shop temporarily unavailable" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Get updates" })).toHaveAttribute("href", "/#dispatch-heading");
+  await expect(page.getByRole("link", { name: "Contact support" })).toHaveAttribute("href", "/contact");
+  await expect(page.getByText("Your bag")).toHaveCount(0);
 });
 
-test("@cart the server-rendered bag header stays truthful before storage hydration", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "chromium", "SSR bag markup is browser-independent.");
-  const response = await page.request.get("/cart");
-  expect(response.status()).toBe(200);
-  const html = await response.text();
-  expect(html).toContain("Saved items stay on this device.");
-  expect(html).not.toContain("Loading your saved items");
-  expect(html).not.toContain("Your bag is empty");
-});
-
-test("@cart a legacy saved bag is cleared and cannot reopen checkout", async ({ page }, testInfo) => {
+test("@cart a legacy saved bag is cleared without restoring a cart surface", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "Browser-storage restore is covered once in Chromium.");
   await page.addInitScript(() => {
-    window.localStorage.setItem("aha-cart", JSON.stringify([{
-      productId: "preview-dont-fuck-fascists-shirt",
-      slug: "dont-fuck-fascists-shirt",
-      variationId: "preview-dont-fuck-fascists-shirt-m",
-      name: "Don't Fuck Fascists Shirt",
-      variationName: "M",
-      price: 4000,
-      priceFormatted: "$40.00",
-      quantity: 1,
-      image: "/products/dont-fuck-fascists-shirt/01-black-mens-fitted-t-shirt-front.webp",
-    }]));
+    window.localStorage.setItem("aha-cart", JSON.stringify([{ productId: "preview-dont-fuck-fascists-shirt", variationId: "preview-dont-fuck-fascists-shirt-m", quantity: 1 }]));
   });
-
   await page.goto("/cart");
-  await expect(page.getByRole("heading", { level: 1, name: "Your bag" })).toBeVisible();
-  await expect(page.getByText("Don't Fuck Fascists Shirt", { exact: true })).toHaveCount(0);
-  await expect(page.getByText("0 items", { exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Continue to checkout" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 1, name: "Shop temporarily unavailable" })).toBeVisible();
+  await expect(page.getByText("Your bag")).toHaveCount(0);
   await expect.poll(() => page.evaluate(() => JSON.parse(window.localStorage.getItem("aha-cart") || "[]"))).toEqual([]);
 });
 
-test("@checkout checkout is open for the capsule and still refuses a retired line", async ({ page }) => {
+test("@checkout checkout stays paused and rejects a saved legacy line before payment", async ({ page }) => {
   const response = await page.goto("/checkout");
   expect(response?.status()).toBe(200);
-  // Checkout reopened on 2026-08-18 against REAL APQ SKUs. It must render the
-  // payment surface rather than the paused notice...
-  await expect(page.getByRole("heading", { level: 1, name: "Checkout is paused" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 1, name: "Checkout is paused" })).toBeVisible();
+  await expect(page.getByText("Existing items cannot be purchased while the shop is temporarily unavailable.")).toBeVisible();
 
-  // ...and still refuse a line for a product that is no longer sold. This is the
-  // assertion that matters now: an open till must not become a way to buy a
-  // retired Printful product whose Square item is archived.
   const quote = await page.request.post("/api/checkout-quote", {
     data: {
       lines: [{ productId: "legacy-product", variationId: "legacy-variation", quantity: 1 }],
@@ -301,10 +266,10 @@ test("@checkout checkout is open for the capsule and still refuses a retired lin
   });
   expect(quote.status()).toBeGreaterThanOrEqual(400);
   const body = await quote.json();
-  expect(JSON.stringify(body)).toMatch(/no longer available|not available|could not be priced|Complete the shipping/i);
+  expect(JSON.stringify(body)).toMatch(/store is being updated|cannot be purchased/i);
 });
 
-test("@cart unavailable browser storage still reaches a usable empty bag", async ({ page }, testInfo) => {
+test("@cart unavailable browser storage still keeps the support surface usable", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "Storage failure handling is browser-independent.");
   await page.addInitScript(() => {
     const getItem = Storage.prototype.getItem;
@@ -318,10 +283,9 @@ test("@cart unavailable browser storage still reaches a usable empty bag", async
       return setItem.call(this, key, value);
     };
   });
-
   await page.goto("/cart");
-  await expect(page.getByRole("heading", { level: 1, name: "Your bag" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Get release updates" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Shop temporarily unavailable" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Get updates" })).toBeVisible();
 });
 
 test("@operations order tracking fails closed without a match", async ({ page }, testInfo) => {
@@ -422,19 +386,11 @@ test("@catalog best-sellers redirects to the shop", async ({ page }) => {
   await expect(page).toHaveURL(/\/shop$/);
 });
 
-test("@catalog shop serves capsule art and none of the deleted legacy imagery", async ({ page }) => {
+test("@catalog shop exposes no product imagery while commerce is closed", async ({ page }) => {
   await page.goto("/shop");
-  await expect(page.locator('a[href="/product/sheep-min-hoodie"]')).toBeVisible();
-  // Capsule mockups live at /products/<capsule-slug>/…; the legacy Printful
-  // mockup tree under /products/<retired-slug>/ was deleted in the reset. Any
-  // /products/ image that is not a capsule slug is that tree coming back.
-  const productImages = await page.locator('img[src*="/products/"]').evaluateAll(
-    (nodes) => nodes.map((n) => decodeURIComponent(n.getAttribute("src") ?? "")),
-  );
-  for (const src of productImages) {
-    const slug = src.match(/\/products\/([^/]+)\//)?.[1];
-    expect(slug && SELLABLE_PRODUCT_SLUGS.has(slug), `legacy imagery served: ${src}`).toBe(true);
-  }
+  await expect(page.getByRole("heading", { level: 1, name: "Shop temporarily unavailable" })).toBeVisible();
+  await expect(page.locator('a[href^="/product/"]')).toHaveCount(0);
+  await expect(page.locator('img[src*="/products/"]')).toHaveCount(0);
 });
 
 test("@brand manifesto page renders the flag and the signup", async ({ page }) => {
