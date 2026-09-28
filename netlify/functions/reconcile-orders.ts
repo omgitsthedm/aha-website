@@ -1,10 +1,10 @@
 import { reconcilePaidOrders, sweepStalledApliiqFulfillments } from "../../lib/commerce/reconciliation";
 import { dispatchOrderNotifications } from "../../lib/commerce/notifications";
-import { isScheduledInvocation } from "../../lib/security/cron-guard";
+import { automationsEnabled, isScheduledInvocation } from "../../lib/security/cron-guard";
 
 export default async (req: Request) => {
-  if (!(await isScheduledInvocation(req))) {
-    return new Response("Not found", { status: 404 });
+  if (!automationsEnabled() || !(await isScheduledInvocation(req))) {
+    return new Response(null, { status: 204 });
   }
   const result = await reconcilePaidOrders(3);
   // Pull half of the APLIIQ contract: their Fulfillment callback URL is blank,
@@ -17,5 +17,3 @@ export default async (req: Request) => {
   console.log(JSON.stringify({ job: "reconcile-orders", ...result, sweep, email }));
   return new Response(null, { status: 204 });
 };
-
-export const config = { schedule: "*/15 * * * *" };
