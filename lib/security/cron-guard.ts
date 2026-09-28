@@ -21,3 +21,10 @@ export async function isScheduledInvocation(req: Request): Promise<boolean> {
   }
   return false;
 }
+
+// Scheduled work remains dormant unless operations deliberately enables it in
+// the deployment environment. This is separate from authentication: a valid
+// scheduler invocation must still have an explicit operating window.
+export function automationsEnabled(): boolean {
+  return process.env.AHA_AUTOMATIONS_ENABLED === "true";
+}
