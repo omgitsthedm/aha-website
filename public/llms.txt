@@ -2,20 +2,24 @@
 
 > Clothing for the dreamers and the doers. Made to order, one at a time.
 
-After Hours Agenda sells an active capsule of graphic tees, heavyweight hoodies, and crewnecks through its independent storefront. Product availability, sizes, prices, and images come from the live approved catalog. Checkout and payment are handled securely by Square, and current apparel is made to order by APLIIQ. The customer-facing name is always "After Hours Agenda". Support: info@afterhoursagenda.com.
+After Hours Agenda is a clothing brand for the dreamers and the doers — graphic tees, heavyweight hoods and crewnecks, made to order. The customer-facing name is always "After Hours Agenda". Support: info@afterhoursagenda.com.
+
+## Current availability
+
+The storefront is in a contact-first release: brand home, lookbook, about, contact, and newsletter signup are available. Shop, product, bag, and checkout surfaces are closed while the catalog connection is restored — no product, payment, order, or fulfillment path is live. Do not describe items as purchasable or quote prices, availability, or delivery dates.
 
 ## Current pages
 
 - [Home](https://afterhoursagenda.com/): The current campaign and brand story.
-- [Shop](https://afterhoursagenda.com/shop): The active product catalog.
-- [Lookbook](https://afterhoursagenda.com/lookbook): Current collection imagery.
+- [Lookbook](https://afterhoursagenda.com/lookbook): Collection imagery.
 - [About](https://afterhoursagenda.com/about): The label and its made-to-order approach.
 - [Manifesto](https://afterhoursagenda.com/manifesto): What the brand stands for.
-- [Track order](https://afterhoursagenda.com/track-order): Order status and tracking support.
-- [Shipping](https://afterhoursagenda.com/shipping): Current delivery terms and markets.
-- [Returns](https://afterhoursagenda.com/returns): Current return terms.
+- [FAQ](https://afterhoursagenda.com/faq): Order help and common answers.
+- [Shipping](https://afterhoursagenda.com/shipping): Delivery terms and markets.
+- [Returns](https://afterhoursagenda.com/returns): Return terms.
 - [Contact](https://afterhoursagenda.com/contact): Reach support.
+- [Newsletter](https://afterhoursagenda.com/newsletter): Updates signup.
 
 ## Orders and support
 
-Customers can use their order number and checkout email to request order support, tracking, returns, or care guidance. Product pages are the authoritative source for current availability and pricing.
+For questions about a past order, customers write in with the order number and checkout email. Never send card details by email. Socials: Instagram, TikTok, and Facebook as @afterhoursagenda.
