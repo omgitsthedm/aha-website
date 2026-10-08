@@ -25,6 +25,7 @@ const faqs = [
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  speakable: { "@type": "SpeakableSpecification", cssSelector: ["#faq-list"] },
   mainEntity: faqs.map(([question, answer]) => ({
     "@type": "Question",
     name: question,
@@ -37,7 +38,7 @@ export default function FAQPage() {
     <div className="px-4 pb-20 pt-28 md:px-6 md:pt-32"><div className="mx-auto max-w-4xl">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <PageHeader eyebrow="Order help" title="Questions, answered" description={<>Everything is made to order and shipped with tracking, and every question is answered by a person. If it’s about an order you already placed, <Link href="/contact" className="text-accent underline underline-offset-4">write to us</Link> with the order number and checkout email.</>} />
-      <div className="border-t border-border/40">{faqs.map(([question, answer]) => <details key={question} className="group border-b border-border/40"><summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-5 py-4 font-display text-lg font-black uppercase leading-tight text-cream hover:text-accent"><span>{question}</span><span aria-hidden="true" className="text-accent transition-transform group-open:rotate-45">+</span></summary><p className="max-w-2xl pb-6 text-sm leading-relaxed text-muted">{answer}</p></details>)}</div>
+      <div id="faq-list" className="border-t border-border/40">{faqs.map(([question, answer]) => <details key={question} className="group border-b border-border/40"><summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-5 py-4 font-display text-lg font-black uppercase leading-tight text-cream hover:text-accent"><span>{question}</span><span aria-hidden="true" className="text-accent transition-transform group-open:rotate-45">+</span></summary><p className="max-w-2xl pb-6 text-sm leading-relaxed text-muted">{answer}</p></details>)}</div>
       <p className="mt-8 border-l-2 border-accent pl-4 text-sm leading-relaxed text-muted">Never send card details by email.</p>
     </div></div>
   );
