@@ -1,5 +1,8 @@
 # After Hours Agenda agent contract
 
+**Release completed October 9, 2026:** source `7a23f9846a337de2ac85bb34014d5b3f983ca71c`, production deploy `6ac8bf631f5bb00008938cac`. All 16 live routes and nine browser suites pass. The one-release authorization is spent; new work is preview-first.
+
+
 This custom-domain project keeps the After Hours Agenda brand. Never substitute an agency or future client's identity. The user corrected the initial rebrand direction on October 9, 2026. Only abstract projects use LFNYC branding.
 
 ## Source and scope

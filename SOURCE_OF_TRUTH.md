@@ -2,6 +2,19 @@
 
 Verified October 9, 2026 from Git, the exact Netlify site, public release markers and browser checks. Provider data was not queried or changed.
 
+## Verified live release — October 9, 2026
+
+- Primary host: https://afterhoursagenda.com.
+- Netlify site: `275b4115-16bf-42fb-9b36-6bce9bb93608`.
+- Published deploy: `6ac8bf631f5bb00008938cac` at `2026-10-09T10:18:44.631Z`.
+- Deployed GitHub main source: `7a23f9846a337de2ac85bb34014d5b3f983ca71c`.
+- Artifact digest: `f86427ebc511f08918e34c23c4feb936c65f86314bb5c4566acfc0b0ef5ae2ed`.
+- Release PRs #93 and #98 merged; all nine required checks passed.
+- Live verification: 60 public files, all 16 routes, three ownership files and nine desktop/mobile browser suites pass.
+- Orders remain paused; contact drafts are unsent. No functions, scheduled functions or database migrations deployed. Netlify recorded its automatic on-publish snapshot.
+
+These current receipts supersede the historical pre-release IDs below. Recheck `/release.json` and the exact Netlify published deploy for future work. The audit branch may contain later documentation-only commits; they do not change this deployed source or artifact.
+
 ## Identity
 
 After Hours Agenda stays After Hours Agenda. It owns the custom-domain project at `afterhoursagenda.com`. The latest user instruction supersedes the initial LFNYC rebrand brief. No other business's marks, services, contact details or case studies belong in the active preview.

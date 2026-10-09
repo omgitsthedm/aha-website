@@ -1,5 +1,12 @@
 # After Hours Agenda audit and modernization — final report
 
+> **Production released October 9, 2026, 10:18:44 UTC:** [afterhoursagenda.com](https://afterhoursagenda.com) now serves the reviewed AHA rebuild. Published deploy `6ac8bf631f5bb00008938cac`, source `7a23f9846a337de2ac85bb34014d5b3f983ca71c`, artifact `f86427ebc511f08918e34c23c4feb936c65f86314bb5c4566acfc0b0ef5ae2ed`. PRs #93 and #98 are merged. All nine required GitHub checks, both build modes, 11 artifact tests per mode, 9 local browser suites and 9 live browser suites passed. All 60 public files match the local production artifact; all 16 routes, three search ownership files, headers, canonical URLs and noindex removal are verified. The earlier preview-only/review-required statements below are historical and superseded. Orders remain paused and contact prepares unsent email drafts as reviewed. No website-release approval remains pending.
+
+The owner explicitly authorized production after reviewing the desktop mockups. The existing named-owner PR exception was used; protections were unchanged and no independent review was manufactured. The first Git build failed before publication because Netlify selected an obsolete nested preview-only config; the corrected config passed a full offline Netlify build before the successful Git release. Netlify reports no functions, scheduled functions or database migrations in the live artifact, plus its automatic on-publish database snapshot. Known deployment effect: one failed production build and one successful production deploy for this release; no extra review preview. Exact account billing delta was not measured. Final receipt and screenshots are in `/Users/davidmarsh/Desktop/Project Upgrades/afterhoursagenda/`.
+
+## Historical audit and release preparation
+
+
 > **Release follow-through, October 9:** The user approved moving the reviewed AHA candidate forward. The audit branch now contains the production configuration, mode-aware tests and preserved Google/Bing ownership files. GitHub requires one independent review plus its named checks; production remains unchanged until that gate clears. [Current release gate and exact commands](NEEDS-APPROVAL.md) supersede the historical approval queue below. The audit measurements and hosted preview receipt remain unchanged.
 
 **October 9, 2026 · All five phases complete · Preview only**

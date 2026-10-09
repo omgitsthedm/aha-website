@@ -1,4 +1,7 @@
-# After Hours Agenda — reviewed website release candidate
+# After Hours Agenda — published website
+
+**Published:** https://afterhoursagenda.com — deploy `6ac8bf631f5bb00008938cac`, source `7a23f9846a337de2ac85bb34014d5b3f983ca71c`. All 16 routes and nine live browser suites passed on October 9, 2026. Orders remain paused as reviewed.
+
 
 After Hours Agenda keeps its own identity and custom domain. The reviewed website lives in **`site-preview/`**, using Astro 7.3.8 and Node 24.21.0. The owner explicitly approved this production release on October 9, 2026. All nine required checks must pass; the existing named-owner PR exception is authorized for this release only. `SOURCE_OF_TRUTH.md` explains how to verify the actual live state.
 

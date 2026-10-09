@@ -1,5 +1,8 @@
 # Approved production release — October 9, 2026
 
+**Completed:** PRs #93 and #98 merged; deploy `6ac8bf631f5bb00008938cac` published source `7a23f9846a337de2ac85bb34014d5b3f983ca71c` on October 9 at 10:18:44 UTC. Live artifact and all route/browser checks passed. No approval is outstanding for this website release. The procedure below is the historical approved execution record, not pending work. New projects or commerce changes still require their own scope.
+
+
 The owner explicitly instructed: “yup push it all live, document it and leave it the folder”. Production publication of the reviewed AHA rebuild and necessary release fixes is authorized. No further conversational approval is required for this release.
 
 GitHub ruleset 20717491 already grants owner `omgitsthedm` (user 55168770) a pull-request-only exception. Use it for this release after all nine required checks pass. Do not change repository rules, create a fake review, or bypass failing checks. PR #93 merged with that permission; its first Netlify build failed before publication because the nested package config still refused production. The fix keeps both root and package Netlify contexts aligned. This supersedes earlier agent-written guidance treating the review exception as unavailable.

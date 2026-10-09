@@ -77,3 +77,6 @@
 
 - October 9 explicit “push it all live” instruction authorizes the existing named-owner PR exception for this release after nine passing checks; no repository rule changes or invented independent review.
 - Netlify build 6ac8bcbea68d840008232b30 proved nested config precedence; align site-preview/netlify.toml production/preview contexts with root and verify the actual resolver before retrying.
+
+- Published production through GitHub main at 7a23f9846a337de2ac85bb34014d5b3f983ca71c, Netlify deploy 6ac8bf631f5bb00008938cac; live artifact, all 16 routes, three ownership files and nine browser suites verified.
+- Closing documentation stays on the audit branch with Netlify skip markers; preserve the exact already-published source and avoid a documentation-only production redeploy.
