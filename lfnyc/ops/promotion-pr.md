@@ -1,0 +1,5 @@
+Replaces the After Hours Agenda public application with the reviewed Little Fight NYC static service website, after explicit approval to repurpose the existing property. The Netlify build base changes to `lfnyc`; the deployment ships no commerce functions, database queries, payment flow, tracking or lead-submission service.
+
+The reviewed preview covers 11 public pages plus a 404, an email-draft contact flow, the supplied LFNYC branding, accessible navigation and current metadata. `AUDIT-REPORT.md` contains the draft receipt, measured results and validation. This migration removes preview noindex/banner metadata for the approved `afterhoursagenda.com` origin. It does not change DNS or the separate `littlefightnyc.com` property.
+
+Before merging: disable the existing Next.js build plugin for exact site `275b4115-16bf-42fb-9b36-6bce9bb93608`, activate the prepared root config, run both required CI suites, and confirm the explicit approval still covers replacing AHA. Preserve AHA provider accounts, data, credentials and source. Production is published by the Git-connected main-branch deployment, never by a manual promotion of a noindex preview.

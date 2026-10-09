@@ -1,0 +1,38 @@
+---
+import Site from '../layouts/Site.astro';
+import ContactBand from '../components/ContactBand.astro';
+import { answers } from '../data/site';
+---
+
+<Site
+  title="Straight answers about websites & tech help"
+  description="Answers about Little Fight NYC services, free consulting, website ownership, NYC support, timing and the written 14-day website promise."
+>
+  <section class="page-head shell">
+    <p class="label">Before you start</p>
+    <h1>
+      STRAIGHT
+      <br />
+      ANSWERS.
+    </h1>
+    <p class="lede">What we do, how it works, and what stays yours.</p>
+  </section>
+  <section class="answer-page shell" aria-label="Common questions">
+    <div class="faq-list">
+      {answers.map((answer, index) => (
+        <details open={index === 0}>
+          <summary>
+            {answer.q}
+            <span aria-hidden="true">+</span>
+          </summary>
+          <p>{answer.a}</p>
+        </details>
+      ))}
+    </div>
+    <p class="evidence-caption">
+      Reviewed October 9, 2026 by Little Fight NYC. Your written project scope
+      sets the terms of paid work.
+    </p>
+  </section>
+  <ContactBand heading="Ask us about your business." />
+</Site>

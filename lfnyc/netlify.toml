@@ -1,0 +1,12 @@
+# This package is a draft-only artifact. The repository root is still AHA production.
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "functions-empty"
+[build.environment]
+  NODE_VERSION = "24.21.0"
+  ASTRO_TELEMETRY_DISABLED = "1"
+[context.production]
+  command = "node scripts/refuse-production.mjs"
+[functions]
+  directory = "functions-empty"

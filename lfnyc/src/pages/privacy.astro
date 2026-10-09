@@ -1,0 +1,59 @@
+---
+import Site from '../layouts/Site.astro';
+const isPreview = import.meta.env.LFNYC_PRODUCTION_BUILD !== 'approved';
+---
+
+<Site
+  title="Privacy"
+  description="How this Little Fight NYC website handles information: no analytics or advertising cookies, no background form submissions, and an email draft you control."
+>
+  <article class="policy shell">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span aria-hidden="true">/</span>
+      <span>Privacy</span>
+    </nav>
+    <p class="label">Updated October 9, 2026</p>
+    <h1>YOUR INFORMATION.</h1>
+    <p>
+      This notice describes this Little Fight NYC{' '}
+      {isPreview ? 'design preview' : 'service website'}. You can also find the
+      business at <a href="https://littlefightnyc.com">littlefightnyc.com</a>.
+    </p>
+    <h2>Visiting this website</h2>
+    <p>
+      This app does not load analytics, advertising pixels, third-party fonts or
+      embedded social widgets. It does not set cookies or save contact details
+      in browser storage. Netlify serves the pages and may process request
+      information, such as an IP address and browser details, to deliver and
+      protect the site. Read{' '}
+      <a href="https://www.netlify.com/privacy/">Netlify’s privacy policy</a>{' '}
+      for its practices.
+    </p>
+    <h2>Preparing a message</h2>
+    <p>
+      The contact form creates an email draft inside your browser. Typing and
+      preparing the draft do not send your details to us. Choosing “Open email
+      draft” passes the draft to your email app. You decide whether to send it.
+      Choosing “Copy message” copies it to your device’s clipboard.
+    </p>
+    <h2>Calling, texting or emailing</h2>
+    <p>
+      If you choose to contact us, your phone, messaging or email provider
+      processes that communication. Send only the information needed to explain
+      your request. Keep passwords, card details and other sensitive account
+      information out of the message.
+    </p>
+    <h2>Links to other websites</h2>
+    <p>
+      Portfolio and source links take you to separate websites. Their own
+      privacy notices and settings apply.
+    </p>
+    <h2>Questions</h2>
+    <p>
+      Write to{' '}
+      <a href="mailto:hello@littlefightnyc.com">hello@littlefightnyc.com</a>{' '}
+      about this website or information you have sent to Little Fight NYC.
+    </p>
+  </article>
+</Site>

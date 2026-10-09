@@ -1,0 +1,285 @@
+---
+import '../styles/site.css';
+import { brand } from '../data/site';
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  service?: string;
+}
+const { title, description, path = Astro.url.pathname, service } = Astro.props;
+const origin = Astro.site!.origin;
+const canonical = new URL(path, origin).href;
+const isPreview = import.meta.env.LFNYC_PRODUCTION_BUILD !== 'approved';
+const navigation = [
+  { label: 'Websites', href: '/services/websites/' },
+  { label: 'Tech help', href: '/services/tech-support/' },
+  { label: 'Our work', href: '/work/' },
+  { label: 'About', href: '/about/' },
+];
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${brand.official}/#organization`,
+      name: brand.name,
+      url: brand.official,
+      logo: `${origin}/brand/mark-white.svg`,
+      email: brand.email,
+      telephone: brand.tel,
+      description:
+        'Custom websites, business technology support and software you own.',
+      areaServed: ['New York City', 'United States'],
+      sameAs: [brand.official],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${origin}/#website`,
+      url: `${origin}/`,
+      name: brand.name,
+      publisher: { '@id': `${brand.official}/#organization` },
+      inLanguage: 'en-US',
+    },
+    {
+      '@type': 'WebPage',
+      '@id': canonical,
+      url: canonical,
+      name: title,
+      description,
+      isPartOf: { '@id': `${origin}/#website` },
+      about: { '@id': `${brand.official}/#organization` },
+      inLanguage: 'en-US',
+      dateModified: brand.verified,
+    },
+    ...(path !== '/'
+      ? [
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: `${origin}/`,
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: title,
+                item: canonical,
+              },
+            ],
+          },
+        ]
+      : []),
+    ...(service
+      ? [
+          {
+            '@type': 'Service',
+            name: service,
+            description,
+            url: canonical,
+            provider: { '@id': `${brand.official}/#organization` },
+            areaServed:
+              service === 'Tech support' ? 'New York City' : 'United States',
+          },
+        ]
+      : []),
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>{title} | Little Fight NYC</title>
+    <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content={
+        isPreview
+          ? 'noindex, noarchive'
+          : 'index, follow, max-image-preview:large'
+      }
+    />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#050507" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={brand.name} />
+    <meta property="og:title" content={`${title} | Little Fight NYC`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta
+      property="og:image"
+      content={`${origin}/brand/${isPreview ? 'og-image.png' : 'og-image-production.png'}`}
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Little Fight NYC. Custom websites, tech support and software you own. Small crew. Heavy pull."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | Little Fight NYC`} />
+    <meta name="twitter:description" content={description} />
+    <meta
+      name="twitter:image"
+      content={`${origin}/brand/${isPreview ? 'og-image.png' : 'og-image-production.png'}`}
+    />
+    <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="icon"
+      href="/brand/favicon-32.png"
+      sizes="32x32"
+      type="image/png"
+    />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link
+      rel="preload"
+      href="/fonts/oswald-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/barlow-latin-400-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(schema).replace(/</g, '\\u003c')}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    {isPreview && (
+      <div class="preview-note">
+        <span>LFNYC design preview</span>
+        <span>For review · October 9, 2026</span>
+      </div>
+    )}
+    <header class="site-header shell">
+      <a class="identity" href="/" aria-label="Little Fight NYC home">
+        <img src="/brand/mark-white.svg" width="52" height="36" alt="" />
+        <span>
+          LITTLE FIGHT <span class="identity-nyc">NYC</span>
+        </span>
+      </a>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        {navigation.map((link) => (
+          <a
+            href={link.href}
+            aria-current={path === link.href ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+      <a class="button button-small header-cta" href="/contact/">
+        Let’s talk <span aria-hidden="true">↗</span>
+      </a>
+      <details class="mobile-nav">
+        <summary>
+          Menu <span aria-hidden="true">+</span>
+        </summary>
+        <nav aria-label="Mobile navigation">
+          {navigation.map((link) => (
+            <a
+              href={link.href}
+              aria-current={path === link.href ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
+          <a href="/services/business-systems/">Software you own</a>
+          <a href="/contact/">Let’s talk ↗</a>
+        </nav>
+      </details>
+    </header>
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer shell">
+      <div class="footer-main">
+        <a class="identity" href="/" aria-label="Little Fight NYC home">
+          <img src="/brand/mark-white.svg" width="52" height="36" alt="" />
+          <span>LITTLE FIGHT NYC</span>
+        </a>
+        <p>
+          Small businesses have enough to fight.
+          <br />
+          Their technology should not be one.
+        </p>
+        <a class="footer-email" href={`mailto:${brand.email}`}>
+          {brand.email} <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <div class="footer-links">
+        <nav aria-label="Services">
+          <span class="label">What we do</span>
+          <a href="/services/websites/">Custom websites</a>
+          <a href="/services/tech-support/">Tech support</a>
+          <a href="/services/business-systems/">Software you own</a>
+        </nav>
+        <nav aria-label="Company">
+          <span class="label">Get to know us</span>
+          <a href="/work/">Our work</a>
+          <a href="/about/">Our approach</a>
+          <a href="/answers/">Straight answers</a>
+          <a href="/contact/">Contact</a>
+        </nav>
+        <div>
+          <span class="label">Talk to a person</span>
+          <a href={`tel:${brand.tel}`}>{brand.phone}</a>
+          <p>
+            9am–9pm Eastern
+            <br />
+            NYC on site. Websites nationwide.
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Little Fight NYC</p>
+        <nav aria-label="Policies">
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/accessibility/">Accessibility</a>
+        </nav>
+      </div>
+      <p class="credit">
+        <a href={brand.official}>
+          Designed, Hosted and Cared For by LittleFightNYC.com
+        </a>
+      </p>
+    </footer>
+    <script>
+      const menu = document.querySelector<HTMLDetailsElement>('.mobile-nav');
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && menu?.open) {
+          menu.open = false;
+          menu.querySelector('summary')?.focus();
+        }
+      });
+      document.addEventListener('click', (event) => {
+        if (
+          menu?.open &&
+          event.target instanceof Node &&
+          !menu.contains(event.target)
+        )
+          menu.open = false;
+      });
+    </script>
+  </body>
+</html>

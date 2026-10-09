@@ -1,0 +1,39 @@
+---
+import Site from '../layouts/Site.astro';
+import WorkCard from '../components/WorkCard.astro';
+import ContactBand from '../components/ContactBand.astro';
+import { work } from '../data/site';
+---
+
+<Site
+  title="Selected website work"
+  description="See public websites built by Little Fight NYC for Hair By Rachel, CC Films and The Tarot Hotline. Real pages with clear customer paths."
+>
+  <div class="work-page">
+    <section class="page-head shell">
+      <p class="label">Small businesses. Individual stories.</p>
+      <h1>
+        THE WORK
+        <br />
+        SPEAKS.
+      </h1>
+      <p class="lede">
+        A salon, a film, a personal service. Each needed a different website.
+        Each gives its visitors a clear next step.
+      </p>
+    </section>
+    <section class="section shell" aria-label="Selected projects">
+      <div class="work-grid">
+        {work.map((project) => (
+          <WorkCard project={project} />
+        ))}
+      </div>
+      <p class="evidence-caption">
+        These are public client websites. Screens captured October 9, 2026. The
+        linked project stories describe the delivered work; no traffic, booking
+        or revenue uplift is claimed.
+      </p>
+    </section>
+  </div>
+  <ContactBand heading="Your business has its own story." />
+</Site>
