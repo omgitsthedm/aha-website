@@ -1,0 +1,35 @@
+---
+import Site from "../layouts/Site.astro";
+import { documents } from "../data/documents";
+export function getStaticPaths() {
+  return documents.map((document) => ({
+    params: { slug: document.slug },
+    props: { document },
+  }));
+}
+const { document } = Astro.props;
+---
+
+<Site title={document.title} description={document.description}>
+  <header class="page-head shell">
+    <p class="label">{document.eyebrow}</p>
+    <h1>{document.title}</h1>
+    <p class="lede">{document.lead}</p>
+  </header>
+  <article class="reading shell">
+    {document.sections.map(([title, body]) => (
+      <section>
+        <h2>{title}</h2>
+        <p>{body}</p>
+      </section>
+    ))}
+    <div class="actions">
+      <a class="button" href={document.href}>
+        {document.action}
+      </a>
+      <a class="text-link" href="/faq/">
+        Common questions →
+      </a>
+    </div>
+  </article>
+</Site>

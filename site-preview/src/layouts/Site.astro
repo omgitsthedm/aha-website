@@ -1,0 +1,254 @@
+---
+import "../styles/site.css";
+import { brand, navigation } from "../data/site";
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+const { title, description, path = Astro.url.pathname } = Astro.props;
+const origin = Astro.site!.origin;
+const canonical = new URL(path, origin).href;
+const isPreview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${brand.official}/#organization`,
+      name: brand.name,
+      url: brand.official,
+      logo: `${origin}/brand/sheep.svg`,
+      email: brand.email,
+      description:
+        "A clothing brand for the dreamers and the doers. New orders are currently paused.",
+      sameAs: [brand.instagram],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${origin}/#website`,
+      url: `${origin}/`,
+      name: brand.name,
+      publisher: { "@id": `${brand.official}/#organization` },
+      inLanguage: "en-US",
+    },
+    {
+      "@type": "WebPage",
+      "@id": canonical,
+      url: canonical,
+      name: title,
+      description,
+      isPartOf: { "@id": `${origin}/#website` },
+      about: { "@id": `${brand.official}/#organization` },
+      inLanguage: "en-US",
+      dateModified: brand.verified,
+    },
+    ...(path !== "/"
+      ? [
+          {
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: `${origin}/`,
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: title,
+                item: canonical,
+              },
+            ],
+          },
+        ]
+      : []),
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>{title} | After Hours Agenda</title>
+    <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content={
+        isPreview
+          ? "noindex, noarchive"
+          : "index, follow, max-image-preview:large"
+      }
+    />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#FF6B6B" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={brand.name} />
+    <meta property="og:title" content={`${title} | After Hours Agenda`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta
+      property="og:image"
+      content={`${origin}/brand/${isPreview ? "og-image.png" : "og-image-production.png"}`}
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="After Hours Agenda. For the dreamers and the doers. The original black-sheep mark on paper white and rose."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | After Hours Agenda`} />
+    <meta name="twitter:description" content={description} />
+    <meta
+      name="twitter:image"
+      content={`${origin}/brand/${isPreview ? "og-image.png" : "og-image-production.png"}`}
+    />
+    <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="icon"
+      href="/brand/favicon-32.png"
+      sizes="32x32"
+      type="image/png"
+    />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(schema).replace(/</g, "\\u003c")}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    {isPreview && (
+      <div class="preview-note">
+        <span>After Hours Agenda · Website preview</span>
+        <span>For review · October 9, 2026</span>
+      </div>
+    )}
+    <header class="site-header shell">
+      <a class="identity" href="/" aria-label="After Hours Agenda home">
+        <img src="/brand/sheep.svg" width="46" height="36" alt="" />
+        <span>
+          AFTER HOURS
+          <br />
+          AGENDA
+        </span>
+      </a>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        {navigation.map((link) => (
+          <a
+            href={link.href}
+            aria-current={path === link.href ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+      <a class="button header-cta" href="/updates/">
+        Stay close <span aria-hidden="true">↗</span>
+      </a>
+      <details class="mobile-nav">
+        <summary>
+          Menu <span aria-hidden="true">+</span>
+        </summary>
+        <nav aria-label="Mobile navigation">
+          {navigation.map((link) => (
+            <a
+              href={link.href}
+              aria-current={path === link.href ? "page" : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
+          <a href="/manifesto/">Manifesto</a>
+          <a href="/updates/">Stay close ↗</a>
+        </nav>
+      </details>
+    </header>
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer shell">
+      <div class="footer-top">
+        <p class="footer-tagline">
+          For the dreamers
+          <br />
+          <span class="accent">and the doers.</span>
+        </p>
+        <a class="identity" href="/" aria-label="After Hours Agenda home">
+          <img src="/brand/sheep.svg" width="46" height="36" alt="" />
+          <span>
+            AFTER HOURS
+            <br />
+            AGENDA
+          </span>
+        </a>
+      </div>
+      <div class="footer-links">
+        <nav aria-label="Explore">
+          <span class="label">Explore</span>
+          <a href="/about/">The story</a>
+          <a href="/lookbook/">Lookbook</a>
+          <a href="/manifesto/">Manifesto</a>
+          <a href="/updates/">Updates</a>
+          <a href="/shop/">Collection status</a>
+        </nav>
+        <nav aria-label="Support">
+          <span class="label">Here to help</span>
+          <a href="/contact/">Contact</a>
+          <a href="/faq/">Common questions</a>
+          <a href="/track-order/">Existing orders</a>
+          <a href="/shipping/">Shipping</a>
+          <a href="/returns/">Returns</a>
+          <a href="/size-guide/">Size and fit</a>
+          <a href="/care/">Care</a>
+        </nav>
+        <div>
+          <p class="label">A real conversation</p>
+          <a class="footer-email" href={`mailto:${brand.email}`}>
+            {brand.email} ↗
+          </a>
+          <p>
+            New orders are paused. Support for existing orders remains
+            available.
+          </p>
+          <a href={brand.instagram}>Instagram ↗</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 After Hours Agenda</p>
+        <nav aria-label="Policies">
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/accessibility/">Accessibility</a>
+        </nav>
+      </div>
+    </footer>
+    <script>
+      const menu = document.querySelector<HTMLDetailsElement>(".mobile-nav");
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && menu?.open) {
+          menu.open = false;
+          menu.querySelector("summary")?.focus();
+        }
+      });
+      document.addEventListener("click", (event) => {
+        if (
+          menu?.open &&
+          event.target instanceof Node &&
+          !menu.contains(event.target)
+        )
+          menu.open = false;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+---
+import Site from "../layouts/Site.astro";
+import UpdatesBand from "../components/UpdatesBand.astro";
+const tenets = [
+  [
+    "Work hard. Love hard.",
+    "Make something with your hands, your head, your heart. Make time for the people beside you. Both count.",
+  ],
+  [
+    "Celebrate.",
+    "The birthday. The small win. The dinner after a long day. Life does not need a special occasion to be worth showing up for.",
+  ],
+  [
+    "Be kind.",
+    "To the people you know and the ones you do not. A little care goes a long way.",
+  ],
+  [
+    "Find your people.",
+    "Different lives. Different ways of getting there. Good company makes the whole thing better.",
+  ],
+];
+---
+
+<Site
+  title="The manifesto"
+  description="The After Hours Agenda manifesto: work hard, love hard, be kind, find your people and celebrate the life you are building."
+>
+  <header class="page-head shell manifesto-hero">
+    <div>
+      <p class="label">The things we come back to</p>
+      <h1>
+        BUILD A LIFE.
+        <br />
+        <span class="accent">LIVE IT WELL.</span>
+      </h1>
+      <p class="lede">
+        For the dreamers and the doers. For kindness. For the community.
+      </p>
+    </div>
+    <img
+      src="/brand/sheep.svg"
+      width="220"
+      height="173"
+      alt="The After Hours Agenda black sheep"
+    />
+  </header>
+  <div class="shell reading">
+    {tenets.map(([title, body]) => (
+      <section>
+        <h2>{title}</h2>
+        <p>{body}</p>
+      </section>
+    ))}
+  </div>
+  <UpdatesBand />
+</Site>

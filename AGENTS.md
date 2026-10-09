@@ -1,55 +1,30 @@
 # After Hours Agenda agent contract
 
-After Hours Agenda is a production commerce storefront. Read this file and `SOURCE_OF_TRUTH.md` before working; that file records current availability. No other file is mandatory startup context.
+This custom-domain project keeps the After Hours Agenda brand. Never substitute an agency or future client's identity. The user corrected the initial rebrand direction on October 9, 2026. Only abstract projects use LFNYC branding.
 
-## Canonical route
+## Source and scope
 
-- **Local root**: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/05 Store and Website/Website Code`
-- **GitHub**: `https://github.com/omgitsthedm/aha-website.git`
-- **Production branch**: `main`
-- **Primary site**: `https://afterhoursagenda.com`
-- **Current operational truth**: `SOURCE_OF_TRUTH.md`
+- Canonical original checkout: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`.
+- Audit worktree: `/Users/davidmarsh/Desktop/Project Upgrades/afterhoursagenda/worktree`.
+- Branch: `audit/2026-10-09`; new app: `site-preview/`.
+- GitHub: `omgitsthedm/aha-website`; production branch: `main`.
+- Exact Netlify site: `275b4115-16bf-42fb-9b36-6bce9bb93608`; primary host: `https://afterhoursagenda.com`.
+- Read `SOURCE_OF_TRUTH.md`. Confirm physical Git root and `git status --short` before edits. Preserve unrelated work and the original checkout.
 
-Run `pwd -P`, `git rev-parse --show-toplevel`, and `git status --short --branch` before editing. Preserve unrelated work. There is no compatibility checkout; use this physical root and never treat a copied directory as a second source.
+The user approved moving the reviewed AHA website toward production on October 9, 2026. Prepare and verify the documented static migration through GitHub main and the exact Netlify site. GitHub ruleset 20717491 requires one independent approval and nine named checks; do not bypass or weaken it. Auto-merge is disabled. Root netlify.toml on this branch is the production candidate, not proof of a live release. No DNS/domain change, provider/data mutation, payment, message or form submission is authorized. No global installs or shared configuration edits. Ports 48378/48379 only; use installed Google Chrome. Return to preview-first scope for new work after this release.
 
-## Safety boundaries
+## Design and content
 
-- Protect Cart to Checkout to Payment to Confirmation above all other behavior
-- Never inspect or edit `.env*`, secrets, credentials, keychains, or protected production data
-- Never create a live payment, order, customer, refund, fulfillment, email, form submission, or analytics event during agent verification
-- Do not change products, prices, inventory, mappings, Square, Printful, Netlify, Domain Name System (DNS), database, email, analytics, or commerce behavior without clear scoped authorization
-- Do not push, deploy, merge, or change live systems unless the current request authorizes the exact action
-- Treat `lib/square/`, `lib/printful/`, `lib/commerce/`, `app/api/`, cart, checkout, webhooks, and operations routes as high risk
-- Never restore retired catalog, brand, or editorial material from historical handoffs without current approval
+Use AHA's current `app/globals.css`, Poppins weights from `app/layout.tsx`, `lib/content/brand-copy.ts`, the canonical `components/ui/SheepMark.tsx` artwork and `data/brand-imagery.json`. The later source contract takes precedence over conflicting July design prose: paper/ink/rose, Poppins 400/700/900, hairline frames, warm plain language and no invented city-origin claims. New preview tokens live in `site-preview/src/styles/tokens.css`.
 
-Public `GET` and `HEAD` checks, name-only readiness checks, and read-only Git, GitHub, and Netlify inspection are observational. Checkout, submissions, provider calls, and production writes are transactional.
+New orders are paused. Never fabricate product availability, future release dates, reviews, revenue, conversion or search results. Caption AI campaign concepts and previous-run renders accurately. Preserve existing-order terms. The contact enhancement only prepares a local email; no backend delivery or automatic signup is implied.
 
-## Commands
+## Validation
 
-```bash
-npm run lint
-npm run typecheck
-npm test
-npm run validate:all
-npm run build
-npm run verify:netlify-site
-LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live
-npm run verify:commerce-readiness:netlify
-```
+From `site-preview/` on Node 24.21.0: `npm run check`, `npm run test:e2e`, `npm audit`. Build and visually inspect before any draft deploy. Artifact tests reject wrong-business content, transactions and secrets. Run both preview and production modes before release. Hosted checks must verify exact source/hash, routes, headers, ownership files and indexing. `NEEDS-APPROVAL.md` records the independent-review gate and the remaining cutover sequence.
 
-Use the smallest validation set that proves the task. Run the exact-site guard before release work. Never use live checkout as a smoke test.
+## Protected original application
 
-## On-demand references
+Treat `app/api/`, `lib/square/`, `lib/apliiq/`, `lib/printful/`, `lib/commerce/`, checkout, webhooks, provider mappings and database operations as high risk. Never manufacture an order/payment/customer/refund/fulfillment or send email during verification. Handle required credentials only within explicit authorization; do not print, commit or publish secrets. Preserve all existing provider accounts and data.
 
-- Documentation map: `docs/README.md`
-- Brand and interface work: `docs/AHA-DESIGN-SYSTEM.md` and `.impeccable.md`
-- Commerce architecture: `docs/commerce-operations.md`
-- Product creation: `docs/product-factory.md`
-- Database changes: `db/README.md`
-- Historical evidence: `docs/archive/2026-08-10-house-cleaning/`, opened only when a task names it
-
-Archived handoffs, plans, operations guides, and dated audits are not current instructions. When a reference conflicts with Git, current Netlify metadata, the live site, or `SOURCE_OF_TRUTH.md`, verify the external truth and update only the current contract.
-
-## Completion
-
-Finish with a clean, synchronized branch when authorized and technically possible. Report changed files, validation, production impact, risks, and the next action only when one remains. Do not create session diaries, status logs, or new handoffs inside this repository.
+Original validation commands remain `npm run lint`, `npm run typecheck`, `npm test`, `npm run validate:all`, `npm run build`, `npm run verify:netlify-site`, `LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live` and `npm run verify:commerce-readiness:netlify`. These do not authorize transactional probes or live mutations. Detailed original design/commerce/database references remain under `docs/` and `db/`; dated handoffs are historical evidence, not current release truth.

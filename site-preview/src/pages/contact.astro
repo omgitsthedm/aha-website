@@ -1,0 +1,242 @@
+---
+import Site from "../layouts/Site.astro";
+import { brand, topics } from "../data/site";
+---
+
+<Site
+  title="Talk to us"
+  description="Contact After Hours Agenda for help with an existing order, a piece, fit, returns or accessibility. Prepare an email draft or write to info@afterhoursagenda.com."
+>
+  <header class="page-head shell">
+    <p class="label">Real people. A real conversation.</p>
+    <h1>
+      TALK
+      <br />
+      <span class="accent">TO US.</span>
+    </h1>
+    <p class="lede">
+      An order question, a piece you love, or something you need a hand with. We
+      are here.
+    </p>
+  </header>
+  <div class="contact-layout shell">
+    <div>
+      <div class="contact-options">
+        <div class="contact-option">
+          <p class="label">Write directly</p>
+          <h2 class="contact-address">
+            <a href={`mailto:${brand.email}`}>{brand.email} ↗</a>
+          </h2>
+          <p>
+            No form needed. Email us with a little context and we will take it
+            from there.
+          </p>
+        </div>
+        <div class="contact-option">
+          <p class="label">For an existing order</p>
+          <h2>A few useful details.</h2>
+          <p>
+            Include the order number and checkout email. For a fit question,
+            tell us the product, size and color. For damage or an incorrect
+            item, attach clear photos when you send your email.
+          </p>
+        </div>
+        <div class="contact-option">
+          <p class="label">Keep it safe</p>
+          <p>
+            Never include passwords, card numbers or security codes. New orders
+            are paused; support for existing orders remains available.
+          </p>
+          <a class="text-link" href="/faq/">
+            Common questions →
+          </a>
+        </div>
+      </div>
+    </div>
+    <section class="brief-panel" aria-labelledby="brief-title">
+      <h2 id="brief-title">A little context helps.</h2>
+      <p>
+        This prepares an email for you to review and send. Your details stay in
+        this page until you choose to open your email app or copy them.
+      </p>
+      <noscript>
+        <p class="reading">
+          Email{" "}
+          <a class="text-link" href={`mailto:${brand.email}`}>
+            {brand.email}
+          </a>{" "}
+          with your name, order number if relevant, and what you need help with.
+        </p>
+      </noscript>
+      <form class="brief-form" id="brief-form" hidden novalidate>
+        <div class="field">
+          <label for="name">
+            Your name <span aria-hidden="true">*</span>
+          </label>
+          <input
+            id="name"
+            name="name"
+            autocomplete="name"
+            required
+            maxlength="80"
+            aria-describedby="name-error"
+          />
+          <p class="field-error" id="name-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="reference">
+            Order number <span class="small-copy">(optional)</span>
+          </label>
+          <input
+            id="reference"
+            name="reference"
+            autocomplete="off"
+            maxlength="120"
+          />
+        </div>
+        <div class="field">
+          <label for="email">
+            Your email <span aria-hidden="true">*</span>
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            inputmode="email"
+            required
+            maxlength="160"
+            aria-describedby="email-error"
+          />
+          <p class="field-error" id="email-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="topic">What brings you here?</label>
+          <select id="topic" name="topic">
+            {topics.map((topic) => (
+              <option value={topic.slug}>{topic.name}</option>
+            ))}
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">
+            How can we help? <span aria-hidden="true">*</span>
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            minlength="10"
+            maxlength="1800"
+            aria-describedby="message-help message-error"
+            placeholder="An order update, a fit question, or something else…"
+          ></textarea>
+          <p class="field-help" id="message-help">
+            A few sentences are enough. Keep passwords and payment details out.
+          </p>
+          <p class="field-error" id="message-error" hidden></p>
+        </div>
+        <p class="form-footnote">
+          * Required. This form creates a draft. It does not submit a request.
+        </p>
+        <button class="button" type="submit">
+          Prepare my email <span aria-hidden="true">↗</span>
+        </button>
+      </form>
+      <div class="brief-result" id="brief-result" hidden>
+        <h3 id="result-title" tabindex="-1">
+          Your email is ready to review.
+        </h3>
+        <p>
+          Nothing has been sent. Open your email app, check the draft and send
+          when you’re ready. If your email app does not open, copy the text and
+          write to {brand.email}.
+        </p>
+        <label for="draft-text" class="label">
+          Your message
+        </label>
+        <textarea
+          id="draft-text"
+          readonly
+          aria-label="Prepared email message"
+        ></textarea>
+        <div class="result-actions">
+          <a id="email-draft" class="button" href={`mailto:${brand.email}`}>
+            Open email draft <span aria-hidden="true">↗</span>
+          </a>
+          <button class="button button-secondary" type="button" id="copy-draft">
+            Copy message
+          </button>
+          <button class="button button-secondary" type="button" id="edit-draft">
+            Edit details
+          </button>
+        </div>
+        <p class="copy-status" id="copy-status" role="status"></p>
+      </div>
+      <p id="form-status" class="field-error" role="status"></p>
+    </section>
+  </div>
+  <script>
+    import { createBrief, validateBrief } from "../scripts/brief";
+    const form = document.querySelector<HTMLFormElement>("#brief-form")!;
+    const result = document.querySelector<HTMLElement>("#brief-result")!;
+    const topic = document.querySelector<HTMLSelectElement>("#topic")!;
+    const status = document.querySelector<HTMLElement>("#form-status")!;
+    const draft = document.querySelector<HTMLTextAreaElement>("#draft-text")!;
+    form.hidden = false;
+    const requested = new URLSearchParams(location.search).get("topic");
+    if (
+      requested &&
+      [...topic.options].some((option) => option.value === requested)
+    )
+      topic.value = requested;
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const values = Object.fromEntries(new FormData(form));
+      const errors = validateBrief(values);
+      for (const name of ["name", "email", "message"]) {
+        const input = form.elements.namedItem(name) as HTMLInputElement;
+        const error = document.getElementById(`${name}-error`)!;
+        input.setAttribute("aria-invalid", String(Boolean(errors[name])));
+        error.textContent = errors[name] || "";
+        error.hidden = !errors[name];
+      }
+      const firstError = Object.keys(errors)[0];
+      if (firstError) {
+        status.textContent =
+          "Check the marked fields. Your details are still here.";
+        (form.elements.namedItem(firstError) as HTMLElement).focus();
+        return;
+      }
+      status.textContent = "";
+      const prepared = createBrief(values);
+      draft.value = prepared.body;
+      document.querySelector<HTMLAnchorElement>("#email-draft")!.href =
+        prepared.url;
+      form.hidden = true;
+      result.hidden = false;
+      document.getElementById("result-title")!.focus();
+    });
+    document.querySelector("#edit-draft")!.addEventListener("click", () => {
+      result.hidden = true;
+      form.hidden = false;
+      document.getElementById("name")!.focus();
+    });
+    document
+      .querySelector("#copy-draft")!
+      .addEventListener("click", async () => {
+        const copyStatus = document.getElementById("copy-status")!;
+        try {
+          await navigator.clipboard.writeText(draft.value);
+          copyStatus.textContent =
+            "Message copied. Paste it into your email. Nothing has been sent.";
+        } catch {
+          draft.focus();
+          draft.select();
+          copyStatus.textContent =
+            "Copy is unavailable here. Your message is selected; use your device’s Copy command.";
+        }
+      });
+  </script>
+</Site>

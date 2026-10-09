@@ -1,0 +1,46 @@
+---
+import Site from "../layouts/Site.astro";
+import Image from "../components/EditorialImage.astro";
+import UpdatesBand from "../components/UpdatesBand.astro";
+import { gallery } from "../data/site";
+import manifest from "../data/images.json";
+---
+
+<Site
+  title="Lookbook and archive"
+  description="Explore After Hours Agenda campaign concepts, the Black Sheep from previous runs, and the original brand archive. Images are labeled by source; these pieces are not currently for sale."
+>
+  <header class="page-head shell">
+    <p class="label">Concepts. Past pieces. Our story.</p>
+    <h1>
+      FOR YOU.
+      <br />
+      <span class="accent">AND YOUR PEOPLE.</span>
+    </h1>
+    <p class="lede">
+      A feeling that runs through the years. The time that is yours, the pieces
+      you reach for, and the people you share them with.
+    </p>
+    <p class="status-copy">
+      This is an editorial lookbook, not a current catalog. Each frame is
+      labeled by its source. New orders are paused.
+    </p>
+  </header>
+  <div class="gallery shell">
+    {gallery.map((shot, i) => (
+      <figure>
+        <Image
+          name={shot.image as keyof typeof manifest}
+          alt={shot.alt}
+          priority={i === 0}
+          sizes="(max-width: 360px) 100vw, 50vw"
+        />
+        <figcaption>
+          <h2>{shot.caption}</h2>
+          <p>{shot.note}</p>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+  <UpdatesBand />
+</Site>

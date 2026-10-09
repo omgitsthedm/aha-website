@@ -1,44 +1,40 @@
-# After Hours Agenda storefront
+# After Hours Agenda — reviewed website release candidate
 
-After Hours Agenda is a New York streetwear storefront at `https://afterhoursagenda.com`. The application uses Next.js 15, TypeScript, Netlify, Square, Printful, Netlify Database, and Resend. See `SOURCE_OF_TRUTH.md` for current production availability.
+After Hours Agenda keeps its own identity and custom domain. The reviewed website lives in **`site-preview/`**, using Astro 7.3.8 and Node 24.21.0. The user approved moving it toward production on October 9, 2026. GitHub's independent PR approval and required checks remain mandatory; `SOURCE_OF_TRUTH.md` records the current live state.
 
-## Start here
-
-Agents read `AGENTS.md` and `SOURCE_OF_TRUTH.md`. Open detailed design, product, commerce, or operations documents only when the task needs them.
-
-## Local commands
+## Work and verify
 
 ```bash
+cd site-preview
+npm ci
+npm run check
+npm run test:e2e
+AHA_PRODUCTION_BUILD=approved PUBLIC_SITE_URL=https://afterhoursagenda.com npm run check
+AHA_PRODUCTION_BUILD=approved npm run test:e2e
 npm run dev
-npm run lint
-npm run typecheck
-npm test
-npm run validate:all
-npm run build
 ```
 
-## Read-only production checks
+Use Node 24.21.0. Dev uses port 48378; built-site checks use 48379 and installed Google Chrome. Preview and production tests enforce their own indexing/canonical mode. Tests cover every page, keyboard navigation, contact states, no-JavaScript content, reflow, accessibility, artifact integrity and unchanged Google/Bing ownership files. Build the corresponding mode immediately before its tests.
 
-```bash
-npm run verify:netlify-site
-LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live
-npm run verify:commerce-readiness:netlify
-```
+## Brand and behavior
 
-These checks do not authorize a deploy, live checkout, provider write, order, fulfillment, email, or production-data mutation.
+AHA's paper/ink/rose palette, Poppins, JetBrains Mono and original black sheep remain the brand authority. New orders are paused. Image captions distinguish campaign concepts, previous-run renders and genuine archive. Contact prepares a local email draft to `info@afterhoursagenda.com`; nothing is sent, stored or subscribed automatically.
 
-## Repository layout
+The static candidate excludes automated newsletter signup, customer order lookup, operational/provider endpoints, analytics and payment functions. This is a disclosed runtime migration, not a commerce reopening. Original source, provider accounts, credentials and historical data remain preserved; they are not proof that a static deployment continues serving those endpoints.
 
-```text
-app/                Next.js routes and application programming interface routes
-components/         Storefront and shared interface components
-lib/                Commerce, provider, data, database, and shared logic
-data/               Product manifest and provider mappings
-scripts/            Validation and product operations
-ops/                Exact-site and commerce-readiness guards
-db/                 Database schema and migrations
-docs/               Current task-specific references and an on-demand historical archive
-.github/workflows/  Continuous integration and release checks
-```
+## Release
 
-Use `docs/README.md` to select one current reference. Historical handoffs, audits, plans, and superseded operations guides are archived and excluded from normal searches.
+- GitHub: `omgitsthedm/aha-website`; production branch: `main`.
+- Exact Netlify site: `275b4115-16bf-42fb-9b36-6bce9bb93608`; domain: `https://afterhoursagenda.com`.
+- On this audit branch, root `netlify.toml` is the prepared static production configuration. It is not live until an approved main merge and successful Git build.
+- Review artifact: https://6ac8af91c681bfc763902db4--afterhoursagenda.netlify.app. It retains noindex and must never be promoted unchanged.
+- Production builds explicitly require `AHA_PRODUCTION_BUILD=approved` and the exact AHA origin. `release.json` records the source, artifact digest and exact site.
+- Required checks keep their established names. Original-app CI still validates the preserved source; browser/performance jobs test the static production candidate. Lighthouse CI uses the exact local build; hosted measurements are separately documented.
+- GitHub requires one independent approval. Do not use an admin bypass or change the rules. The verified `NETLIFY_NEXT_PLUGIN_SKIP=true` flag keeps any old UI-installed Next runtime inert; no live plugin-setting change is needed.
+- Post-release verification: `EXPECTED_COMMIT=<deployed-main-sha> node site-preview/scripts/verify-live.mjs`, followed by production-mode browser checks on `BASE_URL=https://afterhoursagenda.com`.
+
+`AUDIT-REPORT.md` is the dated audit receipt. `NEEDS-APPROVAL.md` records the outstanding release gate and exact remaining sequence. New work returns to preview-first scope after this release.
+
+## Preserved application
+
+The original `app/`, `components/`, `lib/`, `data/`, `db/` and `ops/` remain in Git. Their provider and database operations are protected; do not run transactional probes or infer authorization to reopen commerce. The original checkout is preserved on its existing branch; all release work happens in the isolated audit worktree.

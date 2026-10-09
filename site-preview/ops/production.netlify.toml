@@ -1,0 +1,25 @@
+# PREPARED ONLY. Copy to repository-root netlify.toml only after explicit approval
+# to replace the live AHA site. Merging this template alone does not activate it.
+[build]
+  base = "site-preview"
+  command = "npm run build"
+  publish = "dist"
+  functions = "functions-empty"
+
+[build.environment]
+  NODE_VERSION = "24.21.0"
+  ASTRO_TELEMETRY_DISABLED = "1"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
+[context.production.environment]
+  AHA_PRODUCTION_BUILD = "approved"
+  PUBLIC_SITE_URL = "https://afterhoursagenda.com"
+
+[context.deploy-preview.environment]
+  PUBLIC_SITE_URL = "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app"
+
+[context.branch-deploy.environment]
+  PUBLIC_SITE_URL = "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app"
+
+[functions]
+  directory = "functions-empty"

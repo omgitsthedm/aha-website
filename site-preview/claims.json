@@ -1,0 +1,44 @@
+{
+  "reviewed": "2026-10-09",
+  "owner": "After Hours Agenda",
+  "brandSources": [
+    "app/globals.css",
+    "app/layout.tsx",
+    "lib/content/brand-copy.ts",
+    "components/ui/SheepMark.tsx",
+    "docs/AHA-DESIGN-SYSTEM.md",
+    "docs/design-tokens.md",
+    "data/brand-imagery.json"
+  ],
+  "claims": [
+    {
+      "claim": "New orders are paused; existing orders remain supported under original terms.",
+      "sources": [
+        "lib/commerce/catalog-policy.ts",
+        "app/terms/page.tsx",
+        "current production browser"
+      ]
+    },
+    {
+      "claim": "Est. 2011; Prologue January 2012.",
+      "sources": [
+        "lib/content/brand-copy.ts",
+        "public/editorial/archive/2012-the-prologue.jpg"
+      ]
+    },
+    {
+      "claim": "Campaign concepts and previous-run renders are not current product proof.",
+      "source": "data/brand-imagery.json",
+      "treatment": "Visible captions on every affected image."
+    },
+    {
+      "claim": "Support email info@afterhoursagenda.com.",
+      "source": "lib/content/site-copy.ts"
+    }
+  ],
+  "limits": [
+    "No product availability, future release date, sales, ranking or AI-citation outcome is fabricated.",
+    "No other business identity is adopted.",
+    "No provider, checkout, signup or order-lookup calls are made by the preview."
+  ]
+}

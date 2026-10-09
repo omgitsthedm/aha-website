@@ -1,0 +1,159 @@
+---
+import Site from "../layouts/Site.astro";
+import Image from "../components/EditorialImage.astro";
+import UpdatesBand from "../components/UpdatesBand.astro";
+---
+
+<Site
+  title="For the dreamers and the doers"
+  description="After Hours Agenda is a clothing brand for the dreamers and the doers. Explore the story, lookbook and archive, or get support for an existing order. New orders are paused."
+>
+  <section class="hero shell">
+    <div class="hero-copy">
+      <p class="label">Independent clothing · Est. 2011</p>
+      <h1>
+        FOR THE
+        <br />
+        DREAMERS
+        <br />
+        <span>
+          AND THE
+          <br />
+          DOERS.
+        </span>
+      </h1>
+      <p class="lede">
+        For good people who work hard, love hard, and celebrate the life they’re
+        building.
+      </p>
+      <div class="actions">
+        <a class="button" href="/lookbook/">
+          Explore the lookbook <span aria-hidden="true">↗</span>
+        </a>
+        <a class="text-link" href="/about/">
+          Our story →
+        </a>
+      </div>
+      <p class="status-copy">
+        The next collection is in development. New orders are paused. Our story
+        keeps going.
+      </p>
+    </div>
+    <figure class="hero-image">
+      <span class="image-number" aria-hidden="true">
+        AFTER THE WORK. YOUR TIME.
+      </span>
+      <Image
+        name="hero-her"
+        alt="Campaign concept of a woman in a plain black tee, coffee in hand, on a station platform."
+        priority
+      />
+      <figcaption>
+        Campaign concept · AI-generated · not a product photograph
+      </figcaption>
+    </figure>
+  </section>
+  <div class="shell">
+    <div class="chapter-strip">
+      <span>Kindness. Community. A little individuality.</span>
+      <span>For you and the people you love.</span>
+    </div>
+  </div>
+  <section class="section shell story-grid" aria-labelledby="story-title">
+    <figure class="archive-image">
+      <Image
+        name="2012-the-prologue"
+        alt="The original After Hours Agenda Prologue, typed on paper in January 2012."
+      />
+      <figcaption class="image-caption">
+        The Prologue · Brand archive · January 2012
+      </figcaption>
+    </figure>
+    <div>
+      <p class="label">The first words still hold.</p>
+      <h2 id="story-title">
+        WE CREATE.
+        <br />
+        WE <span class="accent">BUILD.</span>
+      </h2>
+      <p>
+        After hours is the part of the day that’s yours. The time you give to
+        the people and the ideas you love, after the work is done.
+      </p>
+      <p>
+        We wrote about dreamers, community and celebrating life in 2012. That is
+        still who this is for.
+      </p>
+      <div class="actions">
+        <a class="text-link" href="/about/">
+          Read the story →
+        </a>
+        <a class="text-link" href="/manifesto/">
+          The manifesto →
+        </a>
+      </div>
+    </div>
+  </section>
+  <section class="section shell" aria-labelledby="lookbook-title">
+    <div class="section-header">
+      <div>
+        <p class="label">A look back. A feeling that stays.</p>
+        <h2 id="lookbook-title">
+          OUR OWN
+          <br />
+          <span class="accent">KIND OF GOOD.</span>
+        </h2>
+      </div>
+      <a class="text-link" href="/lookbook/">
+        See the lookbook →
+      </a>
+    </div>
+    <div class="teaser-grid">
+      <figure>
+        <Image
+          name="sheep-agave-womens-front"
+          alt="Previous-run provider render of the Black Sheep sweatshirt in agave."
+        />
+        <figcaption>
+          <h3>The Black Sheep.</h3>
+          <p>Previous-run provider render. Not currently for sale.</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <Image
+          name="2013-love-vanity"
+          alt="Love / Vanity tee from the 2013 After Hours Agenda archive."
+        />
+        <figcaption>
+          <h3>Love / Vanity.</h3>
+          <p>From the brand archive, 2013.</p>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="shell section">
+    <div class="statement">
+      <img
+        src="/brand/sheep.svg"
+        width="260"
+        height="204"
+        alt="The After Hours Agenda black-sheep mark"
+        loading="lazy"
+      />
+      <div>
+        <p class="label">The Black Sheep</p>
+        <h2>
+          YOUR OWN WAY.
+          <br />
+          <span class="accent">GOOD COMPANY.</span>
+        </h2>
+        <p>
+          The black sheep does things its own way and brings everyone along. For
+          the people who make something of their time, and make room for one
+          another.
+        </p>
+      </div>
+    </div>
+  </section>
+  <UpdatesBand />
+</Site>

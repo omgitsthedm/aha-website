@@ -1,0 +1,18 @@
+/* After Hours Agenda. Values from the current app/globals.css; current type from app/layout.tsx. */
+:root {
+  --paper: #fafafa;
+  --ink: #1a1a1a;
+  --surface: #f1f1f1;
+  --muted: #4a4a4a;
+  --line: #b0b0b0;
+  --control: #8a8a8a;
+  --rose: #ff6b6b;
+  --accent: #ce3d56;
+  --accent-sunken: #b8304a;
+  --body: "Poppins", Arial, sans-serif;
+  --mono: "JetBrains Mono", Menlo, monospace;
+  --display-hero: clamp(3rem, 6.7vw, 6.4rem);
+  --display-section: clamp(2rem, 4.5vw, 4rem);
+  --display-sub: clamp(1.5rem, 3vw, 2.3rem);
+  --fast: 160ms;
+}

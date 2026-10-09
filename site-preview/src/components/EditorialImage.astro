@@ -1,0 +1,28 @@
+---
+import manifest from "../data/images.json";
+interface Props {
+  name: keyof typeof manifest;
+  alt: string;
+  sizes?: string;
+  priority?: boolean;
+}
+const {
+  name,
+  alt,
+  sizes = "(max-width: 760px) 100vw, 50vw",
+  priority = false,
+} = Astro.props;
+const image = manifest[name];
+---
+
+<img
+  src={image.src}
+  srcset={image.srcset}
+  sizes={sizes}
+  width={image.width}
+  height={image.height}
+  alt={alt}
+  loading={priority ? "eager" : "lazy"}
+  fetchpriority={priority ? "high" : "auto"}
+  decoding="async"
+/>
