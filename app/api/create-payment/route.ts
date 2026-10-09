@@ -192,7 +192,13 @@ export async function POST(request: Request) {
     );
   }
 
-  if (payment.status !== "COMPLETED" && payment.status !== "APPROVED") {
+  // Authorization is not capture. Preserve the order for the signed webhook/reconciliation
+  // path; never mark it paid or submit fulfillment before Square confirms completion.
+  if (payment.status === "APPROVED") {
+    return NextResponse.json({ ok: true, pending: true, orderNumber: order.externalOrderNumber },
+      { status: 202, headers: { "Cache-Control": "no-store" } });
+  }
+  if (payment.status !== "COMPLETED") {
     // Square returned a concrete non-success status: the attempt is spent, so a
     // retry needs a fresh key (declined:true).
     await markOrderFailed(order.orderId, `status ${payment.status}`).catch(() => {});

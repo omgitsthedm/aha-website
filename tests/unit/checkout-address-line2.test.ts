@@ -108,6 +108,17 @@ describe("create-payment forwards the apartment line", () => {
     for (const mock of Object.values(mocks)) mock.mockReset();
   });
 
+  it("holds an authorized payment without marking it paid or starting fulfillment", async () => {
+    mocks.squareRequest.mockResolvedValue({ payment: { id: "PAY_1", status: "APPROVED" } });
+    const response = await POST(request("Apt 4B"));
+    expect(response.status).toBe(202);
+    expect(await response.json()).toMatchObject({ pending: true, orderNumber: "AHA-TEST-0001" });
+    expect(mocks.markOrderPaid).not.toHaveBeenCalled();
+    expect(mocks.markOrderFailed).not.toHaveBeenCalled();
+    expect(mocks.startFulfillment).not.toHaveBeenCalled();
+    expect(mocks.enqueueOrderNotification).not.toHaveBeenCalled();
+  });
+
   it("sends address2 to Square as addressLine2 and keeps it in the paid snapshot", async () => {
     const response = await POST(request("Apt 4B"));
     expect(response.status).toBe(200);
