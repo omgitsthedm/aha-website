@@ -1,5 +1,6 @@
-import { routes } from "../src/data/site.ts";
-import { readFile, writeFile, readdir } from "node:fs/promises";
+import { launch } from "../src/data/catalog.ts";
+import { routes, indexableRoutes } from "../src/data/site.ts";
+import { readFile, writeFile, readdir, cp, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
@@ -8,6 +9,56 @@ const approved = process.env.AHA_PRODUCTION_BUILD === "approved";
 const origin =
   process.env.PUBLIC_SITE_URL ||
   "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app";
+if (!approved) {
+  await mkdir(new URL("images/", dist), { recursive: true });
+  await cp(
+    new URL("../review-assets/collection/", import.meta.url),
+    new URL("images/collection", dist),
+    { recursive: true },
+  );
+}
+const formFields = {
+  support: [
+    "name",
+    "email",
+    "reference",
+    "topic",
+    "message",
+    "consent",
+    "consent-version",
+    "website",
+  ],
+  newsletter: [
+    "email",
+    "interest",
+    "marketing-consent",
+    "consent-version",
+    "list",
+    "website",
+  ],
+  returns: [
+    "name",
+    "email",
+    "reference",
+    "topic",
+    "message",
+    "consent",
+    "consent-version",
+    "website",
+  ],
+};
+const forms = approved
+  ? Object.entries(formFields)
+      .map(
+        ([kind, fields]) =>
+          `<form name="aha-${kind}-2026" method="POST" data-netlify="true" netlify-honeypot="website" hidden><input type="hidden" name="form-name" value="aha-${kind}-2026">${fields.map((name) => `<input name="${name}">`).join("")}</form>`,
+      )
+      .join("")
+  : "Review forms do not submit.";
+await writeFile(
+  new URL("__forms.html", dist),
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>After Hours Agenda forms</title></head><body>${forms}</body></html>`,
+);
 const scriptHashes = new Set();
 const files = [];
 async function walk(dir, prefix = "") {
@@ -33,18 +84,26 @@ async function walk(dir, prefix = "") {
   }
 }
 await walk(dist);
+const paymentsEnabled =
+  approved && launch.releaseApproved && launch.policyApproved;
 const csp = [
   "default-src 'self'",
   "base-uri 'none'",
   "object-src 'none'",
   "frame-ancestors 'none'",
-  "form-action 'none'",
-  `script-src 'self' ${[...scriptHashes].join(" ")}`,
-  "style-src 'self'",
+  "form-action 'self'",
+  `script-src 'self' ${[...scriptHashes].join(" ")}${paymentsEnabled ? " https://web.squarecdn.com" : ""}`,
+  paymentsEnabled
+    ? "style-src 'self' 'unsafe-inline' https://web.squarecdn.com"
+    : "style-src 'self'",
   "img-src 'self' data:",
-  "font-src 'self'",
-  "connect-src 'self'",
-  "frame-src 'none'",
+  paymentsEnabled
+    ? "font-src 'self' https://square-fonts-production-f.squarecdn.com https://d1g145x70srn7h.cloudfront.net"
+    : "font-src 'self'",
+  paymentsEnabled
+    ? "connect-src 'self' https://web.squarecdn.com https://pci-connect.squareup.com https://o160250.ingest.sentry.io"
+    : "connect-src 'self'",
+  paymentsEnabled ? "frame-src https://web.squarecdn.com" : "frame-src 'none'",
   "worker-src 'none'",
   "upgrade-insecure-requests",
 ].join("; ");
@@ -58,11 +117,11 @@ await writeFile(
 );
 await writeFile(
   new URL("sitemap.xml", dist),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map((path) => `<url><loc>${origin}${path}</loc><lastmod>2026-10-09</lastmod></url>`).join("")}</urlset>\n`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${indexableRoutes.map((path) => `<url><loc>${origin}${path}</loc><lastmod>2026-10-09</lastmod></url>`).join("")}</urlset>\n`,
 );
 await writeFile(
   new URL("llms.txt", dist),
-  `# After Hours Agenda\n\n> A clothing brand for the dreamers and the doers.\n\n${approved ? "Official editorial website. New orders are paused." : "This is a review preview, not a production replacement. The official website is https://afterhoursagenda.com."}\n\n## Current status\n\nNew product and gift-card orders are paused while the next collection is developed. No release date is announced here. Lookbook images are labeled campaign concepts, previous-run provider renders or brand archive; they are not available stock. Existing orders remain supported under the terms that applied when purchased.\n\n## Identity and contact\n\nAfter Hours Agenda is a clothing brand established in 2011. Its original Prologue dates to January 2012. Kindness, community and celebrating the life you are building are its stated values. Contact: info@afterhoursagenda.com. Official Instagram: https://www.instagram.com/afterhoursagenda. Reviewed October 9, 2026.\n\n## Pages\n${routes.map((path) => `- [${path === "/" ? "Home" : path.split("/").filter(Boolean).at(-1)}](${origin}${path})`).join("\n")}\n\n## Contact behavior\n\nThe form prepares a local email draft. It does not submit data, subscribe the visitor, query orders, take payment or send a message. Visitors decide whether to send through their email app. Never send card details or passwords.\n`,
+  `# After Hours Agenda\n\n> A clothing brand for the dreamers and the doers.\n\n${approved ? "Official editorial website. New orders are paused." : "This is a review preview, not a production replacement. The official website is https://afterhoursagenda.com."}\n\n## Current status\n\nNew product and gift-card orders are paused while the next collection is developed. No release date is announced here. Lookbook images are labeled campaign concepts, previous-run provider renders or brand archive; they are not available stock. Existing orders remain supported under the terms that applied when purchased.\n\n## Identity and contact\n\nAfter Hours Agenda is a clothing brand established in 2011. Its original Prologue dates to January 2012. Kindness, community and celebrating the life you are building are its stated values. Contact: info@afterhoursagenda.com. Official Instagram: https://www.instagram.com/afterhoursagenda. Reviewed October 9, 2026.\n\n## Pages\n${routes.map((path) => `- [${path === "/" ? "Home" : path.split("/").filter(Boolean).at(-1)}](${origin}${path})`).join("\n")}\n\n## Contact behavior\n\nSupport and returns forms submit requests to the website host in production. Newsletter signup requires separate consent. Order lookup verifies order number, checkout email and shipping postal code. Preview forms and order checks use only test behavior and never access customer records. Saved pieces stay on the visitor device. Optional measurement is off until consent. New purchases stay paused until approved product and fulfillment data are ready. Never send card details or passwords.\n`,
 );
 await writeFile(
   new URL("manifest.webmanifest", dist),
@@ -105,6 +164,13 @@ await writeFile(
       artifactDigest: digest,
       digestScope:
         "All published files except release.json; SHA-256 of path-sorted JSON entries {path,bytes,sha256}.",
+      servicesDigest: createHash("sha256")
+        .update(
+          await readFile(new URL("../.server/legacy.mjs", import.meta.url)),
+        )
+        .digest("hex"),
+      servicesDigestScope:
+        "Preserved commerce bundle only; full function archive hashes are recorded in deployment evidence.",
       siteId: "275b4115-16bf-42fb-9b36-6bce9bb93608",
       reviewed: "2026-10-09",
     },
@@ -113,5 +179,5 @@ await writeFile(
   ),
 );
 console.log(
-  `Finalized ${files.length} static files; ${routes.length} sitemap routes; ${scriptHashes.size} CSP hashes; no functions.`,
+  `Finalized ${files.length} static files; ${indexableRoutes.length} sitemap routes; ${scriptHashes.size} CSP hashes; guarded services bundled separately.`,
 );

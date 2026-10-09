@@ -1,0 +1,80 @@
+---
+import Site from "../layouts/Site.astro";
+---
+
+<Site
+  title="Leave the email list"
+  description="Stop After Hours Agenda marketing email. Necessary messages about an existing order remain separate."
+  noindex
+>
+  <header class="page-head shell">
+    <p class="label">On your terms</p>
+    <h1>
+      A LITTLE
+      <br />
+      <span class="accent">LESS EMAIL.</span>
+    </h1>
+    <p class="lede">
+      Leave the marketing list. Messages needed to support an existing order
+      remain separate.
+    </p>
+  </header>
+  <section class="reading shell">
+    <form id="unsubscribe-form" class="brief-form" hidden>
+      <div class="field">
+        <label for="unsubscribe-email">Your email</label>
+        <input
+          id="unsubscribe-email"
+          type="email"
+          name="email"
+          required
+          maxlength="160"
+          autocomplete="email"
+        />
+      </div>
+      <button class="button" type="submit">
+        Unsubscribe
+      </button>
+      <p id="unsubscribe-status" role="status" tabindex="-1"></p>
+    </form>
+    <noscript>
+      <p>Email info@afterhoursagenda.com with “Unsubscribe” in the subject.</p>
+    </noscript>
+  </section>
+  <script>
+    const form = document.querySelector<HTMLFormElement>("#unsubscribe-form")!;
+    form.hidden = false;
+    const status = document.getElementById("unsubscribe-status")!;
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = form.querySelector<HTMLButtonElement>("button")!;
+      if (button.disabled || !form.reportValidity()) return;
+      button.disabled = true;
+      try {
+        const response = await fetch("/api/unsubscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const data = await response.json();
+        if (!response.ok)
+          throw new Error(
+            data.error ||
+              "Unable to update the preference. Email info@afterhoursagenda.com.",
+          );
+        status.textContent = data.preview
+          ? "Test complete. No real subscription was changed."
+          : "Your preference has been saved. You will not receive marketing email from this list.";
+        form.reset();
+      } catch (error) {
+        status.textContent =
+          error instanceof Error
+            ? error.message
+            : "Please email info@afterhoursagenda.com.";
+      } finally {
+        button.disabled = false;
+        status.focus();
+      }
+    });
+  </script>
+</Site>

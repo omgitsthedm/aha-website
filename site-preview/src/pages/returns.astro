@@ -1,0 +1,54 @@
+---
+import Site from "../layouts/Site.astro";
+import CustomerForm from "../components/CustomerForm.astro";
+---
+
+<Site
+  title="Returns and exchanges"
+  description="Request help with an After Hours Agenda return, exchange, damaged piece or gift. Existing orders keep their original purchase terms."
+>
+  <header class="page-head shell">
+    <p class="label">Let’s sort it out</p>
+    <h1>
+      HERE
+      <br />
+      <span class="accent">TO HELP.</span>
+    </h1>
+    <p class="lede">
+      An issue with a piece should start with a clear conversation.
+    </p>
+  </header>
+  <div class="contact-layout shell">
+    <div class="contact-options">
+      <div class="contact-option">
+        <h2>01. Tell us what happened.</h2>
+        <p>
+          Use the order number and checkout email. For a gift, explain that you
+          received the item and share the order reference if available.
+        </p>
+      </div>
+      <div class="contact-option">
+        <h2>02. Keep the piece nearby.</h2>
+        <p>
+          We may ask for photographs of the garment, its label or packaging.
+          Send them by email after we reply; keep payment details out.
+        </p>
+      </div>
+      <div class="contact-option">
+        <h2>03. Wait for instructions.</h2>
+        <p>
+          This request does not authorize a return or refund. Eligibility
+          follows your original order terms. Do not mail anything until you
+          receive instructions.
+        </p>
+      </div>
+      <a class="text-link" href="/contact/?topic=returns">
+        No order number? Contact us →
+      </a>
+    </div>
+    <section class="brief-panel" aria-labelledby="returns-title">
+      <h2 id="returns-title">Start a request.</h2>
+      <CustomerForm kind="returns" />
+    </section>
+  </div>
+</Site>

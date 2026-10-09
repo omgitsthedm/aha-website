@@ -1,53 +1,5 @@
 export const documents = [
   {
-    slug: "updates",
-    eyebrow: "The next chapter",
-    title: "Stay close.",
-    description:
-      "Follow After Hours Agenda for future releases and brand updates. No release date is announced here, and this preview does not collect newsletter subscriptions.",
-    lead: "New pieces, the occasional note, and what comes next.",
-    sections: [
-      [
-        "Where to follow",
-        "Our official Instagram is @afterhoursagenda. That is a place to follow the brand while the next collection is developed.",
-      ],
-      [
-        "About release dates",
-        "No release date has been announced here. Following the brand does not reserve a product or create an order.",
-      ],
-      [
-        "Email updates",
-        "This preview does not sign you up or store an email address. If you have a question about future releases, write to info@afterhoursagenda.com.",
-      ],
-    ],
-    action: "Follow on Instagram ↗",
-    href: "https://www.instagram.com/afterhoursagenda",
-  },
-  {
-    slug: "shop",
-    eyebrow: "Collection status",
-    title: "A new chapter takes time.",
-    description:
-      "The After Hours Agenda catalog is closed while the next collection is developed. No new product or gift-card orders are accepted. Existing-order support remains available.",
-    lead: "New orders are paused. The story keeps going.",
-    sections: [
-      [
-        "What is available now",
-        "Explore the story, manifesto, campaign concepts and brand archive. The lookbook is an editorial collection of images, not a current stock list.",
-      ],
-      [
-        "What is not available",
-        "This site is not accepting new product or gift-card orders. There is no checkout, payment or product reservation.",
-      ],
-      [
-        "Already placed an order?",
-        "Support remains available for existing orders. Write to info@afterhoursagenda.com with the order number and checkout email. Never include payment-card details.",
-      ],
-    ],
-    action: "Explore the lookbook ↗",
-    href: "/lookbook/",
-  },
-  {
     slug: "shipping",
     eyebrow: "Existing-order help",
     title: "Shipping, with context.",
@@ -76,78 +28,6 @@ export const documents = [
     href: "/contact/?topic=order",
   },
   {
-    slug: "returns",
-    eyebrow: "Existing-order help",
-    title: "Let’s sort it out.",
-    description:
-      "Ask After Hours Agenda about a return, damaged piece or incorrect item. Requests are reviewed under the terms that applied to the original order.",
-    lead: "Start with one message and the details we need to help.",
-    sections: [
-      [
-        "Tell us about the order",
-        "Email info@afterhoursagenda.com with the order number, the item and the reason for your request. Include the email used at checkout.",
-      ],
-      [
-        "Show us the issue",
-        "For damage, a misprint or an incorrect item, include clear photographs of the piece and relevant packaging. Keep payment-card details out of the message.",
-      ],
-      [
-        "Wait for instructions",
-        "Requests are reviewed under the terms that applied when the order was placed. Wait for the return instructions before sending anything. Any approved refund follows the original payment path.",
-      ],
-    ],
-    action: "Ask about a return ↗",
-    href: "/contact/?topic=returns",
-  },
-  {
-    slug: "track-order",
-    eyebrow: "Existing customers",
-    title: "Find your order.",
-    description:
-      "Find the shipping confirmation for an existing After Hours Agenda order or ask support for a status update. This review preview does not query customer records.",
-    lead: "Check your shipping email, or let us help you find the next update.",
-    sections: [
-      [
-        "Use your confirmation",
-        "Look for the order or shipping confirmation in the email account used at checkout. A carrier link, when available, gives the shipment’s tracking updates.",
-      ],
-      [
-        "Need a person?",
-        "Write to info@afterhoursagenda.com with the order number and checkout email. If you cannot find the order number, say so in your message.",
-      ],
-      [
-        "About this page",
-        "This preview does not connect to customer records or perform an order lookup. Do not enter card numbers, passwords or security codes. The contact page prepares an email for you to review.",
-      ],
-    ],
-    action: "Prepare an order question ↗",
-    href: "/contact/?topic=order",
-  },
-  {
-    slug: "size-guide",
-    eyebrow: "Size and fit",
-    title: "Start with what fits.",
-    description:
-      "Ask After Hours Agenda about the fit of an existing piece. The catalog is paused, so no unverified size chart is presented for a future collection.",
-    lead: "A piece you already wear is a useful reference.",
-    sections: [
-      [
-        "For an existing piece",
-        "Check its label and the product information supplied with your order. For a fit question, tell us the product name, size and color.",
-      ],
-      [
-        "For the next collection",
-        "New products are not available yet. Measurements belong to the actual garment, so we will not use an old chart to promise the fit of a future piece.",
-      ],
-      [
-        "Ask for help",
-        "Email info@afterhoursagenda.com with the item you mean and what you want to know. Do not send body photos or other sensitive information.",
-      ],
-    ],
-    action: "Ask about fit ↗",
-    href: "/contact/?topic=product",
-  },
-  {
     slug: "care",
     eyebrow: "Take care of your piece",
     title: "Make it last.",
@@ -172,43 +52,11 @@ export const documents = [
     href: "/contact/?topic=product",
   },
   {
-    slug: "privacy",
-    eyebrow: "Website information · October 9, 2026",
-    title: "Your information.",
-    description:
-      "How this After Hours Agenda preview handles browsing and local email drafts. No analytics, advertising trackers, payment forms or automatic newsletter signups are included.",
-    lead: "This preview keeps the contact process in your hands.",
-    sections: [
-      [
-        "Browsing",
-        "The site serves static pages, images and fonts. It does not load analytics, advertising trackers or social-media embeds. The hosting provider receives technical request information needed to deliver and secure the website.",
-      ],
-      [
-        "Contact drafts",
-        "The contact form prepares a message in your browser. It does not submit the fields, send email or store them in a site database. If you open your email app or copy the message, you control what happens next.",
-      ],
-      [
-        "Messages you choose to send",
-        "An email sent to info@afterhoursagenda.com includes the information you choose to provide. It may be used to answer the question and support an existing order. Never include passwords, security codes or payment-card numbers.",
-      ],
-      [
-        "Existing records",
-        "This preview does not access, migrate or delete historical order or customer records. Existing privacy and order obligations remain separate from this review artifact.",
-      ],
-      [
-        "External links and questions",
-        "Instagram, your email service and any carrier link operate under their own privacy practices. For a privacy question or request concerning After Hours Agenda, contact info@afterhoursagenda.com.",
-      ],
-    ],
-    action: "Contact about privacy ↗",
-    href: "/contact/?topic=general",
-  },
-  {
     slug: "terms",
     eyebrow: "Site and existing-order terms",
     title: "Clear terms.",
     description:
-      "Terms for the After Hours Agenda editorial website and support for existing orders. New sales remain paused; this preview does not change prior purchase terms.",
+      "Terms for the After Hours Agenda editorial website and support for existing orders. New sales remain paused; this website does not change prior purchase terms.",
     lead: "The catalog is closed. Existing orders remain supported under their original terms.",
     sections: [
       [
@@ -217,7 +65,7 @@ export const documents = [
       ],
       [
         "Existing orders",
-        "Orders placed before the catalog reset remain supported under the terms and product information shown when they were purchased. This preview does not replace or remove those terms.",
+        "Orders placed before the catalog reset remain supported under the terms and product information shown when they were purchased. This website does not replace or remove those terms.",
       ],
       [
         "Shipping, returns and payments",
@@ -259,4 +107,4 @@ export const documents = [
     action: "Report an access issue ↗",
     href: "/contact/?topic=accessibility",
   },
-] as const;
+];

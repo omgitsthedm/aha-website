@@ -1,0 +1,165 @@
+---
+import Site from "../layouts/Site.astro";
+const preview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
+---
+
+<Site
+  title="Track your order"
+  description="Look up an existing After Hours Agenda order with its order number, checkout email and shipping postal code. Get customer-facing progress and shipment links."
+  noindex
+>
+  <header class="page-head shell">
+    <p class="label">Existing customers</p>
+    <h1>
+      ON ITS
+      <br />
+      <span class="accent">WAY.</span>
+    </h1>
+    <p class="lede">Find the next update on your piece.</p>
+  </header>
+  <div class="contact-layout shell">
+    <aside class="contact-options">
+      <div class="contact-option">
+        <h2>Three details. One order.</h2>
+        <p>
+          Use the order number from your confirmation, the email you checked out
+          with and the shipping ZIP or postal code.
+        </p>
+      </div>
+      <div class="contact-option">
+        <h2>Can’t find it?</h2>
+        <p>
+          Your shipping confirmation may contain a direct carrier link. We can
+          also help you locate an existing order.
+        </p>
+        <a class="text-link" href="/contact/?topic=order">
+          Ask about an order →
+        </a>
+      </div>
+      {preview && (
+        <div class="service-note">
+          <strong>Test order only</strong>
+          <p>
+            Order: AHA-DEMO-1001
+            <br />
+            Email: review@example.com
+            <br />
+            Postal code: 10001
+          </p>
+          <p>This fictional record does not access customer information.</p>
+        </div>
+      )}
+    </aside>
+    <section class="brief-panel" aria-labelledby="track-title">
+      <h2 id="track-title">Find your order.</h2>
+      <form id="track-form" class="brief-form" hidden>
+        <div class="field">
+          <label for="order-number">Order number *</label>
+          <input
+            id="order-number"
+            name="orderNumber"
+            required
+            maxlength="80"
+            autocomplete="off"
+          />
+        </div>
+        <div class="field">
+          <label for="order-email">Checkout email *</label>
+          <input
+            id="order-email"
+            name="email"
+            type="email"
+            required
+            maxlength="160"
+            autocomplete="email"
+          />
+        </div>
+        <div class="field">
+          <label for="order-postal">Shipping ZIP or postal code *</label>
+          <input
+            id="order-postal"
+            name="postalCode"
+            required
+            maxlength="16"
+            autocomplete="postal-code"
+          />
+        </div>
+        <button class="button" type="submit">
+          Look up order ↗
+        </button>
+        <p id="track-status" role="status" tabindex="-1"></p>
+      </form>
+      <div id="order-result" hidden></div>
+      <noscript>
+        <p>
+          Order lookup needs JavaScript.{" "}
+          <a href="/contact/?topic=order">Contact us</a> for the same help by
+          email.
+        </p>
+      </noscript>
+    </section>
+  </div>
+  <script>
+    const form = document.querySelector<HTMLFormElement>("#track-form")!;
+    form.hidden = false;
+    const status = document.getElementById("track-status")!;
+    const result = document.getElementById("order-result")!;
+    const button = form.querySelector<HTMLButtonElement>("button")!;
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity() || button.disabled) return;
+      button.disabled = true;
+      result.hidden = true;
+      result.replaceChildren();
+      status.textContent = "Looking up your order…";
+      try {
+        const response = await fetch("/api/order-status", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const data = await response.json();
+        if (!response.ok)
+          throw new Error(
+            data.error || "Order lookup is unavailable. Contact us for help.",
+          );
+        const title = document.createElement("h3");
+        title.textContent = data.order.orderNumber;
+        const progress = document.createElement("p");
+        progress.textContent = data.order.customerStatus;
+        result.append(title, progress);
+        for (const item of data.order.items) {
+          const p = document.createElement("p");
+          p.textContent = `${item.quantity} × ${item.title}${item.size ? " / " + item.size : ""}`;
+          result.append(p);
+        }
+        for (const shipment of data.order.shipments) {
+          const p = document.createElement("p");
+          p.textContent = [shipment.carrier, shipment.status]
+            .filter(Boolean)
+            .join(" · ");
+          if (shipment.trackingUrl) {
+            const a = document.createElement("a");
+            a.href = shipment.trackingUrl;
+            a.textContent = "Track shipment ↗";
+            a.rel = "noopener noreferrer";
+            p.append(" — ", a);
+          }
+          result.append(p);
+        }
+        result.hidden = false;
+        status.textContent = data.preview
+          ? "Showing the fictional review order. No customer records were accessed."
+          : "Order found. Tracking updates come from the carrier.";
+      } catch (error) {
+        status.textContent =
+          error instanceof Error
+            ? error.message
+            : "Order lookup is unavailable. Contact us for help.";
+      } finally {
+        button.disabled = false;
+        status.focus();
+      }
+    });
+  </script>
+</Site>

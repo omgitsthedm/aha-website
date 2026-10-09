@@ -1,3 +1,4 @@
+import { pieces } from "./catalog.ts";
 export const brand = {
   name: "After Hours Agenda",
   email: "info@afterhoursagenda.com",
@@ -7,6 +8,7 @@ export const brand = {
   line: "For the dreamers and the doers.",
 };
 export const navigation = [
+  { label: "Collection", href: "/shop/" },
   { label: "The story", href: "/about/" },
   { label: "Lookbook", href: "/lookbook/" },
   { label: "Answers", href: "/faq/" },
@@ -46,11 +48,11 @@ export const answers = [
   },
   {
     q: "When is the next release?",
-    a: "A release date has not been announced here. The Updates page links to our official Instagram and gives you a direct way to ask. Browsing this preview does not sign you up for email.",
+    a: "A release date has not been announced here. The Updates page lets you join the email list and links to our official Instagram. Browsing alone does not subscribe you.",
   },
   {
     q: "Does the contact form send my message?",
-    a: "It prepares an email draft in your browser. Nothing is sent automatically. Review the draft and choose whether to send it from your email app, or copy the message and email us yourself.",
+    a: "Yes. Submit the contact form to send a support request. It does not subscribe you to marketing. Direct email is also available.",
   },
 ];
 export const gallery = [
@@ -98,6 +100,12 @@ export const gallery = [
   },
 ];
 export const routes = [
+  "/search/",
+  "/saved/",
+  "/bag/",
+  "/checkout/",
+  "/unsubscribe/",
+  "/thank-you/",
   "/",
   "/about/",
   "/lookbook/",
@@ -114,4 +122,18 @@ export const routes = [
   "/track-order/",
   "/size-guide/",
   "/care/",
+  ...pieces.map((piece) => `/pieces/${piece.slug}/`),
 ];
+
+export const privateRoutes = [
+  "/search/",
+  "/saved/",
+  "/bag/",
+  "/checkout/",
+  "/track-order/",
+  "/unsubscribe/",
+  "/thank-you/",
+];
+export const indexableRoutes = routes.filter(
+  (route) => !privateRoutes.includes(route),
+);

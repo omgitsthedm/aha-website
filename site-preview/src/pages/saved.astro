@@ -1,0 +1,49 @@
+---
+import Site from "../layouts/Site.astro";
+import PieceCard from "../components/PieceCard.astro";
+import { pieces } from "../data/catalog";
+---
+
+<Site
+  title="Your saved pieces"
+  description="Keep your favorite After Hours Agenda pieces together on this device. Saving a piece does not reserve it or place an order."
+  noindex
+>
+  <header class="page-head shell">
+    <p class="label">A little collection of your own</p>
+    <h1>
+      KEEP IT
+      <br />
+      <span class="accent">CLOSE.</span>
+    </h1>
+    <p class="lede">
+      The pieces that caught your eye. Saved on this device, without an account.
+    </p>
+    <p data-storage-feedback role="status"></p>
+  </header>
+  <section class="shell collection-section" aria-label="Saved pieces">
+    <div class="piece-grid" data-saved-list>
+      {pieces.map((piece) => (
+        <div data-saved-piece={piece.slug} hidden>
+          <PieceCard piece={piece} />
+        </div>
+      ))}
+    </div>
+    <div class="empty-panel" data-saved-empty>
+      <h2>Something will catch your eye.</h2>
+      <p>
+        Tap the heart beside a piece to keep it here. Saved items do not reserve
+        stock.
+      </p>
+      <a class="button" href="/shop/">
+        Explore the collection ↗
+      </a>
+    </div>
+    <noscript>
+      <p>
+        Saved pieces need JavaScript and device storage.{" "}
+        <a href="/shop/">Browse the collection</a> without either.
+      </p>
+    </noscript>
+  </section>
+</Site>

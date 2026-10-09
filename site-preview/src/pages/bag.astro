@@ -1,0 +1,49 @@
+---
+import Site from "../layouts/Site.astro";
+---
+
+<Site
+  title="Your shopping bag"
+  description="Review selected After Hours Agenda pieces, quantities and product totals before checkout."
+  noindex
+>
+  <header class="page-head shell">
+    <p class="label">Your selection</p>
+    <h1>
+      THE
+      <br />
+      <span class="accent">BAG.</span>
+    </h1>
+    <p class="lede">A place for the pieces you want to make your own.</p>
+  </header>
+  <section class="shell collection-section" aria-label="Shopping bag">
+    <div id="bag-rows"></div>
+    <div id="bag-empty" class="empty-panel">
+      <h2>A little room for something good.</h2>
+      <p>
+        Your bag is empty. New orders remain paused while the next collection is
+        developed.
+      </p>
+      <a class="button" href="/shop/">
+        Explore the collection ↗
+      </a>
+    </div>
+    <div id="bag-summary" hidden>
+      <p>
+        Product subtotal <strong id="bag-subtotal"></strong>
+      </p>
+      <p>
+        Shipping and tax are calculated before payment. Nothing is reserved
+        until an order is accepted.
+      </p>
+      <a class="button" href="/checkout/">
+        Continue to checkout ↗
+      </a>
+    </div>
+    <noscript>
+      <p>
+        The bag needs JavaScript. <a href="/contact/">Contact us</a> for help.
+      </p>
+    </noscript>
+  </section>
+</Site>

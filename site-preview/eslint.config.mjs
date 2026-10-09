@@ -4,6 +4,7 @@ export default [
   {
     ignores: [
       'dist/**',
+      '.server/**',
       '.astro/**',
       'node_modules/**',
       'test-results/**',
@@ -13,9 +14,9 @@ export default [
     ],
   },
   ...astro.configs.recommended,
-  { files: ['**/*.ts'], languageOptions: { parser: tsParser } },
+  { files: ['**/*.{ts,mts}'], languageOptions: { parser: tsParser } },
   {
-    files: ['**/*.{js,mjs,ts,astro}'],
+    files: ['**/*.{js,mjs,ts,mts,astro}'],
     rules: {
       'no-eval': 'error',
       'no-implied-eval': 'error',

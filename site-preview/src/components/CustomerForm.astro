@@ -1,0 +1,179 @@
+---
+import { topics } from "../data/site";
+interface Props {
+  kind: "support" | "newsletter" | "returns";
+}
+const { kind } = Astro.props;
+const preview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
+const newsletter = kind === "newsletter";
+const returns = kind === "returns";
+const name = `aha-${kind}-2026`;
+---
+
+<div class="customer-form-wrap">
+  {preview && (
+    <p class="service-note">
+      Review mode: use test details. No message or subscription will be sent.
+    </p>
+  )}
+  <form
+    class="customer-form brief-form"
+    hidden={preview}
+    name={name}
+    method="POST"
+    action="/thank-you/"
+    data-netlify={preview ? undefined : "true"}
+    netlify-honeypot="website"
+    data-customer-form
+    data-preview={String(preview)}
+    data-kind={kind}
+  >
+    <input type="hidden" name="form-name" value={name} />
+    <input type="hidden" name="consent-version" value="2026-10-09" />
+    {newsletter && (
+      <input type="hidden" name="list" value="aha-newsletter-2026" />
+    )}
+    <p class="honeypot" aria-hidden="true">
+      <label>
+        Leave this blank
+        <input name="website" tabindex="-1" autocomplete="off" />
+      </label>
+    </p>
+    {!newsletter && (
+      <div class="field">
+        <label for={`${kind}-name`}>Your name *</label>
+        <input
+          id={`${kind}-name`}
+          name="name"
+          required
+          minlength="2"
+          maxlength="80"
+          autocomplete="name"
+        />
+      </div>
+    )}
+    <div class="field">
+      <label for={`${kind}-email`}>Your email *</label>
+      <input
+        id={`${kind}-email`}
+        name="email"
+        type="email"
+        required
+        maxlength="160"
+        autocomplete="email"
+        inputmode="email"
+      />
+    </div>
+    {!newsletter && (
+      <>
+        <div class="field">
+          <label for={`${kind}-reference`}>
+            Order number{returns ? " *" : " (optional)"}
+          </label>
+          <input
+            id={`${kind}-reference`}
+            name="reference"
+            required={returns}
+            maxlength="80"
+            autocomplete="off"
+          />
+        </div>
+        {returns ? (
+          <div class="field">
+            <label for="returns-reason">What happened? *</label>
+            <select id="returns-reason" name="topic" required>
+              <option value="">Choose a reason</option>
+              <option value="fit">Size or fit</option>
+              <option value="damage">Damaged or incorrect item</option>
+              <option value="exchange">Exchange request</option>
+              <option value="gift">Gift return question</option>
+              <option value="other">Something else</option>
+            </select>
+          </div>
+        ) : (
+          <div class="field">
+            <label for="support-topic">What brings you here?</label>
+            <select id="support-topic" name="topic">
+              {topics.map((topic) => (
+                <option value={topic.slug}>{topic.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
+        <div class="field">
+          <label for={`${kind}-message`}>
+            {returns
+              ? "Which item, and what needs sorting out?"
+              : "How can we help?"}{" "}
+            *
+          </label>
+          <textarea
+            id={`${kind}-message`}
+            name="message"
+            required
+            minlength="10"
+            maxlength="1800"
+            rows="5"
+            aria-describedby={`${kind}-help`}
+          ></textarea>
+          <p id={`${kind}-help`} class="field-help">
+            Keep passwords, payment details and sensitive information out. Send
+            photographs by email after we reply.
+          </p>
+        </div>
+      </>
+    )}
+    {newsletter && (
+      <div class="field">
+        <label for="newsletter-interest">What interests you? (optional)</label>
+        <select id="newsletter-interest" name="interest">
+          <option value="all">The next collection and brand notes</option>
+          <option value="hoods">Hoods and crews</option>
+          <option value="tees">Tees</option>
+        </select>
+      </div>
+    )}
+    <label class="checkbox-label">
+      <input
+        name={newsletter ? "marketing-consent" : "consent"}
+        type="checkbox"
+        value="yes"
+        required
+      />{" "}
+      <span>
+        {newsletter
+          ? "Email me about After Hours Agenda releases and brand news. I can unsubscribe at any time."
+          : "Use these details to answer my request. This does not subscribe me to marketing."}{" "}
+        <a href="/privacy/">Privacy details</a>.
+      </span>
+    </label>
+    <button class="button" type="submit">
+      {newsletter
+        ? "Join the list"
+        : returns
+          ? "Send return request"
+          : "Send message"}{" "}
+      <span aria-hidden="true">↗</span>
+    </button>
+    <p class="form-footnote">
+      {newsletter
+        ? "No reservation or purchase. A release date has not been announced."
+        : "* Required. We will reply to the email address you provide."}
+    </p>
+    <p class="form-result" role="status" tabindex="-1" aria-live="polite"></p>
+  </form>
+  <noscript>
+    <p class="service-note">
+      {preview
+        ? "Forms are inactive in this review. "
+        : "Submit this form without JavaScript, or "}
+      Email{" "}
+      <a href="mailto:info@afterhoursagenda.com">info@afterhoursagenda.com</a>{" "}
+      directly.
+    </p>
+  </noscript>
+</div>
+<script>
+  import { enhanceCustomerForms } from "../scripts/customer-forms";
+  enhanceCustomerForms();
+</script>

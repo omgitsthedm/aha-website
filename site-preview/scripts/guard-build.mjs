@@ -1,3 +1,11 @@
+import {
+  approvedPieces,
+  launch,
+  validateCatalog,
+} from "../src/data/catalog.ts";
+const catalogErrors = validateCatalog(approvedPieces, launch.releaseApproved);
+if (catalogErrors.length)
+  throw new Error("Catalog blocked: " + catalogErrors.join("; "));
 const approved = process.env.AHA_PRODUCTION_BUILD === "approved";
 const preview = "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app";
 const origin = new URL(process.env.PUBLIC_SITE_URL || preview);

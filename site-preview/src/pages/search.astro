@@ -1,0 +1,147 @@
+---
+import Site from "../layouts/Site.astro";
+import { pieces } from "../data/catalog";
+const entries = [
+  ...pieces.map((p) => ({
+    title: p.title,
+    description: p.description,
+    href: `/pieces/${p.slug}/`,
+    kind: "Collection",
+  })),
+  {
+    title: "Size and fit",
+    description: "How to measure a garment you already love.",
+    href: "/size-guide/",
+    kind: "Help",
+  },
+  {
+    title: "Care",
+    description: "Make your pieces last. Garment label and washing guidance.",
+    href: "/care/",
+    kind: "Help",
+  },
+  {
+    title: "Track an order",
+    description:
+      "Tracking and status for an existing order. Use your order number, checkout email and shipping ZIP.",
+    href: "/track-order/",
+    kind: "Help",
+  },
+  {
+    title: "Returns and exchanges",
+    description: "Request help with fit, damage or a gift.",
+    href: "/returns/",
+    kind: "Help",
+  },
+  {
+    title: "Our story",
+    description:
+      "The dreamers and the doers. The original prologue and the people behind the brand.",
+    href: "/about/",
+    kind: "Story",
+  },
+  {
+    title: "Lookbook",
+    description: "Campaign concepts, previous pieces and the brand archive.",
+    href: "/lookbook/",
+    kind: "Story",
+  },
+  {
+    title: "Stay close",
+    description: "Join the email list for collection news.",
+    href: "/updates/",
+    kind: "Updates",
+  },
+  {
+    title: "Shipping",
+    description: "Help with delivery and an existing shipment.",
+    href: "/shipping/",
+    kind: "Help",
+  },
+  {
+    title: "Contact",
+    description: "Send a direct support request.",
+    href: "/contact/",
+    kind: "Help",
+  },
+];
+---
+
+<Site
+  title="Search"
+  description="Find After Hours Agenda pieces, fit guidance, order tracking, returns and brand stories."
+  noindex
+>
+  <header class="page-head shell">
+    <p class="label">Find your way</p>
+    <h1>
+      LOOKING FOR
+      <br />
+      <span class="accent">SOMETHING?</span>
+    </h1>
+    <div class="search-field field">
+      <label for="site-search">Search pieces, stories and help</label>
+      <input
+        id="site-search"
+        type="search"
+        maxlength="100"
+        placeholder="Try fit, tracking or a piece…"
+      />
+    </div>
+    <p id="search-count" role="status">
+      {entries.length} places to start
+    </p>
+  </header>
+  <section class="shell collection-section" aria-label="Search results">
+    <ul class="search-results">
+      {entries.map((entry) => (
+        <li
+          data-search-result
+          data-words={`${entry.title} ${entry.description} ${entry.kind}`.toLowerCase()}
+        >
+          <a href={entry.href}>
+            <span class="label">{entry.kind}</span>
+            <h2>
+              {entry.title} <span aria-hidden="true">↗</span>
+            </h2>
+            <p>{entry.description}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <div id="search-empty" class="empty-panel" hidden>
+      <h2>Nothing here by that name.</h2>
+      <p>Try “fit”, “returns” or “shipping”, or ask us directly.</p>
+      <a href="/contact/" class="button">
+        Ask a person ↗
+      </a>
+    </div>
+  </section>
+  <script>
+    const input = document.querySelector<HTMLInputElement>("#site-search")!;
+    const rows = [
+      ...document.querySelectorAll<HTMLElement>("[data-search-result]"),
+    ];
+    const filter = () => {
+      const terms = input.value
+        .trim()
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(Boolean);
+      let count = 0;
+      for (const row of rows) {
+        row.hidden = !terms.every((term) => row.dataset.words?.includes(term));
+        if (!row.hidden) count++;
+      }
+      document.getElementById("search-count")!.textContent =
+        `${count} ${count === 1 ? "result" : "results"}`;
+      document.getElementById("search-empty")!.hidden = count > 0;
+    };
+    input.value = (new URLSearchParams(location.search).get("q") || "").slice(
+      0,
+      100,
+    );
+    input.addEventListener("input", filter);
+    filter();
+  </script>
+</Site>

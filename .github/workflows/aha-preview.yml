@@ -3,10 +3,10 @@ name: AHA preview checks
 on:
   push:
     branches: ["audit/2026-10-09", main]
-    paths: ["site-preview/**", "netlify.toml", ".github/workflows/aha-preview.yml"]
+    paths: ["site-preview/**", "app/api/**", "lib/commerce/**", "lib/square/**", "lib/apliiq/**", "lib/db/**", "db/**", "data/**", "netlify/**", "netlify.toml", ".github/workflows/aha-preview.yml"]
   pull_request:
     branches: [main]
-    paths: ["site-preview/**", "netlify.toml", ".github/workflows/aha-preview.yml"]
+    paths: ["site-preview/**", "app/api/**", "lib/commerce/**", "lib/square/**", "lib/apliiq/**", "lib/db/**", "db/**", "data/**", "netlify/**", "netlify.toml", ".github/workflows/aha-preview.yml"]
   workflow_dispatch:
 
 permissions:
@@ -37,3 +37,8 @@ jobs:
       - name: Verify installed Google Chrome
         run: google-chrome --version
       - run: npm run test:e2e
+      - name: Verify production rendering without publishing
+        env:
+          AHA_PRODUCTION_BUILD: approved
+          PUBLIC_SITE_URL: https://afterhoursagenda.com
+        run: npm run build && npm test && npm run test:e2e

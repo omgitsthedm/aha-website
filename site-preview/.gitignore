@@ -7,3 +7,10 @@ playwright-report/
 .env
 .env.*
 !.env.example
+
+.server/
+.netlify/
+
+# Historical migrations are staged byte-for-byte from the preserved root.
+netlify/database/migrations/202607*/
+netlify/database/migrations/202608*/

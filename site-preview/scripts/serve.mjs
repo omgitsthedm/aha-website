@@ -33,6 +33,47 @@ const headers = Object.fromEntries(
 http
   .createServer(async (req, res) => {
     try {
+      const apiPath = new URL(req.url, "http://localhost").pathname.replace(
+        /\/$/,
+        "",
+      );
+      const apiModules = {
+        "/api/order-status": ["order-status", "orderStatus"],
+        "/api/unsubscribe": ["preferences", "unsubscribe"],
+        "/api/metrics": ["metrics", "metrics"],
+        "/api/commerce": ["commerce", "commerce"],
+        "/api/checkout-quote": ["commerce", "commerce"],
+        "/api/create-payment": ["commerce", "commerce"],
+      };
+      if (apiModules[apiPath]) {
+        const chunks = [];
+        let length = 0;
+        for await (const chunk of req) {
+          length += chunk.length;
+          if (length > 30000) {
+            res.writeHead(413);
+            res.end();
+            return;
+          }
+          chunks.push(chunk);
+        }
+        const request = new Request(`http://127.0.0.1:${port}${req.url}`, {
+          method: req.method,
+          headers: req.headers,
+          body: ["GET", "HEAD"].includes(req.method)
+            ? undefined
+            : Buffer.concat(chunks),
+        });
+        const [file, fn] = apiModules[apiPath];
+        const service = await import(`../server/${file}.ts`);
+        const response = await service[fn](request, {
+          site: { id: "275b4115-16bf-42fb-9b36-6bce9bb93608" },
+          deploy: { context: "dev", published: false },
+        });
+        res.writeHead(response.status, Object.fromEntries(response.headers));
+        res.end(Buffer.from(await response.arrayBuffer()));
+        return;
+      }
       if (!["GET", "HEAD"].includes(req.method)) {
         res.writeHead(405, headers);
         res.end();

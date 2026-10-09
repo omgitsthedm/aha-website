@@ -1,0 +1,130 @@
+---
+import Site from "../layouts/Site.astro";
+import PieceCard from "../components/PieceCard.astro";
+import { pieces } from "../data/catalog";
+const preview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
+---
+
+<Site
+  title="The collection"
+  description="Explore After Hours Agenda collection stories, save pieces and get release updates. New orders are paused while the next collection is developed."
+>
+  <header class="page-head shell">
+    <p class="label">After Hours Agenda / The next chapter</p>
+    <h1>
+      TAKING
+      <br />
+      <span class="accent">OUR TIME.</span>
+    </h1>
+    <p class="lede">Good pieces deserve the time to get them right.</p>
+    <p class="status-copy">
+      New orders are paused. Join the list for collection news.
+    </p>
+  </header>
+  <section class="shell collection-section" aria-label="Collection">
+    {preview && (
+      <p class="service-note">
+        Review collection: these two current design studies demonstrate the new
+        shopping experience. They are not approved products and will not appear
+        in the production catalog.
+      </p>
+    )}
+    {pieces.length ? (
+      <>
+        <div class="collection-tools">
+          <div class="field">
+            <label for="collection-search">Find a piece</label>
+            <input
+              id="collection-search"
+              type="search"
+              placeholder="Name, color or garment…"
+              maxlength="80"
+            />
+          </div>
+          <div class="field">
+            <label for="collection-category">Garment</label>
+            <select id="collection-category">
+              <option value="">All pieces</option>
+              {[...new Set(pieces.map((p) => p.category))].map((c) => (
+                <option value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+          <p class="label" id="collection-count" role="status">
+            {pieces.length} pieces
+          </p>
+        </div>
+        <div class="piece-grid">
+          {pieces.map((piece) => (
+            <PieceCard piece={piece} />
+          ))}
+        </div>
+        <div id="collection-empty" class="empty-panel" hidden>
+          <h2>No pieces match.</h2>
+          <p>Try a different name or show all garments.</p>
+          <button class="button button-secondary" id="clear-filters">
+            Clear filters
+          </button>
+        </div>
+      </>
+    ) : (
+      <div class="empty-panel">
+        <p class="label">The next collection</p>
+        <h2>A little anticipation.</h2>
+        <p>
+          We will publish the pieces, prices, sizing and delivery details when
+          they are ready.
+        </p>
+        <a class="button" href="/updates/">
+          Join the list ↗
+        </a>
+      </div>
+    )}
+    <div class="service-grid">
+      <a href="/size-guide/">
+        <strong>Find your fit</strong>
+        <span>A useful way to measure →</span>
+      </a>
+      <a href="/care/">
+        <strong>Make it last</strong>
+        <span>Start with the garment label →</span>
+      </a>
+      <a href="/contact/">
+        <strong>Ask a person</strong>
+        <span>We are here to help →</span>
+      </a>
+    </div>
+  </section>
+  <script>
+    const input =
+      document.querySelector<HTMLInputElement>("#collection-search");
+    const select = document.querySelector<HTMLSelectElement>(
+      "#collection-category",
+    );
+    const cards = [...document.querySelectorAll<HTMLElement>("[data-piece]")];
+    function filter() {
+      let count = 0;
+      const query = input?.value.trim().toLowerCase() || "";
+      for (const card of cards) {
+        card.hidden = !(
+          card.dataset.search?.includes(query) &&
+          (!select?.value || card.dataset.category === select.value)
+        );
+        if (!card.hidden) count++;
+      }
+      const result = document.getElementById("collection-count");
+      if (result)
+        result.textContent = `${count} ${count === 1 ? "piece" : "pieces"}`;
+      const empty = document.getElementById("collection-empty");
+      if (empty) empty.hidden = count > 0;
+    }
+    input?.addEventListener("input", filter);
+    select?.addEventListener("change", filter);
+    document.getElementById("clear-filters")?.addEventListener("click", () => {
+      if (input) input.value = "";
+      if (select) select.value = "";
+      filter();
+      input?.focus();
+    });
+  </script>
+</Site>

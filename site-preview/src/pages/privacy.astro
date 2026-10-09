@@ -1,0 +1,99 @@
+---
+import Site from "../layouts/Site.astro";
+---
+
+<Site
+  title="Your information"
+  description="How After Hours Agenda handles support requests, email consent, saved pieces, order lookup and optional aggregate website measurement."
+>
+  <header class="page-head shell">
+    <p class="label">Website information / October 9, 2026</p>
+    <h1>
+      YOUR
+      <br />
+      <span class="accent">INFORMATION.</span>
+    </h1>
+    <p class="lede">
+      A clear account of what this website does with your details.
+    </p>
+  </header>
+  <article class="reading shell">
+    <section>
+      <h2>Support and returns</h2>
+      <p>
+        When you submit a form, the details are stored with our website host,
+        Netlify, so we can answer your request. Support does not subscribe you
+        to marketing. Do not send card numbers, passwords or sensitive
+        information. Email and carrier services use their own privacy practices.
+      </p>
+    </section>
+    <section>
+      <h2>Email updates</h2>
+      <p>
+        The signup form records your email, optional interests, your explicit
+        consent and the version of the notice. You can{" "}
+        <a href="/unsubscribe/">unsubscribe here</a> or email
+        info@afterhoursagenda.com. Marketing is separate from necessary messages
+        about an existing order.
+      </p>
+    </section>
+    <section>
+      <h2>Saved pieces and bag</h2>
+      <p>
+        Your saved items and bag are stored on your device when storage is
+        available. They contain product identifiers and quantities, not contact
+        or payment details. Clearing website data removes them. They do not
+        reserve stock.
+      </p>
+    </section>
+    <section>
+      <h2>Order lookup</h2>
+      <p>
+        The order tool checks the order number, checkout email and shipping
+        postal code against existing records. It returns only customer-facing
+        progress, item details and safe tracking links. It does not expose the
+        stored address or payment-card data. Entries are not added to analytics.
+      </p>
+    </section>
+    <section id="choices">
+      <h2>Measurement is optional</h2>
+      <div>
+        <p>
+          With your permission, we count page views and actions such as a
+          successful signup, and measure loading speed, interaction
+          responsiveness and layout shifts. The event payload excludes your
+          email, order information, search terms, full URLs, advertising
+          identifiers and IP address. The host still receives technical request
+          information needed to serve and secure the website.
+        </p>
+        <p>
+          We store daily aggregate counts and performance buckets, not browsing
+          profiles. No advertising trackers are loaded. Global Privacy Control
+          and Do Not Track disable this collection.
+        </p>
+        <div class="actions">
+          <button type="button" class="button" data-privacy="allow">
+            Allow measurement
+          </button>
+          <button
+            type="button"
+            class="button button-secondary"
+            data-privacy="deny"
+          >
+            Keep measurement off
+          </button>
+        </div>
+        <p data-privacy-status role="status"></p>
+      </div>
+    </section>
+    <section>
+      <h2>Questions and requests</h2>
+      <p>
+        For access, correction, deletion or a privacy question, write to{" "}
+        <a href="mailto:info@afterhoursagenda.com">info@afterhoursagenda.com</a>
+        . Existing purchase and privacy obligations remain in force. Reviews of
+        this website never access or change customer records.
+      </p>
+    </section>
+  </article>
+</Site>

@@ -1,0 +1,46 @@
+---
+import type { Piece } from "../data/catalog";
+const { piece } = Astro.props as { piece: Piece };
+---
+
+<article
+  class="piece-card"
+  data-piece={piece.slug}
+  data-search={`${piece.title} ${piece.category} ${piece.colors.join(" ")}`.toLowerCase()}
+  data-category={piece.category}
+>
+  <a class="piece-image" href={`/pieces/${piece.slug}/`}>
+    <img
+      src={piece.images[0]}
+      width="1536"
+      height="1024"
+      alt={`${piece.title} collection development garment study`}
+      loading="lazy"
+    />
+    <span class="piece-badge">
+      {piece.status === "development" ? "In development" : "Collection"}
+    </span>
+  </a>
+  <div class="piece-line">
+    <div>
+      <h2>
+        <a href={`/pieces/${piece.slug}/`}>{piece.title}</a>
+      </h2>
+      <p>{piece.category}</p>
+    </div>
+    <button
+      type="button"
+      class="save-button"
+      data-save={piece.slug}
+      aria-pressed="false"
+      aria-label={`Save ${piece.title}`}
+    >
+      ♡
+    </button>
+  </div>
+  <p class="piece-note">
+    {piece.status === "development"
+      ? "Design study. Not available to buy."
+      : "View sizes and availability."}
+  </p>
+</article>

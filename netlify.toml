@@ -4,7 +4,7 @@
   base = "site-preview"
   command = "npm run build"
   publish = "dist"
-  functions = "functions-empty"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "24.21.0"
@@ -23,4 +23,8 @@
   PUBLIC_SITE_URL = "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app"
 
 [functions]
-  directory = "functions-empty"
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[functions."*"]
+  included_files = [".server/legacy.mjs"]

@@ -30,7 +30,7 @@ for (const [label, width, height] of [
         ),
         `${label} ${path}`,
       ).toBe(true);
-      for (const image of await page.locator("img").all()) {
+      for (const image of await page.locator("img:visible").all()) {
         await image.scrollIntoViewIfNeeded();
         await expect
           .poll(() =>
@@ -42,7 +42,7 @@ for (const [label, width, height] of [
       }
       await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
       const broken = await page
-        .locator("img")
+        .locator("img:visible")
         .evaluateAll((images) =>
           (images as HTMLImageElement[])
             .filter((x) => !x.complete || !x.naturalWidth)
@@ -99,47 +99,43 @@ test("native mobile menu works by keyboard and Escape restores focus", async ({
     .click();
   await expect(page).toHaveURL(/lookbook\//);
 });
-test("contact validates, preserves details and prepares an unsent email", async ({
+test("contact validates and preserves details through preview or delivery failure", async ({
   page,
 }) => {
   const writes: string[] = [];
   page.on("request", (r) => {
     if (!["GET", "HEAD"].includes(r.method())) writes.push(r.url());
   });
+  if (production)
+    await page.route("**/__forms.html", (route) =>
+      route.fulfill({ status: 503, body: "Unavailable" }),
+    );
   await page.goto("/contact/?topic=order");
-  await expect(page.locator("#topic")).toHaveValue("order");
-  await page.getByRole("button", { name: "Prepare my email" }).click();
-  await expect(page.locator("#name")).toBeFocused();
-  await expect(page.locator("#name-error")).toBeVisible();
-  await page.getByLabel("Your name").fill("Preview Tester");
-  await page.getByLabel("Your email").fill("preview@example.com");
-  await page.getByLabel("Order number").fill("Review only");
+  await expect(page.locator("#support-topic")).toHaveValue("order");
+  await page.getByRole("button", { name: "Send message" }).click();
+  await expect(page.locator("#support-name")).toBeFocused();
+  await page.getByLabel("Your name").fill("Review Tester");
+  await page.getByLabel("Your email").fill("review@example.com");
+  await page.getByLabel("Order number").fill("AHA-TEST");
   await page
     .getByLabel("How can we help")
-    .fill("Testing the local email draft. This is not a support request.");
-  await page.getByRole("button", { name: "Prepare my email" }).click();
-  await expect(page.locator("#brief-result")).toBeVisible();
-  await expect(page.locator("#result-title")).toBeFocused();
-  const href = await page
-    .getByRole("link", { name: "Open email draft" })
-    .getAttribute("href");
-  const url = new URL(href!);
-  expect(url.protocol).toBe("mailto:");
-  expect(url.pathname).toBe("info@afterhoursagenda.com");
-  expect(url.searchParams.get("body")).toContain("Existing order");
-  await page.evaluate(() => {
-    Object.defineProperty(navigator, "clipboard", {
-      value: { writeText: () => Promise.reject(new Error("blocked")) },
-      configurable: true,
-    });
-  });
-  await page.getByRole("button", { name: "Copy message" }).click();
-  await expect(page.locator("#copy-status")).toContainText(
-    "Copy is unavailable",
+    .fill("Synthetic local test. No real support request.");
+  await page.locator('input[name="consent"]').check();
+  await page.getByRole("button", { name: "Send message" }).click();
+  await expect(page.locator(".form-result")).toContainText(
+    production ? "couldn’t submit" : "Nothing was sent",
   );
-  await page.getByRole("button", { name: "Edit details" }).click();
-  await expect(page.locator("#name")).toHaveValue("Preview Tester");
-  expect(writes).toEqual([]);
+  await expect(page.locator("#support-name")).toHaveValue("Review Tester");
+  if (production) {
+    await page.route("**/__forms.html", (route) =>
+      route.fulfill({ status: 200, body: "Accepted test" }),
+    );
+    await page.getByRole("button", { name: "Send message" }).click();
+    await expect(page.locator(".form-result")).toContainText(
+      "request has been received",
+    );
+    await expect(page.locator("#support-name")).toHaveValue("");
+  } else expect(writes).toEqual([]);
 });
 test("all content, menu and contact fallback work without JavaScript", async ({
   browser,
@@ -159,7 +155,8 @@ test("all content, menu and contact fallback work without JavaScript", async ({
     `${process.env.BASE_URL || "http://127.0.0.1:48379"}/contact/`,
   );
   await expect(page.locator("noscript")).toBeVisible();
-  await expect(page.locator("#brief-form")).toBeHidden();
+  if (production) await expect(page.locator(".customer-form")).toBeVisible();
+  else await expect(page.locator(".customer-form")).toBeHidden();
   await page.locator(".mobile-nav summary").click();
   await expect(
     page.getByRole("navigation", { name: "Mobile navigation" }),

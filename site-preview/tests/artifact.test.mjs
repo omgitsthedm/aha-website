@@ -1,4 +1,4 @@
-import { routes } from "../src/data/site.ts";
+import { routes, privateRoutes, indexableRoutes } from "../src/data/site.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir, stat } from "node:fs/promises";
@@ -17,7 +17,7 @@ test("every route has unique metadata, entity data and correct indexing mode", a
       "utf8",
     );
     assert.equal((html.match(/<h1\b/g) || []).length, 1, route);
-    if (production) {
+    if (production && !privateRoutes.includes(route)) {
       assert.match(
         html,
         /name="robots" content="index, follow, max-image-preview:large"/,
@@ -26,7 +26,7 @@ test("every route has unique metadata, entity data and correct indexing mode", a
       assert.ok(!html.includes("noindex"), route);
     } else {
       assert.match(html, /name="robots" content="noindex, noarchive"/);
-      assert.ok(html.includes("Website preview"), route);
+      assert.equal(html.includes("Website preview"), !production, route);
     }
     assert.match(html, /application\/ld\+json/);
     assert.match(html, /After Hours Agenda/);
@@ -42,7 +42,7 @@ test("every route has unique metadata, entity data and correct indexing mode", a
     ))
       await stat(new URL(match[1].slice(1), root));
     assert.ok(
-      !/googletagmanager|google-analytics|squarecdn|data-netlify|Little Fight NYC|hello@littlefightnyc|Small crew|Heavy pull/.test(
+      !/googletagmanager|google-analytics|squarecdn|Little Fight NYC|hello@littlefightnyc|Small crew|Heavy pull/.test(
         html,
       ),
       route,
@@ -68,13 +68,13 @@ test("all inline script content is covered by CSP hashes", async () => {
   assert.ok(!headers.includes("unsafe-inline"));
   assert.ok(!headers.includes("unsafe-eval"));
   assert.match(headers, /connect-src 'self'/);
-  assert.match(headers, /form-action 'none'/);
+  assert.match(headers, /form-action 'self'/);
   assert.equal(headers.includes("X-Robots-Tag: noindex"), !production);
 });
 test("sitemap, crawler policy and summary match the release mode", async () => {
   const sitemap = await readFile(new URL("sitemap.xml", root), "utf8");
-  assert.equal((sitemap.match(/<url>/g) || []).length, routes.length);
-  for (const path of routes)
+  assert.equal((sitemap.match(/<url>/g) || []).length, indexableRoutes.length);
+  for (const path of indexableRoutes)
     assert.ok(sitemap.includes(`${origin}${path}</loc>`));
   assert.match(
     await readFile(new URL("llms.txt", root), "utf8"),
@@ -120,7 +120,10 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
     }
   };
   await walk(root);
-  assert.ok(jsBytes < 12000, `Client JS must stay under 12 KB; got ${jsBytes}`);
+  assert.ok(
+    jsBytes < 45000,
+    `Client JS must stay under 45 KB across all routes and lazy chunks; got ${jsBytes}`,
+  );
 });
 test("production context is refused by default", () => {
   const result = spawnSync(process.execPath, ["scripts/guard-build.mjs"], {
@@ -162,4 +165,20 @@ test("release digest covers every published file except its own receipt", async 
       )
       .digest("hex"),
   );
+});
+
+test("concept imagery and submissions obey the publication boundary", async () => {
+  const forms = await readFile(new URL("__forms.html", root), "utf8");
+  assert.equal(forms.includes('data-netlify="true"'), production);
+  if (production) {
+    await assert.rejects(stat(new URL("images/collection/yikes.webp", root)));
+  }
+  for (const route of routes) {
+    const html = await readFile(
+      new URL(`${route.slice(1)}index.html`, root),
+      "utf8",
+    );
+    if (production)
+      assert.ok(!/this preview|local draft|review artifact/i.test(html), route);
+  }
 });

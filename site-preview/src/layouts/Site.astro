@@ -1,18 +1,28 @@
 ---
 import "../styles/site.css";
 import { brand, navigation } from "../data/site";
+import { pieces } from "../data/catalog";
 interface Props {
   title: string;
   description: string;
   path?: string;
+  noindex?: boolean;
+  productSchema?: Record<string, unknown>;
 }
-const { title, description, path = Astro.url.pathname } = Astro.props;
+const {
+  title,
+  description,
+  path = Astro.url.pathname,
+  noindex = false,
+  productSchema,
+} = Astro.props;
 const origin = Astro.site!.origin;
 const canonical = new URL(path, origin).href;
 const isPreview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
+    ...(productSchema ? [productSchema] : []),
     {
       "@type": "Organization",
       "@id": `${brand.official}/#organization`,
@@ -69,7 +79,7 @@ const schema = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-mode={isPreview ? "preview" : "production"}>
   <head>
     <meta charset="utf-8" />
     <meta
@@ -81,7 +91,7 @@ const schema = {
     <meta
       name="robots"
       content={
-        isPreview
+        isPreview || noindex
           ? "noindex, noarchive"
           : "index, follow, max-image-preview:large"
       }
@@ -153,9 +163,17 @@ const schema = {
           </a>
         ))}
       </nav>
-      <a class="button header-cta" href="/updates/">
-        Stay close <span aria-hidden="true">↗</span>
-      </a>
+      <div class="header-tools">
+        <a href="/search/" aria-label="Search the site">
+          Search
+        </a>
+        <a href="/saved/" aria-label="Saved pieces">
+          Saved <span data-saved-count>0</span>
+        </a>
+        <a href="/bag/" aria-label="Shopping bag">
+          Bag <span data-bag-count>0</span>
+        </a>
+      </div>
       <details class="mobile-nav">
         <summary>
           Menu <span aria-hidden="true">+</span>
@@ -169,6 +187,9 @@ const schema = {
               {link.label}
             </a>
           ))}
+          <a href="/search/">Search</a>
+          <a href="/saved/">Saved pieces</a>
+          <a href="/bag/">Shopping bag</a>
           <a href="/manifesto/">Manifesto</a>
           <a href="/updates/">Stay close ↗</a>
         </nav>
@@ -200,7 +221,9 @@ const schema = {
           <a href="/lookbook/">Lookbook</a>
           <a href="/manifesto/">Manifesto</a>
           <a href="/updates/">Updates</a>
-          <a href="/shop/">Collection status</a>
+          <a href="/shop/">Collection</a>
+          <a href="/saved/">Saved pieces</a>
+          <a href="/search/">Search</a>
         </nav>
         <nav aria-label="Support">
           <span class="label">Here to help</span>
@@ -230,9 +253,19 @@ const schema = {
           <a href="/privacy/">Privacy</a>
           <a href="/terms/">Terms</a>
           <a href="/accessibility/">Accessibility</a>
+          <a href="/privacy/#choices">Privacy choices</a>
         </nav>
       </div>
     </footer>
+    <script
+      id="shopping-data"
+      type="application/json"
+      set:html={JSON.stringify(pieces).replace(/</g, "\\u003c")}
+    />
+    <script>
+      import "../scripts/shopping";
+      import "../scripts/measurement";
+    </script>
     <script>
       const menu = document.querySelector<HTMLDetailsElement>(".mobile-nav");
       document.addEventListener("keydown", (event) => {
