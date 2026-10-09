@@ -1,8 +1,25 @@
-# After Hours Agenda source of truth
+# Current source and preview truth — October 9, 2026
+
+- Original AHA checkout: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website` (verified fleet route and Git root).
+- Isolated LFNYC worktree: `/Users/davidmarsh/Desktop/Project Upgrades/afterhoursagenda/worktree`.
+- GitHub: `omgitsthedm/aha-website`; preview branch: `audit/2026-10-09`; production branch: `main`.
+- Baseline main: `c682761ef26bbedb4ea4f76fc869e7ded883a12d`, published October 8, 2026.
+- Production Netlify deploy: `6ac793e13b19850008db4a3a`; site ID `275b4115-16bf-42fb-9b36-6bce9bb93608`.
+- Live property remains `https://afterhoursagenda.com`; no production, DNS, provider or database change belongs to this preview mission.
+- The production catalog is closed. Existing navigation also gates About/Lookbook links with the catalog; historical claims below that all those links remain visible are stale.
+- New application: `lfnyc/`, static Astro 7.3.8, Node 24.21.0, zero functions. Draft origin: `https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app`.
+- Draft source/artifact/deploy receipt and completed validation: `AUDIT-REPORT.md`. Exact approval-gated production migration: `NEEDS-APPROVAL.md`.
+- Existing `littlefightnyc.com` production is a separate property and was not edited.
+
+The original source below is retained for recovery of the AHA commerce contract. Its dated release, local path, provider state and availability statements are historical snapshots, not permission or current verification. Never use them to reopen commerce.
+
+---
+
+# Historical AHA operating reference
 
 Last verified: September 28, 2026 from local Git, GitHub, Netlify deployment metadata, production-context build, and live primary plus immutable artifact checks. Provider catalog data was not changed.
 
-This file contains the current routing and operational contract. Detailed design, commerce, legal, and historical evidence remains available on demand under `docs/` and in Git history.
+The following September 28 snapshot is retained as a historical operational reference; current routing and release identity are above. Detailed design, commerce, legal, and historical evidence remains available on demand under `docs/` and in Git history.
 
 ## Canonical source and production map
 

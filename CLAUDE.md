@@ -1,9 +1,9 @@
 # Claude compatibility adapter
 
-Read `AGENTS.md`, then `SOURCE_OF_TRUTH.md`. Those files are the only controlling agent contract for this repository.
+Read `AGENTS.md`, then `SOURCE_OF_TRUTH.md`.
 
-After Hours Agenda is production commerce; `SOURCE_OF_TRUTH.md` records current availability. Preserve the storefront, purchase flow, data, providers, secrets, and deployment state unless the current request clearly authorizes a scoped change.
+On `audit/2026-10-09`, `lfnyc/` is the active Little Fight NYC preview. It uses Astro 7, Node 24 and the supplied LFNYC Brand Kit. The repository-root Next.js 16 commerce application and root Netlify config remain AHA production and are preserved. Do not confuse the preview with the production target.
 
-Do not preload `.ai` history, dated audits, master handoffs, or the whole `docs/` tree. Open the task-specific reference named in `AGENTS.md` only when the work needs it.
+Run checks inside `lfnyc/`. Browser tests use installed Google Chrome. Do not merge, promote, change DNS, retire providers or send anything without explicit scoped authorization. The current mission authorizes branch commits, branch pushes and a Netlify draft only. `NEEDS-APPROVAL.md` records the separate live migration.
 
-Use current Git, GitHub, Netlify, and public live evidence when an older document conflicts with present state. End with the compact completion report required by `AGENTS.md`.
+Use current Git and exact-site Netlify evidence over historical handoffs. Do not preload archives. Report verified outcomes, not expected outcomes.

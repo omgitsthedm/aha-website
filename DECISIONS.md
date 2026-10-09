@@ -11,7 +11,24 @@
 - Preview origin is `https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app`; noindex is an indexing directive, not access control.
 - Keep llms.txt as an accurate optional summary requested by the user; Google does not use it for ranking and no AI citation outcome is promised.
 - Publish plain answers without FAQ/HowTo rich-result promises; current Google documentation retires FAQ rich results.
-- Use project-local tooling and non-default ports 4387/4388; no global installs, shared configuration changes or personal Chrome profiles.
+- Use project-local tooling and non-default ports 48378/48379; no global installs, shared configuration changes or personal Chrome profiles.
 - Build hook rejected a dependency command despite an exact workdir; explicit `cd` to the worktree resolved it without approval or global changes.
 - Screenshot URL pathname encoding initially placed this task's captures in a percent-encoded folder; moved only those generated files into the exact output path and corrected fileURLToPath usage.
 - Lighthouse required its custom profile directory to exist; create task-local profile directories explicitly before launch.
+- TypeScript 7.0.2 is newer but unsupported by current @astrojs/check; pinned supported TypeScript 6.0.3 instead of forcing peer dependencies.
+- Installed current Astro 7.3.8, ESLint 10.12.0, Astro ESLint 3.2.1, Playwright 1.64.0 and axe-core 4.14.0; initial complete new-app audit reports zero vulnerabilities.
+- Baseline Lighthouse is already excellent; final performance scoring uses measured results and does not claim the old site was slow.
+- Lighthouse programmatic preset flags did not change the desktop form factor; switched to the official desktop config and reran matching verified profiles.
+- The first failed Lighthouse launch left only this task's Chrome process; stopped that verified PID, preserved other project/browser sessions, and relaunched.
+- Sharp's current package no longer exposes the historical lib/index.js path; resolved its public package entry instead.
+- Port 4388 was occupied by another local project; selected dedicated ports 48378/48379 without stopping or inspecting that project.
+
+- Browser checks found an intrinsic-size grid overflow and a closed-menu layout leak; fixed both and retained 320px reflow coverage.
+- Lazy images are verified after scrolling into view; a full-page capture alone does not trigger every lazy image.
+- The release digest includes headers, crawler files and metadata as well as page assets, excluding only release.json to avoid self-reference.
+- Local Lighthouse exposed oversized mobile images and an uncompressed local test server; added responsive WebP sizes and local text compression before the hosted candidate.
+- Allow same-origin connections in CSP so browser inspection can read robots.txt; cross-origin connections remain blocked, form-action remains none, and tests still prove the brief makes no submission.
+- Gitleaks is not installed; used a redacted known-credential-pattern scan of new source and artifact, plus dependency and artifact-boundary tests, without claiming a full security certification.
+- Netlify still reports the Next.js build plugin; the queued production migration explicitly disables that exact plugin before activating the static build. Draft deploys bypass builds and inherit no function bundle.
+- Added the official SIL Open Font License notices for the three supplied font families; the supplied files remain unmodified.
+- Locally tested the approval-gated production build: production canonicals, indexing directives and social card switch correctly, with no preview banner; restored the noindex draft artifact and uploaded no production build.
