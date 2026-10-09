@@ -1,16 +1,16 @@
-# Approval queue — none of these actions executed
+# Release gate — independent GitHub review
 
-## 1. Production runtime migration, preserving the AHA brand
+The user reviewed the AHA preview and said: “that's good, push forward and document it and then close it.” The release candidate is prepared on `audit/2026-10-09`. The website keeps the After Hours Agenda identity and domain.
 
-The current preview is After Hours Agenda. The original custom domain, business identity and production deployment remain unchanged. This draft does not authorize a production merge.
+## Remaining mandatory gate
 
-The prepared static migration changes the build base to `site-preview`, uses Node 24 and ships no functions. **It is a breaking runtime change:** automatic newsletter signup, automated order lookup, operational APIs and provider callbacks are not in the static application. The safe remedy for preview is complete: no customer queries or submissions, a working local email draft, clear collection status and support guidance. Before production, the owner must explicitly accept the reduced runtime or approve a separate backend-preservation implementation. Existing customer/order/provider data is not deleted or changed. Do not infer that closing new sales makes every historical endpoint safe to remove.
+GitHub ruleset **20717491** requires **one independent approving review**, resolved review threads, an up-to-date branch, and these checks: `ci`, `product-flow`, `cart-flow`, `checkout-sandbox-flow`, `dependency-review`, `npm-audit`, `secret-scan`, `Lighthouse (mobile)`, and `Lighthouse (desktop)`. Auto-merge is disabled. This is a repository control, not a request for another conversational approval. Do not self-approve, use an admin bypass, weaken the rule or publish an unmerged artifact around it.
 
-The exact proposed change is `cp site-preview/ops/production.netlify.toml netlify.toml`. The template changes the publish target to the static app, removes the root Next.js plugin declaration, sets Node 24, and enables the deliberate production build flag for `https://afterhoursagenda.com`. It keeps AHA branding and email. The tested production variant removes the review banner/noindex and uses the approved canonical origin. It allows Google-Extended for Gemini grounding, which also allows Google's covered training use; GPTBot and ClaudeBot remain denied.
+All implementation and local validation are prepared before this gate. The PR review must cover the disclosed static runtime migration: automated newsletter signup, customer order lookup, operational APIs and provider callbacks are excluded. The contact flow prepares an unsent email; new orders stay paused. Original code, provider/customer records, accounts and credentials remain unchanged. No provider retirement or commerce reopening is authorized.
 
-Before any approved merge, on **site `275b4115-16bf-42fb-9b36-6bce9bb93608` only**, open Project configuration → Developer settings → Build plugins and disable `@netlify/plugin-nextjs` if still installed. Current read-only metadata reports that plugin. No other integration, data or secret setting is changed.
+## Exact remaining sequence after independent review
 
-Only after explicit production approval covering the runtime changes above and that plugin step:
+The static root configuration is already committed on the audit branch. It uses Node 24, the exact production origin, the deliberate production flag and `NETLIFY_NEXT_PLUGIN_SKIP=true`. The skip flag was verified against every lifecycle hook in installed runtime 5.16.2 and current upstream source; no live UI plugin mutation is needed. Search ownership files are preserved byte for byte.
 
 ```bash
 (
@@ -19,29 +19,18 @@ cd '/Users/davidmarsh/Desktop/Project Upgrades/afterhoursagenda/worktree'
 git switch audit/2026-10-09
 git fetch origin main
 test "$(git rev-parse origin/main)" = c682761ef26bbedb4ea4f76fc869e7ded883a12d
-cp site-preview/ops/production.netlify.toml netlify.toml
-git add netlify.toml
-git commit -m 'build: prepare approved AHA production migration [skip netlify]'
-git push origin audit/2026-10-09
-gh pr create --repo omgitsthedm/aha-website --base main --head audit/2026-10-09 --title 'Launch approved After Hours Agenda modernization' --body-file site-preview/ops/promotion-pr.md
-gh pr checks audit/2026-10-09 --repo omgitsthedm/aha-website --watch
+gh pr checks audit/2026-10-09 --repo omgitsthedm/aha-website --required
 AHA_APPROVED_HEAD="$(git rev-parse HEAD)"
-gh pr merge audit/2026-10-09 --repo omgitsthedm/aha-website --squash --match-head-commit "$AHA_APPROVED_HEAD" --subject 'feat: launch approved After Hours Agenda website'
+gh pr merge audit/2026-10-09 --repo omgitsthedm/aha-website --squash --match-head-commit "$AHA_APPROVED_HEAD" --subject 'feat: launch reviewed After Hours Agenda website'
 )
 ```
 
-The subshell stops on failure. The `test` stops if main has changed; reconcile and revalidate before continuing. Required PR checks and repository approval rules must pass. A main merge triggers the Git-connected production build. Never manually promote the noindex draft unchanged. No DNS or domain change is needed or authorized.
+The main check stops if another release lands; reconcile and rerun checks. Use a merge subject without `[skip netlify]`. The Git-connected main build targets exact site **275b4115-16bf-42fb-9b36-6bce9bb93608**. Never manually promote the noindex draft. A failed build leaves the existing published deployment intact; fix the build and retry the approved Git source.
 
-After the approved build, verify the public `release.json` source/site/mode, exact Netlify published deploy, Git main, every route and header, sitemap origin, noindex removal, and the accepted backend/support behavior. If verification fails, restore published deploy `6ac793e13b19850008db4a3a` through this exact site's Deploys interface under the release/rollback authorization. Do not alter provider data.
+After the successful build, read the exact Netlify published deploy and source, then run `EXPECTED_COMMIT=<merged-main-sha> node site-preview/scripts/verify-live.mjs`. Run production-mode browser checks with `AHA_PRODUCTION_BUILD=approved BASE_URL=https://afterhoursagenda.com npm run test:e2e` from `site-preview/`. Verify all routes, ownership files, canonicals, noindex removal and the accepted static support behavior. Record the exact deploy ID, source/digest and credit effect. Do not submit forms, query customers or create transactions.
 
-## 2. Restore automatic acquisition and order lookup, if required for production
+## Actions outside this release
 
-The original implementations remain in the preserved root application. No existing integration is disconnected. A future scoped implementation must retain AHA-owned recipients/accounts, server-side validation, abuse controls, appropriate consent and truthful success/error states. Newsletter tests must not actually subscribe anyone; order tests must use an approved non-production fixture. No LFNYC or future-client destination belongs in this project's flows.
+No DNS/domain change, billing or spend, account creation, provider mutation, inventory/catalog publication, payment, refund, fulfillment, deletion, campaign or social posting is authorized. The marketing package remains unpublished. A future backend restoration needs its own scope and non-production fixtures; preserving historical source is not a live-service claim.
 
-## 3. Live commerce and provider retirement
-
-Do not reopen checkout, publish products, change inventory, prices or mappings, create transactions, modify callbacks, retire providers or delete records. Those actions require separately named resources, verified readiness and explicit scope. No blanket deletion or provider-mutation command is prepared because no such change is part of this release.
-
-## 4. External publication and account changes
-
-The complete AHA marketing batch is local and unpublished. No post, email, campaign or search-console submission was sent. Posting and submission of a future live sitemap remain separate external actions. No spend, billing, account creation, DNS or hosting change is required.
+Sources for the non-disruptive plugin preparation: [Netlify build variables](https://docs.netlify.com/build/configure-builds/environment-variables/) and [current runtime source](https://github.com/opennextjs/opennextjs-netlify/blob/main/src/index.ts). The local runtime's actual implementation was read and exercised; this does not rely on the older v4-only wording in the general documentation.

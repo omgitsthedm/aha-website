@@ -15,7 +15,7 @@ After Hours Agenda stays After Hours Agenda. It owns the custom-domain project a
 - Exact Netlify site ID: `275b4115-16bf-42fb-9b36-6bce9bb93608`, project `afterhoursagenda`.
 - Production deploy: `6ac793e13b19850008db4a3a`, published October 8, 2026.
 - Primary host: `https://afterhoursagenda.com`; public marker `/release.json`.
-- Root application: Next.js 16.4.0 / React 19.2.8, with existing commerce/provider infrastructure. Root `netlify.toml` remains unchanged.
+- Root application: Next.js 16.4.0 / React 19.2.8, with existing commerce/provider infrastructure. Root `netlify.toml` on the audit branch now prepares the static migration; Git main and the live deployment remain unchanged until the release gate clears.
 
 These are dated receipts, not permission for future production writes. Recheck before release.
 
@@ -40,4 +40,4 @@ New orders remain paused; historical catalog/provider records are not available-
 
 Square payment/history records, APLIIQ fulfillment contracts, historical Printful routes, Netlify Database and Resend remain protected. The new preview does not use, migrate or delete them. Reopening commerce requires independent authorization, verified provider readiness and all existing production guards. Never create an order or payment as a test, blind-retry a provider submission or expose credentials.
 
-Original validation commands are documented in `AGENTS.md`. Root type checks exclude the new package. Git main can trigger production; audit pushes carry `[skip netlify]`. An approved future migration must deliberately activate the prepared static config, address the existing Next.js plugin and explicitly accept the newsletter/order-lookup changes documented in `NEEDS-APPROVAL.md`. Never promote a noindex draft unchanged.
+Original validation commands are documented in `AGENTS.md`. Root type checks exclude the separate package. The user approved moving the reviewed AHA candidate toward production on October 9. GitHub ruleset 20717491 still requires one independent approval and nine named checks; auto-merge is disabled. The audit branch contains the prepared static config, mode-aware tests and preserved Google/Bing ownership files. The verified NETLIFY_NEXT_PLUGIN_SKIP=true build flag keeps the older UI-installed Next runtime inert without changing live host settings. Git main can trigger production; audit pushes and the PR title carry `[skip netlify]`. Never promote a noindex draft unchanged or claim newsletter/order/provider APIs remain available after a static migration. All account/data resources remain untouched.

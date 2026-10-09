@@ -2,6 +2,14 @@
 
 ## Current decisions after the user's brand correction
 
+- The user's "that's good, push forward and document it and then close it" accepts the reviewed AHA release; prepare the documented production migration while preserving all provider accounts/data and the AHA identity.
+- GitHub ruleset 20717491 requires one independent approval and nine named checks; do not bypass or weaken it. Auto-merge is disabled. Complete the PR/checks and record the remaining platform gate.
+- Keep the required CI check names; move browser/performance checks onto the actual static production candidate, retain original-app CI, use installed Chrome, and run local CI Lighthouse budgets without another Netlify preview.
+- Preserve the three original Google/Bing ownership files byte for byte, with artifact and browser regression checks, before production.
+- Current Next runtime 5.16.2 and upstream source honor `NETLIFY_NEXT_PLUGIN_SKIP=true` in every lifecycle hook; use that verified build flag to keep the old UI plugin inert without changing live host settings.
+- Extend artifact/browser validation to both preview and production indexing modes; retain noindex on review builds and require canonical AHA indexing on production builds.
+- The project-context help and classic GitHub branch-protection requests returned non-success statuses; used supported project-context commands and the active repository-rules endpoint to obtain the actual release controls.
+- Fleet status flags concurrent projects and the preserved original branch's unpublished commits; the isolated audit branch remains the only checkout changed.
 - Custom-domain and future-client projects keep their own identity; only abstract projects use LFNYC branding. This project stays After Hours Agenda.
 - The active package is `site-preview/`; the earlier LFNYC direction and local review assets are preserved only as superseded history under this task's evidence folder and Git history.
 - Keep the existing draft alias so its active contents are replaced; the alias's historical LFNYC prefix is not the website's brand.

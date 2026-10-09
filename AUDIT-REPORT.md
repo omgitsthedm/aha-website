@@ -1,5 +1,7 @@
 # After Hours Agenda audit and modernization — final report
 
+> **Release follow-through, October 9:** The user approved moving the reviewed AHA candidate forward. The audit branch now contains the production configuration, mode-aware tests and preserved Google/Bing ownership files. GitHub requires one independent review plus its named checks; production remains unchanged until that gate clears. [Current release gate and exact commands](NEEDS-APPROVAL.md) supersede the historical approval queue below. The audit measurements and hosted preview receipt remain unchanged.
+
 **October 9, 2026 · All five phases complete · Preview only**
 
 Today was checked with `date`: `Fri Oct 9 00:26:43 MST 2026`.

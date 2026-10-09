@@ -11,7 +11,7 @@ This custom-domain project keeps the After Hours Agenda brand. Never substitute 
 - Exact Netlify site: `275b4115-16bf-42fb-9b36-6bce9bb93608`; primary host: `https://afterhoursagenda.com`.
 - Read `SOURCE_OF_TRUTH.md`. Confirm physical Git root and `git status --short` before edits. Preserve unrelated work and the original checkout.
 
-The authorized audit includes commits, branch pushes and draft-only deploys. It excludes merging, production promotion, DNS/domain changes, provider/data changes, payments, messages and form submissions. Root production configuration stays unchanged. Use exact site ID, prebuilt static artifact and empty functions for a draft. No global installs or shared configuration edits. Ports 48378/48379 only for this task; use installed Google Chrome.
+The user approved moving the reviewed AHA website toward production on October 9, 2026. Prepare and verify the documented static migration through GitHub main and the exact Netlify site. GitHub ruleset 20717491 requires one independent approval and nine named checks; do not bypass or weaken it. Auto-merge is disabled. Root netlify.toml on this branch is the production candidate, not proof of a live release. No DNS/domain change, provider/data mutation, payment, message or form submission is authorized. No global installs or shared configuration edits. Ports 48378/48379 only; use installed Google Chrome. Return to preview-first scope for new work after this release.
 
 ## Design and content
 
@@ -21,7 +21,7 @@ New orders are paused. Never fabricate product availability, future release date
 
 ## Validation
 
-From `site-preview/` on Node 24.21.0: `npm run check`, `npm run test:e2e`, `npm audit`. Build and visually inspect before any draft deploy. Artifact tests reject wrong-business content, transactions and secrets. Hosted checks must verify exact release hash, routes, headers and unchanged production. `NEEDS-APPROVAL.md` contains inactive release preparation.
+From `site-preview/` on Node 24.21.0: `npm run check`, `npm run test:e2e`, `npm audit`. Build and visually inspect before any draft deploy. Artifact tests reject wrong-business content, transactions and secrets. Run both preview and production modes before release. Hosted checks must verify exact source/hash, routes, headers, ownership files and indexing. `NEEDS-APPROVAL.md` records the independent-review gate and the remaining cutover sequence.
 
 ## Protected original application
 

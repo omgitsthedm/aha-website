@@ -1,7 +1,9 @@
 # After Hours Agenda
 
-Read `AGENTS.md` and `SOURCE_OF_TRUTH.md`. This is a custom-domain clothing-brand project and must remain After Hours Agenda. The October 9 correction supersedes the initial LFNYC rebrand direction.
+Read `AGENTS.md`, `SOURCE_OF_TRUTH.md` and `NEEDS-APPROVAL.md`. This custom-domain clothing-brand project keeps its own identity. Only abstract projects use LFNYC branding.
 
-The active review app is `site-preview/` (Astro 7.3.8, Node 24.21.0); the root Next.js commerce app and production config are preserved. Work only in the isolated `audit/2026-10-09` worktree. Run `npm run check`, `npm run test:e2e` and `npm audit` inside the new package. Use installed Chrome and ports 48378/48379.
+The reviewed application is `site-preview/` (Astro 7.3.8, Node 24.21.0). Root Netlify configuration on the audit branch prepares the static migration. Original Next.js source and the canonical checkout remain preserved. The user approved moving the reviewed candidate toward production; GitHub still requires one independent PR approval and all nine named checks. Never bypass or weaken those controls, and never call a pending PR a completed deployment.
 
-The preview is static and non-transactional. It prepares email drafts to AHA support, labels concept/archive imagery, and states that new orders are paused. It does not send, subscribe, query customer records or accept payment. No merge, production promotion, provider/data change or external send is authorized. Exact release preparation is in `NEEDS-APPROVAL.md`; measured evidence is in `AUDIT-REPORT.md`.
+Run preview and production builds, artifact tests, installed-Chrome browser tests and the full new-app dependency audit. Use ports 48378/48379. The static site prepares email drafts and keeps orders paused; it does not run newsletter, order-query, payment or provider endpoints. Provider accounts/data, credentials, DNS and external sends stay outside this release.
+
+After a successful main build, verify exact Git source, Netlify site/deploy, public release receipt, production headers/canonicals and all routes. New work is preview-first. `AUDIT-REPORT.md` is historical audit evidence; the current closeout records whether the release gate has cleared.

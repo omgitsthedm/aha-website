@@ -1,40 +1,40 @@
-# After Hours Agenda — website preview
+# After Hours Agenda — reviewed website release candidate
 
-This is an After Hours Agenda project. Custom-domain and client websites keep their own brands. The current audit branch adds a modern AHA editorial preview in **`site-preview/`**, using Astro 7.3.8 and Node 24.21.0. The existing Next.js 16.4.0 commerce application and root Netlify configuration remain preserved.
+After Hours Agenda keeps its own identity and custom domain. The reviewed website lives in **`site-preview/`**, using Astro 7.3.8 and Node 24.21.0. The user approved moving it toward production on October 9, 2026. GitHub's independent PR approval and required checks remain mandatory; `SOURCE_OF_TRUTH.md` records the current live state.
 
-## Work on the preview
+## Work and verify
 
 ```bash
 cd site-preview
 npm ci
 npm run check
 npm run test:e2e
+AHA_PRODUCTION_BUILD=approved PUBLIC_SITE_URL=https://afterhoursagenda.com npm run check
+AHA_PRODUCTION_BUILD=approved npm run test:e2e
 npm run dev
 ```
 
-Use Node 24.21.0 (`site-preview/.nvmrc`). The dev server uses `127.0.0.1:48378`; built-site checks use `48379`. Browser tests use installed Google Chrome. Checks cover lint, strict types, build, artifact integrity, all routes, keyboard navigation, contact states, no-JavaScript content, narrow-screen reflow and accessibility.
+Use Node 24.21.0. Dev uses port 48378; built-site checks use 48379 and installed Google Chrome. Preview and production tests enforce their own indexing/canonical mode. Tests cover every page, keyboard navigation, contact states, no-JavaScript content, reflow, accessibility, artifact integrity and unchanged Google/Bing ownership files. Build the corresponding mode immediately before its tests.
 
-## Identity and behavior
+## Brand and behavior
 
-- AHA's current CSS tokens, Poppins 400/700/900, JetBrains Mono and canonical black-sheep mark are the brand authority. Historical design documents must be checked against current source.
-- New orders remain paused. Lookbook captions distinguish campaign concepts, previous-run renders and the brand archive.
-- Existing-order support remains visible. The contact form prepares a local email draft to `info@afterhoursagenda.com`; it does not send, store or subscribe anything.
-- The preview has no commerce APIs, customer database, automated tracking lookup, newsletter backend, analytics or payment flow. Existing production integrations are unchanged.
-- Source and asset provenance are recorded in `site-preview/claims.json` and the original `data/brand-imagery.json`.
+AHA's paper/ink/rose palette, Poppins, JetBrains Mono and original black sheep remain the brand authority. New orders are paused. Image captions distinguish campaign concepts, previous-run renders and genuine archive. Contact prepares a local email draft to `info@afterhoursagenda.com`; nothing is sent, stored or subscribed automatically.
 
-## Deployment
+The static candidate excludes automated newsletter signup, customer order lookup, operational/provider endpoints, analytics and payment functions. This is a disclosed runtime migration, not a commerce reopening. Original source, provider accounts, credentials and historical data remain preserved; they are not proof that a static deployment continues serving those endpoints.
 
-- Exact Netlify site ID: `275b4115-16bf-42fb-9b36-6bce9bb93608` (`afterhoursagenda`).
-- Active review alias: `https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app`. The alias retains an earlier technical name solely to supersede its active contents; the website is After Hours Agenda.
-- Build `site-preview/dist`, stage outside the repo using `site-preview/scripts/stage.mjs`, and deploy only that static folder with empty functions and the explicit site ID.
-- HTTP and HTML noindex protect against intended indexing, not public access. Do not promote this review artifact unchanged.
-- The root `netlify.toml` remains the existing production configuration. The template in `site-preview/ops/production.netlify.toml` is inactive and approval-gated.
-- `release.json` records source commit, artifact hash and exact site ID.
+## Release
 
-`AUDIT-REPORT.md` contains final verification and the preview receipt. `NEEDS-APPROVAL.md` records the breaking production migration and the business features that require separate approval. The preview is not authorization to replace the commerce runtime.
+- GitHub: `omgitsthedm/aha-website`; production branch: `main`.
+- Exact Netlify site: `275b4115-16bf-42fb-9b36-6bce9bb93608`; domain: `https://afterhoursagenda.com`.
+- On this audit branch, root `netlify.toml` is the prepared static production configuration. It is not live until an approved main merge and successful Git build.
+- Review artifact: https://6ac8af91c681bfc763902db4--afterhoursagenda.netlify.app. It retains noindex and must never be promoted unchanged.
+- Production builds explicitly require `AHA_PRODUCTION_BUILD=approved` and the exact AHA origin. `release.json` records the source, artifact digest and exact site.
+- Required checks keep their established names. Original-app CI still validates the preserved source; browser/performance jobs test the static production candidate. Lighthouse CI uses the exact local build; hosted measurements are separately documented.
+- GitHub requires one independent approval. Do not use an admin bypass or change the rules. The verified `NETLIFY_NEXT_PLUGIN_SKIP=true` flag keeps any old UI-installed Next runtime inert; no live plugin-setting change is needed.
+- Post-release verification: `EXPECTED_COMMIT=<deployed-main-sha> node site-preview/scripts/verify-live.mjs`, followed by production-mode browser checks on `BASE_URL=https://afterhoursagenda.com`.
 
-## Source structure
+`AUDIT-REPORT.md` is the dated audit receipt. `NEEDS-APPROVAL.md` records the outstanding release gate and exact remaining sequence. New work returns to preview-first scope after this release.
 
-`site-preview/src/` holds current preview pages, shared data, layouts and styles. `site-preview/public/` contains AHA assets and local fonts. `site-preview/scripts/` builds and guards the artifact. `site-preview/tests/` contains meaningful artifact and installed-Chrome browser checks.
+## Preserved application
 
-The preserved `app/`, `components/`, `lib/`, `data/`, `db/` and `ops/` directories remain the original AHA application. Its original lint, typecheck, tests, catalog validators and build commands remain available. Read `SOURCE_OF_TRUTH.md` before any release or provider work.
+The original `app/`, `components/`, `lib/`, `data/`, `db/` and `ops/` remain in Git. Their provider and database operations are protected; do not run transactional probes or infer authorization to reopen commerce. The original checkout is preserved on its existing branch; all release work happens in the isolated audit worktree.
