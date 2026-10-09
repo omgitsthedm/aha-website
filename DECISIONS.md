@@ -33,3 +33,5 @@
 - Added the official SIL Open Font License notices for the three supplied font families; the supplied files remain unmodified.
 - Locally tested the approval-gated production build: production canonicals, indexing directives and social card switch correctly, with no preview banner; restored the noindex draft artifact and uploaded no production build.
 - Clean GitHub CI exposed @typescript-eslint/parser being resolved from the preserved parent install; pinned parser 8.71.1 directly in the new package and reran the clean CI job.
+- CI also exposed inherited Node type declarations; pinned the Node 24 types and restricted compiler ambient types, then verified the app in a separate clean install outside the legacy dependency tree.
+- Current Google documentation says Google-Extended controls Gemini grounding as well as training; the reviewed preview blocks it, while the separately approved production build allows it to support the requested Gemini visibility. GPTBot and ClaudeBot training access remain blocked.

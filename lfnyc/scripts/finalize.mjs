@@ -66,7 +66,7 @@ await writeFile(
 );
 await writeFile(
   new URL('robots.txt', dist),
-  `# ${approved ? 'Published LFNYC site' : 'Design preview: HTML and HTTP responses carry noindex.'}\n# Crawling remains allowed so crawlers can read noindex. This is not access control.\nUser-agent: *\nAllow: /\n\nUser-agent: GPTBot\nDisallow: /\n\nUser-agent: ClaudeBot\nDisallow: /\n\nUser-agent: Google-Extended\nDisallow: /\n\nSitemap: ${origin}/sitemap.xml\n`,
+  `# ${approved ? 'Published LFNYC site' : 'Design preview: HTML and HTTP responses carry noindex.'}\n# Crawling remains allowed so crawlers can read noindex. This is not access control.\nUser-agent: *\nAllow: /\n\nUser-agent: GPTBot\nDisallow: /\n\nUser-agent: ClaudeBot\nDisallow: /\n\nUser-agent: Google-Extended\n${approved ? 'Allow' : 'Disallow'}: /\n\nSitemap: ${origin}/sitemap.xml\n`,
 );
 await writeFile(
   new URL('sitemap.xml', dist),
