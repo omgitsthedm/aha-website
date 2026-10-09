@@ -1,4 +1,5 @@
-# This package is a draft-only artifact. The repository root is still AHA production.
+# Netlify selects this file after the root sets base = "site-preview".
+# Keep release contexts aligned with the root configuration.
 [build]
   command = "npm run build"
   publish = "dist"
@@ -6,7 +7,13 @@
 [build.environment]
   NODE_VERSION = "24.21.0"
   ASTRO_TELEMETRY_DISABLED = "1"
-[context.production]
-  command = "node scripts/refuse-production.mjs"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+[context.production.environment]
+  AHA_PRODUCTION_BUILD = "approved"
+  PUBLIC_SITE_URL = "https://afterhoursagenda.com"
+[context.deploy-preview.environment]
+  PUBLIC_SITE_URL = "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app"
+[context.branch-deploy.environment]
+  PUBLIC_SITE_URL = "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app"
 [functions]
   directory = "functions-empty"

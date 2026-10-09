@@ -74,3 +74,6 @@
 - Retain the existing draft alias only to replace its active contents; its earlier LFNYC label is a technical URL history, not the business identity.
 - Final diff verification initially ran from the output folder instead of the worktree; corrected the directory before any Git mutation.
 - Git diff review caught trailing whitespace in the official Poppins license; normalized whitespace only and preserved all license wording.
+
+- October 9 explicit “push it all live” instruction authorizes the existing named-owner PR exception for this release after nine passing checks; no repository rule changes or invented independent review.
+- Netlify build 6ac8bcbea68d840008232b30 proved nested config precedence; align site-preview/netlify.toml production/preview contexts with root and verify the actual resolver before retrying.

@@ -1,5 +1,5 @@
 # Approved website release candidate, October 9, 2026.
-# GitHub main is the production source; independent PR approval is still required.
+# GitHub main is the production source; use the repository's approved merge path.
 [build]
   base = "site-preview"
   command = "npm run build"
