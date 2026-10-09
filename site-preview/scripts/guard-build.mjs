@@ -10,7 +10,7 @@ if (
   throw new Error("PUBLIC_SITE_URL must be an HTTPS origin.");
 if (process.env.CONTEXT === "production" && !approved)
   throw new Error(
-    "Production build refused. This is a draft-only After Hours Agenda preview.",
+    "Production build refused. Explicit approval and the exact AHA origin are required.",
   );
 if (!approved && origin.origin !== preview)
   throw new Error("Draft build must use its exact review origin.");

@@ -1,6 +1,6 @@
 # After Hours Agenda — reviewed website release candidate
 
-After Hours Agenda keeps its own identity and custom domain. The reviewed website lives in **`site-preview/`**, using Astro 7.3.8 and Node 24.21.0. The user approved moving it toward production on October 9, 2026. GitHub's independent PR approval and required checks remain mandatory; `SOURCE_OF_TRUTH.md` records the current live state.
+After Hours Agenda keeps its own identity and custom domain. The reviewed website lives in **`site-preview/`**, using Astro 7.3.8 and Node 24.21.0. The owner explicitly approved this production release on October 9, 2026. All nine required checks must pass; the existing named-owner PR exception is authorized for this release only. `SOURCE_OF_TRUTH.md` explains how to verify the actual live state.
 
 ## Work and verify
 
@@ -26,14 +26,14 @@ The static candidate excludes automated newsletter signup, customer order lookup
 
 - GitHub: `omgitsthedm/aha-website`; production branch: `main`.
 - Exact Netlify site: `275b4115-16bf-42fb-9b36-6bce9bb93608`; domain: `https://afterhoursagenda.com`.
-- On this audit branch, root `netlify.toml` is the prepared static production configuration. It is not live until an approved main merge and successful Git build.
+- Root `netlify.toml` sets `base = "site-preview"`. Netlify then selects `site-preview/netlify.toml`; both files must keep build environments and contexts aligned. A merged commit is not live until its Git build publishes successfully.
 - Review artifact: https://6ac8af91c681bfc763902db4--afterhoursagenda.netlify.app. It retains noindex and must never be promoted unchanged.
 - Production builds explicitly require `AHA_PRODUCTION_BUILD=approved` and the exact AHA origin. `release.json` records the source, artifact digest and exact site.
 - Required checks keep their established names. Original-app CI still validates the preserved source; browser/performance jobs test the static production candidate. Lighthouse CI uses the exact local build; hosted measurements are separately documented.
-- GitHub requires one independent approval. Do not use an admin bypass or change the rules. The verified `NETLIFY_NEXT_PLUGIN_SKIP=true` flag keeps any old UI-installed Next runtime inert; no live plugin-setting change is needed.
+- GitHub normally requires one independent approval. For this owner-approved release only, the existing named-owner PR exception permits merging after all nine checks pass. No repository rule changes or fabricated reviews. `NETLIFY_NEXT_PLUGIN_SKIP=true` in the selected nested config keeps the older UI-installed Next runtime inert.
 - Post-release verification: `EXPECTED_COMMIT=<deployed-main-sha> node site-preview/scripts/verify-live.mjs`, followed by production-mode browser checks on `BASE_URL=https://afterhoursagenda.com`.
 
-`AUDIT-REPORT.md` is the dated audit receipt. `NEEDS-APPROVAL.md` records the outstanding release gate and exact remaining sequence. New work returns to preview-first scope after this release.
+`AUDIT-REPORT.md` is the dated audit receipt. `NEEDS-APPROVAL.md` records the approved scope and production verification sequence. New work returns to preview-first scope after this release.
 
 ## Preserved application
 
