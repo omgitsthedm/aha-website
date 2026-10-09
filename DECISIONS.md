@@ -35,3 +35,14 @@
 - Clean GitHub CI exposed @typescript-eslint/parser being resolved from the preserved parent install; pinned parser 8.71.1 directly in the new package and reran the clean CI job.
 - CI also exposed inherited Node type declarations; pinned the Node 24 types and restricted compiler ambient types, then verified the app in a separate clean install outside the legacy dependency tree.
 - Current Google documentation says Google-Extended controls Gemini grounding as well as training; the reviewed preview blocks it, while the separately approved production build allows it to support the requested Gemini visibility. GPTBot and ClaudeBot training access remain blocked.
+- Netlify CLI rejected --context with --no-build before creating a deploy; removed the incompatible context flag and retained the explicit draft alias, exact site ID, prebuilt directory and empty functions.
+- Corrected the provisional before-performance score from 6 to 9 after matched baseline Lighthouse runs showed 100 median performance on mobile and desktop; the final comparison does not manufacture an old speed problem.
+- Final hosted medians use three matching Lighthouse 13.5.0 runs per device and version; field CWV, conversions and AI citations are not claimed.
+- The single successful draft is 6ac8a497d59c076a602798ad, with no functions/plugins/database work and no production publication; subsequent documentation commits do not trigger another deploy.
+- A direct host-verification script initially used the Playwright response-status method on the Fetch API; corrected it to the status property and reverified all 58 public files successfully.
+- Static graphics are rendered from the approved fonts/marks and actual screenshots; added a compositor-settle step after visual inspection caught incomplete text painting in two initial exports.
+
+- The user corrected brand scope: custom-domain and future-client projects keep their own identity; this project remains After Hours Agenda, and the initial LFNYC draft/package is superseded.
+- Use current AHA CSS and the later source contract when July design docs conflict: Poppins 400/700/900, paper/ink/rose, hairline frames and warm clothing-brand copy.
+- Retain the existing draft alias only to replace its active contents; its earlier LFNYC label is a technical URL history, not the business identity.
+- Final diff verification initially ran from the output folder instead of the worktree; corrected the directory before any Git mutation.
