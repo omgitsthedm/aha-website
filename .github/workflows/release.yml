@@ -8,20 +8,18 @@ on:
 permissions:
   contents: write
 
-# Verifies the tagged commit is live and healthy. Does NOT create charges or confirm
-# Printful orders. Uses the repo's own exact-site + live guards.
+# Verifies the tagged static website is live. Read-only: no provider or customer calls.
 jobs:
   verify-production:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with: { node-version: "20.20.2", cache: "npm" }
-      - run: npm ci
+        with: { node-version: "24.21.0" }
       - name: Verify live site serves AHA content
-        run: LIVE_URL=https://afterhoursagenda.com/ npm run verify:netlify-live
+        run: node site-preview/scripts/verify-live.mjs
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          EXPECTED_COMMIT: ${{ github.sha }}
       - name: Generate changelog
         run: |
           echo "## ${GITHUB_REF_NAME}" > RELEASE_NOTES.md

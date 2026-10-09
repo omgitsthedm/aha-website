@@ -3,10 +3,10 @@ name: AHA preview checks
 on:
   push:
     branches: ["audit/2026-10-09", main]
-    paths: ["site-preview/**", ".github/workflows/aha-preview.yml"]
+    paths: ["site-preview/**", "netlify.toml", ".github/workflows/aha-preview.yml"]
   pull_request:
     branches: [main]
-    paths: ["site-preview/**", ".github/workflows/aha-preview.yml"]
+    paths: ["site-preview/**", "netlify.toml", ".github/workflows/aha-preview.yml"]
   workflow_dispatch:
 
 permissions:

@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const axe = readFileSync(require.resolve("axe-core/axe.min.js"), "utf8");
+const production = process.env.AHA_PRODUCTION_BUILD === "approved";
 for (const [label, width, height] of [
   ["desktop", 1440, 1000],
   ["mobile", 390, 844],
@@ -183,7 +184,7 @@ test("320px and 200-percent-equivalent reflow keep every page within the viewpor
     }
   }
 });
-test("missing routes and legacy APIs are real 404s; preview headers remain explicit", async ({
+test("missing routes and legacy APIs are real 404s; headers match release mode", async ({
   request,
 }) => {
   for (const path of [
@@ -197,10 +198,39 @@ test("missing routes and legacy APIs are real 404s; preview headers remain expli
     expect(await response.text()).toContain("A DIFFERENT");
   }
   const response = await request.get("/");
-  expect(response.headers()["x-robots-tag"]).toContain("noindex");
+  if (production) {
+    expect(response.headers()["x-robots-tag"] || "").not.toContain("noindex");
+    expect(await response.text()).toContain(
+      'name="robots" content="index, follow, max-image-preview:large"',
+    );
+  } else {
+    expect(response.headers()["x-robots-tag"]).toContain("noindex");
+  }
   expect(response.headers()["content-security-policy"]).toContain(
     "connect-src 'self'",
   );
+});
+
+test("search ownership files and release receipt remain available", async ({
+  request,
+}) => {
+  for (const file of [
+    "googleb80e08d782fcdd45.html",
+    "google9dd9990931be8b22.html",
+    "BingSiteAuth.xml",
+  ]) {
+    const response = await request.get(`/${file}`);
+    expect(response.status()).toBe(200);
+    expect(await response.body()).toEqual(
+      readFileSync(new URL(`../../../public/${file}`, import.meta.url)),
+    );
+  }
+  const response = await request.get("/release.json");
+  expect(response.status()).toBe(200);
+  const release = await response.json();
+  expect(release.project).toBe("After Hours Agenda");
+  expect(release.siteId).toBe("275b4115-16bf-42fb-9b36-6bce9bb93608");
+  expect(release.mode).toBe(production ? "production" : "preview");
 });
 
 test("every internal link resolves, including fragment destinations", async ({

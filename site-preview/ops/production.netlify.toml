@@ -9,6 +9,7 @@
 [build.environment]
   NODE_VERSION = "24.21.0"
   ASTRO_TELEMETRY_DISABLED = "1"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
 [context.production.environment]
   AHA_PRODUCTION_BUILD = "approved"

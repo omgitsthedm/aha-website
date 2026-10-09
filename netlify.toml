@@ -1,77 +1,26 @@
+# Approved website release candidate, October 9, 2026.
+# GitHub main is the production source; independent PR approval is still required.
 [build]
+  base = "site-preview"
   command = "npm run build"
-  publish = ".next"
+  publish = "dist"
+  functions = "functions-empty"
 
 [build.environment]
-  NODE_VERSION = "20.20.2"
-  NEXT_PUBLIC_SITE_URL = "https://afterhoursagenda.com"
-  SQUARE_API_VERSION = "2024-01-18"
-  AHA_FULFILLMENT_MODE = "manual"
-  # Non-secret PUBLIC identifiers that legitimately appear in committed docs
-  # (SOURCE_OF_TRUTH.md, docs/) and, for NEXT_PUBLIC_*, in the client bundle.
-  # Without this, Netlify secrets scanning fails the build (exit 2) on these
-  # values. Real secrets (SQUARE_ACCESS_TOKEN, PRINTFUL_API_TOKEN, webhook
-  # signature keys) are NOT listed here and remain fully scanned.
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SQUARE_APP_ID,NEXT_PUBLIC_GTM_ID,SQUARE_APPLICATION_ID,SQUARE_LOCATION_ID,PRINTFUL_STORE_ID"
-  # Printful v2 defaults. Non-production contexts remain dry-run and never confirm orders.
-  PRINTFUL_API_VERSION = "v2-beta"
-  PRINTFUL_API_BASE_URL = "https://api.printful.com/v2"
-  PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
-  PRINTFUL_LIVE_MODE = "false"
-  # APLIIQ infrastructure ships fail-closed everywhere except the production
-  # context below, which enables order submission for the live capsule.
-  APLIIQ_API_BASE_URL = "https://api.apliiq.com/v1"
-  APLIIQ_DEFAULT_SHIPPING = "standard"
-  APLIIQ_ALLOW_CREATE_ORDERS = "false"
-  APLIIQ_LIVE_MODE = "false"
+  NODE_VERSION = "24.21.0"
+  ASTRO_TELEMETRY_DISABLED = "1"
+  # Current Next runtime hooks honor this flag. Keep stale UI plugin metadata inert.
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
-# ── Production (main) ────────────────────────────────────────────────────────
-# Production: a verified Square payment submits the mapped capsule order to APLIIQ.
 [context.production.environment]
-  # Public container ID: consent and canonical-host gated by GoogleAnalytics.
-  # With this set, the component never renders direct gtag.js, preventing duplicate GA4 pageviews.
-  NEXT_PUBLIC_GTM_ID = "GTM-NDDT5PXZ"
-  SQUARE_ENVIRONMENT = "production"
-  # Must exactly match Square's enabled production subscription for signature verification.
-  SQUARE_WEBHOOK_NOTIFICATION_URL = "https://afterhoursagenda.netlify.app/api/webhooks/square"
-  AHA_FULFILLMENT_MODE = "auto"
-  PRINTFUL_ALLOW_CONFIRM_ORDERS = "true"
-  PRINTFUL_LIVE_MODE = "true"
-  # APLIIQ is the live provider for the capsule (2026-08-18). netlify.toml wins
-  # over the UI, so these two rails MUST be set here — the UI values alone left
-  # production fail-closed. Every other context below stays false.
-  APLIIQ_ALLOW_CREATE_ORDERS = "true"
-  APLIIQ_LIVE_MODE = "true"
+  AHA_PRODUCTION_BUILD = "approved"
+  PUBLIC_SITE_URL = "https://afterhoursagenda.com"
 
-# ── Staging (persistent branch deploy) ───────────────────────────────────────
-[context."staging".environment]
-  SQUARE_ENVIRONMENT = "sandbox"
-  AHA_PREVIEW_CATALOG = "true"
-  AHA_FULFILLMENT_MODE = "dry-run"
-  PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
-  PRINTFUL_LIVE_MODE = "false"
-  APLIIQ_ALLOW_CREATE_ORDERS = "false"
-  APLIIQ_LIVE_MODE = "false"
-
-# ── Deploy Previews (feature/*, drop/*) ──────────────────────────────────────
 [context.deploy-preview.environment]
-  SQUARE_ENVIRONMENT = "sandbox"
-  AHA_PREVIEW_CATALOG = "true"
-  AHA_FULFILLMENT_MODE = "dry-run"
-  PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
-  PRINTFUL_LIVE_MODE = "false"
-  APLIIQ_ALLOW_CREATE_ORDERS = "false"
-  APLIIQ_LIVE_MODE = "false"
+  PUBLIC_SITE_URL = "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app"
 
-# ── All other branch deploys ─────────────────────────────────────────────────
 [context.branch-deploy.environment]
-  SQUARE_ENVIRONMENT = "sandbox"
-  AHA_PREVIEW_CATALOG = "true"
-  AHA_FULFILLMENT_MODE = "dry-run"
-  PRINTFUL_ALLOW_CONFIRM_ORDERS = "false"
-  PRINTFUL_LIVE_MODE = "false"
-  APLIIQ_ALLOW_CREATE_ORDERS = "false"
-  APLIIQ_LIVE_MODE = "false"
+  PUBLIC_SITE_URL = "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app"
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+[functions]
+  directory = "functions-empty"

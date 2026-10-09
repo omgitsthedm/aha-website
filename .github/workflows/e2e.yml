@@ -6,49 +6,65 @@ on:
     branches: [main, staging]
   workflow_dispatch:
 
-env:
-  SQUARE_ENVIRONMENT: sandbox
-  AHA_PREVIEW_CATALOG: "true"
-  AHA_UNOPTIMIZED_IMAGES: "true"
-  AHA_FULFILLMENT_MODE: dry-run
-  PRINTFUL_ALLOW_CONFIRM_ORDERS: "false"
-  PRINTFUL_LIVE_MODE: "false"
-
 permissions:
   contents: read
 
+env:
+  AHA_PRODUCTION_BUILD: approved
+  PUBLIC_SITE_URL: https://afterhoursagenda.com
+  ASTRO_TELEMETRY_DISABLED: "1"
+
+# Existing required check names are retained. They now test the shipped static
+# website, including the deliberately absent commerce runtime and unsent support.
 jobs:
-  # Stable job names map to required checks. Every job selects at least one
-  # real browser flow; a no-test result must never satisfy a release gate.
   product-flow:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site-preview
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with: { node-version: "20.20.2", cache: "npm" }
+        with:
+          node-version: 24.21.0
+          cache: npm
+          cache-dependency-path: site-preview/package-lock.json
       - run: npm ci
-      - run: npx playwright install --with-deps chromium webkit
+      - run: google-chrome --version
       - run: npm run build
-      - run: npx playwright test --grep '@product|@catalog|@seo|@security|@care|@brand|@operations'
+      - run: npm run test:e2e -- --grep 'desktop:|mobile:|native mobile|all content|320px|every internal|search ownership'
 
   cart-flow:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site-preview
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with: { node-version: "20.20.2", cache: "npm" }
+        with:
+          node-version: 24.21.0
+          cache: npm
+          cache-dependency-path: site-preview/package-lock.json
       - run: npm ci
-      - run: npx playwright install --with-deps chromium webkit
+      - run: google-chrome --version
       - run: npm run build
-      - run: npx playwright test --grep @cart
+      - run: npm run test:e2e -- --grep 'missing routes and legacy APIs'
 
   checkout-sandbox-flow:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site-preview
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with: { node-version: "20.20.2", cache: "npm" }
+        with:
+          node-version: 24.21.0
+          cache: npm
+          cache-dependency-path: site-preview/package-lock.json
       - run: npm ci
-      - run: npx playwright install --with-deps chromium webkit
+      - run: google-chrome --version
       - run: npm run build
-      - run: npx playwright test --grep @checkout
+      - run: npm test
+      - run: npm run test:e2e -- --grep 'contact validates'

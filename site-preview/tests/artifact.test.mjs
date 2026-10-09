@@ -4,7 +4,11 @@ import assert from "node:assert/strict";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 const root = new URL("../dist/", import.meta.url);
-test("every route has one H1, unique metadata, entity data and preview noindex", async () => {
+const production = process.env.AHA_PRODUCTION_BUILD === "approved";
+const origin = production
+  ? "https://afterhoursagenda.com"
+  : "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app";
+test("every route has unique metadata, entity data and correct indexing mode", async () => {
   const titles = new Set();
   const descriptions = new Set();
   for (const route of routes) {
@@ -13,7 +17,17 @@ test("every route has one H1, unique metadata, entity data and preview noindex",
       "utf8",
     );
     assert.equal((html.match(/<h1\b/g) || []).length, 1, route);
-    assert.match(html, /name="robots" content="noindex, noarchive"/);
+    if (production) {
+      assert.match(
+        html,
+        /name="robots" content="index, follow, max-image-preview:large"/,
+      );
+      assert.ok(!html.includes("Website preview"), route);
+      assert.ok(!html.includes("noindex"), route);
+    } else {
+      assert.match(html, /name="robots" content="noindex, noarchive"/);
+      assert.ok(html.includes("Website preview"), route);
+    }
     assert.match(html, /application\/ld\+json/);
     assert.match(html, /After Hours Agenda/);
     const title = html.match(/<title>(.*?)<\/title>/)?.[1];
@@ -22,12 +36,7 @@ test("every route has one H1, unique metadata, entity data and preview noindex",
     titles.add(title);
     assert.ok(description && !descriptions.has(description), route);
     descriptions.add(description);
-    assert.ok(
-      html.includes(
-        `href="https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app${route}"`,
-      ),
-      route,
-    );
+    assert.ok(html.includes(`href="${origin}${route}"`), route);
     for (const match of html.matchAll(
       /(?:src|href)="(\/(?:_astro|images|fonts|brand)\/[^"?#]+)"/g,
     ))
@@ -60,17 +69,39 @@ test("all inline script content is covered by CSP hashes", async () => {
   assert.ok(!headers.includes("unsafe-eval"));
   assert.match(headers, /connect-src 'self'/);
   assert.match(headers, /form-action 'none'/);
-  assert.match(headers, /X-Robots-Tag: noindex/);
+  assert.equal(headers.includes("X-Robots-Tag: noindex"), !production);
 });
-test("sitemap covers only shipped canonical pages and llms marks review status", async () => {
+test("sitemap, crawler policy and summary match the release mode", async () => {
   const sitemap = await readFile(new URL("sitemap.xml", root), "utf8");
   assert.equal((sitemap.match(/<url>/g) || []).length, routes.length);
   for (const path of routes)
-    assert.ok(sitemap.includes(`netlify.app${path}</loc>`));
+    assert.ok(sitemap.includes(`${origin}${path}</loc>`));
   assert.match(
     await readFile(new URL("llms.txt", root), "utf8"),
-    /review preview, not a production replacement/,
+    production
+      ? /Official editorial website/
+      : /review preview, not a production replacement/,
   );
+  const robots = await readFile(new URL("robots.txt", root), "utf8");
+  assert.ok(
+    robots.includes(
+      `User-agent: Google-Extended\n${production ? "Allow" : "Disallow"}: /`,
+    ),
+  );
+  assert.ok(robots.includes("User-agent: GPTBot\nDisallow: /"));
+  assert.ok(robots.includes("User-agent: ClaudeBot\nDisallow: /"));
+});
+test("existing Google and Bing ownership files remain byte-identical", async () => {
+  for (const file of [
+    "googleb80e08d782fcdd45.html",
+    "google9dd9990931be8b22.html",
+    "BingSiteAuth.xml",
+  ]) {
+    assert.deepEqual(
+      await readFile(new URL(file, root)),
+      await readFile(new URL(`../../public/${file}`, import.meta.url)),
+    );
+  }
 });
 test("no server bundle, sensitive files or source maps enter the artifact", async () => {
   let jsBytes = 0;
@@ -121,6 +152,8 @@ test("release digest covers every published file except its own receipt", async 
   const release = JSON.parse(
     await readFile(new URL("release.json", root), "utf8"),
   );
+  assert.equal(release.mode, production ? "production" : "preview");
+  assert.equal(release.siteId, "275b4115-16bf-42fb-9b36-6bce9bb93608");
   assert.equal(
     release.artifactDigest,
     createHash("sha256")

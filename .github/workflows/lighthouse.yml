@@ -5,21 +5,17 @@ on:
   workflow_dispatch:
 
 env:
-  AHA_PREVIEW_CATALOG: "true"
-  SQUARE_ENVIRONMENT: sandbox
-  AHA_FULFILLMENT_MODE: dry-run
-  PRINTFUL_ALLOW_CONFIRM_ORDERS: "false"
-  PRINTFUL_LIVE_MODE: "false"
+  AHA_PRODUCTION_BUILD: approved
+  PUBLIC_SITE_URL: https://afterhoursagenda.com
+  ASTRO_TELEMETRY_DISABLED: "1"
+  CHROME_PATH: /usr/bin/google-chrome
 
 permissions:
   contents: read
 
-# This is repeatable lab evidence, not field CWV: Lighthouse cannot establish INP.
-# The mobile profile uses throttled mobile emulation; desktop is captured separately.
-# Both run against the exact Netlify deploy preview, so the real HTTP/2 delivery,
-# image optimizer, headers, and CDN behavior are included. The release endpoint
-# must identify the PR head commit before collection begins, preventing stale-preview
-# false passes. Preview commerce remains sandboxed/dry-run by netlify.toml.
+# Required lab checks run on this commit's production artifact in installed
+# Google Chrome. Hosted before/after evidence is recorded separately; these are
+# local CI budgets, not CDN or field-CWV measurements. No extra Netlify preview.
 jobs:
   performance:
     name: Lighthouse (${{ matrix.profile }})
@@ -31,32 +27,23 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with: { node-version: "20.20.2", cache: "npm" }
-      - name: Resolve exact release target
-        id: target
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          EXPECTED_COMMIT: ${{ github.event.pull_request.head.sha }}
-          PREVIEW_URL: https://deploy-preview-${{ github.event.pull_request.number }}--afterhoursagenda.netlify.app
+        with:
+          node-version: 24.21.0
+          cache: npm
+          cache-dependency-path: site-preview/package-lock.json
+      - run: npm ci --prefix site-preview
+      - run: npm run build --prefix site-preview
+      - name: Start exact production artifact
         run: |
-          if [[ "$EVENT_NAME" != "pull_request" ]]; then
-            echo "url=https://afterhoursagenda.com" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          for attempt in {1..120}; do
-            deployed_commit="$(curl --fail --silent --show-error \
-              --header 'Cache-Control: no-cache' \
-              "$PREVIEW_URL/release.json?expected=$EXPECTED_COMMIT" \
-              | jq -r '.commit // empty' 2>/dev/null || true)"
-            if [[ "$deployed_commit" == "$EXPECTED_COMMIT" ]]; then
-              echo "url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
+          google-chrome --version
+          node site-preview/scripts/serve.mjs > aha-local-server.log 2>&1 &
+          echo "AHA_SERVER_PID=$!" >> "$GITHUB_ENV"
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:48379/release.json; then
               exit 0
             fi
-            sleep 10
+            sleep 1
           done
-
-          echo "Timed out waiting for Netlify preview commit $EXPECTED_COMMIT" >&2
           exit 1
       - name: Lighthouse CI
         id: lighthouse
@@ -64,15 +51,15 @@ jobs:
         with:
           configPath: .lighthouserc.${{ matrix.profile }}.json
           urls: |
-            ${{ steps.target.outputs.url }}/
-            ${{ steps.target.outputs.url }}/shop
-            ${{ steps.target.outputs.url }}/cart
-            ${{ steps.target.outputs.url }}/checkout
-            ${{ steps.target.outputs.url }}/contact
+            http://127.0.0.1:48379/
+            http://127.0.0.1:48379/about/
+            http://127.0.0.1:48379/lookbook/
+            http://127.0.0.1:48379/faq/
+            http://127.0.0.1:48379/contact/
           runs: 3
           uploadArtifacts: true
           artifactName: lighthouse-${{ matrix.profile }}-results
-          temporaryPublicStorage: true
+          temporaryPublicStorage: false
       - name: Verify performance assertions were executed
         if: always()
         env:
@@ -98,3 +85,7 @@ jobs:
             throw new Error(`${failures.length} performance assertion(s) failed`);
           }
           NODE
+      - name: Stop task server
+        if: always()
+        run: |
+          if [[ -n "${AHA_SERVER_PID:-}" ]]; then kill "$AHA_SERVER_PID"; fi
