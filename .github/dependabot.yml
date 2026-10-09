@@ -19,7 +19,7 @@ updates:
     open-pull-requests-limit: 5
 
   - package-ecosystem: "npm"
-    directory: "/lfnyc"
+    directory: "/site-preview"
     target-branch: "audit/2026-10-09"
     schedule:
       interval: "monthly"

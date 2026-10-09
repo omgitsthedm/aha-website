@@ -1,0 +1,39 @@
+---
+import Site from "../layouts/Site.astro";
+import { answers } from "../data/site";
+---
+
+<Site
+  title="Questions, answered"
+  description="Current answers about the After Hours Agenda collection pause, lookbook, existing orders, returns, release updates and contacting support."
+>
+  <header class="page-head shell">
+    <p class="label">A little clarity</p>
+    <h1>
+      QUESTIONS,
+      <br />
+      <span class="accent">ANSWERED.</span>
+    </h1>
+    <p class="lede">
+      New orders are paused. Existing customers still have a way to reach us.
+      Here is what that means.
+    </p>
+  </header>
+  <div class="shell reading">
+    <div class="faq-list">
+      {answers.map((item) => (
+        <details>
+          <summary>
+            {item.q}
+            <span aria-hidden="true">+</span>
+          </summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+    <p>
+      Something else? <a href="/contact/">Talk to us</a>. For an existing order,
+      include the order number and checkout email.
+    </p>
+  </div>
+</Site>
