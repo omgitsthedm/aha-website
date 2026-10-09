@@ -32,3 +32,4 @@
 - Netlify still reports the Next.js build plugin; the queued production migration explicitly disables that exact plugin before activating the static build. Draft deploys bypass builds and inherit no function bundle.
 - Added the official SIL Open Font License notices for the three supplied font families; the supplied files remain unmodified.
 - Locally tested the approval-gated production build: production canonicals, indexing directives and social card switch correctly, with no preview banner; restored the noindex draft artifact and uploaded no production build.
+- Clean GitHub CI exposed @typescript-eslint/parser being resolved from the preserved parent install; pinned parser 8.71.1 directly in the new package and reran the clean CI job.
