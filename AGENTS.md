@@ -20,11 +20,15 @@ The owner explicitly instructed “yup push it all live, document it and leave i
 
 Use AHA's current `app/globals.css`, Poppins weights from `app/layout.tsx`, `lib/content/brand-copy.ts`, the canonical `components/ui/SheepMark.tsx` artwork and `data/brand-imagery.json`. The later source contract takes precedence over conflicting July design prose: paper/ink/rose, Poppins 400/700/900, hairline frames, warm plain language and no invented city-origin claims. New preview tokens live in `site-preview/src/styles/tokens.css`.
 
-New orders are paused. Never fabricate product availability, future release dates, reviews, revenue, conversion or search results. Caption AI campaign concepts and previous-run renders accurately. Preserve existing-order terms. The contact enhancement only prepares a local email; no backend delivery or automatic signup is implied.
+New orders are paused. Never fabricate product availability, future release dates, reviews, revenue, conversion or search results. Caption AI campaign concepts and previous-run renders accurately. Preserve existing-order terms. The new customer-service candidate adds guarded Netlify Functions, Netlify Forms support/returns/newsletter intake, consent-controlled measurement and shopping interfaces. Preview forms never send and preview functions never access customer records. The published static release still has the earlier email-draft behavior until a separate release is authorized.
+
+## Current buildout
+
+See `COMMERCE-BUILDOUT-2026-10-09.md`. Current kit inputs are under `/Users/davidmarsh/Desktop/After Hours Agenda/`; those assets remain read-only. `site-preview/src/data/launch-catalog.json` is the saleable-product manifest. It remains empty and unapproved. `npm run check:launch` deliberately exits 2 while release gates are closed. Never flip the retired Printful catalog policy.
 
 ## Validation
 
-From `site-preview/` on Node 24.21.0: `npm run check`, `npm run test:e2e`, `npm audit`. Build and visually inspect before any draft deploy. Artifact tests reject wrong-business content, transactions and secrets. Run both preview and production modes before release. Hosted checks must verify exact source/hash, routes, headers, ownership files and indexing. `NEEDS-APPROVAL.md` records the approved scope and remaining verification sequence.
+From `site-preview/` on Node 24.21.0: `npm run check`, `npm run test:e2e`, `npm audit`. Build and visually inspect before any draft deploy. Artifact tests reject wrong-business content, secrets, unpublished collection assets in production and any open checkout without approved source data. Local-only payment simulations use mocks; never create a live test payment/order. Run both preview and production modes before release. Hosted checks must verify exact source/hash, routes, headers, ownership files and indexing. `NEEDS-APPROVAL.md` records the approved scope and remaining verification sequence.
 
 ## Protected original application
 

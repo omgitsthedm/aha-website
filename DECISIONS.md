@@ -80,3 +80,20 @@
 
 - Published production through GitHub main at 7a23f9846a337de2ac85bb34014d5b3f983ca71c, Netlify deploy 6ac8bf631f5bb00008938cac; live artifact, all 16 routes, three ownership files and nine browser suites verified.
 - Closing documentation stays on the audit branch with Netlify skip markers; preserve the exact already-published source and avoid a documentation-only production redeploy.
+
+## Customer-service buildout — October 9, 2026
+
+- Research Ralph Lauren's service completeness; retain After Hours Agenda's independent paper/ink/rose identity and actual current collection evidence.
+- Use current Desktop AHA kit files as read-only brand inputs; missing historical client-library paths are superseded by verified current kit locations.
+- Publish only two labeled development studies in review; exclude their pages and images entirely from production output.
+- Use existing Netlify Forms and the preserved database rather than a new paid platform; separate explicit newsletter consent from support.
+- Keep preview forms non-submitting and preview APIs isolated from all customer/provider data; validate hosted behavior with fictional example.com inputs only.
+- Preserve all 14 migration names and bytes when changing the app base; test the history and additive tables in disposable local Postgres.
+- Retain the durable Square/Apliiq pipeline; fix APPROVED-versus-COMPLETED payment handling and never resurrect the payment-link shortcut or Printful catalog.
+- Default optional aggregate measurement off, honor GPC/DNT, reject identifiers and query strings, and avoid fabricated conversion/field-performance claims.
+- The original Drizzle beta is deprecated; bundle the retained service source against pinned current rc.4 in the new app and validate the database paths.
+- Clean GitHub CI exposed missing generated commerce declarations before typecheck; generate the service bundle first. The correction passes on a fresh runner and changes no deployed UI/service artifact.
+- Netlify CLI 26 packaged Node 22; use isolated current CLI 27.12 to prepare Node 24 functions, then remove its temporary vulnerable development-only dependency tree after verification.
+- Keep exactly one active review alias and one successful draft deploy; later build-check and documentation changes do not redeploy an unchanged runtime.
+- Current production keys are masked and neither project root has private env files; record provider health as unproven, not broken or ready.
+- The current product manifest has zero saleable approvals; require origin/labels/QC evidence, measurements and verified variants before release.

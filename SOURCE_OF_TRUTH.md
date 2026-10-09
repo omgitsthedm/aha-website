@@ -39,8 +39,8 @@ These are dated receipts, not permission for future production writes. Recheck b
 - New application: `site-preview/`, Astro 7.3.8 / Node 24.21.0 / supported TypeScript 6.0.3.
 - Review alias: `https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app`. Retained technical alias replaces the initial draft in place; it does not name the site's brand.
 - The final draft ID, exact source and digest belong in `AUDIT-REPORT.md` and deployed `release.json`.
-- Static artifact only; no functions, database migration, checkout, provider request, tracker, newsletter submission or automated order lookup.
-- Contact drafts go only to `info@afterhoursagenda.com` when a visitor chooses to send from their own email app.
+- New customer-service candidate: static storefront plus eight guarded Netlify Functions. Preview uses fictional order data, local form validation and no customer/provider writes. New additive database migration is tested against all 14 historical migrations in local Postgres; production data remains untouched.
+- Preview forms validate without sending. Production-mode forms are prepared for Netlify Forms; direct email fallback is `info@afterhoursagenda.com`.
 - Both HTML and HTTP carry noindex. The preview remains publicly reachable; no authentication is claimed.
 
 ## Brand and content authority
@@ -51,7 +51,7 @@ New orders remain paused; historical catalog/provider records are not available-
 
 ## Preserved operations
 
-Square payment/history records, APLIIQ fulfillment contracts, historical Printful routes, Netlify Database and Resend remain protected. The new preview does not use, migrate or delete them. Reopening commerce requires independent authorization, verified provider readiness and all existing production guards. Never create an order or payment as a test, blind-retry a provider submission or expose credentials.
+Square payment/history records, APLIIQ fulfillment contracts, historical Printful routes, Netlify Database and Resend remain protected. The new preview never accesses provider/customer records; guarded production integrations are prepared but not activated. Reopening commerce requires independent authorization, verified provider readiness and all existing production guards. Never create an order or payment as a test, blind-retry a provider submission or expose credentials.
 
 ## Approved release and authoritative live status
 
@@ -59,4 +59,4 @@ The owner explicitly said “yup push it all live, document it and leave it the 
 
 The old IDs above are historical receipts. Current live truth is the exact Netlify site's **published** deploy plus `https://afterhoursagenda.com/release.json`; match its source to GitHub main and verify the artifact. The local deployment report and evidence are retained in `/Users/davidmarsh/Desktop/Project Upgrades/afterhoursagenda/`. Never infer publication from a merge, branch name or this document.
 
-`NETLIFY_NEXT_PLUGIN_SKIP=true` must be in the config Netlify actually selects. It keeps the older UI-installed Next runtime inert without changing host settings. The static runtime excludes newsletter/order/provider APIs; provider/customer resources remain unchanged. Original validation commands remain documented in `AGENTS.md`. New work is preview-first after this approved release.
+`NETLIFY_NEXT_PLUGIN_SKIP=true` must be in the config Netlify actually selects. It keeps the older UI-installed Next runtime inert without changing host settings. The published static runtime excludes newsletter/order/provider APIs. The new preview candidate adds guarded adapters; provider/customer resources remain unchanged. Original validation commands remain documented in `AGENTS.md`. New work is preview-first after this approved release.

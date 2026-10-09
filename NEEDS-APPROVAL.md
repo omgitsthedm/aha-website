@@ -1,3 +1,25 @@
+# Current customer-service buildout — preview only
+
+The October 9 static release below is complete. Its authorization does not publish this later customer-service buildout. The current task authorizes building and testing the new candidate in preview. No payment, supplier order, marketing send, DNS, billing or production-data mutation has occurred.
+
+## Remaining launch inputs
+
+1. Physical product approval: current garment/decoration/label/SKU, fit measurements, care/origin/label/QC evidence, final photographs, prices, availability and delivery/return policy. The current kit was inspected; it is still a review candidate. No August catalog was reopened. Fill `site-preview/src/data/launch-catalog.json` from approved evidence, then run `npm run check:launch` and the preserved catalog/provider validators. Never set the retired Printful gate true.
+2. Provider health and operational activation: Netlify exposes the production key names but masks their values; source and local tests do not prove current Square/Apliiq/Resend health. Use the authenticated provider accounts to verify read-only location/catalog, approved provider SKU, webhook signing/URL, sender-domain and database binding. Capture a sandbox receipt before any sales activation. Enable `AHA_ORDER_SERVICES_ENABLED` and `AHA_AUTOMATIONS_ENABLED` only after signed callbacks, reconciliation, transactional messages and staffed support are verified. Commerce additionally requires `AHA_COMMERCE_ENABLED`, the existing Apliiq live flags and a valid approved manifest.
+3. Production publication of this candidate remains a separate release. Source must pass both build modes, all required checks, exact function/archive review and installed-Chrome tests. GitHub main triggers the documented build; do not manually promote this noindex draft.
+
+Prepared release commands, only after the new production instruction and exact PR/head are known:
+
+```bash
+gh pr checks <customer-service-pr> --repo omgitsthedm/aha-website --required
+gh pr merge <customer-service-pr> --repo omgitsthedm/aha-website --squash --match-head-commit <reviewed-head> --subject 'feat: release AHA customer services' --body-file <reviewed-merge-body>
+EXPECTED_COMMIT=<published-main-sha> node site-preview/scripts/verify-live.mjs
+```
+
+The documented Netlify Git build targets site `275b4115-16bf-42fb-9b36-6bce9bb93608`, builds production HTML and stages the unchanged migration history plus the additive migration. Never bypass a required independent review using the previous release's spent exception. Verify live receipt, eight functions, form registration and support behavior before marking publication complete. No new commercial terms or provider approval can be manufactured by a command.
+
+---
+
 # Approved production release — October 9, 2026
 
 **Completed:** PRs #93 and #98 merged; deploy `6ac8bf631f5bb00008938cac` published source `7a23f9846a337de2ac85bb34014d5b3f983ca71c` on October 9 at 10:18:44 UTC. Live artifact and all route/browser checks passed. No approval is outstanding for this website release. The procedure below is the historical approved execution record, not pending work. New projects or commerce changes still require their own scope.

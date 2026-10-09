@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 process.env.AHA_PRODUCTION_BUILD = "approved";
-const { routes, privateRoutes, indexableRoutes } = await import("../src/data/site.ts");
+const { routes, privateRoutes, indexableRoutes } =
+  await import("../src/data/site.ts");
 
 const origin = "https://afterhoursagenda.com";
 const get = async (path) => {
@@ -36,7 +37,11 @@ for (const path of routes) {
   const html = await response.text();
   assert.ok(html.includes(`href="${origin}${path}"`), path);
   assert.ok(
-    html.includes(privateRoutes.includes(path) ? 'name="robots" content="noindex, noarchive"' : 'name="robots" content="index, follow, max-image-preview:large"'),
+    html.includes(
+      privateRoutes.includes(path)
+        ? 'name="robots" content="noindex, noarchive"'
+        : 'name="robots" content="index, follow, max-image-preview:large"',
+    ),
     path,
   );
   assert.ok(!html.includes("Website preview"), path);

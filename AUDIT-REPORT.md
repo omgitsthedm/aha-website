@@ -1,3 +1,16 @@
+# Latest addition — customer-service preview, October 9, 2026
+
+Built the missing shopping and service foundations and researched the Ralph Lauren benchmark. **This new buildout is preview-only.** The already-published static website below remains live.
+
+- [Open the current collection preview](https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app/shop/) · [Full buildout, research, evidence and remaining business gates](COMMERCE-BUILDOUT-2026-10-09.md).
+- 24 preview pages; direct forms, protected order lookup, search/saved items/bag, guarded checkout, fit tools, unsubscribe and consent-controlled measurement. No unapproved product is opened for sale.
+- 18 artifact/service tests in both modes; 806 preserved-backend tests; 19 local preview browser suites; 17 production-mode browser suites with two deliberate concept exclusions; 18 hosted suites with one local-only simulation excluded. Clean GitHub CI passes.
+- Local mobile collection Lighthouse: Performance/Accessibility/Best Practices 100; LCP 0.9s, CLS 0.016, TBT 0ms. Preview SEO 69 reflects intentional noindex. No business or field-CWV result is claimed.
+- Draft deploy `6ac8cf2d7bc79534fd2a0c3d`, runtime source `99d4a50ba481bec5b0b6439d7846d6687c037e8f`; 76 public files and all 24 routes verified. Production stays at `6ac8bf631f5bb00008938cac`.
+- Physical product/specification/QC/policy approval, authenticated provider proof and a separate production service release remain open. The precise attempted remedies and release commands are in `NEEDS-APPROVAL.md` and the buildout report.
+
+## Earlier completed static website release
+
 # After Hours Agenda audit and modernization — final report
 
 > **Production released October 9, 2026, 10:18:44 UTC:** [afterhoursagenda.com](https://afterhoursagenda.com) now serves the reviewed AHA rebuild. Published deploy `6ac8bf631f5bb00008938cac`, source `7a23f9846a337de2ac85bb34014d5b3f983ca71c`, artifact `f86427ebc511f08918e34c23c4feb936c65f86314bb5c4566acfc0b0ef5ae2ed`. PRs #93 and #98 are merged. All nine required GitHub checks, both build modes, 11 artifact tests per mode, 9 local browser suites and 9 live browser suites passed. All 60 public files match the local production artifact; all 16 routes, three search ownership files, headers, canonical URLs and noindex removal are verified. The earlier preview-only/review-required statements below are historical and superseded. Orders remain paused and contact prepares unsent email drafts as reviewed. No website-release approval remains pending.
