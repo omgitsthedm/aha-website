@@ -12,6 +12,10 @@
 - Reuse the unmodified current AHA social card and icons; the existing branding is correct and does not need an invented replacement.
 - The corrected preview uses the same current, pinned, zero-advisory toolchain; repeat validation, hosted screenshots and measurements for AHA rather than reusing superseded LFNYC results.
 - A file read initially referenced absent historical filenames; canonical source paths resolved the questions without creating or modifying those files.
+- Corrected AHA draft `6ac8af91c681bfc763902db4` replaces the active alias; all 58 public files match the verified artifact, and production remains `6ac793e13b19850008db4a3a`.
+- Use three matched hosted Lighthouse runs per device and version: mobile transfer falls 35.16%, desktop transfer falls 41.14%, and no blanket speed, sales or ranking gain is claimed.
+- Share the neutral immutable AHA preview URL and the complete AHA marketing batch; the review index passes at 1440px, 390px and 320px, and no marketing material is posted.
+- Final document diff checking caught an extra blank line at the report's end; normalized the generator and both report copies before committing.
 
 ## Earlier execution record — superseded where it conflicts with the decisions above
 
