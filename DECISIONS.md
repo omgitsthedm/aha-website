@@ -1,4 +1,19 @@
-# Decisions — 2026-10-09
+# Decisions — After Hours Agenda — 2026-10-09
+
+## Current decisions after the user's brand correction
+
+- Custom-domain and future-client projects keep their own identity; only abstract projects use LFNYC branding. This project stays After Hours Agenda.
+- The active package is `site-preview/`; the earlier LFNYC direction and local review assets are preserved only as superseded history under this task's evidence folder and Git history.
+- Keep the existing draft alias so its active contents are replaced; the alias's historical LFNYC prefix is not the website's brand.
+- AHA's current CSS, Poppins 400/700/900, JetBrains Mono, black sheep and warm voice override conflicting older design prose; no agency marks, services or client work enter the site.
+- Ship 16 public editorial/support pages plus a 404, including closed Shop, Shipping, Returns, Track Order guidance, Size and Care; retain original purchase terms and claim no current stock or future release date.
+- Existing campaign concepts, previous-run renders and brand archive keep visible provenance captions; do not present placeholders as product photography.
+- Keep static, local email drafts for preview. Automatic newsletter signup, order lookup and provider endpoints are excluded; production replacement requires explicit acceptance or a separate backend-preservation plan.
+- Reuse the unmodified current AHA social card and icons; the existing branding is correct and does not need an invented replacement.
+- The corrected preview uses the same current, pinned, zero-advisory toolchain; repeat validation, hosted screenshots and measurements for AHA rather than reusing superseded LFNYC results.
+- A file read initially referenced absent historical filenames; canonical source paths resolved the questions without creating or modifying those files.
+
+## Earlier execution record — superseded where it conflicts with the decisions above
 
 - Use current GitHub main `c682761` as baseline in an isolated worktree; preserve the original checkout and unmerged branch commits.
 - Rebrand the requested preview as LFNYC while retaining the AHA application and providers unchanged; `lfnyc/` is the only preview publish source.
@@ -46,3 +61,4 @@
 - Use current AHA CSS and the later source contract when July design docs conflict: Poppins 400/700/900, paper/ink/rose, hairline frames and warm clothing-brand copy.
 - Retain the existing draft alias only to replace its active contents; its earlier LFNYC label is a technical URL history, not the business identity.
 - Final diff verification initially ran from the output folder instead of the worktree; corrected the directory before any Git mutation.
+- Git diff review caught trailing whitespace in the official Poppins license; normalized whitespace only and preserved all license wording.

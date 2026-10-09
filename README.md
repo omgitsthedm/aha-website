@@ -1,42 +1,40 @@
-# Little Fight NYC preview / preserved AHA production
+# After Hours Agenda — website preview
 
-The `audit/2026-10-09` branch adds a complete LFNYC service website in **`lfnyc/`**. It is a static Astro 7.3.8 application on Node 24.21.0. The repository-root Next.js **16.4.0** commerce application and root Netlify configuration remain the existing After Hours Agenda production source. Do not deploy the root as the LFNYC preview.
+This is an After Hours Agenda project. Custom-domain and client websites keep their own brands. The current audit branch adds a modern AHA editorial preview in **`site-preview/`**, using Astro 7.3.8 and Node 24.21.0. The existing Next.js 16.4.0 commerce application and root Netlify configuration remain preserved.
 
-## Run the new site
+## Work on the preview
 
 ```bash
-cd lfnyc
+cd site-preview
 npm ci
 npm run check
 npm run test:e2e
 npm run dev
 ```
 
-Use Node 24.21.0 (`lfnyc/.nvmrc`). Development binds to `127.0.0.1:48378`; the built static server uses `48379`. Browser tests use installed Google Chrome, never bundled Chromium. `npm run check` runs lint, strict types, static build and unit/artifact checks. `npm run test:e2e` covers desktop/mobile pages, axe, keyboard menu, contact states, no-JavaScript content, 320px reflow and legacy-route 404s.
+Use Node 24.21.0 (`site-preview/.nvmrc`). The dev server uses `127.0.0.1:48378`; built-site checks use `48379`. Browser tests use installed Google Chrome. Checks cover lint, strict types, build, artifact integrity, all routes, keyboard navigation, contact states, no-JavaScript content, narrow-screen reflow and accessibility.
 
-## Preview contract
+## Identity and behavior
 
-- Review URL: https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app
-- Exact site ID: `275b4115-16bf-42fb-9b36-6bce9bb93608`.
-- Publish only `lfnyc/dist` from a separate static staging directory; no build plugins, functions, migrations or inherited AHA environment are needed.
-- The site prepares email drafts. It sends nothing and stores no leads. Phone and email links work without JavaScript.
-- HTTP and HTML carry `noindex`. This public preview is not password protected.
-- Root `netlify.toml` remains AHA production. `lfnyc/ops/production.netlify.toml` is an inactive approval-gated migration template.
-- `release.json` binds the artifact to a source commit and digest. No source documents or private evidence are published.
+- AHA's current CSS tokens, Poppins 400/700/900, JetBrains Mono and canonical black-sheep mark are the brand authority. Historical design documents must be checked against current source.
+- New orders remain paused. Lookbook captions distinguish campaign concepts, previous-run renders and the brand archive.
+- Existing-order support remains visible. The contact form prepares a local email draft to `info@afterhoursagenda.com`; it does not send, store or subscribe anything.
+- The preview has no commerce APIs, customer database, automated tracking lookup, newsletter backend, analytics or payment flow. Existing production integrations are unchanged.
+- Source and asset provenance are recorded in `site-preview/claims.json` and the original `data/brand-imagery.json`.
 
-Read `AUDIT-REPORT.md` for verified results and `NEEDS-APPROVAL.md` for the prepared production migration. Do not merge this branch to main or change the active build target without explicit production approval.
+## Deployment
 
-## Structure
+- Exact Netlify site ID: `275b4115-16bf-42fb-9b36-6bce9bb93608` (`afterhoursagenda`).
+- Active review alias: `https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app`. The alias retains an earlier technical name solely to supersede its active contents; the website is After Hours Agenda.
+- Build `site-preview/dist`, stage outside the repo using `site-preview/scripts/stage.mjs`, and deploy only that static folder with empty functions and the explicit site ID.
+- HTTP and HTML noindex protect against intended indexing, not public access. Do not promote this review artifact unchanged.
+- The root `netlify.toml` remains the existing production configuration. The template in `site-preview/ops/production.netlify.toml` is inactive and approval-gated.
+- `release.json` records source commit, artifact hash and exact site ID.
 
-```text
-lfnyc/src/          New pages, layouts, content, styles and contact enhancement
-lfnyc/public/       Cleared brand assets, local fonts and published-work captures
-lfnyc/scripts/      Build guards, static headers, metadata and local server
-lfnyc/tests/        Unit/artifact and installed-Chrome browser checks
-lfnyc/ops/          Inactive production migration template
-app/, lib/, db/    Preserved AHA source and operational data contracts
-```
+`AUDIT-REPORT.md` contains final verification and the preview receipt. `NEEDS-APPROVAL.md` records the breaking production migration and the business features that require separate approval. The preview is not authorization to replace the commerce runtime.
 
-## Preserved application
+## Source structure
 
-Legacy root commands remain `npm run lint`, `npm run typecheck`, `npm test`, `npm run validate:all`, and `npm run build`. Its dependencies and provider contracts are separate from the new preview. Historical commerce and catalog records are retained for recovery, not shipped by the static preview. Read `SOURCE_OF_TRUTH.md` before any live-system work.
+`site-preview/src/` holds current preview pages, shared data, layouts and styles. `site-preview/public/` contains AHA assets and local fonts. `site-preview/scripts/` builds and guards the artifact. `site-preview/tests/` contains meaningful artifact and installed-Chrome browser checks.
+
+The preserved `app/`, `components/`, `lib/`, `data/`, `db/` and `ops/` directories remain the original AHA application. Its original lint, typecheck, tests, catalog validators and build commands remain available. Read `SOURCE_OF_TRUTH.md` before any release or provider work.

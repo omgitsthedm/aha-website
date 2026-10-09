@@ -1,44 +1,47 @@
 # Approval queue — none of these actions executed
 
-## 1. Replace the live After Hours Agenda property with LFNYC
+## 1. Production runtime migration, preserving the AHA brand
 
-**Approval must explicitly cover replacing the AHA website at `afterhoursagenda.com`.** This is not the separate `littlefightnyc.com` property. No DNS change is needed for this prepared path. Moving the work to a different site/domain requires that exact target first; no destination is guessed.
+The current preview is After Hours Agenda. The original custom domain, business identity and production deployment remain unchanged. This draft does not authorize a production merge.
 
-Preparation is complete: `lfnyc/ops/production.netlify.toml` changes the build base to the new static app, removes the root Next.js plugin declaration, selects Node 24, publishes `dist`, and sets the deliberate production flag. The build guard rejects an unapproved production context. The approved variant changes canonical origin, crawler directives, the preview banner and social card; it retains the local email-draft behavior. The approved public variant allows Google-Extended, which covers both Gemini grounding and training; the draft denies it. Other search crawlers remain crawlable, and GPTBot/ClaudeBot training access stays denied.
+The prepared static migration changes the build base to `site-preview`, uses Node 24 and ships no functions. **It is a breaking runtime change:** automatic newsletter signup, automated order lookup, operational APIs and provider callbacks are not in the static application. The safe remedy for preview is complete: no customer queries or submissions, a working local email draft, clear collection status and support guidance. Before production, the owner must explicitly accept the reduced runtime or approve a separate backend-preservation implementation. Existing customer/order/provider data is not deleted or changed. Do not infer that closing new sales makes every historical endpoint safe to remove.
 
-Before merge, on **site `275b4115-16bf-42fb-9b36-6bce9bb93608` only**, open Project configuration → Developer settings → Build plugins and disable **`@netlify/plugin-nextjs`** if still installed in the UI. Read-only API inspection confirms the site reports that plugin. Removing the root declaration alone is insufficient if the UI installation remains. Do not change any other integration, provider, secret or database setting.
+The exact proposed change is `cp site-preview/ops/production.netlify.toml netlify.toml`. The template changes the publish target to the static app, removes the root Next.js plugin declaration, sets Node 24, and enables the deliberate production build flag for `https://afterhoursagenda.com`. It keeps AHA branding and email. The tested production variant removes the review banner/noindex and uses the approved canonical origin. It allows Google-Extended for Gemini grounding, which also allows Google's covered training use; GPTBot and ClaudeBot remain denied.
 
-Run only after that explicit production approval and plugin change:
+Before any approved merge, on **site `275b4115-16bf-42fb-9b36-6bce9bb93608` only**, open Project configuration → Developer settings → Build plugins and disable `@netlify/plugin-nextjs` if still installed. Current read-only metadata reports that plugin. No other integration, data or secret setting is changed.
+
+Only after explicit production approval covering the runtime changes above and that plugin step:
 
 ```bash
+(
+set -e
 cd '/Users/davidmarsh/Desktop/Project Upgrades/afterhoursagenda/worktree'
 git switch audit/2026-10-09
 git fetch origin main
 test "$(git rev-parse origin/main)" = c682761ef26bbedb4ea4f76fc869e7ded883a12d
-cp lfnyc/ops/production.netlify.toml netlify.toml
+cp site-preview/ops/production.netlify.toml netlify.toml
 git add netlify.toml
-git commit -m 'build: prepare approved LFNYC production migration [skip netlify]'
+git commit -m 'build: prepare approved AHA production migration [skip netlify]'
 git push origin audit/2026-10-09
-gh pr create --repo omgitsthedm/aha-website --base main --head audit/2026-10-09 --title 'Launch approved Little Fight NYC replacement' --body-file lfnyc/ops/promotion-pr.md
+gh pr create --repo omgitsthedm/aha-website --base main --head audit/2026-10-09 --title 'Launch approved After Hours Agenda modernization' --body-file site-preview/ops/promotion-pr.md
 gh pr checks audit/2026-10-09 --repo omgitsthedm/aha-website --watch
-LFNYC_APPROVED_HEAD="$(git rev-parse HEAD)"
-gh pr merge audit/2026-10-09 --repo omgitsthedm/aha-website --squash --match-head-commit "$LFNYC_APPROVED_HEAD" --subject 'feat: launch approved Little Fight NYC website'
+AHA_APPROVED_HEAD="$(git rev-parse HEAD)"
+gh pr merge audit/2026-10-09 --repo omgitsthedm/aha-website --squash --match-head-commit "$AHA_APPROVED_HEAD" --subject 'feat: launch approved After Hours Agenda website'
+)
 ```
 
-The `test` deliberately stops if main has changed: reconcile and rerun validation before continuing. A failing PR check also blocks the merge. Run the steps as a gated sequence, not an unattended paste that continues after failures. The final merge triggers the existing Git-connected Netlify production build. No `--prod` command or manual promotion is used; the reviewed draft contains intentional noindex metadata and must never be promoted unchanged.
+The subshell stops on failure. The `test` stops if main has changed; reconcile and revalidate before continuing. Required PR checks and repository approval rules must pass. A main merge triggers the Git-connected production build. Never manually promote the noindex draft unchanged. No DNS or domain change is needed or authorized.
 
-After the approved main build succeeds, verify `https://afterhoursagenda.com/release.json` reports production, the exact source commit and site ID; verify the host's published deploy commit matches Git main; check all routes and headers, absence of noindex, sitemap origin, and zero commerce functions. Record the new deploy receipt. If any production check fails, restore the previous published deploy `6ac793e13b19850008db4a3a` through the exact site's Deploys interface under the same explicit release/rollback authorization. Do not change provider data.
+After the approved build, verify the public `release.json` source/site/mode, exact Netlify published deploy, Git main, every route and header, sitemap origin, noindex removal, and the accepted backend/support behavior. If verification fails, restore published deploy `6ac793e13b19850008db4a3a` through this exact site's Deploys interface under the release/rollback authorization. Do not alter provider data.
 
-## 2. Enable an automatic lead inbox, if wanted later
+## 2. Restore automatic acquisition and order lookup, if required for production
 
-No missing credential blocks the delivered preview. The contact flow works now by preparing a local email draft to `hello@littlefightnyc.com`, with call, text and copy fallbacks. It never silently sends anything.
+The original implementations remain in the preserved root application. No existing integration is disconnected. A future scoped implementation must retain AHA-owned recipients/accounts, server-side validation, abuse controls, appropriate consent and truthful success/error states. Newsletter tests must not actually subscribe anyone; order tests must use an approved non-production fixture. No LFNYC or future-client destination belongs in this project's flows.
 
-The separately gated change is to add a verified LFNYC-owned delivery service, recipient, server-side validation, abuse controls, success/error states and updated privacy terms. AHA's Netlify forms, customer database and Resend configuration must not be reused. No exact credential-bearing command is fabricated before that service is selected. This is an optional future feature, not a broken form.
+## 3. Live commerce and provider retirement
 
-## 3. Retire old commerce infrastructure, if the business chooses to
+Do not reopen checkout, publish products, change inventory, prices or mappings, create transactions, modify callbacks, retire providers or delete records. Those actions require separately named resources, verified readiness and explicit scope. No blanket deletion or provider-mutation command is prepared because no such change is part of this release.
 
-The new artifact excludes every AHA API, function, migration, catalog and provider library. Original source and data remain available for recovery. Deleting or disconnecting Square, APLIIQ, Printful, Resend, Netlify Database, webhooks or stored records is a separate destructive business change. The exact proposed scope is **no deletion and no provider change** for this release. Any later retirement requires an inventory, a verified private backup and named resources; there is no safe blanket deletion command.
+## 4. External publication and account changes
 
-## 4. Posting and search submissions
-
-The full marketing batch is prepared locally. No post, email, search-console submission or campaign was sent. Publishing the static social batch and submitting an approved live canonical sitemap are separate external actions, after the production/domain decision. No spend, account creation or billing change is queued or required.
+The complete AHA marketing batch is local and unpublished. No post, email, campaign or search-console submission was sent. Posting and submission of a future live sitemap remain separate external actions. No spend, billing, account creation, DNS or hosting change is required.
