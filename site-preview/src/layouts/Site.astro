@@ -5,8 +5,9 @@ interface Props {
   title: string;
   description: string;
   path?: string;
+  noindex?: boolean;
 }
-const { title, description, path = Astro.url.pathname } = Astro.props;
+const { title, description, path = Astro.url.pathname, noindex = false } = Astro.props;
 const origin = Astro.site!.origin;
 const canonical = new URL(path, origin).href;
 const isPreview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
@@ -33,7 +34,7 @@ const schema = {
       inLanguage: "en-US",
     },
     {
-      "@type": "WebPage",
+      "@type": path === "/about/" ? "AboutPage" : path === "/contact/" ? "ContactPage" : "WebPage",
       "@id": canonical,
       url: canonical,
       name: title,
@@ -41,7 +42,6 @@ const schema = {
       isPartOf: { "@id": `${origin}/#website` },
       about: { "@id": `${brand.official}/#organization` },
       inLanguage: "en-US",
-      dateModified: brand.verified,
     },
     ...(path !== "/"
       ? [
@@ -81,7 +81,7 @@ const schema = {
     <meta
       name="robots"
       content={
-        isPreview
+        (isPreview || noindex)
           ? "noindex, noarchive"
           : "index, follow, max-image-preview:large"
       }

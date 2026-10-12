@@ -10,7 +10,7 @@ export function getStaticPaths() {
 const { document } = Astro.props;
 ---
 
-<Site title={document.title} description={document.description}>
+<Site title={document.metaTitle} description={document.description}>
   <header class="page-head shell">
     <p class="label">{document.eyebrow}</p>
     <h1>{document.title}</h1>
