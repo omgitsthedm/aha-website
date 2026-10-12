@@ -1,10 +1,11 @@
 export const documents = [
   {
     slug: "updates",
+    metaTitle: "Collection news",
     eyebrow: "The next chapter",
     title: "Stay close.",
     description:
-      "Follow After Hours Agenda for future releases and brand updates. No release date is announced here, and this preview does not collect newsletter subscriptions.",
+      "Follow After Hours Agenda for future releases and brand updates. No release date is announced here, and this website does not collect newsletter subscriptions.",
     lead: "New pieces, the occasional note, and what comes next.",
     sections: [
       [
@@ -17,7 +18,7 @@ export const documents = [
       ],
       [
         "Email updates",
-        "This preview does not sign you up or store an email address. If you have a question about future releases, write to info@afterhoursagenda.com.",
+        "This website does not sign you up or store an email address. If you have a question about future releases, write to info@afterhoursagenda.com.",
       ],
     ],
     action: "Follow on Instagram ↗",
@@ -25,6 +26,7 @@ export const documents = [
   },
   {
     slug: "shop",
+    metaTitle: "Collection status",
     eyebrow: "Collection status",
     title: "A new chapter takes time.",
     description:
@@ -49,15 +51,16 @@ export const documents = [
   },
   {
     slug: "shipping",
+    metaTitle: "Shipping and order help",
     eyebrow: "Existing-order help",
-    title: "Shipping, with context.",
+    title: "Help with your shipment.",
     description:
       "Get help with an existing After Hours Agenda shipment. Use the shipping confirmation or contact support with your order number; new orders are paused.",
     lead: "Your shipping confirmation is the starting point for an existing order.",
     sections: [
       [
         "Find your tracking link",
-        "Check the shipping confirmation sent for your order. If a tracking link is available, it will point to the carrier handling that shipment.",
+        "Start with the shipping email sent for your order. If it has a tracking link, use it to check the carrier’s updates.",
       ],
       [
         "Ask about a shipment",
@@ -69,7 +72,7 @@ export const documents = [
       ],
       [
         "Rates and timing",
-        "Existing orders remain governed by the shipping terms and product information shown when they were purchased. The paused catalog does not advertise a new shipping price or delivery promise.",
+        "Use the shipping terms and delivery information from your original purchase. If you cannot find them, send us your order number and checkout email so we can help.",
       ],
     ],
     action: "Get order support ↗",
@@ -77,6 +80,7 @@ export const documents = [
   },
   {
     slug: "returns",
+    metaTitle: "Return and damage requests",
     eyebrow: "Existing-order help",
     title: "Let’s sort it out.",
     description:
@@ -101,10 +105,11 @@ export const documents = [
   },
   {
     slug: "track-order",
+    metaTitle: "Track an existing order",
     eyebrow: "Existing customers",
     title: "Find your order.",
     description:
-      "Find the shipping confirmation for an existing After Hours Agenda order or ask support for a status update. This review preview does not query customer records.",
+      "Find the shipping confirmation for an existing After Hours Agenda order or ask support for a status update. This website does not query customer records.",
     lead: "Check your shipping email, or let us help you find the next update.",
     sections: [
       [
@@ -117,7 +122,7 @@ export const documents = [
       ],
       [
         "About this page",
-        "This preview does not connect to customer records or perform an order lookup. Do not enter card numbers, passwords or security codes. The contact page prepares an email for you to review.",
+        "This website does not connect to customer records or perform an order lookup. Do not enter card numbers, passwords or security codes. The contact page prepares an email for you to review.",
       ],
     ],
     action: "Prepare an order question ↗",
@@ -125,6 +130,7 @@ export const documents = [
   },
   {
     slug: "size-guide",
+    metaTitle: "Size and fit",
     eyebrow: "Size and fit",
     title: "Start with what fits.",
     description:
@@ -133,7 +139,7 @@ export const documents = [
     sections: [
       [
         "For an existing piece",
-        "Check its label and the product information supplied with your order. For a fit question, tell us the product name, size and color.",
+        "For a piece you already own, use its label and original product chart. Compare the same kind of garment: a tee with a tee, or a sweatshirt with a sweatshirt. Tell us the product name, size and color if you need help.",
       ],
       [
         "For the next collection",
@@ -149,6 +155,7 @@ export const documents = [
   },
   {
     slug: "care",
+    metaTitle: "Garment care",
     eyebrow: "Take care of your piece",
     title: "Make it last.",
     description:
@@ -173,11 +180,12 @@ export const documents = [
   },
   {
     slug: "privacy",
+    metaTitle: "Privacy and your information",
     eyebrow: "Website information · October 9, 2026",
     title: "Your information.",
     description:
-      "How this After Hours Agenda preview handles browsing and local email drafts. No analytics, advertising trackers, payment forms or automatic newsletter signups are included.",
-    lead: "This preview keeps the contact process in your hands.",
+      "How this After Hours Agenda website handles browsing and local email drafts. No analytics, advertising trackers, payment forms or automatic newsletter signups are included.",
+    lead: "This website keeps the contact process in your hands.",
     sections: [
       [
         "Browsing",
@@ -193,7 +201,7 @@ export const documents = [
       ],
       [
         "Existing records",
-        "This preview does not access, migrate or delete historical order or customer records. Existing privacy and order obligations remain separate from this review artifact.",
+        "This website does not access, migrate or delete historical order or customer records. Existing privacy and order obligations remain separate from this website.",
       ],
       [
         "External links and questions",
@@ -205,10 +213,11 @@ export const documents = [
   },
   {
     slug: "terms",
+    metaTitle: "Website and order terms",
     eyebrow: "Site and existing-order terms",
     title: "Clear terms.",
     description:
-      "Terms for the After Hours Agenda editorial website and support for existing orders. New sales remain paused; this preview does not change prior purchase terms.",
+      "Terms for the After Hours Agenda editorial website and support for existing orders. New sales remain paused; this website does not change prior purchase terms.",
     lead: "The catalog is closed. Existing orders remain supported under their original terms.",
     sections: [
       [
@@ -217,7 +226,7 @@ export const documents = [
       ],
       [
         "Existing orders",
-        "Orders placed before the catalog reset remain supported under the terms and product information shown when they were purchased. This preview does not replace or remove those terms.",
+        "Orders placed before the catalog reset remain supported under the terms and product information shown when they were purchased. This website does not replace or remove those terms.",
       ],
       [
         "Shipping, returns and payments",
@@ -237,6 +246,7 @@ export const documents = [
   },
   {
     slug: "accessibility",
+    metaTitle: "Website accessibility",
     eyebrow: "Access matters",
     title: "Room for everyone.",
     description:
@@ -245,7 +255,7 @@ export const documents = [
     sections: [
       [
         "How this site is built",
-        "Pages use semantic headings, visible focus, keyboard navigation, readable contrast, labeled fields and responsive layouts. Reduced-motion preferences are respected. The main content and contact email remain available without JavaScript.",
+        "The site has clear headings, labels for form fields and focus marks that show where you are when you use a keyboard. Pages fit smaller screens. If you ask your device to reduce motion, the site respects that choice. You can read the main content and find our email address with JavaScript off.",
       ],
       [
         "Reporting a barrier",
@@ -253,7 +263,7 @@ export const documents = [
       ],
       [
         "Review coverage",
-        "Automated and keyboard checks help find problems; they do not represent every person’s experience. If something stops you, contact us so we can help with the task and investigate the barrier.",
+        "We check the site with tools and a keyboard. Those checks cannot cover every way people use the web. If you get stuck, email us. We can help with the task and look into the problem.",
       ],
     ],
     action: "Report an access issue ↗",

@@ -23,34 +23,56 @@ export const answers = [
   {
     q: "Can I place an order?",
     a: "Not right now. New orders are paused while the next collection is developed. The lookbook shows campaign concepts and past pieces. It is not a list of items available to buy.",
+    href: "/shop/",
+    label: "Check collection status",
   },
   {
     q: "What is After Hours Agenda?",
-    a: "A clothing brand for the dreamers and the doers. Graphic tees, heavyweight hoods and crewnecks are part of our story. Kindness, community and celebrating the life you are building are at the heart of it.",
+    a: "A clothing brand for the dreamers and the doers. Graphic tees, heavyweight hoods and crewnecks are part of our story. We believe in kindness, community and celebrating the life you are building.",
+    href: "/about/",
+    label: "Read the story",
   },
   {
     q: "Does the lookbook show products for sale?",
     a: "No. Each image is labeled as a campaign concept, a previous-run render or brand archive. There are no current prices, stock claims or purchase links.",
+    href: "/lookbook/",
+    label: "Explore the lookbook and archive",
   },
   {
     q: "Can you help with an existing order?",
     a: "Yes. Email info@afterhoursagenda.com with the order number and the email used at checkout. Never include a card number, security code or password.",
+    href: "/contact/?topic=order",
+    label: "Get help with an existing order",
   },
   {
     q: "How do I ask about a return or damaged item?",
     a: "Email support with the order number, the item and a description of the issue. Include clear photos when relevant. Requests are reviewed under the terms that applied when the order was placed. Wait for instructions before returning anything.",
+    href: "/returns/",
+    label: "Read the return request steps",
   },
   {
     q: "Can I change an address?",
     a: "Contact support as soon as possible with your order number and the corrected address. Whether a change can be made depends on the order’s production and shipping stage.",
+    href: "/shipping/",
+    label: "Get shipping help",
   },
   {
     q: "When is the next release?",
-    a: "A release date has not been announced here. The Updates page links to our official Instagram and gives you a direct way to ask. Browsing this preview does not sign you up for email.",
+    a: "We have not announced a release date. Follow our official Instagram for collection news, or email us with a question. Browsing the site does not subscribe you.",
+    href: "/updates/",
+    label: "Choose how to stay in touch",
   },
   {
-    q: "Does the contact form send my message?",
-    a: "It prepares an email draft in your browser. Nothing is sent automatically. Review the draft and choose whether to send it from your email app, or copy the message and email us yourself.",
+    q: "How do I contact you?",
+    a: "The Contact page prepares an email draft for you to review. You can also email info@afterhoursagenda.com. For an order question, include your order number and checkout email. Nothing is sent automatically.",
+    href: "/contact/",
+    label: "Contact After Hours Agenda",
+  },
+  {
+    q: "How do I check the fit of a piece I already own?",
+    a: "Start with its label and original size chart. Lay a similar garment flat and compare its chest width and length. Sizes can differ between pieces and past collections. Send us the item name if you need help finding the right information.",
+    href: "/size-guide/",
+    label: "See how to measure a garment",
   },
 ];
 export const gallery = [
