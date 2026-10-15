@@ -6,27 +6,39 @@ import products from '../../data/products.json';
 export function getStaticPaths(){return products.map(product=>({params:{product:product.slug},props:{product}}));}
 const {product}=Astro.props;
 const origin=Astro.site!.origin;
+const gallery = product.gallery.slice(0, 4);
+const relatedProducts = [
+ ...products.filter((entry) => entry.slug !== product.slug && entry.collection === product.collection),
+ ...products.filter((entry) => entry.slug !== product.slug && entry.collection !== product.collection),
+].slice(0, 4);
+const sizeGuide = product.sizeGuide.map((row) => ({
+  ...row,
+  sleeveLength: 'sleeveLength' in row ? row.sleeveLength : undefined,
+}));
+const hasSleeveMeasurements = sizeGuide.every((row) => typeof row.sleeveLength === 'number');
+const colorSwatches: Record<string, string> = { Bone: '#eae6db', Black: '#171717', Grey: '#989795', 'Heather Gray': '#b7b7b5', 'Heather Grey': '#b7b7b5', 'Grey Heather': '#adadaa' };
+const colorSwatch = colorSwatches[product.color] ?? '#eae6db';
 const productSchema={
- '@context':'https://schema.org','@type':'ProductGroup',name:`${product.title} — Bone`,description:product.description,
- productGroupID:product.squareItemId,brand:{'@type':'Brand',name:'After Hours Agenda'},color:'Bone',material:product.composition,
- image:product.gallery.map(i=>new URL(i.feedImage,origin).href),variesBy:['https://schema.org/size'],
- hasVariant:product.variants.map(v=>({'@type':'Product',name:`${product.title} — Bone — ${v.size}`,sku:v.sku,size:v.size,color:'Bone',image:new URL(product.gallery[0]!.feedImage,origin).href,
+ '@context':'https://schema.org','@type':'ProductGroup',name:`${product.title} — ${product.color}`,description:product.description,
+ productGroupID:product.squareItemId,brand:{'@type':'Brand',name:'After Hours Agenda'},color:product.color,material:product.composition,
+ image:gallery.map(i=>new URL(i.feedImage,origin).href),variesBy:['https://schema.org/size'],
+ hasVariant:product.variants.map(v=>({'@type':'Product',name:`${product.title} — ${product.color} — ${v.size}`,sku:v.sku,size:v.size,color:product.color,image:new URL(gallery[0]!.feedImage,origin).href,
  offers:{'@type':'Offer',url:`${origin}/shop/${product.slug}/?size=${encodeURIComponent(v.size)}`,price:product.price,priceCurrency:'USD',availability:'https://schema.org/InStock',itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:'After Hours Agenda'},shippingDetails:{'@type':'OfferShippingDetails',shippingRate:{'@type':'MonetaryAmount',value:0,currency:'USD'},shippingDestination:{'@type':'DefinedRegion',addressCountry:'US'}}}}))
 };
 ---
-<Site title={`${product.title} — Bone`} description={product.description} image={product.gallery[0]!.feedImage} imageAlt={product.gallery[0]!.alt} imageWidth={product.gallery[0]!.width} imageHeight={product.gallery[0]!.height}>
+<Site title={`${product.title} — ${product.color}`} description={product.description} image={gallery[0]!.feedImage} imageAlt={gallery[0]!.alt} imageWidth={gallery[0]!.width} imageHeight={gallery[0]!.height}>
  <div class="shell product-breadcrumb"><a href="/shop/">← All pieces</a><span>Fall / Winter 2026</span></div>
- <section class="shell product-layout" data-product-id={product.squareItemId} data-product-name={product.title} data-product-price={product.price}>
+ <section class="shell product-layout" data-product-id={product.squareItemId} data-product-name={product.title} data-product-color={product.color} data-product-price={product.price}>
   <div class="product-visuals">
    <div class="product-gallery" role="region" tabindex="0" aria-label={`${product.title} garment views; scroll to see all four`}>
-    {product.gallery.map((shot,i)=><figure id={`view-${i+1}`}><ProductImage image={shot} priority={i===0} sizes="(max-width: 760px) 100vw, 55vw"/><figcaption>{['Front','Back','Print detail','Folded'][i]}</figcaption></figure>)}
+    {gallery.map((shot,i)=><figure id={`view-${i+1}`}><ProductImage image={shot} priority={i===0} sizes="(max-width: 760px) 100vw, 55vw"/><figcaption>{['Front','Back','Print detail','Folded'][i]}</figcaption></figure>)}
    </div>
    <p class="image-note">Product mockups. Colors and print placement can vary slightly in production.</p>
   </div>
   <div class="product-details">
-   <p class="label">Yikes! / {product.slug==='yikes-crewneck'?'Crewneck':'Cropped hoodie'}</p><h1>{product.title}</h1>
+   <p class="label">{product.collection} / {product.typeLabel}</p><h1>{product.title}</h1>
    <div class="product-price-row"><p class="product-price">${product.price}<span> USD</span></p><p>Free domestic shipping</p></div>
-   <p class="color-choice"><span class="bone-swatch" aria-hidden="true"></span> Bone</p>
+   <p class="color-choice"><span class="color-swatch" style={`--swatch:${colorSwatch}`} aria-hidden="true"></span> {product.color}</p>
    <p>{product.description}</p>
    <form class="product-purchase" data-cart-form>
     <p class="label">Choose a size</p>
@@ -39,14 +51,14 @@ const productSchema={
    </form>
    <a class="text-link size-link" href="#size-guide">Check measurements ↓</a>
    <p class="checkout-note">Free domestic shipping. Final tax and payment options are shown securely at checkout.</p>
-   <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li><li>{product.weightOz} oz cotton-blend fleece.</li><li>{product.composition}.</li><li>{product.slug==='yikes-crewneck'?'Ribbed collar, cuffs and waistband.':'Raw cropped hem, dropped shoulders, flat drawcords and ribbed cuffs.'}</li></ul></details>
+   <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li><li>{product.weightOz} oz {product.fabricType}.</li><li>{product.composition}.</li>{product.constructionDetails.map((detail) => <li>{detail}</li>)}</ul></details>
    <details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>
    <details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the print.</p></details>
   </div>
  </section>
- <section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches</p><h2 id="size-title">Find your fit.</h2><p>{product.measurementGuidance} Sleeve length is measured from the center back, including the cuff.</p><div class="size-table-wrap" role="region" aria-label={`${product.title} measurements`} tabindex="0"><table><thead><tr><th scope="col">Size</th><th scope="col">Chest width</th><th scope="col">Body length</th><th scope="col">Sleeve length</th></tr></thead><tbody>{product.sizeGuide.map(row=><tr><th scope="row">{row.size}</th><td>{row.chestWidth}</td><td>{row.bodyLength}</td><td>{row.sleeveLength}</td></tr>)}</tbody></table></div></section>
- <section class="section shell"><div class="section-header"><h2>The other cut.</h2><a href="/shop/" class="text-link">Shop all →</a></div><div class="related-product">{products.filter(p=>p.slug!==product.slug).map(p=><ProductCard product={p}/>)}</div></section>
- {products.flatMap(entry=>entry.variants.map(variant=><template data-cart-catalog data-id={variant.id} data-sku={variant.sku} data-size={variant.size} data-slug={entry.slug} data-title={entry.title} data-price-cents={entry.price*100} data-image={entry.gallery[0]!.src} data-image-alt={entry.gallery[0]!.alt}></template>))}
+ <section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches</p><h2 id="size-title">Find your fit.</h2><p>{product.measurementGuidance}</p>{product.sleeveMeasurementGuidance && <p>{product.sleeveMeasurementGuidance}</p>}<div class="size-table-wrap" role="region" aria-label={`${product.title} measurements`} tabindex="0"><table><thead><tr><th scope="col">Size</th><th scope="col">Chest width</th><th scope="col">Body length</th>{hasSleeveMeasurements && <th scope="col">Sleeve length</th>}</tr></thead><tbody>{sizeGuide.map(row=><tr><th scope="row">{row.size}</th><td>{row.chestWidth}</td><td>{row.bodyLength}</td>{hasSleeveMeasurements && <td>{row.sleeveLength}</td>}</tr>)}</tbody></table></div></section>
+ <section class="section shell"><div class="section-header"><h2>More pieces.</h2><a href="/shop/" class="text-link">Shop all →</a></div><div class="product-grid related-products">{relatedProducts.map(p=><ProductCard product={p}/>)}</div></section>
+ {products.flatMap(entry=>entry.variants.map(variant=><template data-cart-catalog data-id={variant.id} data-sku={variant.sku} data-size={variant.size} data-slug={entry.slug} data-title={`${entry.title} — ${entry.color}`} data-price-cents={entry.price*100} data-image={entry.gallery[0]!.src} data-image-alt={entry.gallery[0]!.alt}></template>))}
  <script type="application/ld+json" set:html={JSON.stringify(productSchema).replace(/</g,'\\u003c')}/>
  <script>
   const search=new URLSearchParams(location.search);

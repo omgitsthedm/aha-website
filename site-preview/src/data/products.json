@@ -7,6 +7,10 @@
     "currency": "USD",
     "squareItemId": "CCB7ITES72OKJ2VYTOPSAPDR",
     "gender": "male",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Crewnecks"
+    },
     "description": "A Bone crewneck with a standard, full-length fit and a yellow-and-blue YIKES! chest print. The 8.5 oz fleece uses an 80% cotton, 20% polyester blend with a smooth cotton face. Ribbing finishes the collar, cuffs and waistband, with double-needle seams and twill neck tape.",
     "fit": "standard, full-length crewneck",
     "weightOz": 8.5,
@@ -159,7 +163,15 @@
         "height": 1402,
         "role": "lifestyle-alternate"
       }
-    ]
+    ],
+    "collection": "Yikes!",
+    "typeLabel": "Crewneck",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "Ribbed collar, cuffs and waistband."
+    ],
+    "sleeveMeasurementGuidance": "Sleeve length is measured from the center back, including the cuff.",
+    "campaignSetting": "Pinball bar"
   },
   {
     "slug": "yikes-cropped-hoodie",
@@ -169,6 +181,10 @@
     "currency": "USD",
     "squareItemId": "35ZC4TQORIIQAHUQ22JIDFG6",
     "gender": "female",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Cropped Hoodies"
+    },
     "description": "A cropped hoodie in Bone with a raw hem, dropped shoulders and a yellow-and-blue YIKES! chest print. The 6.5 oz fleece uses an 80% cotton, 20% polyester blend with a smooth cotton face. Flat drawcords adjust the hood, and ribbed cuffs finish the sleeves.",
     "fit": "cropped raw-hem silhouette; dropped shoulders",
     "weightOz": 6.5,
@@ -306,6 +322,1402 @@
         "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-3-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-3-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-3-1122.webp 1122w",
         "feedImage": "/images/yikes/yikes-cropped-hoodie/campaign-3.jpg",
         "alt": "Seated upright on the NYPL stone ledge, hands tucked in jacket pockets, wearing the Bone cropped hoodie.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ],
+    "collection": "Yikes!",
+    "typeLabel": "Cropped hoodie",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "Raw cropped hem, dropped shoulders, flat drawcords and ribbed cuffs."
+    ],
+    "sleeveMeasurementGuidance": "Sleeve length is measured from the center back, including the cuff.",
+    "campaignSetting": "Library steps"
+  },
+  {
+    "slug": "insomniac-ss4500-black",
+    "title": "Insomniac Hoodie",
+    "color": "Black",
+    "price": 58,
+    "currency": "USD",
+    "squareItemId": "V2DIQ5HVNWHE5J76WAAC2WZJ",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Hoodies",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "description": "An 8.5 oz midweight pullover hoodie in Black with a small left-chest print and a full back print. It has a standard fit, a ring-spun cotton face, a jersey-lined hood, metal eyelets, twill neck tape, and ribbed cuffs and waistband.",
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 27,
+        "chestWidth": 19,
+        "sleeveLength": 33.5
+      },
+      {
+        "size": "S",
+        "bodyLength": 28,
+        "chestWidth": 20,
+        "sleeveLength": 34.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 29,
+        "chestWidth": 22,
+        "sleeveLength": 35.5
+      },
+      {
+        "size": "L",
+        "bodyLength": 30,
+        "chestWidth": 24,
+        "sleeveLength": 36.5
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 26,
+        "sleeveLength": 37.5
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32,
+        "chestWidth": 27,
+        "sleeveLength": 38.5
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 33,
+        "chestWidth": 28,
+        "sleeveLength": 39.5
+      },
+      {
+        "size": "4XL",
+        "bodyLength": 34,
+        "chestWidth": 29.5,
+        "sleeveLength": 40
+      },
+      {
+        "size": "5XL",
+        "bodyLength": 34.5,
+        "chestWidth": 31,
+        "sleeveLength": 40.5
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "collection": "Insomniac",
+    "typeLabel": "Hoodie",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "ring-spun cotton face",
+      "jersey-lined hood",
+      "metal eyelets",
+      "twill neck tape",
+      "1x1 ribbed cuffs and waistband"
+    ],
+    "sleeveMeasurementGuidance": "Use the SS4500 manufacturer's sleeve measurement for the selected size; compare it with a garment that fits you.",
+    "campaignSetting": "Dingy dive-bar exterior",
+    "variants": [
+      {
+        "size": "XS",
+        "id": "3UZ7AE7JBX5CLSENQ76TA4HF",
+        "sku": "APQ-6209275S5A1"
+      },
+      {
+        "size": "S",
+        "id": "OSVQW2METLNMSSBKBCTAF2C5",
+        "sku": "APQ-6209275S6A1"
+      },
+      {
+        "size": "M",
+        "id": "63JL3UPAHMEZMGAORZWRA3S7",
+        "sku": "APQ-6209275S7A1"
+      },
+      {
+        "size": "L",
+        "id": "PQVJD6CAHZPS36XVDMZHIB7B",
+        "sku": "APQ-6209275S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "464AETWT7Q2JEAPKDDJ6KLJQ",
+        "sku": "APQ-6209275S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "QMFGSEG6LRJFZL2YQ4HUQSBY",
+        "sku": "APQ-6209275S2A1"
+      },
+      {
+        "size": "3XL",
+        "id": "MS36EEK7NUWA3YFYE3SJQ5VC",
+        "sku": "APQ-6209275S21A1"
+      },
+      {
+        "size": "4XL",
+        "id": "47O252IOJAJMIMVANEH3ZFL2",
+        "sku": "APQ-6209275S61A1"
+      },
+      {
+        "size": "5XL",
+        "id": "3QPA5UF74IW2H3VUU2GHFBHA",
+        "sku": "APQ-6209275S62A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/insomniac/insomniac-ss4500-black/garment-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-black/garment-1-400.webp 400w, /images/insomniac/insomniac-ss4500-black/garment-1-800.webp 800w, /images/insomniac/insomniac-ss4500-black/garment-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-black/garment-1.jpg",
+        "alt": "Black Insomniac hoodie, front view with small left-chest print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-black/garment-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-black/garment-2-400.webp 400w, /images/insomniac/insomniac-ss4500-black/garment-2-800.webp 800w, /images/insomniac/insomniac-ss4500-black/garment-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-black/garment-2.jpg",
+        "alt": "Black Insomniac hoodie, back view with full back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-black/garment-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-black/garment-3-400.webp 400w, /images/insomniac/insomniac-ss4500-black/garment-3-800.webp 800w, /images/insomniac/insomniac-ss4500-black/garment-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-black/garment-3.jpg",
+        "alt": "Close view of the Insomniac print on the Black hoodie.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-black/garment-4-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-black/garment-4-400.webp 400w, /images/insomniac/insomniac-ss4500-black/garment-4-800.webp 800w, /images/insomniac/insomniac-ss4500-black/garment-4-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-black/garment-4.jpg",
+        "alt": "Black Insomniac hoodie folded naturally.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/insomniac/insomniac-ss4500-black/campaign-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-black/campaign-1-400.webp 400w, /images/insomniac/insomniac-ss4500-black/campaign-1-800.webp 800w, /images/insomniac/insomniac-ss4500-black/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-black/campaign-1.jpg",
+        "alt": "Model wearing the Black Insomniac hoodie outside a dive bar.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-black/campaign-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-black/campaign-2-400.webp 400w, /images/insomniac/insomniac-ss4500-black/campaign-2-800.webp 800w, /images/insomniac/insomniac-ss4500-black/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-black/campaign-2.jpg",
+        "alt": "Second editorial photograph for the Black Insomniac hoodie.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-black/campaign-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-black/campaign-3-400.webp 400w, /images/insomniac/insomniac-ss4500-black/campaign-3-800.webp 800w, /images/insomniac/insomniac-ss4500-black/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-black/campaign-3.jpg",
+        "alt": "Third editorial photograph for the Black Insomniac hoodie.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "insomniac-ss4500-grey-heather",
+    "title": "Insomniac Hoodie",
+    "color": "Grey Heather",
+    "price": 58,
+    "currency": "USD",
+    "squareItemId": "B6JLTLY5OZL5MZ25JWBKCZOI",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Hoodies",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "description": "An 8.5 oz midweight pullover hoodie in Grey Heather with a small left-chest print and a full back print. It has a standard fit, a jersey-lined hood, metal eyelets, twill neck tape, and ribbed cuffs and waistband.",
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "75% cotton / 25% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 27,
+        "chestWidth": 19,
+        "sleeveLength": 33.5
+      },
+      {
+        "size": "S",
+        "bodyLength": 28,
+        "chestWidth": 20,
+        "sleeveLength": 34.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 29,
+        "chestWidth": 22,
+        "sleeveLength": 35.5
+      },
+      {
+        "size": "L",
+        "bodyLength": 30,
+        "chestWidth": 24,
+        "sleeveLength": 36.5
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 26,
+        "sleeveLength": 37.5
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32,
+        "chestWidth": 27,
+        "sleeveLength": 38.5
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 33,
+        "chestWidth": 28,
+        "sleeveLength": 39.5
+      },
+      {
+        "size": "4XL",
+        "bodyLength": 34,
+        "chestWidth": 29.5,
+        "sleeveLength": 40
+      },
+      {
+        "size": "5XL",
+        "bodyLength": 34.5,
+        "chestWidth": 31,
+        "sleeveLength": 40.5
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "collection": "Insomniac",
+    "typeLabel": "Hoodie",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "jersey-lined hood",
+      "metal eyelets",
+      "twill neck tape",
+      "1x1 ribbed cuffs and waistband"
+    ],
+    "sleeveMeasurementGuidance": "Use the SS4500 manufacturer's sleeve measurement for the selected size; compare it with a garment that fits you.",
+    "campaignSetting": "Dingy dive-bar exterior",
+    "variants": [
+      {
+        "size": "XS",
+        "id": "EFSYJQKU3D5BDVCD2UQBMAKH",
+        "sku": "APQ-6209282S5A1"
+      },
+      {
+        "size": "S",
+        "id": "XDWCN2KCLICAB52HHOYO4WPY",
+        "sku": "APQ-6209282S6A1"
+      },
+      {
+        "size": "M",
+        "id": "AAESWA5KUQWFWFHPAFL6IAKD",
+        "sku": "APQ-6209282S7A1"
+      },
+      {
+        "size": "L",
+        "id": "VPKXPD35TLE75XQCTAK2CH6E",
+        "sku": "APQ-6209282S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "U55J5BYSTTHB5NZ7BPHEP6TW",
+        "sku": "APQ-6209282S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "DJWMD6ZJDBMKHAY3R7UUGKFY",
+        "sku": "APQ-6209282S2A1"
+      },
+      {
+        "size": "3XL",
+        "id": "YWPQUNVZSMPO6QRQVTTPAZBX",
+        "sku": "APQ-6209282S21A1"
+      },
+      {
+        "size": "4XL",
+        "id": "IRUNHSK7RTGL2IXOD4TKIEMM",
+        "sku": "APQ-6209282S61A1"
+      },
+      {
+        "size": "5XL",
+        "id": "5BPWX7UNFVVCY4F46MOOMJWS",
+        "sku": "APQ-6209282S62A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/insomniac/insomniac-ss4500-grey-heather/garment-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-grey-heather/garment-1-400.webp 400w, /images/insomniac/insomniac-ss4500-grey-heather/garment-1-800.webp 800w, /images/insomniac/insomniac-ss4500-grey-heather/garment-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-grey-heather/garment-1.jpg",
+        "alt": "Grey Heather Insomniac hoodie, front view with small left-chest print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-grey-heather/garment-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-grey-heather/garment-2-400.webp 400w, /images/insomniac/insomniac-ss4500-grey-heather/garment-2-800.webp 800w, /images/insomniac/insomniac-ss4500-grey-heather/garment-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-grey-heather/garment-2.jpg",
+        "alt": "Grey Heather Insomniac hoodie, back view with full back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-grey-heather/garment-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-grey-heather/garment-3-400.webp 400w, /images/insomniac/insomniac-ss4500-grey-heather/garment-3-800.webp 800w, /images/insomniac/insomniac-ss4500-grey-heather/garment-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-grey-heather/garment-3.jpg",
+        "alt": "Close view of the Insomniac print on the Grey Heather hoodie.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-grey-heather/garment-4-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-grey-heather/garment-4-400.webp 400w, /images/insomniac/insomniac-ss4500-grey-heather/garment-4-800.webp 800w, /images/insomniac/insomniac-ss4500-grey-heather/garment-4-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-grey-heather/garment-4.jpg",
+        "alt": "Grey Heather Insomniac hoodie folded naturally.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-1-400.webp 400w, /images/insomniac/insomniac-ss4500-grey-heather/campaign-1-800.webp 800w, /images/insomniac/insomniac-ss4500-grey-heather/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-1.jpg",
+        "alt": "Model wearing the Grey Heather Insomniac hoodie outside a dive bar.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-2-400.webp 400w, /images/insomniac/insomniac-ss4500-grey-heather/campaign-2-800.webp 800w, /images/insomniac/insomniac-ss4500-grey-heather/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-2.jpg",
+        "alt": "Second editorial photograph for the Grey Heather Insomniac hoodie.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-3-400.webp 400w, /images/insomniac/insomniac-ss4500-grey-heather/campaign-3-800.webp 800w, /images/insomniac/insomniac-ss4500-grey-heather/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-3.jpg",
+        "alt": "Third editorial photograph for the Grey Heather Insomniac hoodie.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "insomniac-ss3000-black",
+    "title": "Insomniac Crewneck",
+    "color": "Black",
+    "price": 55,
+    "currency": "USD",
+    "squareItemId": "QKVKTDR7YHFCEZXC36MEHIKS",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Crewnecks",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "description": "An 8.5 oz midweight crewneck sweatshirt in Black with a small left-chest print and a full back print. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs, and waistband.",
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 25,
+        "chestWidth": 19,
+        "sleeveLength": 34
+      },
+      {
+        "size": "S",
+        "bodyLength": 26.5,
+        "chestWidth": 20.5,
+        "sleeveLength": 35
+      },
+      {
+        "size": "M",
+        "bodyLength": 28,
+        "chestWidth": 22,
+        "sleeveLength": 36
+      },
+      {
+        "size": "L",
+        "bodyLength": 29.5,
+        "chestWidth": 23.5,
+        "sleeveLength": 37
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 25,
+        "sleeveLength": 38
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32.5,
+        "chestWidth": 26.5,
+        "sleeveLength": 39
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 34,
+        "chestWidth": 28,
+        "sleeveLength": 40
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "collection": "Insomniac",
+    "typeLabel": "Crewneck",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "cotton face",
+      "twill neck tape",
+      "1x1 ribbed collar, cuffs and waistband"
+    ],
+    "sleeveMeasurementGuidance": "Use the SS3000 manufacturer's sleeve measurement for the selected size; compare it with a garment that fits you.",
+    "campaignSetting": "Dingy dive-bar exterior",
+    "variants": [
+      {
+        "size": "XS",
+        "id": "HEFIMVZTQGW4B3JLFISE2N7S",
+        "sku": "APQ-6209283S5A1"
+      },
+      {
+        "size": "S",
+        "id": "Q73GEB2FMOJV5HVPHH2RWSFX",
+        "sku": "APQ-6209283S6A1"
+      },
+      {
+        "size": "M",
+        "id": "ED4MIAP64FTDXI2ITGUJQPUH",
+        "sku": "APQ-6209283S7A1"
+      },
+      {
+        "size": "L",
+        "id": "TQ2C7DMQTONA7M4RTKIBYBG7",
+        "sku": "APQ-6209283S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "25BYQHBBNGOPTAUXASZQCLZR",
+        "sku": "APQ-6209283S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "3SSGIQLK2GETSKMPNNQHAG53",
+        "sku": "APQ-6209283S2A1"
+      },
+      {
+        "size": "3XL",
+        "id": "TCNHOO3XHN3L7LX7MIMOD3TU",
+        "sku": "APQ-6209283S21A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/insomniac/insomniac-ss3000-black/garment-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-black/garment-1-400.webp 400w, /images/insomniac/insomniac-ss3000-black/garment-1-800.webp 800w, /images/insomniac/insomniac-ss3000-black/garment-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-black/garment-1.jpg",
+        "alt": "Black Insomniac crewneck, front view with small left-chest print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-black/garment-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-black/garment-2-400.webp 400w, /images/insomniac/insomniac-ss3000-black/garment-2-800.webp 800w, /images/insomniac/insomniac-ss3000-black/garment-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-black/garment-2.jpg",
+        "alt": "Black Insomniac crewneck, back view with full back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-black/garment-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-black/garment-3-400.webp 400w, /images/insomniac/insomniac-ss3000-black/garment-3-800.webp 800w, /images/insomniac/insomniac-ss3000-black/garment-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-black/garment-3.jpg",
+        "alt": "Close view of the Insomniac print on the Black crewneck.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-black/garment-4-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-black/garment-4-400.webp 400w, /images/insomniac/insomniac-ss3000-black/garment-4-800.webp 800w, /images/insomniac/insomniac-ss3000-black/garment-4-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-black/garment-4.jpg",
+        "alt": "Black Insomniac crewneck folded naturally.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/insomniac/insomniac-ss3000-black/campaign-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-black/campaign-1-400.webp 400w, /images/insomniac/insomniac-ss3000-black/campaign-1-800.webp 800w, /images/insomniac/insomniac-ss3000-black/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-black/campaign-1.jpg",
+        "alt": "Model wearing the Black Insomniac crewneck outside a dive bar.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-black/campaign-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-black/campaign-2-400.webp 400w, /images/insomniac/insomniac-ss3000-black/campaign-2-800.webp 800w, /images/insomniac/insomniac-ss3000-black/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-black/campaign-2.jpg",
+        "alt": "Second editorial photograph for the Black Insomniac crewneck.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-black/campaign-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-black/campaign-3-400.webp 400w, /images/insomniac/insomniac-ss3000-black/campaign-3-800.webp 800w, /images/insomniac/insomniac-ss3000-black/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-black/campaign-3.jpg",
+        "alt": "Third editorial photograph for the Black Insomniac crewneck.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "insomniac-ss3000-heather-grey",
+    "title": "Insomniac Crewneck",
+    "color": "Heather Grey",
+    "price": 55,
+    "currency": "USD",
+    "squareItemId": "RDPOTBQWK5NDPDWVF4JQE47L",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Crewnecks",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "description": "An 8.5 oz midweight crewneck sweatshirt in Heather Grey with a small left-chest print and a full back print. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs, and waistband.",
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "75% cotton / 25% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 25,
+        "chestWidth": 19,
+        "sleeveLength": 34
+      },
+      {
+        "size": "S",
+        "bodyLength": 26.5,
+        "chestWidth": 20.5,
+        "sleeveLength": 35
+      },
+      {
+        "size": "M",
+        "bodyLength": 28,
+        "chestWidth": 22,
+        "sleeveLength": 36
+      },
+      {
+        "size": "L",
+        "bodyLength": 29.5,
+        "chestWidth": 23.5,
+        "sleeveLength": 37
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 25,
+        "sleeveLength": 38
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32.5,
+        "chestWidth": 26.5,
+        "sleeveLength": 39
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 34,
+        "chestWidth": 28,
+        "sleeveLength": 40
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "collection": "Insomniac",
+    "typeLabel": "Crewneck",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "cotton face",
+      "twill neck tape",
+      "1x1 ribbed collar, cuffs and waistband"
+    ],
+    "sleeveMeasurementGuidance": "Use the SS3000 manufacturer's sleeve measurement for the selected size; compare it with a garment that fits you.",
+    "campaignSetting": "Dingy dive-bar exterior",
+    "variants": [
+      {
+        "size": "XS",
+        "id": "II7ORA4JDGEA2ZH6QFGSCC6O",
+        "sku": "APQ-6209296S5A1"
+      },
+      {
+        "size": "S",
+        "id": "OH7YSS6ZWCMS5NTTGL2SAKVE",
+        "sku": "APQ-6209296S6A1"
+      },
+      {
+        "size": "M",
+        "id": "KCH7CB7DF6G4SQJ3FE6EB7RX",
+        "sku": "APQ-6209296S7A1"
+      },
+      {
+        "size": "L",
+        "id": "AND2KAYNNIRJOVZOOZLQHMGB",
+        "sku": "APQ-6209296S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "DT26VPID4G4PW7VBTEJPOEZV",
+        "sku": "APQ-6209296S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "BEZQO2HEYXQIG7J43CYB5S36",
+        "sku": "APQ-6209296S2A1"
+      },
+      {
+        "size": "3XL",
+        "id": "OMJPV7Z5ZBH7T3UP4NDV5KOO",
+        "sku": "APQ-6209296S21A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/insomniac/insomniac-ss3000-heather-grey/garment-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-heather-grey/garment-1-400.webp 400w, /images/insomniac/insomniac-ss3000-heather-grey/garment-1-800.webp 800w, /images/insomniac/insomniac-ss3000-heather-grey/garment-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-heather-grey/garment-1.jpg",
+        "alt": "Heather Grey Insomniac crewneck, front view with small left-chest print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-heather-grey/garment-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-heather-grey/garment-2-400.webp 400w, /images/insomniac/insomniac-ss3000-heather-grey/garment-2-800.webp 800w, /images/insomniac/insomniac-ss3000-heather-grey/garment-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-heather-grey/garment-2.jpg",
+        "alt": "Heather Grey Insomniac crewneck, back view with full back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-heather-grey/garment-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-heather-grey/garment-3-400.webp 400w, /images/insomniac/insomniac-ss3000-heather-grey/garment-3-800.webp 800w, /images/insomniac/insomniac-ss3000-heather-grey/garment-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-heather-grey/garment-3.jpg",
+        "alt": "Close view of the Insomniac print on the Heather Grey crewneck.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-heather-grey/garment-4-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-heather-grey/garment-4-400.webp 400w, /images/insomniac/insomniac-ss3000-heather-grey/garment-4-800.webp 800w, /images/insomniac/insomniac-ss3000-heather-grey/garment-4-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-heather-grey/garment-4.jpg",
+        "alt": "Heather Grey Insomniac crewneck folded naturally.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/insomniac/insomniac-ss3000-heather-grey/campaign-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-heather-grey/campaign-1-400.webp 400w, /images/insomniac/insomniac-ss3000-heather-grey/campaign-1-800.webp 800w, /images/insomniac/insomniac-ss3000-heather-grey/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-heather-grey/campaign-1.jpg",
+        "alt": "Model wearing the Heather Grey Insomniac crewneck outside a dive bar.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-heather-grey/campaign-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-heather-grey/campaign-2-400.webp 400w, /images/insomniac/insomniac-ss3000-heather-grey/campaign-2-800.webp 800w, /images/insomniac/insomniac-ss3000-heather-grey/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-heather-grey/campaign-2.jpg",
+        "alt": "Second editorial photograph for the Heather Grey Insomniac crewneck.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/insomniac/insomniac-ss3000-heather-grey/campaign-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-ss3000-heather-grey/campaign-3-400.webp 400w, /images/insomniac/insomniac-ss3000-heather-grey/campaign-3-800.webp 800w, /images/insomniac/insomniac-ss3000-heather-grey/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-ss3000-heather-grey/campaign-3.jpg",
+        "alt": "Third editorial photograph for the Heather Grey Insomniac crewneck.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "insomniac-next-level-3601-black",
+    "title": "Insomniac Long Sleeve",
+    "color": "Black",
+    "price": 42,
+    "currency": "USD",
+    "squareItemId": "LUFTT366D62TYEHP2FNU35BH",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Shirts & Tops > T-Shirts",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "description": "A 4.3 oz long-sleeve crewneck T-shirt in Black with a small left-chest print and a full back print. It has a standard fit, combed ring-spun cotton, a baby-rib collar, hemmed sleeves, and side seams.",
+    "fit": "standard",
+    "weightOz": 4.3,
+    "composition": "100% combed ring-spun cotton",
+    "sizeGuide": [
+      {
+        "size": "S",
+        "bodyLength": 28,
+        "chestWidth": 18.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 29,
+        "chestWidth": 20
+      },
+      {
+        "size": "L",
+        "bodyLength": 30,
+        "chestWidth": 21.5
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 23.3333333333
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32,
+        "chestWidth": 25.5
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "collection": "Insomniac",
+    "typeLabel": "Long sleeve",
+    "fabricType": "cotton jersey",
+    "constructionDetails": [
+      "combed ring-spun cotton",
+      "baby-rib collar",
+      "hemmed sleeves",
+      "side seams",
+      "tear-away label"
+    ],
+    "sleeveMeasurementGuidance": "The official Next Level 3601 specification lists chest and body length only; it does not publish a sleeve measurement. Do not infer one from a center-back measurement.",
+    "campaignSetting": "Diner",
+    "variants": [
+      {
+        "size": "S",
+        "id": "STFINJPACB7S36TGYXGHUJXB",
+        "sku": "APQ-6209284S6A1"
+      },
+      {
+        "size": "M",
+        "id": "RL2WOZXAPCCMHW6MKBEIDT4K",
+        "sku": "APQ-6209284S7A1"
+      },
+      {
+        "size": "L",
+        "id": "QY6IKYQAWIBR7TAFHRUY2C45",
+        "sku": "APQ-6209284S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "NYBAUB2RPDU4GR4N5FLHGM5I",
+        "sku": "APQ-6209284S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "TSY6WNEE3FFJJ2XCVM5W5P74",
+        "sku": "APQ-6209284S2A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-black/garment-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-black/garment-1-400.webp 400w, /images/insomniac/insomniac-next-level-3601-black/garment-1-800.webp 800w, /images/insomniac/insomniac-next-level-3601-black/garment-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-black/garment-1.jpg",
+        "alt": "Black Insomniac long-sleeve T-shirt, front view with small left-chest print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-black/garment-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-black/garment-2-400.webp 400w, /images/insomniac/insomniac-next-level-3601-black/garment-2-800.webp 800w, /images/insomniac/insomniac-next-level-3601-black/garment-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-black/garment-2.jpg",
+        "alt": "Black Insomniac long-sleeve T-shirt, back view with full back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-black/garment-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-black/garment-3-400.webp 400w, /images/insomniac/insomniac-next-level-3601-black/garment-3-800.webp 800w, /images/insomniac/insomniac-next-level-3601-black/garment-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-black/garment-3.jpg",
+        "alt": "Close view of the Insomniac print on the Black long-sleeve T-shirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-black/garment-4-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-black/garment-4-400.webp 400w, /images/insomniac/insomniac-next-level-3601-black/garment-4-800.webp 800w, /images/insomniac/insomniac-next-level-3601-black/garment-4-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-black/garment-4.jpg",
+        "alt": "Black Insomniac long-sleeve T-shirt folded naturally.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-black/campaign-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-black/campaign-1-400.webp 400w, /images/insomniac/insomniac-next-level-3601-black/campaign-1-800.webp 800w, /images/insomniac/insomniac-next-level-3601-black/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-black/campaign-1.jpg",
+        "alt": "Model wearing the Black Insomniac long-sleeve T-shirt in a diner.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-black/campaign-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-black/campaign-2-400.webp 400w, /images/insomniac/insomniac-next-level-3601-black/campaign-2-800.webp 800w, /images/insomniac/insomniac-next-level-3601-black/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-black/campaign-2.jpg",
+        "alt": "Back view of the Black Insomniac long-sleeve T-shirt in a diner.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-black/campaign-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-black/campaign-3-400.webp 400w, /images/insomniac/insomniac-next-level-3601-black/campaign-3-800.webp 800w, /images/insomniac/insomniac-next-level-3601-black/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-black/campaign-3.jpg",
+        "alt": "Second front view of the Black Insomniac long-sleeve T-shirt in a diner.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "insomniac-next-level-3601-heather-grey",
+    "title": "Insomniac Long Sleeve",
+    "color": "Heather Grey",
+    "price": 42,
+    "currency": "USD",
+    "squareItemId": "3GIR54TNW5OT3S4LSTKGX2JT",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Shirts & Tops > T-Shirts",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "description": "A 4.3 oz long-sleeve crewneck T-shirt in Heather Grey with a small left-chest print and a full back print. It has a standard fit, a baby-rib collar, hemmed sleeves, and side seams.",
+    "fit": "standard",
+    "weightOz": 4.3,
+    "composition": "90% cotton / 10% recycled polyester",
+    "sizeGuide": [
+      {
+        "size": "S",
+        "bodyLength": 28,
+        "chestWidth": 18.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 29,
+        "chestWidth": 20
+      },
+      {
+        "size": "L",
+        "bodyLength": 30,
+        "chestWidth": 21.5
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 23.3333333333
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32,
+        "chestWidth": 25.5
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "collection": "Insomniac",
+    "typeLabel": "Long sleeve",
+    "fabricType": "cotton jersey",
+    "constructionDetails": [
+      "baby-rib collar",
+      "hemmed sleeves",
+      "side seams",
+      "tear-away label"
+    ],
+    "sleeveMeasurementGuidance": "The official Next Level 3601 specification lists chest and body length only; it does not publish a sleeve measurement. Do not infer one from a center-back measurement.",
+    "campaignSetting": "Record store",
+    "variants": [
+      {
+        "size": "S",
+        "id": "VSV2NLZUZP6KBXXIVEOJPBZ7",
+        "sku": "APQ-6209285S6A1"
+      },
+      {
+        "size": "M",
+        "id": "N5DGHXTXDRW3DBSYHVBBVTZY",
+        "sku": "APQ-6209285S7A1"
+      },
+      {
+        "size": "L",
+        "id": "A43URISMWMHBVRUZ5FAC53VY",
+        "sku": "APQ-6209285S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "GAQNIX3UIH2J5H36NJO7UTNL",
+        "sku": "APQ-6209285S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "VCYF7NJRQMNYK4HIISS3JNFB",
+        "sku": "APQ-6209285S2A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-1-400.webp 400w, /images/insomniac/insomniac-next-level-3601-heather-grey/garment-1-800.webp 800w, /images/insomniac/insomniac-next-level-3601-heather-grey/garment-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-1.jpg",
+        "alt": "Heather Grey Insomniac long-sleeve T-shirt, front view with small left-chest print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-2-400.webp 400w, /images/insomniac/insomniac-next-level-3601-heather-grey/garment-2-800.webp 800w, /images/insomniac/insomniac-next-level-3601-heather-grey/garment-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-2.jpg",
+        "alt": "Heather Grey Insomniac long-sleeve T-shirt, back view with full back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-3-400.webp 400w, /images/insomniac/insomniac-next-level-3601-heather-grey/garment-3-800.webp 800w, /images/insomniac/insomniac-next-level-3601-heather-grey/garment-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-3.jpg",
+        "alt": "Close view of the Insomniac print on the Heather Grey long-sleeve T-shirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-4-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-4-400.webp 400w, /images/insomniac/insomniac-next-level-3601-heather-grey/garment-4-800.webp 800w, /images/insomniac/insomniac-next-level-3601-heather-grey/garment-4-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-heather-grey/garment-4.jpg",
+        "alt": "Heather Grey Insomniac long-sleeve T-shirt folded naturally.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-1-400.webp 400w, /images/insomniac/insomniac-next-level-3601-heather-grey/campaign-1-800.webp 800w, /images/insomniac/insomniac-next-level-3601-heather-grey/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-1.jpg",
+        "alt": "Model wearing the Heather Grey Insomniac long-sleeve T-shirt in a record store.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-2-400.webp 400w, /images/insomniac/insomniac-next-level-3601-heather-grey/campaign-2-800.webp 800w, /images/insomniac/insomniac-next-level-3601-heather-grey/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-2.jpg",
+        "alt": "Back view of the Heather Grey Insomniac long-sleeve T-shirt in a record store.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-3-400.webp 400w, /images/insomniac/insomniac-next-level-3601-heather-grey/campaign-3-800.webp 800w, /images/insomniac/insomniac-next-level-3601-heather-grey/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-3.jpg",
+        "alt": "Second front view of the Heather Grey Insomniac long-sleeve T-shirt in a record store.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "insomniac-comfort-colors-4410-black",
+    "title": "Insomniac Pocket Long Sleeve",
+    "color": "Black",
+    "price": 58,
+    "currency": "USD",
+    "squareItemId": "NFT6U5H3XXYV4ZE73WHEZ42E",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Shirts & Tops > T-Shirts",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "description": "A 6.1 oz garment-dyed long-sleeve pocket T-shirt in Black with a small left-chest print and a full back print. It has a relaxed fit, ring-spun cotton, a left-chest pocket, and ribbed cuffs.",
+    "fit": "relaxed",
+    "weightOz": 6.1,
+    "composition": "100% ring-spun cotton",
+    "sizeGuide": [
+      {
+        "size": "S",
+        "bodyLength": 26.625,
+        "chestWidth": 17.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 28,
+        "chestWidth": 19.5
+      },
+      {
+        "size": "L",
+        "bodyLength": 29.375,
+        "chestWidth": 21.25
+      },
+      {
+        "size": "XL",
+        "bodyLength": 30.75,
+        "chestWidth": 23
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 31.625,
+        "chestWidth": 25
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 32.5,
+        "chestWidth": 27
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "collection": "Insomniac",
+    "typeLabel": "Pocket long sleeve",
+    "fabricType": "cotton jersey",
+    "constructionDetails": [
+      "garment dyed",
+      "ring-spun cotton",
+      "left-chest pocket",
+      "ribbed cuffs"
+    ],
+    "sleeveMeasurementGuidance": "The selected 4410 source chart records body length and width only; do not infer a sleeve measurement.",
+    "campaignSetting": "Pinball bar",
+    "variants": [
+      {
+        "size": "S",
+        "id": "KG5KN6YV6A2MMPIJL266CUZV",
+        "sku": "APQ-6209286S6A1"
+      },
+      {
+        "size": "M",
+        "id": "2VI6WNFXWHFKEWCPH7ZNBVME",
+        "sku": "APQ-6209286S7A1"
+      },
+      {
+        "size": "L",
+        "id": "UMJNMVHTG3H4IZOYCA4MIDPX",
+        "sku": "APQ-6209286S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "SD6AEXVEQBTRY6UE2Z65BJIC",
+        "sku": "APQ-6209286S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "CEECQLJHOSPAEHCKMXMMUWMH",
+        "sku": "APQ-6209286S2A1"
+      },
+      {
+        "size": "3XL",
+        "id": "5GXNJTD5N4RYCQ7FC6HA3OEA",
+        "sku": "APQ-6209286S21A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-1-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-black/garment-1-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-black/garment-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-1.jpg",
+        "alt": "Black Insomniac pocket long-sleeve T-shirt, front view with small left-chest print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-2-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-black/garment-2-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-black/garment-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-2.jpg",
+        "alt": "Black Insomniac pocket long-sleeve T-shirt, back view with full back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-3-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-black/garment-3-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-black/garment-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-3.jpg",
+        "alt": "Close view of the Insomniac print on the Black pocket long-sleeve T-shirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-4-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-4-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-black/garment-4-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-black/garment-4-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-black/garment-4.jpg",
+        "alt": "Black Insomniac pocket long-sleeve T-shirt folded naturally.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-1-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-black/campaign-1-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-black/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-1.jpg",
+        "alt": "First editorial photograph for the Black Insomniac pocket long-sleeve T-shirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-2-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-black/campaign-2-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-black/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-2.jpg",
+        "alt": "Second editorial photograph for the Black Insomniac pocket long-sleeve T-shirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-3-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-black/campaign-3-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-black/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-3.jpg",
+        "alt": "Third editorial photograph for the Black Insomniac pocket long-sleeve T-shirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "insomniac-comfort-colors-4410-grey",
+    "title": "Insomniac Pocket Long Sleeve",
+    "color": "Grey",
+    "price": 58,
+    "currency": "USD",
+    "squareItemId": "3W7D4BVJ5SVUQWENRW7YEPR3",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Shirts & Tops > T-Shirts",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "description": "A 6.1 oz garment-dyed long-sleeve pocket T-shirt in Grey with a small left-chest print and a full back print. It has a relaxed fit, ring-spun cotton, a left-chest pocket, and ribbed cuffs.",
+    "fit": "relaxed",
+    "weightOz": 6.1,
+    "composition": "100% ring-spun cotton",
+    "sizeGuide": [
+      {
+        "size": "S",
+        "bodyLength": 26.625,
+        "chestWidth": 17.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 28,
+        "chestWidth": 19.5
+      },
+      {
+        "size": "L",
+        "bodyLength": 29.375,
+        "chestWidth": 21.25
+      },
+      {
+        "size": "XL",
+        "bodyLength": 30.75,
+        "chestWidth": 23
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 31.625,
+        "chestWidth": 25
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 32.5,
+        "chestWidth": 27
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "collection": "Insomniac",
+    "typeLabel": "Pocket long sleeve",
+    "fabricType": "cotton jersey",
+    "constructionDetails": [
+      "garment dyed",
+      "ring-spun cotton",
+      "left-chest pocket",
+      "ribbed cuffs"
+    ],
+    "sleeveMeasurementGuidance": "The selected 4410 source chart records body length and width only; do not infer a sleeve measurement.",
+    "campaignSetting": "Library stone wall",
+    "variants": [
+      {
+        "size": "S",
+        "id": "NZZNSZRRN5OMK2Q3EBGDP2S2",
+        "sku": "APQ-6209287S6A1"
+      },
+      {
+        "size": "M",
+        "id": "WPJJA4UEFGEZZ7ZYVYEAUA6E",
+        "sku": "APQ-6209287S7A1"
+      },
+      {
+        "size": "L",
+        "id": "BO7D5FQGZQRE5MDTFS3QPTY4",
+        "sku": "APQ-6209287S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "FL3U7QS67543UNZXLKO3DV4D",
+        "sku": "APQ-6209287S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "G7AX3A36HEDAG3QOJVIMBC2L",
+        "sku": "APQ-6209287S2A1"
+      },
+      {
+        "size": "3XL",
+        "id": "E7ZQH2PFMRURHXLIJEFCYTO7",
+        "sku": "APQ-6209287S21A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-1-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-grey/garment-1-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-grey/garment-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-1.jpg",
+        "alt": "Grey Insomniac pocket long-sleeve T-shirt, front view with small left-chest print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-2-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-grey/garment-2-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-grey/garment-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-2.jpg",
+        "alt": "Grey Insomniac pocket long-sleeve T-shirt, back view with full back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-3-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-grey/garment-3-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-grey/garment-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-3.jpg",
+        "alt": "Close view of the Insomniac print on the Grey pocket long-sleeve T-shirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-4-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-4-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-grey/garment-4-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-grey/garment-4-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-grey/garment-4.jpg",
+        "alt": "Grey Insomniac pocket long-sleeve T-shirt folded naturally.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-1-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-1-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-grey/campaign-1-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-grey/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-1.jpg",
+        "alt": "First editorial photograph for the Grey Insomniac pocket long-sleeve T-shirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-2-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-2-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-grey/campaign-2-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-grey/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-2.jpg",
+        "alt": "Second editorial photograph for the Grey Insomniac pocket long-sleeve T-shirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-3-1122.webp",
+        "srcset": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-3-400.webp 400w, /images/insomniac/insomniac-comfort-colors-4410-grey/campaign-3-800.webp 800w, /images/insomniac/insomniac-comfort-colors-4410-grey/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-3.jpg",
+        "alt": "Third editorial photograph for the Grey Insomniac pocket long-sleeve T-shirt.",
         "width": 1122,
         "height": 1402,
         "role": "lifestyle-alternate"

@@ -10,6 +10,8 @@ const approved = process.env.AHA_PRODUCTION_BUILD === "approved";
 const origin =
   process.env.PUBLIC_SITE_URL ||
   "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app";
+const products = JSON.parse(await readFile(new URL("../src/data/products.json", import.meta.url), "utf8"));
+const productSummary = products.map((product) => `${product.title}: $${product.price}, ${product.color}, ${product.variants[0].size}–${product.variants.at(-1).size}.`).join(" ");
 const scriptHashes = new Set();
 const files = [];
 async function walk(dir, prefix = "") {
@@ -47,11 +49,11 @@ await writeFile(
 );
 await writeFile(
   new URL("sitemap.xml", dist),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map((path) => `<url><loc>${origin}${path}</loc><lastmod>2026-10-14</lastmod></url>`).join("")}</urlset>\n`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map((path) => `<url><loc>${origin}${path}</loc><lastmod>2026-10-15</lastmod></url>`).join("")}</urlset>\n`,
 );
 await writeFile(
   new URL("llms.txt", dist),
-  `# After Hours Agenda\n\n> A clothing brand for the dreamers and the doers.\n\n${approved ? "Official clothing storefront. The Yikes! crewneck and cropped hoodie are available in Bone." : "This is a review preview, not a production replacement. The official website is https://afterhoursagenda.com."}\n\n## Current status\n\nYikes! Crewneck: $52, Bone, XS–3XL. Yikes! Cropped Hoodie: $55, Bone, XS–2XL. Free domestic shipping. Production usually takes about a week before shipping. Add selected sizes and quantities to one cart. Secure payment is processed by Square within the AHA checkout. Eligible payment methods appear at payment, including Afterpay installments subject to eligibility. Lifestyle campaign mockups are separate from the four garment images on each product page. Archive pieces are not for sale. Existing orders remain supported under the terms that applied when purchased.\n\n## Identity and contact\n\nAfter Hours Agenda is a clothing brand established in 2011. Its original Prologue dates to January 2012. Kindness, community and celebrating the life you are building are its stated values. Contact: info@afterhoursagenda.com. Official Instagram: https://www.instagram.com/afterhoursagenda. Reviewed October 15, 2026.\n\n## Pages\n${routes.map((path) => `- [${path === "/" ? "Home" : path.split("/").filter(Boolean).at(-1)}](${origin}${path})`).join("\n")}\n\n## Contact behavior\n\nThe form prepares a local email draft. It does not submit data, subscribe the visitor, query orders, take payment or send a message. Visitors decide whether to send through their email app. Never send card details or passwords.\n`,
+  `# After Hours Agenda\n\n> A clothing brand for the dreamers and the doers.\n\n${approved ? "Official clothing storefront. Current garments, colors, sizes and prices are listed below." : "This is a review preview, not a production replacement. The official website is https://afterhoursagenda.com."}\n\n## Current status\n\n${productSummary} Free domestic shipping. Production usually takes about a week before shipping. Add selected sizes and quantities to one cart. Secure payment is processed by Square within the AHA checkout. Eligible payment methods appear at payment, including Afterpay installments subject to eligibility. Lifestyle campaign mockups are separate from the four garment images on each product page. Archive pieces are not for sale. Existing orders remain supported under the terms that applied when purchased.\n\n## Identity and contact\n\nAfter Hours Agenda is a clothing brand established in 2011. Its original Prologue dates to January 2012. Kindness, community and celebrating the life you are building are its stated values. Contact: info@afterhoursagenda.com. Official Instagram: https://www.instagram.com/afterhoursagenda. Reviewed October 15, 2026.\n\n## Pages\n${routes.map((path) => `- [${path === "/" ? "Home" : path.split("/").filter(Boolean).at(-1)}](${origin}${path})`).join("\n")}\n\n## Contact behavior\n\nThe form prepares a local email draft. It does not submit data, subscribe the visitor, query orders, take payment or send a message. Visitors decide whether to send through their email app. Never send card details or passwords.\n`,
 );
 await writeFile(
   new URL("manifest.webmanifest", dist),

@@ -1,4 +1,27 @@
 import { test, expect } from "@playwright/test";
+import products from "../../src/data/products.json" with { type: "json" };
+
+test("cart: new collection colors and sizes coexist with Yikes through a checkout reload", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({analytics:false,marketing:false,at:Date.now()})));
+  const slugs = ["yikes-crewneck", "insomniac-ss4500-black", "insomniac-comfort-colors-4410-grey"];
+  const selected = slugs.map(slug => products.find(product => product.slug === slug)!);
+  for (const product of selected) {
+    await page.goto(`/shop/${product.slug}/`);
+    await page.getByRole("radio", {name:"M",exact:true}).check();
+    await page.getByRole("button", {name:"Add to bag"}).click();
+    await expect(page.locator("[data-cart-add-status]")).toContainText("added");
+  }
+  await page.goto("/checkout/");
+  await page.reload();
+  await expect(page.locator(".bag-line")).toHaveCount(3);
+  for (const [index, product] of selected.entries()) {
+    await expect(page.locator(".bag-line").nth(index)).toContainText(product.title);
+    await expect(page.locator(".bag-line").nth(index)).toContainText(product.color);
+  }
+  await expect(page.locator("[data-cart-subtotal]")).toHaveText("$168.00");
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("aha-cart-v2") || "[]"));
+  expect(saved).toEqual(selected.map(product => ({variationId:product.variants.find(variant => variant.size === "M")!.id, quantity:1})));
+});
 
 test("cart: PDP size and quantity add exact variants to a persistent shared bag", async ({ page }) => {
   await page.goto("/shop/yikes-crewneck/");

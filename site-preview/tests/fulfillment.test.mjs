@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import { sha256, verifySquareSignature } from "../server/fulfillment/crypto.mjs";
-import { AHA_PRIVATE_LABEL } from "../server/fulfillment/catalog.mjs";
+import { AHA_FULFILLMENT_CATALOG, AHA_PRIVATE_LABEL } from "../server/fulfillment/catalog.mjs";
 import { createFulfillmentService, FulfillmentHold, validatePaidSquareOrder } from "../server/fulfillment/service.mjs";
 import { createSquareGateway } from "../server/fulfillment/square.mjs";
 import squareWebhook from "../netlify/functions/square-webhook.mjs";
@@ -13,6 +14,13 @@ import fulfillmentHealth from "../netlify/functions/fulfillment-health.mjs";
 const LOCATION = "test-aha-location";
 const CREW_M = "R5UCZCGSJMR3Z4HJDVOD3ZIK";
 const HOODIE_L = "4HDYVGQA3ZOGIPYFUCTPKPIV";
+const storefrontProducts = JSON.parse(await readFile(new URL("../src/data/products.json", import.meta.url), "utf8"));
+const LEGACY_PRODUCT_TITLES = Object.freeze({ crewneck: "Yikes Crewneck", cropped_hoodie: "Yikes Cropped Hoodie" });
+
+function catalogTitle(variationId) {
+  const item = AHA_FULFILLMENT_CATALOG[variationId];
+  return item.title ?? LEGACY_PRODUCT_TITLES[item.product];
+}
 
 function paidOrder(overrides = {}) {
   const order = {
@@ -122,6 +130,37 @@ for (const scenario of [
   assert.deepEqual(validated.shippingAddress, {
     firstName: "Ada", lastName: "Lovelace", address1: "1 Main St", city: "Peoria", zip: "85381", province: "AZ", provinceCode: "AZ", country: "United States", countryCode: "US",
   });
+});
+
+test("an expanded mixed cart preserves each Insomniac title, color and decorated SKU while Yikes keeps its legacy title", () => {
+  const insomniac = storefrontProducts.filter((product) => product.collection === "Insomniac");
+  if (insomniac.length === 0) {
+    assert.equal(storefrontProducts.length, 2);
+    return;
+  }
+  assert.equal(insomniac.length, 8);
+  const selected = [storefrontProducts.find((product) => product.slug === "yikes-crewneck"), ...insomniac]
+    .map((product) => ({ product, variant: product.variants[0] }));
+  const lineItems = selected.map(({ product, variant }, index) => ({
+    uid: `mixed-${index}`, catalog_object_id: variant.id, quantity: "1", base_price_money: { amount: Math.round(product.price * 100), currency: "USD" },
+  }));
+  const total = lineItems.reduce((sum, line) => sum + line.base_price_money.amount, 0);
+  const { payment, order } = paidOrder({
+    payment: { amount_money: { amount: total, currency: "USD" } },
+    order: { total_money: { amount: total, currency: "USD" }, line_items: lineItems },
+  });
+  const validated = validatePaidSquareOrder({ payment, order, locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z" });
+  assert.deepEqual(validated.apliiqPayload.line_items.map(({ title, sku }) => ({ title, sku })), selected.map(({ product, variant }) => ({
+    // Yikes retains its established fulfillment title while newer records
+    // carry their display title directly in the mapped catalog.
+    title: `${catalogTitle(variant.id)} — ${variant.size}`,
+    sku: variant.sku,
+  })));
+  assert.equal(validated.items[0].title, "Yikes Crewneck");
+  for (const item of validated.items.slice(1)) assert.equal(item.title, AHA_FULFILLMENT_CATALOG[item.variationId].title);
+  const forged = structuredClone(order);
+  forged.line_items[1].catalog_object_id = `${forged.line_items[1].catalog_object_id}-forged`;
+  assert.throws(() => validatePaidSquareOrder({ payment, order: forged, locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z" }), (error) => error instanceof FulfillmentHold && error.code === "unknown_variation");
 });
 
 test("international recipient regions stay intact while only US needs a two-letter province code", () => {

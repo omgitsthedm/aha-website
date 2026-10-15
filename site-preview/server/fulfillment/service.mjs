@@ -58,6 +58,11 @@ function shippingAddress(details) {
   };
 }
 
+function fulfillmentTitle(item) {
+  const legacy = { crewneck: "Yikes Crewneck", cropped_hoodie: "Yikes Cropped Hoodie" };
+  return requiredString(item.title || legacy[item.product], "catalog_title_missing");
+}
+
 function validateKnownLines(order) {
   if (!Array.isArray(order.line_items) || order.line_items.length === 0) throw new FulfillmentHold("order_lines_missing");
   return order.line_items.map((line, index) => {
@@ -72,6 +77,7 @@ function validateKnownLines(order) {
       sku: mapped.sku,
       size: mapped.size,
       product: mapped.product,
+      title: fulfillmentTitle(mapped),
       quantity,
       priceCents: mapped.priceCents,
       position: index,
@@ -123,7 +129,7 @@ export function validatePaidSquareOrder({ payment, order, locationId, startAt })
       order_number: order.reference_id || order.id,
       line_items: items.map((item) => ({
         id: `${order.id}:${item.squareLineUid}`,
-        title: `Yikes ${item.product === "crewneck" ? "Crewneck" : "Cropped Hoodie"} — ${item.size}`,
+        title: `${fulfillmentTitle(item)} — ${item.size}`,
         quantity: item.quantity,
         price: (item.priceCents / 100).toFixed(2),
         sku: item.sku,
@@ -213,7 +219,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     // Queue the confirmation before a provider submission. If the durable
     // enqueue fails, the signed Square event remains retryable and no customer
     // email is lost or sent twice.
-    await notifications.enqueueConfirmation({ recipient: validated.customerEmail, orderId: validated.squareOrderId, orderNumber: validated.orderNumber, totalAmount: validated.totalAmount, currency: validated.currency, items: validated.items.map((item) => ({ title: `Yikes ${item.product === "crewneck" ? "Crewneck" : "Cropped Hoodie"}`, size: item.size, quantity: item.quantity })) });
+    await notifications.enqueueConfirmation({ recipient: validated.customerEmail, orderId: validated.squareOrderId, orderNumber: validated.orderNumber, totalAmount: validated.totalAmount, currency: validated.currency, items: validated.items.map((item) => ({ title: fulfillmentTitle(item), size: item.size, quantity: item.quantity })) });
     if (deadline && deadlineRemaining(deadline) < 2_000) return { outcome: "deferred", retryable: true };
     const claimed = await repository.claimForSubmission(validated.squareOrderId);
     if (!claimed) return { outcome: "already_claimed" };

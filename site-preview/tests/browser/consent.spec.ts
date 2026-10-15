@@ -42,6 +42,53 @@ test('saved Essential only remains off and the footer exposes privacy controls',
   expect(requested).toEqual([]);
 });
 
+test('an in-page Essential-only choice prevents deferred vendor SDK insertion when storage is blocked', async ({page}) => {
+  test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await page.addInitScript(() => {
+    const callbacks: Array<() => void> = [];
+    Object.defineProperty(window, '__ahaIdleCallbacks', {configurable:true,value:callbacks});
+    Object.defineProperty(window, 'requestIdleCallback', {configurable:true,value:(callback:()=>void) => { callbacks.push(callback); return callbacks.length; }});
+    Object.defineProperty(Storage.prototype, 'setItem', {configurable:true,value:() => { throw new DOMException('Storage blocked'); }});
+  });
+  const requested = await capture(page);
+  await page.goto('/shop/yikes-crewneck/', {waitUntil:'domcontentloaded'});
+  await expect.poll(() => page.evaluate(() => (window as unknown as {__ahaIdleCallbacks?: unknown[]}).__ahaIdleCallbacks?.length || 0)).toBe(2);
+  await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
+  await page.getByRole('button',{name:'Essential only',exact:true}).click();
+  await page.evaluate(() => (window as unknown as {__ahaIdleCallbacks:Array<() => void>}).__ahaIdleCallbacks.splice(0).forEach(callback => callback()));
+  await page.waitForTimeout(100);
+  expect(requested).toEqual([]);
+});
+
+test('a storage-blocked opt-out and re-enable keeps a loaded Meta bridge instead of replacing it', async ({page}) => {
+  test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await page.addInitScript(() => Object.defineProperty(Storage.prototype, 'setItem', {configurable:true,value:() => { throw new DOMException('Storage blocked'); }}));
+  const requested = await capture(page);
+  await page.goto('/shop/yikes-crewneck/');
+  await expect.poll(()=>requested.length).toBe(2);
+  await page.evaluate(() => {
+    const calls: unknown[][] = [];
+    const bridge = ((...args: unknown[]) => calls.push(args)) as NonNullable<typeof window.fbq>;
+    bridge.callMethod = bridge;
+    window.fbq = bridge;
+    window._fbq = bridge;
+    Object.assign(window, {__ahaMetaBridge:bridge,__ahaMetaCalls:calls});
+  });
+  await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
+  await page.getByRole('button',{name:'Essential only',exact:true}).click();
+  await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
+  await page.getByRole('button',{name:'Allow all',exact:true}).click();
+  const state = await page.evaluate(() => ({
+    sameBridge: window.fbq === (window as unknown as {__ahaMetaBridge:unknown}).__ahaMetaBridge,
+    calls: (window as unknown as {__ahaMetaCalls:unknown[][]}).__ahaMetaCalls,
+  }));
+  expect(state.sameBridge).toBe(true);
+  expect(state.calls).toContainEqual(['consent','revoke']);
+  expect(state.calls).toContainEqual(['consent','grant']);
+  expect(state.calls.some(call=>call[0]==='track'&&call[1]==='PageView')).toBe(true);
+  expect(requested).toHaveLength(2);
+});
+
 test('an Essential-only choice stays in effect when browser storage is blocked', async ({page}) => {
   test.skip(!production, 'Production-only integrations stay disabled in preview.');
   await page.addInitScript(() => Object.defineProperty(Storage.prototype, 'setItem', { configurable: true, value: () => { throw new DOMException('Storage blocked'); } }));

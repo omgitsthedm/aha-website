@@ -1,7 +1,7 @@
 /**
  * The only variants the automatic fulfiller may submit.  This is deliberately
- * a source-controlled allow list, generated from the two current Product.json
- * records on 2026-10-15.  Never accept a client SKU, title, or price as a
+ * a source-controlled allow list matched to the active products.json
+ * records.  Never accept a client SKU, title, or price as a
  * substitute for a Square variation id.
  */
 export const AHA_FULFILLMENT_CATALOG = Object.freeze({
@@ -18,6 +18,61 @@ export const AHA_FULFILLMENT_CATALOG = Object.freeze({
   "4HDYVGQA3ZOGIPYFUCTPKPIV": { sku: "APQ-6208412S8A1", size: "L", priceCents: 5500, product: "cropped_hoodie" },
   YG2VANIT6R4SUQ3MWPZK74YI: { sku: "APQ-6208412S1A1", size: "XL", priceCents: 5500, product: "cropped_hoodie" },
   KEQN72Y22B5RL3V5NFVACNWQ: { sku: "APQ-6208412S2A1", size: "2XL", priceCents: 5500, product: "cropped_hoodie" },
+
+  "3UZ7AE7JBX5CLSENQ76TA4HF": { sku: "APQ-6209275S5A1", size: "XS", priceCents: 5800, product: "insomniac_ss4500_black", title: "Insomniac Hoodie — Black" },
+  "OSVQW2METLNMSSBKBCTAF2C5": { sku: "APQ-6209275S6A1", size: "S", priceCents: 5800, product: "insomniac_ss4500_black", title: "Insomniac Hoodie — Black" },
+  "63JL3UPAHMEZMGAORZWRA3S7": { sku: "APQ-6209275S7A1", size: "M", priceCents: 5800, product: "insomniac_ss4500_black", title: "Insomniac Hoodie — Black" },
+  "PQVJD6CAHZPS36XVDMZHIB7B": { sku: "APQ-6209275S8A1", size: "L", priceCents: 5800, product: "insomniac_ss4500_black", title: "Insomniac Hoodie — Black" },
+  "464AETWT7Q2JEAPKDDJ6KLJQ": { sku: "APQ-6209275S1A1", size: "XL", priceCents: 5800, product: "insomniac_ss4500_black", title: "Insomniac Hoodie — Black" },
+  "QMFGSEG6LRJFZL2YQ4HUQSBY": { sku: "APQ-6209275S2A1", size: "2XL", priceCents: 5800, product: "insomniac_ss4500_black", title: "Insomniac Hoodie — Black" },
+  "MS36EEK7NUWA3YFYE3SJQ5VC": { sku: "APQ-6209275S21A1", size: "3XL", priceCents: 5800, product: "insomniac_ss4500_black", title: "Insomniac Hoodie — Black" },
+  "47O252IOJAJMIMVANEH3ZFL2": { sku: "APQ-6209275S61A1", size: "4XL", priceCents: 5800, product: "insomniac_ss4500_black", title: "Insomniac Hoodie — Black" },
+  "3QPA5UF74IW2H3VUU2GHFBHA": { sku: "APQ-6209275S62A1", size: "5XL", priceCents: 5800, product: "insomniac_ss4500_black", title: "Insomniac Hoodie — Black" },
+  "EFSYJQKU3D5BDVCD2UQBMAKH": { sku: "APQ-6209282S5A1", size: "XS", priceCents: 5800, product: "insomniac_ss4500_grey_heather", title: "Insomniac Hoodie — Grey Heather" },
+  "XDWCN2KCLICAB52HHOYO4WPY": { sku: "APQ-6209282S6A1", size: "S", priceCents: 5800, product: "insomniac_ss4500_grey_heather", title: "Insomniac Hoodie — Grey Heather" },
+  "AAESWA5KUQWFWFHPAFL6IAKD": { sku: "APQ-6209282S7A1", size: "M", priceCents: 5800, product: "insomniac_ss4500_grey_heather", title: "Insomniac Hoodie — Grey Heather" },
+  "VPKXPD35TLE75XQCTAK2CH6E": { sku: "APQ-6209282S8A1", size: "L", priceCents: 5800, product: "insomniac_ss4500_grey_heather", title: "Insomniac Hoodie — Grey Heather" },
+  "U55J5BYSTTHB5NZ7BPHEP6TW": { sku: "APQ-6209282S1A1", size: "XL", priceCents: 5800, product: "insomniac_ss4500_grey_heather", title: "Insomniac Hoodie — Grey Heather" },
+  "DJWMD6ZJDBMKHAY3R7UUGKFY": { sku: "APQ-6209282S2A1", size: "2XL", priceCents: 5800, product: "insomniac_ss4500_grey_heather", title: "Insomniac Hoodie — Grey Heather" },
+  "YWPQUNVZSMPO6QRQVTTPAZBX": { sku: "APQ-6209282S21A1", size: "3XL", priceCents: 5800, product: "insomniac_ss4500_grey_heather", title: "Insomniac Hoodie — Grey Heather" },
+  "IRUNHSK7RTGL2IXOD4TKIEMM": { sku: "APQ-6209282S61A1", size: "4XL", priceCents: 5800, product: "insomniac_ss4500_grey_heather", title: "Insomniac Hoodie — Grey Heather" },
+  "5BPWX7UNFVVCY4F46MOOMJWS": { sku: "APQ-6209282S62A1", size: "5XL", priceCents: 5800, product: "insomniac_ss4500_grey_heather", title: "Insomniac Hoodie — Grey Heather" },
+  "HEFIMVZTQGW4B3JLFISE2N7S": { sku: "APQ-6209283S5A1", size: "XS", priceCents: 5500, product: "insomniac_ss3000_black", title: "Insomniac Crewneck — Black" },
+  "Q73GEB2FMOJV5HVPHH2RWSFX": { sku: "APQ-6209283S6A1", size: "S", priceCents: 5500, product: "insomniac_ss3000_black", title: "Insomniac Crewneck — Black" },
+  "ED4MIAP64FTDXI2ITGUJQPUH": { sku: "APQ-6209283S7A1", size: "M", priceCents: 5500, product: "insomniac_ss3000_black", title: "Insomniac Crewneck — Black" },
+  "TQ2C7DMQTONA7M4RTKIBYBG7": { sku: "APQ-6209283S8A1", size: "L", priceCents: 5500, product: "insomniac_ss3000_black", title: "Insomniac Crewneck — Black" },
+  "25BYQHBBNGOPTAUXASZQCLZR": { sku: "APQ-6209283S1A1", size: "XL", priceCents: 5500, product: "insomniac_ss3000_black", title: "Insomniac Crewneck — Black" },
+  "3SSGIQLK2GETSKMPNNQHAG53": { sku: "APQ-6209283S2A1", size: "2XL", priceCents: 5500, product: "insomniac_ss3000_black", title: "Insomniac Crewneck — Black" },
+  "TCNHOO3XHN3L7LX7MIMOD3TU": { sku: "APQ-6209283S21A1", size: "3XL", priceCents: 5500, product: "insomniac_ss3000_black", title: "Insomniac Crewneck — Black" },
+  "II7ORA4JDGEA2ZH6QFGSCC6O": { sku: "APQ-6209296S5A1", size: "XS", priceCents: 5500, product: "insomniac_ss3000_heather_grey", title: "Insomniac Crewneck — Heather Grey" },
+  "OH7YSS6ZWCMS5NTTGL2SAKVE": { sku: "APQ-6209296S6A1", size: "S", priceCents: 5500, product: "insomniac_ss3000_heather_grey", title: "Insomniac Crewneck — Heather Grey" },
+  "KCH7CB7DF6G4SQJ3FE6EB7RX": { sku: "APQ-6209296S7A1", size: "M", priceCents: 5500, product: "insomniac_ss3000_heather_grey", title: "Insomniac Crewneck — Heather Grey" },
+  "AND2KAYNNIRJOVZOOZLQHMGB": { sku: "APQ-6209296S8A1", size: "L", priceCents: 5500, product: "insomniac_ss3000_heather_grey", title: "Insomniac Crewneck — Heather Grey" },
+  "DT26VPID4G4PW7VBTEJPOEZV": { sku: "APQ-6209296S1A1", size: "XL", priceCents: 5500, product: "insomniac_ss3000_heather_grey", title: "Insomniac Crewneck — Heather Grey" },
+  "BEZQO2HEYXQIG7J43CYB5S36": { sku: "APQ-6209296S2A1", size: "2XL", priceCents: 5500, product: "insomniac_ss3000_heather_grey", title: "Insomniac Crewneck — Heather Grey" },
+  "OMJPV7Z5ZBH7T3UP4NDV5KOO": { sku: "APQ-6209296S21A1", size: "3XL", priceCents: 5500, product: "insomniac_ss3000_heather_grey", title: "Insomniac Crewneck — Heather Grey" },
+  "STFINJPACB7S36TGYXGHUJXB": { sku: "APQ-6209284S6A1", size: "S", priceCents: 4200, product: "insomniac_next_level_3601_black", title: "Insomniac Long Sleeve — Black" },
+  "RL2WOZXAPCCMHW6MKBEIDT4K": { sku: "APQ-6209284S7A1", size: "M", priceCents: 4200, product: "insomniac_next_level_3601_black", title: "Insomniac Long Sleeve — Black" },
+  "QY6IKYQAWIBR7TAFHRUY2C45": { sku: "APQ-6209284S8A1", size: "L", priceCents: 4200, product: "insomniac_next_level_3601_black", title: "Insomniac Long Sleeve — Black" },
+  "NYBAUB2RPDU4GR4N5FLHGM5I": { sku: "APQ-6209284S1A1", size: "XL", priceCents: 4200, product: "insomniac_next_level_3601_black", title: "Insomniac Long Sleeve — Black" },
+  "TSY6WNEE3FFJJ2XCVM5W5P74": { sku: "APQ-6209284S2A1", size: "2XL", priceCents: 4200, product: "insomniac_next_level_3601_black", title: "Insomniac Long Sleeve — Black" },
+  "VSV2NLZUZP6KBXXIVEOJPBZ7": { sku: "APQ-6209285S6A1", size: "S", priceCents: 4200, product: "insomniac_next_level_3601_heather_grey", title: "Insomniac Long Sleeve — Heather Grey" },
+  "N5DGHXTXDRW3DBSYHVBBVTZY": { sku: "APQ-6209285S7A1", size: "M", priceCents: 4200, product: "insomniac_next_level_3601_heather_grey", title: "Insomniac Long Sleeve — Heather Grey" },
+  "A43URISMWMHBVRUZ5FAC53VY": { sku: "APQ-6209285S8A1", size: "L", priceCents: 4200, product: "insomniac_next_level_3601_heather_grey", title: "Insomniac Long Sleeve — Heather Grey" },
+  "GAQNIX3UIH2J5H36NJO7UTNL": { sku: "APQ-6209285S1A1", size: "XL", priceCents: 4200, product: "insomniac_next_level_3601_heather_grey", title: "Insomniac Long Sleeve — Heather Grey" },
+  "VCYF7NJRQMNYK4HIISS3JNFB": { sku: "APQ-6209285S2A1", size: "2XL", priceCents: 4200, product: "insomniac_next_level_3601_heather_grey", title: "Insomniac Long Sleeve — Heather Grey" },
+  "KG5KN6YV6A2MMPIJL266CUZV": { sku: "APQ-6209286S6A1", size: "S", priceCents: 5800, product: "insomniac_comfort_colors_4410_black", title: "Insomniac Pocket Long Sleeve — Black" },
+  "2VI6WNFXWHFKEWCPH7ZNBVME": { sku: "APQ-6209286S7A1", size: "M", priceCents: 5800, product: "insomniac_comfort_colors_4410_black", title: "Insomniac Pocket Long Sleeve — Black" },
+  "UMJNMVHTG3H4IZOYCA4MIDPX": { sku: "APQ-6209286S8A1", size: "L", priceCents: 5800, product: "insomniac_comfort_colors_4410_black", title: "Insomniac Pocket Long Sleeve — Black" },
+  "SD6AEXVEQBTRY6UE2Z65BJIC": { sku: "APQ-6209286S1A1", size: "XL", priceCents: 5800, product: "insomniac_comfort_colors_4410_black", title: "Insomniac Pocket Long Sleeve — Black" },
+  "CEECQLJHOSPAEHCKMXMMUWMH": { sku: "APQ-6209286S2A1", size: "2XL", priceCents: 5800, product: "insomniac_comfort_colors_4410_black", title: "Insomniac Pocket Long Sleeve — Black" },
+  "5GXNJTD5N4RYCQ7FC6HA3OEA": { sku: "APQ-6209286S21A1", size: "3XL", priceCents: 5800, product: "insomniac_comfort_colors_4410_black", title: "Insomniac Pocket Long Sleeve — Black" },
+  "NZZNSZRRN5OMK2Q3EBGDP2S2": { sku: "APQ-6209287S6A1", size: "S", priceCents: 5800, product: "insomniac_comfort_colors_4410_grey", title: "Insomniac Pocket Long Sleeve — Grey" },
+  "WPJJA4UEFGEZZ7ZYVYEAUA6E": { sku: "APQ-6209287S7A1", size: "M", priceCents: 5800, product: "insomniac_comfort_colors_4410_grey", title: "Insomniac Pocket Long Sleeve — Grey" },
+  "BO7D5FQGZQRE5MDTFS3QPTY4": { sku: "APQ-6209287S8A1", size: "L", priceCents: 5800, product: "insomniac_comfort_colors_4410_grey", title: "Insomniac Pocket Long Sleeve — Grey" },
+  "FL3U7QS67543UNZXLKO3DV4D": { sku: "APQ-6209287S1A1", size: "XL", priceCents: 5800, product: "insomniac_comfort_colors_4410_grey", title: "Insomniac Pocket Long Sleeve — Grey" },
+  "G7AX3A36HEDAG3QOJVIMBC2L": { sku: "APQ-6209287S2A1", size: "2XL", priceCents: 5800, product: "insomniac_comfort_colors_4410_grey", title: "Insomniac Pocket Long Sleeve — Grey" },
+  "E7ZQH2PFMRURHXLIJEFCYTO7": { sku: "APQ-6209287S21A1", size: "3XL", priceCents: 5800, product: "insomniac_comfort_colors_4410_grey", title: "Insomniac Pocket Long Sleeve — Grey" },
 });
 
 export const AHA_PRIVATE_LABEL = "SB-3-161622";
