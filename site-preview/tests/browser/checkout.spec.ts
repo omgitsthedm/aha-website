@@ -12,6 +12,7 @@ const quote = {
   totalAmount: 5621,
   taxLabel: "Arizona TPT",
   shippingLabel: "Free domestic shipping",
+  shippingRegion: "AZ",
 };
 
 async function fillAddress(page: import("@playwright/test").Page) {
@@ -25,11 +26,15 @@ async function fillAddress(page: import("@playwright/test").Page) {
 }
 async function mockSquare(page: import("@playwright/test").Page, cashApp = false) {
   await page.addInitScript((cash) => {
-    const state = window as Window & { __ahaPaymentRequest?: unknown; __ahaCashReferences?: string[] };
+    const state = window as Window & { __ahaPaymentRequest?: unknown; __ahaAfterpayRequest?: unknown; __ahaAfterpayAddressListener?: (contact: unknown) => unknown; __ahaCashReferences?: string[] };
     state.__ahaCashReferences = [];
     window.Square = { payments: () => ({
       card: async () => ({ attach: async () => {}, tokenize: async () => ({ status: "OK", token: "opaque-square-token" }) }),
-      paymentRequest: (request: unknown) => { state.__ahaPaymentRequest = request; return {}; },
+      paymentRequest: (request: unknown) => {
+        if (!state.__ahaPaymentRequest) state.__ahaPaymentRequest = request;
+        return { options: request, addEventListener: (name: string, listener: (contact: unknown) => unknown) => { if (name === "afterpay_shippingaddresschanged") state.__ahaAfterpayAddressListener = listener; } };
+      },
+      afterpayClearpay: async (request: unknown) => { state.__ahaAfterpayRequest = request; return { attach: async () => {}, tokenize: async () => ({ status: "OK", token: "opaque-afterpay-token" }) }; },
       cashAppPay: cash ? async (_request: unknown, options: unknown) => { const referenceId = (options as { referenceId?: unknown }).referenceId; if (typeof referenceId === "string") state.__ahaCashReferences?.push(referenceId); return { attach: async () => {}, tokenize: async () => ({ status: "OK", token: "opaque-cash-token" }), addEventListener: () => {} }; } : undefined,
     }) };
   }, cashApp);
@@ -106,6 +111,46 @@ test("checkout: an ambiguous service response is reconciled before checkout unlo
   await expect(page.locator("[data-checkout-message]")).toContainText("Payment confirmed · order AHA-1003");
   expect(pays).toBe(1);
   expect(statuses).toBeGreaterThanOrEqual(1);
+});
+
+test("checkout: an unprovable payment outcome stays locked and only rechecks on request", async ({ page }) => {
+  let statuses = 0;
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } }) }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }));
+  await page.route("**/api/checkout/pay", (route) => route.fulfill({ status: 202, contentType: "application/json", body: JSON.stringify({ state: "pending", checkoutId: quote.checkoutId }) }));
+  await page.route("**/api/checkout/status**", (route) => { statuses += 1; return route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "attention", error: "payment_outcome_unknown", orderId: "AHA-hold-1004" }) }); });
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Pay securely" }).click();
+  await expect(page.locator("[data-checkout-message]")).toContainText("Order reference: AHA-hold-1004");
+  await expect(page.getByRole("button", { name: "Check payment status" })).toBeVisible();
+  expect(await page.evaluate(() => ({ form: document.querySelector<HTMLFormElement>("[data-checkout-form]")?.inert, cart: document.querySelector<HTMLElement>("[data-cart-lines]")?.inert, pending: Boolean(localStorage.getItem("aha-pending-payment-v1")) }))).toEqual({ form: true, cart: true, pending: true });
+  await page.getByRole("button", { name: "Check payment status" }).click();
+  await expect.poll(() => statuses).toBe(2);
+  await expect(page.locator("[data-checkout-message]")).toContainText("Please do not try again yet");
+});
+
+test("checkout: Afterpay keeps its delivery contact bound to the server quote", async ({ page }) => {
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true, applePay: false, googlePay: false, afterpay: true, cashAppPay: false } }) }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ ...quote, shippingRegion: "NY" }) }));
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await fillAddress(page);
+  await page.getByLabel("State / province").fill("New York");
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
+  expect(await page.evaluate(() => {
+    const state = window as Window & { __ahaAfterpayRequest?: { options?: { requestShippingContact?: boolean; shippingContact?: unknown; total?: unknown } }; __ahaAfterpayAddressListener?: (contact: unknown) => unknown };
+    const matching = state.__ahaAfterpayAddressListener?.({ addressLines: ["1  n  central ave"], city: " phoenix ", state: "ny", postalCode: "85004-1234", countryCode: "us" });
+    const mismatch = state.__ahaAfterpayAddressListener?.({ addressLines: ["2 Elsewhere Ave"], city: "Phoenix", state: "NY", postalCode: "85004", countryCode: "US" });
+    return { request: state.__ahaAfterpayRequest?.options, matching, mismatch };
+  })).toMatchObject({
+    request: { requestShippingContact: true, shippingContact: { addressLines: ["1 N Central Ave"], state: "NY", postalCode: "85004" }, total: { amount: "56.21" } },
+    matching: { shippingOptions: [{ id: "quoted-shipping", amount: "0.00", taxLineItems: [{ amount: "4.21" }], total: { amount: "56.21" } }] },
+    mismatch: { error: "Use the delivery address above, then confirm a fresh total if it needs to change." },
+  });
 });
 
 

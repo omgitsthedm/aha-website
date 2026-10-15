@@ -12,15 +12,18 @@ function fakeRepo() {
   const rows = new Map();
   return {
     rows,
-    async create(record) { const row = { checkout_id: record.checkoutId, token_sha256: record.tokenHash, state: "quoted", currency: record.currency, cart_json: record.cart, shipping_address_json: record.address, order_payload_json: record.orderPayload, subtotal_cents: record.subtotalCents, shipping_cents: record.shippingCents, tax_cents: record.taxCents, total_cents: record.totalCents, tax_label: record.taxLabel, order_idempotency_key: record.orderIdempotencyKey, expires_at: record.expiresAt, square_order_id: null, square_payment_id: null, payment_idempotency_key: null, processing_lease_expires_at: null, last_error_code: null }; rows.set(record.checkoutId, row); return row; },
+    async create(record) { const row = { checkout_id: record.checkoutId, token_sha256: record.tokenHash, state: "quoted", currency: record.currency, cart_json: record.cart, shipping_address_json: record.address, order_payload_json: record.orderPayload, subtotal_cents: record.subtotalCents, shipping_cents: record.shippingCents, tax_cents: record.taxCents, total_cents: record.totalCents, tax_label: record.taxLabel, order_idempotency_key: record.orderIdempotencyKey, expires_at: record.expiresAt, square_order_id: null, square_payment_id: null, payment_idempotency_key: null, payment_submission_started_at: null, processing_lease_expires_at: null, last_error_code: null }; rows.set(record.checkoutId, row); return row; },
     async get(id) { return rows.get(id) ?? null; },
     async cancelUnclaimedRecovery({ checkoutId, tokenHash }) { const row = rows.get(checkoutId); if (!row || row.token_sha256 !== tokenHash || row.state !== "quoted") return null; Object.assign(row, { state: "failed", last_error_code: "payment_not_started", processing_lease_expires_at: null }); return row; },
+    async closeExpiredUnpaid({ checkoutId, tokenHash }) { const row = rows.get(checkoutId); if (!row || row.token_sha256 !== tokenHash || !["processing", "unknown"].includes(row.state) || row.payment_submission_started_at || (row.processing_lease_expires_at && Date.parse(row.processing_lease_expires_at) > fixedNow())) return null; Object.assign(row, { state: "failed", last_error_code: "payment_not_started", processing_lease_expires_at: null }); return row; },
     async claim({ checkoutId, tokenHash, clientIdempotencyKey }) { const row = rows.get(checkoutId); if (!row || row.token_sha256 !== tokenHash || row.state !== "quoted") return null; row.state = "processing"; row.payment_idempotency_key = clientIdempotencyKey; row.processing_lease_expires_at = new Date(fixedNow() + 90_000).toISOString(); return row; },
     async releaseClaim({ checkoutId, code }) { const row = rows.get(checkoutId); row.state = "quoted"; row.last_error_code = code; return row; },
-    async saveOrder({ checkoutId, orderId }) { const row = rows.get(checkoutId); row.square_order_id = orderId; return row; },
+    async saveOrder({ checkoutId, orderId }) { const row = rows.get(checkoutId); if (!row || row.state !== "processing" || row.square_order_id || Date.parse(row.processing_lease_expires_at ?? "") <= fixedNow()) return null; row.square_order_id = orderId; return row; },
+    async markPaymentSubmissionStarted({ checkoutId, orderId }) { const row = rows.get(checkoutId); if (!row || row.state !== "processing" || row.square_order_id !== orderId || row.payment_submission_started_at || Date.parse(row.processing_lease_expires_at ?? "") <= fixedNow()) return null; row.payment_submission_started_at = new Date(fixedNow()).toISOString(); return row; },
     async complete({ checkoutId, orderId, paymentId, receiptUrl = null }) { const row = rows.get(checkoutId); Object.assign(row, { state: "completed", square_order_id: orderId, square_payment_id: paymentId, square_receipt_url: receiptUrl, last_error_code: null }); return row; },
     async fail({ checkoutId, code }) { const row = rows.get(checkoutId); Object.assign(row, { state: "failed", last_error_code: code }); return row; },
-    async unknown({ checkoutId, code, orderId = null }) { const row = rows.get(checkoutId); Object.assign(row, { state: "unknown", square_order_id: orderId ?? row.square_order_id, last_error_code: code }); return row; },
+    async unknown({ checkoutId, code, orderId = null }) { const row = rows.get(checkoutId); Object.assign(row, { state: "unknown", square_order_id: orderId ?? row.square_order_id, processing_lease_expires_at: null, last_error_code: code }); return row; },
+    async attention({ checkoutId, code }) { const row = rows.get(checkoutId); if (!row || !row.payment_submission_started_at || !["processing", "unknown"].includes(row.state)) return null; Object.assign(row, { state: "unknown", last_error_code: code, processing_lease_expires_at: null }); return row; },
   };
 }
 function calculated(order) {
@@ -88,7 +91,39 @@ test("does not retry an ambiguous processor outcome", async () => {
   const first = await ctx.service.pay({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: "cnon:card-nonce-ok", idempotencyKey: "client-idempotency-key-0002" });
   assert.equal(first.state, "pending");
   const status = await ctx.service.status({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken });
-  assert.equal(status.state, "unknown");
+  assert.equal(status.state, "pending");
+});
+
+test("expired pre-payment lease terminally closes before a stale handler can submit", async () => {
+  const ctx = service();
+  const quote = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }) });
+  const row = ctx.repository.rows.get(quote.checkoutId);
+  Object.assign(row, { state: "processing", processing_lease_expires_at: new Date(fixedNow() - 1).toISOString() });
+  const outcome = await ctx.service.status({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken });
+  assert.equal(outcome.state, "failed"); assert.equal(outcome.error, "payment_not_started");
+  const late = await ctx.service.pay({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: "cnon:card-nonce-ok", idempotencyKey: "client-idempotency-key-0005" }).catch((error) => error);
+  assert.ok(late instanceof CheckoutError); assert.equal(ctx.square.calls.createPayment.length, 0);
+});
+
+test("a pre-payment persistence failure closes safely instead of polling forever", async () => {
+  const ctx = service();
+  const quote = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }) });
+  ctx.repository.markPaymentSubmissionStarted = async () => { throw new Error("database interrupted"); };
+  const attempted = await ctx.service.pay({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: "cnon:card-nonce-ok", idempotencyKey: "client-idempotency-key-0006" });
+  assert.equal(attempted.state, "pending"); assert.equal(ctx.repository.rows.get(quote.checkoutId).payment_submission_started_at, null);
+  const outcome = await ctx.service.status({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken });
+  assert.equal(outcome.state, "failed"); assert.equal(outcome.error, "payment_not_started");
+  assert.equal(ctx.square.calls.createPayment.length, 0);
+});
+
+test("an expired marked submission becomes attention without replaying a source token", async () => {
+  const ctx = service();
+  const quote = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }) });
+  const row = ctx.repository.rows.get(quote.checkoutId);
+  Object.assign(row, { state: "unknown", square_order_id: "order-1", payment_submission_started_at: new Date(fixedNow() - 90_001).toISOString(), processing_lease_expires_at: null });
+  const outcome = await ctx.service.status({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken });
+  assert.equal(outcome.state, "attention"); assert.equal(outcome.error, "payment_outcome_unknown");
+  assert.equal(ctx.square.calls.createPayment.length, 0);
 });
 
 test("recovery closes an unclaimed quote before a late payment can reach Square", async () => {
@@ -109,7 +144,7 @@ test("status recovers a completed payment without ever replaying the source toke
   const ctx = service();
   const quote = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }) });
   const row = ctx.repository.rows.get(quote.checkoutId);
-  Object.assign(row, { state: "unknown", square_order_id: "order-1", last_error_code: "payment_outcome_unknown" });
+  Object.assign(row, { state: "unknown", square_order_id: "order-1", payment_submission_started_at: new Date(fixedNow()).toISOString(), last_error_code: "payment_outcome_unknown" });
   ctx.square.getOrder = async () => ({ tenders: [{ payment_id: "payment-recovered" }] });
   ctx.square.getPayment = async (paymentId) => ({ id: paymentId, status: "COMPLETED", order_id: "order-1", location_id: config.locationId, amount_money: { amount: 5200, currency: "USD" }, receipt_url: "https://squareup.com/receipt/recovered" });
   const outcome = await ctx.service.status({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken });

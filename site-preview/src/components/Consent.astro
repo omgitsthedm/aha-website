@@ -2,7 +2,7 @@
 import {tracking} from '../data/tracking';
 const enabled=import.meta.env.AHA_PRODUCTION_BUILD==='approved';
 ---
-<aside class="cookie-banner" aria-label="Cookie choices" data-tracking-enabled={enabled} data-ga-id={tracking.ga4} data-meta-id={tracking.metaPixel} hidden>
+<aside class="cookie-banner" aria-label="Cookie choices" data-tracking-enabled={enabled} data-ga-id={tracking.ga4} data-meta-id={tracking.metaPixel}>
  <div class="cookie-heading">Your cookie choices</div>
  <p>With your permission, we use Google Analytics to understand visits and Meta tools to measure marketing. Essential functions work without them. <a href="/privacy/">Privacy details</a></p>
  <div class="cookie-actions"><button type="button" data-consent="essential">Essential only</button><button type="button" data-consent="analytics">Analytics only</button><button type="button" data-consent="all">Allow all</button></div>

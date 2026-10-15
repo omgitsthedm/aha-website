@@ -33,12 +33,14 @@ type Quote = {
   totalAmount: number;
   taxLabel?: string;
   shippingLabel: string;
+  shippingRegion?: string;
 };
 type TokenResult = { status?: string; token?: string };
 type SquareMethod = { attach?: (target: string, options?: unknown) => Promise<void>; destroy?: () => Promise<void>; tokenize: (details?: unknown) => Promise<TokenResult>; addEventListener?: (name: string, callback: (event: { detail?: { tokenResult?: TokenResult } }) => void) => void };
+type SquarePaymentRequest = { addEventListener?: (name: string, callback: (value: unknown) => unknown) => void };
 type SquarePayments = {
   card: () => Promise<SquareMethod>;
-  paymentRequest: (request: unknown) => unknown;
+  paymentRequest: (request: unknown) => SquarePaymentRequest;
   applePay?: (request: unknown) => Promise<SquareMethod>;
   googlePay?: (request: unknown) => Promise<SquareMethod>;
   afterpayClearpay?: (request: unknown) => Promise<SquareMethod>;
@@ -210,6 +212,7 @@ function initCheckout() {
   const checkout = page.querySelector<HTMLElement>("[data-checkout-panel]");
   const message = page.querySelector<HTMLElement>("[data-checkout-message]");
   const summary = page.querySelector<HTMLElement>("[data-checkout-summary]");
+  const checkPaymentStatus = page.querySelector<HTMLButtonElement>("[data-check-payment-status]");
   if (!form || !cartLines || !empty || !checkout || !message || !summary) return;
   let lines = readCart(catalogue);
   const recovered = recoverSelection(location.search, catalogue);
@@ -243,6 +246,7 @@ function initCheckout() {
     setCheckoutLocked(false);
     window.clearTimeout(pollTimer);
     summary.hidden = true;
+    if (checkPaymentStatus) { checkPaymentStatus.hidden = true; checkPaymentStatus.disabled = false; checkPaymentStatus.onclick = null; }
     disable(page, "[data-quote]", false);
     disable(page, "[data-pay-card]", true);
     const wallets = page.querySelector<HTMLElement>("[data-wallets]")!;
@@ -281,14 +285,55 @@ function initCheckout() {
   const showMessage = (value: string) => { message.textContent = value; message.hidden = false; };
   const paymentRequest = () => {
     if (!quote || !config || !payments) return null;
+    const address = shippingAddress(form);
+    const quotedRegion = quote.shippingRegion || address.region;
     return payments.paymentRequest({
       countryCode: config.countryCode,
       currencyCode: quote.currency,
       total: { amount: (quote.totalAmount / 100).toFixed(2), label: "After Hours Agenda" },
-      shippingContact: squareContact(shippingAddress(form)),
+      shippingContact: { ...squareContact(address), state: quotedRegion },
       requestShippingContact: false,
       requestBillingContact: false,
     });
+  };
+  const afterpayPaymentRequest = () => {
+    if (!quote || !config || !payments) return null;
+    const address = shippingAddress(form);
+    const quotedRegion = quote.shippingRegion || address.region;
+    const quoteAmount = (amount: number) => (amount / 100).toFixed(2);
+    const shippingOption = {
+      id: "quoted-shipping",
+      amount: quoteAmount(quote.shippingAmount),
+      label: quote.shippingLabel || "Shipping",
+      taxLineItems: [{ amount: quoteAmount(quote.taxAmount), label: quote.taxLabel || "Tax" }],
+      total: { amount: quoteAmount(quote.totalAmount), label: "After Hours Agenda" },
+    };
+    const request = payments.paymentRequest({
+      countryCode: config.countryCode,
+      currencyCode: quote.currency,
+      shippingContact: { ...squareContact(address), state: quotedRegion },
+      requestShippingContact: true,
+      requestBillingContact: false,
+      shippingOptions: [shippingOption],
+      total: shippingOption.total,
+    });
+    request.addEventListener?.("afterpay_shippingaddresschanged", (value) => {
+      const contact = value as Partial<ReturnType<typeof squareContact>>;
+      const normalize = (field: unknown) => String(field || "").trim().toUpperCase().replace(/\s+/g, " ");
+      const samePostalCode = (left: unknown, right: unknown) => {
+        const a = normalize(left).replace(/\s/g, "");
+        const b = normalize(right).replace(/\s/g, "");
+        return /^[0-9]{5}(?:-[0-9]{4})?$/.test(a) && /^[0-9]{5}(?:-[0-9]{4})?$/.test(b) ? a.slice(0, 5) === b.slice(0, 5) : a === b;
+      };
+      const fieldsMatch = Array.isArray(contact.addressLines)
+        && normalize(contact.addressLines.join("|")) === normalize([address.addressLine1, address.addressLine2].filter(Boolean).join("|"))
+        && normalize(contact.city) === normalize(address.city)
+        && normalize(contact.state) === normalize(quotedRegion)
+        && samePostalCode(contact.postalCode, address.postalCode)
+        && normalize(contact.countryCode) === normalize(address.country);
+      return fieldsMatch ? { shippingOptions: [shippingOption] } : { error: "Use the delivery address above, then confirm a fresh total if it needs to change." };
+    });
+    return request;
   };
   const setPaymentControlsBusy = (busy: boolean) => {
     disable(page, "[data-pay-card], [data-apple-pay], #aha-google-pay button, #aha-afterpay button, #aha-cash-app button", busy);
@@ -341,13 +386,28 @@ function initCheckout() {
     message.tabIndex = -1;
     message.focus();
   };
-  const poll = async (saved = unresolvedPayment || (quote ? { checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, idempotencyKey: paymentKey, createdAt: Date.now(), summary: quoteSummary() || undefined } : null)) => {
+  const poll = async (saved = unresolvedPayment || (quote ? { checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, idempotencyKey: paymentKey, createdAt: Date.now(), summary: quoteSummary() || undefined } : null), manual = false) => {
     if (!saved) return;
     try {
       const { response, data } = await requestJson<{ state?: string; orderId?: string; receiptUrl?: string; errorCode?: string }>(`/api/checkout/status?checkoutId=${encodeURIComponent(saved.checkoutId)}&checkoutToken=${encodeURIComponent(saved.checkoutToken)}`);
       if (!response.ok || !data) throw new Error();
       if (data.state === "completed") { finishPayment(data.orderId, data.receiptUrl, saved.summary); return; }
+      if (data.state === "attention") {
+        const reference = typeof data.orderId === "string" && data.orderId ? ` Order reference: ${data.orderId}.` : "";
+        showMessage(`We’re confirming this payment with Square. Please do not try again yet.${reference}`);
+        if (checkPaymentStatus) {
+          checkPaymentStatus.hidden = false;
+          checkPaymentStatus.disabled = false;
+          checkPaymentStatus.onclick = () => { checkPaymentStatus.disabled = true; showMessage("Checking payment status with Square…"); void poll(saved, true); };
+        }
+        const support = document.createElement("a");
+        support.href = `mailto:info@afterhoursagenda.com?subject=${encodeURIComponent(`Payment status${typeof data.orderId === "string" && data.orderId ? ` ${data.orderId}` : ""}`)}`;
+        support.textContent = "Contact support.";
+        message.append(" ", support);
+        return;
+      }
       if (data.state === "failed" || data.state === "quoted") { clearPending(); unresolvedPayment = null; paymentKey = freshKey(); clearQuote(); showError(data.state === "quoted" ? "Your payment details need to be entered again. Confirm a fresh total to continue." : "Payment could not be completed. Your bag is still here—please try again."); return; }
+      if (manual) { if (checkPaymentStatus) checkPaymentStatus.disabled = false; showMessage("The payment is still being confirmed. Please wait, then check status again."); return; }
       pollTimer = window.setTimeout(() => void poll(saved), 1500);
     } catch { pollTimer = window.setTimeout(() => void poll(saved), 2000); }
   };
@@ -406,7 +466,18 @@ function initCheckout() {
     any = await setup(config.methods.applePay, payments.applePay?.bind(payments), "#aha-apple-pay", (method) => { const button = page.querySelector<HTMLButtonElement>("[data-apple-pay]"); if (button) { button.hidden = false; button.onclick = async () => { if (unresolvedPayment) return; const result = await method.tokenize(); if (result.status === "OK" && result.token) void submitToken(result.token); }; } }) || any;
     any = await setup(config.methods.googlePay, payments.googlePay?.bind(payments), "#aha-google-pay", (method) => { const target = page.querySelector<HTMLElement>("#aha-google-pay"); if (target) target.onclick = async () => { if (unresolvedPayment) return; const result = await method.tokenize(); if (result.status === "OK" && result.token) void submitToken(result.token); }; }) || any;
     const afterpayEligible = activeQuote.totalAmount >= 1000 && activeQuote.totalAmount <= 200000;
-    any = await setup(config.methods.afterpay && afterpayEligible, payments.afterpayClearpay?.bind(payments), "#aha-afterpay", (method) => { const target = page.querySelector<HTMLElement>("#aha-afterpay"); if (target) target.onclick = async () => { if (unresolvedPayment) return; const result = await method.tokenize(); if (result.status === "OK" && result.token) void submitToken(result.token); }; }) || any;
+    const afterpayRequest = afterpayPaymentRequest();
+    if (config.methods.afterpay && afterpayEligible && afterpayRequest && payments.afterpayClearpay) {
+      let method: SquareMethod | null = null;
+      try {
+        method = await payments.afterpayClearpay.call(payments, afterpayRequest);
+        await method.attach?.("#aha-afterpay", { buttonSizeMode: "fill" });
+        walletMethods.push(method);
+        const target = page.querySelector<HTMLElement>("#aha-afterpay");
+        if (target) target.onclick = async () => { if (unresolvedPayment) return; const result = await method!.tokenize(); if (result.status === "OK" && result.token) void submitToken(result.token); };
+        any = true;
+      } catch { void method?.destroy?.(); }
+    }
     if (config.methods.cashAppPay && payments.cashAppPay) {
       try {
         writeCashAppResume({ quote: activeQuote, address: shippingAddress(form), paymentKey, fingerprint: quotedFingerprint, createdAt: Date.now() });

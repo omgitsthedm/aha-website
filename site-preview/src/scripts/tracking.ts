@@ -35,7 +35,7 @@ function activate(value:Consent){
  }
 }
 function clearCookies(){for(const entry of document.cookie.split(';')){const name=entry.trim().split('=')[0] || '';if(!/^(_ga|_gid|_gat|_fbp|_fbc)/.test(name))continue;for(const domain of ['',`; domain=${location.hostname}`,'; domain=.afterhoursagenda.com'])document.cookie=`${name}=; Max-Age=0; path=/${domain}; SameSite=Lax`;}}
-if(consent)activate(consent);else if(banner)banner.hidden=false;
+if(consent){if(banner)banner.hidden=true;activate(consent);}else if(banner)banner.hidden=false;
 document.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button=>button.addEventListener('click',()=>{
  const value={analytics:button.dataset.consent!=='essential',marketing:button.dataset.consent==='all'&&!gpc,at:Date.now()};
  try{localStorage.setItem(key,JSON.stringify(value));}catch{/* Choice applies to this page. */}

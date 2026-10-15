@@ -26,6 +26,16 @@ export function createCheckoutRepository(db) {
         RETURNING *
       `);
     },
+    async closeExpiredUnpaid({ checkoutId, tokenHash }) {
+      return one(db.sql`
+        UPDATE aha_checkout_sessions
+        SET state = 'failed', processing_lease_expires_at = NULL, last_error_code = 'payment_not_started', updated_at = now()
+        WHERE checkout_id = ${checkoutId} AND token_sha256 = ${tokenHash} AND state IN ('processing', 'unknown')
+          AND (processing_lease_expires_at IS NULL OR processing_lease_expires_at < now())
+          AND payment_submission_started_at IS NULL
+        RETURNING *
+      `);
+    },
     async claim({ checkoutId, tokenHash, clientIdempotencyKey }) {
       return one(db.sql`
         UPDATE aha_checkout_sessions
@@ -46,7 +56,18 @@ export function createCheckoutRepository(db) {
     async saveOrder({ checkoutId, orderId }) {
       return one(db.sql`
         UPDATE aha_checkout_sessions SET square_order_id = ${orderId}, updated_at = now()
-        WHERE checkout_id = ${checkoutId} AND state = 'processing' AND square_order_id IS NULL RETURNING *
+        WHERE checkout_id = ${checkoutId} AND state = 'processing' AND square_order_id IS NULL
+          AND processing_lease_expires_at > now()
+        RETURNING *
+      `);
+    },
+    async markPaymentSubmissionStarted({ checkoutId, orderId }) {
+      return one(db.sql`
+        UPDATE aha_checkout_sessions
+        SET payment_submission_started_at = now(), updated_at = now()
+        WHERE checkout_id = ${checkoutId} AND state = 'processing' AND square_order_id = ${orderId}
+          AND processing_lease_expires_at > now() AND payment_submission_started_at IS NULL
+        RETURNING *
       `);
     },
     async complete({ checkoutId, orderId, paymentId, receiptUrl = null }) {
@@ -66,6 +87,15 @@ export function createCheckoutRepository(db) {
       return one(db.sql`
         UPDATE aha_checkout_sessions SET state = 'unknown', square_order_id = COALESCE(${orderId}, square_order_id), processing_lease_expires_at = NULL, last_error_code = ${code}, updated_at = now()
         WHERE checkout_id = ${checkoutId} AND state = 'processing' RETURNING *
+      `);
+    },
+    async attention({ checkoutId, code }) {
+      return one(db.sql`
+        UPDATE aha_checkout_sessions
+        SET state = 'unknown', processing_lease_expires_at = NULL, last_error_code = ${code}, updated_at = now()
+        WHERE checkout_id = ${checkoutId} AND state IN ('processing', 'unknown')
+          AND payment_submission_started_at IS NOT NULL
+        RETURNING *
       `);
     },
   };
