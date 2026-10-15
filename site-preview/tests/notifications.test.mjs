@@ -76,6 +76,17 @@ test("health reports a safe provider status without surfacing provider error tex
   assert.deepEqual(await service.health(), { configured: true, providerReachable: false, senderVerified: false, providerStatus: "resend_http_403" });
 });
 
+test("health recognizes a valid sending-only credential without claiming it can inspect the sender domain", async () => {
+  const repository = memoryRepository();
+  const service = configured(repository, { async send() { return { id: "unused" }; }, async listDomains() { const error = new Error("resend_request_failed"); error.status = 401; error.resendReason = "restricted_api_key"; throw error; } });
+  assert.deepEqual(await service.health(), { configured: true, providerReachable: true, senderVerified: null, providerStatus: "sending_only_key" });
+});
+
+test("Resend gateway classifies only the known sending-key restriction and keeps provider detail private", async () => {
+  const gateway = createResendGateway({ apiKey: "secret", from: "After Hours Agenda <orders@afterhoursagenda.com>", replyTo: "info@afterhoursagenda.com", fetchImpl: async () => new Response(JSON.stringify({ name: "restricted_api_key", message: "private provider detail" }), { status: 401 }) });
+  await assert.rejects(gateway.listDomains(), (error) => error.status === 401 && error.resendReason === "restricted_api_key" && error.message === "resend_request_failed");
+});
+
 test("Resend gateway sends no provider token to the browser and keeps only a request authorization header", async () => {
   let received;
   const gateway = createResendGateway({ apiKey: "secret", from: "After Hours Agenda <orders@afterhoursagenda.com>", replyTo: "info@afterhoursagenda.com", fetchImpl: async (url, init) => { received = { url, init }; return new Response(JSON.stringify({ id: "email-1" }), { status: 200 }); } });
