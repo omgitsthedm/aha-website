@@ -214,12 +214,13 @@ describe("fulfillments receipt reconciliation", () => {
 });
 
 describe("the landed-cost migration", () => {
-  it("is the newest migration and links to the previous snapshot", () => {
+  it("preserves its position and links to the preceding snapshot as newer migrations are added", () => {
     const dirs = migrationDirs();
     const target = landedCostMigration();
-    expect(dirs[dirs.length - 1]).toBe(target);
+    const targetIndex = dirs.indexOf(target);
+    expect(targetIndex).toBeGreaterThan(0);
 
-    const previous = JSON.parse(readFileSync(`${MIGRATIONS_DIR}/${dirs[dirs.length - 2]}/snapshot.json`, "utf8"));
+    const previous = JSON.parse(readFileSync(`${MIGRATIONS_DIR}/${dirs[targetIndex - 1]}/snapshot.json`, "utf8"));
     const current = JSON.parse(readFileSync(`${MIGRATIONS_DIR}/${target}/snapshot.json`, "utf8"));
     expect(current.prevIds).toContain(previous.id);
     expect(current.renames).toEqual([]);

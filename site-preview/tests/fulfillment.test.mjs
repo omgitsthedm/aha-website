@@ -9,7 +9,7 @@ import squareWebhook from "../netlify/functions/square-webhook.mjs";
 import apliiqWebhook from "../netlify/functions/apliiq-fulfillment-webhook.mjs";
 import fulfillmentHealth from "../netlify/functions/fulfillment-health.mjs";
 
-const LOCATION = "FGKRPYEXNV482";
+const LOCATION = "test-aha-location";
 const CREW_M = "R5UCZCGSJMR3Z4HJDVOD3ZIK";
 
 function paidOrder(overrides = {}) {
