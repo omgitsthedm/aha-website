@@ -138,7 +138,7 @@
     "campaign": [
       {
         "src": "/images/yikes/yikes-crewneck/campaign-1-1122.webp",
-        "srcset": "/images/yikes/yikes-crewneck/campaign-1-400.webp 400w, /images/yikes/yikes-crewneck/campaign-1-800.webp 800w, /images/yikes/yikes-crewneck/campaign-1-1122.webp 1122w",
+        "srcset": "/images/yikes/yikes-crewneck/campaign-1-400.webp 400w, /images/yikes/yikes-crewneck/campaign-1-680.webp 680w, /images/yikes/yikes-crewneck/campaign-1-800.webp 800w, /images/yikes/yikes-crewneck/campaign-1-1122.webp 1122w",
         "feedImage": "/images/yikes/yikes-crewneck/campaign-1.jpg",
         "alt": "Bone Yikes crewneck worn while playing pinball in a dim bar.",
         "width": 1122,
@@ -147,7 +147,7 @@
       },
       {
         "src": "/images/yikes/yikes-crewneck/campaign-2-1122.webp",
-        "srcset": "/images/yikes/yikes-crewneck/campaign-2-400.webp 400w, /images/yikes/yikes-crewneck/campaign-2-800.webp 800w, /images/yikes/yikes-crewneck/campaign-2-1122.webp 1122w",
+        "srcset": "/images/yikes/yikes-crewneck/campaign-2-400.webp 400w, /images/yikes/yikes-crewneck/campaign-2-680.webp 680w, /images/yikes/yikes-crewneck/campaign-2-800.webp 800w, /images/yikes/yikes-crewneck/campaign-2-1122.webp 1122w",
         "feedImage": "/images/yikes/yikes-crewneck/campaign-2.jpg",
         "alt": "The Bone Yikes crewneck worn at the pinball machine, with hands mostly hidden at the side controls.",
         "width": 1122,
@@ -156,7 +156,7 @@
       },
       {
         "src": "/images/yikes/yikes-crewneck/campaign-3-1122.webp",
-        "srcset": "/images/yikes/yikes-crewneck/campaign-3-400.webp 400w, /images/yikes/yikes-crewneck/campaign-3-800.webp 800w, /images/yikes/yikes-crewneck/campaign-3-1122.webp 1122w",
+        "srcset": "/images/yikes/yikes-crewneck/campaign-3-400.webp 400w, /images/yikes/yikes-crewneck/campaign-3-680.webp 680w, /images/yikes/yikes-crewneck/campaign-3-800.webp 800w, /images/yikes/yikes-crewneck/campaign-3-1122.webp 1122w",
         "feedImage": "/images/yikes/yikes-crewneck/campaign-3.jpg",
         "alt": "Standing beside the pinball machine in the Bone crewneck with hands in jeans pockets.",
         "width": 1122,
@@ -301,7 +301,7 @@
     "campaign": [
       {
         "src": "/images/yikes/yikes-cropped-hoodie/campaign-1-1122.webp",
-        "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-1-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-1-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-1-1122.webp 1122w",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-1-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-1-680.webp 680w, /images/yikes/yikes-cropped-hoodie/campaign-1-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-1-1122.webp 1122w",
         "feedImage": "/images/yikes/yikes-cropped-hoodie/campaign-1.jpg",
         "alt": "Bone Yikes cropped hoodie with an open olive barn jacket and blue jeans outside the New York Public Library.",
         "width": 1122,
@@ -310,7 +310,7 @@
       },
       {
         "src": "/images/yikes/yikes-cropped-hoodie/campaign-2-1122.webp",
-        "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-2-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-2-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-2-1122.webp 1122w",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-2-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-2-680.webp 680w, /images/yikes/yikes-cropped-hoodie/campaign-2-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-2-1122.webp 1122w",
         "feedImage": "/images/yikes/yikes-cropped-hoodie/campaign-2.jpg",
         "alt": "Walking on the NYPL steps in the Bone cropped hoodie, olive barn jacket and jeans.",
         "width": 1122,
@@ -319,7 +319,7 @@
       },
       {
         "src": "/images/yikes/yikes-cropped-hoodie/campaign-3-1122.webp",
-        "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-3-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-3-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-3-1122.webp 1122w",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-3-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-3-680.webp 680w, /images/yikes/yikes-cropped-hoodie/campaign-3-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-3-1122.webp 1122w",
         "feedImage": "/images/yikes/yikes-cropped-hoodie/campaign-3.jpg",
         "alt": "Seated upright on the NYPL stone ledge, hands tucked in jacket pockets, wearing the Bone cropped hoodie.",
         "width": 1122,
