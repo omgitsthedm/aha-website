@@ -234,7 +234,9 @@ select:focus-visible {
 }
 .identity img {
   width: 46px;
-  height: auto;
+  height: 36px;
+  flex: 0 0 46px;
+  object-fit: contain;
 }
 .identity span {
   max-width: 145px;
@@ -816,6 +818,8 @@ select:focus-visible {
   }
   .identity img {
     width: 42px;
+    height: 33px;
+    flex-basis: 42px;
   }
   .identity span {
     max-width: 126px;
@@ -1038,6 +1042,8 @@ select:focus-visible {
   }
   .identity img {
     width: 33px;
+    height: 26px;
+    flex-basis: 33px;
   }
   .identity span {
     max-width: 111px;

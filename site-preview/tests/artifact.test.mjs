@@ -47,7 +47,7 @@ test("every route has unique metadata, entity data and correct indexing mode", a
       ),
       route,
     );
-    assert.ok(!/<script[^>]+src="https:\/\/(?:www\.googletagmanager|connect\.facebook)/.test(html),'Optional tracking must load only after a cookie choice');
+    assert.ok(!/<script[^>]+src="https:\/\/(?:www\.googletagmanager|connect\.facebook)/.test(html),'Tracking scripts must load dynamically so saved choices and Global Privacy Control govern them');
     assert.ok(html.includes(`data-tracking-enabled="${production}"`),route);
   }
 });

@@ -7,8 +7,10 @@ const enabled=banner?.dataset.trackingEnabled==='true';
 const key='aha-cookie-choices-v1';
 const maxAge=180*24*60*60*1000;
 const gpc=(navigator as Navigator&{globalPrivacyControl?:boolean}).globalPrivacyControl===true;
-let consent:Consent|undefined;
+let consent:Consent;
 try{const raw=JSON.parse(localStorage.getItem(key)||'null');if(raw&&typeof raw.analytics==='boolean'&&typeof raw.marketing==='boolean'&&Date.now()-raw.at<maxAge)consent=raw;}catch{/* Storage is optional. */}
+// A new visitor receives the storefront default without writing a synthetic consent click.
+consent ??= {analytics:true,marketing:!gpc,at:Date.now()};
 function insert(src:string){const script=document.createElement('script');script.async=true;script.src=src;document.head.append(script);}
 function cleanLocation(){const url=new URL(location.pathname,location.origin);const search=new URLSearchParams(location.search);for(const name of ['utm_source','utm_medium','utm_campaign','utm_content','utm_term']){const value=search.get(name);if(value&&value.length<150)url.searchParams.set(name,value);}return url.href;}
 function product(){const node=document.querySelector<HTMLElement>('[data-product-id]');return node?{item_id:node.dataset.productId,item_name:node.dataset.productName,price:Number(node.dataset.productPrice),item_brand:'After Hours Agenda',item_variant:'Bone',quantity:1}:null;}
@@ -35,13 +37,27 @@ function activate(value:Consent){
  }
 }
 function clearCookies(){for(const entry of document.cookie.split(';')){const name=entry.trim().split('=')[0] || '';if(!/^(_ga|_gid|_gat|_fbp|_fbc)/.test(name))continue;for(const domain of ['',`; domain=${location.hostname}`,'; domain=.afterhoursagenda.com'])document.cookie=`${name}=; Max-Age=0; path=/${domain}; SameSite=Lax`;}}
-if(consent){if(banner)banner.hidden=true;activate(consent);}else if(banner)banner.hidden=false;
+if(banner)banner.hidden=true;
+activate(consent);
 document.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button=>button.addEventListener('click',()=>{
  const value={analytics:button.dataset.consent!=='essential',marketing:button.dataset.consent==='all'&&!gpc,at:Date.now()};
- try{localStorage.setItem(key,JSON.stringify(value));}catch{/* Choice applies to this page. */}
+ const previous=consent;
+ let persisted=true;
+ try{localStorage.setItem(key,JSON.stringify(value));}catch{persisted=false;}
  if(banner)banner.hidden=true;
- if(consent){window.fbq?.('consent','revoke');window.gtag?.('consent','update',{analytics_storage:'denied'});clearCookies();location.reload();return;}
- consent=value;activate(value);
+ if(persisted){
+  window.fbq?.('consent','revoke');
+  window.gtag?.('consent','update',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
+  clearCookies();
+  location.reload();
+  return;
+ }
+ // Storage can be blocked. Honor the selection for this document without inventing a saved choice.
+ consent=value;
+ if(!value.marketing&&previous.marketing)window.fbq?.('consent','revoke');
+ if(!value.analytics&&previous.analytics){window.gtag?.('consent','update',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});clearCookies();}
+ if(value.analytics&&!previous.analytics)activate({analytics:true,marketing:false,at:value.at});
+ if(value.marketing&&!previous.marketing)activate({analytics:false,marketing:true,at:value.at});
 }));
 document.querySelectorAll<HTMLButtonElement>('[data-privacy-settings]').forEach(button=>button.addEventListener('click',()=>{if(banner){banner.hidden=false;banner.querySelector<HTMLButtonElement>('button')?.focus();}}));
 document.addEventListener('aha:checkout-quoted',(event)=>{

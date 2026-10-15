@@ -168,16 +168,16 @@ export const documents = [
     "metaTitle": "Privacy and your information",
     "eyebrow": "Privacy · October 15, 2026",
     "title": "Your information.",
-    "description": "How After Hours Agenda uses website information, optional analytics and marketing cookies, secure Square payments and order information.",
-    "lead": "You choose whether this website uses optional analytics and marketing tools.",
+    "description": "How After Hours Agenda uses website information, analytics and marketing tools, secure Square payments and order information.",
+    "lead": "This site uses analytics and marketing tools by default. You can change those choices in the footer.",
     "sections": [
       [
         "Essential browsing",
-        "Our host receives technical request information needed to deliver and secure the website. We store your cookie choice in your browser for up to 180 days and keep selected products in your bag. Checkout can temporarily keep delivery details in the current browser tab to restore a wallet payment; that checkout expires after 15 minutes. Browsing and checkout work without optional tracking."
+        "Our host receives technical request information needed to deliver and secure the website. We store your privacy choice in your browser for up to 180 days and keep selected products in your bag. Checkout can temporarily keep delivery details in the current browser tab to restore a wallet payment; that checkout expires after 15 minutes. Browsing and checkout still work when you turn off analytics or marketing."
       ],
       [
-        "Optional analytics and marketing",
-        "If you allow analytics, Google Analytics receives browsing, product, checkout and confirmed-purchase events. If you allow marketing, Meta receives page, product, checkout and confirmed-purchase events. Purchase events include an order reference, products and amounts. We do not send names, email addresses, delivery addresses or payment-card details to these tools. Use Cookie choices in the footer to change your choice. Global Privacy Control disables Meta marketing tracking on this site."
+        "Analytics and marketing choices",
+        "For new visitors, Google Analytics and Meta receive browsing, product, checkout and confirmed-purchase events by default. Purchase events include an order reference, products and amounts. We do not send names, email addresses, delivery addresses or payment-card details to these tools. Use Privacy choices in the footer to turn analytics or marketing off at any time. Global Privacy Control disables Meta marketing tracking on this site."
       ],
       [
         "Checkout and fulfillment",

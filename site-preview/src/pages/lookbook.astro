@@ -6,11 +6,13 @@ import { gallery } from "../data/site";
 import manifest from "../data/images.json";
 import products from '../data/products.json';
 import ProductImage from '../components/ProductImage.astro';
+const leadCampaignImage = products[0]?.campaign[0];
 ---
 
 <Site
   title="Yikes! lookbook and brand archive"
   description="The Yikes! crewneck in a pinball bar and cropped hoodie on the New York Public Library steps. Explore the Fall / Winter 2026 campaign and original brand archive."
+  preloadImage={leadCampaignImage ? { src: leadCampaignImage.src, srcset: leadCampaignImage.srcset, sizes: "(max-width: 760px) calc(100vw - 40px), 33vw" } : undefined}
 >
   <header class="page-head shell">
     <p class="label">Yikes! / Fall–Winter 2026</p>

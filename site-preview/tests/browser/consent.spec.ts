@@ -10,23 +10,59 @@ async function capture(page: Page) {
   });
   return requested;
 }
+async function saveChoice(page: Page, choice: {analytics:boolean;marketing:boolean}) {
+  await page.addInitScript((value) => { if (!localStorage.getItem('aha-cookie-choices-v1')) localStorage.setItem('aha-cookie-choices-v1', JSON.stringify({...value,at:Date.now()})); }, choice);
+}
 
-test('optional trackers remain unloaded before a choice and after Essential only', async ({page}) => {
+test('new visitors use the storefront default without a banner or synthetic saved choice', async ({page}) => {
   const requested = await capture(page);
   await page.goto('/shop/yikes-crewneck/');
-  await expect(page.getByRole('button',{name:'Essential only',exact:true})).toBeVisible();
-  expect(requested).toEqual([]);
-  await page.getByRole('button',{name:'Essential only',exact:true}).click();
-  await page.reload();
   await expect(page.locator('.cookie-banner')).toBeHidden();
+  expect(await page.evaluate(()=>localStorage.getItem('aha-cookie-choices-v1'))).toBeNull();
+  if (!production) { expect(requested).toEqual([]); return; }
+  await expect.poll(()=>requested.length).toBe(2);
+  expect(requested).toEqual(expect.arrayContaining([expect.stringContaining('googletagmanager.com'),expect.stringContaining('connect.facebook.net')]));
+  const queue = await page.evaluate(()=>({ga:window.dataLayer.map(v=>Array.from(v as ArrayLike<unknown>)),meta:window.fbq?.queue}));
+  expect(queue.ga.some(v=>v[0]==='event'&&v[1]==='view_item')).toBe(true);
+  expect(queue.meta?.some(v=>v[1]==='ViewContent')).toBe(true);
+});
+
+test('saved Essential only remains off and the footer exposes privacy controls', async ({page}) => {
+  await saveChoice(page,{analytics:false,marketing:false});
+  const requested = await capture(page);
+  await page.goto('/shop/yikes-crewneck/');
+  await expect(page.locator('.cookie-banner')).toBeHidden();
+  expect(requested).toEqual([]);
+  await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
+  await expect(page.locator('.cookie-banner')).toBeVisible();
+  await page.getByRole('button',{name:'Essential only',exact:true}).click();
+  await page.waitForLoadState('domcontentloaded');
+  await expect(page.locator('.cookie-banner')).toBeHidden();
+  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('aha-cookie-choices-v1')!))).toMatchObject({analytics:false,marketing:false});
   expect(requested).toEqual([]);
 });
 
-test('Analytics only queues product events, strips unrelated query data, and can be withdrawn', async ({page}) => {
+test('an Essential-only choice stays in effect when browser storage is blocked', async ({page}) => {
   test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await page.addInitScript(() => Object.defineProperty(Storage.prototype, 'setItem', { configurable: true, value: () => { throw new DOMException('Storage blocked'); } }));
+  const requested = await capture(page);
+  await page.goto('/shop/yikes-crewneck/');
+  await expect.poll(()=>requested.length).toBe(2);
+  await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
+  await page.getByRole('button',{name:'Essential only',exact:true}).click();
+  await expect(page.locator('.cookie-banner')).toBeHidden();
+  expect(await page.evaluate(()=>localStorage.getItem('aha-cookie-choices-v1'))).toBeNull();
+  const before = await page.evaluate(()=>({ga:window.dataLayer.filter(v=>Array.from(v as ArrayLike<unknown>)[1]==='begin_checkout').length,meta:window.fbq?.queue?.filter(v=>v[1]==='InitiateCheckout').length||0}));
+  await page.evaluate(()=>document.dispatchEvent(new CustomEvent('aha:checkout-quoted',{detail:{value:52,items:[{id:'R5UCZCGSJMR3Z4HJDVOD3ZIK',name:'Yikes! Crewneck',price:52,quantity:1}]}})));
+  const after = await page.evaluate(()=>({ga:window.dataLayer.filter(v=>Array.from(v as ArrayLike<unknown>)[1]==='begin_checkout').length,meta:window.fbq?.queue?.filter(v=>v[1]==='InitiateCheckout').length||0}));
+  expect(after).toEqual(before);
+});
+
+test('saved Analytics only queues product events, strips unrelated query data, and can be withdrawn', async ({page}) => {
+  test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await saveChoice(page,{analytics:true,marketing:false});
   const requested = await capture(page);
   await page.goto('/shop/yikes-crewneck/?email=private%40example.com&utm_source=test');
-  await page.getByRole('button',{name:'Analytics only',exact:true}).click();
   await expect.poll(()=>requested.length).toBe(1);
   expect(requested[0]).toContain('G-S092LRTVRM');
   const queue = await page.evaluate(()=>window.dataLayer.map(v=>Array.from(v as ArrayLike<unknown>)));
@@ -34,20 +70,19 @@ test('Analytics only queues product events, strips unrelated query data, and can
   expect(config.page_location).toContain('utm_source=test');
   expect(config.page_location).not.toContain('email=');
   expect(queue.some(v=>v[0]==='event'&&v[1]==='view_item')).toBe(true);
-  await page.getByRole('button',{name:'Cookie choices',exact:true}).click();
+  await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
   await page.getByRole('button',{name:'Essential only',exact:true}).click();
-  await expect(page.locator('.cookie-banner')).toBeHidden();
+  await page.waitForLoadState('domcontentloaded');
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('aha-cookie-choices-v1')!))).toMatchObject({analytics:false,marketing:false});
   expect(requested).toHaveLength(1);
 });
 
-test('marketing consent queues only explicit product and quoted-checkout events; it never fabricates a purchase', async ({page}) => {
+test('the default marketing setting queues only explicit product and quoted-checkout events; it never fabricates a purchase', async ({page}) => {
   test.skip(!production, 'Production-only integrations stay disabled in preview.');
   const requested = await capture(page);
   await page.route('**/api/checkout/quote',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({checkoutId:'consent-quote',checkoutToken:'safe-token',expiresAt:'2030-01-01T00:00:00.000Z',currency:'USD',lineItems:[{variationId:'R5UCZCGSJMR3Z4HJDVOD3ZIK',quantity:1,unitAmount:5200,totalAmount:5200}],subtotalAmount:5200,shippingAmount:0,taxAmount:421,totalAmount:5621,shippingLabel:'Free domestic shipping'})}));
   await page.route('**/api/checkout/config',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({appId:'public-app',locationId:'location',countryCode:'US',currencyCode:'USD',methods:{card:false,applePay:false,googlePay:false,afterpay:false,cashAppPay:false}})}));
   await page.goto('/shop/yikes-cropped-hoodie/');
-  await page.getByRole('button',{name:'Allow all',exact:true}).click();
   await expect.poll(()=>requested.length).toBe(2);
   const queue = await page.evaluate(()=>window.fbq?.queue);
   expect(queue).toContainEqual(['set','autoConfig',false,'1815233516346046']);
@@ -68,12 +103,11 @@ test('marketing consent queues only explicit product and quoted-checkout events;
   expect(JSON.stringify(after)).not.toContain('Purchase');
 });
 
-test('Global Privacy Control prevents Meta even when Allow all is chosen', async ({page}) => {
+test('Global Privacy Control prevents Meta under the default setting', async ({page}) => {
   test.skip(!production, 'Production-only integrations stay disabled in preview.');
   const requested = await capture(page);
   await page.addInitScript(()=>Object.defineProperty(navigator,'globalPrivacyControl',{value:true}));
   await page.goto('/shop/yikes-crewneck/');
-  await page.getByRole('button',{name:'Allow all',exact:true}).click();
   await expect.poll(()=>requested.length).toBe(1);
   expect(requested[0]).toContain('googletagmanager.com');
   expect(await page.evaluate(()=>Boolean(window.fbq))).toBe(false);
@@ -95,12 +129,11 @@ async function mockCompletedCheckout(page: Page) {
   await page.route('**/api/checkout/pay',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({state:'completed',orderId:'AHA-tracking-1001',paymentId:'payment-test'})}));
 }
 
-test('consented verified completion queues one GA4 and Meta Purchase with exact variant amounts', async ({page}) => {
+test('default verified completion queues one GA4 and Meta Purchase with exact variant amounts and no contact data', async ({page}) => {
   test.skip(!production, 'Production-only integrations stay disabled in preview.');
   await mockCheckoutCard(page);await mockCompletedCheckout(page);
   const requested=await capture(page);
   await page.goto('/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1');
-  await page.getByRole('button',{name:'Allow all',exact:true}).click();
   await expect.poll(()=>requested.length).toBe(2);
   await fillCheckout(page);
   await page.getByRole('button',{name:'Confirm total'}).click();
@@ -112,17 +145,18 @@ test('consented verified completion queues one GA4 and Meta Purchase with exact 
   const meta=events.meta?.find(v=>v[1]==='Purchase');
   expect(meta?.[2]).toMatchObject({content_ids:['R5UCZCGSJMR3Z4HJDVOD3ZIK'],content_type:'product',value:52,currency:'USD'});
   expect(meta?.[3]).toEqual({eventID:'AHA-tracking-1001'});
+  expect(JSON.stringify(events)).not.toMatch(/Avery|Tester|avery@example\.com|1 N Central Ave|Phoenix/);
   await page.reload();
   const afterReload=await page.evaluate(()=>window.dataLayer.map(v=>Array.from(v as ArrayLike<unknown>)).filter(v=>v[0]==='event'&&v[1]==='purchase'));
   expect(afterReload).toHaveLength(0);
 });
 
-test('Essential-only verified completion emits no GA4 or Meta Purchase', async ({page}) => {
+test('saved Essential-only verified completion emits no GA4 or Meta Purchase', async ({page}) => {
   test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await saveChoice(page,{analytics:false,marketing:false});
   await mockCheckoutCard(page);await mockCompletedCheckout(page);
   const requested=await capture(page);
   await page.goto('/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1');
-  await page.getByRole('button',{name:'Essential only',exact:true}).click();
   await fillCheckout(page);
   await page.getByRole('button',{name:'Confirm total'}).click();
   await page.getByRole('button',{name:'Pay securely'}).click();

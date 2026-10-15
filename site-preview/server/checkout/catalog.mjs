@@ -8,9 +8,10 @@ const US_STATES = new Set(Object.keys(US_STATE_NAMES));
 function normalizeUsRegion(value) { const upper = value.toUpperCase(); if (US_STATES.has(upper)) return upper; const match = Object.entries(US_STATE_NAMES).find(([, name]) => name.toUpperCase() === upper); return match?.[0] ?? value; }
 export const DOMESTIC_SHIPPING_CENTS = 0;
 export const INTERNATIONAL_SHIPPING_CENTS = 2500;
+const MAX_CART_LINES = Object.keys(AHA_FULFILLMENT_CATALOG).length;
 
 export function normalizeItems(items) {
-  if (!Array.isArray(items) || items.length < 1 || items.length > 13) throw new CheckoutError("invalid_cart", 422);
+  if (!Array.isArray(items) || items.length < 1 || items.length > MAX_CART_LINES) throw new CheckoutError("invalid_cart", 422);
   const seen = new Set();
   return items.map((item) => {
     if (!item || typeof item.variationId !== "string" || !/^[A-Z0-9]{20,30}$/.test(item.variationId)) throw new CheckoutError("invalid_cart", 422);

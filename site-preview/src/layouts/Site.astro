@@ -11,8 +11,9 @@ interface Props {
   imageAlt?: string;
   imageWidth?: number;
   imageHeight?: number;
+  preloadImage?: { src: string; srcset: string; sizes: string };
 }
-const { title, description, path = Astro.url.pathname, noindex = false, image, imageAlt, imageWidth=1200, imageHeight=630 } = Astro.props;
+const { title, description, path = Astro.url.pathname, noindex = false, image, imageAlt, imageWidth=1200, imageHeight=630, preloadImage } = Astro.props;
 const origin = Astro.site!.origin;
 const canonical = new URL(path, origin).href;
 const isPreview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
@@ -97,6 +98,8 @@ const schema = {
     <link rel="preload" href="/fonts/poppins-latin-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/poppins-latin-700.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/poppins-latin-900.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jetbrains-mono-400.woff2" as="font" type="font/woff2" crossorigin />
+    {preloadImage && <link rel="preload" as="image" href={preloadImage.src} imagesrcset={preloadImage.srcset} imagesizes={preloadImage.sizes} fetchpriority="high" />}
     <meta name="facebook-domain-verification" content="83wsdo81kg6b428satufegpkljq0w6" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={brand.name} />
@@ -244,7 +247,7 @@ const schema = {
           <a href="/privacy/">Privacy</a>
           <a href="/terms/">Terms</a>
           <a href="/accessibility/">Accessibility</a>
-          <button type="button" class="privacy-button" data-privacy-settings>Cookie choices</button>
+          <button type="button" class="privacy-button" data-privacy-settings>Privacy choices</button>
         </nav>
       </div>
     </footer>

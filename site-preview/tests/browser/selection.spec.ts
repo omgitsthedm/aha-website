@@ -34,6 +34,8 @@ test("cart: Meta-recovered selections merge safely into the existing bag and cle
 });
 
 test("cart: retired or malicious recovered selections cannot become a bag line or provider request", async ({ page }) => {
+  // Keep this provider-write assertion focused: default-on measurement is covered separately.
+  await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({analytics:false,marketing:false,at:Date.now()})));
   const writes: string[] = [];
   page.on("request", (request) => { if (!["GET", "HEAD"].includes(request.method())) writes.push(request.url()); });
   await page.goto("/checkout/?products=retired%3A1&coupon=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E");
