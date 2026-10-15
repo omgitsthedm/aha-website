@@ -21,7 +21,8 @@ test('approved catalog records are expansion-safe and keep garment and campaign 
   assert.match(product.feed?.googleProductCategory??'',/\S/);assert.match(product.feed?.productType??'',/\S/);
   assert.ok(Number.isFinite(product.price)&&product.price>0);
   assert.ok(Array.isArray(product.variants)&&product.variants.length>0);
-  assert.deepEqual(product.gallery.map(shot=>shot.role),['front','back','print-detail','folded']);
+  assert.deepEqual(product.gallery.map(shot=>shot.role).sort(),['back','folded','front','print-detail']);
+  assert.ok(['front','back'].includes(product.gallery[0].role),'lead image must show a complete garment');
   assert.equal(product.campaign.length,3);
   for(const variant of product.variants){
    assert.match(variant.size,/\S/);assert.match(variant.id,/^[A-Z0-9]{20,30}$/);assert.match(variant.sku,/^APQ-\d+S\d+A1$/);

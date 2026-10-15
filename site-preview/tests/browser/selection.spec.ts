@@ -24,6 +24,41 @@ test("cart: new collection colors and sizes coexist with Yikes through a checkou
   expect(saved).toEqual(selected.map(product => ({variationId:product.variants.find(variant => variant.size === "M")!.id, quantity:1})));
 });
 
+test("cart: The City keeps three garment sizes and quantities in one persistent checkout", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({analytics:false,marketing:false,at:Date.now()})));
+  const selections = [
+    { slug: "the-city-ss4500-black", size: "2XL", quantity: 2, price: 58 },
+    { slug: "the-city-ss3000-black", size: "3XL", quantity: 1, price: 55 },
+    { slug: "the-city-next-level-3601-black", size: "S", quantity: 3, price: 42 },
+  ].map((selection) => ({ ...selection, product: products.find((product) => product.slug === selection.slug)! }));
+  expect(selections.every(({ product }) => product)).toBe(true);
+
+  for (const { product, size, quantity } of selections) {
+    await page.goto(`/shop/${product.slug}/`);
+    await page.getByRole("radio", {name:size,exact:true}).check();
+    await page.locator("[data-cart-quantity]").fill(String(quantity));
+    await page.getByRole("button", {name:"Add to bag"}).click();
+    await expect(page.locator("[data-cart-add-status]")).toContainText("added");
+  }
+
+  await page.goto("/checkout/");
+  await page.reload();
+  await expect(page.locator(".bag-line")).toHaveCount(3);
+  for (const [index, { product, size, quantity }] of selections.entries()) {
+    const line = page.locator(".bag-line").nth(index);
+    await expect(line).toContainText(product.title);
+    await expect(line).toContainText(product.color);
+    await expect(line.locator(".label")).toHaveText(`${size} · ${product.color}`);
+    await expect(line.getByRole("combobox")).toHaveValue(String(quantity));
+  }
+  await expect(page.locator("[data-cart-subtotal]")).toHaveText("$297.00");
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("aha-cart-v2") || "[]"));
+  expect(saved).toEqual(selections.map(({ product, size, quantity }) => ({
+    variationId: product.variants.find((variant) => variant.size === size)!.id,
+    quantity,
+  })));
+});
+
 test("cart: PDP size and quantity add exact variants to a persistent shared bag", async ({ page }) => {
   await page.goto("/shop/yikes-crewneck/");
   await expect(page.locator("[data-cart-variant]:checked")).toHaveCount(0);

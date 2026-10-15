@@ -16,6 +16,11 @@ const CREW_M = "R5UCZCGSJMR3Z4HJDVOD3ZIK";
 const HOODIE_L = "4HDYVGQA3ZOGIPYFUCTPKPIV";
 const storefrontProducts = JSON.parse(await readFile(new URL("../src/data/products.json", import.meta.url), "utf8"));
 const LEGACY_PRODUCT_TITLES = Object.freeze({ crewneck: "Yikes Crewneck", cropped_hoodie: "Yikes Cropped Hoodie" });
+const CITY_SELECTIONS = Object.freeze([
+  { slug: "the-city-ss4500-black", size: "2XL", quantity: 2, designId: 6210771 },
+  { slug: "the-city-ss3000-black", size: "3XL", quantity: 1, designId: 6210772 },
+  { slug: "the-city-next-level-3601-black", size: "S", quantity: 3, designId: 6210773 },
+]);
 
 function catalogTitle(variationId) {
   const item = AHA_FULFILLMENT_CATALOG[variationId];
@@ -161,6 +166,49 @@ test("an expanded mixed cart preserves each Insomniac title, color and decorated
   const forged = structuredClone(order);
   forged.line_items[1].catalog_object_id = `${forged.line_items[1].catalog_object_id}-forged`;
   assert.throws(() => validatePaidSquareOrder({ payment, order: forged, locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z" }), (error) => error instanceof FulfillmentHold && error.code === "unknown_variation");
+});
+
+test("The City mixed paid order keeps exact sizes, quantities, pricing, decorated designs, and private labeling without a provider write", () => {
+  const city = new Map(storefrontProducts.filter((product) => product.collection === "The City").map((product) => [product.slug, product]));
+  assert.equal(city.size, 3);
+  const selected = CITY_SELECTIONS.map((selection) => {
+    const product = city.get(selection.slug);
+    assert.ok(product, `${selection.slug} missing storefront record`);
+    const variant = product.variants.find((candidate) => candidate.size === selection.size);
+    assert.ok(variant, `${selection.slug} ${selection.size} missing storefront variation`);
+    const mapped = AHA_FULFILLMENT_CATALOG[variant.id];
+    assert.ok(mapped, `${selection.slug} ${selection.size} missing fulfillment mapping`);
+    assert.equal(mapped.title, `${product.title} — ${product.color}`);
+    assert.match(mapped.sku, new RegExp(`^APQ-${selection.designId}S[0-9]+A1$`));
+    return { ...selection, product, variant, mapped };
+  });
+  const lineItems = selected.map(({ product, variant, quantity }, index) => ({
+    uid: `city-${index}`, catalog_object_id: variant.id, quantity: String(quantity),
+    base_price_money: { amount: Math.round(product.price * 100), currency: "USD" },
+  }));
+  const total = lineItems.reduce((sum, line, index) => sum + line.base_price_money.amount * selected[index].quantity, 0);
+  const { payment, order } = paidOrder({
+    payment: { amount_money: { amount: total, currency: "USD" } },
+    order: { total_money: { amount: total, currency: "USD" }, line_items: lineItems },
+  });
+  const validated = validatePaidSquareOrder({ payment, order, locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z" });
+
+  assert.equal(total, 29700);
+  assert.equal(AHA_PRIVATE_LABEL, "SB-3-161622");
+  assert.deepEqual(validated.apliiqPayload.line_items, selected.map(({ product, variant, mapped, quantity }, index) => ({
+    id: `square-order-1:city-${index}`,
+    title: `${product.title} — ${product.color} — ${variant.size}`,
+    quantity,
+    price: (mapped.priceCents / 100).toFixed(2),
+    sku: variant.sku,
+  })));
+  assert.deepEqual(validated.items.map(({ variationId, size, quantity, priceCents, sku }) => ({ variationId, size, quantity, priceCents, sku })), selected.map(({ variant, mapped, quantity }) => ({
+    variationId: variant.id, size: variant.size, quantity, priceCents: mapped.priceCents, sku: variant.sku,
+  })));
+
+  const forged = structuredClone(order);
+  forged.line_items[2].base_price_money.amount += 1;
+  assert.throws(() => validatePaidSquareOrder({ payment, order: forged, locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z" }), (error) => error instanceof FulfillmentHold && error.code === "line_price_mismatch");
 });
 
 test("international recipient regions stay intact while only US needs a two-letter province code", () => {

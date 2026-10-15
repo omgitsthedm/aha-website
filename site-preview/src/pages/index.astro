@@ -6,12 +6,15 @@ import ProductImage from '../components/ProductImage.astro';
 import ProductCard from '../components/ProductCard.astro';
 import products from '../data/products.json';
 const insomniac = products.filter((product) => product.collection === 'Insomniac');
+const city = products.filter((product) => product.collection === 'The City');
 const yikes = products.filter((product) => product.collection === 'Yikes!');
 const uniqueStyles = (pieces: typeof products, count: number) => {
   const seen = new Set<string>();
   return pieces.filter((product) => !seen.has(product.typeLabel) && Boolean(seen.add(product.typeLabel))).slice(0, count);
 };
-const featuredProducts = [...uniqueStyles(insomniac, 3), ...yikes.slice(0, 1)];
+const featuredProducts = city.length
+  ? [...uniqueStyles(city, 2), ...uniqueStyles(insomniac, 1), ...yikes.slice(0, 1)]
+  : [...uniqueStyles(insomniac, 3), ...yikes.slice(0, 1)];
 const heroProduct = featuredProducts[0] ?? products[0]!;
 ---
 

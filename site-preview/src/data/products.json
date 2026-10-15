@@ -1721,5 +1721,531 @@
         "role": "lifestyle-alternate"
       }
     ]
+  },
+  {
+    "slug": "the-city-ss4500-black",
+    "title": "The City Hoodie",
+    "color": "Black",
+    "price": 58,
+    "currency": "USD",
+    "squareItemId": "SI3UZYKBECQAUUU6N7FK4UYE",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Hoodies"
+    },
+    "description": "An 8.5 oz midweight pullover hoodie in Black with a full back print and a plain front. It has a standard fit, a ring-spun cotton face, a jersey-lined hood, metal eyelets, twill neck tape, and ribbed cuffs and waistband.",
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 27,
+        "chestWidth": 19,
+        "sleeveLength": 33.5
+      },
+      {
+        "size": "S",
+        "bodyLength": 28,
+        "chestWidth": 20,
+        "sleeveLength": 34.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 29,
+        "chestWidth": 22,
+        "sleeveLength": 35.5
+      },
+      {
+        "size": "L",
+        "bodyLength": 30,
+        "chestWidth": 24,
+        "sleeveLength": 36.5
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 26,
+        "sleeveLength": 37.5
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32,
+        "chestWidth": 27,
+        "sleeveLength": 38.5
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 33,
+        "chestWidth": 28,
+        "sleeveLength": 39.5
+      },
+      {
+        "size": "4XL",
+        "bodyLength": 34,
+        "chestWidth": 29.5,
+        "sleeveLength": 40
+      },
+      {
+        "size": "5XL",
+        "bodyLength": 34.5,
+        "chestWidth": 31,
+        "sleeveLength": 40.5
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "collection": "The City",
+    "typeLabel": "Hoodie",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "ring-spun cotton face",
+      "jersey-lined hood",
+      "metal eyelets",
+      "twill neck tape",
+      "1x1 ribbed cuffs and waistband"
+    ],
+    "sleeveMeasurementGuidance": "",
+    "campaignSetting": "Queensboro Plaza, Long Island City",
+    "variants": [
+      {
+        "size": "XS",
+        "id": "27MUA3DWTTWFB7YYLCBK24O6",
+        "sku": "APQ-6210771S5A1"
+      },
+      {
+        "size": "S",
+        "id": "TIBHPL7I6VVO7Q2IJ76LONSZ",
+        "sku": "APQ-6210771S6A1"
+      },
+      {
+        "size": "M",
+        "id": "Z4KOPIFUDW4LPHGH2YPRSXCF",
+        "sku": "APQ-6210771S7A1"
+      },
+      {
+        "size": "L",
+        "id": "3IIUQ3SOTIEAM7LCYYYDOU45",
+        "sku": "APQ-6210771S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "A32PW3R7HRGFIW4YPZJF5XNZ",
+        "sku": "APQ-6210771S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "ZAD5SGEQ4VZA3LVEFLTBIYCH",
+        "sku": "APQ-6210771S2A1"
+      },
+      {
+        "size": "3XL",
+        "id": "BULH22GFRN76CCBGVOP3ZLOQ",
+        "sku": "APQ-6210771S21A1"
+      },
+      {
+        "size": "4XL",
+        "id": "XMMAQ6YQ6ZGFTOOQDMGYSC5W",
+        "sku": "APQ-6210771S61A1"
+      },
+      {
+        "size": "5XL",
+        "id": "UOJ2XHWLABERBRLBAGL52HNV",
+        "sku": "APQ-6210771S62A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/the-city/the-city-ss4500-black/garment-2-1122.webp",
+        "srcset": "/images/the-city/the-city-ss4500-black/garment-2-400.webp 400w, /images/the-city/the-city-ss4500-black/garment-2-800.webp 800w, /images/the-city/the-city-ss4500-black/garment-2-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss4500-black/garment-2.jpg",
+        "alt": "Back of The City black pullover hoodie, showing the blue skyline and orange subway print with New York New York below.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/the-city/the-city-ss4500-black/garment-1-1122.webp",
+        "srcset": "/images/the-city/the-city-ss4500-black/garment-1-400.webp 400w, /images/the-city/the-city-ss4500-black/garment-1-800.webp 800w, /images/the-city/the-city-ss4500-black/garment-1-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss4500-black/garment-1.jpg",
+        "alt": "Plain front of The City black pullover hoodie, with finished sleeves and hem on a white background.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/the-city/the-city-ss4500-black/garment-3-1122.webp",
+        "srcset": "/images/the-city/the-city-ss4500-black/garment-3-400.webp 400w, /images/the-city/the-city-ss4500-black/garment-3-800.webp 800w, /images/the-city/the-city-ss4500-black/garment-3-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss4500-black/garment-3.jpg",
+        "alt": "Close view of the blue and orange back print and black fabric texture on The City black pullover hoodie.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/the-city/the-city-ss4500-black/garment-4-1122.webp",
+        "srcset": "/images/the-city/the-city-ss4500-black/garment-4-400.webp 400w, /images/the-city/the-city-ss4500-black/garment-4-800.webp 800w, /images/the-city/the-city-ss4500-black/garment-4-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss4500-black/garment-4.jpg",
+        "alt": "The City black pullover hoodie loosely folded on white, with part of its back print visible.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/the-city/the-city-ss4500-black/campaign-1-1122.webp",
+        "srcset": "/images/the-city/the-city-ss4500-black/campaign-1-400.webp 400w, /images/the-city/the-city-ss4500-black/campaign-1-800.webp 800w, /images/the-city/the-city-ss4500-black/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss4500-black/campaign-1.jpg",
+        "alt": "The City black pullover hoodie worn outdoors in New York, campaign view 1 showing the back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/the-city/the-city-ss4500-black/campaign-2-1122.webp",
+        "srcset": "/images/the-city/the-city-ss4500-black/campaign-2-400.webp 400w, /images/the-city/the-city-ss4500-black/campaign-2-800.webp 800w, /images/the-city/the-city-ss4500-black/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss4500-black/campaign-2.jpg",
+        "alt": "The City black pullover hoodie worn outdoors in New York, campaign view 2 showing the back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/the-city/the-city-ss4500-black/campaign-3-1122.webp",
+        "srcset": "/images/the-city/the-city-ss4500-black/campaign-3-400.webp 400w, /images/the-city/the-city-ss4500-black/campaign-3-800.webp 800w, /images/the-city/the-city-ss4500-black/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss4500-black/campaign-3.jpg",
+        "alt": "The City black pullover hoodie worn outdoors in New York, campaign view 3 showing the back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "the-city-ss3000-black",
+    "title": "The City Crewneck",
+    "color": "Black",
+    "price": 55,
+    "currency": "USD",
+    "squareItemId": "HJBFV57URWDCY3RMMAMAO6V5",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Crewnecks"
+    },
+    "description": "An 8.5 oz midweight crewneck sweatshirt in Black with a full back print and a plain front. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs and waistband.",
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 25,
+        "chestWidth": 19,
+        "sleeveLength": 34
+      },
+      {
+        "size": "S",
+        "bodyLength": 26.5,
+        "chestWidth": 20.5,
+        "sleeveLength": 35
+      },
+      {
+        "size": "M",
+        "bodyLength": 28,
+        "chestWidth": 22,
+        "sleeveLength": 36
+      },
+      {
+        "size": "L",
+        "bodyLength": 29.5,
+        "chestWidth": 23.5,
+        "sleeveLength": 37
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 25,
+        "sleeveLength": 38
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32.5,
+        "chestWidth": 26.5,
+        "sleeveLength": 39
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 34,
+        "chestWidth": 28,
+        "sleeveLength": 40
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "collection": "The City",
+    "typeLabel": "Crewneck",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "cotton face",
+      "twill neck tape",
+      "1x1 ribbed collar, cuffs and waistband"
+    ],
+    "sleeveMeasurementGuidance": "",
+    "campaignSetting": "Queensboro Plaza, Long Island City",
+    "variants": [
+      {
+        "size": "XS",
+        "id": "KQJVOUGOKMJF4RBUR5UGJM3J",
+        "sku": "APQ-6210772S5A1"
+      },
+      {
+        "size": "S",
+        "id": "OHNHFAS23EQVKJIVQ6D27GTW",
+        "sku": "APQ-6210772S6A1"
+      },
+      {
+        "size": "M",
+        "id": "2PYRHHU77GDDVHHR5WFFDLZR",
+        "sku": "APQ-6210772S7A1"
+      },
+      {
+        "size": "L",
+        "id": "2RMJ2JJZDBI3MDXV3Z522C26",
+        "sku": "APQ-6210772S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "ZKOU4YRURYWTQ5N4PBRBMGOV",
+        "sku": "APQ-6210772S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "ZYHURAIHGJFMRDXIQYS7UAPV",
+        "sku": "APQ-6210772S2A1"
+      },
+      {
+        "size": "3XL",
+        "id": "2A2ZZM6K6RM3ZAG6ZW44TOYL",
+        "sku": "APQ-6210772S21A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/the-city/the-city-ss3000-black/garment-2-1122.webp",
+        "srcset": "/images/the-city/the-city-ss3000-black/garment-2-400.webp 400w, /images/the-city/the-city-ss3000-black/garment-2-800.webp 800w, /images/the-city/the-city-ss3000-black/garment-2-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss3000-black/garment-2.jpg",
+        "alt": "Back of The City black crewneck sweatshirt, showing the blue skyline and orange subway print with New York New York below.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/the-city/the-city-ss3000-black/garment-1-1122.webp",
+        "srcset": "/images/the-city/the-city-ss3000-black/garment-1-400.webp 400w, /images/the-city/the-city-ss3000-black/garment-1-800.webp 800w, /images/the-city/the-city-ss3000-black/garment-1-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss3000-black/garment-1.jpg",
+        "alt": "Plain front of The City black crewneck sweatshirt, with finished sleeves and hem on a white background.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/the-city/the-city-ss3000-black/garment-3-1122.webp",
+        "srcset": "/images/the-city/the-city-ss3000-black/garment-3-400.webp 400w, /images/the-city/the-city-ss3000-black/garment-3-800.webp 800w, /images/the-city/the-city-ss3000-black/garment-3-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss3000-black/garment-3.jpg",
+        "alt": "Close view of the blue and orange back print and black fabric texture on The City black crewneck sweatshirt.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/the-city/the-city-ss3000-black/garment-4-1122.webp",
+        "srcset": "/images/the-city/the-city-ss3000-black/garment-4-400.webp 400w, /images/the-city/the-city-ss3000-black/garment-4-800.webp 800w, /images/the-city/the-city-ss3000-black/garment-4-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss3000-black/garment-4.jpg",
+        "alt": "The City black crewneck sweatshirt loosely folded on white, with part of its back print visible.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/the-city/the-city-ss3000-black/campaign-1-1122.webp",
+        "srcset": "/images/the-city/the-city-ss3000-black/campaign-1-400.webp 400w, /images/the-city/the-city-ss3000-black/campaign-1-800.webp 800w, /images/the-city/the-city-ss3000-black/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss3000-black/campaign-1.jpg",
+        "alt": "The City black crewneck sweatshirt worn outdoors in New York, campaign view 1 showing the back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/the-city/the-city-ss3000-black/campaign-2-1122.webp",
+        "srcset": "/images/the-city/the-city-ss3000-black/campaign-2-400.webp 400w, /images/the-city/the-city-ss3000-black/campaign-2-800.webp 800w, /images/the-city/the-city-ss3000-black/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss3000-black/campaign-2.jpg",
+        "alt": "The City black crewneck sweatshirt worn outdoors in New York, campaign view 2 showing the back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/the-city/the-city-ss3000-black/campaign-3-1122.webp",
+        "srcset": "/images/the-city/the-city-ss3000-black/campaign-3-400.webp 400w, /images/the-city/the-city-ss3000-black/campaign-3-800.webp 800w, /images/the-city/the-city-ss3000-black/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-ss3000-black/campaign-3.jpg",
+        "alt": "The City black crewneck sweatshirt worn outdoors in New York, campaign view 3 showing the back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "the-city-next-level-3601-black",
+    "title": "The City Long Sleeve",
+    "color": "Black",
+    "price": 42,
+    "currency": "USD",
+    "squareItemId": "T53XC4LWT3HJIHZHAURGP3B5",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Shirts & Tops > T-Shirts"
+    },
+    "description": "A 4.3 oz long-sleeve crewneck T-shirt in Black with a full back print and a plain front. It has a standard fit, combed ring-spun cotton, a baby-rib collar, hemmed sleeves, and side seams.",
+    "fit": "standard",
+    "weightOz": 4.3,
+    "composition": "100% combed ring-spun cotton",
+    "sizeGuide": [
+      {
+        "size": "S",
+        "bodyLength": 28,
+        "chestWidth": 18.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 29,
+        "chestWidth": 20
+      },
+      {
+        "size": "L",
+        "bodyLength": 30,
+        "chestWidth": 21.5
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 23.3333333333
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32,
+        "chestWidth": 25.5
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "collection": "The City",
+    "typeLabel": "Long Sleeve",
+    "fabricType": "cotton jersey",
+    "constructionDetails": [
+      "combed ring-spun cotton",
+      "baby-rib collar",
+      "hemmed sleeves",
+      "side seams"
+    ],
+    "sleeveMeasurementGuidance": "",
+    "campaignSetting": "Queensboro Plaza, Long Island City",
+    "variants": [
+      {
+        "size": "S",
+        "id": "TFGRKA4U3JBI3DCXGE4YKWKP",
+        "sku": "APQ-6210773S6A1"
+      },
+      {
+        "size": "M",
+        "id": "4S663ECHO2JTEANUZIRVPGW3",
+        "sku": "APQ-6210773S7A1"
+      },
+      {
+        "size": "L",
+        "id": "2GJHLJ23CJEUXHD24EQM5I5Y",
+        "sku": "APQ-6210773S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "VXRBFITIR2LUHMGSOEBN7SOP",
+        "sku": "APQ-6210773S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "TLW77E6SB6RSZ4RVBUG66N5Y",
+        "sku": "APQ-6210773S2A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/the-city/the-city-next-level-3601-black/garment-2-1122.webp",
+        "srcset": "/images/the-city/the-city-next-level-3601-black/garment-2-400.webp 400w, /images/the-city/the-city-next-level-3601-black/garment-2-800.webp 800w, /images/the-city/the-city-next-level-3601-black/garment-2-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-next-level-3601-black/garment-2.jpg",
+        "alt": "Back of The City black long-sleeve tee, showing the blue skyline and orange subway print with New York New York below.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/the-city/the-city-next-level-3601-black/garment-1-1122.webp",
+        "srcset": "/images/the-city/the-city-next-level-3601-black/garment-1-400.webp 400w, /images/the-city/the-city-next-level-3601-black/garment-1-800.webp 800w, /images/the-city/the-city-next-level-3601-black/garment-1-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-next-level-3601-black/garment-1.jpg",
+        "alt": "Plain front of The City black long-sleeve tee, with finished sleeves and hem on a white background.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/the-city/the-city-next-level-3601-black/garment-3-1122.webp",
+        "srcset": "/images/the-city/the-city-next-level-3601-black/garment-3-400.webp 400w, /images/the-city/the-city-next-level-3601-black/garment-3-800.webp 800w, /images/the-city/the-city-next-level-3601-black/garment-3-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-next-level-3601-black/garment-3.jpg",
+        "alt": "Close view of the blue and orange back print and black fabric texture on The City black long-sleeve tee.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/the-city/the-city-next-level-3601-black/garment-4-1122.webp",
+        "srcset": "/images/the-city/the-city-next-level-3601-black/garment-4-400.webp 400w, /images/the-city/the-city-next-level-3601-black/garment-4-800.webp 800w, /images/the-city/the-city-next-level-3601-black/garment-4-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-next-level-3601-black/garment-4.jpg",
+        "alt": "The City black long-sleeve tee loosely folded on white, with part of its back print visible.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/the-city/the-city-next-level-3601-black/campaign-1-1122.webp",
+        "srcset": "/images/the-city/the-city-next-level-3601-black/campaign-1-400.webp 400w, /images/the-city/the-city-next-level-3601-black/campaign-1-800.webp 800w, /images/the-city/the-city-next-level-3601-black/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-next-level-3601-black/campaign-1.jpg",
+        "alt": "The City black long-sleeve tee worn outdoors in New York, campaign view 1 showing the back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/the-city/the-city-next-level-3601-black/campaign-2-1122.webp",
+        "srcset": "/images/the-city/the-city-next-level-3601-black/campaign-2-400.webp 400w, /images/the-city/the-city-next-level-3601-black/campaign-2-800.webp 800w, /images/the-city/the-city-next-level-3601-black/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-next-level-3601-black/campaign-2.jpg",
+        "alt": "The City black long-sleeve tee worn outdoors in New York, campaign view 2 showing the back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/the-city/the-city-next-level-3601-black/campaign-3-1122.webp",
+        "srcset": "/images/the-city/the-city-next-level-3601-black/campaign-3-400.webp 400w, /images/the-city/the-city-next-level-3601-black/campaign-3-800.webp 800w, /images/the-city/the-city-next-level-3601-black/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/the-city/the-city-next-level-3601-black/campaign-3.jpg",
+        "alt": "The City black long-sleeve tee worn outdoors in New York, campaign view 3 showing the back print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
   }
 ]

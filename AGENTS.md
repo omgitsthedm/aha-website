@@ -1,5 +1,9 @@
 # After Hours Agenda agent contract
 
+## Approved The City expansion — October 15, 2026
+
+The owner instructed “Alright let’s upload them for sale” after approving the three Black mockups: Independent SS4500 hoodie, Independent SS3000 crewneck, and Next Level 3601 long sleeve. Publish these alongside the existing Yikes and Insomniac catalog at the existing matching-style prices of $58, $55 and $42, one price across selected sizes, with free domestic shipping. Preserve the approved blue/orange full-back artwork, black negative space and plain fronts. All three supplier records include private label SB-3-161622; woven labels remain on hold. The expansion adds 21 exact Square-to-Apliiq variation mappings, for 13 garment/color options and 88 variants. Each product has four garment-only shopping images and three separate campaign images. Publication must pass the existing checks and exact-site release verification. This scope includes catalog and website publication, not paid test purchases, advertising or additional subscriptions.
+
 ## Approved Insomniac expansion — October 15, 2026
 
 The owner approved publishing all eight Insomniac garment/color options alongside Yikes: Independent SS4500 hoodies at $58, Independent SS3000 crewnecks at $55, Next Level 3601 long sleeves at $42, and Comfort Colors 4410 pocket long sleeves at $58. Each style has two approved colors, one price across its available sizes, free domestic shipping, the exact approved front/back artwork, and private label SB-3-161622; woven labels remain on hold. The resulting catalog has ten garment/color options and 67 exact Square-to-Apliiq variation mappings. Each Insomniac option has four garment-only shopping images and three separate campaign images. This expands the historical 13-variant Yikes-only scope below; it does not authorize new purchases or advertising spend.
