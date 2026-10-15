@@ -1,5 +1,9 @@
 # After Hours Agenda agent contract
 
+## Current custom-checkout authorization — October 15, 2026
+
+The owner explicitly instructed: “fix it all, don't stop until someone can load up their cart, and check out.” Restore an AHA-owned multi-product cart and embedded Square checkout in the active `site-preview/` application, including supported configured wallets and Afterpay subject to eligibility. This supersedes the individual-product-link-only behavior below. Preserve prices, the 13 approved Yikes variants, the existing merchant-approved AZ-only 8.1% order tax, free domestic / existing $25 supported international shipping, current private label, consent controls, and the active durable Square-to-Apliiq webhook. The owner authorized publication of the completed checkout. The active transactional confirmation/shipment outbox may process new verified customer orders; development verification must not send messages. No paid production test, sample, ad spend or customer message is authorized. Use Square Sandbox for non-billable payment verification where available. Do not reactivate old Next.js/provider pipelines. Keep checkout session migrations additive and identical at repository root and active package. Document actual browser/device coverage without claiming every browser version or a genuine paid-order round trip.
+
 ## Current authorized launch — October 14, 2026
 
 The owner explicitly authorized going live with the first two Yikes! products and retiring the previous catalog. The owner subsequently upgraded Apliiq to VIP and authorized the API connection. This dated scope supersedes the paused-commerce and free/manual-only statements in historical records. API work is isolated in branch `launch/apliiq-fulfillment-2026-10-14`; the original Desktop checkout and audit worktree remain preserved.

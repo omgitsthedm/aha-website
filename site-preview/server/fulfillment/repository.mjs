@@ -34,13 +34,14 @@ export function createNetlifyRepository(db) {
     async insertValidated(record) {
       return one(db.sql`
         INSERT INTO aha_fulfillment_orders (
-          square_order_id, square_payment_id, square_fulfillment_uid, payment_created_at,
+          square_order_id, square_payment_id, square_fulfillment_uid, payment_created_at, customer_email,
           state, submitted_items, apliiq_payload, payload_sha256
         ) VALUES (
           ${record.squareOrderId}, ${record.squarePaymentId}, ${record.squareFulfillmentUid},
-          ${record.paymentCreatedAt}, ${record.state}, ${JSON.stringify(record.submittedItems)},
+          ${record.paymentCreatedAt}, ${record.customerEmail}, ${record.state}, ${JSON.stringify(record.submittedItems)},
           ${JSON.stringify(record.apliiqPayload)}, ${record.payloadSha256}
-        ) ON CONFLICT (square_order_id) DO UPDATE SET updated_at = now()
+        ) ON CONFLICT (square_order_id) DO UPDATE SET
+          customer_email = COALESCE(aha_fulfillment_orders.customer_email, EXCLUDED.customer_email), updated_at = now()
         RETURNING *
       `);
     },

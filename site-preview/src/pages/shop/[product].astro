@@ -28,10 +28,17 @@ const productSchema={
    <div class="product-price-row"><p class="product-price">${product.price}<span> USD</span></p><p>Free domestic shipping</p></div>
    <p class="color-choice"><span class="bone-swatch" aria-hidden="true"></span> Bone</p>
    <p>{product.description}</p>
-   <div class="size-summary"><p class="label">Available sizes</p><ul>{product.variants.map(v=><li data-size={v.size}>{v.size}</li>)}</ul><p id="requested-size" hidden></p></div>
+   <form class="product-purchase" data-cart-form>
+    <p class="label">Choose a size</p>
+    <div class="size-options" role="radiogroup" aria-label={`${product.title} size`} aria-required="true">
+     {product.variants.map(v=><label><input type="radio" name="size" value={v.id} data-cart-variant data-size={v.size} data-sku={v.sku}/><span>{v.size}</span></label>)}
+    </div>
+    <label class="quantity-field">Quantity <input data-cart-quantity name="quantity" type="number" min="1" max="10" step="1" value="1" inputmode="numeric" /></label>
+    <button type="submit" class="button add-to-bag">Add to bag <span aria-hidden="true">+</span></button>
+    <p class="cart-add-status" data-cart-add-status aria-live="polite"></p>
+   </form>
    <a class="text-link size-link" href="#size-guide">Check measurements ↓</a>
-   <a class="button checkout-link" href={product.checkoutUrl} data-checkout-link>Choose size &amp; checkout <span aria-hidden="true">↗</span></a>
-   <p class="checkout-note">Choose your size and quantity at secure Square checkout. Tax, if applicable, is calculated there.</p>
+   <p class="checkout-note">Free domestic shipping. Final tax and payment options are shown securely at checkout.</p>
    <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li><li>{product.weightOz} oz cotton-blend fleece.</li><li>{product.composition}.</li><li>{product.slug==='yikes-crewneck'?'Ribbed collar, cuffs and waistband.':'Raw cropped hem, dropped shoulders, flat drawcords and ribbed cuffs.'}</li></ul></details>
    <details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>
    <details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the print.</p></details>
@@ -39,13 +46,15 @@ const productSchema={
  </section>
  <section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches</p><h2 id="size-title">Find your fit.</h2><p>{product.measurementGuidance} Sleeve length is measured from the center back, including the cuff.</p><div class="size-table-wrap" role="region" aria-label={`${product.title} measurements`} tabindex="0"><table><thead><tr><th scope="col">Size</th><th scope="col">Chest width</th><th scope="col">Body length</th><th scope="col">Sleeve length</th></tr></thead><tbody>{product.sizeGuide.map(row=><tr><th scope="row">{row.size}</th><td>{row.chestWidth}</td><td>{row.bodyLength}</td><td>{row.sleeveLength}</td></tr>)}</tbody></table></div></section>
  <section class="section shell"><div class="section-header"><h2>The other cut.</h2><a href="/shop/" class="text-link">Shop all →</a></div><div class="related-product">{products.filter(p=>p.slug!==product.slug).map(p=><ProductCard product={p}/>)}</div></section>
+ {products.flatMap(entry=>entry.variants.map(variant=><template data-cart-catalog data-id={variant.id} data-sku={variant.sku} data-size={variant.size} data-slug={entry.slug} data-title={entry.title} data-price-cents={entry.price*100} data-image={entry.gallery[0]!.src} data-image-alt={entry.gallery[0]!.alt}></template>))}
  <script type="application/ld+json" set:html={JSON.stringify(productSchema).replace(/</g,'\\u003c')}/>
  <script>
   const search=new URLSearchParams(location.search);
   const requested=search.get('size');
   const quantity=Number(search.get('quantity'));
-  const option=[...document.querySelectorAll<HTMLElement>('[data-size]')].find(el=>el.dataset.size===requested);
-  const note=document.querySelector<HTMLElement>('#requested-size');
-  if(option&&note){option.classList.add('requested');note.hidden=false;note.textContent=Number.isInteger(quantity)&&quantity>=1&&quantity<=20?`Your selection: size ${requested}, quantity ${quantity}. Select this size and quantity at checkout.`:`Viewing size ${requested}. Select this size at checkout.`;}
+  const option=[...document.querySelectorAll<HTMLInputElement>('[data-cart-variant]')].find(el=>el.dataset.size===requested);
+  const amount=document.querySelector<HTMLInputElement>('[data-cart-quantity]');
+  if(option){option.checked=true;if(amount&&Number.isInteger(quantity)&&quantity>=1&&quantity<=10)amount.value=String(quantity);}
  </script>
 </Site>
+<script src="../../scripts/cart.ts"></script>

@@ -163,6 +163,9 @@ const schema = {
           </a>
         ))}
       </nav>
+      <a class="header-cart" href="/checkout/" data-cart-link aria-label="Bag, 0 items">
+        Bag <span data-cart-count aria-hidden="true">0</span>
+      </a>
       <a class="button header-cta" href="/shop/">
         Shop Yikes! <span aria-hidden="true">↗</span>
       </a>
@@ -180,6 +183,7 @@ const schema = {
             </a>
           ))}
           <a href="/manifesto/">Manifesto</a>
+          <a href="/checkout/" data-cart-link aria-label="Bag, 0 items">Bag <span data-cart-count aria-hidden="true">0</span></a>
           <a href="/updates/">Stay close ↗</a>
         </nav>
       </details>
@@ -245,6 +249,7 @@ const schema = {
       </div>
     </footer>
     <Consent />
+    <script src="../scripts/cart-count.ts"></script>
     <script>
       const menu = document.querySelector<HTMLDetailsElement>(".mobile-nav");
       document.addEventListener("keydown", (event) => {

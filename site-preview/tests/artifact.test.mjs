@@ -67,7 +67,10 @@ test("all inline script content is covered by CSP hashes", async () => {
           ),
         );
   }
-  assert.ok(!headers.includes("unsafe-inline"));
+  const scriptPolicy = headers.match(/script-src ([^;]+)/)?.[1] ?? "";
+  assert.ok(!scriptPolicy.includes("unsafe-inline"));
+  assert.match(headers, /style-src 'self' 'unsafe-inline'/, "Square requires its dynamic UI styles");
+  assert.match(headers, /payment=\(self/, "Wallet payment requests must be permitted");
   assert.ok(!headers.includes("unsafe-eval"));
   assert.match(headers, /connect-src 'self'/);
   assert.match(headers, /form-action 'none'/);
@@ -122,7 +125,7 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
     }
   };
   await walk(root);
-  assert.ok(jsBytes < 12000, `Client JS must stay under 12 KB; got ${jsBytes}`);
+  assert.ok(jsBytes < 65000, `All first-party JS including checkout must stay under 65 KB; got ${jsBytes}`);
 });
 test("production context is refused by default", () => {
   const result = spawnSync(process.execPath, ["scripts/guard-build.mjs"], {

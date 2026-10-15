@@ -1,5 +1,14 @@
 # After Hours Agenda source of truth
 
+## Current architecture — October 15, 2026
+
+The active application is `site-preview/` (Astro static storefront plus scoped Netlify Functions), selected by both Netlify configurations. The original root Next.js checkout/provider code is preserved historical source and is not deployed. Required CI, browser flows, dependency auditing and Lighthouse now run against the active package. Do not reactivate the root application to repair current checkout.
+
+The current release implements one persistent size-and-quantity bag and embedded Square Web Payments checkout. Server-owned quotes validate the 13 approved variants, prices, shipping and the existing Arizona tax rule. Durable checkout sessions bind one order/payment and recover ambiguous responses without replaying a source token. Current signed Square fulfillment callbacks continue to route eligible paid orders to Apliiq; the active transactional outbox supplies confirmation and shipment emails. New migrations must match byte-for-byte in the repository-root and active-package migration directories. Only production/functions-scoped settings for exact site `275b4115-16bf-42fb-9b36-6bce9bb93608` can enable this runtime.
+
+Square Sandbox is used for non-billable payment verification. Production verification stops before a paid purchase. Publication is proven by the published Netlify deploy and `/release.json`, not this document.
+
+
 ## Current storefront release — October 14, 2026
 
 The owner authorized reopening commerce for two Bone Yikes! products, then upgraded Apliiq to VIP and authorized automatic fulfillment. Current implementation is `site-preview/`; the API release branch is `launch/apliiq-fulfillment-2026-10-14`. The canonical asset package is `/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/05 Product Run — October 14`. Before the API release, GitHub main is `8083759109a0ecb83c6a1db3a62c2240f1917d56` and the exact Netlify site's published deploy is `6ad03b4a097c2b8bd6b02266`. These are dated checkpoints, not proof that the API release has published.

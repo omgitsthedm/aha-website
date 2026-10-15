@@ -10,9 +10,9 @@ test('launch catalog has the agreed prices, size maps, four garment views and th
  ]);
  for(const p of products){
   assert.equal(p.color,'Bone');assert.equal(p.gallery.length,4);assert.equal(p.campaign.length,3);
-  assert.equal(new URL(p.checkoutUrl).hostname,'square.link');
   const html=await readFile(new URL(`../dist/shop/${p.slug}/index.html`,import.meta.url),'utf8');
-  assert.ok(html.includes(p.checkoutUrl));assert.ok(!html.includes('campaign-'));
+  assert.ok(!html.includes('square.link'));assert.ok(!html.includes('campaign-'));
+  assert.equal((html.match(/<input\b[^>]*\bdata-cart-variant\b/g)||[]).length,p.variants.length);
   assert.ok(html.includes('ProductGroup'));assert.ok(!html.includes('New orders are paused'));
   for(const shot of [...p.gallery,...p.campaign]){
    const image=await readFile(new URL(`../public${shot.feedImage}`,import.meta.url));

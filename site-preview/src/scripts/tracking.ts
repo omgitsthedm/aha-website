@@ -44,8 +44,20 @@ document.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button=>b
  consent=value;activate(value);
 }));
 document.querySelectorAll<HTMLButtonElement>('[data-privacy-settings]').forEach(button=>button.addEventListener('click',()=>{if(banner){banner.hidden=false;banner.querySelector<HTMLButtonElement>('button')?.focus();}}));
-document.querySelector<HTMLAnchorElement>('[data-checkout-link]')?.addEventListener('click',()=>{
- const item=product();if(!item||!enabled)return;
- if(consent?.analytics)window.gtag?.('event','begin_checkout',{currency:'USD',value:item.price,items:[item]});
- if(consent?.marketing&&!gpc)window.fbq?.('track','InitiateCheckout',{content_ids:[item.item_id],content_type:'product_group',num_items:1,value:item.price,currency:'USD'});
+document.addEventListener('aha:checkout-quoted',(event)=>{
+ if(!enabled||!consent)return;
+ const detail=(event as CustomEvent<{value:number;items:Array<{id:string;name:string;price:number;quantity:number}>}>).detail;
+ if(!detail||!Number.isFinite(detail.value)||!Array.isArray(detail.items))return;
+ const items=detail.items.map(item=>({item_id:item.id,item_name:item.name,item_brand:'After Hours Agenda',item_variant:'Bone',price:item.price,quantity:item.quantity}));
+ if(consent.analytics)window.gtag?.('event','begin_checkout',{currency:'USD',value:detail.value,items});
+ if(consent.marketing&&!gpc)window.fbq?.('track','InitiateCheckout',{content_ids:detail.items.map(item=>item.id),content_type:'product',num_items:detail.items.reduce((total,item)=>total+item.quantity,0),value:detail.value,currency:'USD'});
+});
+
+document.addEventListener('aha:purchase-confirmed',(event)=>{
+ if(!enabled||!consent)return;
+ const detail=(event as CustomEvent<{orderId:string;value:number;shipping:number;tax:number;currency:string;items:Array<{id:string;name:string;price:number;quantity:number}>}>).detail;
+ if(!detail||typeof detail.orderId!=='string'||!Number.isFinite(detail.value)||!Number.isFinite(detail.shipping)||!Number.isFinite(detail.tax)||typeof detail.currency!=='string'||!Array.isArray(detail.items))return;
+ const items=detail.items.map(item=>({item_id:item.id,item_name:item.name,item_brand:'After Hours Agenda',item_variant:'Bone',price:item.price,quantity:item.quantity}));
+ if(consent.analytics)window.gtag?.('event','purchase',{transaction_id:detail.orderId,currency:detail.currency,value:detail.value,shipping:detail.shipping,tax:detail.tax,items});
+ if(consent.marketing&&!gpc)window.fbq?.('track','Purchase',{content_ids:detail.items.map(item=>item.id),content_type:'product',num_items:detail.items.reduce((total,item)=>total+item.quantity,0),value:detail.value,currency:detail.currency},{eventID:detail.orderId});
 });

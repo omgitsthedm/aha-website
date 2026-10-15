@@ -41,10 +41,11 @@ test('Analytics only queues product events, strips unrelated query data, and can
   expect(requested).toHaveLength(1);
 });
 
-test('marketing consent queues only explicit product events; checkout click is not a purchase', async ({page}) => {
+test('marketing consent queues only explicit product and quoted-checkout events; it never fabricates a purchase', async ({page}) => {
   test.skip(!production, 'Production-only integrations stay disabled in preview.');
   const requested = await capture(page);
-  await page.route('https://square.link/**',route=>route.fulfill({contentType:'text/html',body:'<h1>Checkout navigation intercepted</h1>'}));
+  await page.route('**/api/checkout/quote',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({checkoutId:'consent-quote',checkoutToken:'safe-token',expiresAt:'2030-01-01T00:00:00.000Z',currency:'USD',lineItems:[{variationId:'R5UCZCGSJMR3Z4HJDVOD3ZIK',quantity:1,unitAmount:5200,totalAmount:5200}],subtotalAmount:5200,shippingAmount:0,taxAmount:421,totalAmount:5621,shippingLabel:'Free domestic shipping'})}));
+  await page.route('**/api/checkout/config',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({appId:'public-app',locationId:'location',countryCode:'US',currencyCode:'USD',methods:{card:false,applePay:false,googlePay:false,afterpay:false,cashAppPay:false}})}));
   await page.goto('/shop/yikes-cropped-hoodie/');
   await page.getByRole('button',{name:'Allow all',exact:true}).click();
   await expect.poll(()=>requested.length).toBe(2);
@@ -53,9 +54,14 @@ test('marketing consent queues only explicit product events; checkout click is n
   expect(queue).toContainEqual(['track','PageView']);
   expect(queue?.some(v=>v[1]==='ViewContent')).toBe(true);
   expect(queue?.some(v=>v[1]==='Purchase')).toBe(false);
-  // Prevent navigation only in this test so the outgoing event queues can be inspected.
-  await page.locator('[data-checkout-link]').evaluate(el=>el.addEventListener('click',e=>e.preventDefault()));
-  await page.locator('[data-checkout-link]').click();
+  await page.getByRole('radio',{name:'M',exact:true}).check();
+  await page.getByRole('button',{name:'Add to bag'}).click();
+  const afterAdd = await page.evaluate(()=>({meta:window.fbq?.queue,ga:window.dataLayer.map(v=>Array.from(v as ArrayLike<unknown>))}));
+  expect(afterAdd.meta?.some(v=>v[1]==='InitiateCheckout')).toBe(false);
+  await page.goto('/checkout/');
+  await page.getByLabel('First name').fill('Avery');await page.getByLabel('Last name').fill('Tester');await page.getByLabel('Email').fill('avery@example.com');await page.getByLabel('Address').fill('1 N Central Ave');await page.getByLabel('City').fill('Phoenix');await page.getByLabel('State / province').fill('AZ');await page.getByLabel('Postal code').fill('85004');
+  await page.getByRole('button',{name:'Confirm total'}).click();
+  await expect.poll(async()=>page.evaluate(()=>window.fbq?.queue?.filter(v=>v[1]==='InitiateCheckout').length||0)).toBe(1);
   const after = await page.evaluate(()=>({meta:window.fbq?.queue,ga:window.dataLayer.map(v=>Array.from(v as ArrayLike<unknown>))}));
   expect(after.meta?.filter(v=>v[1]==='InitiateCheckout')).toHaveLength(1);
   expect(after.ga.filter(v=>v[1]==='begin_checkout')).toHaveLength(1);
@@ -71,4 +77,56 @@ test('Global Privacy Control prevents Meta even when Allow all is chosen', async
   await expect.poll(()=>requested.length).toBe(1);
   expect(requested[0]).toContain('googletagmanager.com');
   expect(await page.evaluate(()=>Boolean(window.fbq))).toBe(false);
+});
+
+async function mockCheckoutCard(page: Page) {
+  await page.addInitScript(() => {
+    window.Square = { payments: () => ({ card: async () => ({ attach: async () => {}, tokenize: async () => ({ status: 'OK', token: 'opaque-test-token' }) }), paymentRequest: () => ({}) }) };
+  });
+}
+async function fillCheckout(page: Page) {
+  for (const [label, value] of [['First name','Avery'],['Last name','Tester'],['Email','avery@example.com'],['Address','1 N Central Ave'],['City','Phoenix'],['State / province','AZ'],['Postal code','85004']] as const) await page.getByLabel(label).fill(value);
+}
+const completedQuote={checkoutId:'tracking-quote',checkoutToken:'tracking-token',expiresAt:'2030-01-01T00:00:00.000Z',currency:'USD',lineItems:[{variationId:'R5UCZCGSJMR3Z4HJDVOD3ZIK',quantity:1,unitAmount:5200,totalAmount:5200}],subtotalAmount:5200,shippingAmount:0,taxAmount:421,totalAmount:5621,shippingLabel:'Free domestic shipping'};
+
+async function mockCompletedCheckout(page: Page) {
+  await page.route('**/api/checkout/config',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({appId:'public-app',locationId:'location',countryCode:'US',currencyCode:'USD',methods:{card:true,applePay:false,googlePay:false,afterpay:false,cashAppPay:false}})}));
+  await page.route('**/api/checkout/quote',route=>route.fulfill({contentType:'application/json',body:JSON.stringify(completedQuote)}));
+  await page.route('**/api/checkout/pay',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({state:'completed',orderId:'AHA-tracking-1001',paymentId:'payment-test'})}));
+}
+
+test('consented verified completion queues one GA4 and Meta Purchase with exact variant amounts', async ({page}) => {
+  test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await mockCheckoutCard(page);await mockCompletedCheckout(page);
+  const requested=await capture(page);
+  await page.goto('/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1');
+  await page.getByRole('button',{name:'Allow all',exact:true}).click();
+  await expect.poll(()=>requested.length).toBe(2);
+  await fillCheckout(page);
+  await page.getByRole('button',{name:'Confirm total'}).click();
+  await page.getByRole('button',{name:'Pay securely'}).click();
+  await expect(page.locator('[data-checkout-message]')).toContainText('Payment confirmed');
+  const events=await page.evaluate(()=>({ga:window.dataLayer.map(v=>Array.from(v as ArrayLike<unknown>)),meta:window.fbq?.queue}));
+  const ga=events.ga.find(v=>v[0]==='event'&&v[1]==='purchase')?.[2] as {transaction_id:string;value:number;shipping:number;tax:number;items:Array<{item_id:string}>};
+  expect(ga).toMatchObject({transaction_id:'AHA-tracking-1001',value:52,shipping:0,tax:4.21,items:[{item_id:'R5UCZCGSJMR3Z4HJDVOD3ZIK'}]});
+  const meta=events.meta?.find(v=>v[1]==='Purchase');
+  expect(meta?.[2]).toMatchObject({content_ids:['R5UCZCGSJMR3Z4HJDVOD3ZIK'],content_type:'product',value:52,currency:'USD'});
+  expect(meta?.[3]).toEqual({eventID:'AHA-tracking-1001'});
+  await page.reload();
+  const afterReload=await page.evaluate(()=>window.dataLayer.map(v=>Array.from(v as ArrayLike<unknown>)).filter(v=>v[0]==='event'&&v[1]==='purchase'));
+  expect(afterReload).toHaveLength(0);
+});
+
+test('Essential-only verified completion emits no GA4 or Meta Purchase', async ({page}) => {
+  test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await mockCheckoutCard(page);await mockCompletedCheckout(page);
+  const requested=await capture(page);
+  await page.goto('/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1');
+  await page.getByRole('button',{name:'Essential only',exact:true}).click();
+  await fillCheckout(page);
+  await page.getByRole('button',{name:'Confirm total'}).click();
+  await page.getByRole('button',{name:'Pay securely'}).click();
+  await expect(page.locator('[data-checkout-message]')).toContainText('Payment confirmed');
+  expect(requested).toEqual([]);
+  expect(await page.evaluate(()=>({ga:(window.dataLayer||[]).filter(v=>Array.from(v as ArrayLike<unknown>)[1]==='purchase'),meta:window.fbq?.queue?.filter(v=>v[1]==='Purchase')}))).toEqual({ga:[],meta:undefined});
 });

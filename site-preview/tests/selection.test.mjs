@@ -12,7 +12,7 @@ test('Meta IDs and supplier SKUs recover the same size without accepting URL pri
 });
 
 test('unknown, retired, negative, fractional and excessive quantities cannot become purchasable selections', () => {
-  for (const entry of ['retired:1', 'APQ-6208401S8A1:-1', 'APQ-6208401S8A1:0', 'APQ-6208401S8A1:1.5', 'APQ-6208401S8A1:21', 'APQ-6208401S8A1:2:extra', 'APQ-6208401S8A1:Infinity']) {
+  for (const entry of ['retired:1', 'APQ-6208401S8A1:-1', 'APQ-6208401S8A1:0', 'APQ-6208401S8A1:1.5', 'APQ-6208401S8A1:11', 'APQ-6208401S8A1:2:extra', 'APQ-6208401S8A1:Infinity']) {
     const result = recoverSelection(`?products=${encodeURIComponent(entry)}`, variants);
     assert.equal(result.lines.length, 0, entry);
     assert.equal(result.incomplete, true, entry);
