@@ -23,8 +23,8 @@ test('new visitors use the storefront default without a banner or synthetic save
   await expect.poll(()=>requested.length).toBe(2);
   expect(requested).toEqual(expect.arrayContaining([expect.stringContaining('googletagmanager.com'),expect.stringContaining('/api/partytown/meta-pixel/bootstrap')]));
   const queue = await page.evaluate(()=>window.__ahaTrackingEvents);
-  expect(queue.ga.some(v=>v[0]==='event'&&v[1]==='view_item')).toBe(true);
-  expect(queue.meta?.some(v=>v[1]==='ViewContent')).toBe(true);
+  expect(queue?.ga.some(v=>v[0]==='event'&&v[1]==='view_item')).toBe(true);
+  expect(queue?.meta?.some(v=>v[1]==='ViewContent')).toBe(true);
 });
 
 test('saved Essential only remains off and the footer exposes privacy controls', async ({page}) => {
@@ -146,7 +146,7 @@ test('the default marketing setting queues only explicit product and quoted-chec
   await expect.poll(async()=>page.evaluate(()=>window.__ahaTrackingEvents?.meta.filter(v=>v[1]==='InitiateCheckout').length||0)).toBe(1);
   const after = await page.evaluate(()=>({meta:window.__ahaTrackingEvents?.meta,ga:window.__ahaTrackingEvents?.ga}));
   expect(after.meta?.filter(v=>v[1]==='InitiateCheckout')).toHaveLength(1);
-  expect(after.ga.filter(v=>v[1]==='begin_checkout')).toHaveLength(1);
+  expect(after.ga?.filter(v=>v[1]==='begin_checkout')).toHaveLength(1);
   expect(JSON.stringify(after)).not.toContain('Purchase');
 });
 
@@ -187,9 +187,9 @@ test('default verified completion queues one GA4 and Meta Purchase with exact va
   await page.getByRole('button',{name:'Pay securely'}).click();
   await expect(page.locator('[data-checkout-message]')).toContainText('Payment confirmed');
   const events=await page.evaluate(()=>window.__ahaTrackingEvents);
-  const ga=events.ga.find(v=>v[0]==='event'&&v[1]==='purchase')?.[2] as {transaction_id:string;value:number;shipping:number;tax:number;items:Array<{item_id:string}>};
+  const ga=events?.ga.find(v=>v[0]==='event'&&v[1]==='purchase')?.[2] as {transaction_id:string;value:number;shipping:number;tax:number;items:Array<{item_id:string}>};
   expect(ga).toMatchObject({transaction_id:'AHA-tracking-1001',value:52,shipping:0,tax:4.21,items:[{item_id:'R5UCZCGSJMR3Z4HJDVOD3ZIK'}]});
-  const meta=events.meta?.find(v=>v[1]==='Purchase');
+  const meta=events?.meta?.find(v=>v[1]==='Purchase');
   expect(meta?.[2]).toMatchObject({content_ids:['R5UCZCGSJMR3Z4HJDVOD3ZIK'],content_type:'product',value:52,currency:'USD'});
   expect(meta?.[3]).toEqual({eventID:'AHA-tracking-1001'});
   expect(JSON.stringify(events)).not.toMatch(/Avery|Tester|avery@example\.com|1 N Central Ave|Phoenix/);
