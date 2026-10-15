@@ -4,6 +4,12 @@ import test from 'node:test';
 import { PGlite } from '@electric-sql/pglite';
 import { createNetlifyRepository } from '../server/fulfillment/repository.mjs';
 
+test('Netlify repository-level discovery receives the same additive migration validated by the app', async () => {
+  const app = await readFile(new URL('../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql', import.meta.url), 'utf8');
+  const root = await readFile(new URL('../../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql', import.meta.url), 'utf8');
+  assert.equal(root, app);
+});
+
 async function isolatedRepository(t) {
   const database = new PGlite();
   t.after(() => database.close());
