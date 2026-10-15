@@ -20,6 +20,11 @@ const legacyYikes=Object.freeze({
  YG2VANIT6R4SUQ3MWPZK74YI:['APQ-6208412S1A1','XL',5500,'cropped_hoodie'],
  KEQN72Y22B5RL3V5NFVACNWQ:['APQ-6208412S2A1','2XL',5500,'cropped_hoodie'],
 });
+const cityDesigns=Object.freeze({
+ 'the-city-ss4500-black':{designId:6210771,priceCents:5800,sizes:['XS','S','M','L','XL','2XL','3XL','4XL','5XL']},
+ 'the-city-ss3000-black':{designId:6210772,priceCents:5500,sizes:['XS','S','M','L','XL','2XL','3XL']},
+ 'the-city-next-level-3601-black':{designId:6210773,priceCents:4200,sizes:['S','M','L','XL','2XL']},
+});
 
 test('every approved storefront variation has one exact fulfillment allowlist mapping',()=>{
  const storefront=new Map();
@@ -58,4 +63,34 @@ test('expanded Insomniac catalog records retain a customer-facing title and colo
   assert.equal(mapped.title,`${product.title} — ${product.color}`,`${product.slug} requires its own fulfillment title`);
  }
  assert.equal(AHA_FULFILLMENT_CATALOG.R5UCZCGSJMR3Z4HJDVOD3ZIK.title,undefined,'Yikes remains on the explicit legacy-title fallback');
+});
+
+test('The City keeps all 21 approved variants, back-first imagery, the exact supplier designs, and the private-label contract',()=>{
+ const city=products.filter(product=>product.collection==='The City');
+ assert.equal(city.length,3);
+ assert.deepEqual(city.map(product=>product.slug).sort(),Object.keys(cityDesigns).sort());
+ let variants=0;
+ for(const product of city){
+  const expected=cityDesigns[product.slug];
+  assert.equal(product.color,'Black',`${product.slug} color`);
+  assert.equal(Math.round(product.price*100),expected.priceCents,`${product.slug} price`);
+  assert.deepEqual(product.gallery.map(image=>image.role),['back','front','print-detail','folded'],`${product.slug} gallery order`);
+  assert.deepEqual(product.variants.map(variant=>variant.size),expected.sizes,`${product.slug} sizes`);
+  for(const variant of product.variants){
+   variants+=1;
+   const mapped=AHA_FULFILLMENT_CATALOG[variant.id];
+   assert.ok(mapped,`${product.slug} ${variant.size} missing fulfillment mapping`);
+   assert.equal(mapped.sku,variant.sku,`${product.slug} ${variant.size} decorated SKU`);
+   assert.equal(mapped.size,variant.size,`${product.slug} ${variant.size} mapped size`);
+   assert.equal(mapped.priceCents,expected.priceCents,`${product.slug} ${variant.size} mapped price`);
+   assert.equal(mapped.product,product.slug.replaceAll('-','_'),`${product.slug} product mapping`);
+   assert.equal(mapped.title,`${product.title} — ${product.color}`,`${product.slug} fulfillment title`);
+   // Apliiq's decorated SKU encodes the verified design ID. This pins each
+   // storefront variation to the exact supplier design without trusting a
+   // browser-submitted SKU or a mutable provider label.
+   assert.match(variant.sku,new RegExp(`^APQ-${expected.designId}S[0-9]+A1$`),`${product.slug} exact supplier design`);
+  }
+ }
+ assert.equal(variants,21);
+ assert.equal(AHA_PRIVATE_LABEL,'SB-3-161622');
 });

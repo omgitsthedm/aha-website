@@ -1,10 +1,14 @@
 # After Hours Agenda source of truth
 
+## Current catalog expansion — October 15, 2026
+
+The City adds three Black back-print garments to Yikes and Insomniac: SS4500 hoodie $58 (XS–5XL), SS3000 crewneck $55 (XS–3XL), and Next Level 3601 long sleeve $42 (S–2XL). All use private label SB-3-161622 and free domestic shipping. The intended complete catalog is 13 garment/color options and 88 exact Square-to-Apliiq variations. Four garment-only images per product stay separate from three campaign images. The active app remains `site-preview/`; the original root application stays inactive. Successful Apliiq create-design receipts are 6210771, 6210772 and 6210773, using artwork 8208075. The owner authorized publication; the exact published Netlify deploy and `/release.json` remain the proof of live state.
+
 ## Current architecture — October 15, 2026
 
 The active application is `site-preview/` (Astro static storefront plus scoped Netlify Functions), selected by both Netlify configurations. The original root Next.js checkout/provider code is preserved historical source and is not deployed. Required CI, browser flows, dependency auditing and Lighthouse now run against the active package. Do not reactivate the root application to repair current checkout.
 
-The current release implements one persistent size-and-quantity bag and embedded Square Web Payments checkout. Server-owned quotes validate the 13 approved variants, prices, shipping and the existing Arizona tax rule. Durable checkout sessions bind one order/payment and recover ambiguous responses without replaying a source token. Current signed Square fulfillment callbacks continue to route eligible paid orders to Apliiq; the active transactional outbox supplies confirmation and shipment emails. New migrations must match byte-for-byte in the repository-root and active-package migration directories. Only production/functions-scoped settings for exact site `275b4115-16bf-42fb-9b36-6bce9bb93608` can enable this runtime.
+The current release implements one persistent size-and-quantity bag and embedded Square Web Payments checkout. Server-owned quotes validate the exact approved catalog variants, prices, shipping and the existing Arizona tax rule. Durable checkout sessions bind one order/payment and recover ambiguous responses without replaying a source token. Current signed Square fulfillment callbacks continue to route eligible paid orders to Apliiq; the active transactional outbox supplies confirmation and shipment emails. New migrations must match byte-for-byte in the repository-root and active-package migration directories. Only production/functions-scoped settings for exact site `275b4115-16bf-42fb-9b36-6bce9bb93608` can enable this runtime.
 
 Square Sandbox is used for non-billable payment verification. Production verification stops before a paid purchase. Publication is proven by the published Netlify deploy and `/release.json`, not this document.
 

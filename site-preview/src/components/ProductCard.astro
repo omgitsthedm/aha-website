@@ -5,6 +5,6 @@ interface Props {product: typeof products[number]}
 const {product}=Astro.props;
 ---
 <article class="product-card">
-  <a class="product-card-image" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} in ${product.color}`}><ProductImage image={product.gallery[0]!} sizes="(max-width: 760px) calc((100vw - 60px) / 2), (max-width: 1400px) 23vw, 320px" /></a>
+  <a class="product-card-image" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} in ${product.color}`}><ProductImage image={product.gallery[0]!} sizes="(max-width: 760px) calc(50vw - 28px), (max-width: 1440px) calc(45.6vw - 16px), 640px" /></a>
   <div class="product-card-info"><div><h2><a href={`/shop/${product.slug}/`}>{product.title}</a></h2><p>{product.color} · {product.variants[0]?.size}–{product.variants.at(-1)?.size}</p></div><p class="product-price">${product.price}</p></div>
 </article>

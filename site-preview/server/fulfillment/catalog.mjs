@@ -73,6 +73,28 @@ export const AHA_FULFILLMENT_CATALOG = Object.freeze({
   "FL3U7QS67543UNZXLKO3DV4D": { sku: "APQ-6209287S1A1", size: "XL", priceCents: 5800, product: "insomniac_comfort_colors_4410_grey", title: "Insomniac Pocket Long Sleeve — Grey" },
   "G7AX3A36HEDAG3QOJVIMBC2L": { sku: "APQ-6209287S2A1", size: "2XL", priceCents: 5800, product: "insomniac_comfort_colors_4410_grey", title: "Insomniac Pocket Long Sleeve — Grey" },
   "E7ZQH2PFMRURHXLIJEFCYTO7": { sku: "APQ-6209287S21A1", size: "3XL", priceCents: 5800, product: "insomniac_comfort_colors_4410_grey", title: "Insomniac Pocket Long Sleeve — Grey" },
+
+  "27MUA3DWTTWFB7YYLCBK24O6": { sku: "APQ-6210771S5A1", size: "XS", priceCents: 5800, product: "the_city_ss4500_black", title: "The City Hoodie — Black" },
+  "TIBHPL7I6VVO7Q2IJ76LONSZ": { sku: "APQ-6210771S6A1", size: "S", priceCents: 5800, product: "the_city_ss4500_black", title: "The City Hoodie — Black" },
+  "Z4KOPIFUDW4LPHGH2YPRSXCF": { sku: "APQ-6210771S7A1", size: "M", priceCents: 5800, product: "the_city_ss4500_black", title: "The City Hoodie — Black" },
+  "3IIUQ3SOTIEAM7LCYYYDOU45": { sku: "APQ-6210771S8A1", size: "L", priceCents: 5800, product: "the_city_ss4500_black", title: "The City Hoodie — Black" },
+  "A32PW3R7HRGFIW4YPZJF5XNZ": { sku: "APQ-6210771S1A1", size: "XL", priceCents: 5800, product: "the_city_ss4500_black", title: "The City Hoodie — Black" },
+  "ZAD5SGEQ4VZA3LVEFLTBIYCH": { sku: "APQ-6210771S2A1", size: "2XL", priceCents: 5800, product: "the_city_ss4500_black", title: "The City Hoodie — Black" },
+  "BULH22GFRN76CCBGVOP3ZLOQ": { sku: "APQ-6210771S21A1", size: "3XL", priceCents: 5800, product: "the_city_ss4500_black", title: "The City Hoodie — Black" },
+  "XMMAQ6YQ6ZGFTOOQDMGYSC5W": { sku: "APQ-6210771S61A1", size: "4XL", priceCents: 5800, product: "the_city_ss4500_black", title: "The City Hoodie — Black" },
+  "UOJ2XHWLABERBRLBAGL52HNV": { sku: "APQ-6210771S62A1", size: "5XL", priceCents: 5800, product: "the_city_ss4500_black", title: "The City Hoodie — Black" },
+  "KQJVOUGOKMJF4RBUR5UGJM3J": { sku: "APQ-6210772S5A1", size: "XS", priceCents: 5500, product: "the_city_ss3000_black", title: "The City Crewneck — Black" },
+  "OHNHFAS23EQVKJIVQ6D27GTW": { sku: "APQ-6210772S6A1", size: "S", priceCents: 5500, product: "the_city_ss3000_black", title: "The City Crewneck — Black" },
+  "2PYRHHU77GDDVHHR5WFFDLZR": { sku: "APQ-6210772S7A1", size: "M", priceCents: 5500, product: "the_city_ss3000_black", title: "The City Crewneck — Black" },
+  "2RMJ2JJZDBI3MDXV3Z522C26": { sku: "APQ-6210772S8A1", size: "L", priceCents: 5500, product: "the_city_ss3000_black", title: "The City Crewneck — Black" },
+  "ZKOU4YRURYWTQ5N4PBRBMGOV": { sku: "APQ-6210772S1A1", size: "XL", priceCents: 5500, product: "the_city_ss3000_black", title: "The City Crewneck — Black" },
+  "ZYHURAIHGJFMRDXIQYS7UAPV": { sku: "APQ-6210772S2A1", size: "2XL", priceCents: 5500, product: "the_city_ss3000_black", title: "The City Crewneck — Black" },
+  "2A2ZZM6K6RM3ZAG6ZW44TOYL": { sku: "APQ-6210772S21A1", size: "3XL", priceCents: 5500, product: "the_city_ss3000_black", title: "The City Crewneck — Black" },
+  "TFGRKA4U3JBI3DCXGE4YKWKP": { sku: "APQ-6210773S6A1", size: "S", priceCents: 4200, product: "the_city_next_level_3601_black", title: "The City Long Sleeve — Black" },
+  "4S663ECHO2JTEANUZIRVPGW3": { sku: "APQ-6210773S7A1", size: "M", priceCents: 4200, product: "the_city_next_level_3601_black", title: "The City Long Sleeve — Black" },
+  "2GJHLJ23CJEUXHD24EQM5I5Y": { sku: "APQ-6210773S8A1", size: "L", priceCents: 4200, product: "the_city_next_level_3601_black", title: "The City Long Sleeve — Black" },
+  "VXRBFITIR2LUHMGSOEBN7SOP": { sku: "APQ-6210773S1A1", size: "XL", priceCents: 4200, product: "the_city_next_level_3601_black", title: "The City Long Sleeve — Black" },
+  "TLW77E6SB6RSZ4RVBUG66N5Y": { sku: "APQ-6210773S2A1", size: "2XL", priceCents: 4200, product: "the_city_next_level_3601_black", title: "The City Long Sleeve — Black" },
 });
 
 export const AHA_PRIVATE_LABEL = "SB-3-161622";
