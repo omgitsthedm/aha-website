@@ -410,7 +410,7 @@
         "sleeveLength": 40.5
       }
     ],
-    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
     "collection": "Insomniac",
     "typeLabel": "Hoodie",
     "fabricType": "cotton-blend fleece",
@@ -421,7 +421,7 @@
       "twill neck tape",
       "1x1 ribbed cuffs and waistband"
     ],
-    "sleeveMeasurementGuidance": "Use the SS4500 manufacturer's sleeve measurement for the selected size; compare it with a garment that fits you.",
+    "sleeveMeasurementGuidance": "",
     "campaignSetting": "Dingy dive-bar exterior",
     "variants": [
       {
@@ -612,7 +612,7 @@
         "sleeveLength": 40.5
       }
     ],
-    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
     "collection": "Insomniac",
     "typeLabel": "Hoodie",
     "fabricType": "cotton-blend fleece",
@@ -622,7 +622,7 @@
       "twill neck tape",
       "1x1 ribbed cuffs and waistband"
     ],
-    "sleeveMeasurementGuidance": "Use the SS4500 manufacturer's sleeve measurement for the selected size; compare it with a garment that fits you.",
+    "sleeveMeasurementGuidance": "",
     "campaignSetting": "Dingy dive-bar exterior",
     "variants": [
       {
@@ -801,7 +801,7 @@
         "sleeveLength": 40
       }
     ],
-    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
     "collection": "Insomniac",
     "typeLabel": "Crewneck",
     "fabricType": "cotton-blend fleece",
@@ -810,7 +810,7 @@
       "twill neck tape",
       "1x1 ribbed collar, cuffs and waistband"
     ],
-    "sleeveMeasurementGuidance": "Use the SS3000 manufacturer's sleeve measurement for the selected size; compare it with a garment that fits you.",
+    "sleeveMeasurementGuidance": "",
     "campaignSetting": "Dingy dive-bar exterior",
     "variants": [
       {
@@ -979,7 +979,7 @@
         "sleeveLength": 40
       }
     ],
-    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
     "collection": "Insomniac",
     "typeLabel": "Crewneck",
     "fabricType": "cotton-blend fleece",
@@ -988,7 +988,7 @@
       "twill neck tape",
       "1x1 ribbed collar, cuffs and waistband"
     ],
-    "sleeveMeasurementGuidance": "Use the SS3000 manufacturer's sleeve measurement for the selected size; compare it with a garment that fits you.",
+    "sleeveMeasurementGuidance": "",
     "campaignSetting": "Dingy dive-bar exterior",
     "variants": [
       {
@@ -1140,7 +1140,7 @@
         "chestWidth": 25.5
       }
     ],
-    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
     "collection": "Insomniac",
     "typeLabel": "Long sleeve",
     "fabricType": "cotton jersey",
@@ -1148,10 +1148,9 @@
       "combed ring-spun cotton",
       "baby-rib collar",
       "hemmed sleeves",
-      "side seams",
-      "tear-away label"
+      "side seams"
     ],
-    "sleeveMeasurementGuidance": "The official Next Level 3601 specification lists chest and body length only; it does not publish a sleeve measurement. Do not infer one from a center-back measurement.",
+    "sleeveMeasurementGuidance": "",
     "campaignSetting": "Diner",
     "variants": [
       {
@@ -1293,17 +1292,16 @@
         "chestWidth": 25.5
       }
     ],
-    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
     "collection": "Insomniac",
     "typeLabel": "Long sleeve",
     "fabricType": "cotton jersey",
     "constructionDetails": [
       "baby-rib collar",
       "hemmed sleeves",
-      "side seams",
-      "tear-away label"
+      "side seams"
     ],
-    "sleeveMeasurementGuidance": "The official Next Level 3601 specification lists chest and body length only; it does not publish a sleeve measurement. Do not infer one from a center-back measurement.",
+    "sleeveMeasurementGuidance": "",
     "campaignSetting": "Record store",
     "variants": [
       {
@@ -1450,7 +1448,7 @@
         "chestWidth": 27
       }
     ],
-    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
     "collection": "Insomniac",
     "typeLabel": "Pocket long sleeve",
     "fabricType": "cotton jersey",
@@ -1460,7 +1458,7 @@
       "left-chest pocket",
       "ribbed cuffs"
     ],
-    "sleeveMeasurementGuidance": "The selected 4410 source chart records body length and width only; do not infer a sleeve measurement.",
+    "sleeveMeasurementGuidance": "",
     "campaignSetting": "Pinball bar",
     "variants": [
       {
@@ -1612,7 +1610,7 @@
         "chestWidth": 27
       }
     ],
-    "measurementGuidance": "Measurements are in inches and measured flat unless noted in the manufacturer chart. Compare them with a garment you already own.",
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
     "collection": "Insomniac",
     "typeLabel": "Pocket long sleeve",
     "fabricType": "cotton jersey",
@@ -1622,7 +1620,7 @@
       "left-chest pocket",
       "ribbed cuffs"
     ],
-    "sleeveMeasurementGuidance": "The selected 4410 source chart records body length and width only; do not infer a sleeve measurement.",
+    "sleeveMeasurementGuidance": "",
     "campaignSetting": "Library stone wall",
     "variants": [
       {

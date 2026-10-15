@@ -1,7 +1,7 @@
 export {};
 type Consent={analytics:boolean;marketing:boolean;at:number};
 type Queue=((...args:unknown[])=>void)&{queue?:unknown[][];loaded?:boolean;version?:string;callMethod?:(...args:unknown[])=>void;push?:Queue};
-declare global {interface Window {dataLayer:unknown[];gtag:(...args:unknown[])=>void;fbq?:Queue;_fbq?:Queue;}}
+declare global {interface Window {dataLayer:unknown[];gtag:(...args:unknown[])=>void;fbq?:Queue;_fbq?:Queue;__ahaTrackingEvents?:{ga:unknown[][];meta:unknown[][]};}}
 const banner=document.querySelector<HTMLElement>('.cookie-banner');
 const enabled=banner?.dataset.trackingEnabled==='true';
 const key='aha-cookie-choices-v1';
@@ -11,7 +11,9 @@ let consent:Consent;
 try{const raw=JSON.parse(localStorage.getItem(key)||'null');if(raw&&typeof raw.analytics==='boolean'&&typeof raw.marketing==='boolean'&&Date.now()-raw.at<maxAge)consent=raw;}catch{/* Storage is optional. */}
 // A new visitor receives the storefront default without writing a synthetic consent click.
 consent ??= {analytics:true,marketing:!gpc,at:Date.now()};
-function insert(src:string){const script=document.createElement('script');script.async=true;script.src=src;document.head.append(script);}
+// Partytown observes dynamically inserted scripts, so consent still decides
+// whether a vendor request can exist while its parsing stays off the page thread.
+function insert(src:string){const script=document.createElement('script');script.type='text/partytown';script.async=true;script.src=src;document.head.append(script);}
 let analyticsSdkScheduled=false;
 let marketingSdkScheduled=false;
 let analyticsSdkLoaded=false;
@@ -39,24 +41,29 @@ function scheduleSdk(kind:'analytics'|'marketing',src:string){
 }
 function cleanLocation(){const url=new URL(location.pathname,location.origin);const search=new URLSearchParams(location.search);for(const name of ['utm_source','utm_medium','utm_campaign','utm_content','utm_term']){const value=search.get(name);if(value&&value.length<150)url.searchParams.set(name,value);}return url.href;}
 function product(){const node=document.querySelector<HTMLElement>('[data-product-id]');return node?{item_id:node.dataset.productId,item_name:node.dataset.productName,price:Number(node.dataset.productPrice),item_brand:'After Hours Agenda',item_variant:node.dataset.productColor,quantity:1}:null;}
+function events(){return window.__ahaTrackingEvents??=( {ga:[],meta:[]} );}
+function ga(...args:unknown[]){events().ga.push(args);window.gtag?.(...args);}
+function meta(...args:unknown[]){events().meta.push(args);window.fbq?.(...args);}
 function activate(value:Consent){
  if(!enabled)return;
  const item=product();
  if(value.analytics&&banner?.dataset.gaId){
   window.dataLayer=window.dataLayer||[];
   window.gtag=function(){window.dataLayer.push(arguments);};
-  window.gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
-  window.gtag('consent','update',{analytics_storage:'granted'});
-  window.gtag('js',new Date());
-  window.gtag('config',banner.dataset.gaId,{page_location:cleanLocation(),page_referrer:document.referrer?new URL(document.referrer).origin:'',allow_google_signals:false,allow_ad_personalization_signals:false,send_page_view:true});
-  if(item)window.gtag('event','view_item',{currency:'USD',value:item.price,items:[item]});
+  ga('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
+  ga('consent','update',{analytics_storage:'granted'});
+  ga('js',new Date());
+  ga('config',banner.dataset.gaId,{page_location:cleanLocation(),page_referrer:document.referrer?new URL(document.referrer).origin:'',allow_google_signals:false,allow_ad_personalization_signals:false,send_page_view:true});
+  if(item)ga('event','view_item',{currency:'USD',value:item.price,items:[item]});
   scheduleSdk('analytics',`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(banner.dataset.gaId)}`);
  }
  if(value.marketing&&!gpc&&banner?.dataset.metaId){
   const queue:Queue=window.fbq||(()=>{const stub:Queue=function(...args:unknown[]){if(stub.callMethod)stub.callMethod(...args);else stub.queue?.push(args);};return stub;})();
-  if(!window.fbq){queue.queue=[];queue.loaded=true;queue.version='2.0';queue.push=queue;window.fbq=queue;window._fbq=queue;}
-  queue('consent','grant');queue('set','autoConfig',false,banner.dataset.metaId);queue('init',banner.dataset.metaId);queue('track','PageView');
-  if(item)queue('track','ViewContent',{content_ids:[item.item_id],content_type:'product_group',content_name:item.item_name,value:item.price,currency:'USD'});
+  if(!queue.queue)queue.queue=[];
+  if(!window._fbq)window._fbq=queue;
+  if(!window.fbq){queue.loaded=true;queue.version='2.0';queue.push=queue;window.fbq=queue;window._fbq=queue;}
+  meta('consent','grant');meta('set','autoConfig',false,banner.dataset.metaId);meta('init',banner.dataset.metaId);meta('track','PageView');
+  if(item)meta('track','ViewContent',{content_ids:[item.item_id],content_type:'product_group',content_name:item.item_name,value:item.price,currency:'USD'});
   scheduleSdk('marketing','https://connect.facebook.net/en_US/fbevents.js');
  }
 }
@@ -89,8 +96,8 @@ document.addEventListener('aha:checkout-quoted',(event)=>{
  const detail=(event as CustomEvent<{value:number;items:Array<{id:string;name:string;price:number;quantity:number}>}>).detail;
  if(!detail||!Number.isFinite(detail.value)||!Array.isArray(detail.items))return;
  const items=detail.items.map(item=>({item_id:item.id,item_name:item.name,item_brand:'After Hours Agenda',price:item.price,quantity:item.quantity}));
- if(consent.analytics)window.gtag?.('event','begin_checkout',{currency:'USD',value:detail.value,items});
- if(consent.marketing&&!gpc)window.fbq?.('track','InitiateCheckout',{content_ids:detail.items.map(item=>item.id),content_type:'product',num_items:detail.items.reduce((total,item)=>total+item.quantity,0),value:detail.value,currency:'USD'});
+ if(consent.analytics)ga('event','begin_checkout',{currency:'USD',value:detail.value,items});
+ if(consent.marketing&&!gpc)meta('track','InitiateCheckout',{content_ids:detail.items.map(item=>item.id),content_type:'product',num_items:detail.items.reduce((total,item)=>total+item.quantity,0),value:detail.value,currency:'USD'});
 });
 
 document.addEventListener('aha:purchase-confirmed',(event)=>{
@@ -98,6 +105,6 @@ document.addEventListener('aha:purchase-confirmed',(event)=>{
  const detail=(event as CustomEvent<{orderId:string;value:number;shipping:number;tax:number;currency:string;items:Array<{id:string;name:string;price:number;quantity:number}>}>).detail;
  if(!detail||typeof detail.orderId!=='string'||!Number.isFinite(detail.value)||!Number.isFinite(detail.shipping)||!Number.isFinite(detail.tax)||typeof detail.currency!=='string'||!Array.isArray(detail.items))return;
  const items=detail.items.map(item=>({item_id:item.id,item_name:item.name,item_brand:'After Hours Agenda',price:item.price,quantity:item.quantity}));
- if(consent.analytics)window.gtag?.('event','purchase',{transaction_id:detail.orderId,currency:detail.currency,value:detail.value,shipping:detail.shipping,tax:detail.tax,items});
- if(consent.marketing&&!gpc)window.fbq?.('track','Purchase',{content_ids:detail.items.map(item=>item.id),content_type:'product',num_items:detail.items.reduce((total,item)=>total+item.quantity,0),value:detail.value,currency:detail.currency},{eventID:detail.orderId});
+ if(consent.analytics)ga('event','purchase',{transaction_id:detail.orderId,currency:detail.currency,value:detail.value,shipping:detail.shipping,tax:detail.tax,items});
+ if(consent.marketing&&!gpc)meta('track','Purchase',{content_ids:detail.items.map(item=>item.id),content_type:'product',num_items:detail.items.reduce((total,item)=>total+item.quantity,0),value:detail.value,currency:detail.currency},{eventID:detail.orderId});
 });

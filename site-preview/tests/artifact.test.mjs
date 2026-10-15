@@ -110,6 +110,8 @@ test("existing Google and Bing ownership files remain byte-identical", async () 
 });
 test("no server bundle, sensitive files or source maps enter the artifact", async () => {
   let jsBytes = 0;
+  let workerVendorBytes = 0;
+  const workerFiles = new Set(['partytown-sandbox-sw.html', 'partytown-sw.js', 'partytown-atomics.js', 'partytown.js', 'partytown-media.js']);
   const walk = async (dir) => {
     for (const item of await readdir(dir, { withFileTypes: true })) {
       assert.ok(
@@ -120,12 +122,18 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
       );
       assert.ok(!/\.(map|ts|tsx|sql|md)$/.test(item.name), item.name);
       if (item.isDirectory()) await walk(new URL(`${item.name}/`, dir));
-      else if (item.name.endsWith(".js"))
+      else if (dir.pathname.endsWith('/~partytown/')) {
+        assert.ok(workerFiles.has(item.name), `Unexpected worker vendor asset: ${item.name}`);
+        const emitted = await readFile(new URL(item.name, dir));
+        assert.deepEqual(emitted, await readFile(new URL(`../node_modules/@qwik.dev/partytown/lib/${item.name}`, import.meta.url)), 'Worker runtime must match the pinned dependency exactly');
+        workerVendorBytes += emitted.length;
+      } else if (item.name.endsWith(".js"))
         jsBytes += (await stat(new URL(item.name, dir))).size;
     }
   };
   await walk(root);
   assert.ok(jsBytes < 65000, `All first-party JS including checkout must stay under 65 KB; got ${jsBytes}`);
+  assert.ok(workerVendorBytes > 0 && workerVendorBytes < 160000, `The complete deferred third-party worker runtime must stay under 160 KB; got ${workerVendorBytes}`);
 });
 test("production context is refused by default", () => {
   const result = spawnSync(process.execPath, ["scripts/guard-build.mjs"], {

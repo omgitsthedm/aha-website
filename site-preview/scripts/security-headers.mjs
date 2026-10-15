@@ -15,9 +15,9 @@ export function contentSecurityPolicy({ approved, scriptHashes }) {
     `style-src 'self' 'unsafe-inline' ${square} ${cash} https://fonts.googleapis.com`,
     `img-src 'self' data: ${square} ${cashApi} https://franklin-assets.s3.amazonaws.com https://static.afterpay.com https://site-assets.afterpay.com https://www.gstatic.com${approved ? " https://www.googletagmanager.com https://www.google-analytics.com https://www.facebook.com https://connect.facebook.net" : ""}`,
     "font-src 'self' data: https://square-fonts-production-f.squarecdn.com https://d1g145x70srn7h.cloudfront.net https://cash-f.squarecdn.com https://fonts.gstatic.com",
-    `connect-src 'self' ${square} ${pci} https://o160250.ingest.sentry.io https://api.lab.amplitude.com/sdk/vardata https://static.afterpay.com/modal https://google.com/pay https://www.google.com/pay https://pay.google.com${approved ? " https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.facebook.com" : ""}`,
-    `frame-src ${square} ${cash} https://pay.google.com ${afterpay}`,
-    "worker-src 'none'", "upgrade-insecure-requests",
+    `connect-src 'self' ${square} ${pci} https://o160250.ingest.sentry.io https://api.lab.amplitude.com/sdk/vardata https://static.afterpay.com/modal https://google.com/pay https://www.google.com/pay https://pay.google.com${approved ? " https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.facebook.com" : ""}`,
+    `frame-src 'self' ${square} ${cash} https://pay.google.com ${afterpay}`,
+    "worker-src 'self'", "upgrade-insecure-requests",
   ].join("; ");
 }
 

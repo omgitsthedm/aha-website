@@ -17,6 +17,7 @@
     "check": "npm run lint && npm run typecheck && npm run build && npm test"
   },
   "dependencies": {
+    "@astrojs/partytown": "2.1.8",
     "@netlify/database": "2.0.1",
     "@netlify/functions": "6.0.2",
     "astro": "7.3.8"

@@ -7,4 +7,19 @@ const enabled=import.meta.env.AHA_PRODUCTION_BUILD==='approved';
  <p>Analytics and marketing are enabled by default. Choose a different setting at any time. Global Privacy Control keeps Meta disabled. <a href="/privacy/">Privacy details</a></p>
  <div class="cookie-actions"><button type="button" data-consent="essential">Essential only</button><button type="button" data-consent="analytics">Analytics only</button><button type="button" data-consent="all">Allow all</button></div>
 </aside>
+{enabled && <script is:inline type="text/partytown">
+  // Initialize the worker's queue before Partytown forwards any page events.
+  // This creates no vendor request; tracking.ts still gates every SDK load.
+  (function(w) {
+    const f = function() {
+      f.callMethod ? f.callMethod.apply(f, arguments) : f.queue.push(arguments);
+    };
+    f.queue = [];
+    f.loaded = true;
+    f.version = '2.0';
+    f.push = f;
+    w.fbq = f;
+    w._fbq = f;
+  })(window);
+</script>}
 <script src="../scripts/tracking.ts"></script>
