@@ -1,272 +1,254 @@
 export const documents = [
   {
-    slug: "updates",
-    metaTitle: "Collection news",
-    eyebrow: "The next chapter",
-    title: "Stay close.",
-    description:
-      "Follow After Hours Agenda for future releases and brand updates. No release date is announced here, and this website does not collect newsletter subscriptions.",
-    lead: "New pieces, the occasional note, and what comes next.",
-    sections: [
+    "slug": "updates",
+    "metaTitle": "Collection news",
+    "eyebrow": "The next chapter",
+    "title": "Stay close.",
+    "description": "Follow After Hours Agenda for collection news, new designs and product updates. The Yikes! crewneck and cropped hoodie are available now.",
+    "lead": "New pieces, the occasional note, and what comes next.",
+    "sections": [
       [
         "Where to follow",
-        "Our official Instagram is @afterhoursagenda. That is a place to follow the brand while the next collection is developed.",
+        "Our official Instagram is @afterhoursagenda. Follow for new designs and collection updates."
       ],
       [
-        "About release dates",
-        "No release date has been announced here. Following the brand does not reserve a product or create an order.",
+        "Available now",
+        "The Yikes! crewneck and cropped hoodie are available in Bone, with free domestic shipping."
       ],
       [
         "Email updates",
-        "This website does not sign you up or store an email address. If you have a question about future releases, write to info@afterhoursagenda.com.",
-      ],
+        "This website does not subscribe you to a mailing list. For a product question, write to info@afterhoursagenda.com."
+      ]
     ],
-    action: "Follow on Instagram ↗",
-    href: "https://www.instagram.com/afterhoursagenda",
+    "action": "Follow on Instagram ↗",
+    "href": "https://www.instagram.com/afterhoursagenda"
   },
   {
-    slug: "shop",
-    metaTitle: "Collection status",
-    eyebrow: "Collection status",
-    title: "A new chapter takes time.",
-    description:
-      "The After Hours Agenda catalog is closed while the next collection is developed. No new product or gift-card orders are accepted. Existing-order support remains available.",
-    lead: "New orders are paused. The story keeps going.",
-    sections: [
+    "slug": "shipping",
+    "metaTitle": "Shipping and order help",
+    "eyebrow": "Shipping",
+    "title": "Made for your order.",
+    "description": "Free domestic shipping on After Hours Agenda orders. Each piece is made to order, with production usually taking about a week before shipping.",
+    "lead": "Domestic shipping is free. Each piece is printed and prepared for your order.",
+    "sections": [
       [
-        "What is available now",
-        "Explore the story, manifesto, campaign concepts and brand archive. The lookbook is an editorial collection of images, not a current stock list.",
+        "Production and delivery",
+        "Production usually takes about a week. Shipping time varies by destination and is additional to production time. First-order artwork review or a stock delay can add time; delivery dates are estimates."
       ],
       [
-        "What is not available",
-        "This site is not accepting new product or gift-card orders. There is no checkout, payment or product reservation.",
+        "Rates",
+        "Shipping to the 50 US states and Washington, DC is free. Shipping to supported international destinations is $25 per order. Import duties, taxes and carrier fees may be charged by the destination country and are the recipient’s responsibility."
       ],
       [
-        "Already placed an order?",
-        "Support remains available for existing orders. Write to info@afterhoursagenda.com with the order number and checkout email. Never include payment-card details.",
-      ],
-    ],
-    action: "Explore the lookbook ↗",
-    href: "/lookbook/",
-  },
-  {
-    slug: "shipping",
-    metaTitle: "Shipping and order help",
-    eyebrow: "Existing-order help",
-    title: "Help with your shipment.",
-    description:
-      "Get help with an existing After Hours Agenda shipment. Use the shipping confirmation or contact support with your order number; new orders are paused.",
-    lead: "Your shipping confirmation is the starting point for an existing order.",
-    sections: [
-      [
-        "Find your tracking link",
-        "Start with the shipping email sent for your order. If it has a tracking link, use it to check the carrier’s updates.",
+        "International destinations",
+        "We ship to Canada, the United Kingdom, Ireland, Germany, France, Italy, Spain, the Netherlands, Belgium, Austria, Portugal, Sweden, Denmark, Finland, Poland, Czechia, Greece, Switzerland, Norway, Türkiye, Japan and Australia. Available delivery destinations are confirmed at checkout."
       ],
       [
-        "Ask about a shipment",
-        "Email info@afterhoursagenda.com with the order number and the email used at checkout. Describe what you are seeing, such as a missing update or an unexpected delivery status.",
+        "Tracking",
+        "We send tracking when the order ships. Use the carrier link for transit updates, or contact us with your order number and checkout email."
       ],
       [
         "Address changes",
-        "Contact support as soon as possible with the corrected address. Whether a change can be made depends on the order’s production and shipping stage.",
+        "Contact us as soon as possible if an address needs correcting. Changes depend on whether production or shipping has started."
       ],
       [
-        "Rates and timing",
-        "Use the shipping terms and delivery information from your original purchase. If you cannot find them, send us your order number and checkout email so we can help.",
-      ],
+        "Earlier orders",
+        "Orders placed before this release retain the shipping terms shown at the time of purchase."
+      ]
     ],
-    action: "Get order support ↗",
-    href: "/contact/?topic=order",
+    "action": "Get order support ↗",
+    "href": "/contact/?topic=order"
   },
   {
-    slug: "returns",
-    metaTitle: "Return and damage requests",
-    eyebrow: "Existing-order help",
-    title: "Let’s sort it out.",
-    description:
-      "Ask After Hours Agenda about a return, damaged piece or incorrect item. Requests are reviewed under the terms that applied to the original order.",
-    lead: "Start with one message and the details we need to help.",
-    sections: [
+    "slug": "returns",
+    "metaTitle": "Return and damage requests",
+    "eyebrow": "Returns and quality",
+    "title": "Let’s sort it out.",
+    "description": "Request a return within 30 days for an unworn After Hours Agenda item. We cover approved return shipping. Contact support for damage, misprints or incorrect pieces.",
+    "lead": "Contact us first so we can arrange the right next step.",
+    "sections": [
       [
-        "Tell us about the order",
-        "Email info@afterhoursagenda.com with the order number, the item and the reason for your request. Include the email used at checkout.",
+        "Returns",
+        "Request a return within 30 days of delivery for an unworn, unwashed item. We cover return shipping and send a prepaid label after reviewing the request. Made-to-order production fees may be non-refundable once printing starts; we will explain any applicable deduction before the return."
       ],
       [
-        "Show us the issue",
-        "For damage, a misprint or an incorrect item, include clear photographs of the piece and relevant packaging. Keep payment-card details out of the message.",
+        "Damaged or incorrect pieces",
+        "Email info@afterhoursagenda.com with the order number, checkout email and clear photographs of the issue. Include relevant packaging if it helps show what happened."
       ],
       [
-        "Wait for instructions",
-        "Requests are reviewed under the terms that applied when the order was placed. Wait for the return instructions before sending anything. Any approved refund follows the original payment path.",
+        "Refunds",
+        "Wait for instructions before returning anything. Approved refunds go back through the original payment method. Never send payment-card details by email."
       ],
+      [
+        "Earlier orders",
+        "Previous purchases retain the terms shown when the order was placed."
+      ]
     ],
-    action: "Ask about a return ↗",
-    href: "/contact/?topic=returns",
+    "action": "Ask about a return ↗",
+    "href": "/contact/?topic=returns"
   },
   {
-    slug: "track-order",
-    metaTitle: "Track an existing order",
-    eyebrow: "Existing customers",
-    title: "Find your order.",
-    description:
-      "Find the shipping confirmation for an existing After Hours Agenda order or ask support for a status update. This website does not query customer records.",
-    lead: "Check your shipping email, or let us help you find the next update.",
-    sections: [
+    "slug": "track-order",
+    "metaTitle": "Track an existing order",
+    "eyebrow": "Existing customers",
+    "title": "Find your order.",
+    "description": "Find the shipping confirmation for an existing After Hours Agenda order or ask support for a status update. This website does not query customer records.",
+    "lead": "Check your shipping email, or let us help you find the next update.",
+    "sections": [
       [
         "Use your confirmation",
-        "Look for the order or shipping confirmation in the email account used at checkout. A carrier link, when available, gives the shipment’s tracking updates.",
+        "Look for the order or shipping confirmation in the email account used at checkout. A carrier link, when available, gives the shipment’s tracking updates."
       ],
       [
         "Need a person?",
-        "Write to info@afterhoursagenda.com with the order number and checkout email. If you cannot find the order number, say so in your message.",
+        "Write to info@afterhoursagenda.com with the order number and checkout email. If you cannot find the order number, say so in your message."
       ],
       [
         "About this page",
-        "This website does not connect to customer records or perform an order lookup. Do not enter card numbers, passwords or security codes. The contact page prepares an email for you to review.",
-      ],
+        "This website does not connect to customer records or perform an order lookup. Do not enter card numbers, passwords or security codes. The contact page prepares an email for you to review."
+      ]
     ],
-    action: "Prepare an order question ↗",
-    href: "/contact/?topic=order",
+    "action": "Prepare an order question ↗",
+    "href": "/contact/?topic=order"
   },
   {
-    slug: "size-guide",
-    metaTitle: "Size and fit",
-    eyebrow: "Size and fit",
-    title: "Start with what fits.",
-    description:
-      "Ask After Hours Agenda about the fit of an existing piece. The catalog is paused, so no unverified size chart is presented for a future collection.",
-    lead: "A piece you already wear is a useful reference.",
-    sections: [
+    "slug": "size-guide",
+    "metaTitle": "Size and fit",
+    "eyebrow": "Size and fit",
+    "title": "Start with what fits.",
+    "description": "Compare finished-garment measurements for the Yikes! crewneck and cropped hoodie. Measure a similar piece you own to choose your size.",
+    "lead": "A piece you already wear is a useful reference.",
+    "sections": [
       [
-        "For an existing piece",
-        "For a piece you already own, use its label and original product chart. Compare the same kind of garment: a tee with a tee, or a sweatshirt with a sweatshirt. Tell us the product name, size and color if you need help.",
+        "Use the product chart",
+        "Each Yikes! product page has its own size chart in inches. The crewneck runs XS–3XL; the cropped hoodie runs XS–2XL. The two cuts have different measurements."
       ],
       [
-        "For the next collection",
-        "New products are not available yet. Measurements belong to the actual garment, so we will not use an old chart to promise the fit of a future piece.",
+        "Measure flat",
+        "Lay a similar garment flat. Compare chest width, body length and sleeve length with the product chart. Chest width is measured across the garment, not around the body."
       ],
       [
-        "Ask for help",
-        "Email info@afterhoursagenda.com with the item you mean and what you want to know. Do not send body photos or other sensitive information.",
+        "Check the crop",
+        "The hoodie has a raw cropped hem. Check its body length against a hoodie or top you already wear, especially if you prefer a particular amount of midriff coverage."
       ],
+      [
+        "Earlier pieces",
+        "For an older product, use its original size chart. Email the item name if you need help finding it."
+      ]
     ],
-    action: "Ask about fit ↗",
-    href: "/contact/?topic=product",
+    "action": "Ask about fit ↗",
+    "href": "/contact/?topic=product"
   },
   {
-    slug: "care",
-    metaTitle: "Garment care",
-    eyebrow: "Take care of your piece",
-    title: "Make it last.",
-    description:
-      "Care guidance for an existing After Hours Agenda piece: follow the garment label first and ask support about a specific item when unsure.",
-    lead: "The label on your garment comes first.",
-    sections: [
+    "slug": "care",
+    "metaTitle": "Garment care",
+    "eyebrow": "Take care of your piece",
+    "title": "Make it last.",
+    "description": "Care guidance for an existing After Hours Agenda piece: follow the garment label first and ask support about a specific item when unsure.",
+    "lead": "The label on your garment comes first.",
+    "sections": [
       [
         "Read the label",
-        "Use the care instructions attached to your piece. Fabric, decoration and construction can differ across products and previous runs.",
+        "Use the care instructions attached to your piece. Fabric, decoration and construction can differ across products and previous runs."
       ],
       [
         "Protect the print",
-        "Where the garment label permits, wash printed pieces cold and inside out. Avoid ironing directly on the print. Follow the label’s drying instructions.",
+        "Where the garment label permits, wash printed pieces cold and inside out. Avoid ironing directly on the print. Follow the label’s drying instructions."
       ],
       [
         "Unsure about a piece?",
-        "Send support the product name and a description of the care question. A clear photo of the care label can help.",
-      ],
+        "Send support the product name and a description of the care question. A clear photo of the care label can help."
+      ]
     ],
-    action: "Ask a care question ↗",
-    href: "/contact/?topic=product",
+    "action": "Ask a care question ↗",
+    "href": "/contact/?topic=product"
   },
   {
-    slug: "privacy",
-    metaTitle: "Privacy and your information",
-    eyebrow: "Website information · October 9, 2026",
-    title: "Your information.",
-    description:
-      "How this After Hours Agenda website handles browsing and local email drafts. No analytics, advertising trackers, payment forms or automatic newsletter signups are included.",
-    lead: "This website keeps the contact process in your hands.",
-    sections: [
+    "slug": "privacy",
+    "metaTitle": "Privacy and your information",
+    "eyebrow": "Privacy · October 14, 2026",
+    "title": "Your information.",
+    "description": "How After Hours Agenda uses website information, optional analytics and marketing cookies, Square checkout details and order information.",
+    "lead": "You choose whether this website uses optional analytics and marketing tools.",
+    "sections": [
       [
-        "Browsing",
-        "The site serves static pages, images and fonts. It does not load analytics, advertising trackers or social-media embeds. The hosting provider receives technical request information needed to deliver and secure the website.",
+        "Essential browsing",
+        "Our host receives technical request information needed to deliver and secure the website. We store your cookie choice in your browser for up to 180 days. The main content and checkout links work without optional tracking."
       ],
       [
-        "Contact drafts",
-        "The contact form prepares a message in your browser. It does not submit the fields, send email or store them in a site database. If you open your email app or copy the message, you control what happens next.",
+        "Optional analytics and marketing",
+        "If you allow analytics, Google Analytics receives browsing and product-interaction events. If you allow marketing and Meta tracking is configured, Meta receives page, product-view and checkout-link events. We do not send contact-form fields or payment-card details to these tools. Use Cookie choices in the footer to change your choice. Global Privacy Control disables Meta marketing tracking on this site."
       ],
       [
-        "Messages you choose to send",
-        "An email sent to info@afterhoursagenda.com includes the information you choose to provide. It may be used to answer the question and support an existing order. Never include passwords, security codes or payment-card numbers.",
+        "Checkout and fulfillment",
+        "Checkout is hosted by Square, which collects the information needed for payment and the order under its own privacy practices. We use order and shipping details to provide support and share necessary information with production and delivery partners. Payment-card information is handled by Square."
       ],
       [
-        "Existing records",
-        "This website does not access, migrate or delete historical order or customer records. Existing privacy and order obligations remain separate from this website.",
+        "Contact",
+        "The contact form prepares an email locally; it does not submit it automatically. When you send an email, we use the information you provide to respond and support your order. Please do not include passwords or payment-card numbers."
       ],
       [
-        "External links and questions",
-        "Instagram, your email service and any carrier link operate under their own privacy practices. For a privacy question or request concerning After Hours Agenda, contact info@afterhoursagenda.com.",
-      ],
+        "Your information",
+        "For a question, access or deletion request, email info@afterhoursagenda.com. Some transaction records may need to be retained for accounting, fulfillment, dispute handling or legal obligations. External social sites, Square and carriers have their own privacy practices."
+      ]
     ],
-    action: "Contact about privacy ↗",
-    href: "/contact/?topic=general",
+    "action": "Contact about privacy ↗",
+    "href": "/contact/?topic=general"
   },
   {
-    slug: "terms",
-    metaTitle: "Website and order terms",
-    eyebrow: "Site and existing-order terms",
-    title: "Clear terms.",
-    description:
-      "Terms for the After Hours Agenda editorial website and support for existing orders. New sales remain paused; this website does not change prior purchase terms.",
-    lead: "The catalog is closed. Existing orders remain supported under their original terms.",
-    sections: [
+    "slug": "terms",
+    "metaTitle": "Website and order terms",
+    "eyebrow": "Website and order terms",
+    "title": "Clear terms.",
+    "description": "Terms for shopping with After Hours Agenda, including made-to-order products, Square checkout, shipping, returns and previous purchases.",
+    "lead": "Check the garment measurements and order details before paying.",
+    "sections": [
       [
-        "Catalog status",
-        "New product and gift-card orders are paused while the next collection is developed. Browsing the lookbook, following updates or sending an inquiry does not create a purchase or reservation.",
+        "Current products",
+        "The shop lists the Yikes! crewneck and cropped hoodie in Bone. Prices are in USD, the same across sizes, and include domestic shipping. Applicable tax and any international shipping are shown at checkout."
+      ],
+      [
+        "Payment and production",
+        "Choose size and quantity at Square checkout. Each piece is made to order. Contact support promptly about changes or cancellations; production may already have started. Product mockups illustrate the design, and color or placement can vary slightly in production."
+      ],
+      [
+        "Shipping and returns",
+        "Our Shipping and Returns pages explain timing, rates and the 30-day return-request window. Approved return shipping is covered. Made-to-order production fees may be non-refundable after printing starts. Contact us before returning an item."
       ],
       [
         "Existing orders",
-        "Orders placed before the catalog reset remain supported under the terms and product information shown when they were purchased. This website does not replace or remove those terms.",
+        "Orders placed before this release remain supported under the terms and product information shown when they were purchased."
       ],
       [
-        "Shipping, returns and payments",
-        "The Shipping and Returns pages explain how to request help. Eligibility, timing and available remedies are reviewed against the original order terms. Approved refunds follow the original payment path. Never send card details by email.",
-      ],
-      [
-        "Brand and imagery",
-        "After Hours Agenda names, marks, graphics, photography and site content remain owned by their respective rights holders. Campaign concepts and previous-run renders are labeled. They do not represent available stock.",
-      ],
-      [
-        "Site use",
-        "Do not misuse the site, interfere with its operation, attempt unauthorized access or submit fraudulent information. Questions about these terms go to info@afterhoursagenda.com.",
-      ],
+        "Brand and site use",
+        "After Hours Agenda names, marks, graphics and site content belong to their respective rights holders. Campaign mockups and archive images are labeled. Do not misuse the site, attempt unauthorized access or submit fraudulent information. Questions go to info@afterhoursagenda.com."
+      ]
     ],
-    action: "Contact support ↗",
-    href: "/contact/",
+    "action": "Contact support ↗",
+    "href": "/contact/"
   },
   {
-    slug: "accessibility",
-    metaTitle: "Website accessibility",
-    eyebrow: "Access matters",
-    title: "Room for everyone.",
-    description:
-      "Accessibility information and a direct support path for the After Hours Agenda website. Report a barrier with the page, device and assistive technology involved.",
-    lead: "You should be able to read the story and reach a person.",
-    sections: [
+    "slug": "accessibility",
+    "metaTitle": "Website accessibility",
+    "eyebrow": "Access matters",
+    "title": "Room for everyone.",
+    "description": "Accessibility information and a direct support path for the After Hours Agenda website. Report a barrier with the page, device and assistive technology involved.",
+    "lead": "You should be able to read the story and reach a person.",
+    "sections": [
       [
         "How this site is built",
-        "The site has clear headings, labels for form fields and focus marks that show where you are when you use a keyboard. Pages fit smaller screens. If you ask your device to reduce motion, the site respects that choice. You can read the main content and find our email address with JavaScript off.",
+        "The site has clear headings, labels for form fields and focus marks that show where you are when you use a keyboard. Pages fit smaller screens. If you ask your device to reduce motion, the site respects that choice. You can read the main content and find our email address with JavaScript off."
       ],
       [
         "Reporting a barrier",
-        "Email info@afterhoursagenda.com with the page address, the task you were trying to complete, your device and browser, and any assistive technology involved. Share only what is needed to explain the issue.",
+        "Email info@afterhoursagenda.com with the page address, the task you were trying to complete, your device and browser, and any assistive technology involved. Share only what is needed to explain the issue."
       ],
       [
         "Review coverage",
-        "We check the site with tools and a keyboard. Those checks cannot cover every way people use the web. If you get stuck, email us. We can help with the task and look into the problem.",
-      ],
+        "We check the site with tools and a keyboard. Those checks cannot cover every way people use the web. If you get stuck, email us. We can help with the task and look into the problem."
+      ]
     ],
-    action: "Report an access issue ↗",
-    href: "/contact/?topic=accessibility",
-  },
+    "action": "Report an access issue ↗",
+    "href": "/contact/?topic=accessibility"
+  }
 ] as const;

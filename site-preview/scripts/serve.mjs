@@ -11,6 +11,7 @@ const mime = {
   ".js": "text/javascript",
   ".svg": "image/svg+xml",
   ".png": "image/png",
+  ".jpg": "image/jpeg",
   ".webp": "image/webp",
   ".woff2": "font/woff2",
   ".json": "application/json",
@@ -43,6 +44,7 @@ http
       );
       if (pathname.includes("\0")) throw new Error("Invalid path");
       let path = resolve(root, `.${pathname}`);
+      if (pathname === '/feeds/meta' || pathname === '/feeds/meta/') path=resolve(root,'feeds/meta.xml');
       if (path !== root && !path.startsWith(root + sep)) {
         res.writeHead(403, headers);
         res.end();

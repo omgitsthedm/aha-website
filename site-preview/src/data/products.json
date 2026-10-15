@@ -1,0 +1,317 @@
+[
+  {
+    "slug": "yikes-crewneck",
+    "title": "Yikes! Crewneck",
+    "color": "Bone",
+    "price": 52,
+    "currency": "USD",
+    "squareItemId": "CCB7ITES72OKJ2VYTOPSAPDR",
+    "checkoutUrl": "https://square.link/u/NCQw3apL",
+    "gender": "male",
+    "description": "A Bone crewneck with a standard, full-length fit and a yellow-and-blue YIKES! chest print. The 8.5 oz fleece uses an 80% cotton, 20% polyester blend with a smooth cotton face. Ribbing finishes the collar, cuffs and waistband, with double-needle seams and twill neck tape.",
+    "fit": "standard, full-length crewneck",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 25,
+        "chestWidth": 19,
+        "sleeveLength": 34
+      },
+      {
+        "size": "S",
+        "bodyLength": 26.5,
+        "chestWidth": 20.5,
+        "sleeveLength": 35
+      },
+      {
+        "size": "M",
+        "bodyLength": 28,
+        "chestWidth": 22,
+        "sleeveLength": 36
+      },
+      {
+        "size": "L",
+        "bodyLength": 29.5,
+        "chestWidth": 23.5,
+        "sleeveLength": 37
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 25,
+        "sleeveLength": 38
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32.5,
+        "chestWidth": 26.5,
+        "sleeveLength": 39
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 34,
+        "chestWidth": 28,
+        "sleeveLength": 40
+      }
+    ],
+    "measurementGuidance": "Compare these measurements with a garment you already own. Body length is measured from the high point of the shoulder; chest width is measured flat 1 inch below the armhole.",
+    "variants": [
+      {
+        "size": "XS",
+        "id": "KZFZMSVPRMY3MOC7I3TQ2B5O",
+        "sku": "APQ-6208401S5A1"
+      },
+      {
+        "size": "S",
+        "id": "RKGX6H4FU6NBGAGHKXECXUBE",
+        "sku": "APQ-6208401S6A1"
+      },
+      {
+        "size": "M",
+        "id": "R5UCZCGSJMR3Z4HJDVOD3ZIK",
+        "sku": "APQ-6208401S7A1"
+      },
+      {
+        "size": "L",
+        "id": "3CAFSZ345DL6VRX5CNBI6YDQ",
+        "sku": "APQ-6208401S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "45VCO6MGNJTUGR6UZYLG7Y43",
+        "sku": "APQ-6208401S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "UFYWTQK4GQFOQVYNINTCCL62",
+        "sku": "APQ-6208401S2A1"
+      },
+      {
+        "size": "3XL",
+        "id": "OPKNVVYLRSTI6OY75G67HY6E",
+        "sku": "APQ-6208401S21A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/yikes/yikes-crewneck/garment-1-1122.webp",
+        "srcset": "/images/yikes/yikes-crewneck/garment-1-400.webp 400w, /images/yikes/yikes-crewneck/garment-1-800.webp 800w, /images/yikes/yikes-crewneck/garment-1-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-crewneck/garment-1.jpg",
+        "alt": "Front of the Bone yikes crewneck with a yellow YIKES! graphic and blue shadow.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/yikes/yikes-crewneck/garment-2-1122.webp",
+        "srcset": "/images/yikes/yikes-crewneck/garment-2-400.webp 400w, /images/yikes/yikes-crewneck/garment-2-800.webp 800w, /images/yikes/yikes-crewneck/garment-2-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-crewneck/garment-2.jpg",
+        "alt": "Plain back of the Bone Yikes crewneck, with ribbed cuffs and waistband.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/yikes/yikes-crewneck/garment-3-1122.webp",
+        "srcset": "/images/yikes/yikes-crewneck/garment-3-400.webp 400w, /images/yikes/yikes-crewneck/garment-3-800.webp 800w, /images/yikes/yikes-crewneck/garment-3-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-crewneck/garment-3.jpg",
+        "alt": "Detail of the yellow-and-blue YIKES! print on Bone fleece.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/yikes/yikes-crewneck/garment-4-1122.webp",
+        "srcset": "/images/yikes/yikes-crewneck/garment-4-400.webp 400w, /images/yikes/yikes-crewneck/garment-4-800.webp 800w, /images/yikes/yikes-crewneck/garment-4-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-crewneck/garment-4.jpg",
+        "alt": "Bone Yikes garment casually folded on a white surface, showing the chest print and fabric.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/yikes/yikes-crewneck/campaign-1-1122.webp",
+        "srcset": "/images/yikes/yikes-crewneck/campaign-1-400.webp 400w, /images/yikes/yikes-crewneck/campaign-1-800.webp 800w, /images/yikes/yikes-crewneck/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-crewneck/campaign-1.jpg",
+        "alt": "Bone Yikes crewneck worn while playing pinball in a dim bar.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/yikes/yikes-crewneck/campaign-2-1122.webp",
+        "srcset": "/images/yikes/yikes-crewneck/campaign-2-400.webp 400w, /images/yikes/yikes-crewneck/campaign-2-800.webp 800w, /images/yikes/yikes-crewneck/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-crewneck/campaign-2.jpg",
+        "alt": "The Bone Yikes crewneck worn at the pinball machine, with hands mostly hidden at the side controls.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/yikes/yikes-crewneck/campaign-3-1122.webp",
+        "srcset": "/images/yikes/yikes-crewneck/campaign-3-400.webp 400w, /images/yikes/yikes-crewneck/campaign-3-800.webp 800w, /images/yikes/yikes-crewneck/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-crewneck/campaign-3.jpg",
+        "alt": "Standing beside the pinball machine in the Bone crewneck with hands in jeans pockets.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "yikes-cropped-hoodie",
+    "title": "Yikes! Cropped Hoodie",
+    "color": "Bone",
+    "price": 55,
+    "currency": "USD",
+    "squareItemId": "35ZC4TQORIIQAHUQ22JIDFG6",
+    "checkoutUrl": "https://square.link/u/QxkM0Fkk",
+    "gender": "female",
+    "description": "A cropped hoodie in Bone with a raw hem, dropped shoulders and a yellow-and-blue YIKES! chest print. The 6.5 oz fleece uses an 80% cotton, 20% polyester blend with a smooth cotton face. Flat drawcords adjust the hood, and ribbed cuffs finish the sleeves.",
+    "fit": "cropped raw-hem silhouette; dropped shoulders",
+    "weightOz": 6.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 17.25,
+        "chestWidth": 20.75,
+        "sleeveLength": 31.25
+      },
+      {
+        "size": "S",
+        "bodyLength": 18.25,
+        "chestWidth": 21.75,
+        "sleeveLength": 32.25
+      },
+      {
+        "size": "M",
+        "bodyLength": 19.25,
+        "chestWidth": 22.75,
+        "sleeveLength": 33.25
+      },
+      {
+        "size": "L",
+        "bodyLength": 20.25,
+        "chestWidth": 23.75,
+        "sleeveLength": 34.25
+      },
+      {
+        "size": "XL",
+        "bodyLength": 21.25,
+        "chestWidth": 24.75,
+        "sleeveLength": 35.25
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 22.25,
+        "chestWidth": 25.75,
+        "sleeveLength": 36.25
+      }
+    ],
+    "measurementGuidance": "Compare these measurements with a garment you already own. Body length is measured from the high point of the shoulder; chest width is measured flat 1 inch below the armhole.",
+    "variants": [
+      {
+        "size": "XS",
+        "id": "UXOOJLWOXLDU32KXPFVBB6CU",
+        "sku": "APQ-6208412S5A1"
+      },
+      {
+        "size": "S",
+        "id": "ATOF65IIPKIZWFT3QDJMON4R",
+        "sku": "APQ-6208412S6A1"
+      },
+      {
+        "size": "M",
+        "id": "WFAIFUKSQXCUDRHPTMAWO2UM",
+        "sku": "APQ-6208412S7A1"
+      },
+      {
+        "size": "L",
+        "id": "4HDYVGQA3ZOGIPYFUCTPKPIV",
+        "sku": "APQ-6208412S8A1"
+      },
+      {
+        "size": "XL",
+        "id": "YG2VANIT6R4SUQ3MWPZK74YI",
+        "sku": "APQ-6208412S1A1"
+      },
+      {
+        "size": "2XL",
+        "id": "KEQN72Y22B5RL3V5NFVACNWQ",
+        "sku": "APQ-6208412S2A1"
+      }
+    ],
+    "gallery": [
+      {
+        "src": "/images/yikes/yikes-cropped-hoodie/garment-1-1122.webp",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/garment-1-400.webp 400w, /images/yikes/yikes-cropped-hoodie/garment-1-800.webp 800w, /images/yikes/yikes-cropped-hoodie/garment-1-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-cropped-hoodie/garment-1.jpg",
+        "alt": "Front of the Bone yikes cropped hoodie with a yellow YIKES! graphic and blue shadow.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/yikes/yikes-cropped-hoodie/garment-2-1122.webp",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/garment-2-400.webp 400w, /images/yikes/yikes-cropped-hoodie/garment-2-800.webp 800w, /images/yikes/yikes-cropped-hoodie/garment-2-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-cropped-hoodie/garment-2.jpg",
+        "alt": "Plain back of the Bone yikes cropped hoodie with its cropped raw hem.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/yikes/yikes-cropped-hoodie/garment-3-1122.webp",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/garment-3-400.webp 400w, /images/yikes/yikes-cropped-hoodie/garment-3-800.webp 800w, /images/yikes/yikes-cropped-hoodie/garment-3-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-cropped-hoodie/garment-3.jpg",
+        "alt": "Close view of the yellow-and-blue YIKES! chest graphic on Bone fleece.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/yikes/yikes-cropped-hoodie/garment-4-1122.webp",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/garment-4-400.webp 400w, /images/yikes/yikes-cropped-hoodie/garment-4-800.webp 800w, /images/yikes/yikes-cropped-hoodie/garment-4-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-cropped-hoodie/garment-4.jpg",
+        "alt": "Bone Yikes garment casually folded on a white surface, showing the chest print and fabric.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/yikes/yikes-cropped-hoodie/campaign-1-1122.webp",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-1-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-1-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-1-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-cropped-hoodie/campaign-1.jpg",
+        "alt": "Bone Yikes cropped hoodie with an open olive barn jacket and blue jeans outside the New York Public Library.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/yikes/yikes-cropped-hoodie/campaign-2-1122.webp",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-2-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-2-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-2-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-cropped-hoodie/campaign-2.jpg",
+        "alt": "Walking on the NYPL steps in the Bone cropped hoodie, olive barn jacket and jeans.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/yikes/yikes-cropped-hoodie/campaign-3-1122.webp",
+        "srcset": "/images/yikes/yikes-cropped-hoodie/campaign-3-400.webp 400w, /images/yikes/yikes-cropped-hoodie/campaign-3-800.webp 800w, /images/yikes/yikes-cropped-hoodie/campaign-3-1122.webp 1122w",
+        "feedImage": "/images/yikes/yikes-cropped-hoodie/campaign-3.jpg",
+        "alt": "Seated upright on the NYPL stone ledge, hands tucked in jacket pockets, wearing the Bone cropped hoodie.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  }
+]

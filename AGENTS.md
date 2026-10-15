@@ -1,5 +1,16 @@
 # After Hours Agenda agent contract
 
+## Current authorized launch — October 14, 2026
+
+The owner explicitly authorized going live with the first two Yikes! products and retiring the previous catalog. This dated scope supersedes the paused-commerce statements and October 9 release-only scope below. Work is isolated in branch `launch/yikes-fw26-2026-10-14`; the original Desktop checkout and audit worktree remain preserved.
+
+- Bone only: SS3000 crewneck XS–3XL at $52; AFX64CRP cropped hoodie XS–2XL at $55; free domestic shipping. Four garment-only images per product. Three campaign images per product belong to the lookbook, website editorial and marketing, never shopping galleries or product feeds.
+- Square hosts checkout through the two verified product payment links. Size selection is required there. No multi-product cart or automated fulfillment is claimed. Apliiq stays on its free plan; paid orders are manually entered, then automatically processed with fast swaps. Private label SB-3-161622 is required; woven labels are on hold.
+- GA4 and the approved Meta website dataset load only after the appropriate consent. No Purchase event is emitted from a checkout click or return URL. No ad spend, sample purchase, paid test transaction, new subscription, or customer message is authorized.
+- User confirmed permanent removal of 25 obsolete Apliiq designs and SB-2-155690. Current two garments/current label and historical orders/local source remain preserved.
+- Release through GitHub main to exact Netlify site `275b4115-16bf-42fb-9b36-6bce9bb93608`; retain protections and use the existing owner PR permission only after all required checks pass. Do not claim independent review. Verify source, artifact, live checkout links, feeds and consent behavior after publication.
+- Details and remaining external approvals belong in `LAUNCH-2026-10-14.md`. Historical sections below are dated records, not current commerce status.
+
 This custom-domain project keeps the After Hours Agenda brand. Never substitute an agency or future client's identity. The user corrected the initial rebrand direction on October 9, 2026. Only abstract projects use LFNYC branding.
 
 ## Source and scope

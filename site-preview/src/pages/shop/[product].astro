@@ -1,0 +1,49 @@
+---
+import Site from '../../layouts/Site.astro';
+import ProductImage from '../../components/ProductImage.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import products from '../../data/products.json';
+export function getStaticPaths(){return products.map(product=>({params:{product:product.slug},props:{product}}));}
+const {product}=Astro.props;
+const origin=Astro.site!.origin;
+const productSchema={
+ '@context':'https://schema.org','@type':'ProductGroup',name:`${product.title} — Bone`,description:product.description,
+ productGroupID:product.squareItemId,brand:{'@type':'Brand',name:'After Hours Agenda'},color:'Bone',material:product.composition,
+ image:product.gallery.map(i=>new URL(i.feedImage,origin).href),variesBy:['https://schema.org/size'],
+ hasVariant:product.variants.map(v=>({'@type':'Product',name:`${product.title} — Bone — ${v.size}`,sku:v.sku,size:v.size,color:'Bone',image:new URL(product.gallery[0]!.feedImage,origin).href,
+ offers:{'@type':'Offer',url:`${origin}/shop/${product.slug}/?size=${encodeURIComponent(v.size)}`,price:product.price,priceCurrency:'USD',availability:'https://schema.org/InStock',itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:'After Hours Agenda'},shippingDetails:{'@type':'OfferShippingDetails',shippingRate:{'@type':'MonetaryAmount',value:0,currency:'USD'},shippingDestination:{'@type':'DefinedRegion',addressCountry:'US'}}}}))
+};
+---
+<Site title={`${product.title} — Bone`} description={product.description} image={product.gallery[0]!.feedImage} imageAlt={product.gallery[0]!.alt} imageWidth={product.gallery[0]!.width} imageHeight={product.gallery[0]!.height}>
+ <div class="shell product-breadcrumb"><a href="/shop/">← All pieces</a><span>Fall / Winter 2026</span></div>
+ <section class="shell product-layout" data-product-id={product.squareItemId} data-product-name={product.title} data-product-price={product.price}>
+  <div class="product-visuals">
+   <div class="product-gallery" role="region" tabindex="0" aria-label={`${product.title} garment views; scroll to see all four`}>
+    {product.gallery.map((shot,i)=><figure id={`view-${i+1}`}><ProductImage image={shot} priority={i===0} sizes="(max-width: 760px) 100vw, 55vw"/><figcaption>{['Front','Back','Print detail','Folded'][i]}</figcaption></figure>)}
+   </div>
+   <p class="image-note">Product mockups. Colors and print placement can vary slightly in production.</p>
+  </div>
+  <div class="product-details">
+   <p class="label">Yikes! / {product.slug==='yikes-crewneck'?'Crewneck':'Cropped hoodie'}</p><h1>{product.title}</h1>
+   <div class="product-price-row"><p class="product-price">${product.price}<span> USD</span></p><p>Free domestic shipping</p></div>
+   <p class="color-choice"><span class="bone-swatch" aria-hidden="true"></span> Bone</p>
+   <p>{product.description}</p>
+   <div class="size-summary"><p class="label">Available sizes</p><ul>{product.variants.map(v=><li data-size={v.size}>{v.size}</li>)}</ul><p id="requested-size" hidden></p></div>
+   <a class="text-link size-link" href="#size-guide">Check measurements ↓</a>
+   <a class="button checkout-link" href={product.checkoutUrl} data-checkout-link>Choose size &amp; checkout <span aria-hidden="true">↗</span></a>
+   <p class="checkout-note">Choose your size and quantity at secure Square checkout. Tax, if applicable, is calculated there.</p>
+   <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li><li>{product.weightOz} oz cotton-blend fleece.</li><li>{product.composition}.</li><li>{product.slug==='yikes-crewneck'?'Ribbed collar, cuffs and waistband.':'Raw cropped hem, dropped shoulders, flat drawcords and ribbed cuffs.'}</li></ul></details>
+   <details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>
+   <details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the print.</p></details>
+  </div>
+ </section>
+ <section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches</p><h2 id="size-title">Find your fit.</h2><p>{product.measurementGuidance} Sleeve length is measured from the center back, including the cuff.</p><div class="size-table-wrap" role="region" aria-label={`${product.title} measurements`} tabindex="0"><table><thead><tr><th scope="col">Size</th><th scope="col">Chest width</th><th scope="col">Body length</th><th scope="col">Sleeve length</th></tr></thead><tbody>{product.sizeGuide.map(row=><tr><th scope="row">{row.size}</th><td>{row.chestWidth}</td><td>{row.bodyLength}</td><td>{row.sleeveLength}</td></tr>)}</tbody></table></div></section>
+ <section class="section shell"><div class="section-header"><h2>The other cut.</h2><a href="/shop/" class="text-link">Shop all →</a></div><div class="related-product">{products.filter(p=>p.slug!==product.slug).map(p=><ProductCard product={p}/>)}</div></section>
+ <script type="application/ld+json" set:html={JSON.stringify(productSchema).replace(/</g,'\\u003c')}/>
+ <script>
+  const requested=new URLSearchParams(location.search).get('size');
+  const option=[...document.querySelectorAll<HTMLElement>('[data-size]')].find(el=>el.dataset.size===requested);
+  const note=document.querySelector<HTMLElement>('#requested-size');
+  if(option&&note){option.classList.add('requested');note.hidden=false;note.textContent=`Viewing size ${requested}. Select this size at checkout.`;}
+ </script>
+</Site>

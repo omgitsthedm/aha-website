@@ -1,16 +1,22 @@
 ---
 import "../styles/site.css";
 import { brand, navigation } from "../data/site";
+import Consent from '../components/Consent.astro';
 interface Props {
   title: string;
   description: string;
   path?: string;
   noindex?: boolean;
+  image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 }
-const { title, description, path = Astro.url.pathname, noindex = false } = Astro.props;
+const { title, description, path = Astro.url.pathname, noindex = false, image, imageAlt, imageWidth=1200, imageHeight=630 } = Astro.props;
 const origin = Astro.site!.origin;
 const canonical = new URL(path, origin).href;
 const isPreview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
+const shareImage=image?new URL(image,origin).href:`${origin}/brand/${isPreview?'og-image.png':'og-image-production.png'}`;
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
@@ -22,8 +28,8 @@ const schema = {
       logo: `${origin}/brand/sheep.svg`,
       email: brand.email,
       description:
-        "A clothing brand for the dreamers and the doers. New orders are currently paused.",
-      sameAs: [brand.instagram],
+        "Independent clothing, established in 2011. Graphic fleece, crewnecks and cropped hoodies.",
+      sameAs: [brand.instagram,brand.facebook],
     },
     {
       "@type": "WebSite",
@@ -88,6 +94,7 @@ const schema = {
     />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#FF6B6B" />
+    <meta name="facebook-domain-verification" content="83wsdo81kg6b428satufegpkljq0w6" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={brand.name} />
     <meta property="og:title" content={`${title} | After Hours Agenda`} />
@@ -95,20 +102,20 @@ const schema = {
     <meta property="og:url" content={canonical} />
     <meta
       property="og:image"
-      content={`${origin}/brand/${isPreview ? "og-image.png" : "og-image-production.png"}`}
+      content={shareImage}
     />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content={String(imageWidth)} />
+    <meta property="og:image:height" content={String(imageHeight)} />
     <meta
       property="og:image:alt"
-      content="After Hours Agenda. For the dreamers and the doers. The original black-sheep mark on paper white and rose."
+      content={imageAlt || 'After Hours Agenda. For the dreamers and the doers. The original black-sheep mark on paper white and rose.'}
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${title} | After Hours Agenda`} />
     <meta name="twitter:description" content={description} />
     <meta
       name="twitter:image"
-      content={`${origin}/brand/${isPreview ? "og-image.png" : "og-image-production.png"}`}
+      content={shareImage}
     />
     <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
     <link
@@ -131,7 +138,7 @@ const schema = {
     {isPreview && (
       <div class="preview-note">
         <span>After Hours Agenda · Website preview</span>
-        <span>For review · October 9, 2026</span>
+        <span>For review · Fall / Winter 2026</span>
       </div>
     )}
     <header class="site-header shell">
@@ -153,8 +160,8 @@ const schema = {
           </a>
         ))}
       </nav>
-      <a class="button header-cta" href="/updates/">
-        Stay close <span aria-hidden="true">↗</span>
+      <a class="button header-cta" href="/shop/">
+        Shop Yikes! <span aria-hidden="true">↗</span>
       </a>
       <details class="mobile-nav">
         <summary>
@@ -200,7 +207,7 @@ const schema = {
           <a href="/lookbook/">Lookbook</a>
           <a href="/manifesto/">Manifesto</a>
           <a href="/updates/">Updates</a>
-          <a href="/shop/">Collection status</a>
+          <a href="/shop/">Shop Yikes!</a>
         </nav>
         <nav aria-label="Support">
           <span class="label">Here to help</span>
@@ -218,10 +225,10 @@ const schema = {
             {brand.email} ↗
           </a>
           <p>
-            New orders are paused. Support for existing orders remains
-            available.
+            Questions about fit, shipping or an order? We’re here to help.
           </p>
           <a href={brand.instagram}>Instagram ↗</a>
+          <a href={brand.facebook}>Facebook ↗</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -230,9 +237,11 @@ const schema = {
           <a href="/privacy/">Privacy</a>
           <a href="/terms/">Terms</a>
           <a href="/accessibility/">Accessibility</a>
+          <button type="button" class="privacy-button" data-privacy-settings>Cookie choices</button>
         </nav>
       </div>
     </footer>
+    <Consent />
     <script>
       const menu = document.querySelector<HTMLDetailsElement>(".mobile-nav");
       document.addEventListener("keydown", (event) => {

@@ -1,0 +1,9 @@
+---
+interface Props {
+  image: {src:string; srcset:string; alt:string; width:number; height:number};
+  priority?: boolean;
+  sizes?: string;
+}
+const {image,priority=false,sizes='(max-width: 760px) 100vw, 50vw'}=Astro.props;
+---
+<img src={image.src} srcset={image.srcset} sizes={sizes} alt={image.alt} width={image.width} height={image.height} loading={priority?'eager':'lazy'} fetchpriority={priority?'high':'auto'} decoding="async" />

@@ -1,0 +1,10 @@
+---
+import ProductImage from './ProductImage.astro';
+import products from '../data/products.json';
+interface Props {product: typeof products[number]}
+const {product}=Astro.props;
+---
+<article class="product-card">
+  <a class="product-card-image" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} in Bone`}><ProductImage image={product.gallery[0]!} /></a>
+  <div class="product-card-info"><div><h2><a href={`/shop/${product.slug}/`}>{product.title}</a></h2><p>Bone · {product.variants[0]?.size}–{product.variants.at(-1)?.size}</p></div><p class="product-price">${product.price}</p></div>
+</article>

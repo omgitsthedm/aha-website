@@ -42,11 +42,13 @@ test("every route has unique metadata, entity data and correct indexing mode", a
     ))
       await stat(new URL(match[1].slice(1), root));
     assert.ok(
-      !/googletagmanager|google-analytics|squarecdn|data-netlify|Little Fight NYC|hello@littlefightnyc|Small crew|Heavy pull/.test(
+      !/squarecdn|data-netlify|Little Fight NYC|hello@littlefightnyc|Small crew|Heavy pull/.test(
         html,
       ),
       route,
     );
+    assert.ok(!/<script[^>]+src="https:\/\/(?:www\.googletagmanager|connect\.facebook)/.test(html),'Optional tracking must load only after a cookie choice');
+    assert.ok(html.includes(`data-tracking-enabled="${production}"`),route);
   }
 });
 test("all inline script content is covered by CSP hashes", async () => {
@@ -79,7 +81,7 @@ test("sitemap, crawler policy and summary match the release mode", async () => {
   assert.match(
     await readFile(new URL("llms.txt", root), "utf8"),
     production
-      ? /Official editorial website/
+      ? /Official clothing storefront/
       : /review preview, not a production replacement/,
   );
   const robots = await readFile(new URL("robots.txt", root), "utf8");
