@@ -56,6 +56,12 @@ export function createNotificationService({ repository, gateway, config, now = (
       const sender = domains.find((domain) => String(domain?.name ?? "").toLowerCase() === senderDomain);
       return { configured: true, providerReachable: true, senderVerified: Boolean(sender && ["verified", "active"].includes(String(sender.status ?? "").toLowerCase())), providerStatus: "ok" };
     } catch (error) {
+      // A Resend Sending access key is valid for email delivery but intentionally
+      // cannot inspect /domains. Domain verification is checked separately by an
+      // authenticated account audit, so never present this as API verification.
+      if (error?.resendReason === "restricted_api_key") {
+        return { configured: true, providerReachable: true, senderVerified: null, providerStatus: "sending_only_key" };
+      }
       const status = Number(error?.status);
       const providerStatus = Number.isInteger(status) && status >= 400 && status <= 599 ? `resend_http_${status}` : "resend_unavailable";
       return { configured: true, providerReachable: false, senderVerified: false, providerStatus };

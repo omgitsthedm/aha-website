@@ -8,7 +8,14 @@ export function createResendGateway({ apiKey, from, replyTo, fetchImpl = fetch, 
       signal: AbortSignal.timeout(timeoutMs),
     });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) { const error = new Error("resend_request_failed"); error.status = response.status; throw error; }
+    if (!response.ok) {
+      const error = new Error("resend_request_failed");
+      error.status = response.status;
+      // Sending-only keys are intentionally forbidden from account/domain reads.
+      // Preserve only this safe, known classification; never expose provider detail.
+      if (data?.name === "restricted_api_key") error.resendReason = "restricted_api_key";
+      throw error;
+    }
     return data;
   }
   return {
