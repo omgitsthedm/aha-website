@@ -10,7 +10,7 @@ export default defineConfig({
   vite: { build: { sourcemap: false } },
   integrations: [partytown({
     config: {
-      forward: ['dataLayer.push', 'fbq'],
+      forward: ['fbq'],
       // Meta's script does not permit cross-origin worker fetches. Both routes
       // are fixed server-side allowlist entries; no caller-provided URL passes
       // through this proxy.

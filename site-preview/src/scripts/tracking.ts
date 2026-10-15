@@ -11,9 +11,9 @@ let consent:Consent;
 try{const raw=JSON.parse(localStorage.getItem(key)||'null');if(raw&&typeof raw.analytics==='boolean'&&typeof raw.marketing==='boolean'&&Date.now()-raw.at<maxAge)consent=raw;}catch{/* Storage is optional. */}
 // A new visitor receives the storefront default without writing a synthetic consent click.
 consent ??= {analytics:true,marketing:!gpc,at:Date.now()};
-// Partytown observes dynamically inserted scripts, so consent still decides
-// whether a vendor request can exist while its parsing stays off the page thread.
-function insert(src:string){const script=document.createElement('script');script.type='text/partytown';script.async=true;script.src=src;document.head.append(script);}
+// Consent decides whether a vendor request can exist. Meta parsing stays off
+// the page thread; GA uses its supported main-thread SDK after the same idle gate.
+function insert(src:string,worker:boolean){const script=document.createElement('script');script.type=worker?'text/partytown':'text/javascript';script.async=true;script.src=src;document.head.append(script);}
 let analyticsSdkScheduled=false;
 let marketingSdkScheduled=false;
 let analyticsSdkLoaded=false;
@@ -31,7 +31,7 @@ function scheduleSdk(kind:'analytics'|'marketing',src:string){
    // The immediate queue keeps the first page event. Recheck before loading optional vendor code.
    if((kind==='analytics'?!consent.analytics:!consent.marketing||gpc))return;
    if(kind==='analytics')analyticsSdkLoaded=true;else marketingSdkLoaded=true;
-   insert(src);
+   insert(src,kind==='marketing');
   };
   if(idle)idle.call(window,insertWhenIdle,{timeout:1000});else window.setTimeout(insertWhenIdle,0);
  };

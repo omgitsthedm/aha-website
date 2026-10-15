@@ -72,6 +72,7 @@ const heroProduct = featuredProducts[0] ?? products[0]!;
       <Image
         name="2012-the-prologue"
         alt="The original After Hours Agenda Prologue, typed on paper in January 2012."
+        sizes="(max-width: 760px) calc(100vw - 82px), 40vw"
       />
       <figcaption class="image-caption">
         The Prologue · Brand archive · January 2012
@@ -118,14 +119,14 @@ const heroProduct = featuredProducts[0] ?? products[0]!;
     </div>
     <div class="teaser-grid">
       <figure>
-        <ProductImage image={featuredProducts[0]!.campaign[0]!} />
+        <ProductImage image={featuredProducts[0]!.campaign[0]!} sizes="(max-width: 760px) calc((100vw - 60px) * 0.579), 50vw" />
         <figcaption>
           <h3>{featuredProducts[0]!.title}.</h3>
           <p>{featuredProducts[0]!.campaignSetting} · Campaign mockup · AI-generated</p>
         </figcaption>
       </figure>
       <figure>
-        <ProductImage image={featuredProducts.at(-1)!.campaign[2]!} />
+        <ProductImage image={featuredProducts.at(-1)!.campaign[2]!} sizes="(max-width: 760px) calc((100vw - 60px) * 0.421), 36vw" />
         <figcaption>
           <h3>{featuredProducts.at(-1)!.title}.</h3>
           <p>{featuredProducts.at(-1)!.campaignSetting} · Campaign mockup · AI-generated</p>

@@ -6,4 +6,4 @@ interface Props {
 }
 const {image,priority=false,sizes='(max-width: 760px) 100vw, 50vw'}=Astro.props;
 ---
-<img src={image.src} srcset={image.srcset} sizes={sizes} alt={image.alt} width={image.width} height={image.height} loading={priority?'eager':'lazy'} fetchpriority={priority?'high':'low'} decoding="async" />
+<img src={image.src} srcset={image.srcset} sizes={sizes} alt={image.alt} width={image.width} height={image.height} loading={priority?'eager':'lazy'} fetchpriority={priority?'high':'low'} decoding={priority?'sync':'async'} />

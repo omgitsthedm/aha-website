@@ -8,7 +8,7 @@ const enabled=import.meta.env.AHA_PRODUCTION_BUILD==='approved';
  <div class="cookie-actions"><button type="button" data-consent="essential">Essential only</button><button type="button" data-consent="analytics">Analytics only</button><button type="button" data-consent="all">Allow all</button></div>
 </aside>
 {enabled && <script is:inline type="text/partytown">
-  // Initialize the worker's queue before Partytown forwards any page events.
+  // Initialize the worker queue before Partytown forwards Meta page events.
   // This creates no vendor request; tracking.ts still gates every SDK load.
   (function(w) {
     const f = function() {
