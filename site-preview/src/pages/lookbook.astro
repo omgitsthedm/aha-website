@@ -26,15 +26,14 @@ import ProductImage from '../components/ProductImage.astro';
       Campaign mockups created with AI. Shop pages show garment views and measurements.
     </p>
   </header>
-  {products.map(product=><section class="shell campaign-set" aria-label={`${product.title} campaign`}><div class="section-header"><h2>{product.title}</h2><a class="text-link" href={`/shop/${product.slug}/`}>Shop the piece →</a></div><div class="campaign-grid">{product.campaign.map((shot,i)=><figure><ProductImage image={shot} priority={i===0} sizes="(max-width: 760px) 100vw, 33vw"/><figcaption>{['01','02','03'][i]} / {product.slug==='yikes-crewneck'?'Pinball bar':'Library steps'}</figcaption></figure>)}</div></section>)}
+  {products.map((product,productIndex)=><section class="shell campaign-set" aria-label={`${product.title} campaign`}><div class="section-header"><h2>{product.title}</h2><a class="text-link" href={`/shop/${product.slug}/`}>Shop the piece →</a></div><div class="campaign-grid">{product.campaign.map((shot,i)=><figure><ProductImage image={shot} priority={productIndex===0&&i===0} sizes="(max-width: 760px) calc(100vw - 40px), 33vw"/><figcaption>{['01','02','03'][i]} / {product.slug==='yikes-crewneck'?'Pinball bar':'Library steps'}</figcaption></figure>)}</div></section>)}
   <header class="shell section-header"><div><p class="label">Brand archive</p><h2>From the beginning.</h2><p>Original pieces from 2012 and 2013. Not currently for sale.</p></div></header>
   <div class="gallery shell">
-    {gallery.filter(shot=>shot.note.startsWith('Brand archive')).map((shot, i) => (
+    {gallery.filter(shot=>shot.note.startsWith('Brand archive')).map((shot) => (
       <figure>
         <Image
           name={shot.image as keyof typeof manifest}
           alt={shot.alt}
-          priority={i === 0}
           sizes="(max-width: 360px) 100vw, 50vw"
         />
         <figcaption>
