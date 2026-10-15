@@ -8,6 +8,7 @@ const MAX_QUANTITY = 10;
 const MONEY = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
 type CatalogLine = SelectionVariant & {
+  color: string;
   image: string;
   imageAlt: string;
   priceCents: number;
@@ -61,11 +62,12 @@ function catalogueFrom(root: ParentNode = document): CatalogLine[] {
     const size = node.dataset.size || "";
     const slug = node.dataset.slug || "";
     const title = node.dataset.title || "";
+    const color = node.dataset.color || "";
     const priceCents = Number(node.dataset.priceCents);
     const image = node.dataset.image || "";
     const imageAlt = node.dataset.imageAlt || "";
-    return id && sku && size && slug && title && Number.isSafeInteger(priceCents) && priceCents > 0 && image
-      ? [{ id, sku, size, slug, title, price: priceCents / 100, priceCents, image, imageAlt }]
+    return id && sku && size && slug && title && color && Number.isSafeInteger(priceCents) && priceCents > 0 && image
+      ? [{ id, sku, size, slug, title, color, price: priceCents / 100, priceCents, image, imageAlt }]
       : [];
   });
 }
@@ -266,7 +268,7 @@ function initCheckout() {
     lines.forEach((line) => {
       const article = document.createElement("article");
       article.className = "bag-line";
-      article.innerHTML = `<img src="${line.image}" alt="${line.imageAlt}"><div><p class="label">${line.size} · Bone</p><h2>${line.title}</h2><p>${displayAmount(line.priceCents)} each</p><label>Quantity <select data-cart-quantity aria-label="${line.title}, ${line.size}, quantity"></select></label><button type="button" class="text-button" data-cart-remove>Remove</button></div><p class="bag-line-total">${displayAmount(line.priceCents * line.quantity)}</p>`;
+      article.innerHTML = `<img src="${line.image}" alt="${line.imageAlt}"><div><p class="label">${line.size} · ${line.color}</p><h2>${line.title}</h2><p>${displayAmount(line.priceCents)} each</p><label>Quantity <select data-cart-quantity aria-label="${line.title}, ${line.size}, quantity"></select></label><button type="button" class="text-button" data-cart-remove>Remove</button></div><p class="bag-line-total">${displayAmount(line.priceCents * line.quantity)}</p>`;
       const select = article.querySelector<HTMLSelectElement>("[data-cart-quantity]")!;
       for (let amount = 1; amount <= MAX_QUANTITY; amount += 1) { const option = new Option(String(amount), String(amount), false, amount === line.quantity); select.add(option); }
       select.addEventListener("change", () => {

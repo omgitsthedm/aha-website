@@ -69,7 +69,7 @@ import products from '../data/products.json';
         </section>
       </section>
     </section>
-    {products.flatMap(product => product.variants.map(variant => <template data-cart-catalog data-id={variant.id} data-sku={variant.sku} data-size={variant.size} data-slug={product.slug} data-title={`${product.title} — ${product.color}`} data-price-cents={product.price*100} data-image={product.gallery[0]!.src} data-image-alt={product.gallery[0]!.alt}></template>))}
+    {products.flatMap(product => product.variants.map(variant => <template data-cart-catalog data-id={variant.id} data-sku={variant.sku} data-size={variant.size} data-slug={product.slug} data-title={`${product.title} — ${product.color}`} data-color={product.color} data-price-cents={product.price*100} data-image={product.gallery[0]!.src} data-image-alt={product.gallery[0]!.alt}></template>))}
     <noscript><p class="checkout-message">JavaScript is needed to keep a bag and complete secure checkout. <a href="/shop/">Browse the current pieces</a>.</p></noscript>
   </section>
 </Site>

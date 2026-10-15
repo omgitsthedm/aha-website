@@ -17,6 +17,7 @@ test("cart: new collection colors and sizes coexist with Yikes through a checkou
   for (const [index, product] of selected.entries()) {
     await expect(page.locator(".bag-line").nth(index)).toContainText(product.title);
     await expect(page.locator(".bag-line").nth(index)).toContainText(product.color);
+    await expect(page.locator(".bag-line").nth(index).locator(".label")).toHaveText(`M · ${product.color}`);
   }
   await expect(page.locator("[data-cart-subtotal]")).toHaveText("$168.00");
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("aha-cart-v2") || "[]"));
