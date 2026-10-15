@@ -1,0 +1,10 @@
+---
+import Site from '../../layouts/Site.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import products from '../../data/products.json';
+---
+<Site title="Shop Yikes! — crewneck and cropped hoodie" description="Shop the Yikes! crewneck and cropped hoodie in Bone. Yellow-and-blue chest graphics, cotton-blend fleece and free domestic shipping. Sizes XS–3XL and XS–2XL.">
+  <header class="page-head shell shop-heading"><p class="label">Fall / Winter 2026</p><h1>YIKES!</h1><p class="lede">Two cuts. One print. Bone fleece with a yellow-and-blue chest graphic.</p><p class="status-copy">Free domestic shipping. Same price across every size.</p></header>
+  <section class="product-grid shell" aria-label="Yikes products">{products.map(product=><ProductCard product={product}/>)}</section>
+  <section class="shell shop-end"><p>See the fit in context.</p><a class="text-link" href="/lookbook/">Explore the Yikes! campaign →</a></section>
+</Site>

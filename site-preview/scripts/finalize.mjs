@@ -3,6 +3,7 @@ import { readFile, writeFile, readdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
+import {writeFeeds} from './feeds.mjs';
 const dist = new URL("../dist/", import.meta.url);
 const approved = process.env.AHA_PRODUCTION_BUILD === "approved";
 const origin =
@@ -32,6 +33,7 @@ async function walk(dir, prefix = "") {
     }
   }
 }
+await writeFeeds(dist,origin);
 await walk(dist);
 const csp = [
   "default-src 'self'",
@@ -39,11 +41,11 @@ const csp = [
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'none'",
-  `script-src 'self' ${[...scriptHashes].join(" ")}`,
+  `script-src 'self' ${approved ? 'https://www.googletagmanager.com https://connect.facebook.net ' : ''}${[...scriptHashes].join(" ")}`,
   "style-src 'self'",
-  "img-src 'self' data:",
+  `img-src 'self' data:${approved ? ' https://www.google-analytics.com https://www.facebook.com' : ''}`,
   "font-src 'self'",
-  "connect-src 'self'",
+  `connect-src 'self'${approved ? ' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.facebook.com' : ''}`,
   "frame-src 'none'",
   "worker-src 'none'",
   "upgrade-insecure-requests",
@@ -58,11 +60,11 @@ await writeFile(
 );
 await writeFile(
   new URL("sitemap.xml", dist),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map((path) => `<url><loc>${origin}${path}</loc><lastmod>2026-10-09</lastmod></url>`).join("")}</urlset>\n`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map((path) => `<url><loc>${origin}${path}</loc><lastmod>2026-10-14</lastmod></url>`).join("")}</urlset>\n`,
 );
 await writeFile(
   new URL("llms.txt", dist),
-  `# After Hours Agenda\n\n> A clothing brand for the dreamers and the doers.\n\n${approved ? "Official editorial website. New orders are paused." : "This is a review preview, not a production replacement. The official website is https://afterhoursagenda.com."}\n\n## Current status\n\nNew product and gift-card orders are paused while the next collection is developed. No release date is announced here. Lookbook images are labeled campaign concepts, previous-run provider renders or brand archive; they are not available stock. Existing orders remain supported under the terms that applied when purchased.\n\n## Identity and contact\n\nAfter Hours Agenda is a clothing brand established in 2011. Its original Prologue dates to January 2012. Kindness, community and celebrating the life you are building are its stated values. Contact: info@afterhoursagenda.com. Official Instagram: https://www.instagram.com/afterhoursagenda. Reviewed October 9, 2026.\n\n## Pages\n${routes.map((path) => `- [${path === "/" ? "Home" : path.split("/").filter(Boolean).at(-1)}](${origin}${path})`).join("\n")}\n\n## Contact behavior\n\nThe form prepares a local email draft. It does not submit data, subscribe the visitor, query orders, take payment or send a message. Visitors decide whether to send through their email app. Never send card details or passwords.\n`,
+  `# After Hours Agenda\n\n> A clothing brand for the dreamers and the doers.\n\n${approved ? "Official clothing storefront. The Yikes! crewneck and cropped hoodie are available in Bone." : "This is a review preview, not a production replacement. The official website is https://afterhoursagenda.com."}\n\n## Current status\n\nYikes! Crewneck: $52, Bone, XS–3XL. Yikes! Cropped Hoodie: $55, Bone, XS–2XL. Free domestic shipping. Production usually takes about a week before shipping. Secure checkout is hosted by Square and requires a size selection. Lifestyle campaign mockups are separate from the four garment images on each product page. Archive pieces are not for sale. Existing orders remain supported under the terms that applied when purchased.\n\n## Identity and contact\n\nAfter Hours Agenda is a clothing brand established in 2011. Its original Prologue dates to January 2012. Kindness, community and celebrating the life you are building are its stated values. Contact: info@afterhoursagenda.com. Official Instagram: https://www.instagram.com/afterhoursagenda. Reviewed October 14, 2026.\n\n## Pages\n${routes.map((path) => `- [${path === "/" ? "Home" : path.split("/").filter(Boolean).at(-1)}](${origin}${path})`).join("\n")}\n\n## Contact behavior\n\nThe form prepares a local email draft. It does not submit data, subscribe the visitor, query orders, take payment or send a message. Visitors decide whether to send through their email app. Never send card details or passwords.\n`,
 );
 await writeFile(
   new URL("manifest.webmanifest", dist),
@@ -106,7 +108,7 @@ await writeFile(
       digestScope:
         "All published files except release.json; SHA-256 of path-sorted JSON entries {path,bytes,sha256}.",
       siteId: "275b4115-16bf-42fb-9b36-6bce9bb93608",
-      reviewed: "2026-10-09",
+      reviewed: "2026-10-14",
     },
     null,
     2,

@@ -4,35 +4,36 @@ import Image from "../components/EditorialImage.astro";
 import UpdatesBand from "../components/UpdatesBand.astro";
 import { gallery } from "../data/site";
 import manifest from "../data/images.json";
+import products from '../data/products.json';
+import ProductImage from '../components/ProductImage.astro';
 ---
 
 <Site
-  title="Lookbook and archive"
-  description="See the 2012 wordmark tee, 2013 Love / Vanity design and past Black Sheep pieces in the After Hours Agenda lookbook. New orders are paused."
+  title="Yikes! lookbook and brand archive"
+  description="The Yikes! crewneck in a pinball bar and cropped hoodie on the New York Public Library steps. Explore the Fall / Winter 2026 campaign and original brand archive."
 >
   <header class="page-head shell">
-    <p class="label">Concepts. Past pieces. Our story.</p>
+    <p class="label">Yikes! / Fall–Winter 2026</p>
     <h1>
       FOR YOU.
       <br />
       <span class="accent">AND YOUR PEOPLE.</span>
     </h1>
     <p class="lede">
-      The 2012 wordmark tee sits beside Love / Vanity from 2013 and a later
-      Black Sheep design. Browse past pieces and campaign ideas from the brand.
+      Bone fleece, a yellow-and-blue print, and two cuts out in the city.
     </p>
     <p class="status-copy">
-      Each caption tells you what you’re seeing: an archive piece, a previous-run
-      render or an AI campaign concept. These pieces are not currently for sale.
+      Campaign mockups created with AI. Shop pages show garment views and measurements.
     </p>
   </header>
+  {products.map((product,productIndex)=><section class="shell campaign-set" aria-label={`${product.title} campaign`}><div class="section-header"><h2>{product.title}</h2><a class="text-link" href={`/shop/${product.slug}/`}>Shop the piece →</a></div><div class="campaign-grid">{product.campaign.map((shot,i)=><figure><ProductImage image={shot} priority={productIndex===0&&i===0} sizes="(max-width: 760px) calc(100vw - 40px), 33vw"/><figcaption>{['01','02','03'][i]} / {product.slug==='yikes-crewneck'?'Pinball bar':'Library steps'}</figcaption></figure>)}</div></section>)}
+  <header class="shell section-header"><div><p class="label">Brand archive</p><h2>From the beginning.</h2><p>Original pieces from 2012 and 2013. Not currently for sale.</p></div></header>
   <div class="gallery shell">
-    {gallery.map((shot, i) => (
+    {gallery.filter(shot=>shot.note.startsWith('Brand archive')).map((shot) => (
       <figure>
         <Image
           name={shot.image as keyof typeof manifest}
           alt={shot.alt}
-          priority={i === 0}
           sizes="(max-width: 360px) 100vw, 50vw"
         />
         <figcaption>

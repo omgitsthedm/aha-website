@@ -19,5 +19,5 @@ if (approved && origin.origin !== "https://afterhoursagenda.com")
     "The prepared migration supports only the approved existing site. Review other targets separately.",
   );
 console.log(
-  `Building ${approved ? "approved production migration" : "non-transactional preview"} for ${origin.origin}`,
+  `Building ${approved ? "approved production storefront" : "storefront review preview"} for ${origin.origin}`,
 );

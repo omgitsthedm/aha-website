@@ -3,10 +3,12 @@ export const brand = {
   email: "info@afterhoursagenda.com",
   official: "https://afterhoursagenda.com",
   instagram: "https://www.instagram.com/afterhoursagenda",
+  facebook: "https://www.facebook.com/afterhoursagenda/",
   verified: "2026-10-09",
   line: "For the dreamers and the doers.",
 };
 export const navigation = [
+  { label: "Shop", href: "/shop/" },
   { label: "The story", href: "/about/" },
   { label: "Lookbook", href: "/lookbook/" },
   { label: "Answers", href: "/faq/" },
@@ -22,9 +24,9 @@ export const topics = [
 export const answers = [
   {
     q: "Can I place an order?",
-    a: "Not right now. New orders are paused while the next collection is developed. The lookbook shows campaign concepts and past pieces. It is not a list of items available to buy.",
+    a: "Yes. The Yikes! crewneck and cropped hoodie are available in Bone. Choose a piece in the shop, then select your size and quantity at secure Square checkout. Domestic shipping is free.",
     href: "/shop/",
-    label: "Check collection status",
+    label: "Shop Yikes!",
   },
   {
     q: "What is After Hours Agenda?",
@@ -34,7 +36,7 @@ export const answers = [
   },
   {
     q: "Does the lookbook show products for sale?",
-    a: "No. Each image is labeled as a campaign concept, a previous-run render or brand archive. There are no current prices, stock claims or purchase links.",
+    a: "The Yikes! campaign shows our current crewneck and cropped hoodie in AI-generated lifestyle mockups. Garment views and measurements are on each product page. Historical archive pieces are separately labeled and are not for sale.",
     href: "/lookbook/",
     label: "Explore the lookbook and archive",
   },
@@ -57,10 +59,10 @@ export const answers = [
     label: "Get shipping help",
   },
   {
-    q: "When is the next release?",
-    a: "We have not announced a release date. Follow our official Instagram for collection news, or email us with a question. Browsing the site does not subscribe you.",
-    href: "/updates/",
-    label: "Choose how to stay in touch",
+    q: "How long does an order take?",
+    a: "Each piece is made to order. Production usually takes about a week, and shipping time depends on the destination. Artwork review or a stock delay can add time. We send tracking once the order ships.",
+    href: "/shipping/",
+    label: "Read shipping details",
   },
   {
     q: "How do I contact you?",
@@ -128,6 +130,8 @@ export const routes = [
   "/updates/",
   "/faq/",
   "/shop/",
+  "/shop/yikes-crewneck/",
+  "/shop/yikes-cropped-hoodie/",
   "/privacy/",
   "/terms/",
   "/accessibility/",

@@ -1,5 +1,11 @@
 # After Hours Agenda source of truth
 
+## Current storefront release — October 14, 2026
+
+The owner authorized reopening commerce for two Bone Yikes! products. Current implementation is `site-preview/` on branch `launch/yikes-fw26-2026-10-14`. The canonical asset package is `/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/05 Product Run — October 14`. GitHub main before this release is `4baaa4cd461d53be5a6e42b12336dbb1e310fc8d`; the exact Netlify site's published deploy before release is `6acd40ab0139075548a71ddd`, both freshly verified October 14.
+
+The static storefront links to Square-hosted checkout, supplies 13 current size variants to Google/Meta feeds, and uses consent-gated GA4 and Meta browser events. The original Next.js commerce/provider APIs remain inactive and preserved. Apliiq fulfillment is manual order entry by owner choice; no VIP subscription or automatic order routing is claimed. See `LAUNCH-2026-10-14.md` for current product, tracking, validation and remaining operational details. The paused-commerce and preview-only statements below describe the previous October 9 release.
+
 Verified October 9, 2026 from Git, the exact Netlify site, public release markers and browser checks. Provider data was not queried or changed.
 
 ## Identity
