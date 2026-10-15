@@ -3,23 +3,27 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { PGlite } from '@electric-sql/pglite';
 import { createNetlifyRepository } from '../server/fulfillment/repository.mjs';
+import { createNotificationRepository } from '../server/notifications/repository.mjs';
 
 test('Netlify repository-level discovery receives the same additive migration validated by the app', async () => {
-  const app = await readFile(new URL('../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql', import.meta.url), 'utf8');
-  const root = await readFile(new URL('../../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql', import.meta.url), 'utf8');
-  assert.equal(root, app);
+  for (const name of ['20261015045000_yikes_fulfillment', '20261015160000_custom_checkout', '20261015170000_order_notifications']) {
+    const app = await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), 'utf8');
+    const root = await readFile(new URL(`../../netlify/database/migrations/${name}/migration.sql`, import.meta.url), 'utf8');
+    assert.equal(root, app);
+  }
 });
 
 async function isolatedRepository(t) {
   const database = new PGlite();
   t.after(() => database.close());
   await database.exec(await readFile(new URL('../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql', import.meta.url), 'utf8'));
+  await database.exec(await readFile(new URL('../netlify/database/migrations/20261015170000_order_notifications/migration.sql', import.meta.url), 'utf8'));
   // The production adapter returns rows from the same parameterized SQL.
   const sql = async (strings, ...parameters) => {
     const query = strings.reduce((text, part, index) => text + (index ? `$${index}` : '') + part, '');
     return (await database.query(query, parameters)).rows;
   };
-  return { database, repository: createNetlifyRepository({ sql }) };
+  return { database, repository: createNetlifyRepository({ sql }), notifications: createNotificationRepository({ sql }) };
 }
 
 function snapshot() {
@@ -28,7 +32,7 @@ function snapshot() {
     squareFulfillmentUid: 'local-fulfillment-1', paymentCreatedAt: '2026-10-15T05:00:00Z', state: 'queued',
     submittedItems: [{ sku: 'APQ-6208401S7A1', quantity: 1, squareLineUid: 'local-line-1' }],
     apliiqPayload: { id: 'local-order-1', shipping_address: { name: 'Local test recipient' } },
-    payloadSha256: 'local-test-hash',
+    customerEmail: 'local@example.com', payloadSha256: 'local-test-hash',
   };
 }
 
@@ -84,4 +88,44 @@ test('a Square event survives worker interruption and an expired lease can be re
   await repository.markSquareEventProcessed('local-square-event');
   assert.equal(await repository.claimSquareEvent('local-square-event'), null);
   assert.equal((await repository.listPendingSquareEvents()).length, 0);
+});
+
+
+test('Postgres notification outbox accepts one confirmation and lets one worker claim it', async (t) => {
+  const { notifications } = await isolatedRepository(t);
+  await Promise.all(Array.from({ length: 8 }, () => notifications.enqueue({ dedupeKey: 'local-order-1:order_confirmed', kind: 'order_confirmed', recipient: 'local@example.com', payload: { orderNumber: 'AHA-local' } })));
+  const claims = await Promise.all(Array.from({ length: 8 }, () => notifications.claim(1)));
+  assert.equal(claims.flat().length, 1);
+  const row = claims.flat()[0];
+  await notifications.markSent({ id: row.id, providerMessageId: 'provider-local-1' });
+  assert.deepEqual(await notifications.claim(1), []);
+});
+
+
+test('Postgres retries a stale mail lease with the same row and escalates the fifth stale attempt', async (t) => {
+  const { notifications, database } = await isolatedRepository(t);
+  const row = await notifications.enqueue({ dedupeKey: 'local-order-lease:order_confirmed', kind: 'order_confirmed', recipient: 'local@example.com', payload: { orderNumber: 'AHA-lease' } });
+  const [first] = await notifications.claim(1);
+  assert.equal(first.id, row.id);
+  await database.query("UPDATE aha_order_notifications SET lease_expires_at = now() - interval '1 second' WHERE id = $1", [row.id]);
+  const [second] = await notifications.claim(1);
+  assert.equal(second.id, row.id);
+  assert.equal(second.attempt_count, 2);
+  await database.query("UPDATE aha_order_notifications SET attempt_count = 5, lease_expires_at = now() - interval '1 second' WHERE id = $1", [row.id]);
+  assert.deepEqual(await notifications.claim(1), []);
+  const status = await database.query("SELECT state, last_error_code FROM aha_order_notifications WHERE id = $1", [row.id]);
+  assert.deepEqual(status.rows[0], { state: 'attention', last_error_code: 'resend_delivery_unknown' });
+});
+
+test('Postgres moves only an already-attempted outbox row older than the Resend idempotency window to attention', async (t) => {
+  const { notifications, database } = await isolatedRepository(t);
+  const row = await notifications.enqueue({ dedupeKey: 'local-order-window:order_confirmed', kind: 'order_confirmed', recipient: 'local@example.com', payload: { orderNumber: 'AHA-window' } });
+  await database.query("UPDATE aha_order_notifications SET attempt_count = 1, first_attempt_at = now() - interval '24 hours', next_attempt_at = now() - interval '1 second' WHERE id = $1", [row.id]);
+  assert.deepEqual(await notifications.claim(1), []);
+  const elapsed = await database.query('SELECT state, last_error_code FROM aha_order_notifications WHERE id = $1', [row.id]);
+  assert.deepEqual(elapsed.rows[0], { state: 'attention', last_error_code: 'resend_delivery_unknown' });
+
+  const fresh = await notifications.enqueue({ dedupeKey: 'local-order-fresh:order_confirmed', kind: 'order_confirmed', recipient: 'local@example.com', payload: { orderNumber: 'AHA-fresh' } });
+  const [claim] = await notifications.claim(1);
+  assert.equal(claim.id, fresh.id);
 });

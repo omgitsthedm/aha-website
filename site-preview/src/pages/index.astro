@@ -5,11 +5,20 @@ import UpdatesBand from "../components/UpdatesBand.astro";
 import ProductImage from '../components/ProductImage.astro';
 import ProductCard from '../components/ProductCard.astro';
 import products from '../data/products.json';
+const insomniac = products.filter((product) => product.collection === 'Insomniac');
+const yikes = products.filter((product) => product.collection === 'Yikes!');
+const uniqueStyles = (pieces: typeof products, count: number) => {
+  const seen = new Set<string>();
+  return pieces.filter((product) => !seen.has(product.typeLabel) && Boolean(seen.add(product.typeLabel))).slice(0, count);
+};
+const featuredProducts = [...uniqueStyles(insomniac, 3), ...yikes.slice(0, 1)];
+const heroProduct = featuredProducts[0] ?? products[0]!;
 ---
 
 <Site
-  title="Yikes! — Fall / Winter 2026"
-  description="The Yikes! crewneck and cropped hoodie in Bone. Yellow-and-blue graphics on cotton-blend fleece. Shop After Hours Agenda with free domestic shipping."
+  title="Fall / Winter 2026 collection"
+  description="Shop the Fall / Winter 2026 After Hours Agenda collection: hoodies, crewnecks and long sleeves. Free domestic shipping."
+  preloadImage={{src:heroProduct.campaign[0]!.src,srcset:heroProduct.campaign[0]!.srcset,sizes:'(max-width: 760px) calc(100vw - 40px), 50vw'}}
 >
   <section class="hero shell">
     <div class="hero-copy">
@@ -31,23 +40,23 @@ import products from '../data/products.json';
       </p>
       <div class="actions">
         <a class="button" href="/shop/">
-          Shop Yikes! <span aria-hidden="true">↗</span>
+          Shop the collection <span aria-hidden="true">↗</span>
         </a>
         <a class="text-link" href="/about/">
           Our story →
         </a>
       </div>
       <p class="status-copy">
-        Yikes! is here. Bone fleece, two cuts, free domestic shipping.
+        Fall / Winter 2026. Made-to-order pieces with free domestic shipping.
       </p>
     </div>
     <figure class="hero-image">
       <span class="image-number" aria-hidden="true">
-        YIKES! / FALL–WINTER 2026
+        {heroProduct.collection.toUpperCase()} / FALL–WINTER 2026
       </span>
-      <ProductImage image={products[1]!.campaign[0]!} priority />
+      <ProductImage image={heroProduct!.campaign[0]!} priority sizes="(max-width: 760px) calc(100vw - 40px), 50vw" />
       <figcaption>
-        Yikes! cropped hoodie · Campaign mockup · AI-generated
+        {heroProduct!.title} · Campaign mockup · AI-generated
       </figcaption>
     </figure>
   </section>
@@ -57,12 +66,13 @@ import products from '../data/products.json';
       <span>For you and the people you love.</span>
     </div>
   </div>
-  <section class="section shell" aria-labelledby="new-pieces"><div class="section-header"><div><p class="label">Fall / Winter 2026</p><h2 id="new-pieces">YIKES!</h2></div><a class="text-link" href="/shop/">Shop the collection →</a></div><div class="product-grid">{products.map(product=><ProductCard product={product}/>)}</div></section>
+  <section class="section shell" aria-labelledby="new-pieces"><div class="section-header"><div><p class="label">Fall / Winter 2026</p><h2 id="new-pieces">CURRENT PIECES.</h2></div><a class="text-link" href="/shop/">Shop all pieces →</a></div><div class="product-grid">{featuredProducts.map(product=><ProductCard product={product}/>)}</div></section>
   <section class="section shell story-grid" aria-labelledby="story-title">
     <figure class="archive-image">
       <Image
         name="2012-the-prologue"
         alt="The original After Hours Agenda Prologue, typed on paper in January 2012."
+        sizes="(max-width: 760px) calc(100vw - 82px), 40vw"
       />
       <figcaption class="image-caption">
         The Prologue · Brand archive · January 2012
@@ -96,7 +106,7 @@ import products from '../data/products.json';
   <section class="section shell" aria-labelledby="lookbook-title">
     <div class="section-header">
       <div>
-        <p class="label">The Yikes! campaign</p>
+        <p class="label">From the collection</p>
         <h2 id="lookbook-title">
           OUR OWN
           <br />
@@ -109,17 +119,17 @@ import products from '../data/products.json';
     </div>
     <div class="teaser-grid">
       <figure>
-        <ProductImage image={products[0]!.campaign[0]!} />
+        <ProductImage image={featuredProducts[0]!.campaign[0]!} sizes="(max-width: 760px) calc((100vw - 60px) * 0.579), 50vw" />
         <figcaption>
-          <h3>Yikes! Crewneck.</h3>
-          <p>Bone · Campaign mockup · AI-generated</p>
+          <h3>{featuredProducts[0]!.title}.</h3>
+          <p>{featuredProducts[0]!.campaignSetting} · Campaign mockup · AI-generated</p>
         </figcaption>
       </figure>
       <figure>
-        <ProductImage image={products[1]!.campaign[2]!} />
+        <ProductImage image={featuredProducts.at(-1)!.campaign[2]!} sizes="(max-width: 760px) calc((100vw - 60px) * 0.421), 36vw" />
         <figcaption>
-          <h3>Yikes! Cropped Hoodie.</h3>
-          <p>Bone · Campaign mockup · AI-generated</p>
+          <h3>{featuredProducts.at(-1)!.title}.</h3>
+          <p>{featuredProducts.at(-1)!.campaignSetting} · Campaign mockup · AI-generated</p>
         </figcaption>
       </figure>
     </div>

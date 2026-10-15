@@ -102,6 +102,8 @@ test("native mobile menu works by keyboard and Escape restores focus", async ({
 test("contact validates, preserves details and prepares an unsent email", async ({
   page,
 }) => {
+  // Keep this no-message assertion separate from the default-on analytics tests.
+  await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({analytics:false,marketing:false,at:Date.now()})));
   const writes: string[] = [];
   page.on("request", (r) => {
     if (!["GET", "HEAD"].includes(r.method())) writes.push(r.url());

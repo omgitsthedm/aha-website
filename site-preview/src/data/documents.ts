@@ -166,22 +166,22 @@ export const documents = [
   {
     "slug": "privacy",
     "metaTitle": "Privacy and your information",
-    "eyebrow": "Privacy · October 14, 2026",
+    "eyebrow": "Privacy · October 15, 2026",
     "title": "Your information.",
-    "description": "How After Hours Agenda uses website information, optional analytics and marketing cookies, Square checkout details and order information.",
-    "lead": "You choose whether this website uses optional analytics and marketing tools.",
+    "description": "How After Hours Agenda uses website information, analytics and marketing tools, secure Square payments and order information.",
+    "lead": "This site uses analytics and marketing tools by default. You can change those choices in the footer.",
     "sections": [
       [
         "Essential browsing",
-        "Our host receives technical request information needed to deliver and secure the website. We store your cookie choice in your browser for up to 180 days. The main content and checkout links work without optional tracking."
+        "Our host receives technical request information needed to deliver and secure the website. We store your privacy choice in your browser for up to 180 days and keep selected products in your bag. Checkout can temporarily keep delivery details in the current browser tab to restore a wallet payment; that checkout expires after 15 minutes. Browsing and checkout still work when you turn off analytics or marketing."
       ],
       [
-        "Optional analytics and marketing",
-        "If you allow analytics, Google Analytics receives browsing and product-interaction events. If you allow marketing and Meta tracking is configured, Meta receives page, product-view and checkout-link events. We do not send contact-form fields or payment-card details to these tools. Use Cookie choices in the footer to change your choice. Global Privacy Control disables Meta marketing tracking on this site."
+        "Analytics and marketing choices",
+        "For new visitors, Google Analytics and Meta receive browsing, product, checkout and confirmed-purchase events by default. Purchase events include an order reference, products and amounts. We do not send names, email addresses, delivery addresses or payment-card details to these tools. Use Privacy choices in the footer to turn analytics or marketing off at any time. Global Privacy Control disables Meta marketing tracking on this site."
       ],
       [
         "Checkout and fulfillment",
-        "Checkout is hosted by Square, which collects the information needed for payment and the order under its own privacy practices. We use order and shipping details to provide support and share necessary information with production and delivery partners. Payment-card information is handled by Square."
+        "At checkout, we collect the contact and shipping details needed to create and deliver your order. Square handles payment-card details and payment under its own privacy practices. We share necessary order and shipping details with Apliiq to make and deliver your piece, and use Resend to send transactional order and tracking emails. We do not use this information to add you to marketing."
       ],
       [
         "Contact",
@@ -200,7 +200,7 @@ export const documents = [
     "metaTitle": "Website and order terms",
     "eyebrow": "Website and order terms",
     "title": "Clear terms.",
-    "description": "Terms for shopping with After Hours Agenda, including made-to-order products, Square checkout, shipping, returns and previous purchases.",
+    "description": "Terms for shopping with After Hours Agenda, including made-to-order products, secure Square payments, shipping, returns and previous purchases.",
     "lead": "Check the garment measurements and order details before paying.",
     "sections": [
       [
@@ -209,7 +209,7 @@ export const documents = [
       ],
       [
         "Payment and production",
-        "Choose size and quantity at Square checkout. Each piece is made to order. Contact support promptly about changes or cancellations; production may already have started. Product mockups illustrate the design, and color or placement can vary slightly in production."
+        "Choose size and quantity in the After Hours Agenda cart, enter delivery details, then pay with Square’s secure payment fields. Each piece is made to order. Contact support promptly about changes or cancellations; production may already have started. Product mockups illustrate the design, and color or placement can vary slightly in production."
       ],
       [
         "Shipping and returns",

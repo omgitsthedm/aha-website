@@ -11,8 +11,9 @@ interface Props {
   imageAlt?: string;
   imageWidth?: number;
   imageHeight?: number;
+  preloadImage?: { src: string; srcset: string; sizes: string };
 }
-const { title, description, path = Astro.url.pathname, noindex = false, image, imageAlt, imageWidth=1200, imageHeight=630 } = Astro.props;
+const { title, description, path = Astro.url.pathname, noindex = false, image, imageAlt, imageWidth=1200, imageHeight=630, preloadImage } = Astro.props;
 const origin = Astro.site!.origin;
 const canonical = new URL(path, origin).href;
 const isPreview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
@@ -94,9 +95,7 @@ const schema = {
     />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#FF6B6B" />
-    <link rel="preload" href="/fonts/poppins-latin-400.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/poppins-latin-700.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/poppins-latin-900.woff2" as="font" type="font/woff2" crossorigin />
+    {preloadImage && <link rel="preload" as="image" href={preloadImage.src} imagesrcset={preloadImage.srcset} imagesizes={preloadImage.sizes} fetchpriority="high" />}
     <meta name="facebook-domain-verification" content="83wsdo81kg6b428satufegpkljq0w6" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={brand.name} />
@@ -163,8 +162,11 @@ const schema = {
           </a>
         ))}
       </nav>
+      <a class="header-cart" href="/checkout/" data-cart-link aria-label="Bag, 0 items">
+        Bag <span data-cart-count aria-hidden="true">0</span>
+      </a>
       <a class="button header-cta" href="/shop/">
-        Shop Yikes! <span aria-hidden="true">↗</span>
+        Shop the collection <span aria-hidden="true">↗</span>
       </a>
       <details class="mobile-nav">
         <summary>
@@ -180,6 +182,7 @@ const schema = {
             </a>
           ))}
           <a href="/manifesto/">Manifesto</a>
+          <a href="/checkout/" data-cart-link aria-label="Bag, 0 items">Bag <span data-cart-count aria-hidden="true">0</span></a>
           <a href="/updates/">Stay close ↗</a>
         </nav>
       </details>
@@ -210,7 +213,7 @@ const schema = {
           <a href="/lookbook/">Lookbook</a>
           <a href="/manifesto/">Manifesto</a>
           <a href="/updates/">Updates</a>
-          <a href="/shop/">Shop Yikes!</a>
+          <a href="/shop/">Shop the collection</a>
         </nav>
         <nav aria-label="Support">
           <span class="label">Here to help</span>
@@ -240,11 +243,12 @@ const schema = {
           <a href="/privacy/">Privacy</a>
           <a href="/terms/">Terms</a>
           <a href="/accessibility/">Accessibility</a>
-          <button type="button" class="privacy-button" data-privacy-settings>Cookie choices</button>
+          <button type="button" class="privacy-button" data-privacy-settings>Privacy choices</button>
         </nav>
       </div>
     </footer>
     <Consent />
+    <script src="../scripts/cart-count.ts"></script>
     <script>
       const menu = document.querySelector<HTMLDetailsElement>(".mobile-nav");
       document.addEventListener("keydown", (event) => {

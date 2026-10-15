@@ -2,9 +2,24 @@
 import {tracking} from '../data/tracking';
 const enabled=import.meta.env.AHA_PRODUCTION_BUILD==='approved';
 ---
-<aside class="cookie-banner" aria-label="Cookie choices" data-tracking-enabled={enabled} data-ga-id={tracking.ga4} data-meta-id={tracking.metaPixel} hidden>
- <div class="cookie-heading">Your cookie choices</div>
- <p>With your permission, we use Google Analytics to understand visits and Meta tools to measure marketing. Essential functions work without them. <a href="/privacy/">Privacy details</a></p>
+<aside class="cookie-banner" aria-label="Privacy choices" data-tracking-enabled={enabled} data-ga-id={tracking.ga4} data-meta-id={tracking.metaPixel} hidden>
+ <div class="cookie-heading">Privacy choices</div>
+ <p>Analytics and marketing are enabled by default. Choose a different setting at any time. Global Privacy Control keeps Meta disabled. <a href="/privacy/">Privacy details</a></p>
  <div class="cookie-actions"><button type="button" data-consent="essential">Essential only</button><button type="button" data-consent="analytics">Analytics only</button><button type="button" data-consent="all">Allow all</button></div>
 </aside>
+{enabled && <script is:inline type="text/partytown">
+  // Initialize the worker queue before Partytown forwards Meta page events.
+  // This creates no vendor request; tracking.ts still gates every SDK load.
+  (function(w) {
+    const f = function() {
+      f.callMethod ? f.callMethod.apply(f, arguments) : f.queue.push(arguments);
+    };
+    f.queue = [];
+    f.loaded = true;
+    f.version = '2.0';
+    f.push = f;
+    w.fbq = f;
+    w._fbq = f;
+  })(window);
+</script>}
 <script src="../scripts/tracking.ts"></script>

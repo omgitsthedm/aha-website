@@ -6,6 +6,7 @@ export interface SelectionVariant {
   title: string;
   price: number;
 }
+const MAX_QUANTITY = 10;
 
 export function recoverSelection(search: string, variants: SelectionVariant[]) {
   const params = new URLSearchParams(search);
@@ -18,13 +19,13 @@ export function recoverSelection(search: string, variants: SelectionVariant[]) {
       const [id, amount, extra] = entry.split(':');
       const hit = byId.get(id || '');
       const quantity = Number(amount);
-      if (!hit || extra !== undefined || !/^\d+$/.test(amount || '') || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 20) {
+      if (!hit || extra !== undefined || !/^\d+$/.test(amount || '') || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY) {
         incomplete = true;
         continue;
       }
       const previous = lines.find(line => line.id === hit.id);
       if (previous) {
-        if (previous.quantity + quantity > 20) { incomplete = true; continue; }
+        if (previous.quantity + quantity > MAX_QUANTITY) { incomplete = true; continue; }
         previous.quantity += quantity;
       } else lines.push({ ...hit, quantity });
     }

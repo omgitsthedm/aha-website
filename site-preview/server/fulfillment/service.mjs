@@ -58,6 +58,11 @@ function shippingAddress(details) {
   };
 }
 
+function fulfillmentTitle(item) {
+  const legacy = { crewneck: "Yikes Crewneck", cropped_hoodie: "Yikes Cropped Hoodie" };
+  return requiredString(item.title || legacy[item.product], "catalog_title_missing");
+}
+
 function validateKnownLines(order) {
   if (!Array.isArray(order.line_items) || order.line_items.length === 0) throw new FulfillmentHold("order_lines_missing");
   return order.line_items.map((line, index) => {
@@ -72,6 +77,7 @@ function validateKnownLines(order) {
       sku: mapped.sku,
       size: mapped.size,
       product: mapped.product,
+      title: fulfillmentTitle(mapped),
       quantity,
       priceCents: mapped.priceCents,
       position: index,
@@ -102,11 +108,18 @@ export function validatePaidSquareOrder({ payment, order, locationId, startAt })
   if (!["PROPOSED", "RESERVED"].includes(fulfillment.state)) throw new FulfillmentHold("fulfillment_not_open");
   const items = validateKnownLines(order);
   const address = shippingAddress(fulfillment.shipment_details);
+  const paymentEmail = typeof payment.buyer_email_address === "string" ? payment.buyer_email_address.trim() : "";
+  const recipientEmail = typeof fulfillment.shipment_details?.recipient?.email_address === "string" ? fulfillment.shipment_details.recipient.email_address.trim() : "";
+  const customerEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(paymentEmail) ? paymentEmail : (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipientEmail) ? recipientEmail : null);
   return {
     squareOrderId: order.id,
     squarePaymentId: payment.id,
     squareFulfillmentUid: requiredString(fulfillment.uid, "fulfillment_uid_missing"),
     paymentCreatedAt: payment.created_at ?? null,
+    customerEmail,
+    orderNumber: order.reference_id || order.id,
+    totalAmount: money(order.total_money, "order_currency_invalid"),
+    currency: order.total_money.currency,
     items,
     shippingAddress: address,
     apliiqPayload: {
@@ -116,7 +129,7 @@ export function validatePaidSquareOrder({ payment, order, locationId, startAt })
       order_number: order.reference_id || order.id,
       line_items: items.map((item) => ({
         id: `${order.id}:${item.squareLineUid}`,
-        title: `Yikes ${item.product === "crewneck" ? "Crewneck" : "Cropped Hoodie"} — ${item.size}`,
+        title: `${fulfillmentTitle(item)} — ${item.size}`,
         quantity: item.quantity,
         price: (item.priceCents / 100).toFixed(2),
         sku: item.sku,
@@ -152,7 +165,7 @@ function acceptedReason(response) {
   return "apliiq_accepted";
 }
 
-export function createFulfillmentService({ repository, square, apliiq, config, now = () => new Date() }) {
+export function createFulfillmentService({ repository, square, apliiq, notifications = { enqueueConfirmation: async () => null, enqueueShipment: async () => null }, config, now = () => new Date() }) {
   const deadlineRemaining = (deadline) => Math.max(0, Math.min(8_000, deadline - Date.now()));
   async function hold(squareOrderId, code, detail = {}) {
     const existing = await repository.getOrder(squareOrderId);
@@ -203,6 +216,10 @@ export function createFulfillmentService({ repository, square, apliiq, config, n
     });
     if (record.state !== "queued") return { outcome: "already_known", state: record.state };
     if (record.payload_sha256 !== sha256(JSON.stringify(validated.apliiqPayload))) return hold(validated.squareOrderId, "payload_changed");
+    // Queue the confirmation before a provider submission. If the durable
+    // enqueue fails, the signed Square event remains retryable and no customer
+    // email is lost or sent twice.
+    await notifications.enqueueConfirmation({ recipient: validated.customerEmail, orderId: validated.squareOrderId, orderNumber: validated.orderNumber, totalAmount: validated.totalAmount, currency: validated.currency, items: validated.items.map((item) => ({ title: fulfillmentTitle(item), size: item.size, quantity: item.quantity })) });
     if (deadline && deadlineRemaining(deadline) < 2_000) return { outcome: "deferred", retryable: true };
     const claimed = await repository.claimForSubmission(validated.squareOrderId);
     if (!claimed) return { outcome: "already_claimed" };
@@ -379,6 +396,7 @@ export function createFulfillmentService({ repository, square, apliiq, config, n
     const priorTracking = Array.isArray(record.tracking) ? record.tracking.find((entry) => entry?.trackingNumber === trackingNumber && entry?.shippedAt) : null;
     const shippedAt = priorTracking?.shippedAt ?? now().toISOString();
     await repository.recordShipment({ squareOrderId, quantities, tracking: { carrier, trackingNumber, trackingUrl, shippedAt }, complete });
+    await notifications.enqueueShipment({ recipient: record.customer_email, orderId: squareOrderId, orderNumber: record.apliiq_payload?.order_number || squareOrderId, carrier, trackingNumber, trackingUrl });
     if (!complete || !trackingNumber) return { outcome: "partial" };
     // Retrieve the latest order version immediately before the mutation. The
     // idempotency key makes a network retry safe; a version conflict remains

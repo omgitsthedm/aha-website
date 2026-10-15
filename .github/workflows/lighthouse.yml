@@ -56,6 +56,8 @@ jobs:
             http://127.0.0.1:48379/lookbook/
             http://127.0.0.1:48379/faq/
             http://127.0.0.1:48379/contact/
+            http://127.0.0.1:48379/shop/yikes-crewneck/
+            http://127.0.0.1:48379/checkout/
           runs: 3
           uploadArtifacts: true
           artifactName: lighthouse-${{ matrix.profile }}-results

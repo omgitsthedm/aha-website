@@ -5,6 +5,19 @@ import { fileURLToPath } from "node:url";
 import { resolve, extname, sep } from "node:path";
 const root = resolve(fileURLToPath(new URL("../dist/", import.meta.url)));
 const port = Number(process.env.PORT || 48379);
+const metaPixelSources = Object.freeze({
+  "/api/partytown/meta-pixel/bootstrap": "https://connect.facebook.net/en_US/fbevents.js",
+  "/api/partytown/meta-pixel/config": "https://connect.facebook.net/signals/config/1815233516346046",
+});
+async function fetchMetaPixel(source) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8_000);
+  try {
+    return await fetch(source, { headers: { Accept: "application/javascript" }, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 const mime = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css",
@@ -20,19 +33,30 @@ const mime = {
   ".txt": "text/plain",
 };
 const config = await readFile(resolve(root, "_headers"), "utf8");
-const headers = Object.fromEntries(
-  config
-    .split("\n\n")[0]
-    .split("\n")
-    .slice(1)
-    .filter(Boolean)
-    .map((line) => {
-      const index = line.indexOf(":");
-      return [line.slice(0, index).trim(), line.slice(index + 1).trim()];
-    }),
-);
+const headerRules = [];
+for (const line of config.split("\n")) {
+  if (!line.trim() || line.trimStart().startsWith("#")) continue;
+  if (line.startsWith("/")) headerRules.push({ path: line.trim(), headers: {} });
+  else {
+    const index = line.indexOf(":");
+    if (index > 0 && headerRules.length) {
+      headerRules.at(-1).headers[line.slice(0, index).trim()] = line.slice(index + 1).trim();
+    }
+  }
+}
+function headersFor(pathname) {
+  const result = {};
+  for (const rule of headerRules) {
+    const matches = rule.path.endsWith("*")
+      ? pathname.startsWith(rule.path.slice(0, -1))
+      : pathname === rule.path;
+    if (matches) Object.assign(result, rule.headers);
+  }
+  return result;
+}
 http
   .createServer(async (req, res) => {
+    let headers = headersFor("/");
     try {
       if (!["GET", "HEAD"].includes(req.method)) {
         res.writeHead(405, headers);
@@ -42,7 +66,35 @@ http
       const pathname = decodeURIComponent(
         new URL(req.url, "http://localhost").pathname,
       );
+      headers = headersFor(pathname);
       if (pathname.includes("\0")) throw new Error("Invalid path");
+      const metaPixelSource = metaPixelSources[pathname];
+      if (metaPixelSource) {
+        let upstream;
+        try {
+          upstream = await fetchMetaPixel(metaPixelSource);
+        } catch {
+          res.writeHead(502, headers);
+          res.end();
+          return;
+        }
+        if (!upstream.ok) {
+          res.writeHead(502, headers);
+          res.end();
+          return;
+        }
+        const body = Buffer.from(await upstream.arrayBuffer());
+        res.writeHead(200, {
+          ...headers,
+          "Content-Type": "application/javascript; charset=utf-8",
+          "Access-Control-Allow-Origin": "*",
+          "Cache-Control": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
+          "Content-Length": body.length,
+          "X-Content-Type-Options": "nosniff",
+        });
+        res.end(req.method === "HEAD" ? undefined : body);
+        return;
+      }
       let path = resolve(root, `.${pathname}`);
       if (pathname === '/feeds/meta' || pathname === '/feeds/meta/') path=resolve(root,'feeds/meta.xml');
       if (path !== root && !path.startsWith(root + sep)) {

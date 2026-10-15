@@ -14,8 +14,8 @@ env:
   PUBLIC_SITE_URL: https://afterhoursagenda.com
   ASTRO_TELEMETRY_DISABLED: "1"
 
-# Existing required check names are retained. They now test the shipped static
-# website, including the deliberately absent commerce runtime and unsent support.
+# Required check names stay stable while exercising the deployed storefront,
+# persistent multi-product bag and non-billable checkout browser fixtures.
 jobs:
   product-flow:
     runs-on: ubuntu-latest
@@ -49,7 +49,7 @@ jobs:
       - run: npm ci
       - run: google-chrome --version
       - run: npm run build
-      - run: npm run test:e2e -- --grep 'missing routes and legacy APIs'
+      - run: npm run test:e2e -- tests/browser/selection.spec.ts
 
   checkout-sandbox-flow:
     runs-on: ubuntu-latest
@@ -67,4 +67,4 @@ jobs:
       - run: google-chrome --version
       - run: npm run build
       - run: npm test
-      - run: npm run test:e2e -- --grep 'contact validates'
+      - run: npm run test:e2e -- tests/browser/checkout.spec.ts tests/browser/consent.spec.ts

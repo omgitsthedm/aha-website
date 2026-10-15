@@ -47,7 +47,7 @@ test("every route has unique metadata, entity data and correct indexing mode", a
       ),
       route,
     );
-    assert.ok(!/<script[^>]+src="https:\/\/(?:www\.googletagmanager|connect\.facebook)/.test(html),'Optional tracking must load only after a cookie choice');
+    assert.ok(!/<script[^>]+src="https:\/\/(?:www\.googletagmanager|connect\.facebook)/.test(html),'Tracking scripts must load dynamically so saved choices and Global Privacy Control govern them');
     assert.ok(html.includes(`data-tracking-enabled="${production}"`),route);
   }
 });
@@ -67,7 +67,10 @@ test("all inline script content is covered by CSP hashes", async () => {
           ),
         );
   }
-  assert.ok(!headers.includes("unsafe-inline"));
+  const scriptPolicy = headers.match(/script-src ([^;]+)/)?.[1] ?? "";
+  assert.ok(!scriptPolicy.includes("unsafe-inline"));
+  assert.match(headers, /style-src 'self' 'unsafe-inline'/, "Square requires its dynamic UI styles");
+  assert.match(headers, /payment=\(self/, "Wallet payment requests must be permitted");
   assert.ok(!headers.includes("unsafe-eval"));
   assert.match(headers, /connect-src 'self'/);
   assert.match(headers, /form-action 'none'/);
@@ -107,6 +110,8 @@ test("existing Google and Bing ownership files remain byte-identical", async () 
 });
 test("no server bundle, sensitive files or source maps enter the artifact", async () => {
   let jsBytes = 0;
+  let workerVendorBytes = 0;
+  const workerFiles = new Set(['partytown-sandbox-sw.html', 'partytown-sw.js', 'partytown-atomics.js', 'partytown.js', 'partytown-media.js']);
   const walk = async (dir) => {
     for (const item of await readdir(dir, { withFileTypes: true })) {
       assert.ok(
@@ -117,12 +122,18 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
       );
       assert.ok(!/\.(map|ts|tsx|sql|md)$/.test(item.name), item.name);
       if (item.isDirectory()) await walk(new URL(`${item.name}/`, dir));
-      else if (item.name.endsWith(".js"))
+      else if (dir.pathname.endsWith('/~partytown/')) {
+        assert.ok(workerFiles.has(item.name), `Unexpected worker vendor asset: ${item.name}`);
+        const emitted = await readFile(new URL(item.name, dir));
+        assert.deepEqual(emitted, await readFile(new URL(`../node_modules/@qwik.dev/partytown/lib/${item.name}`, import.meta.url)), 'Worker runtime must match the pinned dependency exactly');
+        workerVendorBytes += emitted.length;
+      } else if (item.name.endsWith(".js"))
         jsBytes += (await stat(new URL(item.name, dir))).size;
     }
   };
   await walk(root);
-  assert.ok(jsBytes < 12000, `Client JS must stay under 12 KB; got ${jsBytes}`);
+  assert.ok(jsBytes < 65000, `All first-party JS including checkout must stay under 65 KB; got ${jsBytes}`);
+  assert.ok(workerVendorBytes > 0 && workerVendorBytes < 160000, `The complete deferred third-party worker runtime must stay under 160 KB; got ${workerVendorBytes}`);
 });
 test("production context is refused by default", () => {
   const result = spawnSync(process.execPath, ["scripts/guard-build.mjs"], {

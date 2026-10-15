@@ -1,3 +1,5 @@
+import products from "./products.json" with { type: "json" };
+
 export const brand = {
   name: "After Hours Agenda",
   email: "info@afterhoursagenda.com",
@@ -24,9 +26,9 @@ export const topics = [
 export const answers = [
   {
     q: "Can I place an order?",
-    a: "Yes. The Yikes! crewneck and cropped hoodie are available in Bone. Choose a piece in the shop, then select your size and quantity at secure Square checkout. Domestic shipping is free.",
+    a: "Yes. Choose a current piece, select your size and quantity, and add it to your bag. You can check out with multiple products together through Square. Domestic shipping is free.",
     href: "/shop/",
-    label: "Shop Yikes!",
+    label: "Shop the collection",
   },
   {
     q: "What is After Hours Agenda?",
@@ -36,7 +38,7 @@ export const answers = [
   },
   {
     q: "Does the lookbook show products for sale?",
-    a: "The Yikes! campaign shows our current crewneck and cropped hoodie in AI-generated lifestyle mockups. Garment views and measurements are on each product page. Historical archive pieces are separately labeled and are not for sale.",
+    a: "The current collection appears in AI-generated lifestyle mockups. Garment views and measurements are on each product page. Historical archive pieces are separately labeled and are not for sale.",
     href: "/lookbook/",
     label: "Explore the lookbook and archive",
   },
@@ -130,8 +132,7 @@ export const routes = [
   "/updates/",
   "/faq/",
   "/shop/",
-  "/shop/yikes-crewneck/",
-  "/shop/yikes-cropped-hoodie/",
+  ...products.map((product) => `/shop/${product.slug}/`),
   "/privacy/",
   "/terms/",
   "/accessibility/",

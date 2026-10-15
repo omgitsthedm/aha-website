@@ -2,6 +2,7 @@ import { createApliiqGateway } from "./apliiq.mjs";
 import { createNetlifyRepository } from "./repository.mjs";
 import { createFulfillmentService } from "./service.mjs";
 import { createSquareGateway } from "./square.mjs";
+import { createNotificationRuntime } from "../notifications/runtime.mjs";
 
 export const AHA_SITE_ID = "275b4115-16bf-42fb-9b36-6bce9bb93608";
 export const AHA_HOST = "afterhoursagenda.com";
@@ -26,6 +27,7 @@ export function requireProductionRequest(request, context) {
 export function createRuntime({ database, env }) {
   const config = environmentConfig(env);
   const repository = createNetlifyRepository(database);
+  const notifications = createNotificationRuntime({ database, env });
   const squareToken = env.get("AHA_SQUARE_ACCESS_TOKEN");
   const apliiqApiKey = env.get("AHA_APLIIQ_API_KEY");
   const unavailable = (provider) => async () => { throw new Error(`${provider} is not configured.`); };
@@ -38,7 +40,9 @@ export function createRuntime({ database, env }) {
       apliiq: apliiqApiKey && config.apliiqSharedSecret
         ? createApliiqGateway({ apiKey: apliiqApiKey, sharedSecret: config.apliiqSharedSecret })
         : { createOrder: unavailable("Apliiq"), getOrder: unavailable("Apliiq"), listOrders: unavailable("Apliiq") },
+      notifications: notifications.service,
       config,
     }),
+    notifications,
   };
 }
