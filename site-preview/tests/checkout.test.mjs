@@ -5,7 +5,7 @@ import { CheckoutError } from "../server/checkout/errors.mjs";
 
 const crewM = "R5UCZCGSJMR3Z4HJDVOD3ZIK";
 const hoodieL = "4HDYVGQA3ZOGIPYFUCTPKPIV";
-const config = { locationId: "FGKRPYEXNV482" };
+const config = { locationId: "TEST_LOCATION" };
 const fixedNow = () => Date.parse("2026-10-15T18:00:00.000Z");
 
 function fakeRepo() {

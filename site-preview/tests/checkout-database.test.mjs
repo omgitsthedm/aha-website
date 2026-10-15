@@ -20,7 +20,7 @@ async function isolated(t) {
   return { database, repository: createCheckoutRepository({ sql }) };
 }
 function record({ checkoutId = "checkout-db-1", token = "test-token", expiresAt = "2030-01-01T00:00:00.000Z" } = {}) {
-  return { checkoutId, tokenHash: tokenHash(token), currency: "USD", cart: [{ variationId: "R5UCZCGSJMR3Z4HJDVOD3ZIK", quantity: 1, unitAmount: 5200, totalAmount: 5200 }], address: { firstName: "A", lastName: "B", addressLine1: "1 Main", city: "New York", region: "NY", postalCode: "10001", country: "US", email: "a@example.com" }, orderPayload: { location_id: "FGKRPYEXNV482", line_items: [] }, subtotalCents: 5200, shippingCents: 0, taxCents: 0, totalCents: 5200, taxLabel: null, orderIdempotencyKey: `order-${checkoutId}`, expiresAt };
+  return { checkoutId, tokenHash: tokenHash(token), currency: "USD", cart: [{ variationId: "R5UCZCGSJMR3Z4HJDVOD3ZIK", quantity: 1, unitAmount: 5200, totalAmount: 5200 }], address: { firstName: "A", lastName: "B", addressLine1: "1 Main", city: "New York", region: "NY", postalCode: "10001", country: "US", email: "a@example.com" }, orderPayload: { location_id: "TEST_LOCATION", line_items: [] }, subtotalCents: 5200, shippingCents: 0, taxCents: 0, totalCents: 5200, taxLabel: null, orderIdempotencyKey: `order-${checkoutId}`, expiresAt };
 }
 
 test("checkout migration remains identical at repository and Netlify discovery paths", async () => {
@@ -77,8 +77,8 @@ test("status can reconcile a processing checkout after quote expiry without sour
   await repository.claim({ checkoutId: saved.checkoutId, tokenHash: saved.tokenHash, clientIdempotencyKey: "client-claim-0000003" });
   await repository.saveOrder({ checkoutId: saved.checkoutId, orderId: "square-order-recover" });
   await database.query("UPDATE aha_checkout_sessions SET expires_at = now() - interval '1 second' WHERE checkout_id = $1", [saved.checkoutId]);
-  const square = { getOrder: async () => ({ tenders: [{ payment_id: "payment-recover" }] }), getPayment: async () => ({ id: "payment-recover", status: "COMPLETED", order_id: "square-order-recover", location_id: "FGKRPYEXNV482", amount_money: { amount: 5200, currency: "USD" }, receipt_url: "https://squareup.com/receipt/recover" }) };
-  const service = createCheckoutService({ repository, square, config: { locationId: "FGKRPYEXNV482" } });
+  const square = { getOrder: async () => ({ tenders: [{ payment_id: "payment-recover" }] }), getPayment: async () => ({ id: "payment-recover", status: "COMPLETED", order_id: "square-order-recover", location_id: "TEST_LOCATION", amount_money: { amount: 5200, currency: "USD" }, receipt_url: "https://squareup.com/receipt/recover" }) };
+  const service = createCheckoutService({ repository, square, config: { locationId: "TEST_LOCATION" } });
   const outcome = await service.status({ checkoutId: saved.checkoutId, checkoutToken: token });
   assert.equal(outcome.state, "completed"); assert.equal(outcome.paymentId, "payment-recover"); assert.equal(outcome.receiptUrl, "https://squareup.com/receipt/recover");
 });
