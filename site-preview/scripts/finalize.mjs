@@ -115,5 +115,5 @@ await writeFile(
   ),
 );
 console.log(
-  `Finalized ${files.length} static files; ${routes.length} sitemap routes; ${scriptHashes.size} CSP hashes; no functions.`,
+  `Finalized ${files.length} static files; ${routes.length} sitemap routes; ${scriptHashes.size} CSP hashes; backend source excluded from the public artifact.`,
 );
