@@ -1,0 +1,9 @@
+{
+  "_note": "Blank-garment photos (supplier references, white studio background). pxPerInch is measured from the torso width of the photographed size; collarY is the front neckline. Re-measure when a base is replaced.",
+  "SS3000": {
+    "front": { "file": "bases/SS3000-front.webp", "centerX": 1041, "collarY": 360, "pxPerInch": 56, "crop": { "left": 251, "top": 53, "width": 1580, "height": 1956 } }
+  },
+  "AFX64CRP": {
+    "front": { "file": "bases/AFX64CRP-front.webp", "centerX": 1040, "collarY": 380, "pxPerInch": 58, "crop": { "left": 260, "top": 62, "width": 1560, "height": 1955 } }
+  }
+}

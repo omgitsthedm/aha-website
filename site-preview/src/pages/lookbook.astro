@@ -6,7 +6,9 @@ import { gallery } from "../data/site";
 import manifest from "../data/images.json";
 import products from '../data/products.json';
 import ProductImage from '../components/ProductImage.astro';
-const campaignProducts = [...products.filter((product) => product.collection === 'Mighty Mick’s'), ...products.filter((product) => product.collection === 'The City'), ...products.filter((product) => product.collection !== 'Mighty Mick’s' && product.collection !== 'The City')];
+// Newest drop leads the lookbook; every other collection follows in catalog order.
+const leadCollections = ['Pet It Be', 'Mighty Mick’s', 'The City'];
+const campaignProducts = [...leadCollections.flatMap((collection) => products.filter((product) => product.collection === collection)), ...products.filter((product) => !leadCollections.includes(product.collection))];
 const leadCampaignImage = campaignProducts[0]?.campaign[0];
 ---
 

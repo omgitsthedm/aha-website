@@ -1,0 +1,63 @@
+{
+  "blank": "NL3601",
+  "name": "Next Level 3601 long sleeve",
+  "referenceProduct": "the-city-next-level-3601-black",
+  "apliiq": {
+    "productId": 1017,
+    "productCode": "mens_Men-s-Cotton-Long-Sleeve-Crew"
+  },
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "product": {
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Shirts & Tops > T-Shirts"
+    },
+    "fit": "standard",
+    "weightOz": 4.3,
+    "composition": "100% combed ring-spun cotton",
+    "sizeGuide": [
+      {
+        "size": "S",
+        "bodyLength": 28,
+        "chestWidth": 18.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 29,
+        "chestWidth": 20
+      },
+      {
+        "size": "L",
+        "bodyLength": 30,
+        "chestWidth": 21.5
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 23.3333333333
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32,
+        "chestWidth": 25.5
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "typeLabel": "Long Sleeve",
+    "fabricType": "cotton jersey",
+    "constructionDetails": [
+      "combed ring-spun cotton",
+      "baby-rib collar",
+      "hemmed sleeves",
+      "side seams"
+    ],
+    "sleeveMeasurementGuidance": ""
+  }
+}

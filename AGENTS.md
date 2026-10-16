@@ -1,5 +1,9 @@
 # After Hours Agenda agent contract
 
+## Approved Pet It Be launch — October 16, 2026
+
+The owner instructed: “Yes: Pet It Be B1 (cream on cranberry) on the Maroon Independent SS3000 crewneck, XS–3XL, $55, free US shipping, front print 11 inches wide, private label as usual.” The catalog engine created Apliiq artwork 8209339 and design 6211854 (SS3000 product 391, Maroon 480, front 4546, label SB-3-161622 inside neck) and Square item CX5OOOUPF44W4JEZLHPTJG4R with seven variations. The catalog is 16 products / 109 variants. Garment front and print-detail shots are deterministic composites of the exact print master on a recolored blank photo; back, folded and three campaign images are AI-generated from that composite. No paid test order, ad spend or customer message is authorized by this entry.
+
 ## Approved The City expansion — October 15, 2026
 
 The owner instructed “Alright let’s upload them for sale” after approving the three Black mockups: Independent SS4500 hoodie, Independent SS3000 crewneck, and Next Level 3601 long sleeve. Publish these alongside the existing Yikes and Insomniac catalog at the existing matching-style prices of $58, $55 and $42, one price across selected sizes, with free domestic shipping. Preserve the approved blue/orange full-back artwork, black negative space and plain fronts. All three supplier records include private label SB-3-161622; woven labels remain on hold. The expansion adds 21 exact Square-to-Apliiq variation mappings, for 13 garment/color options and 88 variants. Each product has four garment-only shopping images and three separate campaign images. Publication must pass the existing checks and exact-site release verification. This scope includes catalog and website publication, not paid test purchases, advertising or additional subscriptions.
@@ -31,11 +35,15 @@ The owner explicitly authorized going live with the first two Yikes! products an
 
 This custom-domain project keeps the After Hours Agenda brand. Never substitute an agency or future client's identity. The user corrected the initial rebrand direction on October 9, 2026. Only abstract projects use LFNYC branding.
 
+## Catalog engine (October 16, 2026)
+
+New products, prices and catalog checks go through the catalog engine, never ad-hoc scripts: `cd site-preview && npm run catalog -- <import|generate|verify|margin|plan|apply|explain>`. The shared skill `.agents/skills/aha-catalog/SKILL.md` (also linked at `.claude/skills`) is the runbook for Codex and Claude Code. `catalog/ledger.json` ties every product to its Apliiq design and Square item; `server/fulfillment/catalog.mjs` is generated from it. Apliiq creates are intent-guarded and never retried blindly.
+
 ## Source and scope
 
-- Canonical original checkout: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`.
-- Audit worktree: `/Users/davidmarsh/Desktop/Project Upgrades/afterhoursagenda/worktree`.
-- Branch: `audit/2026-10-09`; new app: `site-preview/`.
+- Working checkout (October 16, 2026): `/Users/davidmarsh/Code/LiFi NYC/Clients/After Hours Agenda/aha-website`, a fresh clone of `main` outside iCloud. Work here, not in iCloud-synced Desktop or Documents folders; sync creates `* 2.*` duplicate files.
+- Older checkouts (preserved, not active): `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website` (branch `release/seo-domination-2026-10-08`) and the Codex session clone under `/Users/davidmarsh/Documents/Codex/2026-10-14/o-x20/work/aha-launch-source`.
+- Active app: `site-preview/` (Astro). The repository-root Next.js app is inactive.
 - GitHub: `omgitsthedm/aha-website`; production branch: `main`.
 - Exact Netlify site: `275b4115-16bf-42fb-9b36-6bce9bb93608`; primary host: `https://afterhoursagenda.com`.
 - Read `SOURCE_OF_TRUTH.md`. Confirm physical Git root and `git status --short` before edits. Preserve unrelated work and the original checkout.

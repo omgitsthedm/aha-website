@@ -1,0 +1,10 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+---
+<Admin title="Analytics" page="analytics">
+  <div class="admin-cards" data-admin-carts aria-live="polite"></div>
+  <h2>Recent abandoned carts</h2>
+  <p class="admin-meta">Visits that reached a confirmed total but didn't pay. Open a recording to watch what happened.</p>
+  <div class="admin-list" data-admin-cart-list></div>
+  <p data-admin-posthog></p>
+</Admin>

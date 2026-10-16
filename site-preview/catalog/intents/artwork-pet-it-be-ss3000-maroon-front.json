@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-pet-it-be-ss3000-maroon-front",
+  "state": "complete",
+  "createdAt": "2026-10-16T09:55:44.728Z",
+  "payload": {
+    "Name": "Pet It Be B1 front cream 11in",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/c2e164dc61e97858c2840ec85d4bc5d8030d8f90/production-artwork/pet-it-be/pet-it-be-b1-front-cream-3300.png"
+  },
+  "finishedAt": "2026-10-16T09:55:45.827Z",
+  "response": {
+    "WtoHRatio": 1,
+    "DateCreated": "2026-10-16T09:55:45.777109Z",
+    "Id": 8209339,
+    "Name": "Pet It Be B1 front cream 11in"
+  }
+}

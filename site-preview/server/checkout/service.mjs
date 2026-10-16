@@ -1,6 +1,7 @@
 import { randomBytes, createHash, randomUUID } from "node:crypto";
 import { buildSquareOrder, CURRENCY, normalizeAddress, normalizeItems } from "./catalog.mjs";
 import { CheckoutError } from "./errors.mjs";
+import { normalizeAnalyticsIds } from "../analytics/posthog.mjs";
 
 const QUOTE_TTL_MS = 15 * 60 * 1000;
 const PAYMENT_OUTCOME_GRACE_MS = 90 * 1000;
@@ -20,9 +21,10 @@ function paymentOutcomeTimedOut(session, now) {
 
 export function createCheckoutService({ repository, square, config, now = () => Date.now(), createId = randomUUID }) {
   if (!config.locationId) throw new Error("checkout location is not configured");
-  async function quote({ items: rawItems, shippingAddress }) {
+  async function quote({ items: rawItems, shippingAddress, analytics: rawAnalytics }) {
     const items = normalizeItems(rawItems);
     const address = normalizeAddress(shippingAddress);
+    const analytics = normalizeAnalyticsIds(rawAnalytics);
     const checkoutId = createId();
     const checkoutToken = token();
     const orderPayload = buildSquareOrder({ items, address, locationId: config.locationId, referenceId: `AHA-${checkoutId}` });
@@ -36,7 +38,7 @@ export function createCheckoutService({ repository, square, config, now = () => 
     if (!Number.isSafeInteger(taxCents) || totalCents !== subtotalCents + shippingCents + taxCents) throw new CheckoutError("checkout_unavailable", 503);
     const taxLabel = taxCents ? "Arizona TPT (Peoria 8.1%)" : null;
     const expiresAt = new Date(now() + QUOTE_TTL_MS).toISOString();
-    await repository.create({ checkoutId, tokenHash: sha256(checkoutToken), currency: CURRENCY, cart: items, address, orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel, orderIdempotencyKey: `aha-order-${checkoutId}`, expiresAt });
+    await repository.create({ checkoutId, tokenHash: sha256(checkoutToken), currency: CURRENCY, cart: items, address, orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel, orderIdempotencyKey: `aha-order-${checkoutId}`, expiresAt, analytics });
     return { checkoutId, checkoutToken, expiresAt, currency: CURRENCY, shippingRegion: address.region, lineItems: lineResponse(items), subtotalAmount: subtotalCents, shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel: shippingCents ? "International shipping" : "Free U.S. shipping" };
   }
   function authorize(session, checkoutToken, { requireFreshQuote = false } = {}) {

@@ -1,8 +1,8 @@
 ---
-import {tracking} from '../data/tracking';
+import {posthog, tracking} from '../data/tracking';
 const enabled=import.meta.env.AHA_PRODUCTION_BUILD==='approved';
 ---
-<aside class="cookie-banner" aria-label="Privacy choices" data-tracking-enabled={enabled} data-ga-id={tracking.ga4} data-meta-id={tracking.metaPixel} hidden>
+<aside class="cookie-banner" aria-label="Privacy choices" data-tracking-enabled={enabled} data-ga-id={tracking.ga4} data-meta-id={tracking.metaPixel} data-posthog-key={posthog.key || undefined} data-posthog-host={posthog.host} data-posthog-replay={posthog.replaySample} hidden>
  <div class="cookie-heading">Privacy choices</div>
  <p>Analytics and marketing are enabled by default. Choose a different setting at any time. Global Privacy Control keeps Meta disabled. <a href="/privacy/">Privacy details</a></p>
  <div class="cookie-actions"><button type="button" data-consent="essential">Essential only</button><button type="button" data-consent="analytics">Analytics only</button><button type="button" data-consent="all">Allow all</button></div>

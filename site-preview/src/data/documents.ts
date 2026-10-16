@@ -166,7 +166,7 @@ export const documents = [
   {
     "slug": "privacy",
     "metaTitle": "Privacy and your information",
-    "eyebrow": "Privacy · October 15, 2026",
+    "eyebrow": "Privacy · October 16, 2026",
     "title": "Your information.",
     "description": "How After Hours Agenda uses website information, analytics and marketing tools, secure Square payments and order information.",
     "lead": "This site uses analytics and marketing tools by default. You can change those choices in the footer.",
@@ -177,7 +177,7 @@ export const documents = [
       ],
       [
         "Analytics and marketing choices",
-        "For new visitors, Google Analytics and Meta receive browsing, product, checkout and confirmed-purchase events by default. Purchase events include an order reference, products and amounts. We do not send names, email addresses, delivery addresses or payment-card details to these tools. Use Privacy choices in the footer to turn analytics or marketing off at any time. Global Privacy Control disables Meta marketing tracking on this site."
+        "For new visitors, Google Analytics and Meta receive browsing, product, checkout and confirmed-purchase events by default. Purchase events include an order reference, products and amounts. We do not send names, email addresses, delivery addresses or payment-card details to these tools. Use Privacy choices in the footer to turn analytics or marketing off at any time. Global Privacy Control disables Meta marketing tracking on this site. We also use PostHog to understand how the site is used: which pages and products people view, what they click and how far they scroll. For a small share of visits, PostHog records the page as you see it so we can find what is confusing or broken; anything you type is hidden from these recordings, and payment fields run inside Square and are never recorded. Turning analytics off in Privacy choices, or sending Global Privacy Control, turns PostHog off."
       ],
       [
         "Checkout and fulfillment",

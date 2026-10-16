@@ -1,6 +1,7 @@
 import { getDatabase } from "@netlify/database";
 import { sha256, verifyApliiqSignature } from "../../server/fulfillment/crypto.mjs";
 import { createRuntime, requireProductionRequest } from "../../server/fulfillment/runtime.mjs";
+import { dispatchAfterResponse } from "../../server/notifications/dispatch-after.mjs";
 
 const json = (value, status = 200) => Response.json(value, { status, headers: { "cache-control": "no-store" } });
 
@@ -20,6 +21,7 @@ export default async function apliiqFulfillmentWebhook(request, context) {
     const eventId = sha256(rawBody);
     await runtime.repository.ingestProviderEvent({ eventId, squareOrderId: String(providerOrderId) });
     const result = await runtime.service.processApliiqEvent({ providerOrderId, eventId, callbackStatus: payload.fulfillment?.status });
+    await dispatchAfterResponse(runtime.notifications, context);
     return json({ accepted: true, outcome: result.outcome }, 202);
   } catch {
     return json({ accepted: false }, 503);

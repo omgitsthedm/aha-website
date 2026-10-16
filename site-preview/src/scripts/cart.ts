@@ -164,6 +164,7 @@ function initAddForms() {
         : [...current, { ...item, variationId: item.id, quantity: Math.min(quantity, available) }];
       writeCart(next);
       updateCartLinks(next);
+      document.dispatchEvent(new CustomEvent("aha:cart-added", { detail: { id: item.id, name: item.title, size: item.size, color: item.color, price: item.priceCents / 100, quantity: Math.min(quantity, available) } }));
       if (status) status.innerHTML = `${item.title}, ${item.size}, added. <a href="/checkout/">View bag and checkout</a>.`;
     });
   });
@@ -173,6 +174,15 @@ async function requestJson<T>(url: string, init?: RequestInit): Promise<{ respon
   const response = await fetch(url, init);
   const data = await response.json().catch(() => null) as T | null;
   return { response, data };
+}
+// Anonymous PostHog ids link a quote to its session replay; absent when analytics is off.
+function analyticsIds() {
+  const posthog = (window as Window & { posthog?: { get_distinct_id?: () => unknown; get_session_id?: () => unknown } }).posthog;
+  try {
+    const distinctId = posthog?.get_distinct_id?.();
+    const sessionId = posthog?.get_session_id?.();
+    return typeof distinctId === "string" ? { distinctId, sessionId: typeof sessionId === "string" ? sessionId : undefined } : undefined;
+  } catch { return undefined; }
 }
 function fieldValue(form: HTMLFormElement, name: string) { return String(new FormData(form).get(name) || "").trim(); }
 function shippingAddress(form: HTMLFormElement) {
@@ -537,7 +547,7 @@ function initCheckout() {
     showMessage("Confirming your total…");
     const requestedFingerprint = cartFingerprint(lines, form);
     try {
-      const { response, data } = await requestJson<Quote>("/api/checkout/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: lines.map(({ variationId, quantity }) => ({ variationId, quantity })), shippingAddress: address }) });
+      const { response, data } = await requestJson<Quote>("/api/checkout/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: lines.map(({ variationId, quantity }) => ({ variationId, quantity })), shippingAddress: address, analytics: analyticsIds() }) });
       if (!response.ok || !data) { showError("We couldn’t confirm this address. Review it and try again."); return; }
       if (requestedFingerprint !== cartFingerprint(lines, form)) { clearQuote(); showError("Your bag or address changed while the total was loading. Confirm the updated total to continue."); return; }
       quote = data; quotedFingerprint = requestedFingerprint; paymentKey = freshKey();

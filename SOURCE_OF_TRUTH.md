@@ -1,5 +1,11 @@
 # After Hours Agenda source of truth
 
+## Pet It Be launch and platform layer — October 16, 2026
+
+Pet It Be Crewneck — Maroon: Independent SS3000, XS–3XL, $55, free U.S. shipping, cream B1 "The Center Door" front print 11 inches wide, private label SB-3-161622. Apliiq artwork 8209339 / design 6211854; Square item CX5OOOUPF44W4JEZLHPTJG4R. Catalog: 16 products, 109 variants. Print master: `production-artwork/pet-it-be/pet-it-be-b1-front-cream-3300.png` (SHA-256 1a57d8d9…24069).
+
+Products, prices and supplier mappings now go through the catalog engine (`site-preview/tools/catalog`, ledger `site-preview/catalog/ledger.json`); `server/fulfillment/catalog.mjs` is generated. The same release adds PostHog analytics, the `/admin` passkey dashboard, the Apliiq Add to Store webhook, the image pipeline, and hourly (instead of five-minute) background jobs. Live state is still proven only by the published deploy and `/release.json`.
+
 ## Mighty Mick’s launch — October 15, 2026
 
 The owner authorized both SS3000 crewnecks for sale: Navy with muted gold ink and Dark Green with buttercream ink, $55 each across XS–3XL with free U.S. shipping. The catalog now contains 15 garment/color options and 102 exact Square-to-Apliiq variants. Each new product has four garment-only shopping images; its three boxing-gym campaign images remain separate in the lookbook and local campaign folder.
@@ -37,7 +43,8 @@ After Hours Agenda stays After Hours Agenda. It owns the custom-domain project a
 
 ## Source and pre-release production receipt
 
-- Original checkout: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`.
+- Working checkout (October 16, 2026): `/Users/davidmarsh/Code/LiFi NYC/Clients/After Hours Agenda/aha-website`, outside iCloud.
+- Original checkout (preserved, not active): `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`.
 - Original local branch/head preserved: `release/seo-domination-2026-10-08`, `095d5884e720d66e659f3676187e028deecbb84e`.
 - GitHub: `https://github.com/omgitsthedm/aha-website`; production branch `main`.
 - Production source before the October 9 approved release: `c682761ef26bbedb4ea4f76fc869e7ded883a12d`.

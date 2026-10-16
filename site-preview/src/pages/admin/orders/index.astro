@@ -1,0 +1,11 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+---
+<Admin title="Orders" page="orders">
+  <p class="admin-meta">Paid orders, their Apliiq status and tracking. Customer details stay in Square; only first name and city show here.</p>
+  <div class="admin-filters" role="group" aria-label="Filter orders">
+    <button type="button" class="admin-secondary" data-order-filter="all" aria-pressed="true">All</button>
+    <button type="button" class="admin-secondary" data-order-filter="attention" aria-pressed="false">Needs attention</button>
+  </div>
+  <div class="admin-list" data-admin-orders aria-live="polite"></div>
+</Admin>

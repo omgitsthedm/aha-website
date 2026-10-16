@@ -9,4 +9,7 @@ export default async function fulfillmentReconcile(_request, context) {
   await runtime.service.runScheduled();
 }
 
-export const config = { schedule: "*/5 * * * *" };
+// Paid orders are submitted inline by the Square webhook. This hourly run is the
+// safety net for deferred, pending and uncertain records; running it every five
+// minutes kept Netlify Database awake around the clock.
+export const config = { schedule: "0 * * * *" };

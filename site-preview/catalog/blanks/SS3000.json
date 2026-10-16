@@ -1,0 +1,81 @@
+{
+  "blank": "SS3000",
+  "name": "Independent Trading Co. SS3000 midweight crewneck",
+  "referenceProduct": "mighty-micks-ss3000-navy",
+  "apliiq": {
+    "productId": 391,
+    "productCode": "mens_Independent-Mid-Weight-Sweatshirt"
+  },
+  "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+  ],
+  "product": {
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Crewnecks"
+    },
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 25,
+        "chestWidth": 19,
+        "sleeveLength": 34
+      },
+      {
+        "size": "S",
+        "bodyLength": 26.5,
+        "chestWidth": 20.5,
+        "sleeveLength": 35
+      },
+      {
+        "size": "M",
+        "bodyLength": 28,
+        "chestWidth": 22,
+        "sleeveLength": 36
+      },
+      {
+        "size": "L",
+        "bodyLength": 29.5,
+        "chestWidth": 23.5,
+        "sleeveLength": 37
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 25,
+        "sleeveLength": 38
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32.5,
+        "chestWidth": 26.5,
+        "sleeveLength": 39
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 34,
+        "chestWidth": 28,
+        "sleeveLength": 40
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "typeLabel": "Crewneck",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "cotton face",
+      "twill neck tape",
+      "1x1 ribbed collar, cuffs and waistband"
+    ],
+    "sleeveMeasurementGuidance": ""
+  }
+}

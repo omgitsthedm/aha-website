@@ -1,0 +1,71 @@
+{
+  "blank": "CC4410",
+  "name": "Comfort Colors 4410 pocket long sleeve",
+  "referenceProduct": "insomniac-comfort-colors-4410-black",
+  "apliiq": {
+    "productId": 1540,
+    "productCode": "mens_Garment-Dyed-LS-Pocket-Tee"
+  },
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+  ],
+  "product": {
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Shirts & Tops > T-Shirts",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "fit": "relaxed",
+    "weightOz": 6.1,
+    "composition": "100% ring-spun cotton",
+    "sizeGuide": [
+      {
+        "size": "S",
+        "bodyLength": 26.625,
+        "chestWidth": 17.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 28,
+        "chestWidth": 19.5
+      },
+      {
+        "size": "L",
+        "bodyLength": 29.375,
+        "chestWidth": 21.25
+      },
+      {
+        "size": "XL",
+        "bodyLength": 30.75,
+        "chestWidth": 23
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 31.625,
+        "chestWidth": 25
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 32.5,
+        "chestWidth": 27
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "typeLabel": "Pocket long sleeve",
+    "fabricType": "cotton jersey",
+    "constructionDetails": [
+      "garment dyed",
+      "ring-spun cotton",
+      "left-chest pocket",
+      "ribbed cuffs"
+    ],
+    "sleeveMeasurementGuidance": ""
+  }
+}
