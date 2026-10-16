@@ -17,8 +17,9 @@ export async function handleProductPage(request, { catalog = currentCatalog, fet
   const [, shop, slug, extra] = url.pathname.split("/");
   if (shop !== "shop" || !slug) return notFound(url.origin, fetchImpl);
   if (!url.pathname.endsWith("/") && extra === undefined) return Response.redirect(`${url.origin}/shop/${slug}/${url.search}`, 301);
-  const { products, liveProducts } = await catalog();
-  const product = liveProducts.find((entry) => entry.slug === slug);
+  const current = await catalog();
+  const products = current.saleProducts ?? current.products;
+  const product = (current.saleLiveProducts ?? current.liveProducts).find((entry) => entry.slug === slug);
   if (!product) return notFound(url.origin, fetchImpl);
   const shell = await fetchImpl(`${url.origin}/shop/${STATIC_PRODUCTS[0].slug}/`);
   if (!shell.ok) return new Response("Temporarily unavailable", { status: 503, headers: { "cache-control": "no-store", "retry-after": "30" } });

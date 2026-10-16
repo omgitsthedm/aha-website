@@ -57,7 +57,7 @@ export async function runOwnerReport(kind, { db, env, square, mailer, fetchImpl 
   const squareClient = square ?? (config.squareToken ? createSquareGateway({ accessToken: config.squareToken }) : { batchRetrieve: async () => { throw new Error("square_not_configured"); } });
   const report = kind === "daily_health"
     // Live products are in the feeds too, so compare against the merged allow list.
-    ? await runDailyHealth({ db, square: squareClient, fetchText: (url) => fetchText(url, fetchImpl), siteUrl: SITE_URL, catalog: catalog ?? (await currentCatalog()).allowList, now })
+    ? await runDailyHealth({ db, square: squareClient, fetchText: (url) => fetchText(url, fetchImpl), siteUrl: SITE_URL, ...(catalog ? { catalog } : await (async () => { const current = await currentCatalog(); return { catalog: current.allowList, saleCatalog: current.saleAllowList }; })()), now })
     : await weeklyDigest(db, { now });
   const ok = kind === "daily_health" ? report.ok : report.problems.length === 0;
   await db.sql`

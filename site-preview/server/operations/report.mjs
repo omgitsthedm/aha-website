@@ -90,12 +90,13 @@ async function attempt(name, run) {
  * fetchText(url) → string; square.batchRetrieve(ids) → catalog objects.
  * Returns { ok, checkedAt, checks: [{ name, problems }], problems }.
  */
-export async function runDailyHealth({ db, square, fetchText, siteUrl, catalog, now = () => new Date() }) {
+export async function runDailyHealth({ db, square, fetchText, siteUrl, catalog, saleCatalog = catalog, now = () => new Date() }) {
   const ids = Object.keys(catalog);
   const checks = await Promise.all([
     attempt("Square catalog", async () => compareSquareCatalog(catalog, await square.batchRetrieve(ids))),
-    attempt("Google feed", async () => compareFeed(catalog, await fetchText(`${siteUrl}/feeds/google.xml`), "Google")),
-    attempt("Meta feed", async () => compareFeed(catalog, await fetchText(`${siteUrl}/feeds/meta.xml`), "Meta")),
+    // Products removed from sale are still in Square but no longer in the feeds.
+    attempt("Google feed", async () => compareFeed(saleCatalog, await fetchText(`${siteUrl}/feeds/google.xml`), "Google")),
+    attempt("Meta feed", async () => compareFeed(saleCatalog, await fetchText(`${siteUrl}/feeds/meta.xml`), "Meta")),
     attempt("orders", () => orderProblems(db, now().getTime())),
     attempt("email and publishing", () => backgroundProblems(db)),
   ]);

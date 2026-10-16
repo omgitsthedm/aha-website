@@ -8,6 +8,7 @@ import { AdminAuthError, clearedCookie, createAdminAuth, relyingParty, sameSecre
 import { latestReports } from "../operations/runtime.mjs";
 import { POSTHOG_PROJECT_URL } from "../platform/client.mjs";
 import { currentCatalog } from "../catalog/current.mjs";
+import { CatalogActionError, createCatalogActions } from "./catalog-actions.mjs";
 import { LiveCatalogError } from "../catalog/live.mjs";
 import { createLivePublisher } from "../catalog/publish.mjs";
 import { listOrders, overview } from "./orders.mjs";
@@ -29,8 +30,9 @@ function sameOrigin(request, origin) {
 
 /** Every product on sale, built or published live, for the admin Products page. */
 export async function catalogSummary(load = currentCatalog) {
-  const { products, liveProducts } = await load();
+  const { products, liveProducts, retired = [] } = await load();
   const live = new Set(liveProducts.map((product) => product.slug));
+  const removed = new Map(retired.map((entry) => [entry.slug, entry]));
   return {
     products: products.map((product) => ({
       slug: product.slug,
@@ -43,12 +45,15 @@ export async function catalogSummary(load = currentCatalog) {
       squareItemId: product.squareItemId,
       apliiqDesignId: Number(/^APQ-(\d+)S/.exec(product.variants[0]?.sku ?? "")?.[1]) || null,
       source: live.has(product.slug) ? "live" : "built",
+      removed: removed.has(product.slug),
+      removedAt: removed.get(product.slug)?.retiredAt ?? null,
+      apliiqDeleted: Boolean(removed.get(product.slug)?.apliiqDeletedAt),
       url: `/shop/${product.slug}/`,
     })),
   };
 }
 
-export async function handleAdmin(request, { db, env, context, live = createLivePublisher() }) {
+export async function handleAdmin(request, { db, env, context, live = createLivePublisher(), actions }) {
   const url = new URL(request.url);
   const route = url.pathname.replace(/^\/api\/admin\/?/, "").replace(/\/$/, "");
   const parts = route.split("/");
@@ -62,6 +67,18 @@ export async function handleAdmin(request, { db, env, context, live = createLive
       const bearer = (request.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
       if (!sameSecret(bearer, env.get("ADMIN_AUTOMATION_TOKEN"))) return reply({ error: "Unauthorized." }, 401);
       if (route === "automation/publish-requests" && method === "GET") return reply({ requests: await pendingPublishRequests(db) });
+      // Products removed from sale, for the engine's retire-sync. openOrders counts
+      // unshipped orders using the design; the engine keeps those in the code.
+      if (route === "automation/retired" && method === "GET") {
+        const current = await live.catalog();
+        const rows = await db.sql`SELECT submitted_items FROM aha_fulfillment_orders WHERE state <> 'shipped'`;
+        const skus = rows.flatMap((row) => (typeof row.submitted_items === "string" ? JSON.parse(row.submitted_items) : row.submitted_items ?? []).map((item) => String(item?.sku ?? "")));
+        return reply({ products: (current.retired ?? []).map((entry) => {
+          const product = current.products.find((item) => item.slug === entry.slug);
+          const designSkus = new Set(product?.variants.map((variant) => variant.sku) ?? []);
+          return { ...entry, openOrders: skus.filter((sku) => designSkus.has(sku)).length, live: current.liveProducts.some((item) => item.slug === entry.slug) };
+        }) });
+      }
       if (parts[1] === "publish-requests" && parts.length === 3 && method === "POST") {
         const input = await body(request);
         const updated = await finishPublishRequest(db, parts[2], { status: input.status, result: input.result });
@@ -117,6 +134,17 @@ export async function handleAdmin(request, { db, env, context, live = createLive
     if (route === "overview" && method === "GET") return reply({ ...await overview(db), reports: await latestReports(db) });
     if (route === "orders" && method === "GET") return reply({ orders: await listOrders(db) });
     if (route === "catalog" && method === "GET") return reply(await catalogSummary(live.catalog));
+    const productAction = /^catalog\/([a-z0-9-]+)\/(remove|restore|delete-apliiq-design)$/.exec(route);
+    if (productAction && method === "POST") {
+      const [, slug, action] = productAction;
+      const catalogActions = actions ?? createCatalogActions({ db, env, catalog: live.catalog, purge: live.purge });
+      const input = action === "delete-apliiq-design" ? await body(request) : {};
+      const result = action === "remove" ? await catalogActions.remove(slug, { by: user.email })
+        : action === "restore" ? await catalogActions.restore(slug)
+          : await catalogActions.deleteApliiqDesign(slug, { confirm: input.confirm });
+      await auth.audit(user.id, `catalog.${action}`, slug, result);
+      return reply(result);
+    }
     if (parts[0] === "orders" && parts[2] === "note" && method === "POST") {
       const input = await body(request);
       const note = typeof input.note === "string" ? input.note.trim().slice(0, 500) : "";
@@ -163,6 +191,7 @@ export async function handleAdmin(request, { db, env, context, live = createLive
   } catch (error) {
     if (error instanceof AdminAuthError) return reply({ error: error.message }, error.status);
     if (error instanceof DraftValidationError || error instanceof LiveCatalogError) return reply({ error: error.message }, 422);
+    if (error instanceof CatalogActionError) return reply({ error: error.message }, error.status);
     // Name and message only: never request bodies, cookies or headers.
     console.error(JSON.stringify({ event: "admin_api_error", route, name: error?.name ?? "Error", message: String(error?.message ?? "").slice(0, 300) }));
     return reply({ error: "Something went wrong. Try again." }, 500);

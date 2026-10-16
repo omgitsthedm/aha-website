@@ -54,3 +54,5 @@ a.admin-card:hover { border-color: var(--accent); }
 .admin-product { grid-template-columns: 96px 1fr; align-items: start; }
 .admin-product img { width: 96px; height: 120px; object-fit: cover; border: 1px solid var(--line); background: var(--surface); }
 @media (max-width: 520px) { .admin-product { grid-template-columns: 64px 1fr; } .admin-product img { width: 64px; height: 80px; } }
+.admin-product.is-removed img { opacity: .45; filter: grayscale(1); }
+.admin-danger { border-color: var(--accent); color: var(--accent); }

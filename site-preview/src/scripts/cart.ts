@@ -1,4 +1,5 @@
 import { recoverSelection, type SelectionVariant } from "./selection";
+import { catalogState, hideRetiredCards } from "./catalog-state";
 
 const STORAGE_KEY = "aha-cart-v2";
 const PENDING_PAYMENT_KEY = "aha-pending-payment-v1";
@@ -588,31 +589,41 @@ function initCheckout() {
   }
 }
 
-// Products published live after this page was built: add their sizes to the
-// page catalogue before the bag is read, so they are never dropped. Fetched
-// only when the bag (or a recovery link) holds a size this page doesn't know.
-async function addLiveCatalogue() {
+// Products published live after this page was built join the page catalogue;
+// products removed from sale since then leave it, so the bag drops them and
+// their product page stops selling. Fetched only when the page sells or holds
+// something.
+async function syncCatalogue() {
   const known = new Set(catalogueFrom(document).map((line) => line.id));
   const stored = safeRead().map((line) => (line && typeof line === "object" ? (line as { variationId?: unknown }).variationId : null)).filter((id): id is string => typeof id === "string");
-  if (!stored.some((id) => !known.has(id)) && !new URLSearchParams(location.search).has("products")) return;
-  try {
-    const response = await fetch("/api/catalog/live", { headers: { accept: "application/json" } });
-    if (!response.ok) return;
-    const data = await response.json() as { cartLines?: Array<Record<string, unknown>> };
-    const host = document.querySelector<HTMLElement>("[data-checkout-page]") ?? document.body;
-    for (const line of data.cartLines ?? []) {
-      if (typeof line.id !== "string" || known.has(line.id)) continue;
-      const template = document.createElement("template");
-      template.setAttribute("data-cart-catalog", "");
-      for (const [key, value] of Object.entries({ id: line.id, sku: line.sku, size: line.size, slug: line.slug, title: line.title, color: line.color, priceCents: line.priceCents, image: line.image, imageAlt: line.imageAlt })) template.dataset[key] = String(value ?? "");
-      host.append(template);
-    }
-  } catch { /* the built catalogue still works */ }
+  const needed = stored.length > 0 || Boolean(document.querySelector("[data-cart-form], [data-checkout-page]")) || new URLSearchParams(location.search).has("products");
+  if (!needed) return;
+  const state = await catalogState();
+  const removed = new Set(state.retiredVariations);
+  document.querySelectorAll<HTMLElement>("[data-cart-catalog]").forEach((node) => { if (removed.has(node.dataset.id ?? "")) node.remove(); });
+  const host = document.querySelector<HTMLElement>("[data-checkout-page]") ?? document.body;
+  for (const line of state.cartLines) {
+    if (typeof line.id !== "string" || known.has(line.id) || removed.has(line.id)) continue;
+    const template = document.createElement("template");
+    template.setAttribute("data-cart-catalog", "");
+    for (const [key, value] of Object.entries({ id: line.id, sku: line.sku, size: line.size, slug: line.slug, title: line.title, color: line.color, priceCents: line.priceCents, image: line.image, imageAlt: line.imageAlt })) template.dataset[key] = String(value ?? "");
+    host.append(template);
+  }
+  const slug = /^\/shop\/([a-z0-9-]+)\/$/.exec(location.pathname)?.[1];
+  const form = document.querySelector<HTMLElement>("[data-cart-form]");
+  if (slug && form && state.retired.includes(slug)) {
+    const note = document.createElement("p");
+    note.className = "checkout-note";
+    note.setAttribute("role", "status");
+    note.textContent = "This piece is no longer available.";
+    form.replaceWith(note);
+  }
+  hideRetiredCards(state.retired);
 }
 
 async function init() {
   initAddForms();
-  await addLiveCatalogue();
+  await syncCatalogue();
   updateCartLinks(readCart(activeCatalogue()));
   initCheckout();
 }

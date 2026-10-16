@@ -51,13 +51,18 @@ test('an in-page Essential-only choice prevents deferred vendor SDK insertion wh
     Object.defineProperty(Storage.prototype, 'setItem', {configurable:true,value:() => { throw new DOMException('Storage blocked'); }});
   });
   const requested = await capture(page);
+  const posthog: string[] = [];
+  await page.route(/\.i\.posthog\.com\//, async route => { posthog.push(route.request().url()); await route.fulfill({contentType:'application/javascript',body:''}); });
   await page.goto('/shop/yikes-crewneck/', {waitUntil:'domcontentloaded'});
-  await expect.poll(() => page.evaluate(() => (window as unknown as {__ahaIdleCallbacks?: unknown[]}).__ahaIdleCallbacks?.length || 0)).toBe(2);
+  // GA4 and Meta always; PostHog too when the build carries its project key.
+  const vendors = await page.evaluate(() => 2 + (document.querySelector('[data-posthog-key]')?.getAttribute('data-posthog-key') ? 1 : 0));
+  await expect.poll(() => page.evaluate(() => (window as unknown as {__ahaIdleCallbacks?: unknown[]}).__ahaIdleCallbacks?.length || 0)).toBe(vendors);
   await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
   await page.getByRole('button',{name:'Essential only',exact:true}).click();
   await page.evaluate(() => (window as unknown as {__ahaIdleCallbacks:Array<() => void>}).__ahaIdleCallbacks.splice(0).forEach(callback => callback()));
   await page.waitForTimeout(100);
   expect(requested).toEqual([]);
+  expect(posthog).toEqual([]);
 });
 
 test('a storage-blocked opt-out and re-enable keeps a loaded Meta bridge instead of replacing it', async ({page}) => {

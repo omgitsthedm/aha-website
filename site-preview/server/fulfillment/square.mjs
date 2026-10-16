@@ -28,6 +28,14 @@ export function createSquareGateway({ accessToken, fetchImpl = fetch }) {
   return {
     getPayment: async (id, options = {}) => (await request(`/payments/${encodeURIComponent(id)}`, {}, options.timeoutMs)).payment,
     getOrder: async (id, options = {}) => (await request(`/orders/${encodeURIComponent(id)}`, {}, options.timeoutMs)).order,
+    // Archive or restore a catalog item (reversible; variations and history are kept).
+    setItemArchived: async (itemId, archived, options = {}) => {
+      const { object } = await request(`/catalog/object/${encodeURIComponent(itemId)}`, {}, options.timeoutMs);
+      if (!object || object.type !== "ITEM") throw new Error("Square item not found.");
+      if (Boolean(object.item_data?.is_archived) === archived) return object;
+      const body = { idempotency_key: `aha-archive-${itemId}-${archived ? 1 : 0}-v${object.version}`, object: { ...object, item_data: { ...object.item_data, is_archived: archived } } };
+      return (await request("/catalog/object", { method: "POST", body: JSON.stringify(body) }, options.timeoutMs)).catalog_object;
+    },
     // Read-only: the daily health check compares these with the allow list.
     batchRetrieve: async (ids, options = {}) => {
       const objects = [];

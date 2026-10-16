@@ -9,8 +9,9 @@ export default async function checkoutQuote(request, context) {
   if (!requireProductionRequest(request, context) || request.method !== "POST") return new Response(null, { status: 404 });
   if (!allowedOrigin(request)) return errorResponse(new CheckoutError("origin_rejected", 403));
   try {
-    const { allowList } = await currentCatalog();
-    const runtime = createCheckoutRuntime({ database: getDatabase(), env: Netlify.env, catalog: allowList });
+    // Only what is on sale: removed products can't be quoted, though paid ones still ship.
+    const { saleAllowList } = await currentCatalog();
+    const runtime = createCheckoutRuntime({ database: getDatabase(), env: Netlify.env, catalog: saleAllowList });
     if (!checkoutReady(runtime.config)) return errorResponse(new CheckoutError("checkout_unavailable", 503));
     const body = await jsonBody(request);
     const quote = await runtime.service.quote({ items: body?.items, shippingAddress: body?.shippingAddress, analytics: body?.analytics });

@@ -39,5 +39,7 @@ export function createApliiqGateway({ apiKey, sharedSecret, fetchImpl = fetch, n
     createOrder: (payload, options = {}) => request("/Order", { method: "POST", body: payload, ...options }),
     getOrder: async (orderId, options = {}) => (await request(`/Order/${encodeURIComponent(String(orderId))}`, options)).data,
     listOrders: async (options = {}) => (await request("/Order", options)).data,
+    // Permanent. Only the admin's guarded "Delete Apliiq design" calls this.
+    deleteDesign: async (designId, options = {}) => request(`/Design/${encodeURIComponent(String(designId))}`, { method: "DELETE", ...options }),
   };
 }
