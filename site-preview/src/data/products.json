@@ -2670,7 +2670,7 @@
       "1x1 ribbed collar, cuffs and waistband"
     ],
     "sleeveMeasurementGuidance": "",
-    "campaignSetting": "",
+    "campaignSetting": "Outside a neighborhood pet shop on a New York side street",
     "gallery": [
       {
         "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-front-1122.webp",
@@ -2709,7 +2709,35 @@
         "role": "folded"
       }
     ],
-    "campaign": [],
+    "campaign": [
+      {
+        "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-hero-1122.webp",
+        "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-hero-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/campaign-hero-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/campaign-hero-1122.webp 1122w",
+        "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-hero.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Maroon Pet It Be crewneck worn outside a neighborhood pet shop on a New York side street at dusk.",
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-1-960.webp",
+        "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-1-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-1-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-1-960.webp 960w",
+        "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-1.jpg",
+        "width": 960,
+        "height": 1200,
+        "alt": "Maroon Pet It Be crewneck worn while seated on a brownstone stoop beside the pet shop.",
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-2-960.webp",
+        "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-2-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-2-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-2-960.webp 960w",
+        "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-2.jpg",
+        "width": 960,
+        "height": 1200,
+        "alt": "Maroon Pet It Be crewneck worn leaning against the pet shop window.",
+        "role": "lifestyle-alternate"
+      }
+    ],
     "variants": [
       {
         "size": "XS",

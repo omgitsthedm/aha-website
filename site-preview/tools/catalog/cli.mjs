@@ -160,6 +160,13 @@ const commands = {
       if (variants.size !== entry.variants.length) drift.push(`${entry.slug}: variant count differs`);
     }
     for (const product of products) if (!live.some((entry) => entry.slug === product.slug)) drift.push(`${product.slug}: on the site but not in the ledger`);
+    // Every product color needs a swatch on the product page (otherwise it falls back to Bone).
+    const { readFileSync: readText } = await import("node:fs");
+    const productPage = readText(path.join(APP, "src/pages/shop/[product].astro"), "utf8");
+    const swatchLine = productPage.split("\n").find((line) => line.includes("colorSwatches")) ?? "";
+    for (const color of new Set(products.map((product) => product.color))) {
+      if (!swatchLine.includes(`${color}:`) && !swatchLine.includes(`'${color}':`)) drift.push(`color "${color}" has no swatch in src/pages/shop/[product].astro`);
+    }
     const expected = fulfillmentFromLedger(ledger);
     const actual = await loadAllowList();
     if (JSON.stringify(Object.entries(expected).sort()) !== JSON.stringify(Object.entries(actual).map(([id, value]) => [id, { ...value }]).sort())) drift.push("server/fulfillment/catalog.mjs differs from the ledger; run generate");

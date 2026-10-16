@@ -35,21 +35,16 @@ export async function abandonedCartStats(sql) {
     SELECT count(*) AS carts, count(*) FILTER (WHERE done) AS completed FROM carts
   `;
   const recent = await sql`
-    WITH carts AS (
-      SELECT COALESCE(posthog_session_id, checkout_id) AS cart_key,
-             bool_or(state = 'completed') AS done,
-             max(created_at) AS created_at
+    SELECT checkout_id, created_at, total_cents, state, posthog_session_id FROM (
+      SELECT DISTINCT ON (COALESCE(posthog_session_id, checkout_id))
+             checkout_id, created_at, total_cents, state, posthog_session_id,
+             bool_or(state = 'completed') OVER (PARTITION BY COALESCE(posthog_session_id, checkout_id)) AS done
       FROM aha_checkout_sessions
       WHERE created_at > now() - interval '30 days'
-      GROUP BY 1
-    )
-    SELECT DISTINCT ON (s.created_at, s.checkout_id)
-           s.checkout_id, s.created_at, s.total_cents, s.state, s.posthog_session_id
-    FROM carts c
-    JOIN aha_checkout_sessions s
-      ON COALESCE(s.posthog_session_id, s.checkout_id) = c.cart_key AND s.created_at = c.created_at
-    WHERE NOT c.done
-    ORDER BY s.created_at DESC, s.checkout_id
+      ORDER BY COALESCE(posthog_session_id, checkout_id), created_at DESC, checkout_id DESC
+    ) latest
+    WHERE NOT done
+    ORDER BY created_at DESC, checkout_id
     LIMIT 50
   `;
   return {

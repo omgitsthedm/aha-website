@@ -104,6 +104,44 @@ const commands = {
     return { product: slug, ...manifest.qa };
   },
 
+  /**
+   * Place the exact print on a garment in a photo (lifestyle shots generated with a
+   * plain garment). Only garment-colored pixels take ink, so hair, hands and straps
+   * stay in front; the ink is shaded by the fabric's own light.
+   */
+  async place(a) {
+    const [cx, top] = [Number(a.center), Number(a.top)];
+    const width = Number(a.width);
+    const rotate = Number(a.rotate ?? 0);
+    const photo = await sharp(a.photo).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+    const W = photo.info.width, H = photo.info.height;
+    const art = await sharp(a.art).ensureAlpha().resize({ width }).rotate(rotate, { background: { r: 0, g: 0, b: 0, alpha: 0 } }).raw().toBuffer({ resolveWithObject: true });
+    const left = Math.round(cx - art.info.width / 2);
+    const isGarment = (r, g, b) => r > 30 && r > g * 1.35 && b >= g * 0.92;
+    let sum = 0, count = 0;
+    for (let y = 0; y < art.info.height; y += 2) for (let x = 0; x < art.info.width; x += 2) {
+      const px = left + x, py = top + y; if (px < 0 || py < 0 || px >= W || py >= H) continue;
+      const i = (py * W + px) * 3; const r = photo.data[i], g = photo.data[i + 1], b = photo.data[i + 2];
+      if (isGarment(r, g, b)) { sum += 0.2126 * r + 0.7152 * g + 0.0722 * b; count += 1; }
+    }
+    const median = count ? sum / count : 1;
+    const out = Buffer.from(photo.data);
+    let covered = 0, inked = 0;
+    for (let y = 0; y < art.info.height; y += 1) for (let x = 0; x < art.info.width; x += 1) {
+      const px = left + x, py = top + y; if (px < 0 || py < 0 || px >= W || py >= H) continue;
+      const k = (y * art.info.width + x) * 4; const alpha = art.data[k + 3] / 255; if (alpha <= 0) continue;
+      inked += 1;
+      const i = (py * W + px) * 3; const r = photo.data[i], g = photo.data[i + 1], b = photo.data[i + 2];
+      if (!isGarment(r, g, b)) continue;
+      covered += 1;
+      const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / median;
+      const shade = Math.min(Math.max(0.35 + 0.65 * lum, 0.3), 1.25);
+      for (let c = 0; c < 3; c += 1) out[i + c] = Math.round(photo.data[i + c] * (1 - alpha * 0.96) + Math.min(255, art.data[k + c] * shade) * alpha * 0.96);
+    }
+    await sharp(out, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 92 }).toFile(a.out);
+    return { out: a.out, inkPixels: inked, onGarment: Number((covered / Math.max(inked, 1)).toFixed(3)) };
+  },
+
   /** Keyboard review: A approve, R reject, ←/→ move. Decisions saved to decisions.json. */
   async review(a) {
     const slug = a.product;
