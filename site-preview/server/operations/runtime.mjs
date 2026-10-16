@@ -2,7 +2,7 @@
 // emails the owner when it should. The report key makes a repeated scheduled
 // run on the same day a no-op, and doubles as the Resend idempotency key.
 import { currentCatalog } from "../catalog/current.mjs";
-import { SITE_ORIGIN } from "../platform/client.mjs";
+import { POSTHOG_PROJECT_URL, SITE_ORIGIN } from "../platform/client.mjs";
 import { createSquareGateway } from "../fulfillment/square.mjs";
 import { createResendGateway } from "../notifications/resend.mjs";
 import { renderDigestEmail, renderHealthEmail, runDailyHealth, weeklyDigest } from "./report.mjs";
@@ -21,7 +21,7 @@ export function ownerReportConfig(env) {
     from: env.get("RESEND_FROM_EMAIL"),
     replyTo: env.get("RESEND_REPLY_TO"),
     squareToken: env.get("AHA_SQUARE_ACCESS_TOKEN"),
-    posthogUrl: env.get("PUBLIC_POSTHOG_PROJECT_URL") || null,
+    posthogUrl: env.get("PUBLIC_POSTHOG_PROJECT_URL") || POSTHOG_PROJECT_URL,
   };
 }
 

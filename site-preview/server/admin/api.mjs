@@ -6,6 +6,7 @@ import { abandonedCartStats } from "../analytics/abandoned-carts.mjs";
 import { approveDraft, DraftValidationError, finishPublishRequest, getDraft, listDrafts, pendingPublishRequests, rejectDraft, updateDraft } from "../catalog/drafts.mjs";
 import { AdminAuthError, clearedCookie, createAdminAuth, relyingParty, sameSecret, sessionCookie } from "./auth.mjs";
 import { latestReports } from "../operations/runtime.mjs";
+import { POSTHOG_PROJECT_URL } from "../platform/client.mjs";
 import { LiveCatalogError } from "../catalog/live.mjs";
 import { createLivePublisher } from "../catalog/publish.mjs";
 import { listOrders, overview } from "./orders.mjs";
@@ -133,7 +134,7 @@ export async function handleAdmin(request, { db, env, context, live = createLive
       return reply({ requests: rows });
     }
     if (route === "analytics" && method === "GET") {
-      return reply({ abandonedCarts: await abandonedCartStats(db.sql), posthogProjectUrl: env.get("PUBLIC_POSTHOG_PROJECT_URL") || null });
+      return reply({ abandonedCarts: await abandonedCartStats(db.sql), posthogProjectUrl: env.get("PUBLIC_POSTHOG_PROJECT_URL") || POSTHOG_PROJECT_URL });
     }
     return reply({ error: "Not found." }, 404);
   } catch (error) {

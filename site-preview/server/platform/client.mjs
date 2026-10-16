@@ -44,6 +44,7 @@ export function clientConfigProblems(value) {
   need(value?.analytics?.ga4 === null || /^G-[A-Z0-9]+$/.test(value?.analytics?.ga4 ?? ""), "analytics.ga4 must be a G- measurement ID or null.");
   need(value?.analytics?.metaPixel === null || /^\d{10,20}$/.test(value?.analytics?.metaPixel ?? ""), "analytics.metaPixel must be a numeric dataset ID or null.");
   need(ORIGIN.test(value?.analytics?.posthogHost ?? ""), "analytics.posthogHost must be an https origin.");
+  need(value?.analytics?.posthogProjectUrl === undefined || /^https:\/\/(us|eu)\.posthog\.com\/project\/\d+$/.test(value.analytics.posthogProjectUrl), "analytics.posthogProjectUrl must be the PostHog project URL, e.g. https://us.posthog.com/project/123.");
   for (const key of ["paper", "ink", "accent"]) need(HEX.test(value?.brand?.[key] ?? ""), `brand.${key} must be a #rrggbb color.`);
   need(Array.isArray(value?.brand?.fonts) && value.brand.fonts.length > 0, "brand.fonts must list at least one font.");
   const text = JSON.stringify(value ?? {});
@@ -60,3 +61,4 @@ export const SITE_HOST = new URL(config.site.origin).host;
 export const NETLIFY_SITE_ID = config.site.netlifySiteId;
 export const SQUARE_VERSION = config.commerce.apiVersion;
 export const PRIVATE_LABEL = config.print.privateLabel;
+export const POSTHOG_PROJECT_URL = config.analytics.posthogProjectUrl ?? null;

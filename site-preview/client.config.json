@@ -17,18 +17,29 @@
   },
   "print": {
     "provider": "apliiq",
-    "privateLabel": { "code": "SB-3-161622", "id": 6208403, "placementId": 1011 }
+    "privateLabel": {
+      "code": "SB-3-161622",
+      "id": 6208403,
+      "placementId": 1011
+    }
   },
-  "feeds": ["google", "meta"],
+  "feeds": [
+    "google",
+    "meta"
+  ],
   "analytics": {
     "ga4": "G-S092LRTVRM",
     "metaPixel": "1815233516346046",
-    "posthogHost": "https://us.i.posthog.com"
+    "posthogHost": "https://us.i.posthog.com",
+    "posthogProjectUrl": "https://us.posthog.com/project/669368"
   },
   "brand": {
     "paper": "#fafafa",
     "ink": "#1a1a1a",
     "accent": "#ff6b6b",
-    "fonts": ["Poppins", "JetBrains Mono"]
+    "fonts": [
+      "Poppins",
+      "JetBrains Mono"
+    ]
   }
 }
