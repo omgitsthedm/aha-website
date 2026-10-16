@@ -6,7 +6,7 @@
 //   emailed every Monday whether or not anything is wrong.
 // A check that cannot run is itself a problem, so silence always means healthy.
 import { abandonedCartStats } from "../analytics/abandoned-carts.mjs";
-import { signupCounts } from "../updates/signups.mjs";
+import { signupCounts, signupProblems } from "../updates/signups.mjs";
 import { orderFlags } from "../admin/orders.mjs";
 
 const usd = (cents) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(cents || 0) / 100);
@@ -100,6 +100,7 @@ export async function runDailyHealth({ db, square, fetchText, siteUrl, catalog, 
     attempt("Meta feed", async () => compareFeed(saleCatalog, await fetchText(`${siteUrl}/feeds/meta.xml`), "Meta")),
     attempt("orders", () => orderProblems(db, now().getTime())),
     attempt("email and publishing", () => backgroundProblems(db)),
+    attempt("email sign-ups", () => signupProblems(db)),
   ]);
   const problems = checks.flatMap((check) => check.problems);
   return { ok: problems.length === 0, checkedAt: now().toISOString(), variants: ids.length, checks: checks.map(({ name, problems: list }) => ({ name, problems: list })), problems };

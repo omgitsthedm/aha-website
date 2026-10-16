@@ -10,6 +10,11 @@ The owner instructed: “Build the five fixes and also add an email signup that 
   - Analytics get a `generate_lead` / `email_signup` / Meta `Lead` event with the page name, never the address.
   - Sending newsletters, or connecting Resend audiences or another email tool, needs the owner's separate instruction. Every email sent must include an unsubscribe link, as the privacy page says.
   - The migration `20261016140000_email_signups` is byte-identical at both discovery paths.
+  - **Open issue (October 16, 2026):** Netlify's production deploys of `2416505` (#123) and `840fdef` (#124) logged "No pending database migrations" and didn't apply it; `netlify database status --branch production` still ends at `20261016130000_owner_reports`. Until it's applied:
+    - Sign-ups get a plain "couldn't save" reply (HTTP 503) and nothing is stored.
+    - The admin and the digest treat the list as empty.
+    - The daily health check emails the owner about it.
+    - Don't apply the DDL by hand (Netlify's rule). Confirm with `database status` after each production deploy.
 - **Storefront.** `/updates/` copy is current, and the privacy page covers sign-ups. Home, shop and lookbook share the collection order in `src/data/collections.ts`, newest drop first; Pet It Be stays last while it is removed from sale. The lookbook hides sets for removed products. The shop has collection jump links, and phones get a quick-add bar on product pages (`initBuyBar` in `src/scripts/cart.ts`).
 
 ## Approved Pet It Be launch — October 16, 2026

@@ -118,3 +118,14 @@ test("before the sign-up migration is applied, the admin overview, list and dige
   // Other database errors still surface.
   await assert.rejects(signupCounts({ sql: async () => { throw Object.assign(new Error("connection refused"), { code: "ECONNREFUSED" }); } }), /connection refused/);
 });
+
+test("without the sign-up tables a visitor gets a plain reply and the daily check reports it", async (t) => {
+  const { SIGNUP_UNAVAILABLE, signupProblems } = await import("../server/updates/signups.mjs");
+  const bare = new PGlite();
+  t.after(() => bare.close());
+  const db = { sql: async (strings, ...parameters) => (await bare.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows };
+  assert.deepEqual(await subscribe(db, { email: "fan@example.com" }), { status: 503, body: { error: SIGNUP_UNAVAILABLE } });
+  assert.match((await signupProblems(db))[0], /sign-up tables don't exist/);
+  const { db: ready } = await database(t);
+  assert.deepEqual(await signupProblems(ready), []);
+});
