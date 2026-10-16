@@ -16,6 +16,8 @@ export function environmentConfig(env) {
     squareSignatureKey: env.get("AHA_SQUARE_WEBHOOK_SIGNATURE_KEY"),
     adminToken: env.get("AHA_FULFILLMENT_ADMIN_TOKEN"),
     apliiqSharedSecret: env.get("AHA_APLIIQ_SHARED_SECRET"),
+    // Minutes between payment and Apliiq submission (0 submits at once).
+    holdMinutes: env.get("AHA_FULFILLMENT_HOLD_MINUTES") ?? "60",
   };
 }
 

@@ -26,6 +26,8 @@ export function createSquareGateway({ accessToken, fetchImpl = fetch }) {
   return {
     getPayment: async (id, options = {}) => (await request(`/payments/${encodeURIComponent(id)}`, {}, options.timeoutMs)).payment,
     getOrder: async (id, options = {}) => (await request(`/orders/${encodeURIComponent(id)}`, {}, options.timeoutMs)).order,
+    // Read-only: the daily health check compares these with the allow list.
+    batchRetrieve: async (ids, options = {}) => (await request("/catalog/batch-retrieve", { method: "POST", body: JSON.stringify({ object_ids: ids, include_related_objects: false }) }, options.timeoutMs)).objects ?? [],
     updateShipment: async ({ order, fulfillmentUid, tracking }) => request(`/orders/${encodeURIComponent(order.id)}`, {
       method: "PUT",
       body: JSON.stringify({

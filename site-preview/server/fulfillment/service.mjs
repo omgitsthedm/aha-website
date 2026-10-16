@@ -167,6 +167,16 @@ function acceptedReason(response) {
 
 export function createFulfillmentService({ repository, square, apliiq, notifications = { enqueueConfirmation: async () => null, enqueueShipment: async () => null }, config, now = () => new Date() }) {
   const deadlineRemaining = (deadline) => Math.max(0, Math.min(8_000, deadline - Date.now()));
+  // Cancellation window: a paid order is recorded and confirmed at once, but it
+  // reaches Apliiq only after this many minutes, when the scheduled run re-reads
+  // Square. A refund or cancellation inside the window is held, never produced.
+  const holdMs = () => Math.max(0, Number(config.holdMinutes ?? 0) || 0) * 60_000;
+  function withinHold(paymentCreatedAt) {
+    const ms = holdMs();
+    if (!ms || !paymentCreatedAt) return false;
+    const paidAt = new Date(paymentCreatedAt).getTime();
+    return Number.isFinite(paidAt) && now().getTime() - paidAt < ms;
+  }
   async function hold(squareOrderId, code, detail = {}) {
     const existing = await repository.getOrder(squareOrderId);
     if (existing && existing.state !== "held") {
@@ -220,6 +230,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     // enqueue fails, the signed Square event remains retryable and no customer
     // email is lost or sent twice.
     await notifications.enqueueConfirmation({ recipient: validated.customerEmail, orderId: validated.squareOrderId, orderNumber: validated.orderNumber, totalAmount: validated.totalAmount, currency: validated.currency, items: validated.items.map((item) => ({ title: fulfillmentTitle(item), size: item.size, quantity: item.quantity })) });
+    if (withinHold(validated.paymentCreatedAt)) return { outcome: "queued_hold" };
     if (deadline && deadlineRemaining(deadline) < 2_000) return { outcome: "deferred", retryable: true };
     const claimed = await repository.claimForSubmission(validated.squareOrderId);
     if (!claimed) return { outcome: "already_claimed" };
@@ -313,6 +324,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     let claimed = 0;
     for (const record of queued) {
       if (deadlineRemaining(deadline) < 2_000) break;
+      if (withinHold(record.payment_created_at)) continue;
       try {
         const payment = await square.getPayment(record.square_payment_id, { timeoutMs: deadlineRemaining(deadline) });
         if (deadlineRemaining(deadline) < 1_000) break;

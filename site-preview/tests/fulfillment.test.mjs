@@ -50,7 +50,7 @@ function memoryRepository() {
     async insertValidated(record) {
       const existing = rows.get(record.squareOrderId);
       if (existing) return existing;
-      const row = { square_order_id: record.squareOrderId, square_payment_id: record.squarePaymentId, square_fulfillment_uid: record.squareFulfillmentUid, customer_email: record.customerEmail ?? null, state: record.state, submitted_items: record.submittedItems, apliiq_payload: record.apliiqPayload, payload_sha256: record.payloadSha256 };
+      const row = { square_order_id: record.squareOrderId, square_payment_id: record.squarePaymentId, square_fulfillment_uid: record.squareFulfillmentUid, customer_email: record.customerEmail ?? null, payment_created_at: record.paymentCreatedAt ?? null, state: record.state, submitted_items: record.submittedItems, apliiq_payload: record.apliiqPayload, payload_sha256: record.payloadSha256 };
       rows.set(record.squareOrderId, row); return row;
     },
     async claimForSubmission(id) { const row = rows.get(id); if (!row || row.state !== "queued") return null; row.state = "submitting"; return row; },
@@ -426,4 +426,56 @@ test("active fulfillment queues one plain confirmation and one tracking notifica
   assert.equal(calls[0].value.recipient, "ada@example.com");
   assert.equal((await service.receiveApliiqFulfillment({ providerOrderId: order.id, eventId: "email-event" })).outcome, "shipped");
   assert.deepEqual(calls[1], { kind: "shipped", value: { recipient: "ada@example.com", orderId: order.id, orderNumber: order.reference_id, carrier: "UPS", trackingNumber: "1ZEMAIL", trackingUrl: null } });
+});
+
+test("a paid order inside the cancellation hold is confirmed at once but reaches Apliiq only after the hold", async () => {
+  const repo = memoryRepository();
+  let posts = 0;
+  let confirmations = 0;
+  const { payment, order } = paidOrder();
+  let clock = new Date(Date.parse(payment.created_at) + 10 * 60_000);
+  const service = createFulfillmentService({
+    repository: repo,
+    square: { getPayment: async () => payment, getOrder: async () => order },
+    apliiq: { createOrder: async () => { posts += 1; return { status: 200, data: { id: "apliiq-1" } }; }, listOrders: async () => [], getOrder: async () => [] },
+    notifications: { enqueueConfirmation: async () => { confirmations += 1; }, enqueueShipment: async () => null },
+    config: { enabled: "true", locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z", holdMinutes: "60" },
+    now: () => clock,
+  });
+  assert.equal((await service.processSquarePayment(payment.id)).outcome, "queued_hold");
+  assert.equal(confirmations, 1);
+  assert.equal(repo.rows.get(order.id).state, "queued");
+  await service.runScheduled();
+  assert.equal(posts, 0, "nothing is produced inside the hold");
+  clock = new Date(Date.parse(payment.created_at) + 61 * 60_000);
+  await service.runScheduled();
+  assert.equal(posts, 1);
+  assert.equal(repo.rows.get(order.id).state, "submitted_processed");
+});
+
+test("a refund inside the cancellation hold is held and never sent to Apliiq", async () => {
+  const repo = memoryRepository();
+  let posts = 0;
+  const { payment, order } = paidOrder();
+  let current = payment;
+  let clock = new Date(Date.parse(payment.created_at) + 5 * 60_000);
+  const service = createFulfillmentService({
+    repository: repo,
+    square: { getPayment: async () => current, getOrder: async () => order },
+    apliiq: { createOrder: async () => { posts += 1; return { status: 200, data: { id: "never" } }; }, listOrders: async () => [], getOrder: async () => [] },
+    config: { enabled: "true", locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z", holdMinutes: "60" },
+    now: () => clock,
+  });
+  assert.equal((await service.processSquarePayment(payment.id)).outcome, "queued_hold");
+  current = { ...payment, refunded_money: { amount: 5200, currency: "USD" }, refund_ids: ["refund-1"] };
+  clock = new Date(Date.parse(payment.created_at) + 90 * 60_000);
+  await service.runScheduled();
+  assert.equal(posts, 0);
+  assert.equal(repo.rows.get(order.id).state, "held");
+});
+
+test("production defaults to a 60-minute hold; 0 restores immediate submission", async () => {
+  const { environmentConfig } = await import("../server/fulfillment/runtime.mjs");
+  assert.equal(environmentConfig({ get: () => undefined }).holdMinutes, "60");
+  assert.equal(environmentConfig({ get: (key) => (key === "AHA_FULFILLMENT_HOLD_MINUTES" ? "0" : undefined) }).holdMinutes, "0");
 });

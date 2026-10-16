@@ -9,6 +9,7 @@
 //   npm run catalog -- plan                    hashed plan for approved design specs not yet in the ledger
 //   npm run catalog -- apply --plan <file>     execute exactly that plan (Apliiq → Square → ledger → site data)
 //   npm run catalog -- explain <slug>          everything known about one product
+//   npm run catalog -- usage [days]            runs, time and provider calls per command (default 7 days)
 //   npm run catalog -- ship                    pull → margin → plan → apply → Square photos → build → verify → tests → commit
 //   npm run catalog -- square-images <slug>    upload any gallery view Square doesn't have yet
 //   npm run catalog -- pull                    turn admin publish requests into design specs (ADMIN_AUTOMATION_TOKEN)
@@ -16,7 +17,7 @@
 //
 // Exit codes: 0 ok · 1 error · 2 drift · 3 missing credentials · 4 blocked intent · 5 margin/approval gate.
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { apliiqCredentials, createApliiqClient, designPayload, withIntent } from "./apliiq.mjs";
@@ -361,6 +362,28 @@ const commands = {
     return { shipped: slugs, branch, commit: git("rev-parse", "HEAD"), steps, next: "Push the branch, open a PR, wait for the required checks, merge, then run scripts/verify-live.mjs." };
   },
 
+  /** Totals from the run logs: runs, failures, time and provider calls per command. */
+  async usage(daysArg) {
+    const days = Math.min(Math.max(Number(daysArg) || 7, 1), 90);
+    const since = Date.now() - days * 86_400_000;
+    const totals = {};
+    const files = existsSync(PATHS.logs) ? readdirSync(PATHS.logs).filter((name) => name.endsWith(".jsonl") && Date.parse(name.slice(0, 10)) >= since - 86_400_000) : [];
+    for (const name of files) {
+      for (const line of readFileSync(path.join(PATHS.logs, name), "utf8").split("\n")) {
+        if (!line) continue;
+        let entry;
+        try { entry = JSON.parse(line); } catch { continue; }
+        if (Date.parse(entry.at) < since) continue;
+        const row = (totals[entry.command] ??= { runs: 0, failed: 0, ms: 0, apliiq: 0, square: 0, other: 0 });
+        row.runs += 1;
+        if (entry.ok === false) row.failed += 1;
+        row.ms += entry.cost?.ms ?? 0;
+        for (const key of ["apliiq", "square", "other"]) row[key] += entry.cost?.apiCalls?.[key] ?? 0;
+      }
+    }
+    return { days, totals };
+  },
+
   async explain(slug) {
     if (!slug) throw new CatalogError("explain requires a slug.", { code: "slug_missing" });
     const entry = loadLedger().products.find((product) => product.slug === slug);
@@ -389,13 +412,31 @@ function parse(argv) {
   return { command, arg: positional[0], flags };
 }
 
+// Cost meter: every run logs its duration and provider calls, so `usage` can
+// show what a drop actually cost without reading the logs into a chat.
+function meter() {
+  const startedAt = Date.now();
+  const calls = { apliiq: 0, square: 0, other: 0 };
+  const original = globalThis.fetch;
+  globalThis.fetch = (input, init) => {
+    const host = new URL(typeof input === "string" ? input : input.url).hostname;
+    calls[host.endsWith("apliiq.com") ? "apliiq" : host.endsWith("squareup.com") ? "square" : "other"] += 1;
+    return original(input, init);
+  };
+  return () => { globalThis.fetch = original; return { ms: Date.now() - startedAt, apiCalls: calls }; };
+}
+
 export async function run(argv) {
   const { command, arg, flags } = parse(argv);
   const handler = commands[command];
   if (!handler) throw new CatalogError(`Unknown command ${command ?? "(none)"}. Commands: ${Object.keys(commands).join(", ")}.`, { code: "usage" });
-  const result = await handler(arg, flags);
-  const logged = log(command, { ok: true, result });
-  return { ok: true, command, ...result, log: logged };
+  const stop = meter();
+  let result;
+  try { result = await handler(arg, flags); }
+  catch (error) { error.cost = stop(); throw error; }
+  const cost = stop();
+  const logged = log(command, { ok: true, cost, result });
+  return { ok: true, command, ...result, cost, log: logged };
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
@@ -403,7 +444,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
     (summary) => { process.stdout.write(`${JSON.stringify(summary)}\n`); },
     (error) => {
       const code = error instanceof CatalogError ? error.code : "unexpected";
-      const logged = log(process.argv[2] ?? "unknown", { ok: false, code, message: error.message, details: error.details });
+      const logged = log(process.argv[2] ?? "unknown", { ok: false, code, message: error.message, details: error.details, cost: error.cost });
       process.stdout.write(`${JSON.stringify({ ok: false, command: process.argv[2], code, message: error.message, details: Array.isArray(error.details) ? error.details.slice(0, 10) : undefined, log: logged })}\n`);
       process.exitCode = error instanceof CatalogError ? error.exit : 1;
     },

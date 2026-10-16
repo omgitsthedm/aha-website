@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 import { abandonedCartStats } from "../analytics/abandoned-carts.mjs";
 import { approveDraft, DraftValidationError, finishPublishRequest, getDraft, listDrafts, pendingPublishRequests, rejectDraft, updateDraft } from "../catalog/drafts.mjs";
 import { AdminAuthError, clearedCookie, createAdminAuth, relyingParty, sameSecret, sessionCookie } from "./auth.mjs";
+import { latestReports } from "../operations/runtime.mjs";
 import { listOrders, overview } from "./orders.mjs";
 
 const HEADERS = { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" };
@@ -69,7 +70,7 @@ export async function handleAdmin(request, { db, env, context }) {
 
     if (route === "auth/logout" && method === "POST") { await auth.endSession(request); return reply({ ok: true }, 200, { "set-cookie": clearedCookie() }); }
     if (route === "me" && method === "GET") return reply({ email: user.email });
-    if (route === "overview" && method === "GET") return reply(await overview(db));
+    if (route === "overview" && method === "GET") return reply({ ...await overview(db), reports: await latestReports(db) });
     if (route === "orders" && method === "GET") return reply({ orders: await listOrders(db) });
     if (parts[0] === "orders" && parts[2] === "note" && method === "POST") {
       const input = await body(request);
