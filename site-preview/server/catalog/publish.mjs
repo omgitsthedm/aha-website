@@ -39,6 +39,7 @@ export function createLivePublisher({ catalogStore = defaultCatalogStore, imageS
   }
   return {
     catalog: () => currentCatalog(),
+    purge: purgeOnce,
     async list() {
       const snapshot = await readSnapshot(catalogStore());
       return Object.values(snapshot.products).map((product) => ({ slug: product.slug, title: product.title, color: product.color, price: product.price, publishedAt: product.publishedAt, updatedAt: product.updatedAt }));

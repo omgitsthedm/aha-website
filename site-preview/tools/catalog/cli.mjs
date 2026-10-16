@@ -12,6 +12,7 @@
 //   npm run catalog -- publish-live <slug>     put an applied product on the live site now, no site build (ADMIN_AUTOMATION_TOKEN)
 //   npm run catalog -- unpublish-live <slug>   take a live-published product down
 //   npm run catalog -- square-skus [--apply]       report (or fix) Square variation SKUs that differ from the ledger
+//   npm run catalog -- retire-sync              drop products removed in the admin from the code (ADMIN_AUTOMATION_TOKEN)
 //   npm run catalog -- usage [days]            runs, time and provider calls per command (default 7 days)
 //   npm run catalog -- ship                    pull → margin → plan → apply → Square photos → build → verify → tests → live → commit
 //   npm run catalog -- square-images <slug>    upload any gallery view Square doesn't have yet
@@ -369,6 +370,32 @@ const commands = {
     const html = await response.text();
     if (!response.ok || !html.includes(`data-product-id="${page.squareItemId}"`)) throw new CatalogError(`${slug} was published but its page didn't answer as expected (${response.status}).`, { code: "live_check_failed" });
     return { slug, url: `${SITE}/shop/${slug}/`, images: keys.length, publishedAt: result.publishedAt, cachePurged: result.purged };
+  },
+
+  async "retire-sync"() {
+    // Products removed from sale in the admin leave the code here, so the next
+    // site build drops their static pages. A product with unshipped orders stays
+    // until they ship (its sizes must remain fulfillable).
+    const { products: retired = [] } = await automation("retired");
+    const ledger = loadLedger();
+    const pages = readJson(PATHS.products);
+    const removed = [];
+    const waiting = [];
+    for (const entry of retired) {
+      const inCode = pages.some((product) => product.slug === entry.slug);
+      if (!inCode && !entry.live) continue;
+      if (entry.openOrders > 0) { waiting.push({ slug: entry.slug, openOrders: entry.openOrders }); continue; }
+      const ledgerEntry = ledger.products.find((product) => product.slug === entry.slug);
+      if (ledgerEntry) ledgerEntry.status = "retired";
+      if (entry.live) await automation(`live-products/${encodeURIComponent(entry.slug)}`, { method: "DELETE" });
+      removed.push(entry.slug);
+    }
+    if (removed.length) {
+      writeJsonAtomic(PATHS.products, pages.filter((product) => !removed.includes(product.slug)));
+      saveLedger(ledger);
+      await commands.generate();
+    }
+    return { removed, waiting, next: removed.length ? "Build, verify and test, then open a PR; its site build drops the removed pages." : "Nothing to remove from the code." };
   },
 
   async "unpublish-live"(slug) {

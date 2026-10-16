@@ -12,7 +12,11 @@ export async function handleFeeds(request, context, { catalog = currentCatalog }
   const origin = context?.deploy?.context === "production" ? PRODUCTION_ORIGIN : url.origin;
   let products = STATIC_PRODUCTS;
   let live = [];
-  try { ({ products, liveProducts: live } = await catalog()); } catch { /* built products only */ }
+  try {
+    const current = await catalog();
+    products = current.saleProducts ?? current.products;
+    live = current.saleLiveProducts ?? current.liveProducts;
+  } catch { /* built products only */ }
   if (url.pathname === "/sitemap-live.xml") {
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${live.map((product) => `<url><loc>${origin}/shop/${product.slug}/</loc><lastmod>${String(product.updatedAt ?? product.publishedAt ?? "").slice(0, 10) || new Date().toISOString().slice(0, 10)}</lastmod></url>`).join("")}</urlset>\n`;
     return new Response(body, { headers: { "content-type": "application/xml; charset=utf-8", ...catalogCacheHeaders(["sitemap"]) } });

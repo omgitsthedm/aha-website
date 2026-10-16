@@ -120,17 +120,51 @@ async function renderOrders() {
   }));
 }
 
-type CatalogProduct = { slug: string; title: string; color: string; collection: string; price: number; sizes: string[]; image: { src: string | null; alt: string }; squareItemId: string; apliiqDesignId: number | null; source: "built" | "live"; url: string };
+type CatalogProduct = { slug: string; title: string; color: string; collection: string; price: number; sizes: string[]; image: { src: string | null; alt: string }; squareItemId: string; apliiqDesignId: number | null; source: "built" | "live"; url: string; removed: boolean; removedAt: string | null; apliiqDeleted: boolean };
+
+function catalogActions(product: CatalogProduct) {
+  const name = `${product.title} — ${product.color}`;
+  const run = async (path: string, body: Json, done: (result: Json) => string) => {
+    try { const result = await post<Json>(path, body); say(done(result)); await renderCatalog(); } catch (error) { say((error as Error).message); }
+  };
+  const actions = el("div", { className: "admin-actions" });
+  if (!product.removed) {
+    const remove = el("button", { type: "button", className: "admin-secondary", textContent: "Remove from sale" });
+    remove.addEventListener("click", () => {
+      if (!confirm(`Remove "${name}" from sale?\n\nIt disappears from the shop, the bag and the Google, Meta and ChatGPT feeds right away, and checkout stops accepting it. Orders already paid still ship. You can restore it.`)) return;
+      void run(`catalog/${product.slug}/remove`, {}, (result) => `Removed "${name}" from sale. Square item ${result.square}.`);
+    });
+    actions.append(remove);
+    return actions;
+  }
+  const restore = el("button", { type: "button", className: "admin-secondary", textContent: "Restore to sale" });
+  restore.addEventListener("click", () => { void run(`catalog/${product.slug}/restore`, {}, (result) => `"${name}" is on sale again. Square item ${result.square}.`); });
+  actions.append(restore);
+  if (product.apliiqDesignId && !product.apliiqDeleted) {
+    const destroy = el("button", { type: "button", className: "admin-secondary admin-danger", textContent: "Delete Apliiq design…" });
+    destroy.addEventListener("click", () => {
+      const typed = prompt(`This permanently deletes Apliiq design ${product.apliiqDesignId} ("${name}"). It can't be undone; to sell it again you'd create a new design.\n\nType ${product.slug} to confirm.`);
+      if (typed === null) return;
+      void run(`catalog/${product.slug}/delete-apliiq-design`, { confirm: typed.trim() }, (result) => `Apliiq design ${result.designId} deleted.`);
+    });
+    actions.append(destroy);
+  }
+  return actions;
+}
+
 async function renderCatalog() {
   const { products } = await api<{ products: CatalogProduct[] }>("catalog");
-  const sizes = products.reduce((sum, product) => sum + product.sizes.length, 0);
-  document.querySelector("[data-admin-catalog-count]")!.textContent = `${products.length} products, ${sizes} sizes. Prices and sizes change through the catalog engine, so every change stays matched in Square and Apliiq.`;
-  document.querySelector("[data-admin-catalog]")!.replaceChildren(...products.map((product) => el("article", { className: "admin-row admin-product" },
+  const onSale = products.filter((product) => !product.removed);
+  const sizes = onSale.reduce((sum, product) => sum + product.sizes.length, 0);
+  const removedCount = products.length - onSale.length;
+  document.querySelector("[data-admin-catalog-count]")!.textContent = `${onSale.length} products, ${sizes} sizes on sale${removedCount ? `; ${removedCount} removed` : ""}. Remove a product here; prices and sizes change through the catalog engine so Square and Apliiq stay matched.`;
+  document.querySelector("[data-admin-catalog]")!.replaceChildren(...products.map((product) => el("article", { className: `admin-row admin-product${product.removed ? " is-removed" : ""}` },
     product.image.src ? el("img", { src: product.image.src, alt: product.image.alt, loading: "lazy", width: 96, height: 120 }) : null,
     el("div", {},
-      el("header", {}, el("h3", { textContent: `${product.title} — ${product.color}` }), el("span", { className: `admin-pill ${product.source === "live" ? "is-good" : ""}`, textContent: product.source === "live" ? "published live" : "on site" })),
+      el("header", {}, el("h3", { textContent: `${product.title} — ${product.color}` }), el("span", { className: `admin-pill ${product.removed ? "is-alert" : product.source === "live" ? "is-good" : ""}`, textContent: product.removed ? "removed from sale" : product.source === "live" ? "published live" : "on site" })),
       el("p", { className: "admin-meta" }, el("span", { textContent: product.collection }), el("span", { textContent: money.format(product.price) }), el("span", { textContent: product.sizes.join(" · ") })),
-      el("p", { className: "admin-meta" }, el("a", { href: product.url, target: "_blank", rel: "noopener", textContent: "View on site" }), el("span", { textContent: `Square ${product.squareItemId}` }), el("span", { textContent: product.apliiqDesignId ? `Apliiq design ${product.apliiqDesignId}` : "" })),
+      el("p", { className: "admin-meta" }, el("a", { href: product.url, target: "_blank", rel: "noopener", textContent: "View on site" }), el("span", { textContent: `Square ${product.squareItemId}` }), el("span", { textContent: product.apliiqDesignId ? `Apliiq design ${product.apliiqDesignId}${product.apliiqDeleted ? " (deleted)" : ""}` : "" }), el("span", { textContent: product.removedAt ? `Removed ${when.format(new Date(product.removedAt))}` : "" })),
+      catalogActions(product),
     ),
   )));
 }

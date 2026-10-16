@@ -42,6 +42,12 @@ New products, prices and catalog checks go through the catalog engine, never ad-
 ## Live catalog, operations and platform (October 16, 2026)
 
 - **Publishing without a site build.** `npm run catalog -- publish-live <slug>` uploads an applied product's images and then the product itself to Netlify Blobs, through the admin automation API (production only, with `ADMIN_AUTOMATION_TOKEN`). Its page, images, feeds, sitemap, bag and both allow lists pick it up immediately, from `server/catalog/` and the `catalog-*` functions. Built files and built variations always win. `ship` runs it after its checks pass. Commit the product afterwards so the next build serves the same URLs statically; that commit doesn't need its own release.
+- **Removing products.**
+  - Admin → Products → **Remove from sale** takes a product off the shop, product page, bag, feeds and checkout at once, with no site build. It is listed in Netlify Blobs; see `server/catalog/retired.mjs` and `server/admin/catalog-actions.mjs`.
+  - Its Square item is archived. Paid orders still reach Apliiq, because the fulfillment allow list keeps every variation.
+  - **Restore to sale** undoes it.
+  - **Delete Apliiq design** is permanent. It works only after removal, only when no unshipped order uses the design, and only with the slug typed to confirm.
+  - `npm run catalog -- retire-sync` then deletes removed products from the code, so the next build drops their static pages. It skips any product with unshipped orders.
 - **Runtime product pages** are rendered by `server/catalog/render.mjs`. `tests/live-catalog.test.mjs` requires them to be byte-identical to Astro's build for every built product. Change the renderer whenever `src/pages/shop/[product].astro`, `ProductCard.astro` or `ProductImage.astro` change.
 - **Order hold.** Paid orders reach Apliiq only after `AHA_FULFILLMENT_HOLD_MINUTES` (default 60). The hourly run re-reads Square first, so anything refunded or cancelled inside the window is held.
 - **Owner reports.** A daily health check (13:00 UTC) emails only when Square, the feeds, orders, email or publishing need a person. A weekly digest goes out Mondays at 13:30 UTC. Both are recorded in `aha_owner_reports` and shown on the admin overview.
