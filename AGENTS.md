@@ -1,5 +1,17 @@
 # After Hours Agenda agent contract
 
+## Email sign-up and storefront fixes — October 16, 2026
+
+The owner instructed: “Build the five fixes and also add an email signup that only collects addresses.”
+
+- **Email sign-up.** A form in the Stay close band (home, about, lookbook, manifesto) and on `/updates/` posts to `/api/updates/subscribe` (`netlify/functions/updates-subscribe.mjs`, `server/updates/signups.mjs`). It stores the lowercased address, the page and the consent wording in `aha_email_signups`.
+  - It sends nothing: no confirmation email, and no email provider is connected.
+  - Admin → **Email list** shows the addresses, downloads a CSV and removes an address on request. The overview and the weekly digest show counts only.
+  - Analytics get a `generate_lead` / `email_signup` / Meta `Lead` event with the page name, never the address.
+  - Sending newsletters, or connecting Resend audiences or another email tool, needs the owner's separate instruction. Every email sent must include an unsubscribe link, as the privacy page says.
+  - The migration `20261016140000_email_signups` is byte-identical at both discovery paths.
+- **Storefront.** `/updates/` copy is current, and the privacy page covers sign-ups. Home, shop and lookbook share the collection order in `src/data/collections.ts`, newest drop first; Pet It Be stays last while it is removed from sale. The lookbook hides sets for removed products. The shop has collection jump links, and phones get a quick-add bar on product pages (`initBuyBar` in `src/scripts/cart.ts`).
+
 ## Approved Pet It Be launch — October 16, 2026
 
 The owner instructed: “Yes: Pet It Be B1 (cream on cranberry) on the Maroon Independent SS3000 crewneck, XS–3XL, $55, free US shipping, front print 11 inches wide, private label as usual.” The catalog engine created Apliiq artwork 8209339 and design 6211854 (SS3000 product 391, Maroon 480, front 4546, label SB-3-161622 inside neck) and Square item CX5OOOUPF44W4JEZLHPTJG4R with seven variations. The catalog is 16 products / 109 variants. Garment front and print-detail shots are deterministic composites of the exact print master on a recolored blank photo; back, folded and three campaign images are AI-generated from that composite. No paid test order, ad spend or customer message is authorized by this entry.

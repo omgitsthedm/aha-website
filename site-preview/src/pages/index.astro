@@ -5,17 +5,12 @@ import UpdatesBand from "../components/UpdatesBand.astro";
 import ProductImage from '../components/ProductImage.astro';
 import ProductCard from '../components/ProductCard.astro';
 import products from '../data/products.json';
-const insomniac = products.filter((product) => product.collection === 'Insomniac');
-const city = products.filter((product) => product.collection === 'The City');
-const yikes = products.filter((product) => product.collection === 'Yikes!');
-const uniqueStyles = (pieces: typeof products, count: number) => {
-  const seen = new Set<string>();
-  return pieces.filter((product) => !seen.has(product.typeLabel) && Boolean(seen.add(product.typeLabel))).slice(0, count);
-};
-const featuredProducts = city.length
-  ? [...uniqueStyles(city, 2), ...uniqueStyles(insomniac, 1), ...yikes.slice(0, 1)]
-  : [...uniqueStyles(insomniac, 3), ...yikes.slice(0, 1)];
+import { collectionsInOrder } from '../data/collections';
+// One piece per collection, newest drop first; the newest also leads the hero.
+const featuredProducts = collectionsInOrder().slice(0, 4).map(([, pieces]) => pieces.find((product) => product.typeLabel === 'Hoodie') ?? pieces[0]!);
 const heroProduct = featuredProducts[0] ?? products[0]!;
+// The lookbook teaser opens on the next collection so it doesn't repeat the hero.
+const teaserProduct = featuredProducts[1] ?? heroProduct;
 ---
 
 <Site
@@ -122,10 +117,10 @@ const heroProduct = featuredProducts[0] ?? products[0]!;
     </div>
     <div class="teaser-grid">
       <figure>
-        <ProductImage image={featuredProducts[0]!.campaign[0]!} sizes="(max-width: 760px) calc((100vw - 60px) * 0.579), 50vw" />
+        <ProductImage image={teaserProduct.campaign[0]!} sizes="(max-width: 760px) calc((100vw - 60px) * 0.579), 50vw" />
         <figcaption>
-          <h3>{featuredProducts[0]!.title}.</h3>
-          <p>{featuredProducts[0]!.campaignSetting} · Campaign mockup · AI-generated</p>
+          <h3>{teaserProduct.title}.</h3>
+          <p>{teaserProduct.campaignSetting} · Campaign mockup · AI-generated</p>
         </figcaption>
       </figure>
       <figure>
@@ -161,6 +156,6 @@ const heroProduct = featuredProducts[0] ?? products[0]!;
       </div>
     </div>
   </section>
-  <UpdatesBand />
+  <UpdatesBand source="home" />
 </Site>
 <script src="../scripts/retired-cards.ts"></script>

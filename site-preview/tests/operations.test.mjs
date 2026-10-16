@@ -7,7 +7,7 @@ import { latestReports, reportKey, runOwnerReport } from "../server/operations/r
 import operationsHealth, { config as healthSchedule } from "../netlify/functions/operations-health.mjs";
 import weeklyDigestFunction, { config as digestSchedule } from "../netlify/functions/weekly-digest.mjs";
 
-const MIGRATIONS = ["20261015045000_yikes_fulfillment", "20261015160000_custom_checkout", "20261015170000_order_notifications", "20261015180000_checkout_payment_recovery", "20261016100000_checkout_analytics_link", "20261016110000_product_drafts", "20261016120000_admin", "20261016130000_owner_reports"];
+const MIGRATIONS = ["20261015045000_yikes_fulfillment", "20261015160000_custom_checkout", "20261015170000_order_notifications", "20261015180000_checkout_payment_recovery", "20261016100000_checkout_analytics_link", "20261016110000_product_drafts", "20261016120000_admin", "20261016130000_owner_reports", "20261016140000_email_signups"];
 const CATALOG = {
   VAR1: { sku: "APQ-100S7A1", size: "M", priceCents: 5500, product: "crewneck", title: "Pet It Be Crewneck" },
   VAR2: { sku: "APQ-100S8A1", size: "L", priceCents: 5500, product: "crewneck", title: "Pet It Be Crewneck" },
@@ -113,6 +113,7 @@ test("weekly digest always sends: orders, revenue, best sellers and drop-off", a
   await session("c1", "completed", 11000, "s1");
   await session("c2", "completed", 5200, "s2");
   await session("c3", "quoted", 5500, "s3");
+  await pg.query(`INSERT INTO aha_email_signups (email, source, consent_text, created_at) VALUES ('new@example.com', 'home', 'x', now()), ('old@example.com', 'updates', 'x', now() - interval '30 days')`);
   const sent = [];
   const result = await runOwnerReport("weekly_digest", {
     db, env: env({ AHA_OWNER_EMAIL: "owner@example.com", PUBLIC_POSTHOG_PROJECT_URL: "https://us.posthog.com/project/1" }),
@@ -123,6 +124,8 @@ test("weekly digest always sends: orders, revenue, best sellers and drop-off", a
   assert.equal(sent[0].subject, "2 orders, $162.00 this week");
   assert.match(sent[0].text, /3 pieces sold\. Best: Pet It Be Crewneck \(2\), Yikes Crewneck \(1\)\./);
   assert.match(sent[0].text, /Checkouts started: 3\. Paid: 2 \(67%\)\. Abandoned: 1\./);
+  assert.match(sent[0].text, /Email sign-ups: 1 new, 2 on the list\./);
+  assert.doesNotMatch(sent[0].text + sent[0].html, /(new|old)@example\.com/, "the digest counts sign-ups; it never lists addresses");
   assert.match(sent[0].text, /Trends and recordings in PostHog: https:\/\/us\.posthog\.com\/project\/1/);
   assert.equal((await latestReports(db)).weekly_digest.emailedAt !== null, true);
 });

@@ -1,0 +1,10 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+---
+<Admin title="Email list" page="signups">
+  <p class="admin-meta" data-admin-signup-count>Addresses from the sign-up form on the site. Nothing is emailed from here; download the list to use it in the email tool you choose.</p>
+  <div class="admin-actions">
+    <button type="button" class="admin-primary" data-admin-signup-export disabled>Download CSV</button>
+  </div>
+  <div class="admin-list" data-admin-signups aria-live="polite"></div>
+</Admin>

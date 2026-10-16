@@ -84,7 +84,7 @@ function card(value: number | string, label: string, href?: string, alert = fals
 
 async function renderOverview() {
   type Report = { ok: boolean; createdAt: string; summary: { problems?: string[] } };
-  const [me, data] = await Promise.all([api<{ email: string }>("me"), api<{ ordersToday: number; ordersThisWeek: number; ordersNeedingAttention: number; draftsWaiting: number; draftsApproved: number; reports?: { daily_health?: Report; weekly_digest?: Report } }>("overview")]);
+  const [me, data] = await Promise.all([api<{ email: string }>("me"), api<{ ordersToday: number; ordersThisWeek: number; ordersNeedingAttention: number; draftsWaiting: number; draftsApproved: number; signups?: { total: number; last7Days: number }; reports?: { daily_health?: Report; weekly_digest?: Report } }>("overview")]);
   const target = document.querySelector("[data-admin-overview]")!;
   target.replaceChildren(
     card(data.ordersToday, "Orders today", "/admin/orders/"),
@@ -92,6 +92,7 @@ async function renderOverview() {
     card(data.ordersNeedingAttention, "Orders needing attention", "/admin/orders/", data.ordersNeedingAttention > 0),
     card(data.draftsWaiting, "Drafts waiting for you", "/admin/products/", data.draftsWaiting > 0),
     card(data.draftsApproved, "Approved, not yet published", "/admin/products/"),
+    card(data.signups?.total ?? 0, `Email sign-ups (${data.signups?.last7Days ?? 0} this week)`, "/admin/signups/"),
   );
   const health = data.reports?.daily_health;
   const problems = health?.summary?.problems ?? [];
@@ -169,6 +170,35 @@ async function renderCatalog() {
   )));
 }
 
+type Signup = { id: string; email: string; source: string; createdAt: string };
+// Spreadsheet apps run cells that start with = + - @ as formulas; quote them as text.
+const csvCell = (value: string) => `"${(/^[=+\-@]/.test(value) ? `'${value}` : value).replace(/"/g, '""')}"`;
+async function renderSignups() {
+  const { total, last7Days, signups } = await api<{ total: number; last7Days: number; signups: Signup[] }>("signups");
+  document.querySelector("[data-admin-signup-count]")!.textContent = `${total} address${total === 1 ? "" : "es"}, ${last7Days} in the last 7 days. Nothing is emailed from here; download the list to use it in the email tool you choose.`;
+  const exportButton = document.querySelector<HTMLButtonElement>("[data-admin-signup-export]")!;
+  exportButton.disabled = !signups.length;
+  exportButton.onclick = () => {
+    const rows = [["email", "signed_up_on", "signed_up_at"], ...signups.map((entry) => [entry.email, entry.source, entry.createdAt])];
+    const url = URL.createObjectURL(new Blob([rows.map((row) => row.map(csvCell).join(",")).join("\r\n") + "\r\n"], { type: "text/csv" }));
+    const link = el("a", { href: url, download: `aha-email-list-${new Date().toISOString().slice(0, 10)}.csv` });
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const list = document.querySelector("[data-admin-signups]")!;
+  if (!signups.length) { list.replaceChildren(el("p", { className: "admin-empty", textContent: "No sign-ups yet. The form is in the Stay close section and on the Updates page." })); return; }
+  list.replaceChildren(...signups.map((entry) => {
+    const remove = el("button", { type: "button", className: "admin-secondary admin-danger", textContent: "Remove" });
+    remove.addEventListener("click", async () => {
+      if (!confirm(`Remove ${entry.email} from the email list? Do this when someone asks to be taken off.`)) return;
+      try { await post(`signups/${entry.id}/remove`); say(`Removed ${entry.email}.`); await renderSignups(); } catch (error) { say((error as Error).message); }
+    });
+    return el("article", { className: "admin-row" }, el("header", {}, el("h3", { textContent: entry.email }), remove), el("p", { className: "admin-meta" }, el("span", { textContent: when.format(new Date(entry.createdAt)) }), el("span", { textContent: `Signed up on ${entry.source}` })));
+  }));
+}
+
 let draftFilter = "draft";
 async function renderDrafts() {
   const { drafts } = await api<{ drafts: Draft[] }>(`drafts?status=${encodeURIComponent(draftFilter)}`);
@@ -234,6 +264,7 @@ async function load() {
     if (page === "overview") await renderOverview();
     if (page === "orders") await renderOrders();
     if (page === "products") { await renderCatalog(); await renderDrafts(); }
+    if (page === "signups") await renderSignups();
     if (page === "analytics") await renderAnalytics();
   } catch (error) {
     // Sign-in is the safe fallback for any failure, with the reason shown.

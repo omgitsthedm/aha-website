@@ -163,3 +163,13 @@ document.addEventListener('aha:cart-added',(event)=>{
  if(consent.analytics&&!gpc)ph('add_to_cart',{product_id:detail.id,product_name:detail.name,size:detail.size,color:detail.color,price:detail.price,quantity:detail.quantity});
  if(consent.marketing&&!gpc)meta('track','AddToCart',{content_ids:[detail.id],content_type:'product',value,currency:'USD'});
 });
+
+// Email sign-up: the page it came from only, never the address.
+document.addEventListener('aha:signed-up',(event)=>{
+ if(!enabled||!consent)return;
+ const source=(event as CustomEvent<{source?:unknown}>).detail?.source;
+ const page=typeof source==='string'&&/^[a-z0-9-]{1,40}$/.test(source)?source:'site';
+ if(consent.analytics)ga('event','generate_lead',{lead_source:page});
+ if(consent.analytics&&!gpc)ph('email_signup',{source:page});
+ if(consent.marketing&&!gpc)meta('track','Lead',{content_name:'Email updates'});
+});

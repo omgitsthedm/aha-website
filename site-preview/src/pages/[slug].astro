@@ -1,6 +1,7 @@
 ---
 import Site from "../layouts/Site.astro";
 import { documents } from "../data/documents";
+import EmailSignup from "../components/EmailSignup.astro";
 export function getStaticPaths() {
   return documents.map((document) => ({
     params: { slug: document.slug },
@@ -15,6 +16,7 @@ const { document } = Astro.props;
     <p class="label">{document.eyebrow}</p>
     <h1>{document.title}</h1>
     <p class="lede">{document.lead}</p>
+    {"signup" in document && document.signup && <div class="signup-panel"><EmailSignup source={document.slug} label="Get new drops by email" /></div>}
   </header>
   <article class="reading shell">
     {document.sections.map(([title, body]) => (
