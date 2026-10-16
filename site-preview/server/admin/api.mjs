@@ -3,8 +3,8 @@
 // written to the audit log.
 import { randomUUID } from "node:crypto";
 import { abandonedCartStats } from "../analytics/abandoned-carts.mjs";
-import { approveDraft, DraftValidationError, getDraft, listDrafts, rejectDraft, updateDraft } from "../catalog/drafts.mjs";
-import { AdminAuthError, clearedCookie, createAdminAuth, relyingParty, sessionCookie } from "./auth.mjs";
+import { approveDraft, DraftValidationError, finishPublishRequest, getDraft, listDrafts, pendingPublishRequests, rejectDraft, updateDraft } from "../catalog/drafts.mjs";
+import { AdminAuthError, clearedCookie, createAdminAuth, relyingParty, sameSecret, sessionCookie } from "./auth.mjs";
 import { listOrders, overview } from "./orders.mjs";
 
 const HEADERS = { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" };
@@ -31,6 +31,20 @@ export async function handleAdmin(request, { db, env, context }) {
   const { origin } = relyingParty(env);
   const clientKey = context?.ip ?? request.headers.get("x-nf-client-connection-ip") ?? "unknown";
   try {
+    // Automation for the catalog engine: a long bearer token, publish requests only.
+    if (parts[0] === "automation") {
+      const bearer = (request.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
+      if (!sameSecret(bearer, env.get("ADMIN_AUTOMATION_TOKEN"))) return reply({ error: "Unauthorized." }, 401);
+      if (route === "automation/publish-requests" && method === "GET") return reply({ requests: await pendingPublishRequests(db) });
+      if (parts[1] === "publish-requests" && parts.length === 3 && method === "POST") {
+        const input = await body(request);
+        const updated = await finishPublishRequest(db, parts[2], { status: input.status, result: input.result });
+        if (!updated) return reply({ error: "Not found." }, 404);
+        await auth.audit(null, `publish.${input.status}`, parts[2], { result: input.result ?? {} });
+        return reply({ ok: true });
+      }
+      return reply({ error: "Not found." }, 404);
+    }
     if (method !== "GET" && !sameOrigin(request, origin)) return reply({ error: "Request blocked." }, 403);
 
     // Sign-in routes.

@@ -9,6 +9,8 @@
 //   npm run catalog -- plan                    hashed plan for approved design specs not yet in the ledger
 //   npm run catalog -- apply --plan <file>     execute exactly that plan (Apliiq → Square → ledger → site data)
 //   npm run catalog -- explain <slug>          everything known about one product
+//   npm run catalog -- pull                    turn admin publish requests into design specs (ADMIN_AUTOMATION_TOKEN)
+//   npm run catalog -- images <slug> --files a.jpg b.jpg …   attach front/back/detail/folded garment images
 //
 // Exit codes: 0 ok · 1 error · 2 drift · 3 missing credentials · 4 blocked intent · 5 margin/approval gate.
 import { existsSync, readdirSync } from "node:fs";
@@ -17,7 +19,10 @@ import { pathToFileURL } from "node:url";
 import { apliiqCredentials, createApliiqClient, designPayload, withIntent } from "./apliiq.mjs";
 import { renderFulfillmentCatalog } from "./generate.mjs";
 import { fulfillmentFromLedger, ledgerFromLive, loadLedger, saveLedger, validateLedger } from "./ledger.mjs";
-import { APP, CatalogError, PATHS, expectedSku, listDesigns, log, readJson, sha256, writeJsonAtomic, writeTextAtomic } from "./lib.mjs";
+import { APP, CATALOG_DIR, CatalogError, PATHS, expectedSku, listDesigns, log, readJson, sha256, writeJsonAtomic, writeTextAtomic } from "./lib.mjs";
+
+const CATALOG_BLANKS = path.join(CATALOG_DIR, "blanks");
+import { buildGallery } from "./images.mjs";
 import { marginReport } from "./margin.mjs";
 import { createSquareClient, itemObject, squareIdempotencyKey, squareToken, verifyItem } from "./square.mjs";
 
@@ -28,13 +33,20 @@ async function loadAllowList() {
   return module.AHA_FULFILLMENT_CATALOG;
 }
 
-function normalizeSpec(spec, file) {
+function blankDefaults(blank) {
+  const file = path.join(CATALOG_BLANKS, `${blank}.json`);
+  return existsSync(file) ? readJson(file) : null;
+}
+
+function normalizeSpec(raw, file) {
+  const defaults = raw.blank ? blankDefaults(raw.blank) : null;
+  const spec = { ...raw, sizes: raw.sizes ?? defaults?.sizes, product: { ...(defaults?.product ?? {}), ...(raw.product ?? {}) } };
   const required = ["slug", "title", "color", "priceCents", "sizes", "blank", "apliiq", "product", "fulfillment"];
   const missing = required.filter((key) => spec[key] === undefined);
   if (missing.length) throw new CatalogError(`${path.basename(file)}: missing ${missing.join(", ")}.`, { code: "spec_invalid" });
   if (!/^[a-z0-9-]+$/.test(spec.slug)) throw new CatalogError(`${spec.slug}: slug must be lowercase letters, numbers and hyphens.`, { code: "spec_invalid" });
   if (!Number.isSafeInteger(spec.priceCents) || spec.priceCents < 100) throw new CatalogError(`${spec.slug}: priceCents must be whole cents.`, { code: "spec_invalid" });
-  if (spec.apliiq.label?.id !== 6208403) throw new CatalogError(`${spec.slug}: only the approved SB-3-161622 label (6208403) may be used.`, { code: "spec_invalid" });
+  if (!spec.apliiq.designId && spec.apliiq.label?.id !== 6208403) throw new CatalogError(`${spec.slug}: only the approved SB-3-161622 label (6208403) may be used.`, { code: "spec_invalid" });
   for (const size of spec.sizes) expectedSku(1, size);
   return { ...spec, description: spec.product.description, file };
 }
@@ -48,7 +60,61 @@ function productRecord(spec, itemId, variationIds, skus) {
   return record;
 }
 
+const SITE = process.env.AHA_ADMIN_ORIGIN || "https://afterhoursagenda.com";
+function automationToken() {
+  const token = process.env.ADMIN_AUTOMATION_TOKEN;
+  if (!token) throw new CatalogError("ADMIN_AUTOMATION_TOKEN is required to read publish requests.", { code: "automation_token_missing", exit: 3 });
+  return token;
+}
+async function automation(route, init = {}) {
+  const response = await fetch(`${SITE}/api/admin/automation/${route}`, { ...init, headers: { authorization: `Bearer ${automationToken()}`, "content-type": "application/json" }, signal: AbortSignal.timeout(20_000) });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new CatalogError(`Admin automation ${route} failed (${response.status}).`, { code: "automation_failed", details: data });
+  return data;
+}
+const reportPublish = (id, status, result) => automation(`publish-requests/${encodeURIComponent(id)}`, { method: "POST", body: JSON.stringify({ status, result }) });
+
 const commands = {
+  async pull() {
+    // Approved drafts the owner pressed Publish on become design specs here.
+    const { requests } = await automation("publish-requests");
+    const written = [];
+    const skipped = [];
+    for (const request of requests) {
+      const draft = request.payload_json;
+      const slug = request.design_slug;
+      if (!slug || !draft.blank || !draft.priceCents || !draft.color) { skipped.push({ request: request.id, reason: "slug, blank, color and price must be set in the admin" }); await reportPublish(request.id, "failed", { message: "Set slug, blank, color and price, then approve and publish again." }); continue; }
+      const title = draft.title ?? draft.name;
+      const collection = draft.collection ?? title.replace(/\s+(Crewneck|Hoodie|Long Sleeve|Pocket Long Sleeve|Cropped Hoodie)$/i, "");
+      const defaults = blankDefaults(draft.blank);
+      const sizes = (defaults?.sizes ?? draft.sizes).filter((size) => draft.variants.some((variant) => variant.size.toUpperCase() === size.toUpperCase() || variant.sku === expectedSku(request.apliiq_design_id, size)));
+      const gallery = await buildGallery({ slug, collection, title, color: draft.color, inputs: draft.imageUrls });
+      const spec = {
+        slug, status: "approved",
+        approval: { by: request.approved_by, at: new Date(request.approved_at).toISOString(), note: `Approved and published from the admin (request ${request.id}).` },
+        publishRequestId: request.id,
+        title, color: draft.color, priceCents: draft.priceCents, blank: draft.blank, sizes,
+        fulfillment: { product: slug.replace(/-/g, "_") },
+        apliiq: { designId: request.apliiq_design_id, skus: sizes.map((size) => expectedSku(request.apliiq_design_id, size)) },
+        product: { collection, description: draft.storeDescription ?? draft.description ?? "", campaignSetting: "", gallery, campaign: [] },
+      };
+      writeJsonAtomic(path.join(PATHS.designs, `${slug}.json`), spec);
+      await reportPublish(request.id, "running", { spec: `catalog/designs/${slug}.json` });
+      written.push(slug);
+    }
+    return { pulled: written, skipped };
+  },
+
+  async images(slug, flags) {
+    // Attach local or remote garment images (front, back, detail, folded) to a design spec.
+    const entry = listDesigns().find(({ spec }) => spec.slug === slug);
+    if (!entry) throw new CatalogError(`No design spec for ${slug}.`, { code: "spec_missing" });
+    const inputs = flags.files ?? [];
+    const gallery = await buildGallery({ slug, collection: entry.spec.product?.collection ?? entry.spec.title, title: entry.spec.title, color: entry.spec.color, inputs });
+    writeJsonAtomic(entry.file, { ...entry.spec, product: { ...entry.spec.product, gallery } });
+    return { slug, images: gallery.length };
+  },
+
   async import() {
     if (existsSync(PATHS.ledger)) throw new CatalogError("catalog/ledger.json already exists; import only adopts a catalog once.", { code: "ledger_exists" });
     const ledger = ledgerFromLive({ products: readJson(PATHS.products), fulfillment: await loadAllowList() });
@@ -128,8 +194,7 @@ const commands = {
         specHash: sha256(readJson(spec.file)),
         gates,
         steps: [
-          ...spec.apliiq.artwork.filter((art) => !art.id).map((art) => `apliiq.createArtwork ${art.key}`),
-          "apliiq.createDesign",
+          ...(spec.apliiq.designId ? [`apliiq.useExistingDesign ${spec.apliiq.designId}`] : [...spec.apliiq.artwork.filter((art) => !art.id).map((art) => `apliiq.createArtwork ${art.key}`), "apliiq.createDesign"]),
           "square.createItem (or adopt one exact-name match)",
           ...(spec.images?.square?.length ? [`square.uploadImages ${spec.images.square.length}`] : []),
           "ledger.add + products.json.add + generate",
@@ -152,7 +217,8 @@ const commands = {
     const blocked = plan.designs.filter((design) => design.gates.length);
     if (blocked.length) throw new CatalogError("Plan has open gates; fix them and create a new plan.", { code: "gates_open", exit: 5, details: blocked });
     const specs = new Map(listDesigns().map(({ file, spec }) => [spec.slug, normalizeSpec(spec, file)]));
-    const apliiq = createApliiqClient({ credentials: apliiqCredentials() });
+    const needsApliiq = plan.designs.some((step) => !specs.get(step.slug)?.apliiq?.designId);
+    const apliiq = needsApliiq ? createApliiqClient({ credentials: apliiqCredentials() }) : null;
     const square = createSquareClient({ token: squareToken() });
     const results = [];
     for (const step of plan.designs) {
@@ -161,12 +227,18 @@ const commands = {
       const ledger = loadLedger();
       if (ledger.products.some((entry) => entry.slug === spec.slug)) { results.push({ slug: spec.slug, outcome: "already_in_ledger" }); continue; }
       const artworkIds = {};
-      for (const art of spec.apliiq.artwork) {
-        if (art.id) { artworkIds[art.key] = art.id; continue; }
-        const response = await withIntent(`artwork-${spec.slug}-${art.key}`, { Name: art.name, ImagePath: art.imagePath }, apliiq.createArtwork);
-        artworkIds[art.key] = response.Id;
+      let design;
+      if (spec.apliiq.designId) {
+        // Designed in Apliiq and sent with Add to Store: the design and its SKUs already exist.
+        design = { Id: spec.apliiq.designId, Variants: (spec.apliiq.skus ?? spec.sizes.map((size) => expectedSku(spec.apliiq.designId, size))).map((sku) => ({ SKU: sku })) };
+      } else {
+        for (const art of spec.apliiq.artwork) {
+          if (art.id) { artworkIds[art.key] = art.id; continue; }
+          const response = await withIntent(`artwork-${spec.slug}-${art.key}`, { Name: art.name, ImagePath: art.imagePath }, apliiq.createArtwork);
+          artworkIds[art.key] = response.Id;
+        }
+        design = await withIntent(`design-${spec.slug}`, designPayload(spec, artworkIds), apliiq.createDesign);
       }
-      const design = await withIntent(`design-${spec.slug}`, designPayload(spec, artworkIds), apliiq.createDesign);
       const skus = {};
       for (const size of spec.sizes) {
         const sku = expectedSku(design.Id, size);
@@ -197,6 +269,7 @@ const commands = {
       writeJsonAtomic(PATHS.products, products);
       writeTextAtomic(PATHS.fulfillment, renderFulfillmentCatalog(ledger));
       results.push({ slug: spec.slug, outcome: "created", apliiqDesignId: design.Id, squareItemId: item.id, variants: spec.sizes.length });
+      if (spec.publishRequestId) await reportPublish(spec.publishRequestId, "done", { slug: spec.slug, squareItemId: item.id, apliiqDesignId: design.Id }).catch(() => null);
     }
     log("apply", { plan: path.relative(APP, planFile), results });
     return { results };
@@ -221,6 +294,7 @@ function parse(argv) {
     const token = rest[index];
     if (token === "--plan") flags.plan = rest[++index];
     else if (token === "--quiet") flags.quiet = true;
+    else if (token === "--files") { flags.files = []; while (rest[index + 1] && !rest[index + 1].startsWith("--")) flags.files.push(rest[++index]); }
     else positional.push(token);
   }
   return { command, arg: positional[0], flags };

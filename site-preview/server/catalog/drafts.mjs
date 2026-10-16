@@ -4,6 +4,7 @@
 import { randomUUID, timingSafeEqual, createHash } from "node:crypto";
 
 const STATUSES = new Set(["draft", "approved", "rejected", "published", "failed"]);
+export const BLANKS = new Set(["SS3000", "SS4500", "AFX64CRP", "NL3601", "CC4410"]);
 const SKU_PATTERN = /^APQ-(\d+)S(\d+)A1$/;
 const MAX_TEXT = 512;
 const MAX_DESCRIPTION = 8000;
@@ -123,6 +124,11 @@ export async function updateDraft(db, id, patch) {
   if (patch.title !== undefined) next.title = text(patch.title, "title");
   if (patch.color !== undefined) next.color = text(patch.color, "color", 64);
   if (patch.description !== undefined) next.storeDescription = text(patch.description, "description", MAX_DESCRIPTION);
+  if (patch.blank !== undefined) {
+    if (!BLANKS.has(patch.blank)) throw new DraftValidationError(`blank must be one of ${[...BLANKS].join(", ")}.`);
+    next.blank = patch.blank;
+  }
+  if (patch.collection !== undefined) next.collection = text(patch.collection, "collection", 80);
   if (patch.priceCents !== undefined) {
     if (!Number.isSafeInteger(patch.priceCents) || patch.priceCents < 100 || patch.priceCents > 100_000) throw new DraftValidationError("priceCents must be whole cents.");
     next.priceCents = patch.priceCents;
@@ -162,3 +168,26 @@ export async function searchDrafts(db, search) {
   `;
   return rows.map(row).map((draft) => ({ store_ProductId: draft.id, name: draft.payload_json.name, imageUrls: draft.payload_json.imageUrls ?? [] }));
 }
+
+/** Automation: approved drafts the owner asked to publish. */
+export async function pendingPublishRequests(db) {
+  const rows = await db.sql`
+    SELECT r.id, r.requested_by, r.created_at, d.id AS draft_id, d.design_slug, d.payload_json, d.approved_by, d.approved_at, d.apliiq_design_id
+    FROM aha_publish_requests r JOIN aha_product_drafts d ON d.id = r.draft_id
+    WHERE r.status = 'requested' AND d.status = 'approved'
+    ORDER BY r.created_at ASC LIMIT 20`;
+  return rows.map((entry) => ({ ...entry, payload_json: json(entry.payload_json), apliiq_design_id: entry.apliiq_design_id === null ? null : Number(entry.apliiq_design_id) }));
+}
+
+/** Automation: record the engine outcome; a done request publishes its draft. */
+export async function finishPublishRequest(db, id, { status, result }) {
+  if (!["running", "done", "failed"].includes(status)) throw new DraftValidationError("status must be running, done or failed.");
+  const [request] = await db.sql`
+    UPDATE aha_publish_requests SET status = ${status}, result_json = ${JSON.stringify(result ?? {})}, updated_at = now()
+    WHERE id = ${id} RETURNING *`;
+  if (!request) return null;
+  if (status === "done") await db.sql`UPDATE aha_product_drafts SET status = 'published', updated_at = now() WHERE id = ${request.draft_id}`;
+  if (status === "failed") await db.sql`UPDATE aha_product_drafts SET error = ${String(result?.message ?? "Publish failed.").slice(0, 500)}, updated_at = now() WHERE id = ${request.draft_id}`;
+  return request;
+}
+

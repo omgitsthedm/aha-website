@@ -1,0 +1,73 @@
+{
+  "blank": "AFX64CRP",
+  "name": "Independent Trading Co. AFX64CRP cropped hoodie",
+  "referenceProduct": "yikes-cropped-hoodie",
+  "apliiq": {
+    "productId": null,
+    "productCode": null,
+    "note": "Look up with GET /Product before creating a design."
+  },
+  "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "product": {
+    "gender": "female",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Cropped Hoodies"
+    },
+    "fit": "cropped raw-hem silhouette; dropped shoulders",
+    "weightOz": 6.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 17.25,
+        "chestWidth": 20.75,
+        "sleeveLength": 31.25
+      },
+      {
+        "size": "S",
+        "bodyLength": 18.25,
+        "chestWidth": 21.75,
+        "sleeveLength": 32.25
+      },
+      {
+        "size": "M",
+        "bodyLength": 19.25,
+        "chestWidth": 22.75,
+        "sleeveLength": 33.25
+      },
+      {
+        "size": "L",
+        "bodyLength": 20.25,
+        "chestWidth": 23.75,
+        "sleeveLength": 34.25
+      },
+      {
+        "size": "XL",
+        "bodyLength": 21.25,
+        "chestWidth": 24.75,
+        "sleeveLength": 35.25
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 22.25,
+        "chestWidth": 25.75,
+        "sleeveLength": 36.25
+      }
+    ],
+    "measurementGuidance": "Compare these measurements with a garment you already own. Body length is measured from the high point of the shoulder; chest width is measured flat 1 inch below the armhole.",
+    "typeLabel": "Cropped hoodie",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "Raw cropped hem, dropped shoulders, flat drawcords and ribbed cuffs."
+    ],
+    "sleeveMeasurementGuidance": "Sleeve length is measured from the center back, including the cuff."
+  }
+}

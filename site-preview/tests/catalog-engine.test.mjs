@@ -103,3 +103,28 @@ test("Square readback must match every requested size, SKU and price", () => {
   wrongPrice.item_data.variations[2].item_variation_data.price_money.amount = 100;
   assert.throws(() => verifyItem(spec, skus, wrongPrice), /readback mismatch/);
 });
+
+test("garment images become the storefront's WebP/JPEG set and gallery entries", async () => {
+  const sharp = (await import("sharp")).default;
+  const { buildGallery, collectionSlug } = await import("../tools/catalog/images.mjs");
+  const { rmSync } = await import("node:fs");
+  const directory = mkdtempSync(path.join(tmpdir(), "aha-img-"));
+  const file = path.join(directory, "front.png");
+  await sharp({ create: { width: 900, height: 1125, channels: 3, background: "#7a1f2b" } }).png().toFile(file);
+  const slug = "zz-engine-test";
+  const gallery = await buildGallery({ slug, collection: "Pet It Be", title: "Pet It Be Crewneck", color: "Cranberry", inputs: [file] });
+  try {
+    assert.equal(collectionSlug("Mighty Mick’s"), "mighty-micks");
+    assert.equal(gallery.length, 1);
+    assert.equal(gallery[0].role, "front");
+    assert.equal(gallery[0].width, 900);
+    assert.equal(gallery[0].height, 1125);
+    assert.match(gallery[0].srcset, /-400\.webp 400w, .*-800\.webp 800w, .*-900\.webp 900w$/);
+    assert.equal(gallery[0].feedImage, `/images/pet-it-be/${slug}/garment-front.jpg`);
+  } finally {
+    rmSync(new URL(`../public/images/pet-it-be/${slug}`, import.meta.url), { recursive: true, force: true });
+    const { readdirSync, rmdirSync } = await import("node:fs");
+    const collectionDir = new URL("../public/images/pet-it-be", import.meta.url);
+    if (!readdirSync(collectionDir).length) rmdirSync(collectionDir);
+  }
+});

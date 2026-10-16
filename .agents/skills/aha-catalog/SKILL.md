@@ -9,6 +9,14 @@ One command does each step. Read its single JSON line; open `site-preview/tools/
 
 Run everything from `site-preview/` with Node 24.21.0.
 
+## Flow from the admin (Apliiq "Add to Store")
+
+1. The owner designs in Apliiq and presses **Add to Store** (custom store). A draft appears in `/admin/products/`.
+2. The owner sets title, color, garment (blank), collection, slug and retail price, approves, then presses **Publish**.
+3. You run `npm run catalog -- pull` with `ADMIN_AUTOMATION_TOKEN` set. Each publish request becomes `catalog/designs/<slug>.json` (approved, existing Apliiq design, gallery built from the Apliiq mockups).
+4. Replace mockups with real garment images when available: `npm run catalog -- images <slug> --files front.jpg back.jpg detail.jpg folded.jpg`.
+5. Then margin → plan → apply → verify → release, as below. Apply skips Apliiq creation for these and reports the publish request done.
+
 ## Flow for a new product
 
 1. **Design spec.** Copy `catalog/designs/_template.json` to `catalog/designs/<slug>.json` and fill every TODO from what the owner approved (art, blank, color, sizes, price, copy, images). One file per garment/color.
