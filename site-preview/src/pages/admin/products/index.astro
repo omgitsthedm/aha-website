@@ -2,6 +2,12 @@
 import Admin from "../../../layouts/Admin.astro";
 ---
 <Admin title="Products" page="products">
+  <section class="admin-section" aria-labelledby="live-products-title">
+    <h2 id="live-products-title">On sale now</h2>
+    <p class="admin-meta" data-admin-catalog-count>Loading…</p>
+    <div class="admin-list" data-admin-catalog aria-live="polite"></div>
+  </section>
+  <h2>Drafts from Apliiq</h2>
   <p class="admin-meta">Designs sent from Apliiq with “Add to Store” land here as drafts. Approve, then publish: the catalog engine creates the Square item and the site listing.</p>
   <div class="admin-filters" role="group" aria-label="Filter drafts">
     <button type="button" class="admin-secondary" data-draft-filter="draft" aria-pressed="true">Waiting</button>

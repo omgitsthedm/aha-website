@@ -104,3 +104,19 @@ test("order flags stay quiet for a fresh shipped order", () => {
   assert.deepEqual(orderFlags({ state: "shipped", created_at: new Date().toISOString() }), []);
   assert.deepEqual(orderFlags({ state: "submitted_processed", created_at: new Date(Date.now() - 50 * 3_600_000).toISOString() }).map((flag) => flag.code), ["stuck"]);
 });
+
+test("admin Products lists every product on sale, built or published live", async () => {
+  const { catalogSummary } = await import("../server/admin/api.mjs");
+  const { STATIC_PRODUCTS } = await import("../server/catalog/current.mjs");
+  const live = { ...STATIC_PRODUCTS[0], slug: "night-shift-ss3000-maroon" };
+  const summary = await catalogSummary(async () => ({ products: [...STATIC_PRODUCTS, live], liveProducts: [live] }));
+  assert.equal(summary.products.length, STATIC_PRODUCTS.length + 1);
+  const pet = summary.products.find((product) => product.slug === "pet-it-be-ss3000-maroon");
+  assert.deepEqual({ price: pet.price, sizes: pet.sizes, source: pet.source, apliiqDesignId: pet.apliiqDesignId, url: pet.url }, { price: 55, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"], source: "built", apliiqDesignId: 6211854, url: "/shop/pet-it-be-ss3000-maroon/" });
+  assert.equal(summary.products.at(-1).source, "live");
+});
+
+test("the catalog route needs a signed-in session", async (t) => {
+  const { sql } = await isolated(t);
+  assert.equal((await call({ sql }, "catalog")).status, 401);
+});

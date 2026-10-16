@@ -50,3 +50,7 @@ a.admin-card:hover { border-color: var(--accent); }
 .admin-filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 @media (max-width: 640px) { .admin-bar nav { width: 100%; justify-content: space-between; } .admin-card strong { font-size: 2rem; } }
 @media (prefers-reduced-motion: no-preference) { .admin-primary, .admin-secondary, .admin-card { transition: background var(--fast), border-color var(--fast), color var(--fast); } }
+.admin-section { margin-bottom: 2.5rem; }
+.admin-product { grid-template-columns: 96px 1fr; align-items: start; }
+.admin-product img { width: 96px; height: 120px; object-fit: cover; border: 1px solid var(--line); background: var(--surface); }
+@media (max-width: 520px) { .admin-product { grid-template-columns: 64px 1fr; } .admin-product img { width: 64px; height: 80px; } }
