@@ -851,6 +851,71 @@
           "priceCents": 5500
         }
       ]
+    },
+    {
+      "slug": "pet-it-be-ss3000-maroon",
+      "status": "live",
+      "apliiq": {
+        "designId": 6211854,
+        "artworkIds": {
+          "front": 8209339
+        }
+      },
+      "square": {
+        "itemId": "CX5OOOUPF44W4JEZLHPTJG4R",
+        "imageIds": [
+          "BXQIHBNTCH3SZNTMQT2YUK6H",
+          "KZ5BAY6IKVPFBUQIKE4ELC6P"
+        ]
+      },
+      "fulfillment": {
+        "product": "pet_it_be_ss3000_maroon",
+        "title": "Pet It Be Crewneck — Maroon"
+      },
+      "variants": [
+        {
+          "variationId": "CRNQ56AOFBNJVR3SQRJSINXH",
+          "size": "XS",
+          "sku": "APQ-6211854S5A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "7MBOBMIQITLDN5KIBVQSBSW3",
+          "size": "S",
+          "sku": "APQ-6211854S6A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "EGEBJNSZRUUVA6UQGDJHNRBS",
+          "size": "M",
+          "sku": "APQ-6211854S7A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "22MKHWTJQGN5XQITIP6GMOWC",
+          "size": "L",
+          "sku": "APQ-6211854S8A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "T6JTJYYPB3QIOJPGGVUHNF4G",
+          "size": "XL",
+          "sku": "APQ-6211854S1A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "PKESTNVNI2NKEYEKIZN7SYXN",
+          "size": "2XL",
+          "sku": "APQ-6211854S2A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "7DX32YZISMF4LN7N4YDKCJSF",
+          "size": "3XL",
+          "sku": "APQ-6211854S21A1",
+          "priceCents": 5500
+        }
+      ]
     }
   ]
 }

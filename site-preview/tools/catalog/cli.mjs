@@ -10,7 +10,7 @@
 //   npm run catalog -- apply --plan <file>     execute exactly that plan (Apliiq → Square → ledger → site data)
 //   npm run catalog -- explain <slug>          everything known about one product
 //   npm run catalog -- pull                    turn admin publish requests into design specs (ADMIN_AUTOMATION_TOKEN)
-//   npm run catalog -- images <slug> --files a.jpg b.jpg …   attach front/back/detail/folded garment images
+//   npm run catalog -- images <slug> --files front back print-detail folded [--campaign a b c --setting "…"]
 //
 // Exit codes: 0 ok · 1 error · 2 drift · 3 missing credentials · 4 blocked intent · 5 margin/approval gate.
 import { existsSync, readdirSync } from "node:fs";
@@ -22,7 +22,7 @@ import { fulfillmentFromLedger, ledgerFromLive, loadLedger, saveLedger, validate
 import { APP, CATALOG_DIR, CatalogError, PATHS, expectedSku, listDesigns, log, readJson, sha256, writeJsonAtomic, writeTextAtomic } from "./lib.mjs";
 
 const CATALOG_BLANKS = path.join(CATALOG_DIR, "blanks");
-import { buildGallery } from "./images.mjs";
+import { buildCampaign, buildGallery } from "./images.mjs";
 import { marginReport } from "./margin.mjs";
 import { createSquareClient, itemObject, squareIdempotencyKey, squareToken, verifyItem } from "./square.mjs";
 
@@ -109,10 +109,21 @@ const commands = {
     // Attach local or remote garment images (front, back, detail, folded) to a design spec.
     const entry = listDesigns().find(({ spec }) => spec.slug === slug);
     if (!entry) throw new CatalogError(`No design spec for ${slug}.`, { code: "spec_missing" });
-    const inputs = flags.files ?? [];
-    const gallery = await buildGallery({ slug, collection: entry.spec.product?.collection ?? entry.spec.title, title: entry.spec.title, color: entry.spec.color, inputs });
-    writeJsonAtomic(entry.file, { ...entry.spec, product: { ...entry.spec.product, gallery } });
-    return { slug, images: gallery.length };
+    const collection = entry.spec.product?.collection ?? entry.spec.title;
+    const product = { ...entry.spec.product };
+    if (flags.files?.length) product.gallery = await buildGallery({ slug, collection, title: entry.spec.title, color: entry.spec.color, inputs: flags.files, alts: entry.spec.product?.galleryAlts ?? {} });
+    if (flags.campaign?.length) {
+      const setting = flags.setting ?? product.campaignSetting;
+      if (!setting) throw new CatalogError("Campaign images need --setting (one place for all three).", { code: "campaign_setting" });
+      product.campaignSetting = setting;
+      product.campaign = await buildCampaign({ slug, collection, title: entry.spec.title, color: entry.spec.color, setting, inputs: flags.campaign, alts: entry.spec.product?.campaignAlts ?? [] });
+    }
+    writeJsonAtomic(entry.file, { ...entry.spec, product });
+    // A product already applied keeps products.json in step with its spec.
+    const products = readJson(PATHS.products);
+    const live = products.findIndex((item) => item.slug === slug);
+    if (live >= 0) { products[live] = { ...products[live], gallery: product.gallery, campaign: product.campaign, campaignSetting: product.campaignSetting }; writeJsonAtomic(PATHS.products, products); }
+    return { slug, garment: product.gallery?.length ?? 0, campaign: product.campaign?.length ?? 0, updatedLiveProduct: live >= 0 };
   },
 
   async import() {
@@ -295,6 +306,8 @@ function parse(argv) {
     if (token === "--plan") flags.plan = rest[++index];
     else if (token === "--quiet") flags.quiet = true;
     else if (token === "--files") { flags.files = []; while (rest[index + 1] && !rest[index + 1].startsWith("--")) flags.files.push(rest[++index]); }
+    else if (token === "--campaign") { flags.campaign = []; while (rest[index + 1] && !rest[index + 1].startsWith("--")) flags.campaign.push(rest[++index]); }
+    else if (token === "--setting") flags.setting = rest[++index];
     else positional.push(token);
   }
   return { command, arg: positional[0], flags };

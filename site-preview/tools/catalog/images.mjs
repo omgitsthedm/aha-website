@@ -1,14 +1,14 @@
-// Turns approved garment images (Apliiq mockups or local files) into the
-// storefront's derivative set: WebP at 400/800/full width plus a JPEG for the
-// Google/Meta feeds, and returns products.json gallery entries.
+// Turns approved images into the storefront's derivative set: WebP at
+// 400/800/full width plus a JPEG for feeds, each carrying the IPTC AI marker,
+// and returns products.json gallery (4 garment views) and campaign entries.
 import { mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import { APP, CatalogError } from "./lib.mjs";
 
-const ROLES = ["front", "back", "detail", "folded"];
-const ROLE_TEXT = { front: "Front", back: "Back", detail: "Print detail", folded: "Folded view" };
+const ROLES = ["front", "back", "print-detail", "folded"];
 const MAX_WIDTH = 1122;
+const AI_XMP = `<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?><x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:Iptc4xmpExt="http://iptc.org/std/Iptc4xmpExt/2008-02-29/"><Iptc4xmpExt:DigitalSourceType>http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia</Iptc4xmpExt:DigitalSourceType></rdf:Description></rdf:RDF></x:xmpmeta><?xpacket end="w"?>`;
 
 export const collectionSlug = (collection) => collection.toLowerCase().normalize("NFKD").replace(/[̀-ͯ’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
@@ -23,30 +23,65 @@ async function source(input, fetchImpl) {
   return readFileSync(path.resolve(APP, input));
 }
 
-export async function buildGallery({ slug, collection, title, color, inputs, fetchImpl = fetch }) {
-  if (!inputs?.length) throw new CatalogError(`${slug}: at least one garment image is required.`, { code: "image_missing" });
+function roleFor(input, used) {
+  const name = path.basename(String(input)).toLowerCase();
+  const named = name.includes("detail") ? "print-detail" : ROLES.find((role) => new RegExp(`(^|[-_ /])${role}([-_. ]|$)`).test(name));
+  if (named && !used.has(named)) return named;
+  return ROLES.find((role) => !used.has(role));
+}
+
+/** Writes derivatives for one image; returns the entry fields shared by gallery and campaign. */
+async function derive({ folder, base, stem, input, fetchImpl }) {
+  const image = sharp(await source(input, fetchImpl)).rotate();
+  const meta = await image.metadata();
+  const full = Math.min(meta.width ?? MAX_WIDTH, MAX_WIDTH);
+  const widths = [...new Set([400, 800, full].filter((width) => width <= full))];
+  for (const width of widths) await image.clone().resize({ width }).withXmp(AI_XMP).webp({ quality: 82 }).toFile(path.join(folder, `${stem}-${width}.webp`));
+  await image.clone().resize({ width: full }).withXmp(AI_XMP).jpeg({ quality: 88, mozjpeg: true }).toFile(path.join(folder, `${stem}.jpg`));
+  return {
+    src: `${base}/${stem}-${full}.webp`,
+    srcset: widths.map((width) => `${base}/${stem}-${width}.webp ${width}w`).join(", "),
+    feedImage: `${base}/${stem}.jpg`,
+    width: full,
+    height: Math.round(((meta.height ?? full) * full) / (meta.width ?? full)),
+  };
+}
+
+function place(slug, collection) {
   const folder = path.join(APP, "public/images", collectionSlug(collection), slug);
   mkdirSync(folder, { recursive: true });
-  const base = `/images/${collectionSlug(collection)}/${slug}`;
+  return { folder, base: `/images/${collectionSlug(collection)}/${slug}` };
+}
+
+export async function buildGallery({ slug, collection, title, color, inputs, alts = {}, fetchImpl = fetch }) {
+  if (!inputs?.length) throw new CatalogError(`${slug}: at least one garment image is required.`, { code: "image_missing" });
+  const { folder, base } = place(slug, collection);
+  const used = new Set();
+  const garment = `${color} ${title.replace(/^.*?(Crewneck|Hoodie|Long Sleeve|Pocket Long Sleeve|Cropped Hoodie)$/i, (match) => match)}`;
+  const defaults = {
+    front: `Front of the ${garment}.`,
+    back: `Plain back of the ${garment}.`,
+    "print-detail": `Close view of the ${title} print on ${color} fleece.`,
+    folded: `${garment} casually folded.`,
+  };
   const gallery = [];
-  for (const [index, input] of inputs.slice(0, 4).entries()) {
-    const role = ROLES[index];
-    const image = sharp(await source(input, fetchImpl)).rotate();
-    const meta = await image.metadata();
-    const full = Math.min(meta.width ?? MAX_WIDTH, MAX_WIDTH);
-    const widths = [...new Set([400, 800, full].filter((width) => width <= full))];
-    for (const width of widths) await image.clone().resize({ width }).webp({ quality: 82 }).toFile(path.join(folder, `garment-${role}-${width}.webp`));
-    await image.clone().resize({ width: full }).jpeg({ quality: 88, mozjpeg: true }).toFile(path.join(folder, `garment-${role}.jpg`));
-    const height = Math.round(((meta.height ?? full) * full) / (meta.width ?? full));
-    gallery.push({
-      src: `${base}/garment-${role}-${full}.webp`,
-      srcset: widths.map((width) => `${base}/garment-${role}-${width}.webp ${width}w`).join(", "),
-      feedImage: `${base}/garment-${role}.jpg`,
-      alt: `${ROLE_TEXT[role]} of the ${color} ${title}.`,
-      width: full,
-      height,
-      role,
-    });
+  for (const input of inputs.slice(0, 4)) {
+    const role = roleFor(input, used);
+    used.add(role);
+    gallery.push({ ...(await derive({ folder, base, stem: `garment-${role}`, input, fetchImpl })), alt: alts[role] ?? defaults[role], role });
   }
-  return gallery;
+  return gallery.sort((a, b) => ROLES.indexOf(a.role) - ROLES.indexOf(b.role));
+}
+
+/** Three same-setting lifestyle images for the lookbook and marketing (never the shopping gallery or feeds). */
+export async function buildCampaign({ slug, collection, title, color, setting, inputs, alts = [], fetchImpl = fetch }) {
+  if (inputs?.length !== 3) throw new CatalogError(`${slug}: campaign needs exactly three images from one setting.`, { code: "campaign_count" });
+  const { folder, base } = place(slug, collection);
+  const stems = ["campaign-hero", "campaign-alternate-1", "campaign-alternate-2"];
+  const campaign = [];
+  for (const [index, input] of inputs.entries()) {
+    const entry = await derive({ folder, base, stem: stems[index], input, fetchImpl });
+    campaign.push({ ...entry, alt: alts[index] ?? `${color} ${title} worn ${setting.toLowerCase()}.`, role: index === 0 ? "lifestyle-hero" : "lifestyle-alternate" });
+  }
+  return campaign;
 }

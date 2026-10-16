@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "key": "design-pet-it-be-ss3000-maroon",
+  "state": "complete",
+  "createdAt": "2026-10-16T09:55:45.827Z",
+  "payload": {
+    "ProductId": 391,
+    "ProductCode": "mens_Independent-Mid-Weight-Sweatshirt",
+    "ColorId": 480,
+    "Locations": [
+      {
+        "Id": 4546,
+        "ImagePath": "https://blob.apliiq.com/sitestorage/base/4546_590_900.png?v=134365824000000000",
+        "Artworks": [
+          {
+            "Id": 8209339,
+            "Service": "dtgprint",
+            "Note": "Front only. Artwork 11 inches wide by 11 inches tall, proportional, centered on the chest, top approximately 3 inches below the collar seam. Use the exact cream artwork. Print only the cream ink; transparent areas must show the Maroon cloth. No backing rectangle, recolor, gloss, redraw, extra text or print on any other location. Keep a matte, fabric-integrated finish. Scale down only if required for the smallest size.",
+            "BoxId": 1
+          }
+        ]
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        }
+      }
+    ],
+    "Name": "Pet It Be Crewneck — Maroon",
+    "Description": "Pet It Be cream one-color front artwork on Maroon Independent SS3000 crewneck. Current AHA private label inside neck."
+  },
+  "finishedAt": "2026-10-16T09:55:46.177Z",
+  "response": {
+    "ProductId": 391,
+    "ProductCode": "mens_Independent-Mid-Weight-Sweatshirt",
+    "ColorId": 480,
+    "Locations": [
+      {
+        "Artworks": [
+          {
+            "Service": "dtgprint",
+            "Note": "Front only. Artwork 11 inches wide by 11 inches tall, proportional, centered on the chest, top approximately 3 inches below the collar seam. Use the exact cream artwork. Print only the cream ink; transparent areas must show the Maroon cloth. No backing rectangle, recolor, gloss, redraw, extra text or print on any other location. Keep a matte, fabric-integrated finish. Scale down only if required for the smallest size.",
+            "BoxId": 1,
+            "Id": 8209339
+          }
+        ],
+        "Id": 4546,
+        "ImagePath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6211854_45462026-10-16-09-55-46Z4546_590_900.png?v=134365824000000000"
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        },
+        "Id": 0
+      }
+    ],
+    "Variants": [
+      {
+        "SKU": "APQ-6211854S5A1",
+        "Weight": "7.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "xs"
+      },
+      {
+        "SKU": "APQ-6211854S6A1",
+        "Weight": "7.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "s"
+      },
+      {
+        "SKU": "APQ-6211854S7A1",
+        "Weight": "10 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "m"
+      },
+      {
+        "SKU": "APQ-6211854S8A1",
+        "Weight": "11.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "l"
+      },
+      {
+        "SKU": "APQ-6211854S1A1",
+        "Weight": "11.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "xl"
+      },
+      {
+        "SKU": "APQ-6211854S2A1",
+        "Weight": "15.9 oz",
+        "PlusSize_Fee": 2,
+        "Id": 0,
+        "Name": "xxl"
+      },
+      {
+        "SKU": "APQ-6211854S21A1",
+        "Weight": "15.9 oz",
+        "PlusSize_Fee": 4,
+        "Id": 0,
+        "Name": "xxxl"
+      }
+    ],
+    "Id": 6211854,
+    "Name": "Pet It Be Crewneck — Maroon",
+    "Description": "Pet It Be cream one-color front artwork on Maroon Independent SS3000 crewneck. Current AHA private label inside neck."
+  }
+}

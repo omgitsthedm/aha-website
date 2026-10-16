@@ -1,0 +1,85 @@
+{
+  "slug": "pet-it-be-ss3000-maroon",
+  "status": "approved",
+  "approval": {
+    "by": "David Marsh (owner)",
+    "at": "2026-10-16T09:55:36Z",
+    "note": "Owner in chat, Oct 16 2026: \"Yes: Pet It Be B1 (cream on cranberry) on the Maroon Independent SS3000 crewneck, XS–3XL, $55, free US shipping, front print 11 inches wide, private label as usual.\""
+  },
+  "title": "Pet It Be Crewneck",
+  "color": "Maroon",
+  "priceCents": 5500,
+  "blank": "SS3000",
+  "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+  ],
+  "fulfillment": {
+    "product": "pet_it_be_ss3000_maroon"
+  },
+  "apliiq": {
+    "productId": 391,
+    "productCode": "mens_Independent-Mid-Weight-Sweatshirt",
+    "colorId": 480,
+    "label": {
+      "id": 6208403,
+      "placementId": 1011,
+      "placementName": "inside neck"
+    },
+    "artwork": [
+      {
+        "key": "front",
+        "name": "Pet It Be B1 front cream 11in",
+        "imagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/c2e164dc61e97858c2840ec85d4bc5d8030d8f90/production-artwork/pet-it-be/pet-it-be-b1-front-cream-3300.png"
+      }
+    ],
+    "locations": [
+      {
+        "id": 4546,
+        "boxId": 1,
+        "imagePath": "https://blob.apliiq.com/sitestorage/base/4546_590_900.png?v=134365824000000000",
+        "artworkKey": "front",
+        "service": "dtgprint",
+        "note": "Front only. Artwork 11 inches wide by 11 inches tall, proportional, centered on the chest, top approximately 3 inches below the collar seam. Use the exact cream artwork. Print only the cream ink; transparent areas must show the Maroon cloth. No backing rectangle, recolor, gloss, redraw, extra text or print on any other location. Keep a matte, fabric-integrated finish. Scale down only if required for the smallest size."
+      }
+    ],
+    "productionNote": "Pet It Be cream one-color front artwork on Maroon Independent SS3000 crewneck. Current AHA private label inside neck."
+  },
+  "product": {
+    "collection": "Pet It Be",
+    "description": "An 8.5 oz midweight crewneck sweatshirt in Maroon with a cream front print of the Pet It Be neighborhood pet shop. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs and waistband.",
+    "campaignSetting": "",
+    "gallery": [
+      {
+        "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-front-1122.webp",
+        "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-front-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-front-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-front-1122.webp 1122w",
+        "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-front.jpg",
+        "alt": "Front of the Maroon Pet It Be Crewneck.",
+        "width": 1122,
+        "height": 1403,
+        "role": "front"
+      },
+      {
+        "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail-1122.webp",
+        "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail-1122.webp 1122w",
+        "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail.jpg",
+        "alt": "Print detail of the Maroon Pet It Be Crewneck.",
+        "width": 1122,
+        "height": 1403,
+        "role": "detail"
+      }
+    ],
+    "campaign": []
+  },
+  "images": {
+    "square": [
+      "tools/images/out/pet-it-be-ss3000-maroon/garment-front.jpg",
+      "tools/images/out/pet-it-be-ss3000-maroon/garment-detail.jpg"
+    ]
+  }
+}

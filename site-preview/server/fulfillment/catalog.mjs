@@ -110,6 +110,13 @@ export const AHA_FULFILLMENT_CATALOG = Object.freeze({
   "A2QM6DUP3NJTMKVI2BA5YSCB": { sku: "APQ-6211443S1A1", size: "XL", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
   "HYXINA6K4CPMTWM6DWAJCUO4": { sku: "APQ-6211443S2A1", size: "2XL", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
   "IBAN3RYLAN6RRG4LRHLCGIVE": { sku: "APQ-6211443S21A1", size: "3XL", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
+  "CRNQ56AOFBNJVR3SQRJSINXH": { sku: "APQ-6211854S5A1", size: "XS", priceCents: 5500, product: "pet_it_be_ss3000_maroon", title: "Pet It Be Crewneck — Maroon" },
+  "7MBOBMIQITLDN5KIBVQSBSW3": { sku: "APQ-6211854S6A1", size: "S", priceCents: 5500, product: "pet_it_be_ss3000_maroon", title: "Pet It Be Crewneck — Maroon" },
+  "EGEBJNSZRUUVA6UQGDJHNRBS": { sku: "APQ-6211854S7A1", size: "M", priceCents: 5500, product: "pet_it_be_ss3000_maroon", title: "Pet It Be Crewneck — Maroon" },
+  "22MKHWTJQGN5XQITIP6GMOWC": { sku: "APQ-6211854S8A1", size: "L", priceCents: 5500, product: "pet_it_be_ss3000_maroon", title: "Pet It Be Crewneck — Maroon" },
+  "T6JTJYYPB3QIOJPGGVUHNF4G": { sku: "APQ-6211854S1A1", size: "XL", priceCents: 5500, product: "pet_it_be_ss3000_maroon", title: "Pet It Be Crewneck — Maroon" },
+  "PKESTNVNI2NKEYEKIZN7SYXN": { sku: "APQ-6211854S2A1", size: "2XL", priceCents: 5500, product: "pet_it_be_ss3000_maroon", title: "Pet It Be Crewneck — Maroon" },
+  "7DX32YZISMF4LN7N4YDKCJSF": { sku: "APQ-6211854S21A1", size: "3XL", priceCents: 5500, product: "pet_it_be_ss3000_maroon", title: "Pet It Be Crewneck — Maroon" },
 });
 
 export const AHA_PRIVATE_LABEL = "SB-3-161622";
