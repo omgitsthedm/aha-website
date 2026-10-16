@@ -1,0 +1,54 @@
+---
+import "../styles/site.css";
+import "../styles/admin.css";
+interface Props { title: string; page: "overview" | "orders" | "products" | "analytics" }
+const { title, page } = Astro.props;
+const links = [
+  { href: "/admin/", label: "Overview", key: "overview" },
+  { href: "/admin/orders/", label: "Orders", key: "orders" },
+  { href: "/admin/products/", label: "Products", key: "products" },
+  { href: "/admin/analytics/", label: "Analytics", key: "analytics" },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="referrer" content="no-referrer" />
+    <title>{title} · AHA admin</title>
+    <link rel="icon" href="/brand/sheep.svg" type="image/svg+xml" />
+  </head>
+  <body class="admin" data-admin-page={page}>
+    <a class="admin-skip" href="#admin-main">Skip to content</a>
+    <header class="admin-bar">
+      <a class="admin-mark" href="/admin/">After Hours Agenda <span>Admin</span></a>
+      <nav aria-label="Admin" data-admin-nav hidden>
+        {links.map((link) => <a href={link.href} aria-current={link.key === page ? "page" : undefined}>{link.label}</a>)}
+        <button type="button" class="admin-link" data-admin-signout>Sign out</button>
+      </nav>
+    </header>
+    <main id="admin-main" class="admin-main">
+      <h1 class="admin-title">{title}</h1>
+      <section class="admin-panel" data-admin-signin hidden aria-labelledby="signin-heading">
+        <h2 id="signin-heading">Sign in</h2>
+        <p>Use the passkey on this device. No password exists for this admin.</p>
+        <button type="button" class="admin-primary" data-admin-login>Sign in with passkey</button>
+        <details class="admin-setup">
+          <summary>First-time setup</summary>
+          <form data-admin-setup>
+            <label>Owner email <input name="email" type="email" autocomplete="username webauthn" required /></label>
+            <label>Setup code <input name="bootstrapToken" type="password" autocomplete="one-time-code" required /></label>
+            <button type="submit" class="admin-primary">Create passkey</button>
+          </form>
+        </details>
+        <p class="admin-status" role="status" data-admin-status></p>
+      </section>
+      <div data-admin-content hidden>
+        <slot />
+      </div>
+    </main>
+    <script src="../scripts/admin.ts"></script>
+  </body>
+</html>

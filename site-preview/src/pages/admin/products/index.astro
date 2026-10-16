@@ -1,0 +1,13 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+---
+<Admin title="Products" page="products">
+  <p class="admin-meta">Designs sent from Apliiq with “Add to Store” land here as drafts. Approve, then publish: the catalog engine creates the Square item and the site listing.</p>
+  <div class="admin-filters" role="group" aria-label="Filter drafts">
+    <button type="button" class="admin-secondary" data-draft-filter="draft" aria-pressed="true">Waiting</button>
+    <button type="button" class="admin-secondary" data-draft-filter="approved" aria-pressed="false">Approved</button>
+    <button type="button" class="admin-secondary" data-draft-filter="published" aria-pressed="false">Published</button>
+    <button type="button" class="admin-secondary" data-draft-filter="rejected" aria-pressed="false">Rejected</button>
+  </div>
+  <div class="admin-list" data-admin-drafts aria-live="polite"></div>
+</Admin>

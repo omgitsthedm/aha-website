@@ -1,0 +1,52 @@
+/* Private admin. Same paper, ink and rose as the storefront; quieter type. */
+.admin { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; min-height: 100vh; margin: 0; }
+.admin-skip { position: absolute; left: -999px; }
+.admin-skip:focus { left: 1rem; top: 1rem; background: var(--ink); color: var(--paper); padding: .5rem 1rem; z-index: 10; }
+.admin-bar { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; justify-content: space-between; padding: 1rem clamp(1rem, 4vw, 3rem); border-bottom: 1px solid var(--ink); position: sticky; top: 0; background: var(--paper); z-index: 5; }
+.admin-mark { font-weight: 900; text-transform: uppercase; letter-spacing: .02em; color: var(--ink); text-decoration: none; }
+.admin-mark span { font-family: var(--mono); font-weight: 400; font-size: 12px; letter-spacing: .08em; margin-left: .5rem; color: var(--accent); }
+.admin-bar nav { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; align-items: center; }
+.admin-bar nav a, .admin-link { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink); text-decoration: none; background: none; border: 0; padding: .5rem 0; cursor: pointer; border-bottom: 2px solid transparent; }
+.admin-bar nav a[aria-current="page"] { border-bottom-color: var(--rose); }
+.admin-bar nav a:hover, .admin-link:hover { color: var(--accent); }
+.admin-main { max-width: 1200px; margin: 0 auto; padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 3rem) 4rem; }
+.admin-title { font-weight: 900; text-transform: uppercase; font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1; margin: 0 0 2rem; letter-spacing: -.01em; }
+.admin h2 { font-weight: 900; text-transform: uppercase; font-size: 1.25rem; margin: 0 0 .75rem; }
+.admin-panel { border: 1px solid var(--ink); padding: clamp(1.25rem, 3vw, 2rem); max-width: 34rem; }
+.admin-panel p { margin: 0 0 1rem; color: var(--muted); }
+.admin-primary, .admin-secondary { font: 700 14px/1 var(--body); text-transform: uppercase; letter-spacing: .04em; padding: .9rem 1.25rem; border: 1px solid var(--ink); cursor: pointer; min-height: 44px; }
+.admin-primary { background: var(--ink); color: var(--paper); }
+.admin-primary:hover { background: var(--accent); border-color: var(--accent); }
+.admin-secondary { background: transparent; color: var(--ink); }
+.admin-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.admin-danger { color: var(--accent-sunken); }
+.admin :focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.admin-setup { margin-top: 1.5rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+.admin-setup summary { font-family: var(--mono); font-size: 13px; cursor: pointer; }
+.admin form { display: grid; gap: 1rem; margin-top: 1rem; }
+.admin label { display: grid; gap: .35rem; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.admin input, .admin textarea, .admin select { font: 16px/1.4 var(--body); padding: .7rem .8rem; border: 1px solid var(--control); background: #fff; color: var(--ink); text-transform: none; letter-spacing: 0; }
+.admin-status { font-family: var(--mono); font-size: 13px; min-height: 1.5em; }
+.admin-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+.admin-card { border: 1px solid var(--ink); padding: 1.25rem; display: grid; gap: .25rem; text-decoration: none; color: var(--ink); }
+a.admin-card:hover { border-color: var(--accent); }
+.admin-card strong { font-size: 2.5rem; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+.admin-card span { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.admin-card.is-alert strong { color: var(--accent); }
+.admin-list { display: grid; gap: 1rem; }
+.admin-row { border: 1px solid var(--ink); padding: 1.25rem; display: grid; gap: .75rem; }
+.admin-row header { display: flex; flex-wrap: wrap; gap: .5rem 1rem; justify-content: space-between; align-items: baseline; }
+.admin-row h3 { font-size: 1.05rem; font-weight: 700; margin: 0; }
+.admin-meta { font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: .25rem 1rem; }
+.admin-flag { font-size: 14px; border-left: 3px solid var(--rose); padding: .25rem .75rem; background: #fff1f1; margin: 0; }
+.admin-pill { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; border: 1px solid var(--ink); padding: .2rem .5rem; white-space: nowrap; }
+.admin-pill.is-good { border-color: #2f7d4f; color: #2f7d4f; }
+.admin-pill.is-alert { border-color: var(--accent); color: var(--accent); }
+.admin-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.admin-thumbs { display: flex; gap: .5rem; overflow-x: auto; }
+.admin-thumbs img { width: 96px; height: 120px; object-fit: cover; border: 1px solid var(--line); background: var(--surface); }
+.admin-empty { border: 1px dashed var(--line); padding: 2rem; color: var(--muted); }
+.admin-filters { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.25rem; }
+.admin-filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+@media (max-width: 640px) { .admin-bar nav { width: 100%; justify-content: space-between; } .admin-card strong { font-size: 2rem; } }
+@media (prefers-reduced-motion: no-preference) { .admin-primary, .admin-secondary, .admin-card { transition: background var(--fast), border-color var(--fast), color var(--fast); } }
