@@ -1,7 +1,7 @@
 // Runs one owner report (daily health check or weekly digest), records it, and
 // emails the owner when it should. The report key makes a repeated scheduled
 // run on the same day a no-op, and doubles as the Resend idempotency key.
-import { AHA_FULFILLMENT_CATALOG } from "../fulfillment/catalog.mjs";
+import { currentCatalog } from "../catalog/current.mjs";
 import { createSquareGateway } from "../fulfillment/square.mjs";
 import { createResendGateway } from "../notifications/resend.mjs";
 import { renderDigestEmail, renderHealthEmail, runDailyHealth, weeklyDigest } from "./report.mjs";
@@ -47,7 +47,7 @@ export async function latestReports(db) {
  * kind: "daily_health" | "weekly_digest". Dependencies are injectable for tests:
  * square (batchRetrieve), mailer (send), fetchImpl, now.
  */
-export async function runOwnerReport(kind, { db, env, square, mailer, fetchImpl = fetch, now = () => new Date(), catalog = AHA_FULFILLMENT_CATALOG }) {
+export async function runOwnerReport(kind, { db, env, square, mailer, fetchImpl = fetch, now = () => new Date(), catalog }) {
   const config = ownerReportConfig(env);
   const key = reportKey(kind, now());
   const [existing] = await db.sql`SELECT emailed_at, ok FROM aha_owner_reports WHERE report_key = ${key}`;
@@ -55,7 +55,8 @@ export async function runOwnerReport(kind, { db, env, square, mailer, fetchImpl 
 
   const squareClient = square ?? (config.squareToken ? createSquareGateway({ accessToken: config.squareToken }) : { batchRetrieve: async () => { throw new Error("square_not_configured"); } });
   const report = kind === "daily_health"
-    ? await runDailyHealth({ db, square: squareClient, fetchText: (url) => fetchText(url, fetchImpl), siteUrl: SITE_URL, catalog, now })
+    // Live products are in the feeds too, so compare against the merged allow list.
+    ? await runDailyHealth({ db, square: squareClient, fetchText: (url) => fetchText(url, fetchImpl), siteUrl: SITE_URL, catalog: catalog ?? (await currentCatalog()).allowList, now })
     : await weeklyDigest(db, { now });
   const ok = kind === "daily_health" ? report.ok : report.problems.length === 0;
   await db.sql`

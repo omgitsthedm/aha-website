@@ -9,8 +9,10 @@
 //   npm run catalog -- plan                    hashed plan for approved design specs not yet in the ledger
 //   npm run catalog -- apply --plan <file>     execute exactly that plan (Apliiq → Square → ledger → site data)
 //   npm run catalog -- explain <slug>          everything known about one product
+//   npm run catalog -- publish-live <slug>     put an applied product on the live site now, no site build (ADMIN_AUTOMATION_TOKEN)
+//   npm run catalog -- unpublish-live <slug>   take a live-published product down
 //   npm run catalog -- usage [days]            runs, time and provider calls per command (default 7 days)
-//   npm run catalog -- ship                    pull → margin → plan → apply → Square photos → build → verify → tests → commit
+//   npm run catalog -- ship                    pull → margin → plan → apply → Square photos → build → verify → tests → live → commit
 //   npm run catalog -- square-images <slug>    upload any gallery view Square doesn't have yet
 //   npm run catalog -- pull                    turn admin publish requests into design specs (ADMIN_AUTOMATION_TOKEN)
 //   npm run catalog -- images <slug> --files front back print-detail folded [--campaign a b c --setting "…"]
@@ -29,6 +31,7 @@ const CATALOG_BLANKS = path.join(CATALOG_DIR, "blanks");
 import { buildCampaign, buildGallery } from "./images.mjs";
 import { marginReport } from "./margin.mjs";
 import { createSquareClient, itemObject, squareIdempotencyKey, squareToken, verifyItem } from "./square.mjs";
+import { productImageKeys } from "../../server/catalog/publish.mjs";
 
 const PRODUCT_FIELDS = ["gender", "feed", "description", "fit", "weightOz", "composition", "sizeGuide", "measurementGuidance", "collection", "typeLabel", "fabricType", "constructionDetails", "sleeveMeasurementGuidance", "campaignSetting", "gallery", "campaign"];
 
@@ -70,8 +73,8 @@ function automationToken() {
   if (!token) throw new CatalogError("ADMIN_AUTOMATION_TOKEN is required to read publish requests.", { code: "automation_token_missing", exit: 3 });
   return token;
 }
-async function automation(route, init = {}) {
-  const response = await fetch(`${SITE}/api/admin/automation/${route}`, { ...init, headers: { authorization: `Bearer ${automationToken()}`, "content-type": "application/json" }, signal: AbortSignal.timeout(20_000) });
+async function automation(route, { contentType = "application/json", ...init } = {}) {
+  const response = await fetch(`${SITE}/api/admin/automation/${route}`, { ...init, headers: { authorization: `Bearer ${automationToken()}`, "content-type": contentType }, signal: AbortSignal.timeout(20_000) });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new CatalogError(`Admin automation ${route} failed (${response.status}).`, { code: "automation_failed", details: data });
   return data;
@@ -321,6 +324,32 @@ const commands = {
     return { slug, uploaded, squareImages: Object.keys(known).length };
   },
 
+  async "publish-live"(slug) {
+    // Put a product on afterhoursagenda.com now, with no site build: its images
+    // first, then the product. Its page, feeds and checkout pick it up at once;
+    // the next build serves the same URLs as static files.
+    if (!slug) throw new CatalogError("publish-live requires a slug.", { code: "slug_missing" });
+    const page = readJson(PATHS.products).find((product) => product.slug === slug);
+    const entry = loadLedger().products.find((product) => product.slug === slug);
+    if (!page || !entry) throw new CatalogError(`${slug} must be applied (ledger and products.json) before it can go live.`, { code: "slug_unknown" });
+    const product = { ...page, fulfillment: { product: entry.fulfillment.product, title: entry.fulfillment.title ?? `${page.title} — ${page.color}` } };
+    const keys = productImageKeys(product);
+    const missing = keys.filter((key) => !existsSync(path.join(APP, "public/images", key)));
+    if (missing.length) throw new CatalogError(`${slug} is missing image files.`, { code: "images_missing", exit: 5, details: missing });
+    for (const key of keys) await automation(`live-images/${key}`, { method: "PUT", body: readFileSync(path.join(APP, "public/images", key)), contentType: "application/octet-stream" });
+    const result = await automation(`live-products/${encodeURIComponent(slug)}`, { method: "PUT", body: JSON.stringify(product) });
+    // Smoke check against the live site: the page answers with this product.
+    const response = await fetch(`${SITE}/shop/${slug}/`, { signal: AbortSignal.timeout(20_000) });
+    const html = await response.text();
+    if (!response.ok || !html.includes(`data-product-id="${page.squareItemId}"`)) throw new CatalogError(`${slug} was published but its page didn't answer as expected (${response.status}).`, { code: "live_check_failed" });
+    return { slug, url: `${SITE}/shop/${slug}/`, images: keys.length, publishedAt: result.publishedAt };
+  },
+
+  async "unpublish-live"(slug) {
+    if (!slug) throw new CatalogError("unpublish-live requires a slug.", { code: "slug_missing" });
+    return automation(`live-products/${encodeURIComponent(slug)}`, { method: "DELETE" });
+  },
+
   async ship(_arg, flags) {
     // Admin "Publish" (or an approved design file) → live-ready commit, in one command:
     // pull → margin → plan → apply → Square photos → build → verify → tests → commit on a branch.
@@ -353,13 +382,15 @@ const commands = {
       steps.push({ tests: "passed" });
     }
     const slugs = applied.results.map((entry) => entry.slug);
+    // Live now, no site build needed; the commit below folds it into the next build.
+    if (process.env.ADMIN_AUTOMATION_TOKEN && !flags["no-live"]) for (const slug of slugs) steps.push({ live: await commands["publish-live"](slug) });
     const branch = `catalog/${new Date().toISOString().slice(0, 10)}-${slugs.join("-").slice(0, 60)}`;
     const repo = path.resolve(APP, "..");
     const git = (...args) => { const out = spawnSync("git", args, { cwd: repo, encoding: "utf8" }); if (out.status !== 0) throw new CatalogError(`git ${args.join(" ")} failed.`, { code: "git_failed", details: out.stderr.split("\n").slice(-5) }); return out.stdout.trim(); };
     git("switch", "-c", branch);
     git("add", "site-preview/catalog", "site-preview/src/data/products.json", "site-preview/server/fulfillment/catalog.mjs", "site-preview/public/images");
     git("commit", "-q", "-m", `feat: publish ${slugs.join(", ")} via catalog ship\n\nApproved design specs applied by the catalog engine (Apliiq design, Square item and photos, ledger, products.json, generated allow list); build, verify and tests passed.\n\nBuilt with Claude Code (LiFi NYC)`);
-    return { shipped: slugs, branch, commit: git("rev-parse", "HEAD"), steps, next: "Push the branch, open a PR, wait for the required checks, merge, then run scripts/verify-live.mjs." };
+    return { shipped: slugs, branch, commit: git("rev-parse", "HEAD"), steps, next: "Already live if published above. Push the branch and open a PR so the next site build includes it; no separate release is needed." };
   },
 
   /** Totals from the run logs: runs, failures, time and provider calls per command. */
@@ -407,6 +438,7 @@ function parse(argv) {
     else if (token === "--campaign") { flags.campaign = []; while (rest[index + 1] && !rest[index + 1].startsWith("--")) flags.campaign.push(rest[++index]); }
     else if (token === "--setting") flags.setting = rest[++index];
     else if (token === "--skip-checks") flags["skip-checks"] = true;
+    else if (token === "--no-live") flags["no-live"] = true;
     else positional.push(token);
   }
   return { command, arg: positional[0], flags };

@@ -1,5 +1,5 @@
-import {readFile,mkdir,writeFile} from 'node:fs/promises';
-const products=JSON.parse(await readFile(new URL('../src/data/products.json',import.meta.url),'utf8'));
+import {mkdir,writeFile} from 'node:fs/promises';
+import products from '../src/data/products.json' with {type:'json'};
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&apos;');
 const tag=(name,value)=>`<g:${name}>${escape(value)}</g:${name}>`;
 function feedMetadata(product){
@@ -8,9 +8,9 @@ function feedMetadata(product){
  if(typeof googleProductCategory!=='string'||!googleProductCategory.trim()||typeof productType!=='string'||!productType.trim())throw new Error(`${product.slug} has incomplete feed metadata.`);
  return {googleProductCategory,productType};
 }
-export async function writeFeeds(dist,origin){
- await mkdir(new URL('feeds/',dist),{recursive:true});
- const items=products.flatMap(product=>product.variants.map(variant=>{
+/** Google/Meta feed XML. Live products (published without a deploy) reuse this at runtime. */
+export function feedXml(list,origin){
+ const items=list.flatMap(product=>product.variants.map(variant=>{
   const {googleProductCategory,productType}=feedMetadata(product);
   const title=`${product.title} — ${product.color} — ${variant.size}`;
   const link=`${origin}/shop/${product.slug}/?size=${encodeURIComponent(variant.size)}`;
@@ -26,7 +26,11 @@ export async function writeFeeds(dist,origin){
    `<g:shipping>${tag('country','US')}${tag('service','Standard')}${tag('price','0.00 USD')}</g:shipping>`
   ].join('')+'</item>';
  }));
- const xml=`<?xml version="1.0" encoding="UTF-8"?>\n<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel><title>After Hours Agenda — Shop</title><link>${escape(origin)}/shop/</link><description>Current After Hours Agenda collection</description>${items.join('')}</channel></rss>\n`;
+ return `<?xml version="1.0" encoding="UTF-8"?>\n<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel><title>After Hours Agenda — Shop</title><link>${escape(origin)}/shop/</link><description>Current After Hours Agenda collection</description>${items.join('')}</channel></rss>\n`;
+}
+export async function writeFeeds(dist,origin){
+ await mkdir(new URL('feeds/',dist),{recursive:true});
+ const xml=feedXml(products,origin);
  await writeFile(new URL('feeds/google.xml',dist),xml);
  await writeFile(new URL('feeds/meta.xml',dist),xml);
  await writeFile(new URL('_redirects',dist),'/feeds/meta /feeds/meta.xml 200\n/feeds/meta/ /feeds/meta.xml 200\n');

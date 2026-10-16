@@ -588,10 +588,32 @@ function initCheckout() {
   }
 }
 
-function init() {
-  const catalogue = activeCatalogue();
-  updateCartLinks(readCart(catalogue));
+// Products published live after this page was built: add their sizes to the
+// page catalogue before the bag is read, so they are never dropped. Fetched
+// only when the bag (or a recovery link) holds a size this page doesn't know.
+async function addLiveCatalogue() {
+  const known = new Set(catalogueFrom(document).map((line) => line.id));
+  const stored = safeRead().map((line) => (line && typeof line === "object" ? (line as { variationId?: unknown }).variationId : null)).filter((id): id is string => typeof id === "string");
+  if (!stored.some((id) => !known.has(id)) && !new URLSearchParams(location.search).has("products")) return;
+  try {
+    const response = await fetch("/api/catalog/live", { headers: { accept: "application/json" } });
+    if (!response.ok) return;
+    const data = await response.json() as { cartLines?: Array<Record<string, unknown>> };
+    const host = document.querySelector<HTMLElement>("[data-checkout-page]") ?? document.body;
+    for (const line of data.cartLines ?? []) {
+      if (typeof line.id !== "string" || known.has(line.id)) continue;
+      const template = document.createElement("template");
+      template.setAttribute("data-cart-catalog", "");
+      for (const [key, value] of Object.entries({ id: line.id, sku: line.sku, size: line.size, slug: line.slug, title: line.title, color: line.color, priceCents: line.priceCents, image: line.image, imageAlt: line.imageAlt })) template.dataset[key] = String(value ?? "");
+      host.append(template);
+    }
+  } catch { /* the built catalogue still works */ }
+}
+
+async function init() {
   initAddForms();
+  await addLiveCatalogue();
+  updateCartLinks(readCart(activeCatalogue()));
   initCheckout();
 }
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true }); else init();
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => { void init(); }, { once: true }); else void init();

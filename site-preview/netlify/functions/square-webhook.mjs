@@ -2,6 +2,7 @@ import { getDatabase } from "@netlify/database";
 import { sha256, verifySquareSignature } from "../../server/fulfillment/crypto.mjs";
 import { createRuntime, AHA_HOST, requireProductionRequest } from "../../server/fulfillment/runtime.mjs";
 import { dispatchAfterResponse } from "../../server/notifications/dispatch-after.mjs";
+import { currentCatalog } from "../../server/catalog/current.mjs";
 
 const PATH = "/api/webhooks/square";
 const json = (value, status = 200) => Response.json(value, { status, headers: { "cache-control": "no-store" } });
@@ -10,7 +11,7 @@ export default async function squareWebhook(request, context) {
   if (!requireProductionRequest(request, context)) return json({ accepted: false }, 404);
   if (request.method !== "POST") return json({ accepted: false }, 405);
   const rawBody = await request.text();
-  const runtime = createRuntime({ database: getDatabase(), env: Netlify.env });
+  const runtime = createRuntime({ database: getDatabase(), env: Netlify.env, catalog: (await currentCatalog()).allowList });
   const signature = request.headers.get("x-square-hmacsha256-signature");
   if (!verifySquareSignature({
     canonicalUrl: `https://${AHA_HOST}${PATH}`,

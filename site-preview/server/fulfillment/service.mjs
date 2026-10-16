@@ -63,11 +63,11 @@ function fulfillmentTitle(item) {
   return requiredString(item.title || legacy[item.product], "catalog_title_missing");
 }
 
-function validateKnownLines(order) {
+function validateKnownLines(order, catalog) {
   if (!Array.isArray(order.line_items) || order.line_items.length === 0) throw new FulfillmentHold("order_lines_missing");
   return order.line_items.map((line, index) => {
     const variationId = requiredString(line.catalog_object_id, "unknown_variation");
-    const mapped = AHA_FULFILLMENT_CATALOG[variationId];
+    const mapped = catalog[variationId];
     if (!mapped) throw new FulfillmentHold("unknown_variation");
     const quantity = positiveQuantity(line.quantity, "line_quantity_invalid");
     if (money(line.base_price_money, "line_price_invalid") !== mapped.priceCents) throw new FulfillmentHold("line_price_mismatch");
@@ -89,7 +89,7 @@ function validateKnownLines(order) {
  * Turn fresh Square API objects into an immutable, allow-listed submission.
  * This rejects every order shape we do not explicitly support.
  */
-export function validatePaidSquareOrder({ payment, order, locationId, startAt }) {
+export function validatePaidSquareOrder({ payment, order, locationId, startAt, catalog = AHA_FULFILLMENT_CATALOG }) {
   const activation = parseActivation(startAt);
   if (payment.status !== "COMPLETED") throw new FulfillmentHold("payment_not_completed");
   if (payment.location_id !== locationId || order.location_id !== locationId) throw new FulfillmentHold("location_mismatch");
@@ -106,7 +106,7 @@ export function validatePaidSquareOrder({ payment, order, locationId, startAt })
   }
   const fulfillment = fulfillments[0];
   if (!["PROPOSED", "RESERVED"].includes(fulfillment.state)) throw new FulfillmentHold("fulfillment_not_open");
-  const items = validateKnownLines(order);
+  const items = validateKnownLines(order, catalog);
   const address = shippingAddress(fulfillment.shipment_details);
   const paymentEmail = typeof payment.buyer_email_address === "string" ? payment.buyer_email_address.trim() : "";
   const recipientEmail = typeof fulfillment.shipment_details?.recipient?.email_address === "string" ? fulfillment.shipment_details.recipient.email_address.trim() : "";
@@ -165,7 +165,7 @@ function acceptedReason(response) {
   return "apliiq_accepted";
 }
 
-export function createFulfillmentService({ repository, square, apliiq, notifications = { enqueueConfirmation: async () => null, enqueueShipment: async () => null }, config, now = () => new Date() }) {
+export function createFulfillmentService({ repository, square, apliiq, notifications = { enqueueConfirmation: async () => null, enqueueShipment: async () => null }, config, catalog = AHA_FULFILLMENT_CATALOG, now = () => new Date() }) {
   const deadlineRemaining = (deadline) => Math.max(0, Math.min(8_000, deadline - Date.now()));
   // Cancellation window: a paid order is recorded and confirmed at once, but it
   // reaches Apliiq only after this many minutes, when the scheduled run re-reads
@@ -246,7 +246,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     const order = await square.getOrder(payment.order_id, { timeoutMs: deadline ? deadlineRemaining(deadline) : 8_000 });
     let validated;
     try {
-      validated = validatePaidSquareOrder({ payment, order, locationId: config.locationId, startAt: config.startAt });
+      validated = validatePaidSquareOrder({ payment, order, locationId: config.locationId, startAt: config.startAt, catalog });
     } catch (error) {
       // A created/authorized payment is expected to arrive before its
       // completed update. It is neither an error nor a durable hold.
@@ -329,7 +329,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
         const payment = await square.getPayment(record.square_payment_id, { timeoutMs: deadlineRemaining(deadline) });
         if (deadlineRemaining(deadline) < 1_000) break;
         const order = await square.getOrder(payment.order_id, { timeoutMs: deadlineRemaining(deadline) });
-        const fresh = validatePaidSquareOrder({ payment, order, locationId: config.locationId, startAt: config.startAt });
+        const fresh = validatePaidSquareOrder({ payment, order, locationId: config.locationId, startAt: config.startAt, catalog });
         if (sha256(JSON.stringify(fresh.apliiqPayload)) !== record.payload_sha256) {
           await repository.setProviderState({ squareOrderId: record.square_order_id, providerStatus: "changed", state: "held", lastErrorCode: "payload_changed" });
           continue;
@@ -429,7 +429,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
       const orderForValidation = currentFulfillment.state === "COMPLETED"
         ? { ...current, fulfillments: current.fulfillments.map((fulfillment) => fulfillment.uid === currentFulfillment.uid ? { ...fulfillment, state: "PROPOSED" } : fulfillment) }
         : current;
-      const fresh = validatePaidSquareOrder({ payment, order: orderForValidation, locationId: config.locationId, startAt: config.startAt });
+      const fresh = validatePaidSquareOrder({ payment, order: orderForValidation, locationId: config.locationId, startAt: config.startAt, catalog });
       if (record.payload_sha256 && sha256(JSON.stringify(fresh.apliiqPayload)) !== record.payload_sha256) throw new FulfillmentHold("payload_changed");
     } catch (error) {
       const code = error instanceof FulfillmentHold ? error.code : "square_revalidation_failed";

@@ -2,6 +2,7 @@ import { getDatabase } from "@netlify/database";
 import { sha256, verifyApliiqSignature } from "../../server/fulfillment/crypto.mjs";
 import { createRuntime, requireProductionRequest } from "../../server/fulfillment/runtime.mjs";
 import { dispatchAfterResponse } from "../../server/notifications/dispatch-after.mjs";
+import { currentCatalog } from "../../server/catalog/current.mjs";
 
 const json = (value, status = 200) => Response.json(value, { status, headers: { "cache-control": "no-store" } });
 
@@ -9,7 +10,7 @@ export default async function apliiqFulfillmentWebhook(request, context) {
   if (!requireProductionRequest(request, context)) return json({ accepted: false }, 404);
   if (request.method !== "POST") return json({ accepted: false }, 405);
   const rawBody = await request.text();
-  const runtime = createRuntime({ database: getDatabase(), env: Netlify.env });
+  const runtime = createRuntime({ database: getDatabase(), env: Netlify.env, catalog: (await currentCatalog()).allowList });
   if (!verifyApliiqSignature({ rawBody, signature: request.headers.get("x-apliiq-hmac"), sharedSecret: runtime.config.apliiqSharedSecret })) {
     return json({ accepted: false }, 403);
   }

@@ -45,7 +45,7 @@ await writeFile(
 );
 await writeFile(
   new URL("robots.txt", dist),
-  `# ${approved ? "Published After Hours Agenda site" : "Design preview: HTML and HTTP responses carry noindex."}\n# Crawling remains allowed so crawlers can read noindex. This is not access control.\nUser-agent: *\nAllow: /\n\nUser-agent: GPTBot\nDisallow: /\n\nUser-agent: ClaudeBot\nDisallow: /\n\nUser-agent: Google-Extended\n${approved ? "Allow" : "Disallow"}: /\n\nSitemap: ${origin}/sitemap.xml\n`,
+  `# ${approved ? "Published After Hours Agenda site" : "Design preview: HTML and HTTP responses carry noindex."}\n# Crawling remains allowed so crawlers can read noindex. This is not access control.\nUser-agent: *\nAllow: /\n\nUser-agent: GPTBot\nDisallow: /\n\nUser-agent: ClaudeBot\nDisallow: /\n\nUser-agent: Google-Extended\n${approved ? "Allow" : "Disallow"}: /\n\nSitemap: ${origin}/sitemap.xml\nSitemap: ${origin}/sitemap-live.xml\n`,
 );
 await writeFile(
   new URL("sitemap.xml", dist),

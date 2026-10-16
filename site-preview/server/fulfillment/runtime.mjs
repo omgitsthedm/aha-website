@@ -26,7 +26,7 @@ export function requireProductionRequest(request, context) {
   return context?.site?.id === AHA_SITE_ID && context?.deploy?.context === "production" && url.protocol === "https:" && url.hostname === AHA_HOST;
 }
 
-export function createRuntime({ database, env }) {
+export function createRuntime({ database, env, catalog }) {
   const config = environmentConfig(env);
   const repository = createNetlifyRepository(database);
   const notifications = createNotificationRuntime({ database, env });
@@ -44,6 +44,7 @@ export function createRuntime({ database, env }) {
         : { createOrder: unavailable("Apliiq"), getOrder: unavailable("Apliiq"), listOrders: unavailable("Apliiq") },
       notifications: notifications.service,
       config,
+      catalog,
     }),
     notifications,
   };

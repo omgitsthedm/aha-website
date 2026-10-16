@@ -11,7 +11,7 @@ import { createDraftFromApliiq } from "../server/catalog/drafts.mjs";
 const ORIGIN = "https://afterhoursagenda.com";
 const migrations = [
   "20261015045000_yikes_fulfillment", "20261015160000_custom_checkout", "20261015170000_order_notifications",
-  "20261015180000_checkout_payment_recovery", "20261016100000_checkout_analytics_link", "20261016110000_product_drafts", "20261016120000_admin",
+  "20261015180000_checkout_payment_recovery", "20261016100000_checkout_analytics_link", "20261016110000_product_drafts", "20261016120000_admin", "20261016130000_owner_reports",
 ];
 
 async function isolated(t) {
