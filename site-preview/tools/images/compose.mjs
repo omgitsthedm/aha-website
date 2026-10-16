@@ -15,19 +15,36 @@ const hex = (value) => {
 };
 
 async function raw(input, { width, height } = {}) {
-  let image = sharp(input).removeAlpha();
+  // Transparent studio backgrounds become white so the garment mask stays exact.
+  let image = sharp(input).flatten({ background: "#ffffff" }).removeAlpha();
   if (width || height) image = image.resize({ width, height, fit: "fill" });
   const { data, info } = await image.raw().toBuffer({ resolveWithObject: true });
   return { data, width: info.width, height: info.height, channels: info.channels };
 }
 
-/** Garment mask: everything that isn't the white studio background. */
+/**
+ * Garment mask: everything except the white studio background. Background is
+ * near-white AND connected to the image edge, so bright fabric highlights
+ * inside the garment stay garment.
+ */
 function garmentMask({ data, width, height, channels }) {
-  const mask = new Uint8Array(width * height);
-  for (let i = 0; i < width * height; i += 1) {
-    const r = data[i * channels], g = data[i * channels + 1], b = data[i * channels + 2];
-    mask[i] = Math.min(r, g, b) < 246 ? 1 : 0;
+  const nearWhite = (i) => Math.min(data[i * channels], data[i * channels + 1], data[i * channels + 2]) >= 252;
+  const background = new Uint8Array(width * height);
+  const stack = [];
+  for (let x = 0; x < width; x += 1) stack.push(x, (height - 1) * width + x);
+  for (let y = 0; y < height; y += 1) stack.push(y * width, y * width + width - 1);
+  while (stack.length) {
+    const i = stack.pop();
+    if (background[i] || !nearWhite(i)) continue;
+    background[i] = 1;
+    const x = i % width, y = (i - x) / width;
+    if (x > 0) stack.push(i - 1);
+    if (x < width - 1) stack.push(i + 1);
+    if (y > 0) stack.push(i - width);
+    if (y < height - 1) stack.push(i + width);
   }
+  const mask = new Uint8Array(width * height);
+  for (let i = 0; i < width * height; i += 1) mask[i] = background[i] ? 0 : 1;
   return mask;
 }
 

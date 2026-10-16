@@ -866,7 +866,13 @@
         "imageIds": [
           "BXQIHBNTCH3SZNTMQT2YUK6H",
           "KZ5BAY6IKVPFBUQIKE4ELC6P"
-        ]
+        ],
+        "images": {
+          "front": "BXQIHBNTCH3SZNTMQT2YUK6H",
+          "print-detail": "KZ5BAY6IKVPFBUQIKE4ELC6P",
+          "back": "2WINCGPOXIEKQISSL42KYYGM",
+          "folded": "4NQQJGXMF476SV6K2A4ITZTT"
+        }
       },
       "fulfillment": {
         "product": "pet_it_be_ss3000_maroon",

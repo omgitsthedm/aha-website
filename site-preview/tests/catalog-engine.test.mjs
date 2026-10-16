@@ -128,3 +128,21 @@ test("garment images become the storefront's WebP/JPEG set and gallery entries",
     if (!readdirSync(collectionDir).length) rmdirSync(collectionDir);
   }
 });
+
+test("ship refuses an approved design without its four garment and three campaign images, before any provider call", async () => {
+  const { spawnSync } = await import("node:child_process");
+  const { rmSync } = await import("node:fs");
+  const file = new URL("../catalog/designs/zz-ship-gate-test.json", import.meta.url);
+  writeFileSync(file, JSON.stringify({
+    slug: "zz-ship-gate-test", status: "approved", approval: { by: "test", at: "2026-10-16T00:00:00Z", note: "test" },
+    title: "Gate Test Crewneck", color: "Maroon", priceCents: 5500, blank: "SS3000", fulfillment: { product: "zz_ship_gate_test" },
+    apliiq: { designId: 6300000 }, product: { collection: "Gate Test", description: "Test.", gallery: [], campaign: [] },
+  }));
+  try {
+    const result = spawnSync(process.execPath, ["tools/catalog/cli.mjs", "ship", "--skip-checks"], { cwd: new URL("..", import.meta.url), encoding: "utf8", env: { ...process.env, ADMIN_AUTOMATION_TOKEN: "", AHA_SQUARE_ACCESS_TOKEN: "", AHA_APLIIQ_API_KEY: "" } });
+    assert.equal(result.status, 5);
+    assert.match(result.stdout, /"code":"images_missing"/);
+  } finally {
+    rmSync(file, { force: true });
+  }
+});

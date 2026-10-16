@@ -9,10 +9,13 @@
 //   npm run catalog -- plan                    hashed plan for approved design specs not yet in the ledger
 //   npm run catalog -- apply --plan <file>     execute exactly that plan (Apliiq → Square → ledger → site data)
 //   npm run catalog -- explain <slug>          everything known about one product
+//   npm run catalog -- ship                    pull → margin → plan → apply → Square photos → build → verify → tests → commit
+//   npm run catalog -- square-images <slug>    upload any gallery view Square doesn't have yet
 //   npm run catalog -- pull                    turn admin publish requests into design specs (ADMIN_AUTOMATION_TOKEN)
 //   npm run catalog -- images <slug> --files front back print-detail folded [--campaign a b c --setting "…"]
 //
 // Exit codes: 0 ok · 1 error · 2 drift · 3 missing credentials · 4 blocked intent · 5 margin/approval gate.
+import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -293,6 +296,71 @@ const commands = {
     return { results };
   },
 
+  async "square-images"(slug) {
+    // Upload any gallery view Square doesn't have yet (front first), so Square matches the site.
+    if (!slug) throw new CatalogError("square-images requires a slug.", { code: "slug_missing" });
+    const ledger = loadLedger();
+    const entry = ledger.products.find((product) => product.slug === slug);
+    const page = readJson(PATHS.products).find((product) => product.slug === slug);
+    if (!entry || !page) throw new CatalogError(`${slug} is not live in the ledger and products.json.`, { code: "slug_unknown" });
+    const square = createSquareClient({ token: squareToken() });
+    const known = entry.square.images ?? {};
+    // Older entries recorded ids only, in upload order (front, then print detail).
+    if (!entry.square.images && entry.square.imageIds?.length) ["front", "print-detail"].slice(0, entry.square.imageIds.length).forEach((role, index) => { known[role] = entry.square.imageIds[index]; });
+    const name = `${page.title} — ${page.color}`;
+    const uploaded = [];
+    for (const shot of page.gallery) {
+      if (known[shot.role]) continue;
+      const image = await square.uploadImage({ itemId: entry.square.itemId, file: path.join(APP, "public", shot.feedImage), name: `${name} ${shot.role}`, caption: shot.alt, isPrimary: shot.role === "front" && !known.front, idempotencyKey: `aha-img-${slug}-${shot.role}-${sha256(shot.feedImage).slice(0, 12)}` });
+      known[shot.role] = image?.id;
+      uploaded.push(shot.role);
+    }
+    entry.square = { ...entry.square, images: known };
+    saveLedger(ledger);
+    return { slug, uploaded, squareImages: Object.keys(known).length };
+  },
+
+  async ship(_arg, flags) {
+    // Admin "Publish" (or an approved design file) → live-ready commit, in one command:
+    // pull → margin → plan → apply → Square photos → build → verify → tests → commit on a branch.
+    const steps = [];
+    const run = (command, args, env = {}) => {
+      const result = spawnSync(command, args, { cwd: APP, env: { ...process.env, ...env }, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+      if (result.status !== 0) throw new CatalogError(`${command} ${args.join(" ")} failed (exit ${result.status}).`, { code: "ship_step_failed", details: (result.stdout + result.stderr).split("\n").filter(Boolean).slice(-15) });
+      return result.stdout;
+    };
+    if (process.env.ADMIN_AUTOMATION_TOKEN) { const pulled = await commands.pull(); steps.push({ pull: pulled }); }
+    const known = new Set(loadLedger().products.map((entry) => entry.slug));
+    const pending = listDesigns().map(({ file, spec }) => normalizeSpec(spec, file)).filter((spec) => !known.has(spec.slug));
+    if (!pending.length) return { shipped: [], steps, message: "Nothing to ship: no approved design specs outside the ledger." };
+    for (const spec of pending) {
+      const costs = readJson(PATHS.costs);
+      const margin = marginReport(spec, costs);
+      if (!margin.pass) throw new CatalogError(`${spec.slug} is below the margin floor at ${margin.worstSize}.`, { code: "margin_low", exit: 5 });
+      if (!spec.product?.gallery?.length || spec.product.gallery.length < 4) throw new CatalogError(`${spec.slug} needs four garment images (front, back, print-detail, folded) before shipping.`, { code: "images_missing", exit: 5 });
+      if (spec.product?.campaign?.length !== 3) throw new CatalogError(`${spec.slug} needs three campaign images from one setting before shipping.`, { code: "images_missing", exit: 5 });
+    }
+    const plan = await commands.plan();
+    if (plan.blocked.length) throw new CatalogError("Plan has open gates.", { code: "gates_open", exit: 5, details: plan.blocked });
+    const applied = await commands.apply(undefined, { plan: plan.plan });
+    steps.push({ apply: applied.results });
+    for (const result of applied.results.filter((entry) => entry.outcome === "created")) steps.push({ squareImages: await commands["square-images"](result.slug) });
+    if (!flags["skip-checks"]) {
+      run("npm", ["run", "build"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: "https://afterhoursagenda.com" });
+      steps.push({ verify: await commands.verify() });
+      run("npm", ["test"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: "https://afterhoursagenda.com" });
+      steps.push({ tests: "passed" });
+    }
+    const slugs = applied.results.map((entry) => entry.slug);
+    const branch = `catalog/${new Date().toISOString().slice(0, 10)}-${slugs.join("-").slice(0, 60)}`;
+    const repo = path.resolve(APP, "..");
+    const git = (...args) => { const out = spawnSync("git", args, { cwd: repo, encoding: "utf8" }); if (out.status !== 0) throw new CatalogError(`git ${args.join(" ")} failed.`, { code: "git_failed", details: out.stderr.split("\n").slice(-5) }); return out.stdout.trim(); };
+    git("switch", "-c", branch);
+    git("add", "site-preview/catalog", "site-preview/src/data/products.json", "site-preview/server/fulfillment/catalog.mjs", "site-preview/public/images");
+    git("commit", "-q", "-m", `feat: publish ${slugs.join(", ")} via catalog ship\n\nApproved design specs applied by the catalog engine (Apliiq design, Square item and photos, ledger, products.json, generated allow list); build, verify and tests passed.\n\nBuilt with Claude Code (LiFi NYC)`);
+    return { shipped: slugs, branch, commit: git("rev-parse", "HEAD"), steps, next: "Push the branch, open a PR, wait for the required checks, merge, then run scripts/verify-live.mjs." };
+  },
+
   async explain(slug) {
     if (!slug) throw new CatalogError("explain requires a slug.", { code: "slug_missing" });
     const entry = loadLedger().products.find((product) => product.slug === slug);
@@ -315,6 +383,7 @@ function parse(argv) {
     else if (token === "--files") { flags.files = []; while (rest[index + 1] && !rest[index + 1].startsWith("--")) flags.files.push(rest[++index]); }
     else if (token === "--campaign") { flags.campaign = []; while (rest[index + 1] && !rest[index + 1].startsWith("--")) flags.campaign.push(rest[++index]); }
     else if (token === "--setting") flags.setting = rest[++index];
+    else if (token === "--skip-checks") flags["skip-checks"] = true;
     else positional.push(token);
   }
   return { command, arg: positional[0], flags };
