@@ -337,13 +337,17 @@ const commands = {
     const keys = productImageKeys(product);
     const missing = keys.filter((key) => !existsSync(path.join(APP, "public/images", key)));
     if (missing.length) throw new CatalogError(`${slug} is missing image files.`, { code: "images_missing", exit: 5, details: missing });
-    for (const key of keys) await automation(`live-images/${key}`, { method: "PUT", body: readFileSync(path.join(APP, "public/images", key)), contentType: "application/octet-stream" });
+    for (const key of keys) {
+      const upload = () => automation(`live-images/${key}`, { method: "PUT", body: readFileSync(path.join(APP, "public/images", key)), contentType: "application/octet-stream" });
+      // One retry for a transient failure; images are idempotent by path.
+      try { await upload(); } catch (error) { if (error.code !== "automation_failed") throw error; await new Promise((resolve) => { setTimeout(resolve, 2_000); }); await upload(); }
+    }
     const result = await automation(`live-products/${encodeURIComponent(slug)}`, { method: "PUT", body: JSON.stringify(product) });
     // Smoke check against the live site: the page answers with this product.
     const response = await fetch(`${SITE}/shop/${slug}/`, { signal: AbortSignal.timeout(20_000) });
     const html = await response.text();
     if (!response.ok || !html.includes(`data-product-id="${page.squareItemId}"`)) throw new CatalogError(`${slug} was published but its page didn't answer as expected (${response.status}).`, { code: "live_check_failed" });
-    return { slug, url: `${SITE}/shop/${slug}/`, images: keys.length, publishedAt: result.publishedAt };
+    return { slug, url: `${SITE}/shop/${slug}/`, images: keys.length, publishedAt: result.publishedAt, cachePurged: result.purged };
   },
 
   async "unpublish-live"(slug) {

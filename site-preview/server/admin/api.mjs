@@ -139,6 +139,8 @@ export async function handleAdmin(request, { db, env, context, live = createLive
   } catch (error) {
     if (error instanceof AdminAuthError) return reply({ error: error.message }, error.status);
     if (error instanceof DraftValidationError || error instanceof LiveCatalogError) return reply({ error: error.message }, 422);
+    // Name and message only: never request bodies, cookies or headers.
+    console.error(JSON.stringify({ event: "admin_api_error", route, name: error?.name ?? "Error", message: String(error?.message ?? "").slice(0, 300) }));
     return reply({ error: "Something went wrong. Try again." }, 500);
   }
 }

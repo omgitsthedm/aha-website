@@ -1,8 +1,11 @@
 // Write side of the live catalog, behind the admin automation token. The
 // publish engine uploads a product's images first, then the product; the
 // product is refused unless every image it references is already stored, so a
-// live page can never point at a missing file. Each change purges the CDN
-// tags of the pages, feeds and JSON that show it.
+// live page can never point at a missing file. Publishing or removing a
+// product purges the CDN tags of the pages, images, feeds and JSON that show
+// it, once: Netlify limits each tag to two purges per five seconds, so image
+// uploads never purge (a missing image is never cached, and image responses
+// carry the product's tag).
 import { purgeCache } from "@netlify/functions";
 import { imageStore as defaultImageStore, catalogStore as defaultCatalogStore, LiveCatalogError, readSnapshot, removeLiveProduct, upsertLiveProduct, validateLiveProduct } from "./live.mjs";
 
@@ -21,7 +24,18 @@ export function productImageKeys(product) {
   return [...new Set(paths.map((value) => value.replace(/^\/images\//, "")))];
 }
 
-export function createLivePublisher({ catalogStore = defaultCatalogStore, imageStore = defaultImageStore, purge = (tags) => purgeCache({ tags }), now = () => new Date() } = {}) {
+const pause = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
+
+export function createLivePublisher({ catalogStore = defaultCatalogStore, imageStore = defaultImageStore, purge = (tags) => purgeCache({ tags }), now = () => new Date(), retryDelayMs = 5_500 } = {}) {
+  // The snapshot is already saved when this runs; a failed purge only delays
+  // what the CDN shows, so it is retried once and then reported, never thrown.
+  async function purgeOnce(tags) {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try { await purge(tags); return true; }
+      catch { if (attempt === 0) await pause(retryDelayMs); }
+    }
+    return false;
+  }
   return {
     async list() {
       const snapshot = await readSnapshot(catalogStore());
@@ -34,7 +48,6 @@ export function createLivePublisher({ catalogStore = defaultCatalogStore, imageS
       if (!view.length || view.length > MAX_IMAGE_BYTES) throw new LiveCatalogError("Image must be between 1 byte and 6 MB.");
       if (!SIGNATURES[match[4]](view)) throw new LiveCatalogError(`File content isn't a ${match[4]} image.`);
       await imageStore().set(key, bytes, { metadata: { contentType: TYPES[match[4]] } });
-      await purge([`product:${match[2]}`]);
       return { key, bytes: view.length };
     },
     async putProduct(slug, product) {
@@ -45,13 +58,13 @@ export function createLivePublisher({ catalogStore = defaultCatalogStore, imageS
       for (const key of productImageKeys(product)) if (!(await images.getMetadata(key))) missing.push(key);
       if (missing.length) throw new LiveCatalogError(`Upload these images first: ${missing.slice(0, 10).join(", ")}.`);
       const saved = await upsertLiveProduct(product, { store: catalogStore(), now });
-      await purge(["catalog", `product:${slug}`]);
-      return { slug, publishedAt: saved.publishedAt, updatedAt: saved.updatedAt, url: `/shop/${slug}/` };
+      const purged = await purgeOnce(["catalog", `product:${slug}`]);
+      return { slug, publishedAt: saved.publishedAt, updatedAt: saved.updatedAt, url: `/shop/${slug}/`, purged };
     },
     async removeProduct(slug) {
       const removed = await removeLiveProduct(slug, { store: catalogStore(), now });
-      if (removed) await purge(["catalog", `product:${slug}`]);
-      return { slug, removed };
+      const purged = removed ? await purgeOnce(["catalog", `product:${slug}`]) : true;
+      return { slug, removed, purged };
     },
   };
 }
