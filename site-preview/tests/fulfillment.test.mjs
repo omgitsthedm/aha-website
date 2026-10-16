@@ -19,7 +19,7 @@ const LEGACY_PRODUCT_TITLES = Object.freeze({ crewneck: "Yikes Crewneck", croppe
 const CITY_SELECTIONS = Object.freeze([
   { slug: "the-city-ss4500-black", size: "2XL", quantity: 2, designId: 6210771 },
   { slug: "the-city-ss3000-black", size: "3XL", quantity: 1, designId: 6210772 },
-  { slug: "the-city-next-level-3601-black", size: "S", quantity: 3, designId: 6210773 },
+  { slug: "the-city-next-level-3601-black", size: "S", quantity: 3, designId: 6211233 },
 ]);
 
 function catalogTitle(variationId) {
