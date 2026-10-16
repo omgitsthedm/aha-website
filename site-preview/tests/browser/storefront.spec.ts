@@ -89,3 +89,18 @@ test("the quick-add bar stays off on desktop, where the details column is always
   await page.evaluate(() => scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
   await expect(page.getByRole("region", { name: "Quick add" })).toBeHidden();
 });
+
+// Linux Chrome sizes text inputs from the font's widest glyph, so a sign-up input
+// must never rely on its natural width; widen it on purpose and check reflow.
+test("sign-up forms fit a 320px screen whatever the input's natural width", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 900 });
+  for (const path of ["/", "/updates/", "/about/", "/lookbook/", "/manifesto/"]) {
+    await page.goto(path);
+    await page.evaluate(() => document.fonts.ready);
+    const width = await page.evaluate(() => {
+      document.querySelectorAll<HTMLInputElement>("input[name=email]").forEach((input) => { input.size = 60; });
+      return document.documentElement.scrollWidth;
+    });
+    expect(width, path).toBeLessThanOrEqual(320);
+  }
+});
