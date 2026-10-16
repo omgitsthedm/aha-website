@@ -59,22 +59,51 @@
         "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-front-1122.webp",
         "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-front-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-front-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-front-1122.webp 1122w",
         "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-front.jpg",
-        "alt": "Front of the Maroon Pet It Be Crewneck.",
         "width": 1122,
         "height": 1403,
+        "alt": "Front of the Maroon Pet It Be crewneck with a cream pet shop print.",
         "role": "front"
       },
       {
-        "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail-1122.webp",
-        "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail-1122.webp 1122w",
-        "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-detail.jpg",
-        "alt": "Print detail of the Maroon Pet It Be Crewneck.",
+        "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-back-1122.webp",
+        "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-back-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-back-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-back-1122.webp 1122w",
+        "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-back.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Plain back of the Maroon Pet It Be crewneck.",
+        "role": "back"
+      },
+      {
+        "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-print-detail-1122.webp",
+        "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-print-detail-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-print-detail-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-print-detail-1122.webp 1122w",
+        "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-print-detail.jpg",
         "width": 1122,
         "height": 1403,
-        "role": "detail"
+        "alt": "Close view of the cream Pet It Be pet shop print on Maroon fleece.",
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-folded-1122.webp",
+        "srcset": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-folded-400.webp 400w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-folded-800.webp 800w, /images/pet-it-be/pet-it-be-ss3000-maroon/garment-folded-1122.webp 1122w",
+        "feedImage": "/images/pet-it-be/pet-it-be-ss3000-maroon/garment-folded.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Maroon Pet It Be crewneck casually folded, showing the top of the print.",
+        "role": "folded"
       }
     ],
-    "campaign": []
+    "campaign": [],
+    "galleryAlts": {
+      "front": "Front of the Maroon Pet It Be crewneck with a cream pet shop print.",
+      "back": "Plain back of the Maroon Pet It Be crewneck.",
+      "print-detail": "Close view of the cream Pet It Be pet shop print on Maroon fleece.",
+      "folded": "Maroon Pet It Be crewneck casually folded, showing the top of the print."
+    },
+    "campaignAlts": [
+      "Maroon Pet It Be crewneck worn outside a neighborhood pet shop on a New York side street at dusk.",
+      "Maroon Pet It Be crewneck worn while seated on a brownstone stoop beside the pet shop.",
+      "Maroon Pet It Be crewneck worn leaning against the pet shop window."
+    ]
   },
   "images": {
     "square": [
