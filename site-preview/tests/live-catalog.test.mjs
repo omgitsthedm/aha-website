@@ -121,7 +121,7 @@ test("publishing refuses a product until every image it shows is stored, then pu
   const catalogStore = memoryStore();
   const images = memoryStore();
   const purged = [];
-  const publisher = createLivePublisher({ catalogStore: () => catalogStore, imageStore: () => images, purge: async (tags) => { purged.push(tags); }, now: () => new Date("2026-10-17T12:00:00Z") });
+  const publisher = createLivePublisher({ catalogStore: () => catalogStore, imageStore: () => images, purge: async (tags) => { purged.push(tags); }, now: () => new Date("2026-10-17T12:00:00Z"), retryDelayMs: 1 });
   const product = liveProduct();
   await assert.rejects(publisher.putProduct(product.slug, product), /Upload these images first/);
   await assert.rejects(publisher.putImage(`night-shift/${product.slug}/garment-front-400.webp`, new TextEncoder().encode("<svg onload=alert(1)>").buffer), /isn't a webp image/);
@@ -131,12 +131,28 @@ test("publishing refuses a product until every image it shows is stored, then pu
     await publisher.putImage(key, bytes);
   }
   assert.equal(images.data.size, productImageKeys(product).length);
-  assert.deepEqual(await publisher.putProduct(product.slug, product), { slug: product.slug, publishedAt: "2026-10-17T12:00:00.000Z", updatedAt: "2026-10-17T12:00:00.000Z", url: `/shop/${product.slug}/` });
-  assert.deepEqual(purged.at(-1), ["catalog", `product:${product.slug}`]);
+  assert.equal(purged.length, 0, "image uploads never purge (Netlify allows two purges per tag per five seconds)");
+  assert.deepEqual(await publisher.putProduct(product.slug, product), { slug: product.slug, publishedAt: "2026-10-17T12:00:00.000Z", updatedAt: "2026-10-17T12:00:00.000Z", url: `/shop/${product.slug}/`, purged: true });
+  assert.deepEqual(purged, [["catalog", `product:${product.slug}`]]);
   assert.equal((await publisher.list())[0].slug, product.slug);
   await assert.rejects(publisher.putProduct("other-slug", product), /slug must match/);
-  assert.deepEqual(await publisher.removeProduct(product.slug), { slug: product.slug, removed: true });
+  assert.deepEqual(await publisher.removeProduct(product.slug), { slug: product.slug, removed: true, purged: true });
   assert.deepEqual(await publisher.list(), []);
+});
+
+test("a rate-limited purge is retried once and never fails a saved publish", async () => {
+  const catalogStore = memoryStore();
+  const images = memoryStore();
+  let attempts = 0;
+  const flaky = createLivePublisher({ catalogStore: () => catalogStore, imageStore: () => images, purge: async () => { attempts += 1; if (attempts === 1) throw new Error("429"); }, retryDelayMs: 1 });
+  const product = liveProduct();
+  for (const key of productImageKeys(product)) await flaky.putImage(key, key.endsWith(".jpg") ? new Uint8Array([0xff, 0xd8, 0xff, 0xe0]).buffer : WEBP());
+  assert.equal((await flaky.putProduct(product.slug, product)).purged, true);
+  assert.equal(attempts, 2);
+  const down = createLivePublisher({ catalogStore: () => catalogStore, imageStore: () => images, purge: async () => { throw new Error("429"); }, retryDelayMs: 1 });
+  const result = await down.putProduct(product.slug, product);
+  assert.equal(result.purged, false);
+  assert.equal((await down.list()).length, 1, "the product is saved even when the CDN purge fails");
 });
 
 test("live product page: rendered from a built shell with its security headers, cached and tagged", { skip: !existsSync(new URL("shop/", dist)) && "needs npm run build" }, async () => {
