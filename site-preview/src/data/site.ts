@@ -84,7 +84,7 @@ export const gallery = [
   {
     image: "hero-her",
     alt: "Campaign concept of a woman in a plain black tee with a coffee on a station platform.",
-    caption: "The time that is yours.",
+    caption: "On the way somewhere.",
     note: "Campaign concept · AI-generated · not a product photograph",
     kind: "portrait",
   },

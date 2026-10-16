@@ -14,7 +14,7 @@ const leadCampaignImage = campaignProducts[0]?.campaign[0];
 <Site
   title="Fall / Winter 2026 lookbook and brand archive"
   description="Explore the Fall / Winter 2026 campaign sets and the original After Hours Agenda brand archive."
-  preloadImage={leadCampaignImage ? { src: leadCampaignImage.src, srcset: leadCampaignImage.srcset, sizes: "(max-width: 760px) calc(100vw - 40px), 33vw" } : undefined}
+  preloadImage={leadCampaignImage ? { src: leadCampaignImage.src, srcset: leadCampaignImage.srcset, sizes: "(max-width: 760px) 100vw, 33vw" } : undefined}
 >
   <header class="page-head shell">
     <p class="label">Fall–Winter 2026</p>
@@ -30,7 +30,7 @@ const leadCampaignImage = campaignProducts[0]?.campaign[0];
       Campaign mockups created with AI. Shop pages show garment views and measurements.
     </p>
   </header>
-  {campaignProducts.map((product,productIndex)=><section class="shell campaign-set" data-product-set={product.slug} aria-label={`${product.title} in ${product.color} campaign`}><div class="section-header"><div><p class="label">{product.collection} / {product.color} / {product.campaignSetting}</p><h2>{product.title} — {product.color}</h2></div><a class="text-link" href={`/shop/${product.slug}/`}>Shop the piece →</a></div><div class="campaign-grid">{product.campaign.map((shot,i)=><figure><ProductImage image={shot} priority={productIndex===0&&i===0} sizes="(max-width: 760px) calc(100vw - 40px), 33vw"/><figcaption>{['01','02','03'][i]} / {product.campaignSetting}</figcaption></figure>)}</div></section>)}
+  {campaignProducts.map((product,productIndex)=><section class="shell campaign-set" data-product-set={product.slug} aria-label={`${product.title} in ${product.color} campaign`}><div class="section-header"><div><p class="label">{product.collection} / {product.color} / {product.campaignSetting}</p><h2>{product.title} — {product.color}</h2></div><a class="text-link" href={`/shop/${product.slug}/`}>Shop the piece →</a></div><div class="campaign-grid">{product.campaign.map((shot,i)=><figure><ProductImage image={shot} priority={productIndex===0&&i===0} sizes="(max-width: 760px) 100vw, 33vw"/><a class="look-chip" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} — ${product.color}`}>Shop <span aria-hidden="true">→</span></a><figcaption>{['01','02','03'][i]} / {product.campaignSetting}</figcaption></figure>)}</div></section>)}
   <header class="shell section-header"><div><p class="label">Brand archive</p><h2>From the beginning.</h2><p>Original pieces from 2012 and 2013. Not currently for sale.</p></div></header>
   <div class="gallery shell">
     {gallery.filter(shot=>shot.note.startsWith('Brand archive')).map((shot) => (

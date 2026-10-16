@@ -21,6 +21,11 @@ export function normalizeEmail(value) {
   return email.length >= 6 && email.length <= 254 && EMAIL.test(email) ? email : null;
 }
 
+// Until a deploy has applied the sign-up migration the tables don't exist. Read
+// paths treat that as an empty list so the admin overview and the weekly digest
+// keep working; a sign-up gets a plain "couldn't save" reply.
+const missingTable = (error) => error?.code === "42P01" || /relation "aha_(email_signups|signup_attempts)" does not exist/.test(String(error?.message ?? ""));
+
 const hash = (value) => createHash("sha256").update(String(value)).digest("hex");
 
 export async function handleSubscribe(request, { db, clientKey = "unknown", origin = SITE_ORIGIN }) {
@@ -40,18 +45,28 @@ export async function handleSubscribe(request, { db, clientKey = "unknown", orig
   const source = typeof input.source === "string" && SOURCE.test(input.source) ? input.source : "site";
 
   const key = hash(clientKey);
-  const [row] = await db.sql`SELECT count(*) AS attempts FROM aha_signup_attempts WHERE client_key = ${key} AND attempted_at > now() - interval '1 hour'`;
-  if (Number(row?.attempts ?? 0) >= ATTEMPTS_PER_HOUR) return reply({ error: "Too many tries from this connection. Try again in an hour." }, 429);
-  await db.sql`INSERT INTO aha_signup_attempts (client_key) VALUES (${key})`;
-  await db.sql`DELETE FROM aha_signup_attempts WHERE attempted_at < now() - interval '1 day'`;
-  await db.sql`INSERT INTO aha_email_signups (email, source, consent_text) VALUES (${email}, ${source}, ${SIGNUP_CONSENT}) ON CONFLICT (email) DO NOTHING`;
+  try {
+    const [row] = await db.sql`SELECT count(*) AS attempts FROM aha_signup_attempts WHERE client_key = ${key} AND attempted_at > now() - interval '1 hour'`;
+    if (Number(row?.attempts ?? 0) >= ATTEMPTS_PER_HOUR) return reply({ error: "Too many tries from this connection. Try again in an hour." }, 429);
+    await db.sql`INSERT INTO aha_signup_attempts (client_key) VALUES (${key})`;
+    await db.sql`DELETE FROM aha_signup_attempts WHERE attempted_at < now() - interval '1 day'`;
+    await db.sql`INSERT INTO aha_email_signups (email, source, consent_text) VALUES (${email}, ${source}, ${SIGNUP_CONSENT}) ON CONFLICT (email) DO NOTHING`;
+  } catch (error) {
+    // Nothing was stored; say so plainly. The daily health check reports the missing table.
+    if (missingTable(error)) return reply({ error: SIGNUP_UNAVAILABLE }, 503);
+    throw error;
+  }
   return reply({ ok: true });
 }
 
-// Until a deploy has applied the sign-up migration the table doesn't exist. Read
-// paths treat that as an empty list so the admin overview and the weekly digest
-// keep working; sign-ups themselves fail with the function's generic error.
-const missingTable = (error) => error?.code === "42P01" || /relation "aha_(email_signups|signup_attempts)" does not exist/.test(String(error?.message ?? ""));
+export const SIGNUP_UNAVAILABLE = "We couldn't save your address just now. Please try again later, or follow @afterhoursagenda on Instagram.";
+
+/** Daily health: the sign-up tables exist on this database. */
+export async function signupProblems(db) {
+  const [row] = await db.sql`SELECT to_regclass('aha_email_signups') IS NOT NULL AS signups, to_regclass('aha_signup_attempts') IS NOT NULL AS attempts`;
+  return row?.signups && row?.attempts ? [] : ["Email sign-ups can't be saved: the sign-up tables don't exist on the production database yet (migration 20261016140000_email_signups hasn't been applied by a Netlify deploy)."];
+}
+
 
 /** Total addresses and those added in the last seven days. */
 export async function signupCounts(db) {

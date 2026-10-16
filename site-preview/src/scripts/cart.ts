@@ -137,6 +137,10 @@ function updateCartLinks(lines: CartLine[]) {
 }
 function activeCatalogue(): CatalogLine[] { return catalogueFrom(document); }
 
+function bumpCount() {
+  document.querySelectorAll<HTMLElement>("[data-cart-count]").forEach((node) => { node.classList.remove("is-bumped"); void node.offsetWidth; node.classList.add("is-bumped"); });
+}
+
 function initAddForms() {
   document.querySelectorAll<HTMLFormElement>("[data-cart-form]").forEach((form) => {
     const status = form.querySelector<HTMLElement>("[data-cart-add-status]");
@@ -165,8 +169,11 @@ function initAddForms() {
         : [...current, { ...item, variationId: item.id, quantity: Math.min(quantity, available) }];
       writeCart(next);
       updateCartLinks(next);
+      bumpCount();
       document.dispatchEvent(new CustomEvent("aha:cart-added", { detail: { id: item.id, name: item.title, size: item.size, color: item.color, price: item.priceCents / 100, quantity: Math.min(quantity, available) } }));
       if (status) status.innerHTML = `${item.title}, ${item.size}, added. <a href="/checkout/">View bag and checkout</a>.`;
+      const added = Math.min(quantity, available);
+      document.dispatchEvent(new CustomEvent("aha:bag-added", { detail: { title: item.title, size: item.size, image: item.image, added, lineCents: item.priceCents * added, items: count(next), subtotalCents: next.reduce((sum, line) => sum + line.priceCents * line.quantity, 0) } }));
     });
   });
 }
@@ -621,49 +628,15 @@ async function syncCatalogue() {
   hideRetiredCards(state.retired);
 }
 
-// Phones: the photos fill the first screen, so a bar along the bottom keeps the
-// price and the next step in reach until the size picker scrolls into view.
-function initBuyBar() {
-  const form = document.querySelector<HTMLFormElement>("[data-cart-form]");
-  const title = document.querySelector(".product-details h1")?.textContent?.trim();
-  const price = document.querySelector(".product-details .product-price")?.firstChild?.textContent?.trim();
-  if (!form || !title || !price || !("IntersectionObserver" in window)) return;
-  const bar = document.createElement("div");
-  bar.className = "buy-bar";
-  bar.setAttribute("role", "region");
-  bar.setAttribute("aria-label", "Quick add");
-  const name = document.createElement("strong");
-  name.textContent = title;
-  const cost = document.createElement("span");
-  cost.textContent = price;
-  const text = document.createElement("p");
-  text.append(name, cost);
-  const action = document.createElement("button");
-  action.type = "button";
-  action.className = "button";
-  bar.append(text, action);
-  let added = false;
-  const selected = () => form.querySelector<HTMLInputElement>("[data-cart-variant]:checked");
-  const refresh = () => { const size = selected()?.dataset.size; action.textContent = added ? "View bag →" : size ? `Add ${size} to bag` : "Choose a size"; };
-  action.addEventListener("click", () => {
-    if (added) { location.href = "/checkout/"; return; }
-    if (selected()) { form.requestSubmit(); return; }
-    form.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
-    form.querySelector<HTMLInputElement>("[data-cart-variant]")?.focus({ preventScroll: true });
-  });
-  form.addEventListener("change", () => { added = false; refresh(); });
-  document.addEventListener("aha:cart-added", () => { added = true; refresh(); });
-  refresh();
-  bar.hidden = true;
-  document.body.append(bar);
-  document.body.classList.add("has-buy-bar");
-  new IntersectionObserver(([entry]) => { bar.hidden = Boolean(entry?.isIntersecting); }).observe(form);
-}
-
 async function init() {
   initAddForms();
+  // Product-page extras (photo viewer, quick-add bar, bag card) load only where
+  // there is something to buy, so the checkout page parses less script.
+  const extras = document.querySelector("[data-cart-form]") ? import("./product-extras") : null;
+  void extras?.then((module) => module.initProductExtras());
   await syncCatalogue();
-  initBuyBar();
+  // The quick-add bar waits until a removed product's form has been replaced.
+  void extras?.then((module) => module.initBuyBar());
   updateCartLinks(readCart(activeCatalogue()));
   initCheckout();
 }

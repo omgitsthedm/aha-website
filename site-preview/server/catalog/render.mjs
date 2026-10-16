@@ -4,6 +4,7 @@
 // every built product this way and requires byte-identical output to Astro's
 // build, so this file must change whenever src/pages/shop/[product].astro or
 // src/components/ProductCard.astro / ProductImage.astro change.
+import { garmentGroup, hoverView, otherColors, swatchFor } from "./garments.mjs";
 
 const ESCAPABLE = /[&<>'"]/g;
 const ENTITIES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
@@ -14,17 +15,18 @@ export const attr = (value) => String(value ?? "").replace(/&/g, "&amp;").replac
 const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 
 const GALLERY_LABELS = { front: "Front", back: "Back", "print-detail": "Print detail", folded: "Folded" };
-const COLOR_SWATCHES = { Bone: "#eae6db", Maroon: "#5a1e2a", Black: "#171717", Grey: "#989795", "Heather Gray": "#b7b7b5", "Heather Grey": "#b7b7b5", "Grey Heather": "#adadaa", Navy: "#19253C", "Dark Green": "#193F33" };
 const measurement = (value) => value.toLocaleString("en-US", { maximumFractionDigits: 2 });
 
-function image(shot, { priority = false, sizes }) {
-  return `<img src="${attr(shot.src)}" srcset="${attr(shot.srcset)}" sizes="${attr(sizes)}" alt="${attr(shot.alt)}" width="${attr(shot.width)}" height="${attr(shot.height)}" loading="${priority ? "eager" : "lazy"}" fetchpriority="${priority ? "high" : "low"}" decoding="${priority ? "sync" : "async"}">`;
+function image(shot, { priority = false, sizes, name }) {
+  return `<img src="${attr(shot.src)}" srcset="${attr(shot.srcset)}" sizes="${attr(sizes)}" alt="${attr(shot.alt)}" width="${attr(shot.width)}" height="${attr(shot.height)}" loading="${priority ? "eager" : "lazy"}" fetchpriority="${priority ? "high" : "low"}" decoding="${priority ? "sync" : "async"}"${name ? ` style="${attr(`view-transition-name:${name}`)}"` : ""}>`;
 }
 
 export function productCard(product) {
   const first = product.variants[0]?.size;
   const last = product.variants.at(-1)?.size;
-  return `<article class="product-card"><a class="product-card-image" href="/shop/${attr(product.slug)}/" aria-label="${attr(`Shop ${product.title} in ${product.color}`)}">${image(product.gallery[0], { sizes: "(max-width: 760px) calc(50vw - 28px), (max-width: 1440px) calc(45.6vw - 16px), 640px" })}</a><div class="product-card-info"><div><h2><a href="/shop/${attr(product.slug)}/">${text(product.title)}</a></h2><p>${text(product.color)} · ${text(first)}–${text(last)}</p></div><p class="product-price">$${text(product.price)}</p></div></article>`;
+  const swap = hoverView(product);
+  const swapAttrs = swap ? ` data-swap-src="${attr(swap.src)}" data-swap-srcset="${attr(swap.srcset)}"` : "";
+  return `<article class="product-card" data-type="${attr(garmentGroup(product.typeLabel))}"><a class="product-card-image" href="/shop/${attr(product.slug)}/" aria-label="${attr(`Shop ${product.title} in ${product.color}`)}"${swapAttrs}>${image(product.gallery[0], { sizes: "(max-width: 760px) calc(50vw - 28px), (max-width: 1440px) calc(45.6vw - 16px), 640px", name: `p-${product.slug}` })}</a><div class="product-card-info"><div><h2><a href="/shop/${attr(product.slug)}/">${text(product.title)}</a></h2><p>${text(product.color)} · ${text(first)}–${text(last)}</p></div><p class="product-price">$${text(product.price)}</p></div></article>`;
 }
 
 function productSchema(product, gallery, origin) {
@@ -48,17 +50,19 @@ export function renderProductMain(product, products, { origin, pageScript }) {
   ].slice(0, 4);
   const sizeGuide = product.sizeGuide.map((row) => ({ ...row, sleeveLength: "sleeveLength" in row ? row.sleeveLength : undefined }));
   const sleeves = sizeGuide.every((row) => typeof row.sleeveLength === "number");
-  const swatch = COLOR_SWATCHES[product.color] ?? "#eae6db";
+  const swatch = swatchFor(product.color);
+  const siblings = otherColors(product, products);
   return [
     `<main id="main" tabindex="-1">`,
     `<div class="shell product-breadcrumb"><a href="/shop/">← All pieces</a><span>Fall / Winter 2026</span></div>`,
     `<section class="shell product-layout" data-product-id="${attr(product.squareItemId)}" data-product-name="${attr(product.title)}" data-product-color="${attr(product.color)}" data-product-price="${attr(product.price)}">`,
     `<div class="product-visuals"><div class="product-gallery" role="region" tabindex="0" aria-label="${attr(`${product.title} garment views; scroll to see all four`)}">`,
-    gallery.map((shot, index) => `<figure id="view-${index + 1}">${image(shot, { priority: index === 0, sizes: "(max-width: 760px) 100vw, 55vw" })}<figcaption>${text(GALLERY_LABELS[shot.role])}</figcaption></figure>`).join(""),
+    gallery.map((shot, index) => `<figure id="view-${index + 1}">${image(shot, { priority: index === 0, sizes: "(max-width: 760px) 100vw, 55vw", name: index === 0 ? `p-${product.slug}` : undefined })}<figcaption>${text(GALLERY_LABELS[shot.role])}</figcaption></figure>`).join(""),
     `</div><p class="image-note">Product mockups. Colors and print placement can vary slightly in production.</p></div>`,
     `<div class="product-details"><p class="label">${text(product.collection)} / ${text(product.typeLabel)}</p><h1>${text(product.title)}</h1>`,
     `<div class="product-price-row"><p class="product-price">$${text(product.price)}<span> USD</span></p><p>Free domestic shipping</p></div>`,
     `<p class="color-choice"><span class="color-swatch" style="${attr(`--swatch:${swatch}`)}" aria-hidden="true"></span> ${text(product.color)}</p>`,
+    siblings.length ? `<p class="color-options">Also in ${siblings.map((entry) => `<a class="color-option" href="/shop/${attr(entry.slug)}/"><span class="color-swatch" style="${attr(`--swatch:${swatchFor(entry.color)}`)}" aria-hidden="true"></span> ${text(entry.color)}</a>`).join("")}</p>` : "",
     `<p>${text(product.description)}</p>`,
     `<form class="product-purchase" data-cart-form><p class="label">Choose a size</p><div class="size-options" role="radiogroup" aria-label="${attr(`${product.title} size`)}" aria-required="true">`,
     product.variants.map((variant) => `<label><input type="radio" name="size" value="${attr(variant.id)}" data-cart-variant data-size="${attr(variant.size)}" data-sku="${attr(variant.sku)}"><span>${text(variant.size)}</span></label>`).join(""),

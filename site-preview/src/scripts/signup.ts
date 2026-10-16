@@ -25,7 +25,7 @@ document.querySelectorAll<HTMLFormElement>("[data-signup]").forEach((form) => {
     try {
       const response = await fetch("/api/updates/subscribe", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, source, company }) });
       const data = (await response.json().catch(() => ({}))) as { error?: string };
-      if (!response.ok) { say(response.status === 422 || response.status === 429 ? data.error ?? FAILED : FAILED); return; }
+      if (!response.ok) { say([422, 429, 503].includes(response.status) ? data.error ?? FAILED : FAILED); return; }
       input.value = "";
       form.classList.add("is-done");
       say("You're on the list. We'll write when something new is ready.");
