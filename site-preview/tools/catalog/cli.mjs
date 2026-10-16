@@ -9,14 +9,17 @@
 //   npm run catalog -- plan                    hashed plan for approved design specs not yet in the ledger
 //   npm run catalog -- apply --plan <file>     execute exactly that plan (Apliiq → Square → ledger → site data)
 //   npm run catalog -- explain <slug>          everything known about one product
-//   npm run catalog -- ship                    pull → margin → plan → apply → Square photos → build → verify → tests → commit
+//   npm run catalog -- publish-live <slug>     put an applied product on the live site now, no site build (ADMIN_AUTOMATION_TOKEN)
+//   npm run catalog -- unpublish-live <slug>   take a live-published product down
+//   npm run catalog -- usage [days]            runs, time and provider calls per command (default 7 days)
+//   npm run catalog -- ship                    pull → margin → plan → apply → Square photos → build → verify → tests → live → commit
 //   npm run catalog -- square-images <slug>    upload any gallery view Square doesn't have yet
 //   npm run catalog -- pull                    turn admin publish requests into design specs (ADMIN_AUTOMATION_TOKEN)
 //   npm run catalog -- images <slug> --files front back print-detail folded [--campaign a b c --setting "…"]
 //
 // Exit codes: 0 ok · 1 error · 2 drift · 3 missing credentials · 4 blocked intent · 5 margin/approval gate.
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { apliiqCredentials, createApliiqClient, designPayload, withIntent } from "./apliiq.mjs";
@@ -28,6 +31,8 @@ const CATALOG_BLANKS = path.join(CATALOG_DIR, "blanks");
 import { buildCampaign, buildGallery } from "./images.mjs";
 import { marginReport } from "./margin.mjs";
 import { createSquareClient, itemObject, squareIdempotencyKey, squareToken, verifyItem } from "./square.mjs";
+import { productImageKeys } from "../../server/catalog/publish.mjs";
+import { PRIVATE_LABEL, SITE_ORIGIN } from "../../server/platform/client.mjs";
 
 const PRODUCT_FIELDS = ["gender", "feed", "description", "fit", "weightOz", "composition", "sizeGuide", "measurementGuidance", "collection", "typeLabel", "fabricType", "constructionDetails", "sleeveMeasurementGuidance", "campaignSetting", "gallery", "campaign"];
 
@@ -49,7 +54,7 @@ function normalizeSpec(raw, file) {
   if (missing.length) throw new CatalogError(`${path.basename(file)}: missing ${missing.join(", ")}.`, { code: "spec_invalid" });
   if (!/^[a-z0-9-]+$/.test(spec.slug)) throw new CatalogError(`${spec.slug}: slug must be lowercase letters, numbers and hyphens.`, { code: "spec_invalid" });
   if (!Number.isSafeInteger(spec.priceCents) || spec.priceCents < 100) throw new CatalogError(`${spec.slug}: priceCents must be whole cents.`, { code: "spec_invalid" });
-  if (!spec.apliiq.designId && spec.apliiq.label?.id !== 6208403) throw new CatalogError(`${spec.slug}: only the approved SB-3-161622 label (6208403) may be used.`, { code: "spec_invalid" });
+  if (!spec.apliiq.designId && PRIVATE_LABEL && spec.apliiq.label?.id !== PRIVATE_LABEL.id) throw new CatalogError(`${spec.slug}: only the approved ${PRIVATE_LABEL.code} label (${PRIVATE_LABEL.id}) may be used.`, { code: "spec_invalid" });
   for (const size of spec.sizes) expectedSku(1, size);
   return { ...spec, description: spec.product.description, file };
 }
@@ -63,14 +68,14 @@ function productRecord(spec, itemId, variationIds, skus) {
   return record;
 }
 
-const SITE = process.env.AHA_ADMIN_ORIGIN || "https://afterhoursagenda.com";
+const SITE = process.env.AHA_ADMIN_ORIGIN || SITE_ORIGIN;
 function automationToken() {
   const token = process.env.ADMIN_AUTOMATION_TOKEN;
   if (!token) throw new CatalogError("ADMIN_AUTOMATION_TOKEN is required to read publish requests.", { code: "automation_token_missing", exit: 3 });
   return token;
 }
-async function automation(route, init = {}) {
-  const response = await fetch(`${SITE}/api/admin/automation/${route}`, { ...init, headers: { authorization: `Bearer ${automationToken()}`, "content-type": "application/json" }, signal: AbortSignal.timeout(20_000) });
+async function automation(route, { contentType = "application/json", ...init } = {}) {
+  const response = await fetch(`${SITE}/api/admin/automation/${route}`, { ...init, headers: { authorization: `Bearer ${automationToken()}`, "content-type": contentType }, signal: AbortSignal.timeout(20_000) });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new CatalogError(`Admin automation ${route} failed (${response.status}).`, { code: "automation_failed", details: data });
   return data;
@@ -320,6 +325,32 @@ const commands = {
     return { slug, uploaded, squareImages: Object.keys(known).length };
   },
 
+  async "publish-live"(slug) {
+    // Put a product on afterhoursagenda.com now, with no site build: its images
+    // first, then the product. Its page, feeds and checkout pick it up at once;
+    // the next build serves the same URLs as static files.
+    if (!slug) throw new CatalogError("publish-live requires a slug.", { code: "slug_missing" });
+    const page = readJson(PATHS.products).find((product) => product.slug === slug);
+    const entry = loadLedger().products.find((product) => product.slug === slug);
+    if (!page || !entry) throw new CatalogError(`${slug} must be applied (ledger and products.json) before it can go live.`, { code: "slug_unknown" });
+    const product = { ...page, fulfillment: { product: entry.fulfillment.product, title: entry.fulfillment.title ?? `${page.title} — ${page.color}` } };
+    const keys = productImageKeys(product);
+    const missing = keys.filter((key) => !existsSync(path.join(APP, "public/images", key)));
+    if (missing.length) throw new CatalogError(`${slug} is missing image files.`, { code: "images_missing", exit: 5, details: missing });
+    for (const key of keys) await automation(`live-images/${key}`, { method: "PUT", body: readFileSync(path.join(APP, "public/images", key)), contentType: "application/octet-stream" });
+    const result = await automation(`live-products/${encodeURIComponent(slug)}`, { method: "PUT", body: JSON.stringify(product) });
+    // Smoke check against the live site: the page answers with this product.
+    const response = await fetch(`${SITE}/shop/${slug}/`, { signal: AbortSignal.timeout(20_000) });
+    const html = await response.text();
+    if (!response.ok || !html.includes(`data-product-id="${page.squareItemId}"`)) throw new CatalogError(`${slug} was published but its page didn't answer as expected (${response.status}).`, { code: "live_check_failed" });
+    return { slug, url: `${SITE}/shop/${slug}/`, images: keys.length, publishedAt: result.publishedAt };
+  },
+
+  async "unpublish-live"(slug) {
+    if (!slug) throw new CatalogError("unpublish-live requires a slug.", { code: "slug_missing" });
+    return automation(`live-products/${encodeURIComponent(slug)}`, { method: "DELETE" });
+  },
+
   async ship(_arg, flags) {
     // Admin "Publish" (or an approved design file) → live-ready commit, in one command:
     // pull → margin → plan → apply → Square photos → build → verify → tests → commit on a branch.
@@ -346,19 +377,43 @@ const commands = {
     steps.push({ apply: applied.results });
     for (const result of applied.results.filter((entry) => entry.outcome === "created")) steps.push({ squareImages: await commands["square-images"](result.slug) });
     if (!flags["skip-checks"]) {
-      run("npm", ["run", "build"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: "https://afterhoursagenda.com" });
+      run("npm", ["run", "build"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: SITE_ORIGIN });
       steps.push({ verify: await commands.verify() });
-      run("npm", ["test"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: "https://afterhoursagenda.com" });
+      run("npm", ["test"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: SITE_ORIGIN });
       steps.push({ tests: "passed" });
     }
     const slugs = applied.results.map((entry) => entry.slug);
+    // Live now, no site build needed; the commit below folds it into the next build.
+    if (process.env.ADMIN_AUTOMATION_TOKEN && !flags["no-live"]) for (const slug of slugs) steps.push({ live: await commands["publish-live"](slug) });
     const branch = `catalog/${new Date().toISOString().slice(0, 10)}-${slugs.join("-").slice(0, 60)}`;
     const repo = path.resolve(APP, "..");
     const git = (...args) => { const out = spawnSync("git", args, { cwd: repo, encoding: "utf8" }); if (out.status !== 0) throw new CatalogError(`git ${args.join(" ")} failed.`, { code: "git_failed", details: out.stderr.split("\n").slice(-5) }); return out.stdout.trim(); };
     git("switch", "-c", branch);
     git("add", "site-preview/catalog", "site-preview/src/data/products.json", "site-preview/server/fulfillment/catalog.mjs", "site-preview/public/images");
     git("commit", "-q", "-m", `feat: publish ${slugs.join(", ")} via catalog ship\n\nApproved design specs applied by the catalog engine (Apliiq design, Square item and photos, ledger, products.json, generated allow list); build, verify and tests passed.\n\nBuilt with Claude Code (LiFi NYC)`);
-    return { shipped: slugs, branch, commit: git("rev-parse", "HEAD"), steps, next: "Push the branch, open a PR, wait for the required checks, merge, then run scripts/verify-live.mjs." };
+    return { shipped: slugs, branch, commit: git("rev-parse", "HEAD"), steps, next: "Already live if published above. Push the branch and open a PR so the next site build includes it; no separate release is needed." };
+  },
+
+  /** Totals from the run logs: runs, failures, time and provider calls per command. */
+  async usage(daysArg) {
+    const days = Math.min(Math.max(Number(daysArg) || 7, 1), 90);
+    const since = Date.now() - days * 86_400_000;
+    const totals = {};
+    const files = existsSync(PATHS.logs) ? readdirSync(PATHS.logs).filter((name) => name.endsWith(".jsonl") && Date.parse(name.slice(0, 10)) >= since - 86_400_000) : [];
+    for (const name of files) {
+      for (const line of readFileSync(path.join(PATHS.logs, name), "utf8").split("\n")) {
+        if (!line) continue;
+        let entry;
+        try { entry = JSON.parse(line); } catch { continue; }
+        if (Date.parse(entry.at) < since) continue;
+        const row = (totals[entry.command] ??= { runs: 0, failed: 0, ms: 0, apliiq: 0, square: 0, other: 0 });
+        row.runs += 1;
+        if (entry.ok === false) row.failed += 1;
+        row.ms += entry.cost?.ms ?? 0;
+        for (const key of ["apliiq", "square", "other"]) row[key] += entry.cost?.apiCalls?.[key] ?? 0;
+      }
+    }
+    return { days, totals };
   },
 
   async explain(slug) {
@@ -384,18 +439,37 @@ function parse(argv) {
     else if (token === "--campaign") { flags.campaign = []; while (rest[index + 1] && !rest[index + 1].startsWith("--")) flags.campaign.push(rest[++index]); }
     else if (token === "--setting") flags.setting = rest[++index];
     else if (token === "--skip-checks") flags["skip-checks"] = true;
+    else if (token === "--no-live") flags["no-live"] = true;
     else positional.push(token);
   }
   return { command, arg: positional[0], flags };
+}
+
+// Cost meter: every run logs its duration and provider calls, so `usage` can
+// show what a drop actually cost without reading the logs into a chat.
+function meter() {
+  const startedAt = Date.now();
+  const calls = { apliiq: 0, square: 0, other: 0 };
+  const original = globalThis.fetch;
+  globalThis.fetch = (input, init) => {
+    const host = new URL(typeof input === "string" ? input : input.url).hostname;
+    calls[host.endsWith("apliiq.com") ? "apliiq" : host.endsWith("squareup.com") ? "square" : "other"] += 1;
+    return original(input, init);
+  };
+  return () => { globalThis.fetch = original; return { ms: Date.now() - startedAt, apiCalls: calls }; };
 }
 
 export async function run(argv) {
   const { command, arg, flags } = parse(argv);
   const handler = commands[command];
   if (!handler) throw new CatalogError(`Unknown command ${command ?? "(none)"}. Commands: ${Object.keys(commands).join(", ")}.`, { code: "usage" });
-  const result = await handler(arg, flags);
-  const logged = log(command, { ok: true, result });
-  return { ok: true, command, ...result, log: logged };
+  const stop = meter();
+  let result;
+  try { result = await handler(arg, flags); }
+  catch (error) { error.cost = stop(); throw error; }
+  const cost = stop();
+  const logged = log(command, { ok: true, cost, result });
+  return { ok: true, command, ...result, cost, log: logged };
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
@@ -403,7 +477,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
     (summary) => { process.stdout.write(`${JSON.stringify(summary)}\n`); },
     (error) => {
       const code = error instanceof CatalogError ? error.code : "unexpected";
-      const logged = log(process.argv[2] ?? "unknown", { ok: false, code, message: error.message, details: error.details });
+      const logged = log(process.argv[2] ?? "unknown", { ok: false, code, message: error.message, details: error.details, cost: error.cost });
       process.stdout.write(`${JSON.stringify({ ok: false, command: process.argv[2], code, message: error.message, details: Array.isArray(error.details) ? error.details.slice(0, 10) : undefined, log: logged })}\n`);
       process.exitCode = error instanceof CatalogError ? error.exit : 1;
     },

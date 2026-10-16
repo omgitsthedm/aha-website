@@ -28,10 +28,10 @@ export function allowedOrigin(request) {
   const origin = request.headers.get("origin");
   return origin === `https://${AHA_HOST}`;
 }
-export function createCheckoutRuntime({ database, env }) {
+export function createCheckoutRuntime({ database, env, catalog }) {
   const config = checkoutConfig(env);
   const repository = createCheckoutRepository(database);
   const unavailable = async () => { throw new Error("square unavailable"); };
   const square = config.accessToken ? createSquareCheckoutGateway({ accessToken: config.accessToken }) : { calculateOrder: unavailable, createOrder: unavailable, createPayment: unavailable, getOrder: unavailable, getPayment: unavailable };
-  return { config, repository, service: createCheckoutService({ repository, square, config }) };
+  return { config, repository, service: createCheckoutService({ repository, square, config, catalog }) };
 }

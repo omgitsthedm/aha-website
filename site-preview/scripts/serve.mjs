@@ -1,3 +1,4 @@
+import client from "../client.config.json" with { type: "json" };
 import http from "node:http";
 import { gzipSync } from "node:zlib";
 import { readFile, stat } from "node:fs/promises";
@@ -7,7 +8,7 @@ const root = resolve(fileURLToPath(new URL("../dist/", import.meta.url)));
 const port = Number(process.env.PORT || 48379);
 const metaPixelSources = Object.freeze({
   "/api/partytown/meta-pixel/bootstrap": "https://connect.facebook.net/en_US/fbevents.js",
-  "/api/partytown/meta-pixel/config": "https://connect.facebook.net/signals/config/1815233516346046",
+  "/api/partytown/meta-pixel/config": `https://connect.facebook.net/signals/config/${client.analytics.metaPixel}`,
 });
 async function fetchMetaPixel(source) {
   const controller = new AbortController();
@@ -92,6 +93,14 @@ http
           "Content-Length": body.length,
           "X-Content-Type-Options": "nosniff",
         });
+        res.end(req.method === "HEAD" ? undefined : body);
+        return;
+      }
+      // netlify/functions/catalog-live.mjs answers this in production; the
+      // built artifact has nothing published live, so it is always empty here.
+      if (pathname === "/api/catalog/live") {
+        const body = Buffer.from(JSON.stringify({ products: [], cartLines: [] }));
+        res.writeHead(200, { ...headers, "Content-Type": "application/json", "Content-Length": body.length, "Cache-Control": "no-store" });
         res.end(req.method === "HEAD" ? undefined : body);
         return;
       }

@@ -8,6 +8,7 @@ import {
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
 } from "@simplewebauthn/server";
+import { SITE_ORIGIN } from "../platform/client.mjs";
 
 export const SESSION_COOKIE = "__Host-aha_admin";
 const SESSION_HOURS = 12;
@@ -29,7 +30,7 @@ export function sameSecret(provided, expected) {
 }
 
 export function relyingParty(env) {
-  const origin = env.get("ADMIN_ORIGIN") || "https://afterhoursagenda.com";
+  const origin = env.get("ADMIN_ORIGIN") || SITE_ORIGIN;
   const url = new URL(origin);
   return { rpID: url.hostname, rpName: "After Hours Agenda admin", origin: url.origin };
 }

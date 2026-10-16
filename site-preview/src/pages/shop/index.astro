@@ -19,6 +19,8 @@ const collectionCopy: Record<string, string> = {
 ---
 <Site title="Shop Fall / Winter 2026" description="Shop the Fall / Winter 2026 After Hours Agenda collection. Each product page has finished-garment measurements and four product views. Free domestic shipping.">
   <header class="page-head shell shop-heading"><p class="label">Fall / Winter 2026</p><h1>THE COLLECTION.</h1><p class="lede">Made-to-order pieces, each with finished-garment measurements and its own fit details.</p><p class="status-copy">Free domestic shipping. Prices stay the same across sizes.</p></header>
+  <section class="shell collection-group" data-live-products hidden aria-labelledby="collection-just-added"><div class="section-header"><div><p class="label">Fall / Winter 2026</p><h2 id="collection-just-added">Just added</h2><p class="collection-copy">New pieces, ready to order now.</p></div></div><div class="product-grid" data-live-grid></div></section>
   {collections.map(([collection, pieces]) => <section class="shell collection-group" aria-labelledby={`collection-${collection.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}><div class="section-header"><div><p class="label">Fall / Winter 2026</p><h2 id={`collection-${collection.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>{collection}</h2><p class="collection-copy">{collectionCopy[collection] ?? 'Current pieces from the Fall / Winter 2026 collection.'}</p></div></div><div class="product-grid">{pieces.map(product=><ProductCard product={product}/>)}</div></section>)}
   <section class="shell shop-end"><p>See each piece in context.</p><a class="text-link" href="/lookbook/">Explore the lookbook →</a></section>
 </Site>
+<script src="../../scripts/live-shop.ts"></script>

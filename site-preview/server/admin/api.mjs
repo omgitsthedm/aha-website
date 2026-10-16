@@ -5,6 +5,9 @@ import { randomUUID } from "node:crypto";
 import { abandonedCartStats } from "../analytics/abandoned-carts.mjs";
 import { approveDraft, DraftValidationError, finishPublishRequest, getDraft, listDrafts, pendingPublishRequests, rejectDraft, updateDraft } from "../catalog/drafts.mjs";
 import { AdminAuthError, clearedCookie, createAdminAuth, relyingParty, sameSecret, sessionCookie } from "./auth.mjs";
+import { latestReports } from "../operations/runtime.mjs";
+import { LiveCatalogError } from "../catalog/live.mjs";
+import { createLivePublisher } from "../catalog/publish.mjs";
 import { listOrders, overview } from "./orders.mjs";
 
 const HEADERS = { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" };
@@ -22,7 +25,7 @@ function sameOrigin(request, origin) {
   return request.headers.get("origin") === origin && request.headers.get("x-aha-admin") === "1";
 }
 
-export async function handleAdmin(request, { db, env, context }) {
+export async function handleAdmin(request, { db, env, context, live = createLivePublisher() }) {
   const url = new URL(request.url);
   const route = url.pathname.replace(/^\/api\/admin\/?/, "").replace(/\/$/, "");
   const parts = route.split("/");
@@ -42,6 +45,25 @@ export async function handleAdmin(request, { db, env, context }) {
         if (!updated) return reply({ error: "Not found." }, 404);
         await auth.audit(null, `publish.${input.status}`, parts[2], { result: input.result ?? {} });
         return reply({ ok: true });
+      }
+      // Live catalog: publish products without a site build (see server/catalog/live.mjs).
+      if (parts[1] === "live-products" || parts[1] === "live-images") {
+        if (method !== "GET" && context?.deploy?.context !== "production") return reply({ error: "Live publishing runs only on the production site." }, 403);
+        if (route === "automation/live-products" && method === "GET") return reply({ products: await live.list() });
+        if (parts[1] === "live-products" && parts.length === 3 && method === "PUT") {
+          const result = await live.putProduct(parts[2], await body(request));
+          await auth.audit(null, "live.publish", parts[2], {});
+          return reply(result);
+        }
+        if (parts[1] === "live-products" && parts.length === 3 && method === "DELETE") {
+          const result = await live.removeProduct(parts[2]);
+          await auth.audit(null, "live.remove", parts[2], { removed: result.removed });
+          return reply(result);
+        }
+        if (parts[1] === "live-images" && parts.length === 5 && method === "PUT") {
+          const bytes = await request.arrayBuffer();
+          return reply(await live.putImage(parts.slice(2).join("/"), bytes));
+        }
       }
       return reply({ error: "Not found." }, 404);
     }
@@ -69,7 +91,7 @@ export async function handleAdmin(request, { db, env, context }) {
 
     if (route === "auth/logout" && method === "POST") { await auth.endSession(request); return reply({ ok: true }, 200, { "set-cookie": clearedCookie() }); }
     if (route === "me" && method === "GET") return reply({ email: user.email });
-    if (route === "overview" && method === "GET") return reply(await overview(db));
+    if (route === "overview" && method === "GET") return reply({ ...await overview(db), reports: await latestReports(db) });
     if (route === "orders" && method === "GET") return reply({ orders: await listOrders(db) });
     if (parts[0] === "orders" && parts[2] === "note" && method === "POST") {
       const input = await body(request);
@@ -116,7 +138,7 @@ export async function handleAdmin(request, { db, env, context }) {
     return reply({ error: "Not found." }, 404);
   } catch (error) {
     if (error instanceof AdminAuthError) return reply({ error: error.message }, error.status);
-    if (error instanceof DraftValidationError) return reply({ error: error.message }, 422);
+    if (error instanceof DraftValidationError || error instanceof LiveCatalogError) return reply({ error: error.message }, 422);
     return reply({ error: "Something went wrong. Try again." }, 500);
   }
 }

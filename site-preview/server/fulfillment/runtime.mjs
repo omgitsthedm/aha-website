@@ -4,8 +4,10 @@ import { createFulfillmentService } from "./service.mjs";
 import { createSquareGateway } from "./square.mjs";
 import { createNotificationRuntime } from "../notifications/runtime.mjs";
 
-export const AHA_SITE_ID = "275b4115-16bf-42fb-9b36-6bce9bb93608";
-export const AHA_HOST = "afterhoursagenda.com";
+import { NETLIFY_SITE_ID, SITE_HOST } from "../platform/client.mjs";
+
+export const AHA_SITE_ID = NETLIFY_SITE_ID;
+export const AHA_HOST = SITE_HOST;
 
 export function environmentConfig(env) {
   return {
@@ -16,6 +18,8 @@ export function environmentConfig(env) {
     squareSignatureKey: env.get("AHA_SQUARE_WEBHOOK_SIGNATURE_KEY"),
     adminToken: env.get("AHA_FULFILLMENT_ADMIN_TOKEN"),
     apliiqSharedSecret: env.get("AHA_APLIIQ_SHARED_SECRET"),
+    // Minutes between payment and Apliiq submission (0 submits at once).
+    holdMinutes: env.get("AHA_FULFILLMENT_HOLD_MINUTES") ?? "60",
   };
 }
 
@@ -24,7 +28,7 @@ export function requireProductionRequest(request, context) {
   return context?.site?.id === AHA_SITE_ID && context?.deploy?.context === "production" && url.protocol === "https:" && url.hostname === AHA_HOST;
 }
 
-export function createRuntime({ database, env }) {
+export function createRuntime({ database, env, catalog }) {
   const config = environmentConfig(env);
   const repository = createNetlifyRepository(database);
   const notifications = createNotificationRuntime({ database, env });
@@ -42,6 +46,7 @@ export function createRuntime({ database, env }) {
         : { createOrder: unavailable("Apliiq"), getOrder: unavailable("Apliiq"), listOrders: unavailable("Apliiq") },
       notifications: notifications.service,
       config,
+      catalog,
     }),
     notifications,
   };

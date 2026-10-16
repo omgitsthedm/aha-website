@@ -3,6 +3,8 @@
 [build]
   base = "site-preview"
   command = "npm run build"
+  # Skips builds for commits that only touch tooling, tests, catalog data or docs.
+  ignore = "node scripts/netlify-ignore.mjs"
   publish = "dist"
   functions = "netlify/functions"
 

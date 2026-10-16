@@ -1,5 +1,6 @@
+import client from "../client.config.json" with { type: "json" };
 const approved = process.env.AHA_PRODUCTION_BUILD === "approved";
-const preview = "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app";
+const preview = client.site.previewOrigin;
 const origin = new URL(process.env.PUBLIC_SITE_URL || preview);
 if (
   origin.protocol !== "https:" ||
@@ -14,7 +15,7 @@ if (process.env.CONTEXT === "production" && !approved)
   );
 if (!approved && origin.origin !== preview)
   throw new Error("Draft build must use its exact review origin.");
-if (approved && origin.origin !== "https://afterhoursagenda.com")
+if (approved && origin.origin !== client.site.origin)
   throw new Error(
     "The prepared migration supports only the approved existing site. Review other targets separately.",
   );

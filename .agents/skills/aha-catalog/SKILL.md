@@ -22,7 +22,15 @@ node --env-file="$HOME/.config/aha/provider-credentials.env" tools/catalog/cli.m
 2. It plans, applies (Apliiq design and Square item), and syncs every gallery photo to Square.
 3. It builds, verifies, runs the tests, and commits on a `catalog/<date>-<slug>` branch.
 
-Then push the branch, open a PR, wait for the nine required checks, merge, and run `EXPECTED_COMMIT=<merge sha> node scripts/verify-live.mjs`. Images come from `tools/images` (see its README): `compose` for exact-print garment shots, `place` to put the exact print on generated lifestyle photos.
+4. With `ADMIN_AUTOMATION_TOKEN` set, it publishes each product live: images, then product, then a check that its page answers. Add `--no-live` to skip this.
+
+The product is then on sale with no site build. Push the branch and open a PR so the next build serves it statically; that PR goes out with the next code change and needs no release of its own. Images come from `tools/images` (see its README): `compose` for exact-print garment shots, `place` to put the exact print on generated lifestyle photos.
+
+## Token budget
+
+- One drop (design → live) should take one short session. Read each command's single JSON line, not the logs.
+- If a drop needs more than about 15 tool calls or one retry of the same step, stop and tell the owner what is blocking.
+- `npm run catalog -- usage` shows time and provider calls per command.
 
 
 ## Flow from the admin (Apliiq "Add to Store")
@@ -57,6 +65,8 @@ Then push the branch, open a PR, wait for the nine required checks, merge, and r
 - `npm run catalog -- verify`: ledger ↔ products.json ↔ allow list ↔ built feeds.
 - `npm run catalog -- explain <slug>`: ledger entry, site status, spec status and intents for one product.
 - `npm run catalog -- square-images <slug>`: upload any gallery view Square doesn't have yet.
+- `npm run catalog -- publish-live <slug>` / `unpublish-live <slug>`: put an applied product on the live site without a site build, or take it down.
+- `npm run catalog -- usage [days]`: runs, time and provider calls per command.
 - `npm run catalog -- generate`: rewrite the allow list from the ledger.
 - `npm run catalog -- import`: one-time adoption of an existing catalog (already done Oct 16, 2026).
 

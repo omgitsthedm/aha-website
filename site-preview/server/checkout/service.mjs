@@ -19,10 +19,10 @@ function paymentOutcomeTimedOut(session, now) {
   return Number.isFinite(started) && started > 0 && started + PAYMENT_OUTCOME_GRACE_MS <= now;
 }
 
-export function createCheckoutService({ repository, square, config, now = () => Date.now(), createId = randomUUID }) {
+export function createCheckoutService({ repository, square, config, catalog, now = () => Date.now(), createId = randomUUID }) {
   if (!config.locationId) throw new Error("checkout location is not configured");
   async function quote({ items: rawItems, shippingAddress, analytics: rawAnalytics }) {
-    const items = normalizeItems(rawItems);
+    const items = normalizeItems(rawItems, catalog);
     const address = normalizeAddress(shippingAddress);
     const analytics = normalizeAnalyticsIds(rawAnalytics);
     const checkoutId = createId();

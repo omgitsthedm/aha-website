@@ -74,7 +74,8 @@ function card(value: number | string, label: string, href?: string, alert = fals
 }
 
 async function renderOverview() {
-  const [me, data] = await Promise.all([api<{ email: string }>("me"), api<{ ordersToday: number; ordersThisWeek: number; ordersNeedingAttention: number; draftsWaiting: number; draftsApproved: number }>("overview")]);
+  type Report = { ok: boolean; createdAt: string; summary: { problems?: string[] } };
+  const [me, data] = await Promise.all([api<{ email: string }>("me"), api<{ ordersToday: number; ordersThisWeek: number; ordersNeedingAttention: number; draftsWaiting: number; draftsApproved: number; reports?: { daily_health?: Report; weekly_digest?: Report } }>("overview")]);
   const target = document.querySelector("[data-admin-overview]")!;
   target.replaceChildren(
     card(data.ordersToday, "Orders today", "/admin/orders/"),
@@ -82,6 +83,14 @@ async function renderOverview() {
     card(data.ordersNeedingAttention, "Orders needing attention", "/admin/orders/", data.ordersNeedingAttention > 0),
     card(data.draftsWaiting, "Drafts waiting for you", "/admin/products/", data.draftsWaiting > 0),
     card(data.draftsApproved, "Approved, not yet published", "/admin/products/"),
+  );
+  const health = data.reports?.daily_health;
+  const problems = health?.summary?.problems ?? [];
+  const checked = health ? new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(new Date(health.createdAt)) : null;
+  document.querySelector("[data-admin-health]")!.replaceChildren(
+    el("h2", { textContent: "Daily check" }),
+    el("p", { className: "admin-meta", textContent: health ? `${health.ok ? "Everything matches" : `${problems.length} thing${problems.length === 1 ? "" : "s"} need a look`} · checked ${checked}` : "The first daily check runs at 9:00 New York time." }),
+    ...(problems.length ? [el("ul", { className: "admin-list" }, ...problems.slice(0, 20).map((problem) => el("li", { textContent: problem })))] : []),
   );
   document.querySelector("[data-admin-whoami]")!.textContent = `Signed in as ${me.email}`;
 }

@@ -1,5 +1,9 @@
 # After Hours Agenda source of truth
 
+## Live catalog, operations and client platform — October 16, 2026
+
+These changes ship with the release after PR #113. Products can go on sale without a site build: the engine's `publish-live` writes a Netlify Blobs snapshot, and runtime pages, feeds and allow lists read it, while built files always win. Paid orders wait 60 minutes before Apliiq, and refunds inside that window are held. A daily health check and a weekly digest email the owner. Commits that only touch tooling or docs skip Netlify builds. Store identity lives in `site-preview/client.config.json`. Live state is still proven only by the published deploy and `/release.json`.
+
 ## Pet It Be launch and platform layer — October 16, 2026
 
 Pet It Be Crewneck — Maroon: Independent SS3000, XS–3XL, $55, free U.S. shipping, cream B1 "The Center Door" front print 11 inches wide, private label SB-3-161622. Apliiq artwork 8209339 / design 6211854; Square item CX5OOOUPF44W4JEZLHPTJG4R. Catalog: 16 products, 109 variants. Print master: `production-artwork/pet-it-be/pet-it-be-b1-front-cream-3300.png` (SHA-256 1a57d8d9…24069).
