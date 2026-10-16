@@ -1,0 +1,45 @@
+name: openai-feed
+
+# Pushes the live OpenAI product feed (ChatGPT shopping) to OpenAI's SFTP drop
+# once a day, as OpenAI recommends. It does nothing until the merchant account
+# exists and these repository secrets are set:
+#   OPENAI_SFTP_HOST, OPENAI_SFTP_USER, OPENAI_SFTP_KEY (private key),
+#   OPENAI_SFTP_KNOWN_HOSTS (the host's known_hosts line; host keys are verified).
+on:
+  schedule:
+    - cron: "15 14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_SFTP_HOST: ${{ secrets.OPENAI_SFTP_HOST }}
+    steps:
+      - name: Skip until OpenAI SFTP is configured
+        if: env.OPENAI_SFTP_HOST == ''
+        run: echo "OpenAI SFTP secrets are not set; nothing to push."
+      - name: Fetch and check the live feed
+        if: env.OPENAI_SFTP_HOST != ''
+        run: |
+          curl --fail --silent --show-error --output openai.jsonl.gz https://afterhoursagenda.com/feeds/openai.jsonl.gz
+          rows=$(gunzip -c openai.jsonl.gz | wc -l)
+          gunzip -c openai.jsonl.gz | head -1 | python3 -c "import json,sys; row=json.loads(sys.stdin.read()); missing=[f for f in ['item_id','title','description','url','brand','seller_name','image_url','availability','price'] if not row.get(f)]; sys.exit(f'missing {missing}' if missing else 0)"
+          test "$rows" -gt 0
+          echo "Feed has $rows rows."
+      - name: Push over SFTP (same file name each day)
+        if: env.OPENAI_SFTP_HOST != ''
+        env:
+          OPENAI_SFTP_USER: ${{ secrets.OPENAI_SFTP_USER }}
+          OPENAI_SFTP_KEY: ${{ secrets.OPENAI_SFTP_KEY }}
+          OPENAI_SFTP_KNOWN_HOSTS: ${{ secrets.OPENAI_SFTP_KNOWN_HOSTS }}
+        run: |
+          umask 077
+          printf '%s\n' "$OPENAI_SFTP_KEY" > sftp_key
+          printf '%s\n' "$OPENAI_SFTP_KNOWN_HOSTS" > known_hosts
+          printf 'put openai.jsonl.gz after-hours-agenda.jsonl.gz\n' > batch
+          sftp -b batch -i sftp_key -o StrictHostKeyChecking=yes -o UserKnownHostsFile=known_hosts "$OPENAI_SFTP_USER@$OPENAI_SFTP_HOST"
+          rm -f sftp_key known_hosts batch

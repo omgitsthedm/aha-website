@@ -1,4 +1,4 @@
-import { feedXml } from "../../scripts/feeds.mjs";
+import { feedXml, gzipFeed, openAiFeedJsonl } from "../../scripts/feeds.mjs";
 import { catalogCacheHeaders, currentCatalog, STATIC_PRODUCTS } from "../../server/catalog/current.mjs";
 import { SITE_ORIGIN } from "../../server/platform/client.mjs";
 
@@ -17,9 +17,12 @@ export async function handleFeeds(request, context, { catalog = currentCatalog }
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${live.map((product) => `<url><loc>${origin}/shop/${product.slug}/</loc><lastmod>${String(product.updatedAt ?? product.publishedAt ?? "").slice(0, 10) || new Date().toISOString().slice(0, 10)}</lastmod></url>`).join("")}</urlset>\n`;
     return new Response(body, { headers: { "content-type": "application/xml; charset=utf-8", ...catalogCacheHeaders(["sitemap"]) } });
   }
+  if (url.pathname === "/feeds/openai.jsonl.gz") {
+    return new Response(gzipFeed(openAiFeedJsonl(products, origin)), { headers: { "content-type": "application/gzip", ...catalogCacheHeaders(["feeds"]) } });
+  }
   return new Response(feedXml(products, origin), { headers: { "content-type": "application/xml; charset=utf-8", ...catalogCacheHeaders(["feeds"]) } });
 }
 
 export default (request, context) => handleFeeds(request, context);
 
-export const config = { path: ["/feeds/google.xml", "/feeds/meta.xml", "/sitemap-live.xml"] };
+export const config = { path: ["/feeds/google.xml", "/feeds/meta.xml", "/feeds/openai.jsonl.gz", "/sitemap-live.xml"] };

@@ -48,6 +48,9 @@ New products, prices and catalog checks go through the catalog engine, never ad-
 - **Deploy skips.** The Netlify `ignore` command (`scripts/netlify-ignore.mjs`) skips builds for commits that only touch tooling, tests, catalog data or docs.
 - **Client platform.** Store identity and providers live only in `site-preview/client.config.json`, validated by `npm run client:check` and `tests/platform.test.mjs`. That file holds the site origin, the exact Netlify site ID, the pinned Square version, the private label, analytics IDs and brand colors. A new LiFi client store starts from a copy of this repository with that file replaced. Only Square and Apliiq have connectors (`server/platform/client.mjs`); a config naming another provider is refused until its connector is built.
 - **Cost.** Every engine run logs its time and provider calls; `npm run catalog -- usage [days]` totals them.
+- **OpenAI product feed.** `/feeds/openai.jsonl.gz` is in OpenAI's JSON Lines format, built and served live like the Google and Meta feeds (search only, no ChatGPT checkout). `.github/workflows/openai-feed.yml` pushes it daily by SFTP once the owner's OpenAI merchant account exists and the `OPENAI_SFTP_*` secrets are set; until then it does nothing.
+- **AI image labels.** Site and feed images keep their IPTC `trainedAlgorithmicMedia` tags. Square strips all metadata from its own copies, which appear only in the Square dashboard.
+- **MCP.** `.mcp.json` (Claude Code) and `.codex/config.toml` (Codex) both add the read-only Astro docs server. Provider writes go only through the catalog engine.
 
 ## Source and scope
 
