@@ -96,6 +96,14 @@ http
         res.end(req.method === "HEAD" ? undefined : body);
         return;
       }
+      // netlify/functions/catalog-live.mjs answers this in production; the
+      // built artifact has nothing published live, so it is always empty here.
+      if (pathname === "/api/catalog/live") {
+        const body = Buffer.from(JSON.stringify({ products: [], cartLines: [] }));
+        res.writeHead(200, { ...headers, "Content-Type": "application/json", "Content-Length": body.length, "Cache-Control": "no-store" });
+        res.end(req.method === "HEAD" ? undefined : body);
+        return;
+      }
       let path = resolve(root, `.${pathname}`);
       if (pathname === '/feeds/meta' || pathname === '/feeds/meta/') path=resolve(root,'feeds/meta.xml');
       if (path !== root && !path.startsWith(root + sep)) {
