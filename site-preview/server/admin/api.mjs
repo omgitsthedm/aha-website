@@ -7,6 +7,7 @@ import { approveDraft, DraftValidationError, finishPublishRequest, getDraft, lis
 import { AdminAuthError, clearedCookie, createAdminAuth, relyingParty, sameSecret, sessionCookie } from "./auth.mjs";
 import { latestReports } from "../operations/runtime.mjs";
 import { POSTHOG_PROJECT_URL } from "../platform/client.mjs";
+import { currentCatalog } from "../catalog/current.mjs";
 import { LiveCatalogError } from "../catalog/live.mjs";
 import { createLivePublisher } from "../catalog/publish.mjs";
 import { listOrders, overview } from "./orders.mjs";
@@ -24,6 +25,27 @@ async function body(request) {
 
 function sameOrigin(request, origin) {
   return request.headers.get("origin") === origin && request.headers.get("x-aha-admin") === "1";
+}
+
+/** Every product on sale, built or published live, for the admin Products page. */
+export async function catalogSummary(load = currentCatalog) {
+  const { products, liveProducts } = await load();
+  const live = new Set(liveProducts.map((product) => product.slug));
+  return {
+    products: products.map((product) => ({
+      slug: product.slug,
+      title: product.title,
+      color: product.color,
+      collection: product.collection,
+      price: product.price,
+      sizes: product.variants.map((variant) => variant.size),
+      image: { src: product.gallery[0]?.src ?? null, alt: product.gallery[0]?.alt ?? "" },
+      squareItemId: product.squareItemId,
+      apliiqDesignId: Number(/^APQ-(\d+)S/.exec(product.variants[0]?.sku ?? "")?.[1]) || null,
+      source: live.has(product.slug) ? "live" : "built",
+      url: `/shop/${product.slug}/`,
+    })),
+  };
 }
 
 export async function handleAdmin(request, { db, env, context, live = createLivePublisher() }) {
@@ -94,6 +116,7 @@ export async function handleAdmin(request, { db, env, context, live = createLive
     if (route === "me" && method === "GET") return reply({ email: user.email });
     if (route === "overview" && method === "GET") return reply({ ...await overview(db), reports: await latestReports(db) });
     if (route === "orders" && method === "GET") return reply({ orders: await listOrders(db) });
+    if (route === "catalog" && method === "GET") return reply(await catalogSummary(live.catalog));
     if (parts[0] === "orders" && parts[2] === "note" && method === "POST") {
       const input = await body(request);
       const note = typeof input.note === "string" ? input.note.trim().slice(0, 500) : "";

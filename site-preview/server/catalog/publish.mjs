@@ -7,6 +7,7 @@
 // uploads never purge (a missing image is never cached, and image responses
 // carry the product's tag).
 import { purgeCache } from "@netlify/functions";
+import { currentCatalog } from "./current.mjs";
 import { imageStore as defaultImageStore, catalogStore as defaultCatalogStore, LiveCatalogError, readSnapshot, removeLiveProduct, upsertLiveProduct, validateLiveProduct } from "./live.mjs";
 
 const IMAGE = /^([a-z0-9-]+)\/([a-z0-9-]+)\/([a-z0-9-]+\.(webp|jpg|jpeg|png))$/;
@@ -37,6 +38,7 @@ export function createLivePublisher({ catalogStore = defaultCatalogStore, imageS
     return false;
   }
   return {
+    catalog: () => currentCatalog(),
     async list() {
       const snapshot = await readSnapshot(catalogStore());
       return Object.values(snapshot.products).map((product) => ({ slug: product.slug, title: product.title, color: product.color, price: product.price, publishedAt: product.publishedAt, updatedAt: product.updatedAt }));

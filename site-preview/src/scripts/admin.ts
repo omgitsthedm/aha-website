@@ -120,6 +120,21 @@ async function renderOrders() {
   }));
 }
 
+type CatalogProduct = { slug: string; title: string; color: string; collection: string; price: number; sizes: string[]; image: { src: string | null; alt: string }; squareItemId: string; apliiqDesignId: number | null; source: "built" | "live"; url: string };
+async function renderCatalog() {
+  const { products } = await api<{ products: CatalogProduct[] }>("catalog");
+  const sizes = products.reduce((sum, product) => sum + product.sizes.length, 0);
+  document.querySelector("[data-admin-catalog-count]")!.textContent = `${products.length} products, ${sizes} sizes. Prices and sizes change through the catalog engine, so every change stays matched in Square and Apliiq.`;
+  document.querySelector("[data-admin-catalog]")!.replaceChildren(...products.map((product) => el("article", { className: "admin-row admin-product" },
+    product.image.src ? el("img", { src: product.image.src, alt: product.image.alt, loading: "lazy", width: 96, height: 120 }) : null,
+    el("div", {},
+      el("header", {}, el("h3", { textContent: `${product.title} — ${product.color}` }), el("span", { className: `admin-pill ${product.source === "live" ? "is-good" : ""}`, textContent: product.source === "live" ? "published live" : "on site" })),
+      el("p", { className: "admin-meta" }, el("span", { textContent: product.collection }), el("span", { textContent: money.format(product.price) }), el("span", { textContent: product.sizes.join(" · ") })),
+      el("p", { className: "admin-meta" }, el("a", { href: product.url, target: "_blank", rel: "noopener", textContent: "View on site" }), el("span", { textContent: `Square ${product.squareItemId}` }), el("span", { textContent: product.apliiqDesignId ? `Apliiq design ${product.apliiqDesignId}` : "" })),
+    ),
+  )));
+}
+
 let draftFilter = "draft";
 async function renderDrafts() {
   const { drafts } = await api<{ drafts: Draft[] }>(`drafts?status=${encodeURIComponent(draftFilter)}`);
@@ -184,7 +199,7 @@ async function load() {
     showContent();
     if (page === "overview") await renderOverview();
     if (page === "orders") await renderOrders();
-    if (page === "products") await renderDrafts();
+    if (page === "products") { await renderCatalog(); await renderDrafts(); }
     if (page === "analytics") await renderAnalytics();
   } catch (error) {
     // Sign-in is the safe fallback for any failure, with the reason shown.
