@@ -8,12 +8,14 @@ export function createCheckoutRepository(db) {
       return one(db.sql`
         INSERT INTO aha_checkout_sessions (
           checkout_id, token_sha256, state, currency, cart_json, shipping_address_json, order_payload_json,
-          subtotal_cents, shipping_cents, tax_cents, total_cents, tax_label, order_idempotency_key, expires_at
+          subtotal_cents, shipping_cents, tax_cents, total_cents, tax_label, order_idempotency_key, expires_at,
+          posthog_distinct_id, posthog_session_id
         ) VALUES (
           ${record.checkoutId}, ${record.tokenHash}, 'quoted', ${record.currency}, ${JSON.stringify(record.cart)},
           ${JSON.stringify(record.address)}, ${JSON.stringify(record.orderPayload)}, ${record.subtotalCents},
           ${record.shippingCents}, ${record.taxCents}, ${record.totalCents}, ${record.taxLabel},
-          ${record.orderIdempotencyKey}, ${record.expiresAt}
+          ${record.orderIdempotencyKey}, ${record.expiresAt},
+          ${record.analytics?.distinctId ?? null}, ${record.analytics?.sessionId ?? null}
         ) RETURNING *
       `);
     },

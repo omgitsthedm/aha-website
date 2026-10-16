@@ -10,12 +10,15 @@ const migration = new URL("../netlify/database/migrations/20261015160000_custom_
 const rootMigration = new URL("../../netlify/database/migrations/20261015160000_custom_checkout/migration.sql", import.meta.url);
 const recoveryMigration = new URL("../netlify/database/migrations/20261015180000_checkout_payment_recovery/migration.sql", import.meta.url);
 const rootRecoveryMigration = new URL("../../netlify/database/migrations/20261015180000_checkout_payment_recovery/migration.sql", import.meta.url);
+const analyticsMigration = new URL("../netlify/database/migrations/20261016100000_checkout_analytics_link/migration.sql", import.meta.url);
+const rootAnalyticsMigration = new URL("../../netlify/database/migrations/20261016100000_checkout_analytics_link/migration.sql", import.meta.url);
 const tokenHash = (value) => createHash("sha256").update(value).digest("hex");
 
 async function isolated(t) {
   const database = new PGlite(); t.after(() => database.close());
   await database.exec(await readFile(migration, "utf8"));
   await database.exec(await readFile(recoveryMigration, "utf8"));
+  await database.exec(await readFile(analyticsMigration, "utf8"));
   const sql = async (strings, ...parameters) => (await database.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows;
   return { database, repository: createCheckoutRepository({ sql }) };
 }
@@ -26,6 +29,7 @@ function record({ checkoutId = "checkout-db-1", token = "test-token", expiresAt 
 test("checkout migration remains identical at repository and Netlify discovery paths", async () => {
   assert.equal(await readFile(migration, "utf8"), await readFile(rootMigration, "utf8"));
   assert.equal(await readFile(recoveryMigration, "utf8"), await readFile(rootRecoveryMigration, "utf8"));
+  assert.equal(await readFile(analyticsMigration, "utf8"), await readFile(rootAnalyticsMigration, "utf8"));
 });
 
 test("Postgres permits one durable payment claim under concurrent checkout submits", async (t) => {
