@@ -64,3 +64,22 @@ test("drafts move draft → approved or rejected, and only open drafts are edita
   assert.equal((await getDraft(db, draft.id)).error, "Wrong ink color");
   await assert.rejects(updateDraft(db, draft.id, { designSlug: "Bad Slug" }), /lowercase/);
 });
+
+test("Add to Store answers Apliiq's registered addresses with either token, and nothing else", async () => {
+  const { handleAddToStore, config } = await import("../netlify/functions/apliiq-add-to-store.mjs");
+  assert.deepEqual(config.path, ["/api/apliiq/add-to-store", "/api/integrations/apliiq/products/upsert", "/api/integrations/apliiq/products/search"]);
+  const current = "c".repeat(48);
+  const original = "o".repeat(40);
+  const env = { get: (key) => ({ APLIIQ_CALLBACK_TOKEN: current, APLIIQ_PRODUCT_CALLBACK_TOKEN: original })[key] };
+  const context = { site: { id: "275b4115-16bf-42fb-9b36-6bce9bb93608" }, deploy: { context: "production" } };
+  const searched = [];
+  const database = () => ({ sql: async (strings, ...values) => { searched.push(values); return []; } });
+  const get = (path, token) => handleAddToStore(new Request(`https://afterhoursagenda.com${path}?search=pet${token ? `&token=${token}` : ""}`), context, { env, database });
+  for (const path of config.path) {
+    assert.equal((await get(path)).status, 401, `${path} without a token`);
+    assert.equal((await get(path, "x".repeat(48))).status, 401, `${path} with a wrong token`);
+    assert.equal((await get(path, current)).status, 200, `${path} with the current token`);
+    assert.equal((await get(path, original)).status, 200, `${path} with the token already registered in Apliiq`);
+  }
+  assert.equal((await handleAddToStore(new Request(`https://afterhoursagenda.com/api/integrations/apliiq/products/upsert?token=${original}`), { ...context, deploy: { context: "deploy-preview" } }, { env, database })).status, 404, "previews never accept callbacks");
+});

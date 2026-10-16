@@ -61,6 +61,7 @@ test("the first passkey needs the one-time setup code; later ones need a session
   assert.equal(right.status, 200);
   assert.equal(right.body.options.rp.id, "afterhoursagenda.com");
   assert.equal(right.body.options.authenticatorSelection.userVerification, "required");
+  assert.equal(right.body.options.timeout, 240_000, "the passkey prompt waits four minutes, inside the five-minute challenge");
   await signedIn(db);
   const afterSetup = await call(db, "auth/register/options", { method: "POST", body: { email: "x@example.com", bootstrapToken: "b".repeat(32) } });
   assert.equal(afterSetup.status, 403);

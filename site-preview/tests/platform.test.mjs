@@ -16,6 +16,7 @@ test("this store's client config is valid and drives the platform constants", ()
   assert.equal(NETLIFY_SITE_ID, "275b4115-16bf-42fb-9b36-6bce9bb93608");
   assert.equal(SQUARE_VERSION, "2026-09-16");
   assert.equal(CLIENT.print.privateLabel.code, "SB-3-161622");
+  assert.equal(CLIENT.analytics.posthogProjectUrl, "https://us.posthog.com/project/669368");
 });
 
 test("a bad client config is rejected with plain reasons", () => {
@@ -26,9 +27,10 @@ test("a bad client config is rejected with plain reasons", () => {
   bad.commerce.provider = "shopify";
   bad.analytics.ga4 = "UA-123";
   bad.brand.accent = "pink";
+  bad.analytics.posthogProjectUrl = "https://evil.example/project/1";
   bad.client.apiToken = "sk_live_abc";
   const problems = clientConfigProblems(bad).join("\n");
-  for (const pattern of [/site\.origin must be an https origin/, /exact Netlify site ID/, /print\.provider printful has no connector yet/, /commerce\.provider shopify has no connector yet/, /analytics\.ga4/, /brand\.accent/, /must not contain secrets/]) assert.match(problems, pattern);
+  for (const pattern of [/site\.origin must be an https origin/, /exact Netlify site ID/, /print\.provider printful has no connector yet/, /commerce\.provider shopify has no connector yet/, /analytics\.ga4/, /brand\.accent/, /posthogProjectUrl/, /must not contain secrets/]) assert.match(problems, pattern);
   const script = fileURLToPath(new URL("../tools/platform/check.mjs", import.meta.url));
   assert.throws(() => execFileSync(process.execPath, [script, "/nonexistent.json"], { stdio: "pipe" }));
 });
