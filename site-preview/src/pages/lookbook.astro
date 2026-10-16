@@ -6,7 +6,7 @@ import { gallery } from "../data/site";
 import manifest from "../data/images.json";
 import products from '../data/products.json';
 import ProductImage from '../components/ProductImage.astro';
-const campaignProducts = [...products.filter((product) => product.collection === 'The City'), ...products.filter((product) => product.collection !== 'The City')];
+const campaignProducts = [...products.filter((product) => product.collection === 'Mighty Mick’s'), ...products.filter((product) => product.collection === 'The City'), ...products.filter((product) => product.collection !== 'Mighty Mick’s' && product.collection !== 'The City')];
 const leadCampaignImage = campaignProducts[0]?.campaign[0];
 ---
 

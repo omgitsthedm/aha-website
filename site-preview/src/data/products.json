@@ -2247,5 +2247,223 @@
         "role": "lifestyle-alternate"
       }
     ]
+  },
+  {
+    "slug": "mighty-micks-ss3000-navy",
+    "title": "Mighty Mick’s Crewneck",
+    "color": "Navy",
+    "price": 55,
+    "currency": "USD",
+    "squareItemId": "UDZPAU3Y733EINKACKUHHFDT",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Crewnecks"
+    },
+    "description": "An 8.5 oz midweight crewneck sweatshirt in Navy with a muted gold front print. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs and waistband.",
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      { "size": "XS", "bodyLength": 25, "chestWidth": 19, "sleeveLength": 34 },
+      { "size": "S", "bodyLength": 26.5, "chestWidth": 20.5, "sleeveLength": 35 },
+      { "size": "M", "bodyLength": 28, "chestWidth": 22, "sleeveLength": 36 },
+      { "size": "L", "bodyLength": 29.5, "chestWidth": 23.5, "sleeveLength": 37 },
+      { "size": "XL", "bodyLength": 31, "chestWidth": 25, "sleeveLength": 38 },
+      { "size": "2XL", "bodyLength": 32.5, "chestWidth": 26.5, "sleeveLength": 39 },
+      { "size": "3XL", "bodyLength": 34, "chestWidth": 28, "sleeveLength": 40 }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "collection": "Mighty Mick’s",
+    "typeLabel": "Crewneck",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": ["cotton face", "twill neck tape", "1x1 ribbed collar, cuffs and waistband"],
+    "sleeveMeasurementGuidance": "",
+    "campaignSetting": "Old boxing gym",
+    "variants": [
+      { "size": "XS", "id": "KP6MUHS6DUU25CHDMNLZWZ3E", "sku": "APQ-6211442S5A1" },
+      { "size": "S", "id": "MGHMBPC7FHC46T6A7ZYFAWN7", "sku": "APQ-6211442S6A1" },
+      { "size": "M", "id": "QJW4CD6AVQINBJKBSEYDAF7P", "sku": "APQ-6211442S7A1" },
+      { "size": "L", "id": "7X3KG5V3JXTKJOCLY7DLJCFV", "sku": "APQ-6211442S8A1" },
+      { "size": "XL", "id": "HI6TDJ7EIZIPJTUVYQPVTFC7", "sku": "APQ-6211442S1A1" },
+      { "size": "2XL", "id": "MTI4OOHBWYJ4VDJZ3JAX36NC", "sku": "APQ-6211442S2A1" },
+      { "size": "3XL", "id": "KCJDUQWBZJA5GRJNBKCYMPTE", "sku": "APQ-6211442S21A1" }
+    ],
+    "gallery": [
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-front-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-front-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-navy/garment-front-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-navy/garment-front-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-front.jpg",
+        "alt": "Front of the Navy Mighty Mick’s crewneck with a muted gold one-color print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-back-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-back-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-navy/garment-back-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-navy/garment-back-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-back.jpg",
+        "alt": "Plain back of the Navy Mighty Mick’s crewneck.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-print-detail-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-print-detail-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-navy/garment-print-detail-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-navy/garment-print-detail-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-print-detail.jpg",
+        "alt": "Close view of the muted gold Mighty Mick’s print on Navy fleece.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-folded-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-folded-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-navy/garment-folded-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-navy/garment-folded-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-navy/garment-folded.jpg",
+        "alt": "Navy Mighty Mick’s crewneck casually folded on white.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-hero-standing-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-hero-standing-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-navy/campaign-hero-standing-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-navy/campaign-hero-standing-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-hero-standing.jpg",
+        "alt": "Navy Mighty Mick’s crewneck worn in an old boxing gym beside a heavy bag.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-seated-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-seated-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-navy/campaign-seated-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-navy/campaign-seated-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-seated.jpg",
+        "alt": "Navy Mighty Mick’s crewneck worn while seated on a wooden bench in an old boxing gym.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-standing-alternate-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-standing-alternate-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-navy/campaign-standing-alternate-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-navy/campaign-standing-alternate-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-standing-alternate.jpg",
+        "alt": "Navy Mighty Mick’s crewneck worn in an old boxing gym, with a heavy bag in the background.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
+  },
+  {
+    "slug": "mighty-micks-ss3000-dark-green",
+    "title": "Mighty Mick’s Crewneck",
+    "color": "Dark Green",
+    "price": 55,
+    "currency": "USD",
+    "squareItemId": "E5VUTJQGOP665FOK6LW4JVZY",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Crewnecks"
+    },
+    "description": "An 8.5 oz midweight crewneck sweatshirt in Dark Green with a buttercream front print. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs and waistband.",
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      { "size": "XS", "bodyLength": 25, "chestWidth": 19, "sleeveLength": 34 },
+      { "size": "S", "bodyLength": 26.5, "chestWidth": 20.5, "sleeveLength": 35 },
+      { "size": "M", "bodyLength": 28, "chestWidth": 22, "sleeveLength": 36 },
+      { "size": "L", "bodyLength": 29.5, "chestWidth": 23.5, "sleeveLength": 37 },
+      { "size": "XL", "bodyLength": 31, "chestWidth": 25, "sleeveLength": 38 },
+      { "size": "2XL", "bodyLength": 32.5, "chestWidth": 26.5, "sleeveLength": 39 },
+      { "size": "3XL", "bodyLength": 34, "chestWidth": 28, "sleeveLength": 40 }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "collection": "Mighty Mick’s",
+    "typeLabel": "Crewneck",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": ["cotton face", "twill neck tape", "1x1 ribbed collar, cuffs and waistband"],
+    "sleeveMeasurementGuidance": "",
+    "campaignSetting": "Old boxing gym",
+    "variants": [
+      { "size": "XS", "id": "2YEXCBP24N7IGAVRUAFH3YAL", "sku": "APQ-6211443S5A1" },
+      { "size": "S", "id": "ULEWPGCCUTZRH6W6TKX46QZA", "sku": "APQ-6211443S6A1" },
+      { "size": "M", "id": "LTGIVZ6WPFJJHI65U7G7ALRJ", "sku": "APQ-6211443S7A1" },
+      { "size": "L", "id": "DR4A6AOBYIRX2OYGWPPJ2VJI", "sku": "APQ-6211443S8A1" },
+      { "size": "XL", "id": "A2QM6DUP3NJTMKVI2BA5YSCB", "sku": "APQ-6211443S1A1" },
+      { "size": "2XL", "id": "HYXINA6K4CPMTWM6DWAJCUO4", "sku": "APQ-6211443S2A1" },
+      { "size": "3XL", "id": "IBAN3RYLAN6RRG4LRHLCGIVE", "sku": "APQ-6211443S21A1" }
+    ],
+    "gallery": [
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-front-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-front-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-dark-green/garment-front-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-dark-green/garment-front-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-front.jpg",
+        "alt": "Front of the Dark Green Mighty Mick’s crewneck with a buttercream one-color print.",
+        "width": 1122,
+        "height": 1402,
+        "role": "front"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-back-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-back-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-dark-green/garment-back-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-dark-green/garment-back-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-back.jpg",
+        "alt": "Plain back of the Dark Green Mighty Mick’s crewneck.",
+        "width": 1122,
+        "height": 1402,
+        "role": "back"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-print-detail-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-print-detail-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-dark-green/garment-print-detail-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-dark-green/garment-print-detail-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-print-detail.jpg",
+        "alt": "Close view of the buttercream Mighty Mick’s print on Dark Green fleece.",
+        "width": 1122,
+        "height": 1402,
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-folded-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-folded-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-dark-green/garment-folded-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-dark-green/garment-folded-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-dark-green/garment-folded.jpg",
+        "alt": "Dark Green Mighty Mick’s crewneck casually folded on white.",
+        "width": 1122,
+        "height": 1402,
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-hero-standing-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-hero-standing-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-hero-standing-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-hero-standing-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-hero-standing.jpg",
+        "alt": "Dark Green Mighty Mick’s crewneck worn in an old boxing gym beside a heavy bag.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-seated-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-seated-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-seated-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-seated-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-seated.jpg",
+        "alt": "Dark Green Mighty Mick’s crewneck worn while seated on a wooden bench in an old boxing gym.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-standing-alternate-1122.webp",
+        "srcset": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-standing-alternate-400.webp 400w, /images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-standing-alternate-800.webp 800w, /images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-standing-alternate-1122.webp 1122w",
+        "feedImage": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-standing-alternate.jpg",
+        "alt": "Dark Green Mighty Mick’s crewneck worn in an old boxing gym, with a heavy bag in the background.",
+        "width": 1122,
+        "height": 1402,
+        "role": "lifestyle-alternate"
+      }
+    ]
   }
 ]

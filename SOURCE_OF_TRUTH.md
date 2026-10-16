@@ -1,5 +1,13 @@
 # After Hours Agenda source of truth
 
+## Mighty Mick’s launch — October 15, 2026
+
+The owner authorized both SS3000 crewnecks for sale: Navy with muted gold ink and Dark Green with buttercream ink, $55 each across XS–3XL with free U.S. shipping. The catalog now contains 15 garment/color options and 102 exact Square-to-Apliiq variants. Each new product has four garment-only shopping images; its three boxing-gym campaign images remain separate in the lookbook and local campaign folder.
+
+Supplier designs 6211442 (Navy, artwork 8208841) and 6211443 (Dark Green, artwork 8208842) use SS3000 product 391, front DTG placement 4546, a 10 × 15-inch transparent canvas and current inside-neck private label SB-3-161622. The current supplier dropship quote is $26.39 before shipping/label itemization. Square items are UDZPAU3Y733EINKACKUHHFDT and E5VUTJQGOP665FOK6LW4JVZY respectively; their fourteen exact variations are allow-listed in the active fulfillment catalog. Existing products and mappings are preserved.
+
+The approved address footer reads 2147 N. FRONT ST. / PHILADELPHIA, PA. No unverified movie phone number was invented. The native 1024 × 1536 artwork was proportionally enlarged to a 3000 × 4500 export; 300-PPI metadata does not add native detail (effective source resolution approximately 102 PPI at 10 × 15 inches). Supplier configuration acceptance and art-directed mockups are not a physical sample or a rendered supplier proof. No paid test order, sample, or customer message was created. Exact publication remains established by the published Netlify deploy and matching release.json, not this record.
+
 ## Current catalog expansion — October 15, 2026
 
 The City adds three Black back-print garments to Yikes and Insomniac: SS4500 hoodie $58 (XS–5XL), SS3000 crewneck $55 (XS–3XL), and Next Level 3601 long sleeve $42 (S–2XL). All use private label SB-3-161622 and free domestic shipping. The intended complete catalog is 13 garment/color options and 88 exact Square-to-Apliiq variations. Four garment-only images per product stay separate from three campaign images. The active app remains `site-preview/`; the original root application stays inactive. Successful Apliiq create-design receipts are 6210771, 6210772 and 6210773, using artwork 8208075. The owner authorized publication; the exact published Netlify deploy and `/release.json` remain the proof of live state.

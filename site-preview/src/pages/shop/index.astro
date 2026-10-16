@@ -4,8 +4,8 @@ import ProductCard from '../../components/ProductCard.astro';
 import products from '../../data/products.json';
 const availableCollections = [...new Set(products.map((product) => product.collection))];
 const collectionOrder = [
-  ...['The City', 'Insomniac', 'Yikes!'].filter((collection) => availableCollections.includes(collection)),
-  ...availableCollections.filter((collection) => !['The City', 'Insomniac', 'Yikes!'].includes(collection)),
+  ...['Mighty Mick’s', 'The City', 'Insomniac', 'Yikes!'].filter((collection) => availableCollections.includes(collection)),
+  ...availableCollections.filter((collection) => !['Mighty Mick’s', 'The City', 'Insomniac', 'Yikes!'].includes(collection)),
 ];
 const collections = collectionOrder
   .map((collection) => [collection, products.filter((product) => product.collection === collection)] as const)
@@ -13,6 +13,7 @@ const collections = collectionOrder
 const collectionCopy: Record<string, string> = {
   'The City': 'Black fleece and cotton jersey with a blue-and-orange back print and a plain front.',
   Insomniac: 'Long-sleeve layers with a front chest mark and a full back sketch.',
+  'Mighty Mick’s': 'Midweight crewnecks in navy or dark green with a one-color front print.',
   'Yikes!': 'Bone fleece in two cuts with a yellow-and-blue chest graphic.',
 };
 ---

@@ -95,6 +95,22 @@ export const AHA_FULFILLMENT_CATALOG = Object.freeze({
   "2GJHLJ23CJEUXHD24EQM5I5Y": { sku: "APQ-6211233S8A1", size: "L", priceCents: 4200, product: "the_city_next_level_3601_black", title: "The City Long Sleeve — Black" },
   "VXRBFITIR2LUHMGSOEBN7SOP": { sku: "APQ-6211233S1A1", size: "XL", priceCents: 4200, product: "the_city_next_level_3601_black", title: "The City Long Sleeve — Black" },
   "TLW77E6SB6RSZ4RVBUG66N5Y": { sku: "APQ-6211233S2A1", size: "2XL", priceCents: 4200, product: "the_city_next_level_3601_black", title: "The City Long Sleeve — Black" },
+
+  KP6MUHS6DUU25CHDMNLZWZ3E: { sku: "APQ-6211442S5A1", size: "XS", priceCents: 5500, product: "mighty_micks_ss3000_navy", title: "Mighty Mick’s Crewneck — Navy" },
+  MGHMBPC7FHC46T6A7ZYFAWN7: { sku: "APQ-6211442S6A1", size: "S", priceCents: 5500, product: "mighty_micks_ss3000_navy", title: "Mighty Mick’s Crewneck — Navy" },
+  QJW4CD6AVQINBJKBSEYDAF7P: { sku: "APQ-6211442S7A1", size: "M", priceCents: 5500, product: "mighty_micks_ss3000_navy", title: "Mighty Mick’s Crewneck — Navy" },
+  "7X3KG5V3JXTKJOCLY7DLJCFV": { sku: "APQ-6211442S8A1", size: "L", priceCents: 5500, product: "mighty_micks_ss3000_navy", title: "Mighty Mick’s Crewneck — Navy" },
+  HI6TDJ7EIZIPJTUVYQPVTFC7: { sku: "APQ-6211442S1A1", size: "XL", priceCents: 5500, product: "mighty_micks_ss3000_navy", title: "Mighty Mick’s Crewneck — Navy" },
+  MTI4OOHBWYJ4VDJZ3JAX36NC: { sku: "APQ-6211442S2A1", size: "2XL", priceCents: 5500, product: "mighty_micks_ss3000_navy", title: "Mighty Mick’s Crewneck — Navy" },
+  KCJDUQWBZJA5GRJNBKCYMPTE: { sku: "APQ-6211442S21A1", size: "3XL", priceCents: 5500, product: "mighty_micks_ss3000_navy", title: "Mighty Mick’s Crewneck — Navy" },
+
+  "2YEXCBP24N7IGAVRUAFH3YAL": { sku: "APQ-6211443S5A1", size: "XS", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
+  ULEWPGCCUTZRH6W6TKX46QZA: { sku: "APQ-6211443S6A1", size: "S", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
+  LTGIVZ6WPFJJHI65U7G7ALRJ: { sku: "APQ-6211443S7A1", size: "M", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
+  DR4A6AOBYIRX2OYGWPPJ2VJI: { sku: "APQ-6211443S8A1", size: "L", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
+  A2QM6DUP3NJTMKVI2BA5YSCB: { sku: "APQ-6211443S1A1", size: "XL", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
+  HYXINA6K4CPMTWM6DWAJCUO4: { sku: "APQ-6211443S2A1", size: "2XL", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
+  IBAN3RYLAN6RRG4LRHLCGIVE: { sku: "APQ-6211443S21A1", size: "3XL", priceCents: 5500, product: "mighty_micks_ss3000_dark_green", title: "Mighty Mick’s Crewneck — Dark Green" },
 });
 
 export const AHA_PRIVATE_LABEL = "SB-3-161622";

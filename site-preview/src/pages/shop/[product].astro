@@ -18,7 +18,7 @@ const sizeGuide = product.sizeGuide.map((row) => ({
   sleeveLength: 'sleeveLength' in row ? row.sleeveLength : undefined,
 }));
 const hasSleeveMeasurements = sizeGuide.every((row) => typeof row.sleeveLength === 'number');
-const colorSwatches: Record<string, string> = { Bone: '#eae6db', Black: '#171717', Grey: '#989795', 'Heather Gray': '#b7b7b5', 'Heather Grey': '#b7b7b5', 'Grey Heather': '#adadaa' };
+const colorSwatches: Record<string, string> = { Bone: '#eae6db', Black: '#171717', Grey: '#989795', 'Heather Gray': '#b7b7b5', 'Heather Grey': '#b7b7b5', 'Grey Heather': '#adadaa', Navy: '#19253C', 'Dark Green': '#193F33' };
 const colorSwatch = colorSwatches[product.color] ?? '#eae6db';
 const productSchema={
  '@context':'https://schema.org','@type':'ProductGroup',name:`${product.title} — ${product.color}`,description:product.description,
