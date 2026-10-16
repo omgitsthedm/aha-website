@@ -4,20 +4,21 @@ export const documents = [
     "metaTitle": "Collection news",
     "eyebrow": "The next chapter",
     "title": "Stay close.",
-    "description": "Follow After Hours Agenda for collection news, new designs and product updates. The Yikes! crewneck and cropped hoodie are available now.",
+    "description": "Get After Hours Agenda's new pieces and collection news by email, or follow along on Instagram. Free domestic shipping on everything in the shop.",
     "lead": "New pieces, the occasional note, and what comes next.",
+    "signup": true,
     "sections": [
+      [
+        "Available now",
+        "Everything currently for sale is in the shop, with free domestic shipping and one price across sizes."
+      ],
       [
         "Where to follow",
         "Our official Instagram is @afterhoursagenda. Follow for new designs and collection updates."
       ],
       [
-        "Available now",
-        "The Yikes! crewneck and cropped hoodie are available in Bone, with free domestic shipping."
-      ],
-      [
         "Email updates",
-        "This website does not subscribe you to a mailing list. For a product question, write to info@afterhoursagenda.com."
+        "Sign up above to hear about new pieces and drops. We only use your address to send After Hours Agenda news, never sell or share it, and remove it whenever you ask. For a product question, write to info@afterhoursagenda.com."
       ]
     ],
     "action": "Follow on Instagram ↗",
@@ -168,7 +169,7 @@ export const documents = [
     "metaTitle": "Privacy and your information",
     "eyebrow": "Privacy · October 16, 2026",
     "title": "Your information.",
-    "description": "How After Hours Agenda uses website information, analytics and marketing tools, secure Square payments and order information.",
+    "description": "How After Hours Agenda uses website information, analytics and marketing tools, email sign-ups, secure Square payments and order information.",
     "lead": "This site uses analytics and marketing tools by default. You can change those choices in the footer.",
     "sections": [
       [
@@ -182,6 +183,10 @@ export const documents = [
       [
         "Checkout and fulfillment",
         "At checkout, we collect the contact and shipping details needed to create and deliver your order. Square handles payment-card details and payment under its own privacy practices. We share necessary order and shipping details with Apliiq to make and deliver your piece, and use Resend to send transactional order and tracking emails. We do not use this information to add you to marketing."
+      ],
+      [
+        "Email updates",
+        "If you sign up for email updates, we keep your email address, the page you signed up on and the date, and use them only to send After Hours Agenda news about new pieces. We never sell or share the list. Every email we send will include a way to unsubscribe, and you can ask us to remove your address at any time by writing to info@afterhoursagenda.com. Signing up doesn't add you to anything else, and buying something doesn't sign you up."
       ],
       [
         "Contact",

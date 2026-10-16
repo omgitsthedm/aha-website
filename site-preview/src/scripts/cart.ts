@@ -621,9 +621,49 @@ async function syncCatalogue() {
   hideRetiredCards(state.retired);
 }
 
+// Phones: the photos fill the first screen, so a bar along the bottom keeps the
+// price and the next step in reach until the size picker scrolls into view.
+function initBuyBar() {
+  const form = document.querySelector<HTMLFormElement>("[data-cart-form]");
+  const title = document.querySelector(".product-details h1")?.textContent?.trim();
+  const price = document.querySelector(".product-details .product-price")?.firstChild?.textContent?.trim();
+  if (!form || !title || !price || !("IntersectionObserver" in window)) return;
+  const bar = document.createElement("div");
+  bar.className = "buy-bar";
+  bar.setAttribute("role", "region");
+  bar.setAttribute("aria-label", "Quick add");
+  const name = document.createElement("strong");
+  name.textContent = title;
+  const cost = document.createElement("span");
+  cost.textContent = price;
+  const text = document.createElement("p");
+  text.append(name, cost);
+  const action = document.createElement("button");
+  action.type = "button";
+  action.className = "button";
+  bar.append(text, action);
+  let added = false;
+  const selected = () => form.querySelector<HTMLInputElement>("[data-cart-variant]:checked");
+  const refresh = () => { const size = selected()?.dataset.size; action.textContent = added ? "View bag →" : size ? `Add ${size} to bag` : "Choose a size"; };
+  action.addEventListener("click", () => {
+    if (added) { location.href = "/checkout/"; return; }
+    if (selected()) { form.requestSubmit(); return; }
+    form.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    form.querySelector<HTMLInputElement>("[data-cart-variant]")?.focus({ preventScroll: true });
+  });
+  form.addEventListener("change", () => { added = false; refresh(); });
+  document.addEventListener("aha:cart-added", () => { added = true; refresh(); });
+  refresh();
+  bar.hidden = true;
+  document.body.append(bar);
+  document.body.classList.add("has-buy-bar");
+  new IntersectionObserver(([entry]) => { bar.hidden = Boolean(entry?.isIntersecting); }).observe(form);
+}
+
 async function init() {
   initAddForms();
   await syncCatalogue();
+  initBuyBar();
   updateCartLinks(readCart(activeCatalogue()));
   initCheckout();
 }

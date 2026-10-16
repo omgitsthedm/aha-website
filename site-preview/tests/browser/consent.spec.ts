@@ -216,3 +216,18 @@ test('saved Essential-only verified completion emits no GA4 or Meta Purchase', a
   expect(requested).toEqual([]);
   expect(await page.evaluate(()=>({ga:window.__ahaTrackingEvents?.ga.filter(v=>v[1]==='purchase')||[],meta:window.__ahaTrackingEvents?.meta.filter(v=>v[1]==='Purchase')||[]}))).toEqual({ga:[],meta:[]});
 });
+
+test('an email sign-up reports a lead with its page and never the address', async ({page}) => {
+  test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await capture(page);
+  await page.route('**/api/updates/subscribe',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({ok:true})}));
+  await page.goto('/updates/');
+  await page.getByLabel('Get new drops by email').fill('lead@example.com');
+  await page.getByRole('button',{name:'Sign me up'}).click();
+  await expect(page.locator('[data-signup-status]')).toContainText("You're on the list");
+  const queue = await page.evaluate(()=>window.__ahaTrackingEvents);
+  expect(queue?.ga).toContainEqual(['event','generate_lead',{lead_source:'updates'}]);
+  expect(queue?.meta).toContainEqual(['track','Lead',{content_name:'Email updates'}]);
+  if (queue?.posthog) expect(queue.posthog).toContainEqual(['email_signup',{source:'updates'}]);
+  expect(JSON.stringify(queue)).not.toContain('lead@example.com');
+});

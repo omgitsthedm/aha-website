@@ -1,0 +1,23 @@
+---
+// Email sign-up form: the address goes to /api/updates/subscribe and nothing is
+// sent to the visitor (server/updates/signups.mjs). Posts only from script; the
+// site's form-action 'none' policy stops a no-script submission.
+import { SIGNUP_CONSENT } from "../../server/updates/signups.mjs";
+interface Props { source: string; label?: string }
+const { source, label = "Email address" } = Astro.props;
+const id = `signup-${source}`;
+---
+<form class="signup" data-signup data-source={source} method="post" action="/api/updates/subscribe" novalidate>
+  <label class="signup-label" for={`${id}-email`}>{label}</label>
+  <div class="signup-row">
+    <input id={`${id}-email`} class="ph-no-capture" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required aria-describedby={`${id}-note ${id}-status`} />
+    <button type="submit" class="button">Sign me up <span aria-hidden="true">→</span></button>
+  </div>
+  <div class="signup-trap" aria-hidden="true">
+    <label>Leave this empty <input name="company" type="text" tabindex="-1" autocomplete="off" /></label>
+  </div>
+  <p class="signup-note" id={`${id}-note`}>{SIGNUP_CONSENT} <a href="/privacy/">Privacy</a></p>
+  <noscript><p class="signup-note">Sign-up needs JavaScript. You can also write to info@afterhoursagenda.com.</p></noscript>
+  <p class="signup-status" id={`${id}-status`} role="status" data-signup-status></p>
+</form>
+<script src="../scripts/signup.ts"></script>

@@ -2,10 +2,11 @@
 // - Daily health check: Square vs the fulfillment allow list, the live Google
 //   and Meta feeds vs the allow list, orders that need a person, stuck emails
 //   and publish requests. It emails the owner only when something is wrong.
-// - Weekly digest: orders, revenue, units, abandoned carts and open problems,
+// - Weekly digest: orders, revenue, units, abandoned carts, email sign-ups and open problems,
 //   emailed every Monday whether or not anything is wrong.
 // A check that cannot run is itself a problem, so silence always means healthy.
 import { abandonedCartStats } from "../analytics/abandoned-carts.mjs";
+import { signupCounts } from "../updates/signups.mjs";
 import { orderFlags } from "../admin/orders.mjs";
 
 const usd = (cents) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(cents || 0) / 100);
@@ -121,6 +122,7 @@ export async function weeklyDigest(db, { now = () => new Date() } = {}) {
     }
   }
   const carts = await abandonedCartStats(db.sql);
+  const signups = await signupCounts(db);
   const problems = [...await orderProblems(db, now().getTime()), ...await backgroundProblems(db)];
   const to = now();
   return {
@@ -131,6 +133,7 @@ export async function weeklyDigest(db, { now = () => new Date() } = {}) {
     units: [...units.values()].reduce((sum, value) => sum + value, 0),
     topProducts: [...units.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([title, count]) => ({ title, units: count })),
     carts: carts.last7Days,
+    signups,
     problems,
   };
 }
@@ -160,6 +163,7 @@ export function renderDigestEmail(digest, { siteUrl, posthogUrl }) {
     lines: [
       `${digest.units} piece${digest.units === 1 ? "" : "s"} sold.${digest.topProducts.length ? ` Best: ${digest.topProducts.map((item) => `${item.title} (${item.units})`).join(", ")}.` : ""}`,
       `Checkouts started: ${digest.carts.carts}. Paid: ${digest.carts.completed} (${conversion}%). Abandoned: ${digest.carts.abandoned}.`,
+      ...(digest.signups ? [`Email sign-ups: ${digest.signups.last7Days} new, ${digest.signups.total} on the list.`] : []),
       digest.problems.length ? `${digest.problems.length} open problem(s):` : "No open problems.",
     ],
     list: digest.problems.slice(0, 20),

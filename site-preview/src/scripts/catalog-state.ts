@@ -21,7 +21,7 @@ export function catalogState(): Promise<CatalogState> {
 
 const slugFromHref = (href: string | null) => /^\/shop\/([a-z0-9-]+)\/$/.exec(href ?? "")?.[1] ?? null;
 
-/** Hide product cards (and emptied collection rows) for products removed from sale. */
+/** Hide product cards, lookbook sets and emptied collection rows (with their jump links) for products removed from sale. */
 export function hideRetiredCards(retired: string[]) {
   if (!retired.length) return;
   const removed = new Set(retired);
@@ -29,10 +29,16 @@ export function hideRetiredCards(retired: string[]) {
     const slug = slugFromHref(card.querySelector("a")?.getAttribute("href") ?? null);
     if (slug && removed.has(slug)) card.hidden = true;
   });
+  document.querySelectorAll<HTMLElement>("[data-product-set]").forEach((set) => {
+    if (removed.has(set.dataset.productSet ?? "")) set.hidden = true;
+  });
   document.querySelectorAll<HTMLElement>(".collection-group").forEach((group) => {
     const cards = [...group.querySelectorAll<HTMLElement>("article.product-card")];
-    if (cards.length && cards.every((card) => card.hidden)) group.hidden = true;
+    if (!cards.length || !cards.every((card) => card.hidden)) return;
+    group.hidden = true;
+    const heading = group.getAttribute("aria-labelledby");
+    if (heading) document.querySelectorAll<HTMLElement>(`[data-jump="${heading}"]`).forEach((link) => { link.hidden = true; });
   });
 }
 
-export const pageHasProductCards = () => Boolean(document.querySelector("article.product-card"));
+export const pageHasProductCards = () => Boolean(document.querySelector("article.product-card, [data-product-set]"));

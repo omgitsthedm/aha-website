@@ -12,6 +12,7 @@ import { CatalogActionError, createCatalogActions } from "./catalog-actions.mjs"
 import { LiveCatalogError } from "../catalog/live.mjs";
 import { createLivePublisher } from "../catalog/publish.mjs";
 import { listOrders, overview } from "./orders.mjs";
+import { listSignups, removeSignup, signupCounts } from "../updates/signups.mjs";
 
 const HEADERS = { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" };
 const reply = (body, status = 200, extra = {}) => Response.json(body, { status, headers: { ...HEADERS, ...extra } });
@@ -131,9 +132,18 @@ export async function handleAdmin(request, { db, env, context, live = createLive
 
     if (route === "auth/logout" && method === "POST") { await auth.endSession(request); return reply({ ok: true }, 200, { "set-cookie": clearedCookie() }); }
     if (route === "me" && method === "GET") return reply({ email: user.email });
-    if (route === "overview" && method === "GET") return reply({ ...await overview(db), reports: await latestReports(db) });
+    if (route === "overview" && method === "GET") return reply({ ...await overview(db), signups: await signupCounts(db), reports: await latestReports(db) });
     if (route === "orders" && method === "GET") return reply({ orders: await listOrders(db) });
     if (route === "catalog" && method === "GET") return reply(await catalogSummary(live.catalog));
+    // Email list: addresses from the storefront sign-up form. Removal is by row id,
+    // so the audit log never holds the address.
+    if (route === "signups" && method === "GET") return reply(await listSignups(db));
+    const signupAction = /^signups\/(\d{1,18})\/remove$/.exec(route);
+    if (signupAction && method === "POST") {
+      const removed = await removeSignup(db, signupAction[1]);
+      await auth.audit(user.id, "signup.removed", signupAction[1], { removed });
+      return reply({ removed });
+    }
     const productAction = /^catalog\/([a-z0-9-]+)\/(remove|restore|delete-apliiq-design)$/.exec(route);
     if (productAction && method === "POST") {
       const [, slug, action] = productAction;

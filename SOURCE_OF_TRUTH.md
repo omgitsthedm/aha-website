@@ -1,5 +1,9 @@
 # After Hours Agenda source of truth
 
+## Email sign-up and storefront fixes — October 16, 2026
+
+The storefront collects email addresses for news about new pieces. They are stored in `aha_email_signups` and managed in Admin → Email list; nothing is emailed from the site. Home, shop and lookbook lead with the newest collection (Mighty Mick’s) from one shared order. The lookbook hides removed products, the shop has collection jump links, and product pages on phones have a quick-add bar. Live state is still proven only by the published deploy and `/release.json`.
+
 ## Live catalog, operations and client platform — October 16, 2026
 
 These changes ship with the release after PR #113. Products can go on sale without a site build: the engine's `publish-live` writes a Netlify Blobs snapshot, and runtime pages, feeds and allow lists read it, while built files always win. Paid orders wait 60 minutes before Apliiq, and refunds inside that window are held. A daily health check and a weekly digest email the owner. Commits that only touch tooling or docs skip Netlify builds. Store identity lives in `site-preview/client.config.json`. Live state is still proven only by the published deploy and `/release.json`.
