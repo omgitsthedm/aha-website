@@ -137,6 +137,98 @@ function updateCartLinks(lines: CartLine[]) {
 }
 function activeCatalogue(): CatalogLine[] { return catalogueFrom(document); }
 
+function bumpCount() {
+  document.querySelectorAll<HTMLElement>("[data-cart-count]").forEach((node) => { node.classList.remove("is-bumped"); void node.offsetWidth; node.classList.add("is-bumped"); });
+}
+
+// After "Add to bag": a card in the corner (a sheet on phones) with the piece, the
+// bag subtotal and Checkout. It never blocks the page: Escape, Close, Keep shopping
+// or a click elsewhere puts it away, and focus returns where it was.
+let bagPanel: HTMLElement | null = null;
+let returnFocus: HTMLElement | null = null;
+function closeBagPanel() {
+  if (!bagPanel || bagPanel.hidden) return;
+  bagPanel.hidden = true;
+  returnFocus?.focus({ preventScroll: true });
+}
+function showBagPanel(item: CatalogLine, added: number, lines: CartLine[]) {
+  if (!bagPanel) {
+    bagPanel = document.createElement("section");
+    bagPanel.className = "bag-panel";
+    bagPanel.tabIndex = -1;
+    bagPanel.setAttribute("aria-labelledby", "bag-panel-title");
+    bagPanel.innerHTML = `<div class="bag-panel-head"><p class="label" id="bag-panel-title">Added to your bag</p><button type="button" class="bag-panel-close" aria-label="Close" data-close>×</button></div><div class="bag-panel-item"><img alt="" width="72" height="90"><p><strong></strong><span></span><span></span></p></div><p class="bag-panel-total"><span></span><strong></strong></p><a class="button bag-panel-checkout" href="/checkout/">Checkout <span aria-hidden="true">→</span></a><button type="button" class="text-button" data-close>Keep shopping</button>`;
+    document.body.append(bagPanel);
+    bagPanel.querySelectorAll("[data-close]").forEach((button) => button.addEventListener("click", closeBagPanel));
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeBagPanel(); });
+    document.addEventListener("pointerdown", (event) => {
+      const target = event.target as Element;
+      if (bagPanel && !bagPanel.contains(target) && !target.closest?.("[data-cart-form], .buy-bar")) closeBagPanel();
+    });
+  }
+  bagPanel.querySelector("img")!.src = item.image;
+  const [name, detail, price] = bagPanel.querySelectorAll<HTMLElement>(".bag-panel-item strong, .bag-panel-item span");
+  name!.textContent = item.title;
+  detail!.textContent = `Size ${item.size} · Qty ${added}`;
+  price!.textContent = MONEY.format((item.priceCents * added) / 100);
+  const items = count(lines);
+  bagPanel.querySelector(".bag-panel-total span")!.textContent = `Bag subtotal · ${items} ${items === 1 ? "item" : "items"}`;
+  bagPanel.querySelector(".bag-panel-total strong")!.textContent = MONEY.format(lines.reduce((sum, line) => sum + line.priceCents * line.quantity, 0) / 100);
+  returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  bagPanel.hidden = false;
+  bagPanel.focus({ preventScroll: true });
+}
+
+// Product photos: a "1 / 4" count on the phone carousel, and tap or click for a full-screen view.
+function initGallery() {
+  const gallery = document.querySelector<HTMLElement>(".product-gallery");
+  const figures = gallery ? [...gallery.querySelectorAll<HTMLElement>("figure")] : [];
+  if (!gallery || figures.length < 2) return;
+  const counter = document.createElement("p");
+  counter.className = "gallery-count";
+  counter.setAttribute("aria-hidden", "true");
+  gallery.after(counter);
+  const update = () => {
+    const step = Math.max(1, figures[1]!.offsetLeft - figures[0]!.offsetLeft);
+    counter.textContent = `${Math.min(figures.length, Math.round(gallery.scrollLeft / step) + 1)} / ${figures.length}`;
+  };
+  gallery.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+  update();
+  // The viewer is built on first use, so pages carry no empty image.
+  let viewer: HTMLDialogElement | null = null;
+  const openViewer = () => {
+    if (viewer) return viewer;
+    const dialog = document.createElement("dialog");
+    dialog.className = "photo-viewer";
+    dialog.innerHTML = `<button type="button" class="photo-viewer-close" aria-label="Close">×</button><div class="photo-viewer-frame"><img alt=""></div>`;
+    document.body.append(dialog);
+    dialog.querySelector("button")!.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => { if (event.target === dialog || event.target === dialog.querySelector(".photo-viewer-frame")) dialog.close(); });
+    return (viewer = dialog);
+  };
+  figures.forEach((figure) => {
+    const image = figure.querySelector("img");
+    if (!image) return;
+    const open = document.createElement("button");
+    open.type = "button";
+    open.className = "photo-zoom";
+    open.setAttribute("aria-label", `Enlarge photo: ${figure.querySelector("figcaption")?.textContent ?? "view"}`);
+    open.addEventListener("click", () => {
+      const dialog = openViewer();
+      const large = dialog.querySelector("img")!;
+      large.alt = image.alt;
+      large.sizes = "200vw";
+      large.srcset = image.srcset;
+      large.src = image.currentSrc || image.src;
+      dialog.setAttribute("aria-label", image.alt);
+      dialog.showModal();
+      const frame = large.parentElement!;
+      requestAnimationFrame(() => { frame.scrollLeft = (frame.scrollWidth - frame.clientWidth) / 2; });
+    });
+    figure.append(open);
+  });
+}
+
 function initAddForms() {
   document.querySelectorAll<HTMLFormElement>("[data-cart-form]").forEach((form) => {
     const status = form.querySelector<HTMLElement>("[data-cart-add-status]");
@@ -165,8 +257,10 @@ function initAddForms() {
         : [...current, { ...item, variationId: item.id, quantity: Math.min(quantity, available) }];
       writeCart(next);
       updateCartLinks(next);
+      bumpCount();
       document.dispatchEvent(new CustomEvent("aha:cart-added", { detail: { id: item.id, name: item.title, size: item.size, color: item.color, price: item.priceCents / 100, quantity: Math.min(quantity, available) } }));
       if (status) status.innerHTML = `${item.title}, ${item.size}, added. <a href="/checkout/">View bag and checkout</a>.`;
+      showBagPanel(item, Math.min(quantity, available), next);
     });
   });
 }
@@ -662,6 +756,7 @@ function initBuyBar() {
 
 async function init() {
   initAddForms();
+  initGallery();
   await syncCatalogue();
   initBuyBar();
   updateCartLinks(readCart(activeCatalogue()));

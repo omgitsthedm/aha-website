@@ -32,6 +32,14 @@ export function hideRetiredCards(retired: string[]) {
   document.querySelectorAll<HTMLElement>("[data-product-set]").forEach((set) => {
     if (removed.has(set.dataset.productSet ?? "")) set.hidden = true;
   });
+  // "Also in" color links on product pages.
+  document.querySelectorAll<HTMLAnchorElement>("a.color-option").forEach((link) => {
+    const slug = slugFromHref(link.getAttribute("href"));
+    if (slug && removed.has(slug)) link.hidden = true;
+  });
+  document.querySelectorAll<HTMLElement>(".color-options").forEach((row) => {
+    if ([...row.querySelectorAll<HTMLElement>("a.color-option")].every((link) => link.hidden)) row.hidden = true;
+  });
   document.querySelectorAll<HTMLElement>(".collection-group").forEach((group) => {
     const cards = [...group.querySelectorAll<HTMLElement>("article.product-card")];
     if (!cards.length || !cards.every((card) => card.hidden)) return;
@@ -42,3 +50,23 @@ export function hideRetiredCards(retired: string[]) {
 }
 
 export const pageHasProductCards = () => Boolean(document.querySelector("article.product-card, [data-product-set]"));
+
+// Hover devices: a product card swaps to its second view. The image is created
+// on first hover, so phones and visitors who never hover download nothing extra.
+if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  document.addEventListener("pointerover", (event) => {
+    const link = (event.target as Element | null)?.closest?.<HTMLAnchorElement>(".product-card-image[data-swap-src]");
+    if (!link || link.querySelector(".product-card-swap")) return;
+    const main = link.querySelector("img");
+    const swap = document.createElement("img");
+    swap.className = "product-card-swap";
+    swap.alt = "";
+    swap.setAttribute("aria-hidden", "true");
+    swap.decoding = "async";
+    swap.sizes = main?.sizes ?? "";
+    swap.srcset = link.dataset.swapSrcset ?? "";
+    swap.src = link.dataset.swapSrc ?? "";
+    swap.addEventListener("load", () => link.classList.add("has-swap"), { once: true });
+    link.append(swap);
+  }, { passive: true });
+}

@@ -3,6 +3,7 @@ import Site from '../../layouts/Site.astro';
 import ProductImage from '../../components/ProductImage.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import products from '../../data/products.json';
+import { otherColors, swatchFor } from '../../../server/catalog/garments.mjs';
 export function getStaticPaths(){return products.map(product=>({params:{product:product.slug},props:{product}}));}
 const {product}=Astro.props;
 const origin=Astro.site!.origin;
@@ -18,8 +19,8 @@ const sizeGuide = product.sizeGuide.map((row) => ({
   sleeveLength: 'sleeveLength' in row ? row.sleeveLength : undefined,
 }));
 const hasSleeveMeasurements = sizeGuide.every((row) => typeof row.sleeveLength === 'number');
-const colorSwatches: Record<string, string> = { Bone: '#eae6db', Maroon: '#5a1e2a', Black: '#171717', Grey: '#989795', 'Heather Gray': '#b7b7b5', 'Heather Grey': '#b7b7b5', 'Grey Heather': '#adadaa', Navy: '#19253C', 'Dark Green': '#193F33' };
-const colorSwatch = colorSwatches[product.color] ?? '#eae6db';
+const colorSwatch = swatchFor(product.color);
+const siblings: typeof products = otherColors(product, products);
 const productSchema={
  '@context':'https://schema.org','@type':'ProductGroup',name:`${product.title} — ${product.color}`,description:product.description,
  productGroupID:product.squareItemId,brand:{'@type':'Brand',name:'After Hours Agenda'},color:product.color,material:product.composition,
@@ -33,7 +34,7 @@ const productSchema={
  <section class="shell product-layout" data-product-id={product.squareItemId} data-product-name={product.title} data-product-color={product.color} data-product-price={product.price}>
   <div class="product-visuals">
    <div class="product-gallery" role="region" tabindex="0" aria-label={`${product.title} garment views; scroll to see all four`}>
-    {gallery.map((shot,i)=><figure id={`view-${i+1}`}><ProductImage image={shot} priority={i===0} sizes="(max-width: 760px) 100vw, 55vw"/><figcaption>{galleryLabels[shot.role]}</figcaption></figure>)}
+    {gallery.map((shot,i)=><figure id={`view-${i+1}`}><ProductImage image={shot} priority={i===0} sizes="(max-width: 760px) 100vw, 55vw" name={i===0 ? `p-${product.slug}` : undefined}/><figcaption>{galleryLabels[shot.role]}</figcaption></figure>)}
    </div>
    <p class="image-note">Product mockups. Colors and print placement can vary slightly in production.</p>
   </div>
@@ -41,6 +42,7 @@ const productSchema={
    <p class="label">{product.collection} / {product.typeLabel}</p><h1>{product.title}</h1>
    <div class="product-price-row"><p class="product-price">${product.price}<span> USD</span></p><p>Free domestic shipping</p></div>
    <p class="color-choice"><span class="color-swatch" style={`--swatch:${colorSwatch}`} aria-hidden="true"></span> {product.color}</p>
+   {siblings.length > 0 && <p class="color-options">Also in {siblings.map((entry) => <a class="color-option" href={`/shop/${entry.slug}/`}><span class="color-swatch" style={`--swatch:${swatchFor(entry.color)}`} aria-hidden="true"></span> {entry.color}</a>)}</p>}
    <p>{product.description}</p>
    <form class="product-purchase" data-cart-form>
     <p class="label">Choose a size</p>

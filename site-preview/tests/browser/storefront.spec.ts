@@ -78,6 +78,10 @@ test("product pages on a phone keep price and the next step in a bar until the s
   await expect(bar.getByRole("button", { name: "Add M to bag" })).toBeVisible();
   await bar.getByRole("button", { name: "Add M to bag" }).click();
   await expect(page.locator(".header-cart [data-cart-count]")).toHaveText("1");
+  const added = page.getByRole("region", { name: "Added to your bag" });
+  await expect(added).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(added).toBeHidden();
   await expect(bar.getByRole("button", { name: "View bag →" })).toBeVisible();
   await bar.getByRole("button", { name: "View bag →" }).click();
   await expect(page).toHaveURL(/\/checkout\/$/);
@@ -103,4 +107,81 @@ test("sign-up forms fit a 320px screen whatever the input's natural width", asyn
     });
     expect(width, path).toBeLessThanOrEqual(320);
   }
+});
+
+test("adding to the bag opens a card with the piece, the subtotal and Checkout, without blocking the page", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/shop/the-city-ss4500-black/");
+  await page.getByRole("radio", { name: "M", exact: true }).check();
+  await page.locator("[data-cart-quantity]").fill("2");
+  const add = page.getByRole("button", { name: "Add to bag" });
+  await add.click();
+  const card = page.getByRole("region", { name: "Added to your bag" });
+  await expect(card).toBeVisible();
+  await expect(card).toContainText("The City Hoodie");
+  await expect(card).toContainText("Size M · Qty 2");
+  await expect(card).toContainText("Bag subtotal · 2 items");
+  await expect(card).toContainText("$116.00");
+  await expect(card.getByRole("link", { name: "Checkout" })).toHaveAttribute("href", "/checkout/");
+  await card.getByRole("button", { name: "Keep shopping" }).click();
+  await expect(card).toBeHidden();
+  await expect(add).toBeFocused();
+  await add.click();
+  await expect(card).toContainText("Bag subtotal · 4 items");
+  await page.getByRole("link", { name: /Bag, 4 items/ }).click();
+  await expect(page).toHaveURL(/\/checkout\/$/);
+});
+
+test("product pages link the same garment in its other colors", async ({ page }) => {
+  await page.goto("/shop/mighty-micks-ss3000-navy/");
+  const other = page.locator(".color-options").getByRole("link", { name: "Dark Green" });
+  await expect(other).toHaveAttribute("href", "/shop/mighty-micks-ss3000-dark-green/");
+  await page.goto("/shop/the-city-ss4500-black/");
+  await expect(page.locator(".color-options")).toHaveCount(0);
+});
+
+test("the shop filter shows one garment type and hides collections left empty", async ({ page }) => {
+  await page.goto("/shop/");
+  const filter = page.getByRole("group", { name: "Show" });
+  await filter.getByRole("button", { name: "Hoodies" }).click();
+  await expect(filter.getByRole("button", { name: "Hoodies" })).toHaveAttribute("aria-pressed", "true");
+  const visible = page.locator("article.product-card:visible");
+  expect(await visible.evaluateAll((cards) => cards.every((card) => (card as HTMLElement).dataset.type === "hoodies"))).toBe(true);
+  expect(await visible.count()).toBeGreaterThan(0);
+  await expect(page.getByRole("heading", { name: "Mighty Mick’s", exact: true })).toBeHidden();
+  await expect(page.getByRole("navigation", { name: "Jump to a collection" }).getByRole("link", { name: "Mighty Mick’s" })).toBeHidden();
+  await filter.getByRole("button", { name: "All" }).click();
+  await expect(page.getByRole("heading", { name: "Mighty Mick’s", exact: true })).toBeVisible();
+});
+
+test("hovering a product card swaps to its second view; the image loads only on hover", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/shop/");
+  const card = page.locator(".product-card-image").first();
+  await expect(card.locator(".product-card-swap")).toHaveCount(0);
+  await card.hover();
+  await expect(card).toHaveClass(/has-swap/);
+  await expect(card.locator(".product-card-swap")).toHaveAttribute("src", (await card.getAttribute("data-swap-src"))!);
+});
+
+test("phone product photos show a count and open full screen", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/shop/the-city-ss4500-black/");
+  const count = page.locator(".gallery-count");
+  await expect(count).toHaveText("1 / 4");
+  await page.locator(".product-gallery").evaluate((gallery) => { gallery.scrollLeft = (gallery.children[1] as HTMLElement).offsetLeft - (gallery.children[0] as HTMLElement).offsetLeft; });
+  await expect(count).toHaveText("2 / 4");
+  await page.getByRole("button", { name: "Enlarge photo: Front" }).click();
+  const viewer = page.locator("dialog.photo-viewer");
+  await expect(viewer).toBeVisible();
+  await expect(viewer.locator("img")).toHaveJSProperty("complete", true);
+  await page.keyboard.press("Escape");
+  await expect(viewer).toBeHidden();
+});
+
+test("every lookbook photo links to its piece", async ({ page }) => {
+  await page.goto("/lookbook/");
+  const chips = page.locator(".campaign-set .look-chip");
+  expect(await chips.count()).toBe(await page.locator(".campaign-grid figure").count());
+  await expect(chips.first()).toHaveAttribute("href", /^\/shop\/[a-z0-9-]+\/$/);
 });

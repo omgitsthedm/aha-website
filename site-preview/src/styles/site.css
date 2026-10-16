@@ -1132,3 +1132,53 @@ select:focus-visible {
 .signup{display:grid;gap:.6rem;width:100%;min-width:0;max-width:34rem}.signup-label{font:700 .78rem var(--mono);letter-spacing:.06em;text-transform:uppercase}.signup-row{display:flex;gap:.5rem}.signup-row input{flex:1;width:100%;min-width:0;min-height:52px;padding:.7rem .85rem;border:1px solid var(--ink);border-radius:0;background:var(--paper);color:var(--ink);font:400 1rem var(--body)}.signup-row input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}.signup-row input[aria-invalid="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.signup-row .button{flex:none}.signup-row .button:disabled{opacity:.6;cursor:progress;transform:none}.signup p,.updates-inner .signup p{margin:0;max-width:none}.signup-note{font-size:.78rem;line-height:1.6;color:var(--muted)}.updates-inner .signup .signup-status,.signup-status{min-height:1.4rem;font-weight:700;font-size:.9rem;color:var(--ink)}.signup.is-done .signup-row,.signup.is-done .signup-label{display:none}.signup-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}.signup-panel{margin-top:2rem;padding:1.5rem;border:1px solid var(--ink);background:var(--surface);max-width:40rem}.updates-inner .signup{justify-self:end}
 @media(max-width:760px){.updates-inner .signup{justify-self:start}}
 @media(max-width:540px){.signup-row{flex-direction:column}.signup-row .button{width:100%}.signup-panel{padding:1.25rem}}
+/* Motion. Everything here is CSS, runs only where the browser supports it, and
+   is off for visitors who reduce motion. Nothing above the fold starts hidden. */
+@view-transition { navigation: auto; }
+::view-transition-group(*) { animation-duration: .45s; animation-timing-function: cubic-bezier(.2,.7,.15,1); }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+/* Values strip: two phrases by default; with scroll-linked animation it drifts as the page scrolls (never on its own). */
+.chapter-strip{overflow:hidden;overflow:clip}.ticker{display:flex;flex:1;justify-content:space-between;gap:32px}.ticker span[aria-hidden]{display:none}
+@media(max-width:760px){.ticker span:nth-child(2){display:none}}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    :root{--scroll-view:view()}
+    .ticker{flex:none;justify-content:flex-start;gap:4.5rem;width:max-content;animation-name:drift;animation-timing-function:linear;animation-fill-mode:both;animation-duration:auto;animation-timeline:var(--scroll-view);animation-range:cover 0% cover 100%}
+    .ticker span,.ticker span[aria-hidden],.ticker span:nth-child(2){display:inline;white-space:nowrap}
+    .product-grid .product-card-image,.campaign-grid img,.teaser-grid img,.story-grid .archive-image img,.statement img{animation-name:rise;animation-timing-function:linear;animation-fill-mode:both;animation-duration:auto;animation-timeline:var(--scroll-view);animation-range:entry 0% entry 45%}
+    .section-header h2,.statement h2,.updates-inner h2,.size-guide h2,.page-head h1{animation-name:unmask;animation-timing-function:linear;animation-fill-mode:both;animation-duration:auto;animation-timeline:var(--scroll-view);animation-range:entry 0% entry 55%}
+  }
+}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-18%)}}
+@keyframes rise{from{opacity:0;transform:translateY(28px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes unmask{from{clip-path:inset(0 0 100% 0);transform:translateY(.3em)}to{clip-path:inset(0 0 -12% 0);transform:none}}
+/* Small responses: size chips press in, button arrows lean forward, the bag count pops when something is added. */
+.size-options input{z-index:1}.size-options span{transition:background-color .15s,color .15s,border-color .15s,transform .12s}.size-options label:active span{transform:scale(.94)}
+.button>span[aria-hidden]{display:inline-block;transition:transform .2s cubic-bezier(.2,.7,.15,1)}.button:hover>span[aria-hidden]{transform:translateX(3px)}
+[data-cart-count].is-bumped{animation:bump .5s cubic-bezier(.2,.7,.15,1)}
+@keyframes bump{40%{transform:scale(1.45);background:var(--rose);color:var(--ink)}}
+@media (prefers-reduced-motion: reduce){.size-options span,.button>span[aria-hidden]{transition:none}[data-cart-count].is-bumped{animation:none}}
+/* Product cards: second view on hover (created by src/scripts/catalog-state.ts). */
+.product-card-image{position:relative}.product-card-swap{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;opacity:0;transition:opacity .35s ease}
+@media(hover:hover){.product-card-image.has-swap:hover .product-card-swap,.product-card-image.has-swap:focus-visible .product-card-swap{opacity:1}}
+/* Other colors of the same garment. */
+.color-options{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .9rem;margin:.6rem 0 0;font-size:.85rem;color:var(--muted)}.color-option{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;color:var(--ink);font-weight:700}.color-option .color-swatch{transition:transform .2s}.color-option:hover .color-swatch{transform:scale(1.15)}
+/* Shop garment filter. */
+.is-filtered{display:none!important}
+.type-filter{display:flex;flex-wrap:wrap;gap:0;margin-top:1.75rem;border:1px solid var(--ink);width:max-content;max-width:100%}.type-filter button{min-height:44px;padding:.45rem 1rem;border:0;border-right:1px solid var(--ink);background:var(--paper);color:var(--ink);font:700 .75rem var(--mono);letter-spacing:.04em;text-transform:uppercase;transition:background-color .15s,color .15s}.type-filter button:last-child{border-right:0}.type-filter button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}.type-filter button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}.type-filter+.collection-jump{margin-top:.75rem}
+@media(max-width:760px){.type-filter{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.type-filter::-webkit-scrollbar{display:none}.type-filter button{flex:none}}
+/* Bag card after Add to bag (src/scripts/cart.ts): bottom-right on desktop, a sheet on phones. */
+.bag-panel{position:fixed;z-index:70;right:24px;bottom:24px;display:grid;gap:.8rem;width:min(380px,calc(100vw - 32px));padding:1rem 1.25rem 1.1rem;background:var(--paper);border:1px solid var(--ink);box-shadow:0 18px 50px rgba(0,0,0,.16);animation:panel-in .35s cubic-bezier(.2,.7,.15,1)}.bag-panel:focus:not(:focus-visible){outline:none}.bag-panel-head{display:flex;align-items:center;justify-content:space-between}.bag-panel-head .label{margin:0}.bag-panel-close{min-width:44px;min-height:44px;margin-right:-.6rem;border:0;background:transparent;font-size:1.5rem;line-height:1}.bag-panel-item{display:grid;grid-template-columns:72px minmax(0,1fr);gap:.9rem;align-items:center}.bag-panel-item img{width:72px;height:90px;object-fit:contain;background:#fff;border:1px solid var(--line)}.bag-panel-item p{display:grid;gap:.15rem;margin:0;font-size:.85rem;color:var(--muted)}.bag-panel-item strong{color:var(--ink);font-size:.95rem}.bag-panel-item span:last-child{color:var(--ink);font:700 .85rem var(--mono)}.bag-panel-total{display:flex;justify-content:space-between;gap:1rem;margin:0;padding-top:.8rem;border-top:1px solid var(--line);font-size:.85rem}.bag-panel-total strong{font:700 1rem var(--mono);font-variant-numeric:tabular-nums}.bag-panel-checkout{width:100%}.bag-panel .text-button{justify-self:center;margin:0}
+@keyframes panel-in{from{opacity:0;transform:translateY(16px)}}
+@media(max-width:760px){.bag-panel{left:0;right:0;bottom:0;width:auto;border-width:2px 0 0;padding:1rem clamp(20px,4.4vw,72px) calc(1rem + env(safe-area-inset-bottom))}}
+/* Product photos: carousel count on phones, and a full-screen viewer. */
+.gallery-count{display:none}.product-gallery figure{position:relative}.photo-zoom{position:absolute;inset:0;width:100%;border:0;background:transparent;cursor:zoom-in}.photo-zoom:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+@media(max-width:760px){.gallery-count{display:block;margin:.5rem 0 0;font:700 .75rem var(--mono);font-variant-numeric:tabular-nums;text-align:right}}
+.photo-viewer{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:#fff}.photo-viewer::backdrop{background:rgba(26,26,26,.6)}.photo-viewer[open]{animation:panel-in .25s ease}.photo-viewer-frame{width:100%;height:100%;overflow:auto;display:grid;place-items:center}.photo-viewer-frame img{width:min(100%,1200px);max-width:none;height:auto;cursor:zoom-out}.photo-viewer-close{position:fixed;top:12px;right:12px;z-index:1;min-width:48px;min-height:48px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);font-size:1.6rem;line-height:1}
+@media(max-width:760px){.photo-viewer-frame{place-items:start}.photo-viewer-frame img{width:200%}}
+@media (prefers-reduced-motion: reduce){.bag-panel,.photo-viewer[open]{animation:none}}
+/* Lookbook: every campaign photo links to its piece. On phones each photo fills
+   the screen edge to edge and the page settles on one photo at a time. */
+.campaign-grid figure{position:relative}.look-chip{position:absolute;left:.75rem;top:.75rem;display:inline-flex;align-items:center;gap:.4rem;min-height:40px;padding:.4rem .8rem;background:var(--paper);color:var(--ink);border:1px solid var(--ink);font:700 .72rem var(--mono);letter-spacing:.05em;text-transform:uppercase;text-decoration:none;transition:background-color .15s,color .15s}.look-chip:hover,.look-chip:focus-visible{background:var(--ink);color:var(--paper)}.look-chip span{transition:transform .2s}.look-chip:hover span{transform:translateX(3px)}
+@media(max-width:760px){html:has(.campaign-set){scroll-snap-type:y proximity}.campaign-set .campaign-grid{gap:0;margin-inline:calc(-1 * clamp(20px,4.4vw,72px))}.campaign-grid figure{scroll-snap-align:start}.campaign-grid img,.campaign-set .campaign-grid img{width:100%;height:calc(100svh - 2.5rem);max-height:none;aspect-ratio:auto;object-fit:cover;border:0}.campaign-grid figcaption{padding:.6rem clamp(20px,4.4vw,72px) 0;margin:0;height:2.5rem}.look-chip{left:auto;right:clamp(20px,4.4vw,72px);top:auto;bottom:3.25rem}}

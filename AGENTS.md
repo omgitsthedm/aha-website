@@ -92,6 +92,8 @@ The owner explicitly instructed “yup push it all live, document it and leave i
 
 Use AHA's current `app/globals.css`, Poppins weights from `app/layout.tsx`, `lib/content/brand-copy.ts`, the canonical `components/ui/SheepMark.tsx` artwork and `data/brand-imagery.json`. The later source contract takes precedence over conflicting July design prose: paper/ink/rose, Poppins 400/700/900, hairline frames, warm plain language and no invented city-origin claims. New preview tokens live in `site-preview/src/styles/tokens.css`.
 
+Never theme a feature or write customer-facing copy that plays off the brand name (no “after hours” modes, night or time-of-day puns, or “agenda” wordplay); the name appears only as the name. The owner set this rule on October 16, 2026.
+
 New orders are paused. Never fabricate product availability, future release dates, reviews, revenue, conversion or search results. Caption AI campaign concepts and previous-run renders accurately. Preserve existing-order terms. The contact enhancement only prepares a local email; no backend delivery or automatic signup is implied.
 
 ## Validation
