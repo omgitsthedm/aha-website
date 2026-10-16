@@ -57,8 +57,12 @@ export function openAiFeedJsonl(list,origin){
   material:product.composition,
  }))).join('\n')+'\n';
 }
-/** Gzip with a fixed header (no timestamp) so the build stays reproducible. */
-export const gzipFeed=(text)=>gzipSync(Buffer.from(text),{level:9});
+/**
+ * Gzip that is byte-identical on every build machine: Node writes no timestamp,
+ * and the header's OS byte (macOS 19, Linux 3) is pinned to 3 so a local build
+ * reproduces Netlify's artifact digest.
+ */
+export const gzipFeed=(text)=>{const out=gzipSync(Buffer.from(text),{level:9});out[9]=3;return out;};
 
 export async function writeFeeds(dist,origin){
  await mkdir(new URL('feeds/',dist),{recursive:true});
