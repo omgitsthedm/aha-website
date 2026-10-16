@@ -1,4 +1,5 @@
 import {mkdir,writeFile} from 'node:fs/promises';
+import {gzipSync} from 'node:zlib';
 import products from '../src/data/products.json' with {type:'json'};
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&apos;');
 const tag=(name,value)=>`<g:${name}>${escape(value)}</g:${name}>`;
@@ -28,10 +29,42 @@ export function feedXml(list,origin){
  }));
  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel><title>After Hours Agenda — Shop</title><link>${escape(origin)}/shop/</link><description>Current After Hours Agenda collection</description>${items.join('')}</channel></rss>\n`;
 }
+/**
+ * OpenAI product feed (ChatGPT shopping), OpenAI format as JSON Lines: one row
+ * per size, required fields plus variant grouping. Search only; checkout in
+ * ChatGPT needs a separate integration. Delivered by SFTP (see
+ * .github/workflows/openai-feed.yml) once the merchant account exists.
+ */
+export function openAiFeedJsonl(list,origin){
+ return list.flatMap(product=>product.variants.map(variant=>JSON.stringify({
+  item_id:variant.id,
+  title:`${product.title} — ${product.color} — ${variant.size}`,
+  description:product.description,
+  url:`${origin}/shop/${product.slug}/?size=${encodeURIComponent(variant.size)}`,
+  brand:'After Hours Agenda',
+  seller_name:'After Hours Agenda',
+  image_url:origin+product.gallery[0].feedImage,
+  availability:'in_stock',
+  price:`${product.price.toFixed(2)} USD`,
+  is_eligible_search:true,
+  is_eligible_checkout:false,
+  group_id:product.squareItemId,
+  listing_has_variations:true,
+  variant_dict:{color:product.color,size:variant.size},
+  color:product.color,
+  size:variant.size,
+  gender:product.gender,
+  material:product.composition,
+ }))).join('\n')+'\n';
+}
+/** Gzip with a fixed header (no timestamp) so the build stays reproducible. */
+export const gzipFeed=(text)=>gzipSync(Buffer.from(text),{level:9});
+
 export async function writeFeeds(dist,origin){
  await mkdir(new URL('feeds/',dist),{recursive:true});
  const xml=feedXml(products,origin);
  await writeFile(new URL('feeds/google.xml',dist),xml);
  await writeFile(new URL('feeds/meta.xml',dist),xml);
+ await writeFile(new URL('feeds/openai.jsonl.gz',dist),gzipFeed(openAiFeedJsonl(products,origin)));
  await writeFile(new URL('_redirects',dist),'/feeds/meta /feeds/meta.xml 200\n/feeds/meta/ /feeds/meta.xml 200\n');
 }

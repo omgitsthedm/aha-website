@@ -1,0 +1,4 @@
+# Project MCP servers for Codex, matching .mcp.json for Claude Code.
+# Read-only documentation only; the catalog engine owns Square/Apliiq writes.
+[mcp_servers.astro-docs]
+url = "https://mcp.docs.astro.build/mcp"

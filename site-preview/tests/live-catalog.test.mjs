@@ -3,7 +3,8 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
-import { feedXml } from "../scripts/feeds.mjs";
+import { gunzipSync } from "node:zlib";
+import { feedXml, gzipFeed, openAiFeedJsonl } from "../scripts/feeds.mjs";
 import { handleAdmin } from "../server/admin/api.mjs";
 import { normalizeItems } from "../server/checkout/catalog.mjs";
 import { STATIC_PRODUCTS } from "../server/catalog/current.mjs";
@@ -236,4 +237,30 @@ test("live publishing API needs the automation token and only writes on producti
   assert.equal((await put({ authorization: `Bearer ${token}` }, { deploy: { context: "deploy-preview" } })).status, 403);
   assert.equal((await put({ authorization: `Bearer ${token}` }, { deploy: { context: "production" } })).status, 200);
   assert.deepEqual(calls, ["night-shift"]);
+});
+
+test("OpenAI feed: every size has the required fields, groups by product, and includes live products", async () => {
+  const production = { deploy: { context: "production" } };
+  const empty = async () => ({ products: STATIC_PRODUCTS, liveProducts: [], allowList: AHA_FULFILLMENT_CATALOG });
+  const response = await handleFeeds(new Request("https://afterhoursagenda.com/feeds/openai.jsonl.gz"), production, { catalog: empty });
+  assert.equal(response.headers.get("content-type"), "application/gzip");
+  const body = Buffer.from(await response.arrayBuffer());
+  assert.deepEqual(body, gzipFeed(openAiFeedJsonl(STATIC_PRODUCTS, "https://afterhoursagenda.com")));
+  if (process.env.AHA_PRODUCTION_BUILD === "approved") assert.deepEqual(body, await readFile(new URL("feeds/openai.jsonl.gz", dist)));
+  const rows = gunzipSync(body).toString("utf8").trim().split("\n").map((line) => JSON.parse(line));
+  assert.equal(rows.length, STATIC_PRODUCTS.reduce((sum, product) => sum + product.variants.length, 0));
+  for (const row of rows) {
+    for (const field of ["item_id", "title", "description", "url", "brand", "seller_name", "image_url", "availability", "price"]) assert.ok(typeof row[field] === "string" && row[field].length > 0, `${row.item_id} ${field}`);
+    assert.match(row.price, /^\d+\.\d{2} USD$/);
+    assert.match(row.url, /^https:\/\/afterhoursagenda\.com\/shop\/[a-z0-9-]+\/\?size=/);
+    assert.match(row.image_url, /^https:\/\/afterhoursagenda\.com\/images\/.+\.jpg$/);
+    assert.notEqual(row.group_id, row.item_id);
+    assert.deepEqual(Object.keys(row.variant_dict), ["color", "size"]);
+    assert.equal(row.is_eligible_checkout, false);
+    assert.equal(AHA_FULFILLMENT_CATALOG[row.item_id].priceCents, Math.round(Number(row.price.split(" ")[0]) * 100), "feed price equals checkout price");
+  }
+  const product = liveProduct();
+  const withLive = async () => ({ products: [...STATIC_PRODUCTS, product], liveProducts: [product], allowList: {} });
+  const live = gunzipSync(Buffer.from(await (await handleFeeds(new Request("https://afterhoursagenda.com/feeds/openai.jsonl.gz"), production, { catalog: withLive })).arrayBuffer())).toString("utf8");
+  assert.ok(live.includes(`"item_id":"${product.variants[0].id}"`));
 });
