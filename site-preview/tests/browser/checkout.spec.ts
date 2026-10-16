@@ -187,7 +187,8 @@ test("checkout: expired or bag-mismatched Cash App resume is discarded without r
   await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
   await page.evaluate(() => { const key = "aha-cash-app-resume-v1"; const saved = JSON.parse(sessionStorage.getItem(key)!); saved.quote.expiresAt = "2000-01-01T00:00:00.000Z"; sessionStorage.setItem(key, JSON.stringify(saved)); });
   await page.reload();
-  expect(await page.evaluate(() => sessionStorage.getItem("aha-cash-app-resume-v1"))).toBeNull();
+  // Checkout discards the expired resume after its catalog check, which is async.
+  await expect.poll(() => page.evaluate(() => sessionStorage.getItem("aha-cash-app-resume-v1"))).toBeNull();
   expect(quotes).toBe(1);
 });
 
@@ -203,6 +204,6 @@ test("checkout: a bag-mismatched Cash App resume is discarded without re-quoting
   await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
   await page.evaluate(() => localStorage.setItem("aha-cart-v2", JSON.stringify([{ variationId: "R5UCZCGSJMR3Z4HJDVOD3ZIK", quantity: 2 }])));
   await page.reload();
-  expect(await page.evaluate(() => sessionStorage.getItem("aha-cash-app-resume-v1"))).toBeNull();
+  await expect.poll(() => page.evaluate(() => sessionStorage.getItem("aha-cash-app-resume-v1"))).toBeNull();
   expect(quotes).toBe(1);
 });
