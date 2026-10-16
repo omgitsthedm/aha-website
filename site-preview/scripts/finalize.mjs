@@ -64,7 +64,7 @@ await writeFile(
     start_url: "/",
     display: "browser",
     background_color: "#fafafa",
-    theme_color: "#ff6b6b",
+    theme_color: "#fafafa",
     icons: [
       {
         src: "/brand/android-chrome-192x192.png",

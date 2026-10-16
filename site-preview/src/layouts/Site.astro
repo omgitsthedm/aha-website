@@ -94,7 +94,7 @@ const schema = {
       }
     />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#FF6B6B" />
+    <meta name="theme-color" content="#fafafa" />
     {preloadImage && <link rel="preload" as="image" href={preloadImage.src} imagesrcset={preloadImage.srcset} imagesizes={preloadImage.sizes} fetchpriority="high" />}
     <meta name="facebook-domain-verification" content="83wsdo81kg6b428satufegpkljq0w6" />
     <meta property="og:type" content="website" />
@@ -128,6 +128,8 @@ const schema = {
     />
     <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
+    {/* Supporting browsers start loading a product page when a visitor hovers or presses its link. */}
+    <script type="speculationrules" is:inline set:html={`{"prerender":[{"where":{"and":[{"href_matches":"/shop/*"},{"not":{"href_matches":"/shop/"}}]},"eagerness":"moderate"}],"prefetch":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/shop/*","/admin/*","/api/*","/checkout/*"]}}]},"eagerness":"moderate"}]}`} />
     <script
       type="application/ld+json"
       set:html={JSON.stringify(schema).replace(/</g, "\\u003c")}
@@ -143,6 +145,7 @@ const schema = {
         <span>For review · Fall / Winter 2026</span>
       </div>
     )}
+    <div class="site-header-bar" data-header-bar>
     <header class="site-header shell">
       <a class="identity" href="/" aria-label="After Hours Agenda home">
         <img src="/brand/sheep.svg" width="46" height="36" alt="" />
@@ -187,6 +190,7 @@ const schema = {
         </nav>
       </details>
     </header>
+    </div>
     <main id="main" tabindex="-1">
       <slot />
     </main>
@@ -265,6 +269,22 @@ const schema = {
         )
           menu.open = false;
       });
+      // The header tucks away while scrolling down and returns on scroll up or
+      // keyboard focus. Sticky product details and checkout follow it (--header-offset).
+      const header = document.querySelector<HTMLElement>("[data-header-bar]");
+      let lastY = scrollY;
+      const tuck = (tucked: boolean) => {
+        if (!header || header.classList.contains("is-tucked") === tucked) return;
+        header.classList.toggle("is-tucked", tucked);
+        document.documentElement.style.setProperty("--header-offset", tucked ? "0px" : `${header.offsetHeight}px`);
+      };
+      addEventListener("scroll", () => {
+        const y = scrollY;
+        if (Math.abs(y - lastY) < 8) return;
+        tuck(y > lastY && y > 200 && !menu?.open);
+        lastY = y;
+      }, { passive: true });
+      header?.addEventListener("focusin", () => tuck(false));
     </script>
   </body>
 </html>

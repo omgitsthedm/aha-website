@@ -12,7 +12,7 @@ import { CatalogActionError, createCatalogActions } from "./catalog-actions.mjs"
 import { LiveCatalogError } from "../catalog/live.mjs";
 import { createLivePublisher } from "../catalog/publish.mjs";
 import { listOrders, overview } from "./orders.mjs";
-import { listSignups, removeSignup, signupCounts } from "../updates/signups.mjs";
+import { errorSummary, listSignups, removeSignup, signupCounts } from "../updates/signups.mjs";
 
 const HEADERS = { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" };
 const reply = (body, status = 200, extra = {}) => Response.json(body, { status, headers: { ...HEADERS, ...extra } });
@@ -202,8 +202,8 @@ export async function handleAdmin(request, { db, env, context, live = createLive
     if (error instanceof AdminAuthError) return reply({ error: error.message }, error.status);
     if (error instanceof DraftValidationError || error instanceof LiveCatalogError) return reply({ error: error.message }, 422);
     if (error instanceof CatalogActionError) return reply({ error: error.message }, error.status);
-    // Name and message only: never request bodies, cookies or headers.
-    console.error(JSON.stringify({ event: "admin_api_error", route, name: error?.name ?? "Error", message: String(error?.message ?? "").slice(0, 300) }));
+    // Error names and codes only: never request bodies, cookies, headers or query parameters.
+    console.error(JSON.stringify({ event: "admin_api_error", route, error: errorSummary(error) }));
     return reply({ error: "Something went wrong. Try again." }, 500);
   }
 }

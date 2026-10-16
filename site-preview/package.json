@@ -16,7 +16,8 @@
     "test:e2e": "playwright test",
     "check": "npm run lint && npm run typecheck && npm run build && npm test",
     "catalog": "node tools/catalog/cli.mjs",
-    "client:check": "node tools/platform/check.mjs"
+    "client:check": "node tools/platform/check.mjs",
+    "images:placeholders": "node tools/images/placeholders.mjs"
   },
   "dependencies": {
     "@astrojs/partytown": "2.1.8",
