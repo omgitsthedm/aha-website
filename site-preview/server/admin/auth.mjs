@@ -13,6 +13,8 @@ import { SITE_ORIGIN } from "../platform/client.mjs";
 export const SESSION_COOKIE = "__Host-aha_admin";
 const SESSION_HOURS = 12;
 const CHALLENGE_MINUTES = 5;
+// The browser prompt gives up before the stored challenge expires.
+const PROMPT_TIMEOUT_MS = 4 * 60_000;
 const ATTEMPT_WINDOW_MINUTES = 15;
 const ATTEMPT_LIMIT = 30;
 
@@ -115,6 +117,7 @@ export function createAdminAuth({ db, env, now = () => new Date() }) {
       attestationType: "none",
       excludeCredentials: existing.map((row) => ({ id: row.id, transports: row.transports ?? [] })),
       authenticatorSelection: { residentKey: "required", userVerification: "required" },
+      timeout: PROMPT_TIMEOUT_MS,
     });
     const handle = await saveChallenge({ challenge: options.challenge, purpose: "register", userId, email: userEmail });
     return { options, handle };
@@ -140,7 +143,7 @@ export function createAdminAuth({ db, env, now = () => new Date() }) {
 
   async function loginOptions({ clientKey }) {
     await throttle(clientKey);
-    const options = await generateAuthenticationOptions({ rpID: rp.rpID, userVerification: "required" });
+    const options = await generateAuthenticationOptions({ rpID: rp.rpID, userVerification: "required", timeout: PROMPT_TIMEOUT_MS });
     const handle = await saveChallenge({ challenge: options.challenge, purpose: "login" });
     return { options, handle };
   }

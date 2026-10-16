@@ -36,6 +36,15 @@ function showContent() {
   document.querySelector<HTMLElement>("[data-admin-nav]")!.hidden = false;
 }
 
+// The browser reports a closed, timed-out or blocked passkey prompt as NotAllowedError
+// with a spec link; say what to do instead.
+function passkeyMessage(error: unknown, fallback: string) {
+  if (error instanceof Error && error.name === "NotAllowedError") {
+    return "The passkey prompt was closed, timed out or blocked. Try again in a regular Chrome or Safari window (not one controlled by an automation extension) and finish the Touch ID, phone or security-key step within four minutes.";
+  }
+  return error instanceof Error ? error.message : fallback;
+}
+
 document.querySelector("[data-admin-login]")?.addEventListener("click", async () => {
   try {
     say("Waiting for your passkey…");
@@ -44,7 +53,7 @@ document.querySelector("[data-admin-login]")?.addEventListener("click", async ()
     await post("auth/login/verify", { handle, response });
     say("Signed in.");
     await load();
-  } catch (error) { say(error instanceof Error ? error.message : "Sign-in failed."); }
+  } catch (error) { say(passkeyMessage(error, "Sign-in failed.")); }
 });
 
 document.querySelector<HTMLFormElement>("[data-admin-setup]")?.addEventListener("submit", async (event) => {
@@ -57,7 +66,7 @@ document.querySelector<HTMLFormElement>("[data-admin-setup]")?.addEventListener(
     await post("auth/register/verify", { handle, response });
     say("Passkey saved. You're signed in.");
     await load();
-  } catch (error) { say(error instanceof Error ? error.message : "Setup failed."); }
+  } catch (error) { say(passkeyMessage(error, "Setup failed.")); }
 });
 
 document.querySelector("[data-admin-signout]")?.addEventListener("click", async () => {
