@@ -48,15 +48,31 @@ export async function handleSubscribe(request, { db, clientKey = "unknown", orig
   return reply({ ok: true });
 }
 
+// Until a deploy has applied the sign-up migration the table doesn't exist. Read
+// paths treat that as an empty list so the admin overview and the weekly digest
+// keep working; sign-ups themselves fail with the function's generic error.
+const missingTable = (error) => error?.code === "42P01" || /relation "aha_(email_signups|signup_attempts)" does not exist/.test(String(error?.message ?? ""));
+
 /** Total addresses and those added in the last seven days. */
 export async function signupCounts(db) {
-  const [counts] = await db.sql`SELECT count(*) AS total, count(*) FILTER (WHERE created_at > now() - interval '7 days') AS week FROM aha_email_signups`;
-  return { total: Number(counts?.total ?? 0), last7Days: Number(counts?.week ?? 0) };
+  try {
+    const [counts] = await db.sql`SELECT count(*) AS total, count(*) FILTER (WHERE created_at > now() - interval '7 days') AS week FROM aha_email_signups`;
+    return { total: Number(counts?.total ?? 0), last7Days: Number(counts?.week ?? 0) };
+  } catch (error) {
+    if (missingTable(error)) return { total: 0, last7Days: 0 };
+    throw error;
+  }
 }
 
 /** Admin: every address, newest first. */
 export async function listSignups(db, { limit = 5000 } = {}) {
-  const rows = await db.sql`SELECT id, email, source, created_at FROM aha_email_signups ORDER BY created_at DESC, id DESC LIMIT ${limit}`;
+  let rows;
+  try {
+    rows = await db.sql`SELECT id, email, source, created_at FROM aha_email_signups ORDER BY created_at DESC, id DESC LIMIT ${limit}`;
+  } catch (error) {
+    if (missingTable(error)) return { total: 0, last7Days: 0, signups: [] };
+    throw error;
+  }
   return {
     ...await signupCounts(db),
     signups: rows.map((row) => ({ id: String(row.id), email: row.email, source: row.source, createdAt: new Date(row.created_at).toISOString() })),

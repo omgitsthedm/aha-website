@@ -101,3 +101,20 @@ test("the admin email list needs a session, removes by id and keeps addresses ou
   assert.equal(audit.length, 2);
   assert.ok(audit.every((row) => row.target === target && !row.detail.includes("@")));
 });
+
+test("before the sign-up migration is applied, the admin overview, list and digest still work", async (t) => {
+  const pg = new PGlite();
+  t.after(() => pg.close());
+  for (const name of ["20261015045000_yikes_fulfillment", "20261016110000_product_drafts", "20261016120000_admin", "20261016130000_owner_reports"]) await pg.exec(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
+  const db = { sql: async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows };
+  const { listSignups, signupCounts } = await import("../server/updates/signups.mjs");
+  assert.deepEqual(await signupCounts(db), { total: 0, last7Days: 0 });
+  assert.deepEqual(await listSignups(db), { total: 0, last7Days: 0, signups: [] });
+  await pg.query(`INSERT INTO aha_admin_users (id, email) VALUES ('adm_1', 'info@afterhoursagenda.com')`);
+  await pg.query(`INSERT INTO aha_admin_sessions (token_sha256, user_id, expires_at) VALUES ($1, 'adm_1', now() + interval '1 hour')`, [createHash("sha256").update("tok").digest("hex")]);
+  const overview = await handleAdmin(new Request(`${ORIGIN}/api/admin/overview`, { headers: { cookie: `${SESSION_COOKIE}=tok` } }), { db, env: { get: (key) => ({ ADMIN_ORIGIN: ORIGIN })[key] }, context: {} });
+  assert.equal(overview.status, 200);
+  assert.deepEqual((await overview.json()).signups, { total: 0, last7Days: 0 });
+  // Other database errors still surface.
+  await assert.rejects(signupCounts({ sql: async () => { throw Object.assign(new Error("connection refused"), { code: "ECONNREFUSED" }); } }), /connection refused/);
+});
