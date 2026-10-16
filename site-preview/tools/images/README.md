@@ -11,4 +11,8 @@ Run from `site-preview/` (Node 24.21.0). Every command prints one JSON line; out
 5. `node tools/images/cli.mjs review --product <slug>` serves http://127.0.0.1:48378/: A approve, R reject, arrows move.
 6. `node tools/images/cli.mjs export --product <slug>` prints the `npm run catalog -- images …` command for the approved garment shots.
 
-Bases live in `bases.json` (SS3000 and AFX64CRP front so far). Back and folded views, and SS4500/NL3601/CC4410 fronts, need a blank photo added there. Garment colors are approximate swatches until a photographed blank of that color is added.
+Bases live in `bases.json`:
+- **Fronts:** SS3000, SS4500, AFX64CRP, CC4410, NL3601.
+- **Backs:** SS3000, SS4500, CC4410, NL3601.
+
+The SS3000, SS4500 and AFX64CRP fronts are 2080 px supplier photos. The rest are Apliiq's 590×900 neutral blanks, made for recoloring. The background must be pure white or transparent: only near-white connected to the edge counts as background, so fabric highlights stay garment. Folded views and lifestyle scenes still come from generation (`generate`, or another generator), with the exact print placed by `place`. Garment colors are approximate swatches until a photographed blank of that color is added.

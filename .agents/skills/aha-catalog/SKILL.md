@@ -9,6 +9,22 @@ One command does each step. Read its single JSON line; open `site-preview/tools/
 
 Run everything from `site-preview/` with Node 24.21.0.
 
+Credentials live outside the repo in `~/.config/aha/provider-credentials.env` (Apliiq key and secret, Square token, admin automation token). Load them per command and never print them:
+
+```bash
+node --env-file="$HOME/.config/aha/provider-credentials.env" tools/catalog/cli.mjs <command>
+```
+
+## Fastest path: one command
+
+`ship` turns approved work into a live-ready commit:
+1. It pulls admin publish requests and checks margin and images: four garment views, plus three campaign photos from one setting.
+2. It plans, applies (Apliiq design and Square item), and syncs every gallery photo to Square.
+3. It builds, verifies, runs the tests, and commits on a `catalog/<date>-<slug>` branch.
+
+Then push the branch, open a PR, wait for the nine required checks, merge, and run `EXPECTED_COMMIT=<merge sha> node scripts/verify-live.mjs`. Images come from `tools/images` (see its README): `compose` for exact-print garment shots, `place` to put the exact print on generated lifestyle photos.
+
+
 ## Flow from the admin (Apliiq "Add to Store")
 
 1. The owner designs in Apliiq and presses **Add to Store** (custom store). A draft appears in `/admin/products/`.
@@ -40,6 +56,7 @@ Run everything from `site-preview/` with Node 24.21.0.
 
 - `npm run catalog -- verify`: ledger ↔ products.json ↔ allow list ↔ built feeds.
 - `npm run catalog -- explain <slug>`: ledger entry, site status, spec status and intents for one product.
+- `npm run catalog -- square-images <slug>`: upload any gallery view Square doesn't have yet.
 - `npm run catalog -- generate`: rewrite the allow list from the ledger.
 - `npm run catalog -- import`: one-time adoption of an existing catalog (already done Oct 16, 2026).
 
