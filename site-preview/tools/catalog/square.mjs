@@ -27,6 +27,13 @@ export function createSquareClient({ token, fetchImpl = fetch, timeoutMs = 20_00
   }
   return {
     readItem: async (itemId) => (await call(`/catalog/object/${encodeURIComponent(itemId)}`)).object,
+    batchRetrieve: async (ids) => {
+      const objects = [];
+      for (let start = 0; start < ids.length; start += 1000) objects.push(...((await call("/catalog/batch-retrieve", { method: "POST", body: JSON.stringify({ object_ids: ids.slice(start, start + 1000), include_related_objects: false }) })).objects ?? []));
+      return objects;
+    },
+    // Whole objects as read (with their version), so no other field is cleared.
+    batchUpsert: async (objects, idempotencyKey) => (await call("/catalog/batch-upsert", { method: "POST", body: JSON.stringify({ idempotency_key: idempotencyKey, batches: [{ objects }] }) })).objects ?? [],
     exactNameMatches: async (name) => {
       const data = await call("/catalog/search", { method: "POST", body: JSON.stringify({ object_types: ["ITEM"], query: { exact_query: { attribute_name: "name", attribute_value: name } } }) });
       return (data.objects ?? []).filter((object) => !object.is_deleted && object.item_data?.name === name);

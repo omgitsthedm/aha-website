@@ -11,6 +11,7 @@
 //   npm run catalog -- explain <slug>          everything known about one product
 //   npm run catalog -- publish-live <slug>     put an applied product on the live site now, no site build (ADMIN_AUTOMATION_TOKEN)
 //   npm run catalog -- unpublish-live <slug>   take a live-published product down
+//   npm run catalog -- square-skus [--apply]       report (or fix) Square variation SKUs that differ from the ledger
 //   npm run catalog -- usage [days]            runs, time and provider calls per command (default 7 days)
 //   npm run catalog -- ship                    pull → margin → plan → apply → Square photos → build → verify → tests → live → commit
 //   npm run catalog -- square-images <slug>    upload any gallery view Square doesn't have yet
@@ -301,6 +302,26 @@ const commands = {
     return { results };
   },
 
+  async "square-skus"(_arg, flags) {
+    // Make each Square variation's SKU field match the ledger (the daily health
+    // check reports drift). Fulfillment always uses the ledger's SKU; this keeps
+    // Square's own record honest. Without --apply it only reports.
+    const ledger = loadLedger();
+    const expected = new Map(ledger.products.filter((entry) => entry.status === "live").flatMap((entry) => entry.variants.map((variant) => [variant.variationId, variant.sku])));
+    const square = createSquareClient({ token: squareToken() });
+    const objects = await square.batchRetrieve([...expected.keys()]);
+    const missing = [...expected.keys()].filter((id) => !objects.some((object) => object.id === id && !object.is_deleted));
+    if (missing.length) throw new CatalogError("Some ledger variations are missing in Square.", { code: "square_missing", details: missing });
+    const drift = objects.filter((object) => object.item_variation_data?.sku !== expected.get(object.id)).map((object) => ({ variationId: object.id, square: object.item_variation_data?.sku ?? null, ledger: expected.get(object.id) }));
+    if (!drift.length || !flags.apply) return { checked: objects.length, drift, applied: false };
+    const changed = objects.filter((object) => drift.some((row) => row.variationId === object.id)).map((object) => ({ ...object, item_variation_data: { ...object.item_variation_data, sku: expected.get(object.id) } }));
+    await square.batchUpsert(changed, `aha-skus-${sha256(drift).slice(0, 24)}`);
+    const after = await square.batchRetrieve(drift.map((row) => row.variationId));
+    const wrong = after.filter((object) => object.item_variation_data?.sku !== expected.get(object.id));
+    if (wrong.length) throw new CatalogError("Square readback still differs after the update.", { code: "square_readback_mismatch", details: wrong.map((object) => object.id) });
+    return { checked: objects.length, drift, applied: true, verified: after.length };
+  },
+
   async "square-images"(slug) {
     // Upload any gallery view Square doesn't have yet (front first), so Square matches the site.
     if (!slug) throw new CatalogError("square-images requires a slug.", { code: "slug_missing" });
@@ -444,6 +465,7 @@ function parse(argv) {
     else if (token === "--setting") flags.setting = rest[++index];
     else if (token === "--skip-checks") flags["skip-checks"] = true;
     else if (token === "--no-live") flags["no-live"] = true;
+    else if (token === "--apply") flags.apply = true;
     else positional.push(token);
   }
   return { command, arg: positional[0], flags };
