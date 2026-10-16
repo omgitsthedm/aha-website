@@ -1,5 +1,9 @@
 # After Hours Agenda agent contract
 
+## Approved Pet It Be launch — October 16, 2026
+
+The owner instructed: “Yes: Pet It Be B1 (cream on cranberry) on the Maroon Independent SS3000 crewneck, XS–3XL, $55, free US shipping, front print 11 inches wide, private label as usual.” The catalog engine created Apliiq artwork 8209339 and design 6211854 (SS3000 product 391, Maroon 480, front 4546, label SB-3-161622 inside neck) and Square item CX5OOOUPF44W4JEZLHPTJG4R with seven variations. The catalog is 16 products / 109 variants. Garment front and print-detail shots are deterministic composites of the exact print master on a recolored blank photo; back, folded and three campaign images are AI-generated from that composite. No paid test order, ad spend or customer message is authorized by this entry.
+
 ## Approved The City expansion — October 15, 2026
 
 The owner instructed “Alright let’s upload them for sale” after approving the three Black mockups: Independent SS4500 hoodie, Independent SS3000 crewneck, and Next Level 3601 long sleeve. Publish these alongside the existing Yikes and Insomniac catalog at the existing matching-style prices of $58, $55 and $42, one price across selected sizes, with free domestic shipping. Preserve the approved blue/orange full-back artwork, black negative space and plain fronts. All three supplier records include private label SB-3-161622; woven labels remain on hold. The expansion adds 21 exact Square-to-Apliiq variation mappings, for 13 garment/color options and 88 variants. Each product has four garment-only shopping images and three separate campaign images. Publication must pass the existing checks and exact-site release verification. This scope includes catalog and website publication, not paid test purchases, advertising or additional subscriptions.
