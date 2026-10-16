@@ -111,7 +111,8 @@ function activate(value:Consent){
 function clearPostHogStorage(){try{for(const name of Object.keys(localStorage))if(name.startsWith('ph_'))localStorage.removeItem(name);}catch{/* Storage is optional. */}}
 function clearCookies(){for(const entry of document.cookie.split(';')){const name=entry.trim().split('=')[0] || '';if(!/^(_ga|_gid|_gat|_fbp|_fbc|ph_)/.test(name))continue;for(const domain of ['',`; domain=${location.hostname}`,'; domain=.afterhoursagenda.com'])document.cookie=`${name}=; Max-Age=0; path=/${domain}; SameSite=Lax`;}}
 if(banner)banner.hidden=true;
-activate(consent);
+// A page prerendered on hover counts only once the visitor actually opens it.
+if((document as Document&{prerendering?:boolean}).prerendering)document.addEventListener('prerenderingchange',()=>activate(consent),{once:true});else activate(consent);
 document.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button=>button.addEventListener('click',()=>{
  const value={analytics:button.dataset.consent!=='essential',marketing:button.dataset.consent==='all'&&!gpc,at:Date.now()};
  const previous=consent;

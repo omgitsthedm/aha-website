@@ -231,3 +231,14 @@ test('an email sign-up reports a lead with its page and never the address', asyn
   if (queue?.posthog) expect(queue.posthog).toContainEqual(['email_signup',{source:'updates'}]);
   expect(JSON.stringify(queue)).not.toContain('lead@example.com');
 });
+
+test('a page prerendered on hover sends nothing until the visitor opens it', async ({page}) => {
+  test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await capture(page);
+  await page.addInitScript(() => { Object.defineProperty(Document.prototype, 'prerendering', { configurable: true, get: () => (window as Window & {__opened?: boolean}).__opened !== true }); });
+  await page.goto('/shop/yikes-crewneck/');
+  await page.waitForTimeout(300);
+  expect(await page.evaluate(() => window.__ahaTrackingEvents?.ga.length ?? 0)).toBe(0);
+  await page.evaluate(() => { (window as Window & {__opened?: boolean}).__opened = true; document.dispatchEvent(new Event('prerenderingchange')); });
+  await expect.poll(() => page.evaluate(() => window.__ahaTrackingEvents?.ga.some((entry) => entry[0] === 'event' && entry[1] === 'view_item') ?? false)).toBe(true);
+});

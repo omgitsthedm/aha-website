@@ -1,5 +1,6 @@
 ---
 import manifest from "../data/images.json";
+import placeholders from "../data/placeholders.json";
 interface Props {
   name: keyof typeof manifest;
   alt: string;
@@ -13,6 +14,7 @@ const {
   priority = false,
 } = Astro.props;
 const image = manifest[name];
+const tone = (placeholders as Record<string, string[]>)[image.src];
 ---
 
 <img
@@ -25,4 +27,5 @@ const image = manifest[name];
   loading={priority ? "eager" : "lazy"}
   fetchpriority={priority ? "high" : "auto"}
   decoding="async"
+  style={tone ? `background:linear-gradient(${tone[0]},${tone[1]})` : undefined}
 />

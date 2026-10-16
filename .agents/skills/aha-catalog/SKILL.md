@@ -50,6 +50,7 @@ The product is then on sale with no site build. Push the branch and open a PR so
 5. **Apply.** `npm run catalog -- apply --plan <file>` with `AHA_APLIIQ_API_KEY`, `AHA_APLIIQ_SHARED_SECRET` and `AHA_SQUARE_ACCESS_TOKEN` in the environment (never print them). It creates the Apliiq artwork and design (label SB-3-161622 / 6208403, inside neck), creates or adopts the Square item, verifies the readback, then updates `catalog/ledger.json`, `src/data/products.json` and the generated `server/fulfillment/catalog.mjs`.
 6. **Verify.** `npm run build` then `npm run catalog -- verify` (exit 2 = drift). Then `npm test`.
    A new collection leads the home page, shop and lookbook only after you add its name to the front of `COLLECTION_ORDER` in `src/data/collections.ts`; otherwise it follows the listed ones.
+   Run `npm run images:placeholders` so its campaign photos get loading placeholders; `tests/premium.test.mjs` fails until they have them.
 7. **Release** through the normal PR → required checks → merge → exact-site Netlify deploy. Never deploy from a branch.
 
 ## Rules that never bend

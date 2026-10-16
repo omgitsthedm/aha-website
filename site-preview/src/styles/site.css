@@ -1182,3 +1182,10 @@ select:focus-visible {
    the screen edge to edge and the page settles on one photo at a time. */
 .campaign-grid figure{position:relative}.look-chip{position:absolute;left:.75rem;top:.75rem;display:inline-flex;align-items:center;gap:.4rem;min-height:40px;padding:.4rem .8rem;background:var(--paper);color:var(--ink);border:1px solid var(--ink);font:700 .72rem var(--mono);letter-spacing:.05em;text-transform:uppercase;text-decoration:none;transition:background-color .15s,color .15s}.look-chip:hover,.look-chip:focus-visible{background:var(--ink);color:var(--paper)}.look-chip span{transition:transform .2s}.look-chip:hover span{transform:translateX(3px)}
 @media(max-width:760px){html:has(.campaign-set){scroll-snap-type:y proximity}.campaign-set .campaign-grid{gap:0;margin-inline:calc(-1 * clamp(20px,4.4vw,72px))}.campaign-grid figure{scroll-snap-align:start}.campaign-grid img,.campaign-set .campaign-grid img{width:100%;height:calc(100svh - 2.5rem);max-height:none;aspect-ratio:auto;object-fit:cover;border:0}.campaign-grid figcaption{padding:.6rem clamp(20px,4.4vw,72px) 0;margin:0;height:2.5rem}.look-chip{left:auto;right:clamp(20px,4.4vw,72px);top:auto;bottom:3.25rem}}
+/* Header stays reachable: sticky, tucked away while scrolling down (src/layouts/Site.astro). */
+.site-header-bar{position:sticky;top:0;z-index:100;background:var(--paper);border-bottom:1px solid var(--line);transition:transform .35s cubic-bezier(.2,.7,.15,1)}.site-header-bar .site-header{border-bottom:0}.site-header-bar.is-tucked{transform:translateY(-100%)}
+.product-details,.checkout-panel{top:calc(var(--header-offset,100px) + 1.5rem);transition:top .35s cubic-bezier(.2,.7,.15,1)}
+.collection-group h2,.size-guide{scroll-margin-top:7rem}
+/* Headlines break evenly; body copy avoids stranded last words. */
+h1,h2,h3{text-wrap:balance}p,li,figcaption{text-wrap:pretty}
+@media (prefers-reduced-motion: reduce){.site-header-bar,.product-details,.checkout-panel{transition:none}}

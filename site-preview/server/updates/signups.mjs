@@ -24,7 +24,21 @@ export function normalizeEmail(value) {
 // Until a deploy has applied the sign-up migration the tables don't exist. Read
 // paths treat that as an empty list so the admin overview and the weekly digest
 // keep working; a sign-up gets a plain "couldn't save" reply.
-const missingTable = (error) => error?.code === "42P01" || /relation "aha_(email_signups|signup_attempts)" does not exist/.test(String(error?.message ?? ""));
+// The hosted driver wraps Postgres errors ("Failed query: …") and keeps the
+// original, with its code, in error.cause; check the whole chain.
+export function missingTable(error) {
+  for (let current = error, depth = 0; current && depth < 5; current = current.cause, depth += 1) {
+    if (current.code === "42P01" || /relation "aha_(email_signups|signup_attempts)" does not exist/.test(String(current.message ?? ""))) return true;
+  }
+  return false;
+}
+
+/** For logs: error names and Postgres codes only, never messages (they carry query parameters, such as an address). */
+export function errorSummary(error) {
+  const chain = [];
+  for (let current = error, depth = 0; current && depth < 5; current = current.cause, depth += 1) chain.push(`${current.name ?? "Error"}${current.code ? ` ${current.code}` : ""}`);
+  return chain.join(" <- ");
+}
 
 const hash = (value) => createHash("sha256").update(String(value)).digest("hex");
 

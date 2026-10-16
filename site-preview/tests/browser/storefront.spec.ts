@@ -185,3 +185,18 @@ test("every lookbook photo links to its piece", async ({ page }) => {
   expect(await chips.count()).toBe(await page.locator(".campaign-grid figure").count());
   await expect(chips.first()).toHaveAttribute("href", /^\/shop\/[a-z0-9-]+\/$/);
 });
+
+test("the header tucks away while scrolling down and returns on scroll up", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/shop/");
+  const bar = page.locator("[data-header-bar]");
+  await page.mouse.wheel(0, 900);
+  await expect(bar).toHaveClass(/is-tucked/);
+  await page.mouse.wheel(0, -300);
+  await expect(bar).not.toHaveClass(/is-tucked/);
+  await expect(bar).toBeInViewport();
+  await page.mouse.wheel(0, 900);
+  await expect(bar).toHaveClass(/is-tucked/);
+  await page.getByRole("link", { name: "After Hours Agenda home" }).first().focus();
+  await expect(bar).not.toHaveClass(/is-tucked/);
+});

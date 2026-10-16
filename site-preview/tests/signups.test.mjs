@@ -129,3 +129,16 @@ test("without the sign-up tables a visitor gets a plain reply and the daily chec
   const { db: ready } = await database(t);
   assert.deepEqual(await signupProblems(ready), []);
 });
+
+test("the hosted driver's wrapped errors are recognized, and logs never carry query parameters", async () => {
+  const { errorSummary, missingTable, signupCounts } = await import("../server/updates/signups.mjs");
+  const wrapped = (code, message) => Object.assign(new Error("Failed query: INSERT INTO aha_email_signups (email) VALUES ($1)\nparams: fan@example.com"), { cause: Object.assign(new Error(message), { name: "NeonDbError", code }) });
+  const missing = wrapped("42P01", 'relation "aha_email_signups" does not exist');
+  assert.equal(missingTable(missing), true);
+  assert.equal(missingTable(wrapped("57P01", "terminating connection")), false);
+  assert.deepEqual(await signupCounts({ sql: async () => { throw missing; } }), { total: 0, last7Days: 0 });
+  const response = await handleSubscribe(post({ email: "fan@example.com" }), { db: { sql: async () => { throw missing; } } });
+  assert.equal(response.status, 503);
+  assert.equal(errorSummary(missing), "Error <- NeonDbError 42P01");
+  assert.doesNotMatch(errorSummary(missing), /@|params/);
+});
