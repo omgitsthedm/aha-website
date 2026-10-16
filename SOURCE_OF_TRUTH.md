@@ -37,7 +37,8 @@ After Hours Agenda stays After Hours Agenda. It owns the custom-domain project a
 
 ## Source and pre-release production receipt
 
-- Original checkout: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`.
+- Working checkout (October 16, 2026): `/Users/davidmarsh/Code/LiFi NYC/Clients/After Hours Agenda/aha-website`, outside iCloud.
+- Original checkout (preserved, not active): `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`.
 - Original local branch/head preserved: `release/seo-domination-2026-10-08`, `095d5884e720d66e659f3676187e028deecbb84e`.
 - GitHub: `https://github.com/omgitsthedm/aha-website`; production branch `main`.
 - Production source before the October 9 approved release: `c682761ef26bbedb4ea4f76fc869e7ded883a12d`.

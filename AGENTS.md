@@ -33,9 +33,9 @@ This custom-domain project keeps the After Hours Agenda brand. Never substitute 
 
 ## Source and scope
 
-- Canonical original checkout: `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`.
-- Audit worktree: `/Users/davidmarsh/Desktop/Project Upgrades/afterhoursagenda/worktree`.
-- Branch: `audit/2026-10-09`; new app: `site-preview/`.
+- Working checkout (October 16, 2026): `/Users/davidmarsh/Code/LiFi NYC/Clients/After Hours Agenda/aha-website`, a fresh clone of `main` outside iCloud. Work here, not in iCloud-synced Desktop or Documents folders; sync creates `* 2.*` duplicate files.
+- Older checkouts (preserved, not active): `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website` (branch `release/seo-domination-2026-10-08`) and the Codex session clone under `/Users/davidmarsh/Documents/Codex/2026-10-14/o-x20/work/aha-launch-source`.
+- Active app: `site-preview/` (Astro). The repository-root Next.js app is inactive.
 - GitHub: `omgitsthedm/aha-website`; production branch: `main`.
 - Exact Netlify site: `275b4115-16bf-42fb-9b36-6bce9bb93608`; primary host: `https://afterhoursagenda.com`.
 - Read `SOURCE_OF_TRUTH.md`. Confirm physical Git root and `git status --short` before edits. Preserve unrelated work and the original checkout.
