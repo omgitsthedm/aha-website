@@ -36,7 +36,7 @@ test("Square drift names the exact size and what is wrong", () => {
   assert.deepEqual(compareSquareCatalog(CATALOG, [variation("VAR1", "APQ-100S7A1", 5500), variation("VAR2", "APQ-100S8A1", 5500)]), []);
   const problems = compareSquareCatalog(CATALOG, [variation("VAR1", "APQ-999S7A1", 5000)]);
   assert.equal(problems.length, 3);
-  assert.match(problems[0], /Pet It Be Crewneck M SKU is APQ-999S7A1, expected APQ-100S7A1/);
+  assert.match(problems[0], /Pet It Be Crewneck M shows SKU APQ-999S7A1; orders are sent to Apliiq as APQ-100S7A1/);
   assert.match(problems[1], /price is \$50\.00, expected \$55\.00/);
   assert.match(problems[2], /L \(VAR2\) is missing or deleted/);
   assert.match(compareSquareCatalog(CATALOG, [variation("VAR1", "APQ-100S7A1", 5500), variation("VAR2", "APQ-100S8A1", 5500, { is_deleted: true })])[0], /missing or deleted/);

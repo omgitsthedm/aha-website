@@ -19,7 +19,7 @@ export function compareSquareCatalog(catalog, objects) {
     const object = byId.get(id);
     const data = object?.item_variation_data;
     if (!object || object.is_deleted || object.type !== "ITEM_VARIATION") { problems.push(`Square: ${label(entry, id)} (${id}) is missing or deleted.`); continue; }
-    if (data?.sku !== entry.sku) problems.push(`Square: ${label(entry, id)} SKU is ${data?.sku ?? "empty"}, expected ${entry.sku}. Orders for it would go to the wrong Apliiq design.`);
+    if (data?.sku !== entry.sku) problems.push(`Square: ${label(entry, id)} shows SKU ${data?.sku ?? "none"}; orders are sent to Apliiq as ${entry.sku}. Run \`npm run catalog -- square-skus --apply\` so Square matches.`);
     if (data?.price_money?.amount !== entry.priceCents) problems.push(`Square: ${label(entry, id)} price is ${usd(data?.price_money?.amount)}, expected ${usd(entry.priceCents)}.`);
   }
   return problems;

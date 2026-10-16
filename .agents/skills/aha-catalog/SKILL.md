@@ -67,6 +67,7 @@ The product is then on sale with no site build. Push the branch and open a PR so
 - `npm run catalog -- square-images <slug>`: upload any gallery view Square doesn't have yet.
 - `npm run catalog -- publish-live <slug>` / `unpublish-live <slug>`: put an applied product on the live site without a site build, or take it down.
 - `npm run catalog -- usage [days]`: runs, time and provider calls per command.
+- `npm run catalog -- square-skus [--apply]`: report, or fix, Square variation SKUs that differ from the ledger (the daily check flags this).
 - `npm run catalog -- generate`: rewrite the allow list from the ledger.
 - `npm run catalog -- import`: one-time adoption of an existing catalog (already done Oct 16, 2026).
 
