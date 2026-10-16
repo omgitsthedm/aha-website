@@ -1,0 +1,130 @@
+{
+  "_readme": "Copy to catalog/designs/<slug>.json. Fill every TODO. Set status to approved with approval.by/at only after the owner approves art, garment and price. Then: npm run catalog -- margin <slug> → plan → owner reviews plan → apply --plan <file> → verify.",
+  "slug": "pet-it-be-ss3000-TODO-color",
+  "status": "draft",
+  "approval": {
+    "by": "TODO owner",
+    "at": "TODO ISO time",
+    "note": "TODO what was approved"
+  },
+  "title": "Pet It Be Crewneck",
+  "color": "TODO",
+  "priceCents": 5500,
+  "blank": "SS3000",
+  "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+  ],
+  "fulfillment": {
+    "product": "pet_it_be_ss3000_TODO_color"
+  },
+  "apliiq": {
+    "productId": 391,
+    "productCode": "mens_Independent-Mid-Weight-Sweatshirt",
+    "colorId": "TODO Apliiq color id for this blank color (GET /Product/391)",
+    "label": {
+      "id": 6208403,
+      "placementId": 1011,
+      "placementName": "inside neck"
+    },
+    "artwork": [
+      {
+        "key": "front",
+        "name": "Pet It Be front 10x15in",
+        "imagePath": "TODO public HTTPS PNG (no query string)"
+      }
+    ],
+    "locations": [
+      {
+        "id": 4546,
+        "boxId": 1,
+        "imagePath": "https://blob.apliiq.com/sitestorage/base/4546_590_900.png",
+        "artworkKey": "front",
+        "service": "dtgprint",
+        "note": "TODO exact placement and print instructions"
+      }
+    ],
+    "productionNote": "TODO short production description shown in Apliiq"
+  },
+  "product": {
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Crewnecks"
+    },
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 25,
+        "chestWidth": 19,
+        "sleeveLength": 34
+      },
+      {
+        "size": "S",
+        "bodyLength": 26.5,
+        "chestWidth": 20.5,
+        "sleeveLength": 35
+      },
+      {
+        "size": "M",
+        "bodyLength": 28,
+        "chestWidth": 22,
+        "sleeveLength": 36
+      },
+      {
+        "size": "L",
+        "bodyLength": 29.5,
+        "chestWidth": 23.5,
+        "sleeveLength": 37
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 25,
+        "sleeveLength": 38
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32.5,
+        "chestWidth": 26.5,
+        "sleeveLength": 39
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 34,
+        "chestWidth": 28,
+        "sleeveLength": 40
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "typeLabel": "Crewneck",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "cotton face",
+      "twill neck tape",
+      "1x1 ribbed collar, cuffs and waistband"
+    ],
+    "sleeveMeasurementGuidance": "",
+    "collection": "Pet It Be",
+    "description": "TODO factual fit, fabric, construction and print description",
+    "campaignSetting": "TODO",
+    "gallery": "TODO four garment images (front, back, detail, folded) in the products.json gallery format",
+    "campaign": "TODO three lifestyle images in the products.json campaign format"
+  },
+  "images": {
+    "square": [
+      "TODO path to garment-front.jpg relative to site-preview",
+      "…back",
+      "…detail",
+      "…folded"
+    ]
+  }
+}

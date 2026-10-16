@@ -31,6 +31,10 @@ The owner explicitly authorized going live with the first two Yikes! products an
 
 This custom-domain project keeps the After Hours Agenda brand. Never substitute an agency or future client's identity. The user corrected the initial rebrand direction on October 9, 2026. Only abstract projects use LFNYC branding.
 
+## Catalog engine (October 16, 2026)
+
+New products, prices and catalog checks go through the catalog engine, never ad-hoc scripts: `cd site-preview && npm run catalog -- <import|generate|verify|margin|plan|apply|explain>`. The shared skill `.agents/skills/aha-catalog/SKILL.md` (also linked at `.claude/skills`) is the runbook for Codex and Claude Code. `catalog/ledger.json` ties every product to its Apliiq design and Square item; `server/fulfillment/catalog.mjs` is generated from it. Apliiq creates are intent-guarded and never retried blindly.
+
 ## Source and scope
 
 - Working checkout (October 16, 2026): `/Users/davidmarsh/Code/LiFi NYC/Clients/After Hours Agenda/aha-website`, a fresh clone of `main` outside iCloud. Work here, not in iCloud-synced Desktop or Documents folders; sync creates `* 2.*` duplicate files.

@@ -1,0 +1,856 @@
+{
+  "schemaVersion": 1,
+  "privateLabel": "SB-3-161622",
+  "products": [
+    {
+      "slug": "yikes-crewneck",
+      "status": "live",
+      "apliiq": {
+        "designId": 6208401
+      },
+      "square": {
+        "itemId": "CCB7ITES72OKJ2VYTOPSAPDR"
+      },
+      "fulfillment": {
+        "product": "crewneck"
+      },
+      "variants": [
+        {
+          "variationId": "KZFZMSVPRMY3MOC7I3TQ2B5O",
+          "size": "XS",
+          "sku": "APQ-6208401S5A1",
+          "priceCents": 5200
+        },
+        {
+          "variationId": "RKGX6H4FU6NBGAGHKXECXUBE",
+          "size": "S",
+          "sku": "APQ-6208401S6A1",
+          "priceCents": 5200
+        },
+        {
+          "variationId": "R5UCZCGSJMR3Z4HJDVOD3ZIK",
+          "size": "M",
+          "sku": "APQ-6208401S7A1",
+          "priceCents": 5200
+        },
+        {
+          "variationId": "3CAFSZ345DL6VRX5CNBI6YDQ",
+          "size": "L",
+          "sku": "APQ-6208401S8A1",
+          "priceCents": 5200
+        },
+        {
+          "variationId": "45VCO6MGNJTUGR6UZYLG7Y43",
+          "size": "XL",
+          "sku": "APQ-6208401S1A1",
+          "priceCents": 5200
+        },
+        {
+          "variationId": "UFYWTQK4GQFOQVYNINTCCL62",
+          "size": "2XL",
+          "sku": "APQ-6208401S2A1",
+          "priceCents": 5200
+        },
+        {
+          "variationId": "OPKNVVYLRSTI6OY75G67HY6E",
+          "size": "3XL",
+          "sku": "APQ-6208401S21A1",
+          "priceCents": 5200
+        }
+      ]
+    },
+    {
+      "slug": "yikes-cropped-hoodie",
+      "status": "live",
+      "apliiq": {
+        "designId": 6208412
+      },
+      "square": {
+        "itemId": "35ZC4TQORIIQAHUQ22JIDFG6"
+      },
+      "fulfillment": {
+        "product": "cropped_hoodie"
+      },
+      "variants": [
+        {
+          "variationId": "UXOOJLWOXLDU32KXPFVBB6CU",
+          "size": "XS",
+          "sku": "APQ-6208412S5A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "ATOF65IIPKIZWFT3QDJMON4R",
+          "size": "S",
+          "sku": "APQ-6208412S6A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "WFAIFUKSQXCUDRHPTMAWO2UM",
+          "size": "M",
+          "sku": "APQ-6208412S7A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "4HDYVGQA3ZOGIPYFUCTPKPIV",
+          "size": "L",
+          "sku": "APQ-6208412S8A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "YG2VANIT6R4SUQ3MWPZK74YI",
+          "size": "XL",
+          "sku": "APQ-6208412S1A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "KEQN72Y22B5RL3V5NFVACNWQ",
+          "size": "2XL",
+          "sku": "APQ-6208412S2A1",
+          "priceCents": 5500
+        }
+      ]
+    },
+    {
+      "slug": "insomniac-ss4500-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6209275
+      },
+      "square": {
+        "itemId": "V2DIQ5HVNWHE5J76WAAC2WZJ"
+      },
+      "fulfillment": {
+        "product": "insomniac_ss4500_black",
+        "title": "Insomniac Hoodie — Black"
+      },
+      "variants": [
+        {
+          "variationId": "3UZ7AE7JBX5CLSENQ76TA4HF",
+          "size": "XS",
+          "sku": "APQ-6209275S5A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "OSVQW2METLNMSSBKBCTAF2C5",
+          "size": "S",
+          "sku": "APQ-6209275S6A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "63JL3UPAHMEZMGAORZWRA3S7",
+          "size": "M",
+          "sku": "APQ-6209275S7A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "PQVJD6CAHZPS36XVDMZHIB7B",
+          "size": "L",
+          "sku": "APQ-6209275S8A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "464AETWT7Q2JEAPKDDJ6KLJQ",
+          "size": "XL",
+          "sku": "APQ-6209275S1A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "QMFGSEG6LRJFZL2YQ4HUQSBY",
+          "size": "2XL",
+          "sku": "APQ-6209275S2A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "MS36EEK7NUWA3YFYE3SJQ5VC",
+          "size": "3XL",
+          "sku": "APQ-6209275S21A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "47O252IOJAJMIMVANEH3ZFL2",
+          "size": "4XL",
+          "sku": "APQ-6209275S61A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "3QPA5UF74IW2H3VUU2GHFBHA",
+          "size": "5XL",
+          "sku": "APQ-6209275S62A1",
+          "priceCents": 5800
+        }
+      ]
+    },
+    {
+      "slug": "insomniac-ss4500-grey-heather",
+      "status": "live",
+      "apliiq": {
+        "designId": 6209282
+      },
+      "square": {
+        "itemId": "B6JLTLY5OZL5MZ25JWBKCZOI"
+      },
+      "fulfillment": {
+        "product": "insomniac_ss4500_grey_heather",
+        "title": "Insomniac Hoodie — Grey Heather"
+      },
+      "variants": [
+        {
+          "variationId": "EFSYJQKU3D5BDVCD2UQBMAKH",
+          "size": "XS",
+          "sku": "APQ-6209282S5A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "XDWCN2KCLICAB52HHOYO4WPY",
+          "size": "S",
+          "sku": "APQ-6209282S6A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "AAESWA5KUQWFWFHPAFL6IAKD",
+          "size": "M",
+          "sku": "APQ-6209282S7A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "VPKXPD35TLE75XQCTAK2CH6E",
+          "size": "L",
+          "sku": "APQ-6209282S8A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "U55J5BYSTTHB5NZ7BPHEP6TW",
+          "size": "XL",
+          "sku": "APQ-6209282S1A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "DJWMD6ZJDBMKHAY3R7UUGKFY",
+          "size": "2XL",
+          "sku": "APQ-6209282S2A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "YWPQUNVZSMPO6QRQVTTPAZBX",
+          "size": "3XL",
+          "sku": "APQ-6209282S21A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "IRUNHSK7RTGL2IXOD4TKIEMM",
+          "size": "4XL",
+          "sku": "APQ-6209282S61A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "5BPWX7UNFVVCY4F46MOOMJWS",
+          "size": "5XL",
+          "sku": "APQ-6209282S62A1",
+          "priceCents": 5800
+        }
+      ]
+    },
+    {
+      "slug": "insomniac-ss3000-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6209283
+      },
+      "square": {
+        "itemId": "QKVKTDR7YHFCEZXC36MEHIKS"
+      },
+      "fulfillment": {
+        "product": "insomniac_ss3000_black",
+        "title": "Insomniac Crewneck — Black"
+      },
+      "variants": [
+        {
+          "variationId": "HEFIMVZTQGW4B3JLFISE2N7S",
+          "size": "XS",
+          "sku": "APQ-6209283S5A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "Q73GEB2FMOJV5HVPHH2RWSFX",
+          "size": "S",
+          "sku": "APQ-6209283S6A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "ED4MIAP64FTDXI2ITGUJQPUH",
+          "size": "M",
+          "sku": "APQ-6209283S7A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "TQ2C7DMQTONA7M4RTKIBYBG7",
+          "size": "L",
+          "sku": "APQ-6209283S8A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "25BYQHBBNGOPTAUXASZQCLZR",
+          "size": "XL",
+          "sku": "APQ-6209283S1A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "3SSGIQLK2GETSKMPNNQHAG53",
+          "size": "2XL",
+          "sku": "APQ-6209283S2A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "TCNHOO3XHN3L7LX7MIMOD3TU",
+          "size": "3XL",
+          "sku": "APQ-6209283S21A1",
+          "priceCents": 5500
+        }
+      ]
+    },
+    {
+      "slug": "insomniac-ss3000-heather-grey",
+      "status": "live",
+      "apliiq": {
+        "designId": 6209296
+      },
+      "square": {
+        "itemId": "RDPOTBQWK5NDPDWVF4JQE47L"
+      },
+      "fulfillment": {
+        "product": "insomniac_ss3000_heather_grey",
+        "title": "Insomniac Crewneck — Heather Grey"
+      },
+      "variants": [
+        {
+          "variationId": "II7ORA4JDGEA2ZH6QFGSCC6O",
+          "size": "XS",
+          "sku": "APQ-6209296S5A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "OH7YSS6ZWCMS5NTTGL2SAKVE",
+          "size": "S",
+          "sku": "APQ-6209296S6A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "KCH7CB7DF6G4SQJ3FE6EB7RX",
+          "size": "M",
+          "sku": "APQ-6209296S7A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "AND2KAYNNIRJOVZOOZLQHMGB",
+          "size": "L",
+          "sku": "APQ-6209296S8A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "DT26VPID4G4PW7VBTEJPOEZV",
+          "size": "XL",
+          "sku": "APQ-6209296S1A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "BEZQO2HEYXQIG7J43CYB5S36",
+          "size": "2XL",
+          "sku": "APQ-6209296S2A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "OMJPV7Z5ZBH7T3UP4NDV5KOO",
+          "size": "3XL",
+          "sku": "APQ-6209296S21A1",
+          "priceCents": 5500
+        }
+      ]
+    },
+    {
+      "slug": "insomniac-next-level-3601-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6211255
+      },
+      "square": {
+        "itemId": "LUFTT366D62TYEHP2FNU35BH"
+      },
+      "fulfillment": {
+        "product": "insomniac_next_level_3601_black",
+        "title": "Insomniac Long Sleeve — Black"
+      },
+      "variants": [
+        {
+          "variationId": "STFINJPACB7S36TGYXGHUJXB",
+          "size": "S",
+          "sku": "APQ-6211255S6A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "RL2WOZXAPCCMHW6MKBEIDT4K",
+          "size": "M",
+          "sku": "APQ-6211255S7A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "QY6IKYQAWIBR7TAFHRUY2C45",
+          "size": "L",
+          "sku": "APQ-6211255S8A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "NYBAUB2RPDU4GR4N5FLHGM5I",
+          "size": "XL",
+          "sku": "APQ-6211255S1A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "TSY6WNEE3FFJJ2XCVM5W5P74",
+          "size": "2XL",
+          "sku": "APQ-6211255S2A1",
+          "priceCents": 4200
+        }
+      ]
+    },
+    {
+      "slug": "insomniac-next-level-3601-heather-grey",
+      "status": "live",
+      "apliiq": {
+        "designId": 6209285
+      },
+      "square": {
+        "itemId": "3GIR54TNW5OT3S4LSTKGX2JT"
+      },
+      "fulfillment": {
+        "product": "insomniac_next_level_3601_heather_grey",
+        "title": "Insomniac Long Sleeve — Heather Grey"
+      },
+      "variants": [
+        {
+          "variationId": "VSV2NLZUZP6KBXXIVEOJPBZ7",
+          "size": "S",
+          "sku": "APQ-6209285S6A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "N5DGHXTXDRW3DBSYHVBBVTZY",
+          "size": "M",
+          "sku": "APQ-6209285S7A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "A43URISMWMHBVRUZ5FAC53VY",
+          "size": "L",
+          "sku": "APQ-6209285S8A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "GAQNIX3UIH2J5H36NJO7UTNL",
+          "size": "XL",
+          "sku": "APQ-6209285S1A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "VCYF7NJRQMNYK4HIISS3JNFB",
+          "size": "2XL",
+          "sku": "APQ-6209285S2A1",
+          "priceCents": 4200
+        }
+      ]
+    },
+    {
+      "slug": "insomniac-comfort-colors-4410-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6209286
+      },
+      "square": {
+        "itemId": "NFT6U5H3XXYV4ZE73WHEZ42E"
+      },
+      "fulfillment": {
+        "product": "insomniac_comfort_colors_4410_black",
+        "title": "Insomniac Pocket Long Sleeve — Black"
+      },
+      "variants": [
+        {
+          "variationId": "KG5KN6YV6A2MMPIJL266CUZV",
+          "size": "S",
+          "sku": "APQ-6209286S6A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "2VI6WNFXWHFKEWCPH7ZNBVME",
+          "size": "M",
+          "sku": "APQ-6209286S7A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "UMJNMVHTG3H4IZOYCA4MIDPX",
+          "size": "L",
+          "sku": "APQ-6209286S8A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "SD6AEXVEQBTRY6UE2Z65BJIC",
+          "size": "XL",
+          "sku": "APQ-6209286S1A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "CEECQLJHOSPAEHCKMXMMUWMH",
+          "size": "2XL",
+          "sku": "APQ-6209286S2A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "5GXNJTD5N4RYCQ7FC6HA3OEA",
+          "size": "3XL",
+          "sku": "APQ-6209286S21A1",
+          "priceCents": 5800
+        }
+      ]
+    },
+    {
+      "slug": "insomniac-comfort-colors-4410-grey",
+      "status": "live",
+      "apliiq": {
+        "designId": 6209287
+      },
+      "square": {
+        "itemId": "3W7D4BVJ5SVUQWENRW7YEPR3"
+      },
+      "fulfillment": {
+        "product": "insomniac_comfort_colors_4410_grey",
+        "title": "Insomniac Pocket Long Sleeve — Grey"
+      },
+      "variants": [
+        {
+          "variationId": "NZZNSZRRN5OMK2Q3EBGDP2S2",
+          "size": "S",
+          "sku": "APQ-6209287S6A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "WPJJA4UEFGEZZ7ZYVYEAUA6E",
+          "size": "M",
+          "sku": "APQ-6209287S7A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "BO7D5FQGZQRE5MDTFS3QPTY4",
+          "size": "L",
+          "sku": "APQ-6209287S8A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "FL3U7QS67543UNZXLKO3DV4D",
+          "size": "XL",
+          "sku": "APQ-6209287S1A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "G7AX3A36HEDAG3QOJVIMBC2L",
+          "size": "2XL",
+          "sku": "APQ-6209287S2A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "E7ZQH2PFMRURHXLIJEFCYTO7",
+          "size": "3XL",
+          "sku": "APQ-6209287S21A1",
+          "priceCents": 5800
+        }
+      ]
+    },
+    {
+      "slug": "the-city-ss4500-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6210771
+      },
+      "square": {
+        "itemId": "SI3UZYKBECQAUUU6N7FK4UYE"
+      },
+      "fulfillment": {
+        "product": "the_city_ss4500_black",
+        "title": "The City Hoodie — Black"
+      },
+      "variants": [
+        {
+          "variationId": "27MUA3DWTTWFB7YYLCBK24O6",
+          "size": "XS",
+          "sku": "APQ-6210771S5A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "TIBHPL7I6VVO7Q2IJ76LONSZ",
+          "size": "S",
+          "sku": "APQ-6210771S6A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "Z4KOPIFUDW4LPHGH2YPRSXCF",
+          "size": "M",
+          "sku": "APQ-6210771S7A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "3IIUQ3SOTIEAM7LCYYYDOU45",
+          "size": "L",
+          "sku": "APQ-6210771S8A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "A32PW3R7HRGFIW4YPZJF5XNZ",
+          "size": "XL",
+          "sku": "APQ-6210771S1A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "ZAD5SGEQ4VZA3LVEFLTBIYCH",
+          "size": "2XL",
+          "sku": "APQ-6210771S2A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "BULH22GFRN76CCBGVOP3ZLOQ",
+          "size": "3XL",
+          "sku": "APQ-6210771S21A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "XMMAQ6YQ6ZGFTOOQDMGYSC5W",
+          "size": "4XL",
+          "sku": "APQ-6210771S61A1",
+          "priceCents": 5800
+        },
+        {
+          "variationId": "UOJ2XHWLABERBRLBAGL52HNV",
+          "size": "5XL",
+          "sku": "APQ-6210771S62A1",
+          "priceCents": 5800
+        }
+      ]
+    },
+    {
+      "slug": "the-city-ss3000-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6210772
+      },
+      "square": {
+        "itemId": "HJBFV57URWDCY3RMMAMAO6V5"
+      },
+      "fulfillment": {
+        "product": "the_city_ss3000_black",
+        "title": "The City Crewneck — Black"
+      },
+      "variants": [
+        {
+          "variationId": "KQJVOUGOKMJF4RBUR5UGJM3J",
+          "size": "XS",
+          "sku": "APQ-6210772S5A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "OHNHFAS23EQVKJIVQ6D27GTW",
+          "size": "S",
+          "sku": "APQ-6210772S6A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "2PYRHHU77GDDVHHR5WFFDLZR",
+          "size": "M",
+          "sku": "APQ-6210772S7A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "2RMJ2JJZDBI3MDXV3Z522C26",
+          "size": "L",
+          "sku": "APQ-6210772S8A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "ZKOU4YRURYWTQ5N4PBRBMGOV",
+          "size": "XL",
+          "sku": "APQ-6210772S1A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "ZYHURAIHGJFMRDXIQYS7UAPV",
+          "size": "2XL",
+          "sku": "APQ-6210772S2A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "2A2ZZM6K6RM3ZAG6ZW44TOYL",
+          "size": "3XL",
+          "sku": "APQ-6210772S21A1",
+          "priceCents": 5500
+        }
+      ]
+    },
+    {
+      "slug": "the-city-next-level-3601-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6211233
+      },
+      "square": {
+        "itemId": "T53XC4LWT3HJIHZHAURGP3B5"
+      },
+      "fulfillment": {
+        "product": "the_city_next_level_3601_black",
+        "title": "The City Long Sleeve — Black"
+      },
+      "variants": [
+        {
+          "variationId": "TFGRKA4U3JBI3DCXGE4YKWKP",
+          "size": "S",
+          "sku": "APQ-6211233S6A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "4S663ECHO2JTEANUZIRVPGW3",
+          "size": "M",
+          "sku": "APQ-6211233S7A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "2GJHLJ23CJEUXHD24EQM5I5Y",
+          "size": "L",
+          "sku": "APQ-6211233S8A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "VXRBFITIR2LUHMGSOEBN7SOP",
+          "size": "XL",
+          "sku": "APQ-6211233S1A1",
+          "priceCents": 4200
+        },
+        {
+          "variationId": "TLW77E6SB6RSZ4RVBUG66N5Y",
+          "size": "2XL",
+          "sku": "APQ-6211233S2A1",
+          "priceCents": 4200
+        }
+      ]
+    },
+    {
+      "slug": "mighty-micks-ss3000-navy",
+      "status": "live",
+      "apliiq": {
+        "designId": 6211442
+      },
+      "square": {
+        "itemId": "UDZPAU3Y733EINKACKUHHFDT"
+      },
+      "fulfillment": {
+        "product": "mighty_micks_ss3000_navy",
+        "title": "Mighty Mick’s Crewneck — Navy"
+      },
+      "variants": [
+        {
+          "variationId": "KP6MUHS6DUU25CHDMNLZWZ3E",
+          "size": "XS",
+          "sku": "APQ-6211442S5A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "MGHMBPC7FHC46T6A7ZYFAWN7",
+          "size": "S",
+          "sku": "APQ-6211442S6A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "QJW4CD6AVQINBJKBSEYDAF7P",
+          "size": "M",
+          "sku": "APQ-6211442S7A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "7X3KG5V3JXTKJOCLY7DLJCFV",
+          "size": "L",
+          "sku": "APQ-6211442S8A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "HI6TDJ7EIZIPJTUVYQPVTFC7",
+          "size": "XL",
+          "sku": "APQ-6211442S1A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "MTI4OOHBWYJ4VDJZ3JAX36NC",
+          "size": "2XL",
+          "sku": "APQ-6211442S2A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "KCJDUQWBZJA5GRJNBKCYMPTE",
+          "size": "3XL",
+          "sku": "APQ-6211442S21A1",
+          "priceCents": 5500
+        }
+      ]
+    },
+    {
+      "slug": "mighty-micks-ss3000-dark-green",
+      "status": "live",
+      "apliiq": {
+        "designId": 6211443
+      },
+      "square": {
+        "itemId": "E5VUTJQGOP665FOK6LW4JVZY"
+      },
+      "fulfillment": {
+        "product": "mighty_micks_ss3000_dark_green",
+        "title": "Mighty Mick’s Crewneck — Dark Green"
+      },
+      "variants": [
+        {
+          "variationId": "2YEXCBP24N7IGAVRUAFH3YAL",
+          "size": "XS",
+          "sku": "APQ-6211443S5A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "ULEWPGCCUTZRH6W6TKX46QZA",
+          "size": "S",
+          "sku": "APQ-6211443S6A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "LTGIVZ6WPFJJHI65U7G7ALRJ",
+          "size": "M",
+          "sku": "APQ-6211443S7A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "DR4A6AOBYIRX2OYGWPPJ2VJI",
+          "size": "L",
+          "sku": "APQ-6211443S8A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "A2QM6DUP3NJTMKVI2BA5YSCB",
+          "size": "XL",
+          "sku": "APQ-6211443S1A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "HYXINA6K4CPMTWM6DWAJCUO4",
+          "size": "2XL",
+          "sku": "APQ-6211443S2A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "IBAN3RYLAN6RRG4LRHLCGIVE",
+          "size": "3XL",
+          "sku": "APQ-6211443S21A1",
+          "priceCents": 5500
+        }
+      ]
+    }
+  ]
+}
