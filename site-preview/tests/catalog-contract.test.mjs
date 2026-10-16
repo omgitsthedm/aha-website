@@ -23,7 +23,7 @@ const legacyYikes=Object.freeze({
 const cityDesigns=Object.freeze({
  'the-city-ss4500-black':{designId:6210771,priceCents:5800,sizes:['XS','S','M','L','XL','2XL','3XL','4XL','5XL']},
  'the-city-ss3000-black':{designId:6210772,priceCents:5500,sizes:['XS','S','M','L','XL','2XL','3XL']},
- 'the-city-next-level-3601-black':{designId:6210773,priceCents:4200,sizes:['S','M','L','XL','2XL']},
+ 'the-city-next-level-3601-black':{designId:6211233,priceCents:4200,sizes:['S','M','L','XL','2XL']},
 });
 
 test('every approved storefront variation has one exact fulfillment allowlist mapping',()=>{
@@ -54,6 +54,7 @@ test('the original Yikes mappings remain exact even after approved catalog expan
 
 test('expanded Insomniac catalog records retain a customer-facing title and color without changing Yikes',()=>{
  const insomniac=products.filter(product=>product.collection==='Insomniac');
+ const longSleeveDesigns={'insomniac-next-level-3601-black':6211255,'insomniac-next-level-3601-heather-grey':6209285};
  if(insomniac.length===0){assert.equal(products.length,2);return;}
  assert.equal(insomniac.length,8);
  for(const product of insomniac)for(const variant of product.variants){
@@ -61,6 +62,7 @@ test('expanded Insomniac catalog records retain a customer-facing title and colo
   assert.ok(mapped,`${product.slug} ${variant.size} missing fulfillment mapping`);
   assert.equal(mapped.sku,variant.sku,`${product.slug} ${variant.size} changed decorated SKU`);
   assert.equal(mapped.title,`${product.title} — ${product.color}`,`${product.slug} requires its own fulfillment title`);
+  if(product.slug in longSleeveDesigns)assert.match(variant.sku,new RegExp(`^APQ-${longSleeveDesigns[product.slug]}S[0-9]+A1$`),`${product.slug} exact verified supplier design`);
  }
  assert.equal(AHA_FULFILLMENT_CATALOG.R5UCZCGSJMR3Z4HJDVOD3ZIK.title,undefined,'Yikes remains on the explicit legacy-title fallback');
 });
