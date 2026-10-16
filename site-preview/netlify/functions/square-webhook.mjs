@@ -1,6 +1,7 @@
 import { getDatabase } from "@netlify/database";
 import { sha256, verifySquareSignature } from "../../server/fulfillment/crypto.mjs";
 import { createRuntime, AHA_HOST, requireProductionRequest } from "../../server/fulfillment/runtime.mjs";
+import { dispatchAfterResponse } from "../../server/notifications/dispatch-after.mjs";
 
 const PATH = "/api/webhooks/square";
 const json = (value, status = 200) => Response.json(value, { status, headers: { "cache-control": "no-store" } });
@@ -31,6 +32,7 @@ export default async function squareWebhook(request, context) {
     // an event whose provider retry budget expires during an outage.
     await runtime.repository.ingestSquareEvent({ eventId, paymentId, eventCreatedAt: event.created_at ?? null });
     const result = await runtime.service.processSquareEvent(eventId);
+    if (result.outcome !== "duplicate") await dispatchAfterResponse(runtime.notifications, context);
     return json({ accepted: true, outcome: result.outcome }, 202);
   } catch {
     // Return retryable failure without order or customer data. Square can send
