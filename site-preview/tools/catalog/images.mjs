@@ -31,12 +31,20 @@ function roleFor(input, used) {
 }
 
 /** Writes derivatives for one image; returns the entry fields shared by gallery and campaign. */
-async function derive({ folder, base, stem, input, fetchImpl }) {
+// Campaign photos lead the lookbook on phones, so they get a 680 px size and
+// stronger compression (mobile LCP budget 2.5 s); garment shots stay crisp.
+const PROFILES = {
+  garment: { widths: [400, 800], webp: { quality: 82 } },
+  campaign: { widths: [400, 680, 800], webp: { quality: 50, effort: 6, smartSubsample: true } },
+};
+
+async function derive({ folder, base, stem, input, fetchImpl, profile = "garment" }) {
+  const settings = PROFILES[profile];
   const image = sharp(await source(input, fetchImpl)).rotate();
   const meta = await image.metadata();
   const full = Math.min(meta.width ?? MAX_WIDTH, MAX_WIDTH);
-  const widths = [...new Set([400, 800, full].filter((width) => width <= full))];
-  for (const width of widths) await image.clone().resize({ width }).withXmp(AI_XMP).webp({ quality: 82 }).toFile(path.join(folder, `${stem}-${width}.webp`));
+  const widths = [...new Set([...settings.widths, full].filter((width) => width <= full))].sort((a, b) => a - b);
+  for (const width of widths) await image.clone().resize({ width }).withXmp(AI_XMP).webp(settings.webp).toFile(path.join(folder, `${stem}-${width}.webp`));
   await image.clone().resize({ width: full }).withXmp(AI_XMP).jpeg({ quality: 88, mozjpeg: true }).toFile(path.join(folder, `${stem}.jpg`));
   return {
     src: `${base}/${stem}-${full}.webp`,
@@ -80,7 +88,7 @@ export async function buildCampaign({ slug, collection, title, color, setting, i
   const stems = ["campaign-hero", "campaign-alternate-1", "campaign-alternate-2"];
   const campaign = [];
   for (const [index, input] of inputs.entries()) {
-    const entry = await derive({ folder, base, stem: stems[index], input, fetchImpl });
+    const entry = await derive({ folder, base, stem: stems[index], input, fetchImpl, profile: "campaign" });
     campaign.push({ ...entry, alt: alts[index] ?? `${color} ${title} worn ${setting.toLowerCase()}.`, role: index === 0 ? "lifestyle-hero" : "lifestyle-alternate" });
   }
   return campaign;
