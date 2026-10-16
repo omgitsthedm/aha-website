@@ -1,10 +1,11 @@
 import { feedXml } from "../../scripts/feeds.mjs";
 import { catalogCacheHeaders, currentCatalog, STATIC_PRODUCTS } from "../../server/catalog/current.mjs";
+import { SITE_ORIGIN } from "../../server/platform/client.mjs";
 
 // Google/Meta feeds and the live-product sitemap. The feeds replace the built
 // files so products published live are advertised the moment they can be
 // bought; with nothing published live they are byte-identical to the build.
-const PRODUCTION_ORIGIN = "https://afterhoursagenda.com";
+const PRODUCTION_ORIGIN = SITE_ORIGIN;
 
 export async function handleFeeds(request, context, { catalog = currentCatalog } = {}) {
   const url = new URL(request.url);

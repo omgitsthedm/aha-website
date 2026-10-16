@@ -1,4 +1,4 @@
-const SQUARE_VERSION = "2026-09-16";
+import { SQUARE_VERSION } from "../platform/client.mjs";
 const BASE_URL = "https://connect.squareup.com";
 
 export function createSquareCheckoutGateway({ accessToken, fetchImpl = fetch, timeoutMs = 8_000, apiBase = BASE_URL }) {

@@ -1,3 +1,4 @@
+import client from "../client.config.json" with { type: "json" };
 import { cp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { resolve, isAbsolute } from "node:path";
@@ -20,7 +21,7 @@ const release = JSON.parse(
 );
 if (
   release.mode !== "preview" ||
-  release.siteId !== "275b4115-16bf-42fb-9b36-6bce9bb93608"
+  release.siteId !== client.site.netlifySiteId
 ) {
   throw new Error("Only the exact-site preview artifact can be staged here.");
 }

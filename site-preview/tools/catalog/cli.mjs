@@ -32,6 +32,7 @@ import { buildCampaign, buildGallery } from "./images.mjs";
 import { marginReport } from "./margin.mjs";
 import { createSquareClient, itemObject, squareIdempotencyKey, squareToken, verifyItem } from "./square.mjs";
 import { productImageKeys } from "../../server/catalog/publish.mjs";
+import { PRIVATE_LABEL, SITE_ORIGIN } from "../../server/platform/client.mjs";
 
 const PRODUCT_FIELDS = ["gender", "feed", "description", "fit", "weightOz", "composition", "sizeGuide", "measurementGuidance", "collection", "typeLabel", "fabricType", "constructionDetails", "sleeveMeasurementGuidance", "campaignSetting", "gallery", "campaign"];
 
@@ -53,7 +54,7 @@ function normalizeSpec(raw, file) {
   if (missing.length) throw new CatalogError(`${path.basename(file)}: missing ${missing.join(", ")}.`, { code: "spec_invalid" });
   if (!/^[a-z0-9-]+$/.test(spec.slug)) throw new CatalogError(`${spec.slug}: slug must be lowercase letters, numbers and hyphens.`, { code: "spec_invalid" });
   if (!Number.isSafeInteger(spec.priceCents) || spec.priceCents < 100) throw new CatalogError(`${spec.slug}: priceCents must be whole cents.`, { code: "spec_invalid" });
-  if (!spec.apliiq.designId && spec.apliiq.label?.id !== 6208403) throw new CatalogError(`${spec.slug}: only the approved SB-3-161622 label (6208403) may be used.`, { code: "spec_invalid" });
+  if (!spec.apliiq.designId && PRIVATE_LABEL && spec.apliiq.label?.id !== PRIVATE_LABEL.id) throw new CatalogError(`${spec.slug}: only the approved ${PRIVATE_LABEL.code} label (${PRIVATE_LABEL.id}) may be used.`, { code: "spec_invalid" });
   for (const size of spec.sizes) expectedSku(1, size);
   return { ...spec, description: spec.product.description, file };
 }
@@ -67,7 +68,7 @@ function productRecord(spec, itemId, variationIds, skus) {
   return record;
 }
 
-const SITE = process.env.AHA_ADMIN_ORIGIN || "https://afterhoursagenda.com";
+const SITE = process.env.AHA_ADMIN_ORIGIN || SITE_ORIGIN;
 function automationToken() {
   const token = process.env.ADMIN_AUTOMATION_TOKEN;
   if (!token) throw new CatalogError("ADMIN_AUTOMATION_TOKEN is required to read publish requests.", { code: "automation_token_missing", exit: 3 });
@@ -376,9 +377,9 @@ const commands = {
     steps.push({ apply: applied.results });
     for (const result of applied.results.filter((entry) => entry.outcome === "created")) steps.push({ squareImages: await commands["square-images"](result.slug) });
     if (!flags["skip-checks"]) {
-      run("npm", ["run", "build"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: "https://afterhoursagenda.com" });
+      run("npm", ["run", "build"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: SITE_ORIGIN });
       steps.push({ verify: await commands.verify() });
-      run("npm", ["test"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: "https://afterhoursagenda.com" });
+      run("npm", ["test"], { AHA_PRODUCTION_BUILD: "approved", PUBLIC_SITE_URL: SITE_ORIGIN });
       steps.push({ tests: "passed" });
     }
     const slugs = applied.results.map((entry) => entry.slug);

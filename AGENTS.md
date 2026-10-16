@@ -39,6 +39,16 @@ This custom-domain project keeps the After Hours Agenda brand. Never substitute 
 
 New products, prices and catalog checks go through the catalog engine, never ad-hoc scripts: `cd site-preview && npm run catalog -- <import|generate|verify|margin|plan|apply|explain>`. The shared skill `.agents/skills/aha-catalog/SKILL.md` (also linked at `.claude/skills`) is the runbook for Codex and Claude Code. `catalog/ledger.json` ties every product to its Apliiq design and Square item; `server/fulfillment/catalog.mjs` is generated from it. Apliiq creates are intent-guarded and never retried blindly.
 
+## Live catalog, operations and platform (October 16, 2026)
+
+- **Publishing without a site build.** `npm run catalog -- publish-live <slug>` uploads an applied product's images and then the product itself to Netlify Blobs, through the admin automation API (production only, with `ADMIN_AUTOMATION_TOKEN`). Its page, images, feeds, sitemap, bag and both allow lists pick it up immediately, from `server/catalog/` and the `catalog-*` functions. Built files and built variations always win. `ship` runs it after its checks pass. Commit the product afterwards so the next build serves the same URLs statically; that commit doesn't need its own release.
+- **Runtime product pages** are rendered by `server/catalog/render.mjs`. `tests/live-catalog.test.mjs` requires them to be byte-identical to Astro's build for every built product. Change the renderer whenever `src/pages/shop/[product].astro`, `ProductCard.astro` or `ProductImage.astro` change.
+- **Order hold.** Paid orders reach Apliiq only after `AHA_FULFILLMENT_HOLD_MINUTES` (default 60). The hourly run re-reads Square first, so anything refunded or cancelled inside the window is held.
+- **Owner reports.** A daily health check (13:00 UTC) emails only when Square, the feeds, orders, email or publishing need a person. A weekly digest goes out Mondays at 13:30 UTC. Both are recorded in `aha_owner_reports` and shown on the admin overview.
+- **Deploy skips.** The Netlify `ignore` command (`scripts/netlify-ignore.mjs`) skips builds for commits that only touch tooling, tests, catalog data or docs.
+- **Client platform.** Store identity and providers live only in `site-preview/client.config.json`, validated by `npm run client:check` and `tests/platform.test.mjs`. That file holds the site origin, the exact Netlify site ID, the pinned Square version, the private label, analytics IDs and brand colors. A new LiFi client store starts from a copy of this repository with that file replaced. Only Square and Apliiq have connectors (`server/platform/client.mjs`); a config naming another provider is refused until its connector is built.
+- **Cost.** Every engine run logs its time and provider calls; `npm run catalog -- usage [days]` totals them.
+
 ## Source and scope
 
 - Working checkout (October 16, 2026): `/Users/davidmarsh/Code/LiFi NYC/Clients/After Hours Agenda/aha-website`, a fresh clone of `main` outside iCloud. Work here, not in iCloud-synced Desktop or Documents folders; sync creates `* 2.*` duplicate files.

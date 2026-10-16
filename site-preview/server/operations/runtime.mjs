@@ -2,11 +2,12 @@
 // emails the owner when it should. The report key makes a repeated scheduled
 // run on the same day a no-op, and doubles as the Resend idempotency key.
 import { currentCatalog } from "../catalog/current.mjs";
+import { SITE_ORIGIN } from "../platform/client.mjs";
 import { createSquareGateway } from "../fulfillment/square.mjs";
 import { createResendGateway } from "../notifications/resend.mjs";
 import { renderDigestEmail, renderHealthEmail, runDailyHealth, weeklyDigest } from "./report.mjs";
 
-export const SITE_URL = "https://afterhoursagenda.com";
+export const SITE_URL = SITE_ORIGIN;
 
 export function reportKey(kind, date) {
   const day = date.toISOString().slice(0, 10);

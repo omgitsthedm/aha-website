@@ -1,3 +1,5 @@
+import { SQUARE_VERSION } from "../platform/client.mjs";
+
 const SQUARE_API = "https://connect.squareup.com/v2";
 
 export function createSquareGateway({ accessToken, fetchImpl = fetch }) {
@@ -7,7 +9,7 @@ export function createSquareGateway({ accessToken, fetchImpl = fetch }) {
       ...init,
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "Square-Version": "2026-09-16",
+        "Square-Version": SQUARE_VERSION,
         Accept: "application/json",
         ...(init.body ? { "Content-Type": "application/json" } : {}),
       },
@@ -27,7 +29,13 @@ export function createSquareGateway({ accessToken, fetchImpl = fetch }) {
     getPayment: async (id, options = {}) => (await request(`/payments/${encodeURIComponent(id)}`, {}, options.timeoutMs)).payment,
     getOrder: async (id, options = {}) => (await request(`/orders/${encodeURIComponent(id)}`, {}, options.timeoutMs)).order,
     // Read-only: the daily health check compares these with the allow list.
-    batchRetrieve: async (ids, options = {}) => (await request("/catalog/batch-retrieve", { method: "POST", body: JSON.stringify({ object_ids: ids, include_related_objects: false }) }, options.timeoutMs)).objects ?? [],
+    batchRetrieve: async (ids, options = {}) => {
+      const objects = [];
+      for (let start = 0; start < ids.length; start += 1000) {
+        objects.push(...((await request("/catalog/batch-retrieve", { method: "POST", body: JSON.stringify({ object_ids: ids.slice(start, start + 1000), include_related_objects: false }) }, options.timeoutMs)).objects ?? []));
+      }
+      return objects;
+    },
     updateShipment: async ({ order, fulfillmentUid, tracking }) => request(`/orders/${encodeURIComponent(order.id)}`, {
       method: "PUT",
       body: JSON.stringify({

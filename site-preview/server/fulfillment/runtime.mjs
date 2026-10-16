@@ -4,8 +4,10 @@ import { createFulfillmentService } from "./service.mjs";
 import { createSquareGateway } from "./square.mjs";
 import { createNotificationRuntime } from "../notifications/runtime.mjs";
 
-export const AHA_SITE_ID = "275b4115-16bf-42fb-9b36-6bce9bb93608";
-export const AHA_HOST = "afterhoursagenda.com";
+import { NETLIFY_SITE_ID, SITE_HOST } from "../platform/client.mjs";
+
+export const AHA_SITE_ID = NETLIFY_SITE_ID;
+export const AHA_HOST = SITE_HOST;
 
 export function environmentConfig(env) {
   return {

@@ -1,3 +1,4 @@
+import client from "../client.config.json" with { type: "json" };
 import { routes } from "../src/data/site.ts";
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -9,7 +10,7 @@ const dist = new URL("../dist/", import.meta.url);
 const approved = process.env.AHA_PRODUCTION_BUILD === "approved";
 const origin =
   process.env.PUBLIC_SITE_URL ||
-  "https://lfnyc-audit-2026-10-09--afterhoursagenda.netlify.app";
+  client.site.previewOrigin;
 const products = JSON.parse(await readFile(new URL("../src/data/products.json", import.meta.url), "utf8"));
 const productSummary = products.map((product) => `${product.title}: $${product.price}, ${product.color}, ${product.variants[0].size}–${product.variants.at(-1).size}.`).join(" ");
 const scriptHashes = new Set();
@@ -96,7 +97,7 @@ await writeFile(
       artifactDigest: digest,
       digestScope:
         "All published files except release.json; SHA-256 of path-sorted JSON entries {path,bytes,sha256}.",
-      siteId: "275b4115-16bf-42fb-9b36-6bce9bb93608",
+      siteId: client.site.netlifySiteId,
       reviewed: "2026-10-15",
     },
     null,

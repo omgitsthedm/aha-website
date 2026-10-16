@@ -1,10 +1,11 @@
+import { CLIENT } from "../../server/platform/client.mjs";
 import { requireProductionRequest } from "../../server/fulfillment/runtime.mjs";
 
 // Keep Meta's CORS workaround deliberately narrower than a general fetch proxy.
 // The pixel and its known configuration script are the only upstream resources.
 const sources = Object.freeze({
   "/api/partytown/meta-pixel/bootstrap": "https://connect.facebook.net/en_US/fbevents.js",
-  "/api/partytown/meta-pixel/config": "https://connect.facebook.net/signals/config/1815233516346046",
+  "/api/partytown/meta-pixel/config": `https://connect.facebook.net/signals/config/${CLIENT.analytics.metaPixel}`,
 });
 async function fetchMetaPixel(source) {
   const controller = new AbortController();

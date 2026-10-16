@@ -1,8 +1,9 @@
+import client from "../client.config.json" with { type: "json" };
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { routes } from "../src/data/site.ts";
 
-const origin = "https://afterhoursagenda.com";
+const origin = client.site.origin;
 const get = async (path) => {
   const response = await fetch(`${origin}${path}`, {
     headers: { "Cache-Control": "no-cache" },
@@ -14,7 +15,7 @@ const get = async (path) => {
 const release = await (await get("/release.json")).json();
 assert.equal(release.project, "After Hours Agenda");
 assert.equal(release.mode, "production");
-assert.equal(release.siteId, "275b4115-16bf-42fb-9b36-6bce9bb93608");
+assert.equal(release.siteId, client.site.netlifySiteId);
 assert.match(release.sourceCommit, /^[0-9a-f]{40}$/);
 assert.match(release.artifactDigest, /^[0-9a-f]{64}$/);
 if (process.env.EXPECTED_COMMIT)

@@ -4,9 +4,10 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { CatalogError, sha256 } from "./lib.mjs";
+import { SQUARE_VERSION } from "../../server/platform/client.mjs";
 
 const API = "https://connect.squareup.com/v2";
-const VERSION = "2026-09-16";
+const VERSION = SQUARE_VERSION;
 
 export function squareToken(env = process.env) {
   const token = env.AHA_SQUARE_ACCESS_TOKEN;

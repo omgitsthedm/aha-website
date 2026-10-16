@@ -1,9 +1,10 @@
 import products from "./products.json" with { type: "json" };
+import client from "../../client.config.json" with { type: "json" };
 
 export const brand = {
-  name: "After Hours Agenda",
-  email: "info@afterhoursagenda.com",
-  official: "https://afterhoursagenda.com",
+  name: client.client.name,
+  email: client.client.email,
+  official: client.site.origin,
   instagram: "https://www.instagram.com/afterhoursagenda",
   facebook: "https://www.facebook.com/afterhoursagenda/",
   verified: "2026-10-09",

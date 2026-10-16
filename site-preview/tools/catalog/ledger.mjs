@@ -2,6 +2,7 @@
 // Apliiq design and Square item. products.json stays the presentation record;
 // the fulfillment allow list is generated from the ledger.
 import { CatalogError, PATHS, SKU_PATTERN, readJson, skuDesignId, writeJsonAtomic } from "./lib.mjs";
+import { PRIVATE_LABEL } from "../../server/platform/client.mjs";
 
 export function loadLedger(file = PATHS.ledger) { return readJson(file, "catalog/ledger.json"); }
 export function saveLedger(ledger, file = PATHS.ledger) { writeJsonAtomic(file, ledger); }
@@ -31,7 +32,7 @@ export function ledgerFromLive({ products, fulfillment }) {
   });
   const extra = Object.keys(fulfillment).filter((id) => !covered.has(id));
   if (extra.length) throw new CatalogError(`The allow list has ${extra.length} variation(s) with no product page.`, { code: "allowlist_orphan", details: extra });
-  return { schemaVersion: 1, privateLabel: "SB-3-161622", products: entries };
+  return { schemaVersion: 1, privateLabel: PRIVATE_LABEL?.code ?? null, products: entries };
 }
 
 /** Fulfillment allow-list object derived from the ledger (published products only). */
