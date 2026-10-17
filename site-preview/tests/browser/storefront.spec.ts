@@ -258,3 +258,36 @@ test("the private order page shows progress, tracking and items from its signed 
   await expect(page.locator("[data-order-lede]")).toHaveText("We couldn't find that order. Use the link in your order email.");
   await expect(page.locator("[data-order-steps]")).toBeHidden();
 });
+
+test("each collection has its own page with its pieces, campaign and share image", async ({ page }) => {
+  const { collectionSlug } = await import("../../src/data/collections");
+  for (const [name, pieces] of collectionsInOrder()) {
+    await page.goto(`/shop/${collectionSlug(name)}/`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(name);
+    await expect(page.locator("#pieces article.product-card")).toHaveCount(pieces.length);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", new RegExp(`${pieces[0]!.campaign[0]!.feedImage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
+    const schema = JSON.parse((await page.locator('script[type="application/ld+json"]').last().textContent())!);
+    expect(schema["@type"]).toBe("CollectionPage");
+    expect(schema.mainEntity.itemListElement).toHaveLength(pieces.length);
+  }
+  await page.goto("/shop/");
+  await page.locator(".collection-group").filter({ hasText: "The City" }).getByRole("link", { name: "The collection →" }).click();
+  await expect(page).toHaveURL(/\/shop\/the-city\/$/);
+});
+
+test("a collection whose pieces were all removed says so", async ({ page }) => {
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ retired: ["pet-it-be-ss3000-maroon"], retiredVariations: [], products: [], cartLines: [] }) }));
+  await page.goto("/shop/pet-it-be/");
+  await expect(page.locator("[data-collection-empty]")).toBeVisible();
+  await expect(page.locator("#pieces article.product-card")).toBeHidden();
+  await page.goto("/shop/the-city/");
+  await expect(page.locator("[data-collection-empty]")).toBeHidden();
+});
+
+test("product pages show how to measure, and Find my size repeats the drawing", async ({ page }) => {
+  await page.goto("/shop/the-city-ss4500-black/");
+  await expect(page.getByRole("img", { name: "How to measure a top" })).toBeVisible();
+  await page.getByRole("button", { name: "Find my size" }).click();
+  await expect(page.locator(".fit-dialog .measure-diagram")).toHaveAttribute("aria-hidden", "true");
+  await expect(page.getByRole("img", { name: "How to measure a top" })).toHaveCount(1);
+});

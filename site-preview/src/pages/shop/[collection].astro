@@ -1,0 +1,52 @@
+---
+// One page per collection (/shop/<collection>/): its campaign, its pieces and a
+// share image, for search, Instagram and ad links. Same order and copy as the shop.
+import Site from '../../layouts/Site.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import ProductImage from '../../components/ProductImage.astro';
+import UpdatesBand from '../../components/UpdatesBand.astro';
+import { collectionCopy, collectionSlug, collectionsInOrder } from '../../data/collections';
+export function getStaticPaths() {
+  return collectionsInOrder().filter(([, pieces]) => pieces.length).map(([name, pieces]) => ({ params: { collection: collectionSlug(name) }, props: { name, pieces } }));
+}
+const { name, pieces } = Astro.props;
+const origin = Astro.site!.origin;
+const slug = collectionSlug(name);
+const lead = pieces[0]!;
+const hero = lead.campaign[0]!;
+const copy = collectionCopy(name);
+const from = Math.min(...pieces.map((product) => product.price));
+const campaign = pieces.flatMap((product) => product.campaign.map((shot) => ({ shot, product }))).slice(0, 6);
+const heroSizes = '(max-width: 760px) calc(100vw - 40px), 50vw';
+const schema = {
+  '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${name} collection`, url: `${origin}/shop/${slug}/`, description: copy,
+  mainEntity: { '@type': 'ItemList', itemListElement: pieces.map((product, index) => ({ '@type': 'ListItem', position: index + 1, url: `${origin}/shop/${product.slug}/`, name: `${product.title} — ${product.color}` })) },
+};
+---
+<Site title={`${name} collection`} description={`${copy} ${pieces.length} ${pieces.length === 1 ? 'piece' : 'pieces'} from $${from}, made to order with free domestic shipping.`} image={hero.feedImage} imageAlt={hero.alt} imageWidth={hero.width} imageHeight={hero.height} preloadImage={{ src: hero.src, srcset: hero.srcset, sizes: heroSizes }}>
+  <section class="shell collection-hero" data-collection-page>
+    <div class="collection-hero-copy">
+      <p class="label"><a href="/shop/">Shop</a> / Fall / Winter 2026</p>
+      <h1>{name}</h1>
+      <p class="lede">{copy}</p>
+      <p class="status-copy">{pieces.length} {pieces.length === 1 ? 'piece' : 'pieces'} · from ${from} · made to order · free domestic shipping</p>
+      <a class="button" href="#pieces">Shop the pieces <span aria-hidden="true">↓</span></a>
+    </div>
+    <figure class="collection-hero-image">
+      <ProductImage image={hero} priority sizes={heroSizes} />
+      <figcaption>{lead.title} · Campaign mockup · AI-generated</figcaption>
+    </figure>
+  </section>
+  <section class="section shell" id="pieces" aria-labelledby="pieces-title">
+    <div class="section-header"><h2 id="pieces-title">The pieces.</h2><a class="text-link" href="/shop/">Everything in the shop →</a></div>
+    <div class="product-grid">{pieces.map((product) => <ProductCard product={product} />)}</div>
+    <p class="checkout-note" data-collection-empty hidden>These pieces aren’t available right now. <a href="/shop/">See what’s in the shop →</a></p>
+  </section>
+  <section class="section shell campaign-set" aria-labelledby="campaign-title">
+    <div class="section-header"><h2 id="campaign-title">In the campaign.</h2><a class="text-link" href="/lookbook/">The full lookbook →</a></div>
+    <div class="campaign-grid">{campaign.map(({ shot, product }) => <figure data-product-set={product.slug}><ProductImage image={shot} sizes="(max-width: 760px) 100vw, 33vw" /><a class="look-chip" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} — ${product.color}`}>Shop <span aria-hidden="true">→</span></a><figcaption>{product.color} / {product.campaignSetting}</figcaption></figure>)}</div>
+  </section>
+  <UpdatesBand source={`collection-${slug}`} />
+  <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+</Site>
+<script src="../../scripts/retired-cards.ts"></script>

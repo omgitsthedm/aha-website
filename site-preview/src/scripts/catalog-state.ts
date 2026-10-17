@@ -40,6 +40,11 @@ export function hideRetiredCards(retired: string[]) {
   document.querySelectorAll<HTMLElement>(".color-options").forEach((row) => {
     if ([...row.querySelectorAll<HTMLElement>("a.color-option")].every((link) => link.hidden)) row.hidden = true;
   });
+  // A collection page whose pieces were all removed says so instead of showing an empty grid.
+  document.querySelectorAll<HTMLElement>("[data-collection-empty]").forEach((note) => {
+    const cards = [...document.querySelectorAll<HTMLElement>("#pieces article.product-card")];
+    note.hidden = !cards.length || cards.some((card) => !card.hidden);
+  });
   document.querySelectorAll<HTMLElement>(".collection-group").forEach((group) => {
     const cards = [...group.querySelectorAll<HTMLElement>("article.product-card")];
     if (!cards.length || !cards.every((card) => card.hidden)) return;

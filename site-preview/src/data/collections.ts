@@ -14,3 +14,14 @@ export function collectionsInOrder(pieces: Product[] = products) {
 }
 
 export const collectionId = (name: string) => `collection-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+
+/** URL slug for a collection page: "Mighty Mick’s" → "mighty-micks". */
+export const collectionSlug = (name: string) => name.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+const COLLECTION_COPY: Record<string, string> = {
+  "The City": "Black fleece and cotton jersey with a blue-and-orange back print and a plain front.",
+  Insomniac: "Long-sleeve layers with a front chest mark and a full back sketch.",
+  "Mighty Mick’s": "Midweight crewnecks in navy or dark green with a one-color front print.",
+  "Yikes!": "Bone fleece in two cuts with a yellow-and-blue chest graphic.",
+};
+export const collectionCopy = (name: string) => COLLECTION_COPY[name] ?? "Current pieces from the Fall / Winter 2026 collection.";

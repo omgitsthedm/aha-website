@@ -1,5 +1,6 @@
 import products from "./products.json" with { type: "json" };
 import client from "../../client.config.json" with { type: "json" };
+import { collectionSlug, collectionsInOrder } from "./collections.ts";
 
 export const brand = {
   name: client.client.name,
@@ -142,6 +143,7 @@ export const routes = [
   "/updates/",
   "/faq/",
   "/shop/",
+  ...collectionsInOrder().filter(([, pieces]) => pieces.length).map(([name]) => `/shop/${collectionSlug(name)}/`),
   ...products.map((product) => `/shop/${product.slug}/`),
   "/privacy/",
   "/terms/",

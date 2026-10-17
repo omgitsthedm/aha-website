@@ -1,5 +1,15 @@
 # After Hours Agenda agent contract
 
+## Collection pages and measuring drawing — October 16, 2026
+
+- **Collection pages:**
+  - Every collection has a page at `/shop/<collection>/`, for example `/shop/mighty-micks/`, built by `src/pages/shop/[collection].astro`.
+  - Each page has a campaign hero, the pieces, campaign photos with Shop chips, a CollectionPage/ItemList schema and the campaign photo as its share image.
+  - Slugs and copy come from `src/data/collections.ts` (`collectionSlug`, `collectionCopy`), the same source as the shop. Give a new collection its copy there.
+  - When every piece in a collection has been removed from sale, its page says so.
+- **Measuring drawing:** `MEASURE_DIAGRAM` in `server/catalog/garments.mjs` is the how-to-measure drawing on every product page. The live renderer uses the same string; Find my size shows a decorative copy.
+- **AI motion clips:** requested but not made. The ElevenLabs creative workspace needs a paid plan for video, and Figma Weave needs the owner's Figma account linked plus per-run cost approval.
+
 ## Customer experience, phase 1 — October 16, 2026
 
 The owner asked to "do it all" after reviewing the plan: delivery dates, a fit profile, Buy now, and a live order page. Phase 2 is Square gift cards, as its own release. Phase 3 waits until Netlify applies database migrations again: customer accounts, saved pieces, drop early access and reviews.
