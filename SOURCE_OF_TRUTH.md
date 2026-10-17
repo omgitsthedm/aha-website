@@ -1,5 +1,9 @@
 # After Hours Agenda source of truth
 
+## Torso-only campaign photos — October 17, 2026
+
+Every campaign photo now follows the FW26 brief's first rule: torso only, never a face. 39 photos were re-cropped from their originals, and one Yikes wall sign was painted out under the no-readable-text rule; `AGENTS.md` has the details. Live state is still proven only by the published deploy and `/release.json`.
+
 ## Customer experience, phase 1 — October 16, 2026
 
 Product pages show a U.S. delivery estimate (and holiday order-by dates from November), a "Find my size" fit profile kept in the browser, and Buy now. Each order email links to a private order page showing Paid → In production → Shipped, with tracking. Delivery settings live in `site-preview/src/data/delivery.json`. Live state is still proven only by the published deploy and `/release.json`.

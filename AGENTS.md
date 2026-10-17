@@ -1,5 +1,17 @@
 # After Hours Agenda agent contract
 
+## Torso-only campaign photos — October 17, 2026
+
+The owner's FW26 Lookbook & Campaign Brief (`~/Desktop/AHA Fall Winter 2026 Lifestyle/FW26 Lookbook & Campaign Brief.md`) sets two rules for campaign photos:
+- Rule 1: torso only, never a face; hair only as strands at the edge.
+- Rule 8: no readable text except the design's own graphic; generic BAR, PIZZA, DELI and OPEN signs are allowed.
+
+- **What changed:** 39 of the 48 campaign photos were re-cropped to torso framing from their lossless originals. Fronts now start at the base of the neck, and backs start below the hood or neckline. The Yikes cropped hoodie set and the six Mighty Mick's photos already started at the neck and are unchanged.
+- **Where the originals are:** the launch folders under `~/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/`, and for Pet It Be, `site-preview/tools/images/out/pet-it-be-ss3000-maroon/gen/`.
+- **How:** crops come from Apple Vision body-pose joints (neck, shoulders, hips) and face boxes. Insomniac fronts lean toward the left-chest logo so it stays inside the full-screen phone lookbook crop. Files were rebuilt with the catalog engine's campaign profile, keeping each file's IPTC AI marker; `products.json` is unchanged and placeholders were rebuilt. The originals are 1122 × 1402, so crops are enlarged 1.06–1.66× and slightly soft; regenerating at higher resolution would restore detail.
+- **Rule 8:** the crops removed Pabst and Budweiser neon, a Simpsons pinball backglass, the Silvercup sign, MTA 7 bullets and an I♥NYC sticker. A "GOOD BEER BAD PEOPLE" wall sign in Yikes crewneck campaign-1 and campaign-3 was painted out to a blank board; that is the only retouch. Generic BAR, DINER and RECORDS neon remain where they're in frame.
+- **Still unmet:** the existing set doesn't meet the brief's other rules (flash on the lens axis, the amber time stamp, one New York night). That needs regeneration from the house's garment references. New campaign photos must follow the brief's crops before they're published.
+
 ## Collection pages and measuring drawing — October 16, 2026
 
 - **Collection pages:**
