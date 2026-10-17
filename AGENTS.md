@@ -22,7 +22,7 @@ The owner asked for short, labeled AI motion from the campaign photos for the he
   - Back-view and leaning garment shots are cropped below the head, hair or any sign (`film72.py` top/cx, recorded in `tools/motion/garment-shots.txt`).
   - Every frame of every film was checked with Apple Vision face detection. The only hits are the illustrated boxer in the Mighty Mick's print and specks of city light.
   - Run that check again on any new shot.
-- **Rebuilding:** the scripts expect the working folder `/tmp/aha-video`. The Desktop toolchain (`03 Video Advert/Production Project/Production/V22/toolchain`) imports far too slowly through iCloud. Clone its weights with `cp -c`, which uses no extra disk, and rebuild the Python environment from the local uv cache. Don't re-download.
+- **Rebuilding:** the raw takes, treated shots, Pexels originals, web files and campaign crop masters are kept in `~/Desktop/After Hours Agenda/03 Video Advert/04 Site Films — 2026-10-17/`, because `/tmp` is cleared on restart. The scripts expect the working folder `/tmp/aha-video`; copy the sources back there first. The Desktop toolchain (`03 Video Advert/Production Project/Production/V22/toolchain`) imports far too slowly through iCloud. Clone its weights with `cp -c`, which uses no extra disk, and rebuild the Python environment from the local uv cache. Don't re-download.
 - **The Fall 2026 advert (V27–V31) can't go on the site.** Its own source manifest calls it an internal proof of concept. Of the 27 city shots in V31, 24 come from other creators' YouTube videos (downloaded with yt-dlp), 2 have no recorded source, and only 1 (Pexels 8491299) is licensed. Its soundtrack is commercial music (Madeon "Hi!"), and its garment flashes are retired AI concepts that don't match the products for sale. Keep every advert file. Don't publish the film or its city shots without licenses from those creators.
 
 ## Torso-only campaign photos — October 17, 2026
@@ -51,7 +51,7 @@ The owner's FW26 Lookbook & Campaign Brief (`~/Desktop/AHA Fall Winter 2026 Life
 
 ## Customer experience, phase 1 — October 16, 2026
 
-The owner asked to "do it all" after reviewing the plan: delivery dates, a fit profile, Buy now, and a live order page. Phase 2 is Square gift cards, as its own release. Phase 3 waits until Netlify applies database migrations again: customer accounts, saved pieces, drop early access and reviews.
+The owner asked to "do it all" after reviewing the plan: delivery dates, a fit profile, Buy now, and a live order page. Phase 2 is Square gift cards, as its own release. Phase 3 is customer accounts, saved pieces, drop early access and reviews. It was waiting on Netlify applying migrations, which it did again by October 17.
 
 - **Delivery estimates:**
   - `src/data/delivery.json` holds production and shipping business days, a buffer, closed dates and the holiday order-by date. `src/scripts/delivery.ts` turns them into "Estimated U.S. arrival" lines.
@@ -81,11 +81,7 @@ The owner instructed: “Build the five fixes and also add an email signup that 
   - Analytics get a `generate_lead` / `email_signup` / Meta `Lead` event with the page name, never the address.
   - Sending newsletters, or connecting Resend audiences or another email tool, needs the owner's separate instruction. Every email sent must include an unsubscribe link, as the privacy page says.
   - The migration `20261016140000_email_signups` is byte-identical at both discovery paths.
-  - **Open issue (October 16, 2026):** Netlify's production deploys of `2416505` (#123) and `840fdef` (#124) logged "No pending database migrations" and didn't apply it; `netlify database status --branch production` still ends at `20261016130000_owner_reports`. Until it's applied:
-    - Sign-ups get a plain "couldn't save" reply (HTTP 503) and nothing is stored.
-    - The admin and the digest treat the list as empty.
-    - The daily health check emails the owner about it.
-    - Don't apply the DDL by hand (Netlify's rule). Confirm with `database status` after each production deploy.
+  - **Resolved (checked October 17, 2026):** a later production deploy applied `20261016140000_email_signups`. `NETLIFY_SITE_ID=275b4115-16bf-42fb-9b36-6bce9bb93608 netlify database status --branch production` lists it as applied, with nothing pending. Sign-ups now store addresses. Still never apply DDL by hand (Netlify's rule); confirm with `database status` after each production deploy.
 - **Storefront.** `/updates/` copy is current, and the privacy page covers sign-ups. Home, shop and lookbook share the collection order in `src/data/collections.ts`, newest drop first; Pet It Be stays last while it is removed from sale. The lookbook hides sets for removed products. The shop has collection jump links, and phones get a quick-add bar on product pages (`initBuyBar` in `src/scripts/cart.ts`).
 
 ## Approved Pet It Be launch — October 16, 2026
