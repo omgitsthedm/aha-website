@@ -18,6 +18,8 @@ export function checkoutConfig(env) {
       googlePay: enabled(env.get("AHA_CHECKOUT_GOOGLE_PAY_ENABLED")),
       cashAppPay: enabled(env.get("AHA_CHECKOUT_CASH_APP_PAY_ENABLED")),
       afterpay: enabled(env.get("AHA_CHECKOUT_AFTERPAY_ENABLED")),
+      // Square gift cards (sold on Square's own eGift page) are on unless turned off.
+      giftCard: env.get("AHA_CHECKOUT_GIFT_CARD_ENABLED") !== "false",
     },
   };
 }

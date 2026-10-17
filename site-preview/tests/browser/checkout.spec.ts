@@ -30,6 +30,7 @@ async function mockSquare(page: import("@playwright/test").Page, cashApp = false
     state.__ahaCashReferences = [];
     window.Square = { payments: () => ({
       card: async () => ({ attach: async () => {}, tokenize: async () => ({ status: "OK", token: "opaque-square-token" }) }),
+      giftCard: async () => ({ attach: async () => {}, tokenize: async () => ({ status: "OK", token: "opaque-gift-card-token" }) }),
       paymentRequest: (request: unknown) => {
         if (!state.__ahaPaymentRequest) state.__ahaPaymentRequest = request;
         return { options: request, addEventListener: (name: string, listener: (contact: unknown) => unknown) => { if (name === "afterpay_shippingaddresschanged") state.__ahaAfterpayAddressListener = listener; } };
@@ -206,4 +207,41 @@ test("checkout: a bag-mismatched Cash App resume is discarded without re-quoting
   await page.reload();
   await expect.poll(() => page.evaluate(() => sessionStorage.getItem("aha-cash-app-resume-v1"))).toBeNull();
   expect(quotes).toBe(1);
+});
+
+test("checkout: a gift card pays the whole server total, and a short balance says so plainly", async ({ page }) => {
+  const paymentBodies: Record<string, unknown>[] = [];
+  let decline = true;
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true, applePay: false, googlePay: false, afterpay: false, cashAppPay: false, giftCard: true } }) }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }));
+  await page.route("**/api/checkout/pay", async (route) => {
+    paymentBodies.push(route.request().postDataJSON() as Record<string, unknown>);
+    if (decline) { decline = false; await route.fulfill({ status: 402, contentType: "application/json", body: JSON.stringify({ error: "payment_failed", errorCode: "payment_failed" }) }); return; }
+    await route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "completed", orderId: "AHA-1002", paymentId: "payment_gift" }) });
+  });
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await expect(page.locator("[data-gift-card]")).toBeHidden();
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.locator("[data-gift-card] summary").click();
+  await page.getByRole("button", { name: "Pay with gift card" }).click();
+  await expect(page.locator("[data-checkout-message]")).toContainText("That gift card couldn’t pay the full total.");
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.locator("[data-gift-card] summary").click();
+  await page.getByRole("button", { name: "Pay with gift card" }).click();
+  await expect(page.locator("[data-checkout-message]")).toContainText("Payment confirmed · order AHA-1002");
+  expect(paymentBodies.map((body) => body.sourceId)).toEqual(["opaque-gift-card-token", "opaque-gift-card-token"]);
+  expect(paymentBodies[1]).not.toHaveProperty("totalAmount");
+});
+
+test("checkout: the gift card option stays hidden when turned off", async ({ page }) => {
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true, applePay: false, googlePay: false, afterpay: false, cashAppPay: false, giftCard: false } }) }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }));
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
+  await expect(page.locator("[data-gift-card]")).toBeHidden();
 });

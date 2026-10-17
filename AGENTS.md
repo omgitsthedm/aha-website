@@ -17,6 +17,10 @@ The owner asked to "do it all" after reviewing the plan: delivery dates, a fit p
   - Confirmation and shipment emails include "See your order".
   - `/order/*` is served with noindex and no-referrer headers.
 - **Script budget:** the artifact test counts only customer-facing scripts against 65 KB; admin-only scripts have their own 40 KB cap.
+- **Gift cards (phase 2):**
+  - Square's own eGift shop for this account (`brand.giftCards` in `src/data/site.ts`) sells and emails digital cards and owns their terms. It's linked from the footer and the FAQ.
+  - Checkout redeems Square gift cards with the Web Payments gift card field. A card must cover the whole order; split payments aren't supported, and a short balance gets a plain message.
+  - It's on unless `AHA_CHECKOUT_GIFT_CARD_ENABLED=false`.
 
 ## Email sign-up and storefront fixes — October 16, 2026
 

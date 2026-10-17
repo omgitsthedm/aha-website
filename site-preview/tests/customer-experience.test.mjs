@@ -83,3 +83,11 @@ test("order emails carry the private order link when one can be signed", () => {
   assert.doesNotMatch(renderOrderConfirmation({ orderNumber: "1001", items: [], totalAmount: 5500, currency: "USD", statusUrl: null }).html, /See your order/);
   assert.doesNotMatch(renderOrderConfirmation({ orderNumber: "1001", items: [], totalAmount: 5500, currency: "USD", statusUrl: "javascript:alert(1)" }).html, /See your order/);
 });
+
+test("gift cards are on unless turned off, and the footer links Square's own eGift shop", async () => {
+  const { checkoutConfig } = await import("../server/checkout/runtime.mjs");
+  assert.equal(checkoutConfig({ get: () => undefined }).methods.giftCard, true);
+  assert.equal(checkoutConfig({ get: (key) => (key === "AHA_CHECKOUT_GIFT_CARD_ENABLED" ? "false" : undefined) }).methods.giftCard, false);
+  const { brand } = await import("../src/data/site.ts");
+  assert.match(brand.giftCards, /^https:\/\/app\.squareup\.com\/gift\/[A-Z0-9]+\/order$/);
+});
