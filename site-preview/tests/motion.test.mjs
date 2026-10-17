@@ -25,6 +25,7 @@ test("every film plays over a campaign photo, credits its city footage and recor
     assert.ok(campaignSrcs.has(src), `${src} is a current campaign photo`);
     assert.match(film.large, /^\/motion\/[a-z0-9-]+\.mp4$/);
     assert.match(film.small, /^\/motion\/[a-z0-9-]+\.mp4$/);
+    assert.match(film.tall, /^\/motion\/[a-z0-9-]+\.mp4$/);
     assert.ok(film.seconds > 2 && film.seconds <= 14);
     assert.match(film.label, /AI-generated/, "the caption says the garment shots are AI-generated");
     assert.match(film.label, /Pexels/, "the caption says where the city footage comes from");
@@ -40,7 +41,7 @@ test("every film plays over a campaign photo, credits its city footage and recor
 
 test("film files are small, silent, start playing before they finish downloading", async () => {
   for (const clip of Object.values(motion)) {
-    for (const [path, limit] of [[clip.large, 2_500_000], [clip.small, 1_300_000]]) {
+    for (const [path, limit] of [[clip.large, 1_200_000], [clip.small, 700_000], [clip.tall, 700_000]]) {
       const buffer = await readFile(new URL(`../public${path}`, import.meta.url));
       assert.ok(buffer.length < limit, `${path} is ${buffer.length} bytes; keep it under ${limit}`);
       const order = boxes(buffer);

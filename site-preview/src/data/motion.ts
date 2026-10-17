@@ -7,8 +7,11 @@ import films from "./motion.json" with { type: "json" };
 export interface Motion {
   /** Film for wider screens. */
   large: string;
-  /** Lighter film for phones. */
+  /** Lighter film for phones (home and collection heroes). */
   small: string;
+  /** Phone film for the full-screen lookbook, whose crop keeps only the middle of the frame;
+   *  its time stamp sits lower, under the print. */
+  tall: string;
   seconds: number;
   /** Caption while the film plays; says what is real and what is AI-generated. */
   label: string;

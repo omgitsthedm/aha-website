@@ -23,7 +23,7 @@ out = {}
 for f in films:
     lead = photo_src[(f['lead'], 0)]
     out[lead] = {
-        'large': f"/motion/{f['name']}-800.mp4", 'small': f"/motion/{f['name']}-600.mp4", 'seconds': f['seconds'],
+        'large': f"/motion/{f['name']}-800.mp4", 'small': f"/motion/{f['name']}-600.mp4", 'tall': f"/motion/{f['name']}-600t.mp4", 'seconds': f['seconds'],
         'label': f"{f['collection']} film · New York footage from Pexels · garment shots AI-generated",
         'city': [{'pexels': city[c][0], 'creator': city[c][1]} for c in f['shots'] if c in city],
         'garments': [{'photo': shot_photo[g], 'seed': seeds[g], 'generator': GEN} for g in f['shots'] if g not in city],

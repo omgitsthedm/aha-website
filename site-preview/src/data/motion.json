@@ -2,6 +2,7 @@
   "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-hero-standing-1122.webp": {
     "large": "/motion/mighty-micks-800.mp4",
     "small": "/motion/mighty-micks-600.mp4",
+    "tall": "/motion/mighty-micks-600t.mp4",
     "seconds": 8.3,
     "label": "Mighty Mick’s film · New York footage from Pexels · garment shots AI-generated",
     "city": [
@@ -52,6 +53,7 @@
   "/images/the-city/the-city-ss4500-black/campaign-1-1122.webp": {
     "large": "/motion/the-city-800.mp4",
     "small": "/motion/the-city-600.mp4",
+    "tall": "/motion/the-city-600t.mp4",
     "seconds": 8.3,
     "label": "The City film · New York footage from Pexels · garment shots AI-generated",
     "city": [
@@ -102,6 +104,7 @@
   "/images/yikes/yikes-crewneck/campaign-1-1122.webp": {
     "large": "/motion/yikes-800.mp4",
     "small": "/motion/yikes-600.mp4",
+    "tall": "/motion/yikes-600t.mp4",
     "seconds": 8.3,
     "label": "Yikes! film · New York footage from Pexels · garment shots AI-generated",
     "city": [
@@ -152,12 +155,13 @@
   "/images/insomniac/insomniac-ss4500-black/campaign-1-1122.webp": {
     "large": "/motion/insomniac-800.mp4",
     "small": "/motion/insomniac-600.mp4",
+    "tall": "/motion/insomniac-600t.mp4",
     "seconds": 7.9,
     "label": "Insomniac film · New York footage from Pexels · garment shots AI-generated",
     "city": [
       {
-        "pexels": 36244109,
-        "creator": "Yura Forrat"
+        "pexels": 19145696,
+        "creator": "Lukas Rodriguez"
       },
       {
         "pexels": 15941743,

@@ -30,6 +30,6 @@ for k in range(count):
     i = min(len(frames) - 1, round(k / 18 * speed * 60))
     im = tiltshift(Image.fromarray(frames[i]), focus, 0.07, blur)
     im = place(im, dx[k], dy[k], tilt[k])
-    enc.stdin.write(stock(im, rng, soften=0.6).tobytes())
+    enc.stdin.write(stock(im, rng).tobytes())
 enc.stdin.close(); enc.wait()
 print('city72', dst, count, 'frames', f'{span:.2f}s of source from {start}s', f'crop {cw}x{ch}+{x0}+{y0}')

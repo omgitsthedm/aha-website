@@ -312,6 +312,16 @@ test.describe("campaign motion", () => {
     await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(false);
   });
 
+  test("the full-screen phone lookbook gets the film cut for its crop", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/lookbook/");
+    const frame = page.locator(".campaign-set .motion-frame").first();
+    await frame.scrollIntoViewIfNeeded();
+    await expect(frame.locator("video")).toHaveCount(1, { timeout: 15_000 });
+    expect(await frame.getAttribute("data-motion-small")).toMatch(/-600t\.mp4$/);
+    expect(await frame.locator("video").getAttribute("src")).toBe(await frame.getAttribute("data-motion-small"));
+  });
+
   test("phones get the lighter film", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");

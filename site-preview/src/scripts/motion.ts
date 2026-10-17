@@ -1,6 +1,6 @@
-// Campaign motion loops (src/components/MotionImage.astro). The photo is the page's
-// main image; a loop is added only after load, only while on screen, and never for
-// reduced motion or data saver. Every loop has a pause button.
+// Collection films (src/components/MotionImage.astro). The photo is the page's main
+// image; a film is added only after load, only while on screen, and never for reduced
+// motion, Data Saver or 2G. Every film has a pause button.
 const reduce = matchMedia("(prefers-reduced-motion: reduce)");
 const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
 // Data saver and 2G connections keep the photos; the phone loop is about 200 KB, so 3G still gets it.

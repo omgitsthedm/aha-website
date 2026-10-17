@@ -1,16 +1,18 @@
 ---
-// A campaign photo that can carry a short AI-generated motion loop. Without a loop
-// it is exactly ProductImage. With one, the photo still loads first; the loop is
-// added after page load, never for reduced motion or data saver, and has a pause button.
+// A campaign photo that can carry its collection's short film. Without one it is exactly
+// ProductImage. With one, the photo still loads first; the film is added after page load,
+// never for reduced motion, Data Saver or 2G, and has a pause button.
 import ProductImage from './ProductImage.astro';
 import { motionFor } from '../data/motion';
 interface Props {
   image: {src:string; srcset:string; alt:string; width:number; height:number};
   priority?: boolean;
   sizes?: string;
+  /** Shown full-screen on phones (the lookbook): use the film cut for that crop. */
+  tall?: boolean;
 }
-const {image,priority=false,sizes}=Astro.props;
+const {image,priority=false,sizes,tall=false}=Astro.props;
 const motion = motionFor(image.src);
 ---
-{motion ? <div class="motion-frame" data-motion={motion.large} data-motion-small={motion.small}><ProductImage image={image} priority={priority} sizes={sizes} /></div> : <ProductImage image={image} priority={priority} sizes={sizes} />}
+{motion ? <div class="motion-frame" data-motion={motion.large} data-motion-small={tall ? motion.tall : motion.small}><ProductImage image={image} priority={priority} sizes={sizes} /></div> : <ProductImage image={image} priority={priority} sizes={sizes} />}
 <script>import "../scripts/motion";</script>
