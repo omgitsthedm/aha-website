@@ -4,6 +4,8 @@
 import Site from '../../layouts/Site.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import ProductImage from '../../components/ProductImage.astro';
+import MotionImage from '../../components/MotionImage.astro';
+import { motionFor } from '../../data/motion';
 import UpdatesBand from '../../components/UpdatesBand.astro';
 import { collectionCopy, collectionSlug, collectionsInOrder } from '../../data/collections';
 export function getStaticPaths() {
@@ -14,6 +16,7 @@ const origin = Astro.site!.origin;
 const slug = collectionSlug(name);
 const lead = pieces[0]!;
 const hero = lead.campaign[0]!;
+const film = motionFor(hero.src);
 const copy = collectionCopy(name);
 const from = Math.min(...pieces.map((product) => product.price));
 const campaign = pieces.flatMap((product) => product.campaign.map((shot) => ({ shot, product }))).slice(0, 6);
@@ -33,8 +36,8 @@ const schema = {
       <a class="button" href="#pieces">Shop the pieces <span aria-hidden="true">↓</span></a>
     </div>
     <figure class="collection-hero-image">
-      <ProductImage image={hero} priority sizes={heroSizes} />
-      <figcaption>{lead.title} · Campaign mockup · AI-generated</figcaption>
+      <MotionImage image={hero} priority sizes={heroSizes} />
+      <figcaption><span class="still-note">{lead.title} · Campaign mockup · AI-generated</span>{film && <span class="motion-note">{film.label}</span>}</figcaption>
     </figure>
   </section>
   <section class="section shell" id="pieces" aria-labelledby="pieces-title">

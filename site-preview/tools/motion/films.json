@@ -1,0 +1,70 @@
+[
+ {
+  "name": "mighty-micks",
+  "collection": "Mighty Mick’s",
+  "lead": "mighty-micks-ss3000-navy",
+  "seconds": 8.3,
+  "shots": [
+   "c01",
+   "c02",
+   "mm-1",
+   "c08",
+   "mm-2",
+   "c06",
+   "mm-3",
+   "c10",
+   "mm-4"
+  ]
+ },
+ {
+  "name": "the-city",
+  "collection": "The City",
+  "lead": "the-city-ss4500-black",
+  "seconds": 8.3,
+  "shots": [
+   "c04",
+   "c11",
+   "city-1",
+   "c03",
+   "city-2",
+   "c05",
+   "city-3",
+   "c09",
+   "city-4"
+  ]
+ },
+ {
+  "name": "yikes",
+  "collection": "Yikes!",
+  "lead": "yikes-crewneck",
+  "seconds": 8.3,
+  "shots": [
+   "c05",
+   "c10",
+   "yik-1",
+   "c02",
+   "yik-2",
+   "c11",
+   "yik-3",
+   "c09",
+   "yik-4"
+  ]
+ },
+ {
+  "name": "insomniac",
+  "collection": "Insomniac",
+  "lead": "insomniac-ss4500-black",
+  "seconds": 7.9,
+  "shots": [
+   "c07",
+   "c12",
+   "ins-1",
+   "c03",
+   "ins-3",
+   "c08",
+   "ins-2",
+   "c06",
+   "ins-4"
+  ]
+ }
+]

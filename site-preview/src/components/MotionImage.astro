@@ -1,0 +1,16 @@
+---
+// A campaign photo that can carry a short AI-generated motion loop. Without a loop
+// it is exactly ProductImage. With one, the photo still loads first; the loop is
+// added after page load, never for reduced motion or data saver, and has a pause button.
+import ProductImage from './ProductImage.astro';
+import { motionFor } from '../data/motion';
+interface Props {
+  image: {src:string; srcset:string; alt:string; width:number; height:number};
+  priority?: boolean;
+  sizes?: string;
+}
+const {image,priority=false,sizes}=Astro.props;
+const motion = motionFor(image.src);
+---
+{motion ? <div class="motion-frame" data-motion={motion.large} data-motion-small={motion.small}><ProductImage image={image} priority={priority} sizes={sizes} /></div> : <ProductImage image={image} priority={priority} sizes={sizes} />}
+<script>import "../scripts/motion";</script>

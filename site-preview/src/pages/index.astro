@@ -3,6 +3,8 @@ import Site from "../layouts/Site.astro";
 import Image from "../components/EditorialImage.astro";
 import UpdatesBand from "../components/UpdatesBand.astro";
 import ProductImage from '../components/ProductImage.astro';
+import MotionImage from '../components/MotionImage.astro';
+import { motionFor } from '../data/motion';
 import ProductCard from '../components/ProductCard.astro';
 import products from '../data/products.json';
 import { collectionsInOrder } from '../data/collections';
@@ -11,6 +13,7 @@ const featuredProducts = collectionsInOrder().slice(0, 4).map(([, pieces]) => pi
 const heroProduct = featuredProducts[0] ?? products[0]!;
 // The lookbook teaser opens on the next collection so it doesn't repeat the hero.
 const teaserProduct = featuredProducts[1] ?? heroProduct;
+const heroFilm = motionFor(heroProduct.campaign[0]!.src);
 ---
 
 <Site
@@ -52,9 +55,9 @@ const teaserProduct = featuredProducts[1] ?? heroProduct;
       <span class="image-number" aria-hidden="true">
         {heroProduct.collection.toUpperCase()} / FALL–WINTER 2026
       </span>
-      <ProductImage image={heroProduct!.campaign[0]!} priority sizes="(max-width: 760px) calc(100vw - 40px), 50vw" />
+      <MotionImage image={heroProduct!.campaign[0]!} priority sizes="(max-width: 760px) calc(100vw - 40px), 50vw" />
       <figcaption>
-        {heroProduct!.title} · Campaign mockup · AI-generated
+        <span class="still-note">{heroProduct!.title} · Campaign mockup · AI-generated</span>{heroFilm && <span class="motion-note">{heroFilm.label}</span>}
       </figcaption>
     </figure>
   </section>

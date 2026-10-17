@@ -291,3 +291,40 @@ test("product pages show how to measure, and Find my size repeats the drawing", 
   await expect(page.locator(".fit-dialog .measure-diagram")).toHaveAttribute("aria-hidden", "true");
   await expect(page.getByRole("img", { name: "How to measure a top" })).toHaveCount(1);
 });
+
+test.describe("campaign motion", () => {
+  test.use({ reducedMotion: "no-preference" });
+
+  test("the home hero photo comes first, then its labeled film plays and can be paused", async ({ page }) => {
+    await page.goto("/");
+    const frame = page.locator(".hero-image .motion-frame");
+    await expect(frame.locator("img")).toBeVisible();
+    await expect(frame).toHaveClass(/is-moving/, { timeout: 15_000 });
+    const video = frame.locator("video");
+    await expect(video).toHaveAttribute("aria-hidden", "true");
+    expect(await video.evaluate((element: HTMLVideoElement) => element.muted && element.loop && !element.paused)).toBe(true);
+    await expect(page.locator(".hero-image figcaption")).toContainText(/garment shots AI-generated/);
+    await expect(page.locator(".hero-image figcaption .still-note")).toBeHidden();
+    const toggle = frame.getByRole("button", { name: "Pause the motion" });
+    await toggle.click();
+    expect(await video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(true);
+    await frame.getByRole("button", { name: "Play the motion" }).click();
+    await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(false);
+  });
+
+  test("phones get the lighter film", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    const video = page.locator(".hero-image video");
+    await expect(video).toHaveCount(1, { timeout: 15_000 });
+    expect(await video.getAttribute("src")).toBe(await page.locator(".hero-image .motion-frame").getAttribute("data-motion-small"));
+  });
+});
+
+test("reduced motion keeps the still photos", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("load");
+  await page.waitForTimeout(3000);
+  await expect(page.locator(".motion-frame video")).toHaveCount(0);
+  await expect(page.locator(".hero-image figcaption .motion-note")).toBeHidden();
+});
