@@ -51,6 +51,7 @@ The product is then on sale with no site build. Push the branch and open a PR so
 6. **Verify.** `npm run build` then `npm run catalog -- verify` (exit 2 = drift). Then `npm test`.
    A new collection leads the home page, shop and lookbook only after you add its name to the front of `COLLECTION_ORDER` in `src/data/collections.ts`; otherwise it follows the listed ones.
    Run `npm run images:placeholders` so its campaign photos get loading placeholders; `tests/premium.test.mjs` fails until they have them.
+   A new collection automatically gets a page at `/shop/<collection>/`. Add its one-line description to `collectionCopy` in `src/data/collections.ts`.
 7. **Release** through the normal PR → required checks → merge → exact-site Netlify deploy. Never deploy from a branch.
 
 ## Rules that never bend

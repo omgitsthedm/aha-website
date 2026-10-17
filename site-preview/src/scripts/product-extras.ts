@@ -170,6 +170,12 @@ function initFit() {
     element.setAttribute("aria-labelledby", "fit-title");
     element.innerHTML = `<form method="dialog" class="fit-form"><div class="fit-head"><h2 id="fit-title">Find your size</h2><button type="button" class="bag-panel-close" aria-label="Close" data-fit-close>×</button></div><p>Lay a top that fits you well flat. Measure straight across the chest, an inch below the armholes, and from the top of the shoulder to the hem.</p><div class="fit-fields"><label>Chest width <span>inches</span><input name="chest" type="number" inputmode="decimal" min="12" max="40" step="0.25" required></label><label>Body length <span>inches</span><input name="length" type="number" inputmode="decimal" min="16" max="40" step="0.25" required></label></div><p class="fit-result" role="status" data-fit-result></p><div class="fit-actions"><button type="submit" class="button">Show my size <span aria-hidden="true">→</span></button><button type="button" class="button button-secondary" data-fit-select hidden></button><button type="button" class="text-button" data-fit-forget hidden>Forget my measurements</button></div><p class="fit-privacy">Saved only in this browser.</p></form>`;
     document.body.append(element);
+    const drawing = document.querySelector(".measure-diagram")?.cloneNode(true) as SVGElement | undefined;
+    if (drawing) {
+      drawing.removeAttribute("role"); drawing.removeAttribute("aria-labelledby"); drawing.setAttribute("aria-hidden", "true");
+      drawing.querySelectorAll("title, desc").forEach((node) => node.remove());
+      element.querySelector(".fit-form > p")?.before(drawing);
+    }
     const fitForm = element.querySelector<HTMLFormElement>("form")!;
     const result = element.querySelector<HTMLElement>("[data-fit-result]")!;
     const select = element.querySelector<HTMLButtonElement>("[data-fit-select]")!;

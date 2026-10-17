@@ -4,7 +4,7 @@
 // every built product this way and requires byte-identical output to Astro's
 // build, so this file must change whenever src/pages/shop/[product].astro or
 // src/components/ProductCard.astro / ProductImage.astro change.
-import { garmentGroup, hoverView, otherColors, swatchFor } from "./garments.mjs";
+import { garmentGroup, hoverView, MEASURE_DIAGRAM, otherColors, swatchFor } from "./garments.mjs";
 
 const ESCAPABLE = /[&<>'"]/g;
 const ENTITIES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
@@ -72,7 +72,7 @@ export function renderProductMain(product, products, { origin, pageScript }) {
     `<details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>${text(product.fit)}.</li><li>${text(product.weightOz)} oz ${text(product.fabricType)}.</li><li>${text(product.composition)}.</li>${product.constructionDetails.map((detail) => `<li>${text(detail)}</li>`).join("")}</ul></details>`,
     `<details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>`,
     `<details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the print.</p></details></div></section>`,
-    `<section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches</p><h2 id="size-title">Find your fit.</h2><p>${text(product.measurementGuidance)}</p>${product.sleeveMeasurementGuidance ? `<p>${text(product.sleeveMeasurementGuidance)}</p>` : ""}`,
+    `<section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches</p><h2 id="size-title">Find your fit.</h2><p>${text(product.measurementGuidance)}</p>${product.sleeveMeasurementGuidance ? `<p>${text(product.sleeveMeasurementGuidance)}</p>` : ""}${MEASURE_DIAGRAM}`,
     `<div class="size-table-wrap" role="region" aria-label="${attr(`${product.title} measurements`)}" tabindex="0"><table><thead><tr><th scope="col">Size</th><th scope="col">Chest width</th><th scope="col">Body length</th>${sleeves ? `<th scope="col">Sleeve length</th>` : ""}</tr></thead><tbody>`,
     sizeGuide.map((row) => `<tr><th scope="row">${text(row.size)}</th><td>${text(measurement(row.chestWidth))}</td><td>${text(measurement(row.bodyLength))}</td>${sleeves ? `<td>${typeof row.sleeveLength === "number" ? text(measurement(row.sleeveLength)) : ""}</td>` : ""}</tr>`).join(""),
     `</tbody></table></div></section>`,
