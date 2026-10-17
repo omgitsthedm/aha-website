@@ -109,7 +109,16 @@ test("existing Google and Bing ownership files remain byte-identical", async () 
   }
 });
 test("no server bundle, sensitive files or source maps enter the artifact", async () => {
+  // Scripts only the private admin pages load don't count toward the customer budget.
+  const adminOnly = new Set();
+  const referenced = async (file) => [...(await readFile(new URL(file, root), "utf8")).matchAll(/<script[^>]+src="\/_astro\/([^"]+\.js)"/g)].map((match) => match[1]);
+  const adminPages = (await readdir(new URL("admin/", root), { recursive: true })).filter((file) => file.endsWith("index.html")).map((file) => `admin/${file}`);
+  const customerPages = [...routes.map((route) => `${route.slice(1)}index.html`), "404.html"];
+  const customerScripts = new Set((await Promise.all(customerPages.map(referenced))).flat());
+  for (const name of (await Promise.all(adminPages.map(referenced))).flat()) if (!customerScripts.has(name)) adminOnly.add(name);
+  assert.ok(adminOnly.size > 0, "the admin script is found");
   let jsBytes = 0;
+  let adminBytes = 0;
   let workerVendorBytes = 0;
   const workerFiles = new Set(['partytown-sandbox-sw.html', 'partytown-sw.js', 'partytown-atomics.js', 'partytown.js', 'partytown-media.js']);
   const walk = async (dir) => {
@@ -127,12 +136,16 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
         const emitted = await readFile(new URL(item.name, dir));
         assert.deepEqual(emitted, await readFile(new URL(`../node_modules/@qwik.dev/partytown/lib/${item.name}`, import.meta.url)), 'Worker runtime must match the pinned dependency exactly');
         workerVendorBytes += emitted.length;
-      } else if (item.name.endsWith(".js"))
-        jsBytes += (await stat(new URL(item.name, dir))).size;
+      } else if (item.name.endsWith(".js")) {
+        const size = (await stat(new URL(item.name, dir))).size;
+        if (adminOnly.has(item.name)) adminBytes += size;
+        else jsBytes += size;
+      }
     }
   };
   await walk(root);
-  assert.ok(jsBytes < 65000, `All first-party JS including checkout must stay under 65 KB; got ${jsBytes}`);
+  assert.ok(jsBytes < 65000, `All customer-facing first-party JS including checkout must stay under 65 KB; got ${jsBytes}`);
+  assert.ok(adminBytes < 40000, `The private admin script must stay under 40 KB; got ${adminBytes}`);
   assert.ok(workerVendorBytes > 0 && workerVendorBytes < 160000, `The complete deferred third-party worker runtime must stay under 160 KB; got ${workerVendorBytes}`);
 });
 test("production context is refused by default", () => {

@@ -146,6 +146,7 @@ function initAddForms() {
     const status = form.querySelector<HTMLElement>("[data-cart-add-status]");
     form.addEventListener("submit", (event) => {
       event.preventDefault();
+      const buyNow = (event as SubmitEvent).submitter?.hasAttribute("data-buy-now") ?? false;
       const selected = form.querySelector<HTMLInputElement>("[data-cart-variant]:checked");
       const quantity = Number(form.querySelector<HTMLInputElement>("[data-cart-quantity]")?.value);
       if (!selected) {
@@ -173,6 +174,8 @@ function initAddForms() {
       document.dispatchEvent(new CustomEvent("aha:cart-added", { detail: { id: item.id, name: item.title, size: item.size, color: item.color, price: item.priceCents / 100, quantity: Math.min(quantity, available) } }));
       if (status) status.innerHTML = `${item.title}, ${item.size}, added. <a href="/checkout/">View bag and checkout</a>.`;
       const added = Math.min(quantity, available);
+      // Buy now goes straight to checkout, where the browser can fill in saved details.
+      if (buyNow) { location.href = "/checkout/"; return; }
       document.dispatchEvent(new CustomEvent("aha:bag-added", { detail: { title: item.title, size: item.size, image: item.image, added, lineCents: item.priceCents * added, items: count(next), subtotalCents: next.reduce((sum, line) => sum + line.priceCents * line.quantity, 0) } }));
     });
   });

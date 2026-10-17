@@ -3,15 +3,15 @@ import { renderOrderConfirmation, renderShipment } from "./templates.mjs";
 function validEmail(value) { return typeof value === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }
 function clean(value, fallback) { return typeof value === "string" && value.trim() ? value.trim() : fallback; }
 
-export function createNotificationService({ repository, gateway, config, now = () => Date.now() }) {
+export function createNotificationService({ repository, gateway, config, orderLink = () => null, now = () => Date.now() }) {
   const enabled = () => config.enabled === true && Boolean(config.apiKey && config.from && config.replyTo);
   async function enqueueConfirmation({ recipient, orderId, orderNumber, totalAmount, currency, items }) {
     if (!enabled() || !validEmail(recipient)) return null;
-    return repository.enqueue({ dedupeKey: `${orderId}:order_confirmed`, kind: "order_confirmed", recipient, payload: { orderNumber: clean(orderNumber, orderId), totalAmount, currency, items } });
+    return repository.enqueue({ dedupeKey: `${orderId}:order_confirmed`, kind: "order_confirmed", recipient, payload: { orderNumber: clean(orderNumber, orderId), totalAmount, currency, items, statusUrl: orderLink(orderId) } });
   }
   async function enqueueShipment({ recipient, orderId, orderNumber, carrier, trackingNumber, trackingUrl }) {
     if (!enabled() || !validEmail(recipient) || !trackingNumber) return null;
-    return repository.enqueue({ dedupeKey: `${orderId}:order_shipped:${trackingNumber}`, kind: "order_shipped", recipient, payload: { orderNumber: clean(orderNumber, orderId), carrier, trackingNumber, trackingUrl } });
+    return repository.enqueue({ dedupeKey: `${orderId}:order_shipped:${trackingNumber}`, kind: "order_shipped", recipient, payload: { orderNumber: clean(orderNumber, orderId), carrier, trackingNumber, trackingUrl, statusUrl: orderLink(orderId) } });
   }
   function render(row) {
     if (row.kind === "order_confirmed") return renderOrderConfirmation(row.payload_json);

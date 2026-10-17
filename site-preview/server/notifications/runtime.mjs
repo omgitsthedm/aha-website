@@ -1,3 +1,4 @@
+import { orderStatusUrl } from "../orders/status.mjs";
 import { createNotificationRepository } from "./repository.mjs";
 import { createResendGateway } from "./resend.mjs";
 import { createNotificationService } from "./service.mjs";
@@ -10,5 +11,5 @@ export function createNotificationRuntime({ database, env }) {
   const repository = createNotificationRepository(database);
   const unavailable = async () => { throw new Error("resend unavailable"); };
   const gateway = config.apiKey && config.from && config.replyTo ? createResendGateway({ apiKey: config.apiKey, from: config.from, replyTo: config.replyTo }) : { send: unavailable, listDomains: unavailable };
-  return { config, repository, service: createNotificationService({ repository, gateway, config }) };
+  return { config, repository, service: createNotificationService({ repository, gateway, config, orderLink: (orderId) => orderStatusUrl(orderId, env) }) };
 }

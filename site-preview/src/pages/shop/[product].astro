@@ -41,16 +41,18 @@ const productSchema={
   <div class="product-details">
    <p class="label">{product.collection} / {product.typeLabel}</p><h1>{product.title}</h1>
    <div class="product-price-row"><p class="product-price">${product.price}<span> USD</span></p><p>Free domestic shipping</p></div>
+   <div class="arrival" data-arrival><p>Made to order: production takes about a week, then shipping.</p></div>
    <p class="color-choice"><span class="color-swatch" style={`--swatch:${colorSwatch}`} aria-hidden="true"></span> {product.color}</p>
    {siblings.length > 0 && <p class="color-options">Also in {siblings.map((entry) => <a class="color-option" href={`/shop/${entry.slug}/`}><span class="color-swatch" style={`--swatch:${swatchFor(entry.color)}`} aria-hidden="true"></span> {entry.color}</a>)}</p>}
    <p>{product.description}</p>
    <form class="product-purchase" data-cart-form>
-    <p class="label">Choose a size</p>
+    <div class="size-head"><p class="label">Choose a size</p><button type="button" class="text-button fit-open" data-fit-open hidden>Find my size</button></div>
     <div class="size-options" role="radiogroup" aria-label={`${product.title} size`} aria-required="true">
      {product.variants.map(v=><label><input type="radio" name="size" value={v.id} data-cart-variant data-size={v.size} data-sku={v.sku}/><span>{v.size}</span></label>)}
     </div>
     <label class="quantity-field">Quantity <input data-cart-quantity name="quantity" type="number" min="1" max="10" step="1" value="1" inputmode="numeric" /></label>
     <button type="submit" class="button add-to-bag">Add to bag <span aria-hidden="true">+</span></button>
+    <button type="submit" class="button button-secondary buy-now" data-buy-now>Buy now <span aria-hidden="true">→</span></button>
     <p class="cart-add-status" data-cart-add-status aria-live="polite"></p>
    </form>
    <a class="text-link size-link" href="#size-guide">Check measurements ↓</a>

@@ -200,3 +200,61 @@ test("the header tucks away while scrolling down and returns on scroll up", asyn
   await page.getByRole("link", { name: "After Hours Agenda home" }).first().focus();
   await expect(bar).not.toHaveClass(/is-tucked/);
 });
+
+test("product pages show a delivery estimate in the space reserved for it", async ({ page }) => {
+  await page.goto("/shop/the-city-ss4500-black/");
+  await expect(page.locator("[data-arrival]")).toContainText(/Estimated U\.S\. arrival: \w{3}, \w{3} \d{1,2} – \w{3}, \w{3} \d{1,2}/);
+});
+
+test("the fit profile suggests a size from the visitor's own top and remembers it", async ({ page }) => {
+  await page.goto("/shop/the-city-ss4500-black/");
+  await page.getByRole("button", { name: "Find my size" }).click();
+  const dialog = page.getByRole("dialog", { name: "Find your size" });
+  await dialog.getByLabel("Chest width").fill("21.5");
+  await dialog.getByLabel("Body length").fill("28");
+  await dialog.getByRole("button", { name: "Show my size" }).click();
+  await expect(dialog.getByRole("status")).toContainText(/^Compared with your own top, \w+ is/);
+  const pick = (await dialog.getByRole("button", { name: /^Select / }).textContent())!.replace("Select ", "");
+  await dialog.getByRole("button", { name: `Select ${pick}` }).click();
+  await expect(dialog).toBeHidden();
+  await expect(page.getByRole("radio", { name: pick, exact: true })).toBeChecked();
+  await expect(page.getByRole("button", { name: `Your size: ${pick}` })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("button", { name: `Your size: ${pick}` })).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem("aha-fit-v1"))).toBe(JSON.stringify({ chest: 21.5, length: 28 }));
+  await page.getByRole("button", { name: `Your size: ${pick}` }).click();
+  await page.getByRole("button", { name: "Forget my measurements" }).click();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: "Find my size" })).toBeVisible();
+});
+
+test("Buy now adds the piece and goes straight to checkout", async ({ page }) => {
+  await page.goto("/shop/mighty-micks-ss3000-navy/");
+  await page.getByRole("radio", { name: "L", exact: true }).check();
+  await page.getByRole("button", { name: "Buy now" }).click();
+  await expect(page).toHaveURL(/\/checkout\/$/);
+  await expect(page.locator(".bag-line")).toHaveCount(1);
+  await expect(page.locator(".bag-line")).toContainText("Mighty Mick’s Crewneck");
+});
+
+test("the bag card includes the delivery estimate", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/shop/the-city-ss4500-black/");
+  await page.getByRole("radio", { name: "M", exact: true }).check();
+  await page.getByRole("button", { name: "Add to bag" }).click();
+  await expect(page.getByRole("region", { name: "Added to your bag" })).toContainText(/Estimated U\.S\. arrival/);
+});
+
+test("the private order page shows progress, tracking and items from its signed link", async ({ page }) => {
+  await page.route("**/api/orders/status?**", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ orderNumber: "1042", stage: "shipped", paidAt: "2026-10-16T18:00:00.000Z", items: [{ title: "The City Hoodie", size: "M", quantity: 1 }], tracking: [{ carrier: "USPS", number: "9400", url: "https://tools.usps.com/go/TrackConfirmAction?tLabels=9400" }] }) }));
+  await page.goto("/order/?o=ORDER123456&k=signed");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Order 1042");
+  await expect(page.locator("[data-step='shipped']")).toHaveAttribute("aria-current", "");
+  await expect(page.getByRole("link", { name: "Track with USPS" })).toHaveAttribute("href", /tools\.usps\.com/);
+  await expect(page.locator("[data-order-items]")).toContainText("1 × The City Hoodie · M");
+  await page.unroute("**/api/orders/status?**");
+  await page.route("**/api/orders/status?**", (route) => route.fulfill({ status: 404, contentType: "application/json", body: JSON.stringify({ error: "We couldn't find that order. Use the link in your order email." }) }));
+  await page.goto("/order/?o=ORDER123456&k=wrong");
+  await expect(page.locator("[data-order-lede]")).toHaveText("We couldn't find that order. Use the link in your order email.");
+  await expect(page.locator("[data-order-steps]")).toBeHidden();
+});
