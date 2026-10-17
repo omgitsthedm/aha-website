@@ -1,0 +1,17 @@
+# shot seed frames top cx   (film72.py: first frames of each take; top/cx cut away heads, hair or signs)
+mm-1 101 10 0 0.5
+mm-2 102 10 0 0.5
+mm-3 103 10 0 0.5
+mm-4 104 10 0 0.5
+city-1 201 10 0.06 0.5
+city-2 202 10 0.05 0.5
+city-3 203 10 0.14 0.5
+city-4 204 10 0.12 0.5
+ins-1 301 8 0.10 0.5
+ins-2 302 8 0.14 0.5
+ins-3 303 8 0.14 0.5
+ins-4 304 8 0.18 0.5
+yik-1 401 10 0 0.5
+yik-2 402 10 0 0.5
+yik-3 403 10 0.10 0.62
+yik-4 404 10 0 0.5
