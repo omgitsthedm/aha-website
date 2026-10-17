@@ -1,32 +1,4 @@
 {
-  "hero-her": {
-    "src": "/images/hero-her.webp",
-    "width": 900,
-    "height": 1125,
-    "srcset": "/images/hero-her-480.webp 480w, /images/hero-her-800.webp 800w, /images/hero-her.webp 900w",
-    "source": "public/editorial/hero-her.jpg"
-  },
-  "hero-him": {
-    "src": "/images/hero-him.webp",
-    "width": 900,
-    "height": 1125,
-    "srcset": "/images/hero-him-480.webp 480w, /images/hero-him-800.webp 800w, /images/hero-him.webp 900w",
-    "source": "public/editorial/hero-him.jpg"
-  },
-  "sheep-agave-womens-front": {
-    "src": "/images/sheep-agave-womens-front.webp",
-    "width": 1000,
-    "height": 1250,
-    "srcset": "/images/sheep-agave-womens-front-480.webp 480w, /images/sheep-agave-womens-front-800.webp 800w, /images/sheep-agave-womens-front.webp 1000w",
-    "source": "public/editorial/sheep-agave-womens-front.jpg"
-  },
-  "sheep-bone-womens-back": {
-    "src": "/images/sheep-bone-womens-back.webp",
-    "width": 1000,
-    "height": 1250,
-    "srcset": "/images/sheep-bone-womens-back-480.webp 480w, /images/sheep-bone-womens-back-800.webp 800w, /images/sheep-bone-womens-back.webp 1000w",
-    "source": "public/editorial/sheep-bone-womens-back.jpg"
-  },
   "2012-the-prologue": {
     "src": "/images/2012-the-prologue.webp",
     "width": 730,

@@ -1,0 +1,206 @@
+{
+  "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-hero-standing-1122.webp": {
+    "large": "/motion/mighty-micks-800.mp4",
+    "small": "/motion/mighty-micks-600.mp4",
+    "tall": "/motion/mighty-micks-600t.mp4",
+    "seconds": 8.3,
+    "label": "Mighty Mick’s film · New York footage from Pexels · garment shots AI-generated",
+    "city": [
+      {
+        "pexels": 37898716,
+        "creator": "Yura Forrat"
+      },
+      {
+        "pexels": 5838621,
+        "creator": "CityXcape"
+      },
+      {
+        "pexels": 3856665,
+        "creator": "Martin Portas"
+      },
+      {
+        "pexels": 36244091,
+        "creator": "Yura Forrat"
+      },
+      {
+        "pexels": 5729409,
+        "creator": "CityXcape"
+      }
+    ],
+    "garments": [
+      {
+        "photo": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-hero-standing-1122.webp",
+        "seed": 5103,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-hero-standing-1122.webp",
+        "seed": 5201,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/mighty-micks/mighty-micks-ss3000-navy/campaign-seated-1122.webp",
+        "seed": 5302,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-standing-alternate-1122.webp",
+        "seed": 5402,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      }
+    ]
+  },
+  "/images/the-city/the-city-ss4500-black/campaign-1-1122.webp": {
+    "large": "/motion/the-city-800.mp4",
+    "small": "/motion/the-city-600.mp4",
+    "tall": "/motion/the-city-600t.mp4",
+    "seconds": 8.3,
+    "label": "The City film · New York footage from Pexels · garment shots AI-generated",
+    "city": [
+      {
+        "pexels": 19145696,
+        "creator": "Lukas Rodriguez"
+      },
+      {
+        "pexels": 5828502,
+        "creator": "Charles Parker"
+      },
+      {
+        "pexels": 11724587,
+        "creator": "Jan Pischke"
+      },
+      {
+        "pexels": 32095634,
+        "creator": "Stoic Tea Time Yelverton"
+      },
+      {
+        "pexels": 5727833,
+        "creator": "CityXcape"
+      }
+    ],
+    "garments": [
+      {
+        "photo": "/images/the-city/the-city-ss4500-black/campaign-1-1122.webp",
+        "seed": 6101,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/the-city/the-city-ss3000-black/campaign-1-1122.webp",
+        "seed": 6201,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/the-city/the-city-next-level-3601-black/campaign-2-1122.webp",
+        "seed": 6301,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/the-city/the-city-ss4500-black/campaign-2-1122.webp",
+        "seed": 6401,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      }
+    ]
+  },
+  "/images/yikes/yikes-crewneck/campaign-1-1122.webp": {
+    "large": "/motion/yikes-800.mp4",
+    "small": "/motion/yikes-600.mp4",
+    "tall": "/motion/yikes-600t.mp4",
+    "seconds": 8.3,
+    "label": "Yikes! film · New York footage from Pexels · garment shots AI-generated",
+    "city": [
+      {
+        "pexels": 32095634,
+        "creator": "Stoic Tea Time Yelverton"
+      },
+      {
+        "pexels": 5729409,
+        "creator": "CityXcape"
+      },
+      {
+        "pexels": 5838621,
+        "creator": "CityXcape"
+      },
+      {
+        "pexels": 5828502,
+        "creator": "Charles Parker"
+      },
+      {
+        "pexels": 5727833,
+        "creator": "CityXcape"
+      }
+    ],
+    "garments": [
+      {
+        "photo": "/images/yikes/yikes-crewneck/campaign-3-1122.webp",
+        "seed": 8101,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/yikes/yikes-cropped-hoodie/campaign-1-1122.webp",
+        "seed": 8201,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/yikes/yikes-crewneck/campaign-2-1122.webp",
+        "seed": 8301,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/yikes/yikes-cropped-hoodie/campaign-2-1122.webp",
+        "seed": 8401,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      }
+    ]
+  },
+  "/images/insomniac/insomniac-ss4500-black/campaign-1-1122.webp": {
+    "large": "/motion/insomniac-800.mp4",
+    "small": "/motion/insomniac-600.mp4",
+    "tall": "/motion/insomniac-600t.mp4",
+    "seconds": 7.9,
+    "label": "Insomniac film · New York footage from Pexels · garment shots AI-generated",
+    "city": [
+      {
+        "pexels": 19145696,
+        "creator": "Lukas Rodriguez"
+      },
+      {
+        "pexels": 15941743,
+        "creator": "Volkan Yilmaz"
+      },
+      {
+        "pexels": 11724587,
+        "creator": "Jan Pischke"
+      },
+      {
+        "pexels": 3856665,
+        "creator": "Martin Portas"
+      },
+      {
+        "pexels": 36244091,
+        "creator": "Yura Forrat"
+      }
+    ],
+    "garments": [
+      {
+        "photo": "/images/insomniac/insomniac-ss4500-black/campaign-2-1122.webp",
+        "seed": 7102,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/insomniac/insomniac-ss3000-black/campaign-2-1122.webp",
+        "seed": 7301,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/insomniac/insomniac-ss4500-grey-heather/campaign-2-1122.webp",
+        "seed": 7202,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      },
+      {
+        "photo": "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-2-1122.webp",
+        "seed": 7401,
+        "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
+      }
+    ]
+  }
+}

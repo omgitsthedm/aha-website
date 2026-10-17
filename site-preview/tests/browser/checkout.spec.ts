@@ -71,7 +71,12 @@ test("checkout: server quote then card payment never sends client money", async 
   await expect(page.locator("[data-cart-empty]")).toBeHidden();
   await expect(page.locator("[data-cart-subtotal]")).toBeHidden();
   expect(await page.evaluate(() => document.activeElement?.matches("[data-checkout-message]"))).toBe(true);
-  expect(quoteBodies).toEqual([{ items: [{ variationId: "R5UCZCGSJMR3Z4HJDVOD3ZIK", quantity: 1 }], shippingAddress: { firstName: "Avery", lastName: "Tester", email: "avery@example.com", addressLine1: "1 N Central Ave", city: "Phoenix", region: "AZ", postalCode: "85004", country: "US" } }]);
+  // With analytics on (production default), the quote may carry anonymous PostHog ids, depending on
+  // whether PostHog loaded before the click. Those ids are allowed; nothing else, and never money.
+  expect(quoteBodies).toHaveLength(1);
+  const { analytics, ...quoteBody } = quoteBodies[0] as Record<string, unknown>;
+  expect(quoteBody).toEqual({ items: [{ variationId: "R5UCZCGSJMR3Z4HJDVOD3ZIK", quantity: 1 }], shippingAddress: { firstName: "Avery", lastName: "Tester", email: "avery@example.com", addressLine1: "1 N Central Ave", city: "Phoenix", region: "AZ", postalCode: "85004", country: "US" } });
+  if (analytics !== undefined) expect(Object.keys(analytics as object).every((key) => key === "distinctId" || key === "sessionId")).toBe(true);
   expect(paymentBodies).toHaveLength(1);
   expect(paymentBodies[0]).toMatchObject({ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token", sourceId: "opaque-square-token" });
   expect(paymentBodies[0]).not.toHaveProperty("totalAmount");

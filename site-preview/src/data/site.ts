@@ -92,20 +92,6 @@ export const answers = [
 ];
 export const gallery = [
   {
-    image: "hero-her",
-    alt: "Campaign concept of a woman in a plain black tee with a coffee on a station platform.",
-    caption: "On the way somewhere.",
-    note: "Campaign concept · AI-generated · not a product photograph",
-    kind: "portrait",
-  },
-  {
-    image: "sheep-agave-womens-front",
-    alt: "Previous-run provider render of the Black Sheep sweatshirt in agave.",
-    caption: "The Black Sheep. A previous chapter.",
-    note: "Previous-run provider render · not currently for sale",
-    kind: "portrait",
-  },
-  {
     image: "2012-the-after-hours-agenda-tee",
     alt: "The first After Hours Agenda wordmark tee from the 2012 brand archive.",
     caption: "Where the name began.",
@@ -117,20 +103,6 @@ export const gallery = [
     alt: "Love / Vanity tee from the 2013 After Hours Agenda archive.",
     caption: "Love / Vanity.",
     note: "Brand archive · 2013",
-    kind: "portrait",
-  },
-  {
-    image: "hero-him",
-    alt: "Campaign concept of a man in a plain black hoodie at dusk.",
-    caption: "For the people you love.",
-    note: "Campaign concept · AI-generated · not a product photograph",
-    kind: "portrait",
-  },
-  {
-    image: "sheep-bone-womens-back",
-    alt: "Previous-run provider render of the Black Sheep sweatshirt in bone, seen from behind.",
-    caption: "The signature, from behind.",
-    note: "Previous-run provider render · not currently for sale",
     kind: "portrait",
   },
 ];

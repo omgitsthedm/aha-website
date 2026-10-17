@@ -15,109 +15,101 @@
     "#e8d2dc",
     "#dcb7c4"
   ],
-  "/images/hero-her.webp": [
-    "#6e6a59",
-    "#817b6c"
-  ],
-  "/images/hero-him.webp": [
-    "#333026",
-    "#1f1c1a"
-  ],
   "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-1-1122.webp": [
-    "#3e261f",
-    "#2f231e"
+    "#241f1d",
+    "#221e1d"
   ],
   "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-2-1122.webp": [
-    "#41271e",
-    "#32201b"
+    "#4b312c",
+    "#1c1817"
   ],
   "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-3-1122.webp": [
-    "#432c22",
-    "#1e1715"
+    "#2a2220",
+    "#1d1918"
   ],
   "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-1-1122.webp": [
-    "#594940",
-    "#766f6d"
+    "#776f6d",
+    "#605d60"
   ],
   "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-2-1122.webp": [
-    "#56473f",
-    "#665855"
+    "#886c67",
+    "#595556"
   ],
   "/images/insomniac/insomniac-comfort-colors-4410-grey/campaign-3-1122.webp": [
-    "#4d4139",
-    "#555152"
+    "#675d59",
+    "#525157"
   ],
   "/images/insomniac/insomniac-next-level-3601-black/campaign-1-1122.webp": [
-    "#50372a",
-    "#31241d"
+    "#2a2323",
+    "#2c2523"
   ],
   "/images/insomniac/insomniac-next-level-3601-black/campaign-2-1122.webp": [
-    "#442d27",
-    "#32221f"
+    "#47322f",
+    "#1b1716"
   ],
   "/images/insomniac/insomniac-next-level-3601-black/campaign-3-1122.webp": [
-    "#553d34",
-    "#322924"
+    "#282322",
+    "#2c2826"
   ],
   "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-1-1122.webp": [
-    "#564540",
-    "#544f52"
+    "#9f9a9d",
+    "#4c494f"
   ],
   "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-2-1122.webp": [
-    "#57443e",
-    "#5f5757"
+    "#a89593",
+    "#5a595f"
   ],
   "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-3-1122.webp": [
-    "#62443a",
-    "#807a7b"
+    "#b4acb1",
+    "#86858a"
   ],
   "/images/insomniac/insomniac-ss3000-black/campaign-1-1122.webp": [
-    "#3d2016",
-    "#211816"
+    "#231d1a",
+    "#241c1b"
   ],
   "/images/insomniac/insomniac-ss3000-black/campaign-2-1122.webp": [
-    "#3c1f17",
-    "#311f1d"
+    "#51342e",
+    "#241b19"
   ],
   "/images/insomniac/insomniac-ss3000-black/campaign-3-1122.webp": [
-    "#3c1f15",
-    "#1e1613"
+    "#211917",
+    "#1f1a18"
   ],
   "/images/insomniac/insomniac-ss3000-heather-grey/campaign-1-1122.webp": [
-    "#543c33",
-    "#4a4645"
+    "#928888",
+    "#4b4848"
   ],
   "/images/insomniac/insomniac-ss3000-heather-grey/campaign-2-1122.webp": [
-    "#5c453e",
-    "#726463"
+    "#b49896",
+    "#766b6d"
   ],
   "/images/insomniac/insomniac-ss3000-heather-grey/campaign-3-1122.webp": [
-    "#523b31",
-    "#494545"
+    "#928888",
+    "#4b4848"
   ],
   "/images/insomniac/insomniac-ss4500-black/campaign-1-1122.webp": [
-    "#3e251f",
-    "#1f1919"
+    "#221b1b",
+    "#271f1f"
   ],
   "/images/insomniac/insomniac-ss4500-black/campaign-2-1122.webp": [
-    "#39221c",
-    "#322320"
+    "#4b312c",
+    "#2c1f1d"
   ],
   "/images/insomniac/insomniac-ss4500-black/campaign-3-1122.webp": [
-    "#3b251f",
-    "#1f1817"
+    "#211819",
+    "#231d1b"
   ],
   "/images/insomniac/insomniac-ss4500-grey-heather/campaign-1-1122.webp": [
-    "#4f3f39",
-    "#46403d"
+    "#847c7c",
+    "#3d3837"
   ],
   "/images/insomniac/insomniac-ss4500-grey-heather/campaign-2-1122.webp": [
-    "#584741",
-    "#6d5c5a"
+    "#a5918e",
+    "#736363"
   ],
   "/images/insomniac/insomniac-ss4500-grey-heather/campaign-3-1122.webp": [
-    "#554039",
-    "#534e4d"
+    "#897f80",
+    "#565153"
   ],
   "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-hero-standing-1122.webp": [
     "#363f32",
@@ -144,72 +136,64 @@
     "#2f2a27"
   ],
   "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-1-960.webp": [
-    "#45362c",
-    "#6a6463"
+    "#5b4e4d",
+    "#6f6a68"
   ],
   "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-alternate-2-960.webp": [
-    "#4c3b32",
-    "#5f5353"
+    "#583536",
+    "#6f7078"
   ],
   "/images/pet-it-be/pet-it-be-ss3000-maroon/campaign-hero-1122.webp": [
-    "#563d2c",
-    "#63504f"
-  ],
-  "/images/sheep-agave-womens-front.webp": [
-    "#dbdad6",
-    "#c1c6c5"
-  ],
-  "/images/sheep-bone-womens-back.webp": [
-    "#f2eae1",
-    "#d5d0ca"
+    "#5b322e",
+    "#786e70"
   ],
   "/images/the-city/the-city-next-level-3601-black/campaign-1-1122.webp": [
-    "#3d312b",
-    "#4b3527"
+    "#3e312a",
+    "#382820"
   ],
   "/images/the-city/the-city-next-level-3601-black/campaign-2-1122.webp": [
-    "#36322d",
-    "#57463a"
+    "#3a3430",
+    "#443b39"
   ],
   "/images/the-city/the-city-next-level-3601-black/campaign-3-1122.webp": [
-    "#4b3c30",
-    "#4a382a"
+    "#4b3a30",
+    "#422f23"
   ],
   "/images/the-city/the-city-ss3000-black/campaign-1-1122.webp": [
-    "#3a363b",
-    "#50423f"
+    "#363133",
+    "#45393a"
   ],
   "/images/the-city/the-city-ss3000-black/campaign-2-1122.webp": [
-    "#3b3a43",
-    "#4f413c"
+    "#3b3736",
+    "#463b3a"
   ],
   "/images/the-city/the-city-ss3000-black/campaign-3-1122.webp": [
-    "#3b3b42",
-    "#63534c"
+    "#423b3a",
+    "#695a55"
   ],
   "/images/the-city/the-city-ss4500-black/campaign-1-1122.webp": [
-    "#2e2d32",
-    "#49372c"
+    "#352e27",
+    "#3c312c"
   ],
   "/images/the-city/the-city-ss4500-black/campaign-2-1122.webp": [
-    "#373238",
-    "#443631"
+    "#36302e",
+    "#322b2d"
   ],
   "/images/the-city/the-city-ss4500-black/campaign-3-1122.webp": [
-    "#3c3d3d",
-    "#473d34"
+    "#37322c",
+    "#39342d"
   ],
   "/images/yikes/yikes-crewneck/campaign-1-1122.webp": [
-    "#8f7f78",
-    "#6b5040"
+    "#a0958b",
+    "#694d3c"
   ],
   "/images/yikes/yikes-crewneck/campaign-2-1122.webp": [
-    "#887972",
-    "#6a5446"
+    "#a69b91",
+    "#695144"
   ],
   "/images/yikes/yikes-crewneck/campaign-3-1122.webp": [
-    "#91827b",
-    "#4c3f38"
+    "#a69a92",
+    "#433831"
   ],
   "/images/yikes/yikes-cropped-hoodie/campaign-1-1122.webp": [
     "#70635b",

@@ -1,5 +1,44 @@
 # After Hours Agenda agent contract
 
+## Collection films — October 17, 2026
+
+The owner asked for short, labeled AI motion from the campaign photos for the hero and lookbook, then set the direction: the star is New York City and its nightlife, seen through a tilt-shift lens from a high angle; garments appear only as sub-second, torso-only shots (Justice, "D.A.N.C.E."), very subtle, no push in or out, nothing bright or polished, as if a drunk cameraman shot it in 1972.
+
+- **What ships:** four silent films of about 8 seconds, one per collection, at 18 fps in `site-preview/public/motion/`. Each cuts five high-angle New York night shots with four garment shots of about half a second. There are three files per film:
+  - `<collection>-800.mp4` (640 × 800) for wider screens.
+  - `-600.mp4` (480 × 600) for the phone home and collection heroes.
+  - `-600t.mp4` for the full-screen phone lookbook (`MotionImage tall`), whose crop keeps only the middle of the frame.
+- **Where:** the home hero (Mighty Mick's), the lead photo of each collection in the lookbook and each collection page's hero, through `src/components/MotionImage.astro`. `src/data/motion.json` maps the photo `src` to its film and records every city clip (Pexels ID and creator) and every garment shot (source photo, seed, generator).
+- **Behavior** (`src/scripts/motion.ts`): the photo stays the page's main image. The film is added only after load, only while on screen, and never for reduced motion, Data Saver or 2G. A prerendered page waits until it's opened. Every film has a Pause button. While a film plays, its caption reads "<collection> film · New York footage from Pexels · garment shots AI-generated". Keep that label.
+- **City footage:** Pexels videos under the Pexels license (free commercial use, editing allowed, no credit required; no implied endorsement by people shown). Avoid close, identifiable faces and Times Square brightness. The shortlist and source URLs are in `site-preview/tools/motion/pexels-sources.tsv`.
+- **Garment shots:** LTX-2.3 distilled image-to-video, run locally from a torso crop of a campaign photo. The LTX-2 Community License is free for businesses under $10 million in annual revenue and requires disclosing machine-generated content; the caption does that. Only the first half-second of each take is used, because prints drift later. Every shot was checked frame by frame. Rejected takes: hands over the print, a hem tug that melted the address line, a sway that garbled "insomniac".
+- **The look** is applied after generation, so the model never polishes it (`site-preview/tools/motion/look72.py`).
+  - The owner's motion direction: 18 fps cadence, and a handheld lurch at constant framing that is never a zoom move.
+  - The grade is the fixed post pass from the owner's FW26 Lookbook & Campaign Brief (`~/Desktop/AHA Fall Winter 2026 Lifestyle/FW26 Lookbook & Campaign Brief.md`, section "Post-production"). Its script, filmpost_v3.py, isn't on disk, so `stock()` implements its published numbers: black point 10% with a soft knee to 20% (true blacks, never lifted), 0.45 px softness, a shoulder above 85% at 0.7, saturation 0.90, cool shadows and warm highlights, halation above 88%, grain 2.2% plus 1.8% in the shadows, black held below 4%, and a 12% vignette.
+  - Every frame carries the brief's amber seven-segment time stamp. Across each film the hour runs through one night, 18:00 to 04:00. The desktop file has it in the corner; the phone file sets it inward so the phone hero and the full-screen lookbook crops keep it.
+  - City shots add a tilt-shift focus band (`city72.py`) at the owner's request, although the brief's stills rule is no bokeh. City shots carry no readable signs or road text (brief rule 8). `film72.py` treats garment shots, and `reel.py` cuts, stamps and encodes.
+  - The brief lists stills only; the films came later at the owner's request and follow its grade, stamp and rules.
+- **No people, only garments** (owner, October 17: every image on a model focuses on the garment and never expresses a human):
+  - Back-view and leaning garment shots are cropped below the head, hair or any sign (`film72.py` top/cx, recorded in `tools/motion/garment-shots.txt`).
+  - Every frame of every film was checked with Apple Vision face detection. The only hits are the illustrated boxer in the Mighty Mick's print and specks of city light.
+  - Run that check again on any new shot.
+- **Rebuilding:** the scripts expect the working folder `/tmp/aha-video`. The Desktop toolchain (`03 Video Advert/Production Project/Production/V22/toolchain`) imports far too slowly through iCloud. Clone its weights with `cp -c`, which uses no extra disk, and rebuild the Python environment from the local uv cache. Don't re-download.
+- **The Fall 2026 advert (V27–V31) can't go on the site.** Its own source manifest calls it an internal proof of concept. Of the 27 city shots in V31, 24 come from other creators' YouTube videos (downloaded with yt-dlp), 2 have no recorded source, and only 1 (Pexels 8491299) is licensed. Its soundtrack is commercial music (Madeon "Hi!"), and its garment flashes are retired AI concepts that don't match the products for sale. Keep every advert file. Don't publish the film or its city shots without licenses from those creators.
+
+## Torso-only campaign photos — October 17, 2026
+
+The owner's FW26 Lookbook & Campaign Brief (`~/Desktop/AHA Fall Winter 2026 Lifestyle/FW26 Lookbook & Campaign Brief.md`) sets two rules for campaign photos:
+- Rule 1: torso only, never a face; hair only as strands at the edge.
+- Rule 8: no readable text except the design's own graphic; generic BAR, PIZZA, DELI and OPEN signs are allowed.
+
+- **What changed:** 39 of the 48 campaign photos were re-cropped to torso framing from their lossless originals. Fronts now start at the base of the neck, and backs start below the hood or neckline. The Yikes cropped hoodie set and the six Mighty Mick's photos already started at the neck and are unchanged.
+- **Where the originals are:** the launch folders under `~/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/`, and for Pet It Be, `site-preview/tools/images/out/pet-it-be-ss3000-maroon/gen/`.
+- **How:** crops come from Apple Vision body-pose joints (neck, shoulders, hips) and face boxes. Insomniac fronts lean toward the left-chest logo so it stays inside the full-screen phone lookbook crop. Files were rebuilt with the catalog engine's campaign profile, keeping each file's IPTC AI marker; `products.json` is unchanged and placeholders were rebuilt. The originals are 1122 × 1402, so crops are enlarged 1.06–1.66× and slightly soft; regenerating at higher resolution would restore detail.
+- **Rule 8:** the crops removed Pabst and Budweiser neon, a Simpsons pinball backglass, the Silvercup sign, MTA 7 bullets and an I♥NYC sticker. A "GOOD BEER BAD PEOPLE" wall sign in Yikes crewneck campaign-1 and campaign-3 was painted out to a blank board; that is the only retouch. Generic BAR, DINER and RECORDS neon remain where they're in frame.
+- **Portraits removed:** four unused editorial portraits (`hero-her`, `hero-him`, and the two Black Sheep provider renders) showed faces. They were deleted from `site.ts`, `images.json`, the placeholders and `public/images` so they can't come back by accident; git history keeps them.
+- **Still unmet:** the existing set doesn't meet the brief's other rules (flash on the lens axis, the amber time stamp, one New York night). That needs regeneration from the house's garment references. New campaign photos must follow the brief's crops before they're published.
+||||||| parent of 2833815 (Collection films: tilt-shift New York nights cut with half-second garment shots)
+
 ## Collection pages and measuring drawing — October 16, 2026
 
 - **Collection pages:**
@@ -8,7 +47,7 @@
   - Slugs and copy come from `src/data/collections.ts` (`collectionSlug`, `collectionCopy`), the same source as the shop. Give a new collection its copy there.
   - When every piece in a collection has been removed from sale, its page says so.
 - **Measuring drawing:** `MEASURE_DIAGRAM` in `server/catalog/garments.mjs` is the how-to-measure drawing on every product page. The live renderer uses the same string; Find my size shows a decorative copy.
-- **AI motion clips:** requested but not made. The ElevenLabs creative workspace needs a paid plan for video, and Figma Weave needs the owner's Figma account linked plus per-run cost approval.
+- **AI motion clips:** became the collection films on October 17, 2026; see the section above.
 
 ## Customer experience, phase 1 — October 16, 2026
 
