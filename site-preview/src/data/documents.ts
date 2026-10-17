@@ -93,12 +93,12 @@ export const documents = [
     "metaTitle": "Track an existing order",
     "eyebrow": "Existing customers",
     "title": "Find your order.",
-    "description": "Find the shipping confirmation for an existing After Hours Agenda order or ask support for a status update. This website does not query customer records.",
-    "lead": "Check your shipping email, or let us help you find the next update.",
+    "description": "Follow an After Hours Agenda order from payment to production to delivery with the private link in your order email, or ask support for help.",
+    "lead": "Your order email has a private link that shows where your order is now.",
     "sections": [
       [
-        "Use your confirmation",
-        "Look for the order or shipping confirmation in the email account used at checkout. A carrier link, when available, gives the shipment’s tracking updates."
+        "Use your order link",
+        "Open “See your order” in your order confirmation or shipping email. It shows whether your piece is in production or on its way, an estimated arrival, and the carrier tracking link once it ships. Anyone with the link can see the order’s status and items, so keep it to yourself."
       ],
       [
         "Need a person?",
@@ -106,7 +106,7 @@ export const documents = [
       ],
       [
         "About this page",
-        "This website does not connect to customer records or perform an order lookup. Do not enter card numbers, passwords or security codes. The contact page prepares an email for you to review."
+        "Order links show status and items only: never names, addresses or payment details. Do not send card numbers, passwords or security codes. The contact page prepares an email for you to review."
       ]
     ],
     "action": "Prepare an order question ↗",
@@ -174,7 +174,7 @@ export const documents = [
     "sections": [
       [
         "Essential browsing",
-        "Our host receives technical request information needed to deliver and secure the website. We store your privacy choice in your browser for up to 180 days and keep selected products in your bag. Checkout can temporarily keep delivery details in the current browser tab to restore a wallet payment; that checkout expires after 15 minutes. Browsing and checkout still work when you turn off analytics or marketing."
+        "Our host receives technical request information needed to deliver and secure the website. We store your privacy choice in your browser for up to 180 days and keep selected products in your bag. If you use Find my size, the two measurements you enter stay in this browser; they are never sent to us. Checkout can temporarily keep delivery details in the current browser tab to restore a wallet payment; that checkout expires after 15 minutes. Browsing and checkout still work when you turn off analytics or marketing."
       ],
       [
         "Analytics and marketing choices",

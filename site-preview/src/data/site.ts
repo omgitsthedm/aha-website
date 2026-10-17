@@ -9,6 +9,9 @@ export const brand = {
   facebook: "https://www.facebook.com/afterhoursagenda/",
   verified: "2026-10-09",
   line: "For the dreamers and the doers.",
+  // Square's own eGift card shop for this account: Square takes payment, emails
+  // the card and owns the card terms. Cards are redeemed at checkout here.
+  giftCards: "https://app.squareup.com/gift/1K2RDK7ZPFZXW/order",
 };
 export const navigation = [
   { label: "Shop", href: "/shop/" },
@@ -25,6 +28,12 @@ export const topics = [
   { slug: "general", name: "Something else" },
 ];
 export const answers = [
+  {
+    q: "Do you sell gift cards?",
+    a: "Yes. Digital gift cards are sold and emailed by Square, our payment provider, and can be used at checkout here. A gift card covers a whole order; if its balance is lower than the total, pay with a card instead.",
+    href: brand.giftCards,
+    label: "Buy a gift card",
+  },
   {
     q: "Can I place an order?",
     a: "Yes. Choose a current piece, select your size and quantity, and add it to your bag. You can check out with multiple products together through Square. Domestic shipping is free.",

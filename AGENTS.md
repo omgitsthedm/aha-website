@@ -1,5 +1,27 @@
 # After Hours Agenda agent contract
 
+## Customer experience, phase 1 — October 16, 2026
+
+The owner asked to "do it all" after reviewing the plan: delivery dates, a fit profile, Buy now, and a live order page. Phase 2 is Square gift cards, as its own release. Phase 3 waits until Netlify applies database migrations again: customer accounts, saved pieces, drop early access and reviews.
+
+- **Delivery estimates:**
+  - `src/data/delivery.json` holds production and shipping business days, a buffer, closed dates and the holiday order-by date. `src/scripts/delivery.ts` turns them into "Estimated U.S. arrival" lines.
+  - The lines appear on product pages (in space reserved in the page markup), on the bag card and on the order page.
+  - Keep the numbers cautious and adjust them from real orders.
+- **Fit profile:** "Find my size" on product pages compares a top the visitor owns (chest width and body length, laid flat) with the page's measurement table (`src/scripts/fit.ts`). It suggests a size, and the measurements stay in the browser (`aha-fit-v1`).
+- **Buy now:** adds the piece and goes straight to checkout, where browser autofill completes the form. True one-tap Apple Pay or Google Pay on product pages would let the wallet supply the address and re-price the order. That changes the checkout's quote-then-pay design and needs a real-device test, so it hasn't been built.
+- **Live order page:**
+  - `/order/?o=<square order id>&k=<signature>` is served by `netlify/functions/order-status.mjs` and `server/orders/status.mjs`.
+  - It shows Paid → In production → Shipped, tracking and items, but never names, emails or addresses.
+  - Links are HMAC-signed with `AHA_ORDER_LINK_SECRET`, or else a key derived from `AHA_SQUARE_WEBHOOK_SIGNATURE_KEY`. Rotating that secret breaks old links.
+  - Confirmation and shipment emails include "See your order".
+  - `/order/*` is served with noindex and no-referrer headers.
+- **Script budget:** the artifact test counts only customer-facing scripts against 65 KB; admin-only scripts have their own 40 KB cap.
+- **Gift cards (phase 2):**
+  - Square's own eGift shop for this account (`brand.giftCards` in `src/data/site.ts`) sells and emails digital cards and owns their terms. It's linked from the footer and the FAQ.
+  - Checkout redeems Square gift cards with the Web Payments gift card field. A card must cover the whole order; split payments aren't supported, and a short balance gets a plain message.
+  - It's on unless `AHA_CHECKOUT_GIFT_CARD_ENABLED=false`.
+
 ## Email sign-up and storefront fixes — October 16, 2026
 
 The owner instructed: “Build the five fixes and also add an email signup that only collects addresses.”

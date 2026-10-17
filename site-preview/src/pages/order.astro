@@ -1,0 +1,22 @@
+---
+import Site from "../layouts/Site.astro";
+---
+<Site title="Your order" description="The private status page for an After Hours Agenda order, opened from the link in your order email." noindex>
+  <header class="page-head shell order-head">
+    <p class="label">Your order</p>
+    <h1 data-order-title>Where it is now.</h1>
+    <p class="lede" data-order-lede>Open this page from the link in your order email.</p>
+  </header>
+  <section class="shell order-status" data-order aria-live="polite">
+    <ol class="order-steps" data-order-steps hidden>
+      <li data-step="paid"><strong>Paid</strong><span>Your payment is confirmed.</span></li>
+      <li data-step="production"><strong>In production</strong><span>Your piece is being printed and finished.</span></li>
+      <li data-step="shipped"><strong>Shipped</strong><span>On its way to you.</span></li>
+    </ol>
+    <p class="order-note" data-order-note></p>
+    <div class="order-tracking" data-order-tracking hidden></div>
+    <ul class="order-items" data-order-items hidden></ul>
+    <p class="order-help">Questions about this order? Write to <a href="mailto:info@afterhoursagenda.com">info@afterhoursagenda.com</a> with your order number.</p>
+  </section>
+</Site>
+<script src="../scripts/order-status.ts"></script>

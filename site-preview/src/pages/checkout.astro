@@ -59,6 +59,12 @@ import products from '../data/products.json';
           <p class="checkout-note" data-card-status>Confirm your address to load secure payment options.</p>
           <div id="aha-card" class="square-field" aria-label="Secure card details"></div>
           <button type="button" class="button pay-button" data-pay-card disabled>Pay securely <span aria-hidden="true">↗</span></button>
+          <details class="gift-card-pay" data-gift-card hidden>
+            <summary>Pay with a gift card</summary>
+            <div id="aha-gift-card" class="square-field" aria-label="Secure gift card number"></div>
+            <button type="button" class="button button-secondary pay-button" data-pay-gift-card disabled>Pay with gift card</button>
+            <p class="checkout-note">A gift card pays for the whole order. If its balance is lower than the total, pay with a card instead.</p>
+          </details>
           <div class="wallets" data-wallets hidden aria-label="Other secure payment options">
             <p class="label">Or choose another payment option</p>
             <button type="button" class="apple-pay-button" data-apple-pay aria-label="Pay with Apple Pay" hidden><span aria-hidden="true"> Pay</span></button>

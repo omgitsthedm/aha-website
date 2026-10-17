@@ -21,7 +21,7 @@ type CheckoutConfig = {
   countryCode: string;
   currencyCode: string;
   environment?: "sandbox" | "production";
-  methods: { card: boolean; applePay: boolean; googlePay: boolean; afterpay: boolean; cashAppPay: boolean };
+  methods: { card: boolean; applePay: boolean; googlePay: boolean; afterpay: boolean; cashAppPay: boolean; giftCard?: boolean };
 };
 type Quote = {
   checkoutId: string;
@@ -42,6 +42,7 @@ type SquareMethod = { attach?: (target: string, options?: unknown) => Promise<vo
 type SquarePaymentRequest = { addEventListener?: (name: string, callback: (value: unknown) => unknown) => void };
 type SquarePayments = {
   card: () => Promise<SquareMethod>;
+  giftCard?: () => Promise<SquareMethod>;
   paymentRequest: (request: unknown) => SquarePaymentRequest;
   applePay?: (request: unknown) => Promise<SquareMethod>;
   googlePay?: (request: unknown) => Promise<SquareMethod>;
@@ -146,6 +147,7 @@ function initAddForms() {
     const status = form.querySelector<HTMLElement>("[data-cart-add-status]");
     form.addEventListener("submit", (event) => {
       event.preventDefault();
+      const buyNow = (event as SubmitEvent).submitter?.hasAttribute("data-buy-now") ?? false;
       const selected = form.querySelector<HTMLInputElement>("[data-cart-variant]:checked");
       const quantity = Number(form.querySelector<HTMLInputElement>("[data-cart-quantity]")?.value);
       if (!selected) {
@@ -173,6 +175,8 @@ function initAddForms() {
       document.dispatchEvent(new CustomEvent("aha:cart-added", { detail: { id: item.id, name: item.title, size: item.size, color: item.color, price: item.priceCents / 100, quantity: Math.min(quantity, available) } }));
       if (status) status.innerHTML = `${item.title}, ${item.size}, added. <a href="/checkout/">View bag and checkout</a>.`;
       const added = Math.min(quantity, available);
+      // Buy now goes straight to checkout, where the browser can fill in saved details.
+      if (buyNow) { location.href = "/checkout/"; return; }
       document.dispatchEvent(new CustomEvent("aha:bag-added", { detail: { title: item.title, size: item.size, image: item.image, added, lineCents: item.priceCents * added, items: count(next), subtotalCents: next.reduce((sum, line) => sum + line.priceCents * line.quantity, 0) } }));
     });
   });
@@ -251,6 +255,9 @@ function initCheckout() {
   let quotedFingerprint = "";
   let payments: SquarePayments | null = null;
   let card: SquareMethod | null = null;
+  let giftCard: SquareMethod | null = null;
+  // Which method the pending payment used, for the decline message.
+  let paidWithGiftCard = false;
   let walletMethods: SquareMethod[] = [];
   let paymentKey: string = freshKey();
   let pollTimer = 0;
@@ -274,6 +281,12 @@ function initCheckout() {
     wallets.style.pointerEvents = "";
     wallets.removeAttribute("aria-busy");
     page.querySelector<HTMLElement>("#aha-card")!.replaceChildren();
+    page.querySelector<HTMLElement>("#aha-gift-card")?.replaceChildren();
+    const giftCardBox = page.querySelector<HTMLDetailsElement>("[data-gift-card]");
+    if (giftCardBox) { giftCardBox.hidden = true; giftCardBox.open = false; }
+    disable(page, "[data-pay-gift-card]", true);
+    giftCard = null;
+    paidWithGiftCard = false;
     ["#aha-google-pay", "#aha-afterpay", "#aha-cash-app"].forEach((selector) => page.querySelector<HTMLElement>(selector)?.replaceChildren());
     page.querySelector<HTMLButtonElement>("[data-apple-pay]")!.hidden = true;
     setText(page, "[data-card-status]", "Confirm your address to load secure payment options.");
@@ -356,7 +369,7 @@ function initCheckout() {
     return request;
   };
   const setPaymentControlsBusy = (busy: boolean) => {
-    disable(page, "[data-pay-card], [data-apple-pay], #aha-google-pay button, #aha-afterpay button, #aha-cash-app button", busy);
+    disable(page, "[data-pay-card], [data-pay-gift-card], [data-apple-pay], #aha-google-pay button, #aha-afterpay button, #aha-cash-app button", busy);
     const wallets = page.querySelector<HTMLElement>("[data-wallets]");
     if (wallets) {
       wallets.style.pointerEvents = busy ? "none" : "";
@@ -454,8 +467,9 @@ function initCheckout() {
     if (response.ok && data?.state === "completed") { finishPayment(data.orderId, data.receiptUrl); return; }
     if (response.status === 202 && data?.state === "pending") { showMessage("Payment is processing. We’re confirming it safely now."); void poll(); return; }
     if (response.status === 402) {
+      const viaGiftCard = paidWithGiftCard;
       clearPending(); unresolvedPayment = null; paymentKey = freshKey(); clearQuote();
-      showError("Payment was declined. Check your details or try another method, then confirm a fresh total.");
+      showError(viaGiftCard ? "That gift card couldn’t pay the full total. Confirm a fresh total, then pay with a card or another method." : "Payment was declined. Check your details or try another method, then confirm a fresh total.");
       return;
     }
     if (response.status === 409 && (data?.errorCode === "quote_expired" || data?.errorCode === "quote_stale")) { clearPending(); unresolvedPayment = null; clearQuote(); showError("That total expired. Confirm your details again for a fresh total."); return; }
@@ -518,6 +532,14 @@ function initCheckout() {
     payments = window.Square.payments(config.appId, config.locationId);
     card = await payments.card(); await card.attach?.("#aha-card");
     setText(page, "[data-card-status]", "Card details are encrypted by Square.");
+    if (config.methods.giftCard && payments.giftCard) {
+      try {
+        giftCard = await payments.giftCard();
+        await giftCard.attach?.("#aha-gift-card");
+        page.querySelector<HTMLElement>("[data-gift-card]")!.hidden = false;
+        disable(page, "[data-pay-gift-card]", false);
+      } catch { giftCard = null; /* The account or browser can't take gift cards here; cards still work. */ }
+    }
   };
   const restoreCashAppResume = async () => {
     const hadResume = sessionStorage.getItem(CASH_APP_RESUME_KEY) !== null;
@@ -576,8 +598,15 @@ function initCheckout() {
     }
     finally { if (quoteButton) quoteButton.disabled = false; }
   });
+  page.querySelector<HTMLButtonElement>("[data-pay-gift-card]")?.addEventListener("click", async () => {
+    if (!giftCard || !quote || unresolvedPayment) return;
+    const result = await giftCard.tokenize();
+    if (result.status === "OK" && result.token) { paidWithGiftCard = true; void submitToken(result.token); }
+    else showError("Check the gift card number and try again.");
+  });
   page.querySelector<HTMLButtonElement>("[data-pay-card]")?.addEventListener("click", async () => {
     if (!card || !quote) return;
+    paidWithGiftCard = false;
     const address = shippingAddress(form);
     if (unresolvedPayment) return;
     const result = await card.tokenize({ amount: (quote.totalAmount / 100).toFixed(2), currencyCode: quote.currency, intent: "CHARGE", customerInitiated: true, sellerKeyedIn: false, billingContact: { givenName: address.firstName, familyName: address.lastName, email: address.email, phone: address.phone } });

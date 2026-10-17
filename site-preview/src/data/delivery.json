@@ -1,0 +1,8 @@
+{
+  "note": "U.S. delivery estimates shown on product pages, the bag card and the order page. Business days skip weekends and closedDates. Keep these cautious: a missed date is worse than a later one.",
+  "productionBusinessDays": [5, 7],
+  "domesticShippingBusinessDays": [3, 6],
+  "bufferBusinessDays": 1,
+  "closedDates": ["2026-11-11", "2026-11-26", "2026-11-27", "2026-12-24", "2026-12-25", "2026-12-31", "2027-01-01"],
+  "holiday": { "deliverBy": "2026-12-24", "showFrom": "2026-11-01", "label": "December 24" }
+}

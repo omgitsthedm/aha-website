@@ -1,5 +1,9 @@
 # After Hours Agenda source of truth
 
+## Customer experience, phase 1 — October 16, 2026
+
+Product pages show a U.S. delivery estimate (and holiday order-by dates from November), a "Find my size" fit profile kept in the browser, and Buy now. Each order email links to a private order page showing Paid → In production → Shipped, with tracking. Delivery settings live in `site-preview/src/data/delivery.json`. Live state is still proven only by the published deploy and `/release.json`.
+
 ## Email sign-up and storefront fixes — October 16, 2026
 
 The storefront collects email addresses for news about new pieces. They are stored in `aha_email_signups` and managed in Admin → Email list; nothing is emailed from the site. Home, shop and lookbook lead with the newest collection (Mighty Mick’s) from one shared order. The lookbook hides removed products, the shop has collection jump links, and product pages on phones have a quick-add bar. Live state is still proven only by the published deploy and `/release.json`.
