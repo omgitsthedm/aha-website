@@ -108,6 +108,8 @@ test("the manifesto lives in The story and its old address redirects there", asy
     for (const path of [from.replace(/\/$/, ""), from])
       assert.ok(redirects.includes(`${path} ${to} 301\n`), path);
   }
+  // The moved-page rules join the Meta feed rewrites; they never replace them.
+  assert.ok(redirects.includes("/feeds/meta /feeds/meta.xml 200\n/feeds/meta/ /feeds/meta.xml 200\n"));
 });
 test("each page has one sign-up form: Home's band, the Updates page or the footer", async () => {
   const forms = async (file) =>

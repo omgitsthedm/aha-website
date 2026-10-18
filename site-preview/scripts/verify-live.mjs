@@ -68,9 +68,15 @@ for (const [from, to] of moved)
       path,
     );
   }
+// The Meta catalog reads its feed at the extensionless address (a _redirects rewrite).
+for (const path of ["/feeds/meta", "/feeds/meta/"]) {
+  const response = await get(path);
+  assert.match(response.headers.get("content-type") || "", /xml/, path);
+  assert.match(await response.text(), /<rss[\s>]/, path);
+}
 console.log(
   JSON.stringify(
-    { verified: true, routes: routes.length, redirects: moved.length * 2, ownershipFiles: 3, release },
+    { verified: true, routes: routes.length, redirects: moved.length * 2, feedRewrites: 2, ownershipFiles: 3, release },
     null,
     2,
   ),
