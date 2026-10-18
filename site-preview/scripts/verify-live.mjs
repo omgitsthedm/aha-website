@@ -1,7 +1,7 @@
 import client from "../client.config.json" with { type: "json" };
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { routes } from "../src/data/site.ts";
+import { moved, routes } from "../src/data/site.ts";
 
 const origin = client.site.origin;
 const get = async (path) => {
@@ -55,9 +55,22 @@ for (const file of [
 const sitemap = await (await get("/sitemap.xml")).text();
 for (const path of routes)
   assert.ok(sitemap.includes(`<loc>${origin}${path}</loc>`));
+for (const [from, to] of moved)
+  for (const path of [from.replace(/\/$/, ""), from]) {
+    const response = await fetch(`${origin}${path}`, {
+      redirect: "manual",
+      signal: AbortSignal.timeout(20000),
+    });
+    assert.equal(response.status, 301, path);
+    assert.equal(
+      new URL(response.headers.get("location") || "", origin).href,
+      new URL(to, origin).href,
+      path,
+    );
+  }
 console.log(
   JSON.stringify(
-    { verified: true, routes: routes.length, ownershipFiles: 3, release },
+    { verified: true, routes: routes.length, redirects: moved.length * 2, ownershipFiles: 3, release },
     null,
     2,
   ),

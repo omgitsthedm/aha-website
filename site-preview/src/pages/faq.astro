@@ -27,7 +27,7 @@ import { answers } from "../data/site";
             <span aria-hidden="true">+</span>
           </summary>
           <p>{item.a}</p>
-          <p><a href={item.href}>{item.label} →</a></p>
+          <p><a href={item.href}>{item.label} {item.href.startsWith("http") ? "↗" : "→"}</a></p>
         </details>
       ))}
     </div>

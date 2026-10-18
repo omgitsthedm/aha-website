@@ -2,6 +2,7 @@
 import "../styles/site.css";
 import { brand, navigation } from "../data/site";
 import Consent from '../components/Consent.astro';
+import EmailSignup from '../components/EmailSignup.astro';
 interface Props {
   title: string;
   description: string;
@@ -18,6 +19,10 @@ const origin = Astro.site!.origin;
 const canonical = new URL(path, origin).href;
 const isPreview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
 const shareImage=image?new URL(image,origin).href:`${origin}/brand/${isPreview?'og-image.png':'og-image-production.png'}`;
+// One sign-up form per page: Home and Updates have their own, and the bag and order
+// pages stay clear. Every product page shares this footer (the live renderer reuses
+// it), so the form reports the section of the site, not the exact page.
+const footerSignup = ["/", "/updates/", "/checkout/", "/order/"].includes(path) ? null : (path.split("/").filter(Boolean)[0] ?? "site").replace(/[^a-z0-9-]/g, "-").slice(0, 40);
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
@@ -168,9 +173,6 @@ const schema = {
       <a class="header-cart" href="/checkout/" data-cart-link aria-label="Bag, 0 items">
         Bag <span data-cart-count aria-hidden="true">0</span>
       </a>
-      <a class="button header-cta" href="/shop/">
-        Shop the collection <span aria-hidden="true">↗</span>
-      </a>
       <details class="mobile-nav">
         <summary>
           Menu <span aria-hidden="true">+</span>
@@ -184,7 +186,6 @@ const schema = {
               {link.label}
             </a>
           ))}
-          <a href="/manifesto/">Manifesto</a>
           <a href="/checkout/" data-cart-link aria-label="Bag, 0 items">Bag <span data-cart-count aria-hidden="true">0</span></a>
           <a href="/updates/">Stay close ↗</a>
         </nav>
@@ -210,12 +211,16 @@ const schema = {
           </span>
         </a>
       </div>
+      {footerSignup && (
+        <div class="footer-signup">
+          <EmailSignup source={footerSignup} label="Get new drops by email" />
+        </div>
+      )}
       <div class="footer-links">
         <nav aria-label="Explore">
           <span class="label">Explore</span>
           <a href="/about/">The story</a>
           <a href="/lookbook/">Lookbook</a>
-          <a href="/manifesto/">Manifesto</a>
           <a href="/updates/">Updates</a>
           <a href="/shop/">Shop the collection</a>
           <a href={brand.giftCards}>Gift cards ↗</a>

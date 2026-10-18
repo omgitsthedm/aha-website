@@ -1,4 +1,4 @@
-import { routes } from "../src/data/site.ts";
+import { answers, moved, routes } from "../src/data/site.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir, stat } from "node:fs/promises";
@@ -95,6 +95,36 @@ test("sitemap, crawler policy and summary match the release mode", async () => {
   );
   assert.ok(robots.includes("User-agent: GPTBot\nDisallow: /"));
   assert.ok(robots.includes("User-agent: ClaudeBot\nDisallow: /"));
+});
+test("the manifesto lives in The story and its old address redirects there", async () => {
+  const about = await readFile(new URL("about/index.html", root), "utf8");
+  assert.match(about, /id="manifesto"/);
+  for (const tenet of ["Work hard. Love hard.", "Celebrate.", "Be kind.", "Find your people."])
+    assert.ok(about.includes(`<h3>${tenet}</h3>`), tenet);
+  await assert.rejects(stat(new URL("manifesto/index.html", root)));
+  const redirects = await readFile(new URL("_redirects", root), "utf8");
+  for (const [from, to] of moved) {
+    assert.ok(!routes.includes(from), from);
+    for (const path of [from.replace(/\/$/, ""), from])
+      assert.ok(redirects.includes(`${path} ${to} 301\n`), path);
+  }
+});
+test("each page has one sign-up form: Home's band, the Updates page or the footer", async () => {
+  const forms = async (file) =>
+    [...(await readFile(new URL(file, root), "utf8")).matchAll(/<form class="signup" data-signup data-source="([^"]+)"/g)].map((match) => match[1]);
+  for (const route of routes) {
+    const expected = route === "/" ? "home" : route === "/updates/" ? "updates" : route.split("/")[1];
+    assert.deepEqual(await forms(`${route.slice(1)}index.html`), [expected], route);
+  }
+  for (const file of ["checkout/index.html", "order/index.html"])
+    assert.deepEqual(await forms(file), [], file);
+  assert.match(await readFile(new URL("index.html", root), "utf8"), /class="updates-band"[\s\S]*data-source="home"/);
+});
+test("FAQ answers stay short and point to the page that owns each topic", () => {
+  for (const { q, a, href } of answers) {
+    assert.ok(a.length <= 140, `${q} has a ${a.length}-character answer`);
+    assert.ok(href.startsWith("https://") || routes.includes(href), q);
+  }
 });
 test("existing Google and Bing ownership files remain byte-identical", async () => {
   for (const file of [

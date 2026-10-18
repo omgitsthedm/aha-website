@@ -45,6 +45,14 @@ for (const line of config.split("\n")) {
     }
   }
 }
+// Exact-path redirects from the built _redirects file, as Netlify serves them.
+const redirects = new Map(
+  (await readFile(resolve(root, "_redirects"), "utf8").catch(() => ""))
+    .split("\n")
+    .map((line) => line.trim().split(/\s+/))
+    .filter(([from, to]) => from?.startsWith("/") && to)
+    .map(([from, to, status]) => [from, { to, status: Number(status) || 301 }]),
+);
 function headersFor(pathname) {
   const result = {};
   for (const rule of headerRules) {
@@ -69,6 +77,12 @@ http
       );
       headers = headersFor(pathname);
       if (pathname.includes("\0")) throw new Error("Invalid path");
+      const redirect = redirects.get(pathname);
+      if (redirect) {
+        res.writeHead(redirect.status, { ...headers, Location: redirect.to });
+        res.end();
+        return;
+      }
       const metaPixelSource = metaPixelSources[pathname];
       if (metaPixelSource) {
         let upstream;

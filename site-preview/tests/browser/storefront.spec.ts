@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { collectionsInOrder } from "../../src/data/collections";
+import { collectionSlug, collectionsInOrder } from "../../src/data/collections";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({ analytics: false, marketing: false, at: Date.now() })));
@@ -98,7 +98,7 @@ test("the quick-add bar stays off on desktop, where the details column is always
 // must never rely on its natural width; widen it on purpose and check reflow.
 test("sign-up forms fit a 320px screen whatever the input's natural width", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 900 });
-  for (const path of ["/", "/updates/", "/about/", "/lookbook/", "/manifesto/"]) {
+  for (const path of ["/", "/updates/", "/about/", "/lookbook/", "/faq/"]) {
     await page.goto(path);
     await page.evaluate(() => document.fonts.ready);
     const width = await page.evaluate(() => {
@@ -179,11 +179,52 @@ test("phone product photos show a count and open full screen", async ({ page }) 
   await expect(viewer).toBeHidden();
 });
 
-test("every lookbook photo links to its piece", async ({ page }) => {
+test("the lookbook has one set per collection, three looks each, every look linking to its piece", async ({ page }) => {
   await page.goto("/lookbook/");
-  const chips = page.locator(".campaign-set .look-chip");
-  expect(await chips.count()).toBe(await page.locator(".campaign-grid figure").count());
-  await expect(chips.first()).toHaveAttribute("href", /^\/shop\/[a-z0-9-]+\/$/);
+  const names = collectionsInOrder().map(([name]) => name);
+  const sets = page.locator("[data-look-set]");
+  await expect(sets.locator("h2")).toHaveText(names);
+  for (const set of await sets.all()) {
+    await expect(set.locator("figure")).toHaveCount(3);
+    await expect(set.locator(".look-chip")).toHaveCount(3);
+  }
+  await expect(page.locator(".campaign-set .look-chip").first()).toHaveAttribute("href", /^\/shop\/[a-z0-9-]+\/$/);
+  await expect(sets.first().getByRole("link", { name: `Shop ${names[0]} →` })).toHaveAttribute("href", `/shop/${collectionSlug(names[0]!)}/`);
+});
+
+test("the footer sign-up reports its section of the site, and Home keeps only its band", async ({ page }) => {
+  const sent: unknown[] = [];
+  await page.route("**/api/updates/subscribe", async (route) => {
+    sent.push(route.request().postDataJSON());
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true }) });
+  });
+  await page.goto("/shop/the-city-ss4500-black/");
+  const form = page.locator(".footer-signup [data-signup]");
+  await form.getByLabel("Get new drops by email").fill("fan@example.com");
+  await form.getByRole("button", { name: "Sign me up" }).click();
+  await expect(form.locator("[data-signup-status]")).toHaveText("You're on the list. We'll write when something new is ready.");
+  expect(sent).toEqual([{ email: "fan@example.com", source: "shop", company: "" }]);
+  await page.goto("/");
+  await expect(page.locator("[data-signup]")).toHaveCount(1);
+  await expect(page.locator(".footer-signup")).toHaveCount(0);
+});
+
+test("the header has one Shop link, in the main navigation", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/about/");
+  await expect(page.locator(".site-header a[href='/shop/']:visible")).toHaveCount(1);
+  await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "Shop", exact: true })).toBeVisible();
+});
+
+test("the old manifesto address moves permanently to The story", async ({ page, request }) => {
+  for (const path of ["/manifesto", "/manifesto/"]) {
+    const response = await request.get(path, { maxRedirects: 0 });
+    expect(response.status(), path).toBe(301);
+    expect(response.headers()["location"], path).toBe("/about/#manifesto");
+  }
+  await page.goto("/manifesto/");
+  await expect(page).toHaveURL(/\/about\/#manifesto$/);
+  await expect(page.getByRole("heading", { name: /BUILD A LIFE/ })).toBeInViewport();
 });
 
 test("the header tucks away while scrolling down and returns on scroll up", async ({ page }) => {

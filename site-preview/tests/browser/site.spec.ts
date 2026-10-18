@@ -160,7 +160,7 @@ test("all content, menu and contact fallback work without JavaScript", async ({
   await page.goto(
     `${process.env.BASE_URL || "http://127.0.0.1:48379"}/contact/`,
   );
-  await expect(page.locator("noscript")).toBeVisible();
+  await expect(page.locator("main noscript")).toBeVisible();
   await expect(page.locator("#brief-form")).toBeHidden();
   await page.locator(".mobile-nav summary").click();
   await expect(

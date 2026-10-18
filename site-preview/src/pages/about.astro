@@ -1,26 +1,30 @@
 ---
 import Site from "../layouts/Site.astro";
 import Image from "../components/EditorialImage.astro";
-import UpdatesBand from "../components/UpdatesBand.astro";
-const values = [
+// The manifesto lives here; /manifesto/ redirects to #manifesto (scripts/finalize.mjs).
+const tenets = [
   [
-    "Kindness",
-    "We make clothes for good people. Kind to the people who wear them, the people who make them, and the people they are given to.",
+    "Work hard. Love hard.",
+    "Work matters. So do the small wins, the time together and the ideas you keep coming back to. Make time for the people beside you, too.",
   ],
   [
-    "Community",
-    "A brand is the people wearing it. Friends, families, the person you love and the ones you look after. There is room for all of them here.",
+    "Celebrate.",
+    "A birthday gives you a reason to get together. So does a dinner after a long day. Leave a little room for both.",
   ],
   [
-    "The life you build",
-    "Work matters. So do the small wins, the time together and the ideas you keep coming back to.",
+    "Be kind.",
+    "We make clothes for good people: kind to the people who wear them, the people who make them and the people they’re given to. Kindness belongs in the small choices we make every day.",
+  ],
+  [
+    "Find your people.",
+    "A brand is the people wearing it: friends, families, the person you love and the ones you look after. There’s room for all of them here.",
   ],
 ];
 ---
 
 <Site
   title="The story"
-  description="The After Hours Agenda story, from the original 2012 Prologue to a clothing brand built around kindness, community and the life you are building."
+  description="The After Hours Agenda story and manifesto, from the original 2012 Prologue to a clothing brand built on kindness, community and the life you’re building."
 >
   <header class="page-head shell">
     <p class="label">After Hours Agenda · Est. 2011</p>
@@ -47,9 +51,8 @@ const values = [
         good people beside you.
       </p>
       <p>
-        Today, Yikes!, Insomniac and The City bring distinct graphics to fleece and
-        long-sleeve layers. The archive keeps the early pieces close while the
-        collection grows one design at a time.
+        Today, each collection brings its own graphics, one design at a time.
+        The archive keeps the early pieces close.
       </p>
       <div class="actions">
         <a class="button" href="/lookbook/">
@@ -71,14 +74,27 @@ const values = [
       </figcaption>
     </figure>
   </section>
-  <section class="shell section" aria-label="What matters to us">
-    {values.map(([title, text], index) => (
+  <section class="shell section manifesto" id="manifesto" aria-labelledby="manifesto-title">
+    <div class="manifesto-head">
+      <div>
+        <p class="label">The manifesto</p>
+        <h2 id="manifesto-title">
+          BUILD A LIFE.
+          <br />
+          <span class="accent">LIVE IT WELL.</span>
+        </h2>
+        <p class="lede">
+          For the dreamers and the doers. For kindness. For the community.
+        </p>
+      </div>
+      <img src="/brand/sheep.svg" width="220" height="173" alt="" loading="lazy" />
+    </div>
+    {tenets.map(([title, text], index) => (
       <div class="values">
         <span class="label">0{index + 1}</span>
-        <h2>{title}</h2>
+        <h3>{title}</h3>
         <p>{text}</p>
       </div>
     ))}
   </section>
-  <UpdatesBand source="about" />
 </Site>

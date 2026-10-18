@@ -28,66 +28,61 @@ export const topics = [
   { slug: "accessibility", name: "An accessibility issue" },
   { slug: "general", name: "Something else" },
 ];
+// Short answers that point to the page that owns each topic.
 export const answers = [
   {
     q: "Do you sell gift cards?",
-    a: "Yes. Digital gift cards are sold and emailed by Square, our payment provider, and can be used at checkout here. A gift card covers a whole order; if its balance is lower than the total, pay with a card instead.",
+    a: "Yes. Square sells and emails our digital gift cards. One card has to cover the whole order.",
     href: brand.giftCards,
     label: "Buy a gift card",
   },
   {
     q: "Can I place an order?",
-    a: "Yes. Choose a current piece, select your size and quantity, and add it to your bag. You can check out with multiple products together through Square. Domestic shipping is free.",
+    a: "Yes. Pick a size, add pieces to your bag and check out together. U.S. shipping is free.",
     href: "/shop/",
-    label: "Shop the collection",
+    label: "Go to the shop",
   },
   {
     q: "What is After Hours Agenda?",
-    a: "A clothing brand for the dreamers and the doers. Graphic tees, heavyweight hoods and crewnecks are part of our story. We believe in kindness, community and celebrating the life you are building.",
+    a: "A clothing brand for the dreamers and the doers, since 2011.",
     href: "/about/",
     label: "Read the story",
   },
   {
     q: "Does the lookbook show products for sale?",
-    a: "The current collection appears in AI-generated lifestyle mockups. Garment views and measurements are on each product page. Historical archive pieces are separately labeled and are not for sale.",
+    a: "Yes. Every campaign photo links to its piece. The photos are AI-generated mockups, and archive pieces aren’t for sale.",
     href: "/lookbook/",
-    label: "Explore the lookbook and archive",
+    label: "See the lookbook",
   },
   {
     q: "Can you help with an existing order?",
-    a: "Yes. Email info@afterhoursagenda.com with the order number and the email used at checkout. Never include a card number, security code or password.",
-    href: "/contact/?topic=order",
-    label: "Get help with an existing order",
+    a: "Yes. Your order email has a private link that shows where your order is. For anything else, write to us with the order number.",
+    href: "/track-order/",
+    label: "Find your order",
   },
   {
     q: "How do I ask about a return or damaged item?",
-    a: "Email support with the order number, the item and a description of the issue. Include clear photos when relevant. Requests are reviewed under the terms that applied when the order was placed. Wait for instructions before returning anything.",
+    a: "Write to us with your order number and photos of any damage. Wait for instructions before sending anything back.",
     href: "/returns/",
-    label: "Read the return request steps",
+    label: "Returns and damage",
   },
   {
     q: "Can I change an address?",
-    a: "Contact support as soon as possible with your order number and the corrected address. Whether a change can be made depends on the order’s production and shipping stage.",
+    a: "Write to us right away with your order number. A change depends on whether production or shipping has started.",
     href: "/shipping/",
-    label: "Get shipping help",
+    label: "Shipping details",
   },
   {
     q: "How long does an order take?",
-    a: "Each piece is made to order. Production usually takes about a week, and shipping time depends on the destination. Artwork review or a stock delay can add time. We send tracking once the order ships.",
+    a: "About a week to make, then shipping. Each product page shows an estimated U.S. arrival date.",
     href: "/shipping/",
-    label: "Read shipping details",
+    label: "Shipping details",
   },
   {
-    q: "How do I contact you?",
-    a: "The Contact page prepares an email draft for you to review. You can also email info@afterhoursagenda.com. For an order question, include your order number and checkout email. Nothing is sent automatically.",
-    href: "/contact/",
-    label: "Contact After Hours Agenda",
-  },
-  {
-    q: "How do I check the fit of a piece I already own?",
-    a: "Start with its label and original size chart. Lay a similar garment flat and compare its chest width and length. Sizes can differ between pieces and past collections. Send us the item name if you need help finding the right information.",
+    q: "How do I find my size?",
+    a: "Lay a top you own flat and compare it with the size chart, or use Find my size on any product page.",
     href: "/size-guide/",
-    label: "See how to measure a garment",
+    label: "How to measure",
   },
 ];
 export const gallery = [
@@ -106,11 +101,12 @@ export const gallery = [
     kind: "portrait",
   },
 ];
+/** Pages that moved, served as permanent redirects (scripts/finalize.mjs writes _redirects). */
+export const moved = [["/manifesto/", "/about/#manifesto"]] as const;
 export const routes = [
   "/",
   "/about/",
   "/lookbook/",
-  "/manifesto/",
   "/contact/",
   "/updates/",
   "/faq/",

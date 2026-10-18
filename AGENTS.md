@@ -1,5 +1,24 @@
 # After Hours Agenda agent contract
 
+## Consolidation — October 17, 2026
+
+The owner instructed: “Consolidate: merge Manifesto into The story, trim the FAQ to answers that link out, keep sign-up on Home, Updates and the footer only, make the Lookbook one set per collection, and drop the duplicate Shop link.”
+
+- **The story** (`/about/`) carries the manifesto at `#manifesto`. Its four tenets absorb the old About values: Kindness went into "Be kind", Community into "Find your people", and The life you build into "Work hard. Love hard."
+  - `/manifesto` and `/manifesto/` answer with a 301 to `/about/#manifesto`.
+  - `moved` in `src/data/site.ts` lists moved pages. `scripts/finalize.mjs` writes them to `_redirects`, `scripts/serve.mjs` honors them locally, and `scripts/verify-live.mjs` checks them after a release.
+  - The intro no longer names the collections, so it can't go stale.
+- **FAQ:** each answer is one or two short sentences with a link to the page that owns the topic. The artifact test caps answers at 140 characters. "How do I contact you?" was dropped, because the page already ends with "Talk to us".
+- **Sign-up:** one form per page.
+  - Home keeps the Stay close band, and `/updates/` keeps its own form.
+  - Every other page has a compact form in the footer (`Site.astro`), except `/checkout/` and `/order/`.
+  - The footer form reports the first part of the path as its source (`shop`, `lookbook`, `faq` and so on). Every product page has the same footer, because the live renderer reuses a built product page's footer and `tests/live-catalog.test.mjs` requires byte-identical pages.
+- **Lookbook:** one set per collection, in shop order, with three looks each (`looksFor` in `src/pages/lookbook.astro`).
+  - The first look is the lead piece's first photo, which carries the collection film.
+  - The next two come from pieces that add a new setting or garment, each at the next photo index so poses don't repeat.
+  - Removed products hide their looks, and a set whose looks are all removed hides too (`hideRetiredCards` in `src/scripts/catalog-state.ts`).
+- **Header:** the "Shop the collection ↗" button is gone. Shop is the first navigation link.
+
 ## Collection films — October 17, 2026
 
 The owner asked for short, labeled AI motion from the campaign photos for the hero and lookbook, then set the direction: the star is New York City and its nightlife, seen through a tilt-shift lens from a high angle; garments appear only as sub-second, torso-only shots (Justice, "D.A.N.C.E."), very subtle, no push in or out, nothing bright or polished, as if a drunk cameraman shot it in 1972.
@@ -31,13 +50,15 @@ The owner's FW26 Lookbook & Campaign Brief (`~/Desktop/AHA Fall Winter 2026 Life
 - Rule 1: torso only, never a face; hair only as strands at the edge.
 - Rule 8: no readable text except the design's own graphic; generic BAR, PIZZA, DELI and OPEN signs are allowed.
 
-- **What changed:** 39 of the 48 campaign photos were re-cropped to torso framing from their lossless originals. Fronts now start at the base of the neck, and backs start below the hood or neckline. The Yikes cropped hoodie set and the six Mighty Mick's photos already started at the neck and are unchanged.
+- **What changed:** 45 of the 48 campaign photos were re-cropped to torso framing from their lossless originals. Fronts now start at the base of the neck, and backs start below the hood or neckline. The Yikes cropped hoodie set already started at the neck and is unchanged.
+- **Mighty Mick's, second pass:** the first pass left the six Mighty Mick's photos alone, but they showed the chin and jaw. On October 17 they were re-cropped at 9% from the top, so they start at the collar.
+  - Vision finds no face in a chin without eyes, so check crops by eye too: a contact sheet of the top 16% of every campaign photo shows them quickly.
+  - The face joints Vision reports on these photos sit on the boxer illustrated in the print.
 - **Where the originals are:** the launch folders under `~/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/`, and for Pet It Be, `site-preview/tools/images/out/pet-it-be-ss3000-maroon/gen/`.
 - **How:** crops come from Apple Vision body-pose joints (neck, shoulders, hips) and face boxes. Insomniac fronts lean toward the left-chest logo so it stays inside the full-screen phone lookbook crop. Files were rebuilt with the catalog engine's campaign profile, keeping each file's IPTC AI marker; `products.json` is unchanged and placeholders were rebuilt. The originals are 1122 × 1402, so crops are enlarged 1.06–1.66× and slightly soft; regenerating at higher resolution would restore detail.
 - **Rule 8:** the crops removed Pabst and Budweiser neon, a Simpsons pinball backglass, the Silvercup sign, MTA 7 bullets and an I♥NYC sticker. A "GOOD BEER BAD PEOPLE" wall sign in Yikes crewneck campaign-1 and campaign-3 was painted out to a blank board; that is the only retouch. Generic BAR, DINER and RECORDS neon remain where they're in frame.
 - **Portraits removed:** four unused editorial portraits (`hero-her`, `hero-him`, and the two Black Sheep provider renders) showed faces. They were deleted from `site.ts`, `images.json`, the placeholders and `public/images` so they can't come back by accident; git history keeps them.
 - **Still unmet:** the existing set doesn't meet the brief's other rules (flash on the lens axis, the amber time stamp, one New York night). That needs regeneration from the house's garment references. New campaign photos must follow the brief's crops before they're published.
-||||||| parent of 2833815 (Collection films: tilt-shift New York nights cut with half-second garment shots)
 
 ## Collection pages and measuring drawing — October 16, 2026
 
@@ -75,14 +96,14 @@ The owner asked to "do it all" after reviewing the plan: delivery dates, a fit p
 
 The owner instructed: “Build the five fixes and also add an email signup that only collects addresses.”
 
-- **Email sign-up.** A form in the Stay close band (home, about, lookbook, manifesto) and on `/updates/` posts to `/api/updates/subscribe` (`netlify/functions/updates-subscribe.mjs`, `server/updates/signups.mjs`). It stores the lowercased address, the page and the consent wording in `aha_email_signups`.
+- **Email sign-up.** A form (since October 17: the Stay close band on Home, `/updates/` and the footer of other pages; see Consolidation) posts to `/api/updates/subscribe` (`netlify/functions/updates-subscribe.mjs`, `server/updates/signups.mjs`). It stores the lowercased address, the page and the consent wording in `aha_email_signups`.
   - It sends nothing: no confirmation email, and no email provider is connected.
   - Admin → **Email list** shows the addresses, downloads a CSV and removes an address on request. The overview and the weekly digest show counts only.
   - Analytics get a `generate_lead` / `email_signup` / Meta `Lead` event with the page name, never the address.
   - Sending newsletters, or connecting Resend audiences or another email tool, needs the owner's separate instruction. Every email sent must include an unsubscribe link, as the privacy page says.
   - The migration `20261016140000_email_signups` is byte-identical at both discovery paths.
   - **Resolved (checked October 17, 2026):** a later production deploy applied `20261016140000_email_signups`. `NETLIFY_SITE_ID=275b4115-16bf-42fb-9b36-6bce9bb93608 netlify database status --branch production` lists it as applied, with nothing pending. Sign-ups now store addresses. Still never apply DDL by hand (Netlify's rule); confirm with `database status` after each production deploy.
-- **Storefront.** `/updates/` copy is current, and the privacy page covers sign-ups. Home, shop and lookbook share the collection order in `src/data/collections.ts`, newest drop first; Pet It Be stays last while it is removed from sale. The lookbook hides sets for removed products. The shop has collection jump links, and phones get a quick-add bar on product pages (`initBuyBar` in `src/scripts/cart.ts`).
+- **Storefront.** `/updates/` copy is current, and the privacy page covers sign-ups. Home, shop and lookbook share the collection order in `src/data/collections.ts`, newest drop first; Pet It Be stays last while it is removed from sale. The lookbook hides looks and sets for removed products. The shop has collection jump links, and phones get a quick-add bar on product pages (`initBuyBar` in `src/scripts/cart.ts`).
 
 ## Approved Pet It Be launch — October 16, 2026
 

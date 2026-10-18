@@ -1,13 +1,16 @@
 # After Hours Agenda source of truth
 
+## Consolidation — October 17, 2026
+
+The site has less repetition. The manifesto is part of The story (`/about/#manifesto`), and `/manifesto/` redirects there permanently. FAQ answers are one or two lines that link to the page that owns each topic. Each page has one email sign-up form: the band on Home, the form on `/updates/`, or a compact form in the footer everywhere else except the bag and order pages. The lookbook shows one three-look set per collection. The header's duplicate "Shop the collection" button is gone. The six Mighty Mick's campaign photos showed the chin and were re-cropped to start at the collar. Live state is still proven only by the published deploy and `/release.json`.
+
 ## Collection films — October 17, 2026
 
 Each collection has a short, silent film of high-angle New York night footage (Pexels license) cut with half-second torso shots of the pieces (AI-generated locally from the campaign photos). The films have a 1972 tilt-shift film look and play on the home hero, the lookbook and the collection pages. The photo loads first and stays the main image, and captions say what is real and what is AI-generated. `site-preview/src/data/motion.json` records every source. The Fall 2026 advert is not publishable: most of its city footage belongs to other YouTube creators and its music is commercial (see `AGENTS.md`). Live state is still proven only by the published deploy and `/release.json`.
 
 ## Torso-only campaign photos — October 17, 2026
 
-Every campaign photo now follows the FW26 brief's first rule: torso only, never a face. 39 photos were re-cropped from their originals, and one Yikes wall sign was painted out under the no-readable-text rule; `AGENTS.md` has the details. Live state is still proven only by the published deploy and `/release.json`.
-||||||| parent of 2833815 (Collection films: tilt-shift New York nights cut with half-second garment shots)
+Every campaign photo now follows the FW26 brief's first rule: torso only, never a face. 45 photos were re-cropped from their originals (the six Mighty Mick's photos on a second pass), and one Yikes wall sign was painted out under the no-readable-text rule; `AGENTS.md` has the details. Live state is still proven only by the published deploy and `/release.json`.
 
 ## Customer experience, phase 1 — October 16, 2026
 
