@@ -23,7 +23,7 @@ type Gtag = (...args: unknown[]) => void;
 type TrackingWindow = { gtag?: Gtag; posthog?: { get_distinct_id?: () => unknown; get_session_id?: () => unknown }; __ahaTrackingConsent?: Consent };
 
 const CONSENT_KEY = "aha-cookie-choices-v1";
-const ATTRIBUTION_KEY = "aha-marketing-attribution-v1";
+const ATTRIBUTION_STORAGE = "aha-marketing-attribution-v1";
 const MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"] as const;
 const CLICK_KEYS = ["gclid", "gbraid", "wbraid", "fbclid"] as const;
@@ -71,7 +71,7 @@ function currentAttribution(): StoredAttribution | undefined {
 }
 function readAttribution(): StoredAttribution | undefined {
   try {
-    const value = JSON.parse(localStorage.getItem(ATTRIBUTION_KEY) || "null") as Partial<StoredAttribution> | null;
+    const value = JSON.parse(localStorage.getItem(ATTRIBUTION_STORAGE) || "null") as Partial<StoredAttribution> | null;
     const capturedAt = value?.capturedAt;
     const timestamp = typeof capturedAt === "string" ? Date.parse(capturedAt) : NaN;
     if (!value || typeof value !== "object" || !Number.isFinite(timestamp) || timestamp > Date.now() || Date.now() - timestamp > MAX_AGE) return undefined;
@@ -128,10 +128,10 @@ export function captureAttribution() {
   if (!consent.marketing || gpcEnabled()) { clearAttribution(); return; }
   const value = currentAttribution();
   if (!value) return;
-  try { localStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(value)); } catch { /* Storage is optional. */ }
+  try { localStorage.setItem(ATTRIBUTION_STORAGE, JSON.stringify(value)); } catch { /* Storage is optional. */ }
 }
 
-export function clearAttribution() { try { localStorage.removeItem(ATTRIBUTION_KEY); } catch { /* Storage is optional. */ } }
+export function clearAttribution() { try { localStorage.removeItem(ATTRIBUTION_STORAGE); } catch { /* Storage is optional. */ } }
 
 export function setAttributionConsent(value: Consent) {
   trackingWindow().__ahaTrackingConsent = value;
