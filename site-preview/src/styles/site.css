@@ -258,11 +258,6 @@ select:focus-visible {
   text-decoration-color: var(--accent);
   text-decoration-thickness: 2px;
 }
-.header-cta {
-  min-height: 44px;
-  padding: 9px 18px;
-  font-size: 12px;
-}
 .header-cart{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:44px;padding:.4rem .2rem;font:700 12px var(--mono);text-decoration:none;white-space:nowrap}.header-cart span{display:inline-grid;place-items:center;min-width:1.35rem;height:1.35rem;padding-inline:.22rem;background:var(--ink);color:var(--paper);font-size:.68rem;font-variant-numeric:tabular-nums}
 .mobile-nav {
   display: none;
@@ -513,15 +508,32 @@ select:focus-visible {
   color: var(--muted);
   max-width: 60ch;
 }
-.manifesto-hero {
+.manifesto {
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 24px;
+}
+.manifesto-head {
   display: grid;
   grid-template-columns: 1.6fr 0.4fr;
   gap: 60px;
   align-items: center;
+  padding-bottom: 56px;
 }
-.manifesto-hero img {
+.manifesto-head .label {
+  margin-bottom: 24px;
+}
+.manifesto-head .lede {
+  margin-top: 28px;
+}
+.manifesto-head img {
   width: 100%;
   max-width: 220px;
+  justify-self: end;
+}
+.manifesto .values h3 {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
 }
 .gallery {
   display: grid;
@@ -713,6 +725,11 @@ select:focus-visible {
   line-height: 1.1;
   max-width: 21ch;
 }
+.footer-signup {
+  margin-top: 50px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
 .footer-links {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -738,6 +755,9 @@ select:focus-visible {
 }
 .footer-links a:hover {
   text-decoration: underline;
+}
+.footer-links > div a + a {
+  margin-left: 20px;
 }
 .footer-links p {
   font-size: 14px;
@@ -790,9 +810,6 @@ select:focus-visible {
 @media (max-width: 1100px) {
   .desktop-nav {
     gap: 20px;
-  }
-  .header-cta {
-    display: none;
   }
   .hero {
     gap: 38px;
@@ -977,12 +994,15 @@ select:focus-visible {
   .values p {
     grid-column: 2;
   }
-  .manifesto-hero {
+  .manifesto-head {
     grid-template-columns: 1fr;
     gap: 30px;
+    padding-bottom: 36px;
   }
-  .manifesto-hero img {
+  .manifesto-head img {
     max-width: 130px;
+    justify-self: start;
+    grid-row: 1;
   }
   .about-intro {
     padding-bottom: 50px;
@@ -1016,6 +1036,10 @@ select:focus-visible {
   .footer-top {
     flex-direction: column;
     gap: 30px;
+  }
+  .footer-signup {
+    margin-top: 36px;
+    padding-top: 28px;
   }
   .footer-links {
     grid-template-columns: 1fr 1fr;

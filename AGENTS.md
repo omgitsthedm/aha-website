@@ -14,8 +14,18 @@ This is the current operating contract. It replaces dated launch narratives and 
 
 - The customer-facing business is **After Hours Agenda**. Do not substitute agency/client identities, invented city-origin claims, other businesses' details, or unsupported social channels. There is no TikTok work or account in scope.
 - Preserve the established paper/ink/rose system, Poppins 400/700/900, JetBrains Mono, black-sheep mark, hairline frames, and warm plain clothing-brand voice. Customer copy may not make puns on the brand name, night/time of day, or “agenda.”
-- Shopping images are garment-only; campaign/editorial images remain separate. Campaign imagery is torso-only with no faces and no readable text except a garment’s own graphic (generic environmental signs allowed). Keep accurate AI/archive/provider labels and IPTC AI metadata where supplied.
+- Shopping images are garment-only; campaign/editorial images remain separate. Campaign imagery is torso-only with no faces and no readable text except a garment’s own graphic (generic environmental signs allowed). Keep accurate AI/archive/provider labels and IPTC AI metadata where supplied. Check crops by eye as well as with Apple Vision: Vision finds no face in a chin without eyes (the six Mighty Mick’s photos were re-cropped to the collar on October 17 for that reason), so review a contact sheet of the top of every campaign photo.
 - The collection films use licensed Pexels city footage and locally generated torso garment clips. Keep the photo as the primary image, reduced-motion/data-saver safeguards, pause control, and real/AI caption. Recheck new garment frames for faces. The Fall 2026 advert and its YouTube-sourced footage/commercial music are not publishable.
+
+## Site structure
+
+Set by the owner on October 17, 2026 (“Consolidate: merge Manifesto into The story, trim the FAQ to answers that link out, keep sign-up on Home, Updates and the footer only, make the Lookbook one set per collection, and drop the duplicate Shop link.”):
+
+- The manifesto lives in The story at `/about/#manifesto`. Moved pages are listed in `moved` in `site-preview/src/data/site.ts`; `scripts/finalize.mjs` appends them as 301s to `_redirects` after the Meta feed rewrites that `scripts/feeds.mjs` writes (never replace those), `scripts/serve.mjs` honors them locally, and `scripts/verify-live.mjs` checks both after a release.
+- FAQ answers are one or two sentences (140 characters at most, enforced by the artifact test) that link to the page owning the topic.
+- One email sign-up form per page: the band on Home, the form on `/updates/`, and a compact footer form everywhere else except `/checkout/` and `/order/`. The footer form reports the first path segment as its source, so every product page keeps the byte-identical footer the live renderer and `tests/live-catalog.test.mjs` require.
+- The lookbook shows one three-look set per collection in shop order (`looksFor` in `src/pages/lookbook.astro`); removed products hide their looks, and a set with every look removed hides too.
+- The header has one Shop link, the first navigation item.
 
 ## Catalog, checkout, fulfillment, and tracking safeguards
 

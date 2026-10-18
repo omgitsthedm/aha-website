@@ -6,7 +6,6 @@ import ProductCard from '../../components/ProductCard.astro';
 import ProductImage from '../../components/ProductImage.astro';
 import MotionImage from '../../components/MotionImage.astro';
 import { motionFor } from '../../data/motion';
-import UpdatesBand from '../../components/UpdatesBand.astro';
 import { collectionCopy, collectionSlug, collectionsInOrder } from '../../data/collections';
 export function getStaticPaths() {
   return collectionsInOrder().filter(([, pieces]) => pieces.length).map(([name, pieces]) => ({ params: { collection: collectionSlug(name) }, props: { name, pieces } }));
@@ -49,7 +48,6 @@ const schema = {
     <div class="section-header"><h2 id="campaign-title">In the campaign.</h2><a class="text-link" href="/lookbook/">The full lookbook →</a></div>
     <div class="campaign-grid">{campaign.map(({ shot, product }) => <figure data-product-set={product.slug}><ProductImage image={shot} sizes="(max-width: 760px) 100vw, 33vw" /><a class="look-chip" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} — ${product.color}`}>Shop <span aria-hidden="true">→</span></a><figcaption>{product.color} / {product.campaignSetting}</figcaption></figure>)}</div>
   </section>
-  <UpdatesBand source={`collection-${slug}`} />
   <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
 </Site>
 <script src="../../scripts/retired-cards.ts"></script>

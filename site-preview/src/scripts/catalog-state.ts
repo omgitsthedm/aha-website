@@ -32,6 +32,11 @@ export function hideRetiredCards(retired: string[]) {
   document.querySelectorAll<HTMLElement>("[data-product-set]").forEach((set) => {
     if (removed.has(set.dataset.productSet ?? "")) set.hidden = true;
   });
+  // A lookbook set whose pieces were all removed goes with them.
+  document.querySelectorAll<HTMLElement>("[data-look-set]").forEach((set) => {
+    const looks = [...set.querySelectorAll<HTMLElement>("[data-product-set]")];
+    if (looks.length && looks.every((look) => look.hidden)) set.hidden = true;
+  });
   // "Also in" color links on product pages.
   document.querySelectorAll<HTMLAnchorElement>("a.color-option").forEach((link) => {
     const slug = slugFromHref(link.getAttribute("href"));

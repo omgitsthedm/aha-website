@@ -1,6 +1,6 @@
 import client from "../client.config.json" with { type: "json" };
-import { routes } from "../src/data/site.ts";
-import { readFile, writeFile, readdir } from "node:fs/promises";
+import { moved, routes } from "../src/data/site.ts";
+import { appendFile, readFile, writeFile, readdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
@@ -43,6 +43,11 @@ const csp = contentSecurityPolicy({ approved, scriptHashes });
 await writeFile(
   new URL("_headers", dist),
   `/*\n  Content-Security-Policy: ${csp}\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: ${permissionsPolicy(approved)}\n  Strict-Transport-Security: max-age=31536000\n  Cache-Control: public, max-age=0, must-revalidate\n${approved ? "" : "  X-Robots-Tag: noindex, noarchive\n"}\n/_astro/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/fonts/*\n  Cache-Control: public, max-age=604800\n\n/images/*\n  Cache-Control: public, max-age=86400\n\n/motion/*\n  Cache-Control: public, max-age=86400\n\n/admin/*\n  X-Robots-Tag: none\n  Cache-Control: no-store\n  Referrer-Policy: no-referrer\n\n/order/*\n  X-Robots-Tag: none\n  Cache-Control: no-store\n  Referrer-Policy: no-referrer\n`,
+);
+// Moved pages, with and without the trailing slash, after the feed rewrites writeFeeds() wrote.
+await appendFile(
+  new URL("_redirects", dist),
+  moved.flatMap(([from, to]) => [`${from.replace(/\/$/, "")} ${to} 301`, `${from} ${to} 301`]).join("\n") + "\n",
 );
 await writeFile(
   new URL("robots.txt", dist),
