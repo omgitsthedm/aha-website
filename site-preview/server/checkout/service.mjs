@@ -2,6 +2,7 @@ import { randomBytes, createHash, randomUUID } from "node:crypto";
 import { buildSquareOrder, CURRENCY, normalizeAddress, normalizeItems } from "./catalog.mjs";
 import { CheckoutError } from "./errors.mjs";
 import { normalizeAnalyticsIds } from "../analytics/posthog.mjs";
+import { narrowMarketingContext, normalizeMarketingContext, restrictMarketingContext } from "../analytics/marketing.mjs";
 
 const QUOTE_TTL_MS = 15 * 60 * 1000;
 const PAYMENT_OUTCOME_GRACE_MS = 90 * 1000;
@@ -19,12 +20,15 @@ function paymentOutcomeTimedOut(session, now) {
   return Number.isFinite(started) && started > 0 && started + PAYMENT_OUTCOME_GRACE_MS <= now;
 }
 
-export function createCheckoutService({ repository, square, config, catalog, now = () => Date.now(), createId = randomUUID }) {
+export function createCheckoutService({ repository, square, config, catalog, eligibleProviders = [], now = () => Date.now(), createId = randomUUID }) {
   if (!config.locationId) throw new Error("checkout location is not configured");
-  async function quote({ items: rawItems, shippingAddress, analytics: rawAnalytics }) {
+  async function quote({ items: rawItems, shippingAddress, analytics: rawAnalytics, marketing: rawMarketing }) {
     const items = normalizeItems(rawItems, catalog);
     const address = normalizeAddress(shippingAddress);
-    const analytics = normalizeAnalyticsIds(rawAnalytics);
+    const analytics = normalizeAnalyticsIds(rawAnalytics ?? {
+      distinctId: rawMarketing?.analytics?.posthogDistinctId,
+      sessionId: rawMarketing?.analytics?.posthogSessionId,
+    });
     const checkoutId = createId();
     const checkoutToken = token();
     const orderPayload = buildSquareOrder({ items, address, locationId: config.locationId, referenceId: `AHA-${checkoutId}` });
@@ -39,7 +43,37 @@ export function createCheckoutService({ repository, square, config, catalog, now
     const taxLabel = taxCents ? "Arizona TPT (Peoria 8.1%)" : null;
     const expiresAt = new Date(now() + QUOTE_TTL_MS).toISOString();
     await repository.create({ checkoutId, tokenHash: sha256(checkoutToken), currency: CURRENCY, cart: items, address, orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel, orderIdempotencyKey: `aha-order-${checkoutId}`, expiresAt, analytics });
+    // Never reject a quote if the optional attribution migration has not been
+    // applied yet. The explicit context is normalized before it is persisted.
+    await repository.saveMarketing?.({ checkoutId, context: {
+      ...normalizeMarketingContext(rawMarketing),
+      eligibleProviders: ["google", "meta"].filter((provider) => Array.isArray(eligibleProviders) && eligibleProviders.includes(provider)),
+      paymentConsentConfirmed: false,
+    } });
     return { checkoutId, checkoutToken, expiresAt, currency: CURRENCY, shippingRegion: address.region, lineItems: lineResponse(items), subtotalAmount: subtotalCents, shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel: shippingCents ? "International shipping" : "Free U.S. shipping" };
+  }
+  async function persistNarrowedMarketing(session, derive, { required = false } = {}) {
+    let current = session;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const expected = current?.marketing_json ?? {};
+      const context = derive(expected);
+      try {
+        const saved = repository.compareAndSetMarketing
+          ? await repository.compareAndSetMarketing({ checkoutId: current.checkout_id, expected, context })
+          : await repository.saveMarketing?.({ checkoutId: current.checkout_id, context });
+        if (saved) return saved;
+      } catch {
+        if (!required) return null;
+        throw new CheckoutError("privacy_unavailable", 503);
+      }
+      try { current = await repository.get(current?.checkout_id); } catch {
+        if (required) throw new CheckoutError("privacy_unavailable", 503);
+        return null;
+      }
+      if (!current) break;
+    }
+    if (required) throw new CheckoutError("privacy_unavailable", 503);
+    return null;
   }
   function authorize(session, checkoutToken, { requireFreshQuote = false } = {}) {
     if (!session || !checkoutToken || sha256(checkoutToken) !== session.token_sha256) throw new CheckoutError("checkout_not_found", 404);
@@ -78,16 +112,25 @@ export function createCheckoutService({ repository, square, config, catalog, now
     const publicState = session.state === "unknown" && session.payment_submission_started_at ? (paymentOutcomeTimedOut(session, now()) ? "attention" : "pending") : session.state;
     return { state: publicState, checkoutId: session.checkout_id, orderId: session.square_order_id ?? undefined, paymentId: session.square_payment_id ?? undefined, receiptUrl: safeReceiptUrl(session.square_receipt_url), error: session.last_error_code ?? undefined };
   }
-  async function pay({ checkoutId, checkoutToken, sourceId, idempotencyKey }) {
+  async function pay({ checkoutId, checkoutToken, sourceId, idempotencyKey, marketing: rawMarketing }) {
     if (typeof checkoutId !== "string" || checkoutId.length > 80 || typeof checkoutToken !== "string" || typeof sourceId !== "string" || sourceId.length < 8 || sourceId.length > 512 || !expectedIdempotency(idempotencyKey)) throw new CheckoutError("invalid_request", 400);
-    const existing = authorize(await repository.get(checkoutId), checkoutToken);
-    if (existing.state === "completed") return { state: "completed", checkoutId, orderId: existing.square_order_id, paymentId: existing.square_payment_id, receiptUrl: safeReceiptUrl(existing.square_receipt_url) };
+    let existing = authorize(await repository.get(checkoutId), checkoutToken);
+    // A visitor may opt out between the quote and the payment screen. Persist
+    // only the intersection before the payment call; this optional write can
+    // never interrupt a real charge if the additive migration is still absent.
+    const restricted = await persistNarrowedMarketing(existing, (stored) => restrictMarketingContext(stored, rawMarketing));
+    // This cannot interrupt a payment, but a response that could not persist
+    // its narrowed consent must not trigger after-response tracking.
+    const trackingSuppressed = !restricted;
+    const trackingResult = trackingSuppressed ? { trackingSuppressed: true } : {};
+    if (restricted) existing = restricted;
+    if (existing.state === "completed") return { state: "completed", checkoutId, orderId: existing.square_order_id, paymentId: existing.square_payment_id, receiptUrl: safeReceiptUrl(existing.square_receipt_url), ...trackingResult };
     if (existing.state === "unknown" || existing.state === "processing") return { state: "pending", checkoutId };
     if (new Date(existing.expires_at).getTime() <= now()) throw new CheckoutError("quote_expired", 409);
     const session = await repository.claim({ checkoutId, tokenHash: sha256(checkoutToken), clientIdempotencyKey: idempotencyKey });
     if (!session) {
       const current = authorize(await repository.get(checkoutId), checkoutToken);
-      if (current.state === "completed") return { state: "completed", checkoutId, orderId: current.square_order_id, paymentId: current.square_payment_id, receiptUrl: safeReceiptUrl(current.square_receipt_url) };
+      if (current.state === "completed") return { state: "completed", checkoutId, orderId: current.square_order_id, paymentId: current.square_payment_id, receiptUrl: safeReceiptUrl(current.square_receipt_url), ...trackingResult };
       if (current.state === "processing" || current.state === "unknown") return { state: "pending", checkoutId };
       throw new CheckoutError(current.last_error_code === "payment_failed" ? "payment_failed" : "quote_stale", current.last_error_code === "payment_failed" ? 402 : 409);
     }
@@ -106,7 +149,7 @@ export function createCheckoutService({ repository, square, config, catalog, now
       if (payment?.status !== "COMPLETED" || payment.order_id !== orderId || payment.location_id !== config.locationId || payment.amount_money?.amount !== session.total_cents || payment.amount_money?.currency !== CURRENCY) throw new Error("square_payment_mismatch");
       const receiptUrl = safeReceiptUrl(payment.receipt_url);
       await repository.complete({ checkoutId, orderId, paymentId: payment.id, receiptUrl: receiptUrl ?? null });
-      return { state: "completed", checkoutId, orderId, paymentId: payment.id, receiptUrl };
+      return { state: "completed", checkoutId, orderId, paymentId: payment.id, receiptUrl, ...trackingResult };
     } catch (error) {
       if (!orderId) { await repository.releaseClaim({ checkoutId, code: "order_unavailable" }); throw new CheckoutError("checkout_unavailable", 503); }
       if (error?.status >= 400 && error?.status < 500) { await repository.fail({ checkoutId, code: "payment_failed" }); throw new CheckoutError("payment_failed", 402); }
@@ -114,5 +157,36 @@ export function createCheckoutService({ repository, square, config, catalog, now
       return { state: "pending", checkoutId };
     }
   }
-  return { quote, pay, status };
+  async function privacy({ checkouts, analytics, marketing, gpc }) {
+    if (!Array.isArray(checkouts) || checkouts.length < 1 || checkouts.length > 10 || ![analytics, marketing, gpc].every((value) => typeof value === "boolean")) throw new CheckoutError("invalid_request", 400);
+    const unique = new Map();
+    for (const receipt of checkouts) {
+      if (typeof receipt?.checkoutId !== "string" || receipt.checkoutId.length > 80 || typeof receipt?.checkoutToken !== "string" || receipt.checkoutToken.length < 32 || receipt.checkoutToken.length > 128) throw new CheckoutError("invalid_request", 400);
+      if (unique.has(receipt.checkoutId)) throw new CheckoutError("invalid_request", 400);
+      try { unique.set(receipt.checkoutId, authorize(await repository.get(receipt.checkoutId), receipt.checkoutToken)); } catch (error) {
+        if (!(error instanceof CheckoutError && error.code === "checkout_not_found")) throw error;
+        // A stale receipt cannot block a valid withdrawal.
+      }
+    }
+    let updated = 0;
+    for (const [checkoutId, session] of unique) {
+      const saved = await persistNarrowedMarketing(session, (stored) => narrowMarketingContext(stored, { analytics, marketing, gpc }), { required: true });
+      const context = saved.marketing_json;
+      // Retry the cancellation even when the previous privacy write already
+      // succeeded but its outbox update was interrupted.
+      const disallowed = [
+        ...(!context.analytics?.consent ? ["google"] : []),
+        ...(!context.marketing?.consent || context.marketing?.gpc ? ["meta"] : []),
+      ];
+      if (disallowed.length) await repository.disableOutstandingMarketing?.({ checkoutId, providers: disallowed });
+      updated += 1;
+    }
+    return { accepted: true, updated };
+  }
+  return { quote, pay, status, privacy };
+}
+
+export function publicCheckoutResult(result) {
+  const { trackingSuppressed: _trackingSuppressed, ...publicResult } = result;
+  return publicResult;
 }

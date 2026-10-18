@@ -24,7 +24,8 @@ export async function handleFeeds(request, context, { catalog = currentCatalog }
   if (url.pathname === "/feeds/openai.jsonl.gz") {
     return new Response(gzipFeed(openAiFeedJsonl(products, origin)), { headers: { "content-type": "application/gzip", ...catalogCacheHeaders(["feeds"]) } });
   }
-  return new Response(feedXml(products, origin), { headers: { "content-type": "application/xml; charset=utf-8", ...catalogCacheHeaders(["feeds"]) } });
+  const channel = url.pathname === "/feeds/meta.xml" ? "meta" : "google";
+  return new Response(feedXml(products, origin, channel), { headers: { "content-type": "application/xml; charset=utf-8", ...catalogCacheHeaders(["feeds"]) } });
 }
 
 export default (request, context) => handleFeeds(request, context);

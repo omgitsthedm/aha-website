@@ -1,5 +1,6 @@
 import { recoverSelection, type SelectionVariant } from "./selection";
 import { catalogState, hideRetiredCards } from "./catalog-state";
+import { checkoutMarketingEnvelope, retainCheckoutReceipt, withdrawCheckoutPrivacy } from "./attribution";
 
 const STORAGE_KEY = "aha-cart-v2";
 const PENDING_PAYMENT_KEY = "aha-pending-payment-v1";
@@ -186,15 +187,6 @@ async function requestJson<T>(url: string, init?: RequestInit): Promise<{ respon
   const response = await fetch(url, init);
   const data = await response.json().catch(() => null) as T | null;
   return { response, data };
-}
-// Anonymous PostHog ids link a quote to its session replay; absent when analytics is off.
-function analyticsIds() {
-  const posthog = (window as Window & { posthog?: { get_distinct_id?: () => unknown; get_session_id?: () => unknown } }).posthog;
-  try {
-    const distinctId = posthog?.get_distinct_id?.();
-    const sessionId = posthog?.get_session_id?.();
-    return typeof distinctId === "string" ? { distinctId, sessionId: typeof sessionId === "string" ? sessionId : undefined } : undefined;
-  } catch { return undefined; }
 }
 function fieldValue(form: HTMLFormElement, name: string) { return String(new FormData(form).get(name) || "").trim(); }
 function shippingAddress(form: HTMLFormElement) {
@@ -449,6 +441,8 @@ function initCheckout() {
     if (!quote || quotedFingerprint !== cartFingerprint(lines, form)) { showError("Your bag or address changed. Confirm the updated total before paying."); clearQuote(); return; }
     const summary = quoteSummary();
     if (!summary) { clearQuote(); showError("Confirm a fresh total before paying."); return; }
+    const marketing = await checkoutMarketingEnvelope();
+    if (!quote || quotedFingerprint !== cartFingerprint(lines, form)) { showError("Your bag or address changed. Confirm the updated total before paying."); clearQuote(); return; }
     clearCashAppResume();
     unresolvedPayment = { checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, idempotencyKey: paymentKey, createdAt: Date.now(), summary };
     writePending(unresolvedPayment);
@@ -457,7 +451,7 @@ function initCheckout() {
     let data: { state?: string; orderId?: string; receiptUrl?: string; errorCode?: string } | null;
     try {
       ({ response, data } = await requestJson<{ state?: string; orderId?: string; receiptUrl?: string; errorCode?: string }>("/api/checkout/pay", {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId, idempotencyKey: paymentKey }),
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId, idempotencyKey: paymentKey, marketing }),
       }));
     } catch {
       showMessage("Payment confirmation is taking longer than usual. We’re checking it safely now—please keep this page open.");
@@ -577,10 +571,15 @@ function initCheckout() {
     showMessage("Confirming your total…");
     const requestedFingerprint = cartFingerprint(lines, form);
     try {
-      const { response, data } = await requestJson<Quote>("/api/checkout/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: lines.map(({ variationId, quantity }) => ({ variationId, quantity })), shippingAddress: address, analytics: analyticsIds() }) });
+      const marketing = await checkoutMarketingEnvelope({ requireReceipt: true });
+      const { response, data } = await requestJson<Quote>("/api/checkout/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: lines.map(({ variationId, quantity }) => ({ variationId, quantity })), shippingAddress: address, marketing }) });
       if (!response.ok || !data) { showError("We couldn’t confirm this address. Review it and try again."); return; }
       if (requestedFingerprint !== cartFingerprint(lines, form)) { clearQuote(); showError("Your bag or address changed while the total was loading. Confirm the updated total to continue."); return; }
       quote = data; quotedFingerprint = requestedFingerprint; paymentKey = freshKey();
+      // Only opaque checkout credentials are retained: never contact, address,
+      // cart, or payment data. If storage changes between preflight and quote,
+      // immediately narrow the server context and retain it in memory to retry.
+      if (!retainCheckoutReceipt(quote.checkoutId, quote.checkoutToken)) void withdrawCheckoutPrivacy({ analytics: false, marketing: false });
       setText(summary, "[data-quote-subtotal]", displayAmount(quote.subtotalAmount)); setText(summary, "[data-quote-shipping]", displayAmount(quote.shippingAmount));
       setText(summary, "[data-quote-tax-label]", quote.taxLabel || "Tax"); setText(summary, "[data-quote-tax]", displayAmount(quote.taxAmount)); setText(summary, "[data-quote-total]", displayAmount(quote.totalAmount));
       summary.hidden = false; showMessage(`Total confirmed. ${quote.shippingLabel}`);

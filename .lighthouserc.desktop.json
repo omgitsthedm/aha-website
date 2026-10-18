@@ -4,7 +4,14 @@
       "settings": {
         "onlyCategories": ["performance"],
         "preset": "desktop",
-        "throttlingMethod": "simulate"
+        "throttlingMethod": "simulate",
+        "blockedUrlPatterns": [
+          "*://*.google-analytics.com/*",
+          "*://analytics.google.com/*",
+          "*://www.facebook.com/tr*",
+          "*://us.i.posthog.com/*",
+          "*://eu.i.posthog.com/*"
+        ]
       }
     },
     "assert": {

@@ -1,0 +1,3 @@
+# Public localStorage bucket name, not an authentication credential.
+# Scope this exception to the exact reviewed finding in its original commit.
+e4b12dbbecf3283763bdaf1b56b4c0c91093475d:site-preview/src/scripts/attribution.ts:generic-api-key:26

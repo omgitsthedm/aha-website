@@ -10,11 +10,13 @@ function feedMetadata(product){
  return {googleProductCategory,productType};
 }
 /** Google/Meta feed XML. Live products (published without a deploy) reuse this at runtime. */
-export function feedXml(list,origin){
+export function feedXml(list,origin,channel='google'){
+ if(!['google','meta'].includes(channel))throw new Error('Unsupported shopping feed channel.');
  const items=list.flatMap(product=>product.variants.map(variant=>{
   const {googleProductCategory,productType}=feedMetadata(product);
   const title=`${product.title} — ${product.color} — ${variant.size}`;
-  const link=`${origin}/shop/${product.slug}/?size=${encodeURIComponent(variant.size)}`;
+  // Both Meta shops share this feed; do not mislabel Instagram visits as Facebook.
+  const link=`${origin}/shop/${product.slug}/?size=${encodeURIComponent(variant.size)}&utm_source=${channel}&utm_medium=${channel==='google'?'organic':'organic_social'}&utm_campaign=shopping`;
   return '<item>'+[
    tag('id',variant.id),tag('item_group_id',product.squareItemId),tag('title',title),tag('description',product.description),
    `<g:structured_title>${tag('digital_source_type','trained_algorithmic_media')}${tag('content',title)}</g:structured_title>`,
@@ -66,9 +68,8 @@ export const gzipFeed=(text)=>{const out=gzipSync(Buffer.from(text),{level:9});o
 
 export async function writeFeeds(dist,origin){
  await mkdir(new URL('feeds/',dist),{recursive:true});
- const xml=feedXml(products,origin);
- await writeFile(new URL('feeds/google.xml',dist),xml);
- await writeFile(new URL('feeds/meta.xml',dist),xml);
+ await writeFile(new URL('feeds/google.xml',dist),feedXml(products,origin,'google'));
+ await writeFile(new URL('feeds/meta.xml',dist),feedXml(products,origin,'meta'));
  await writeFile(new URL('feeds/openai.jsonl.gz',dist),gzipFeed(openAiFeedJsonl(products,origin)));
  await writeFile(new URL('_redirects',dist),'/feeds/meta /feeds/meta.xml 200\n/feeds/meta/ /feeds/meta.xml 200\n');
 }

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createCheckoutService } from "../server/checkout/service.mjs";
+import { createCheckoutService, publicCheckoutResult } from "../server/checkout/service.mjs";
 import { CheckoutError } from "../server/checkout/errors.mjs";
 
 const crewM = "R5UCZCGSJMR3Z4HJDVOD3ZIK";
@@ -12,7 +12,11 @@ function fakeRepo() {
   const rows = new Map();
   return {
     rows,
-    async create(record) { const row = { checkout_id: record.checkoutId, token_sha256: record.tokenHash, state: "quoted", currency: record.currency, cart_json: record.cart, shipping_address_json: record.address, order_payload_json: record.orderPayload, subtotal_cents: record.subtotalCents, shipping_cents: record.shippingCents, tax_cents: record.taxCents, total_cents: record.totalCents, tax_label: record.taxLabel, order_idempotency_key: record.orderIdempotencyKey, expires_at: record.expiresAt, square_order_id: null, square_payment_id: null, payment_idempotency_key: null, payment_submission_started_at: null, processing_lease_expires_at: null, last_error_code: null }; rows.set(record.checkoutId, row); return row; },
+    async create(record) { const row = { checkout_id: record.checkoutId, token_sha256: record.tokenHash, state: "quoted", currency: record.currency, cart_json: record.cart, shipping_address_json: record.address, order_payload_json: record.orderPayload, subtotal_cents: record.subtotalCents, shipping_cents: record.shippingCents, tax_cents: record.taxCents, total_cents: record.totalCents, tax_label: record.taxLabel, order_idempotency_key: record.orderIdempotencyKey, expires_at: record.expiresAt, square_order_id: null, square_payment_id: null, payment_idempotency_key: null, payment_submission_started_at: null, processing_lease_expires_at: null, last_error_code: null, marketing_json: {} }; rows.set(record.checkoutId, row); return row; },
+    async updateMarketing({ checkoutId, context }) { const row = rows.get(checkoutId); if (!row) return null; row.marketing_json = context; return row; },
+    async compareAndSetMarketing({ checkoutId, expected, context }) { const row = rows.get(checkoutId); if (!row || JSON.stringify(row.marketing_json) !== JSON.stringify(expected)) return null; row.marketing_json = context; return row; },
+    async saveMarketing({ checkoutId, context }) { return this.updateMarketing({ checkoutId, context }); },
+    async disableOutstandingMarketing({ checkoutId, providers }) { const row = rows.get(checkoutId); row.disabled_marketing_providers = providers; },
     async get(id) { return rows.get(id) ?? null; },
     async cancelUnclaimedRecovery({ checkoutId, tokenHash }) { const row = rows.get(checkoutId); if (!row || row.token_sha256 !== tokenHash || row.state !== "quoted") return null; Object.assign(row, { state: "failed", last_error_code: "payment_not_started", processing_lease_expires_at: null }); return row; },
     async closeExpiredUnpaid({ checkoutId, tokenHash }) { const row = rows.get(checkoutId); if (!row || row.token_sha256 !== tokenHash || !["processing", "unknown"].includes(row.state) || row.payment_submission_started_at || (row.processing_lease_expires_at && Date.parse(row.processing_lease_expires_at) > fixedNow())) return null; Object.assign(row, { state: "failed", last_error_code: "payment_not_started", processing_lease_expires_at: null }); return row; },
@@ -150,4 +154,72 @@ test("status recovers a completed payment without ever replaying the source toke
   const outcome = await ctx.service.status({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken });
   assert.deepEqual(outcome, { state: "completed", checkoutId: quote.checkoutId, orderId: "order-1", paymentId: "payment-recovered", receiptUrl: "https://squareup.com/receipt/recovered", error: undefined });
   assert.equal(ctx.square.calls.createPayment.length, 0);
+});
+
+test("privacy receipts narrow persisted consent and disable pending provider delivery", async () => {
+  const ctx = service();
+  const quote = await ctx.service.quote({
+    items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }),
+    marketing: { analytics: { consent: true, gaClientId: "123.456" }, marketing: { consent: true, gpc: false, meta: { fbp: "fb.1.2" } } },
+  });
+  const row = ctx.repository.rows.get(quote.checkoutId);
+  row.marketing_json.eligibleProviders = ["google", "meta"];
+  assert.deepEqual(await ctx.service.privacy({ checkouts: [{ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken }], analytics: false, marketing: false, gpc: true }), { accepted: true, updated: 1 });
+  assert.equal(row.marketing_json.analytics.consent, false);
+  assert.equal(row.marketing_json.marketing.consent, false);
+  assert.equal(row.marketing_json.marketing.gpc, true);
+  assert.deepEqual(row.disabled_marketing_providers, ["google", "meta"]);
+});
+
+test("privacy never grants tracking and reports a persistence failure", async () => {
+  const ctx = service();
+  const quote = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }) });
+  const row = ctx.repository.rows.get(quote.checkoutId);
+  await ctx.service.privacy({ checkouts: [{ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken }], analytics: true, marketing: true, gpc: false });
+  assert.equal(row.marketing_json.analytics.consent, false);
+  assert.equal(row.marketing_json.marketing.consent, false);
+  ctx.repository.compareAndSetMarketing = async () => null;
+  await assert.rejects(
+    ctx.service.privacy({ checkouts: [{ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken }], analytics: false, marketing: false, gpc: true }),
+    (error) => error instanceof CheckoutError && error.code === "privacy_unavailable",
+  );
+});
+
+test("a stale receipt cannot block a valid privacy withdrawal", async () => {
+  const ctx = service();
+  const quote = await ctx.service.quote({
+    items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }),
+    marketing: { analytics: { consent: true, gaClientId: "123.456" }, marketing: { consent: true, gpc: false } },
+  });
+  assert.deepEqual(await ctx.service.privacy({
+    checkouts: [{ checkoutId: "expired-checkout", checkoutToken: "x".repeat(32) }, { checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken }],
+    analytics: false, marketing: false, gpc: true,
+  }), { accepted: true, updated: 1 });
+  assert.equal(ctx.repository.rows.get(quote.checkoutId).marketing_json.analytics.consent, false);
+});
+
+test("a completed retry with a failed consent write keeps payment success but suppresses tracking", async () => {
+  const ctx = service();
+  const quote = await ctx.service.quote({
+    items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }),
+    marketing: { analytics: { consent: true, gaClientId: "123.456" }, marketing: { consent: true, gpc: false } },
+  });
+  const row = ctx.repository.rows.get(quote.checkoutId);
+  Object.assign(row, { state: "completed", square_order_id: "order-retry", square_payment_id: "payment-retry", marketing_json: { paymentConsentConfirmed: true, analytics: { consent: true, gaClientId: "123.456" }, marketing: { consent: true, gpc: false } } });
+  ctx.repository.compareAndSetMarketing = async () => null;
+  const result = await ctx.service.pay({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: "cnon:card-nonce-ok", idempotencyKey: "client-idempotency-key-0011", marketing: { analytics: { consent: false }, marketing: { consent: false, gpc: true } } });
+  assert.equal(result.state, "completed");
+  assert.equal(result.trackingSuppressed, true);
+  assert.equal(publicCheckoutResult(result).trackingSuppressed, undefined);
+  assert.equal(publicCheckoutResult(result).paymentId, "payment-retry");
+});
+
+test("privacy does not acknowledge a transient receipt lookup failure", async () => {
+  const ctx = service();
+  const quote = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }) });
+  ctx.repository.get = async () => { throw new Error("database unavailable"); };
+  await assert.rejects(
+    ctx.service.privacy({ checkouts: [{ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken }], analytics: false, marketing: false, gpc: true }),
+    /database unavailable/,
+  );
 });
