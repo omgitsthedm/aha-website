@@ -129,6 +129,7 @@ test("checkout: a failed privacy withdrawal is retried after navigation", async 
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
   await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("aha-checkout-marketing-receipts-v1"))).not.toBeNull();
   await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
   await page.getByRole("button", { name: "Analytics only", exact: true }).click();
   await expect.poll(() => privacyBodies.length).toBe(2);
