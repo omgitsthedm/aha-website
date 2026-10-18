@@ -19,18 +19,38 @@ export function createCheckoutRepository(db) {
         ) RETURNING *
       `);
     },
+    async updateMarketing({ checkoutId, context }) {
+      return one(db.sql`
+        UPDATE aha_checkout_sessions
+        SET marketing_json = ${JSON.stringify(context)},
+            updated_at = CASE WHEN state = 'completed' THEN updated_at ELSE now() END
+        WHERE checkout_id = ${checkoutId} RETURNING *
+      `);
+    },
+    async compareAndSetMarketing({ checkoutId, expected, context }) {
+      return one(db.sql`
+        UPDATE aha_checkout_sessions
+        SET marketing_json = ${JSON.stringify(context)},
+            updated_at = CASE WHEN state = 'completed' THEN updated_at ELSE now() END
+        WHERE checkout_id = ${checkoutId} AND marketing_json = ${JSON.stringify(expected ?? {})}::jsonb
+        RETURNING *
+      `);
+    },
     // This is deliberately a second, optional write. Netlify must apply the
     // additive migration before attribution becomes durable; until then a
     // checkout still has to price and pay normally.
     async saveMarketing({ checkoutId, context }) {
-      try {
-        return await one(db.sql`
-          UPDATE aha_checkout_sessions
-          SET marketing_json = ${JSON.stringify(context)},
-              updated_at = CASE WHEN state = 'completed' THEN updated_at ELSE now() END
-          WHERE checkout_id = ${checkoutId} RETURNING *
-        `);
-      } catch { return null; }
+      try { return await this.updateMarketing({ checkoutId, context }); } catch { return null; }
+    },
+    async disableOutstandingMarketing({ checkoutId, providers }) {
+      const allowed = ["google", "meta"].filter((provider) => Array.isArray(providers) && providers.includes(provider));
+      for (const provider of allowed) {
+        await db.sql`
+          UPDATE aha_marketing_purchase_outbox
+          SET state = 'disabled', lease_expires_at = NULL, last_error_code = 'consent_revoked', updated_at = now()
+          WHERE checkout_id = ${checkoutId} AND provider = ${provider} AND state IN ('pending', 'sending')
+        `;
+      }
     },
     async get(checkoutId) { return one(db.sql`SELECT * FROM aha_checkout_sessions WHERE checkout_id = ${checkoutId} LIMIT 1`); },
     async cancelUnclaimedRecovery({ checkoutId, tokenHash }) {

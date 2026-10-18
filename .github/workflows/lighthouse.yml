@@ -16,6 +16,8 @@ permissions:
 # Required lab checks run on this commit's production artifact in installed
 # Google Chrome. Hosted before/after evidence is recorded separately; these are
 # local CI budgets, not CDN or field-CWV measurements. No extra Netlify preview.
+# Both profiles block analytics collection endpoints while loading the real
+# SDKs, preserving their performance cost without recording synthetic visits.
 jobs:
   performance:
     name: Lighthouse (${{ matrix.profile }})

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createGoogleDelivery, createMarketingService, createMetaDelivery, googlePurchaseRequest, metaPurchaseRequest, normalizeMarketingContext, purchasePayload, restrictMarketingContext } from "../server/analytics/marketing.mjs";
+import { createGoogleDelivery, createMarketingService, createMetaDelivery, googlePurchaseRequest, metaPurchaseRequest, normalizeMarketingContext, posthogPurchaseAllowed, purchasePayload, restrictMarketingContext } from "../server/analytics/marketing.mjs";
 
 function session(overrides = {}) {
   return {
@@ -65,6 +65,12 @@ test("payment-time privacy choices can only narrow a quoted marketing context", 
   const gpc = restrictMarketingContext(quote, { analytics: { consent: true }, marketing: { consent: true, gpc: true } });
   assert.equal(gpc.marketing.consent, false);
   assert.equal(gpc.marketing.gpc, true);
+});
+
+test("PostHog purchase capture fails closed when payment-time consent persistence failed", () => {
+  const unconfirmed = session({ marketing_json: { ...session().marketing_json, paymentConsentConfirmed: false } });
+  assert.equal(posthogPurchaseAllowed(unconfirmed), false);
+  assert.equal(posthogPurchaseAllowed(session()), true);
 });
 
 test("server requests contain purchase facts and anonymous identifiers, never checkout contact fields", () => {

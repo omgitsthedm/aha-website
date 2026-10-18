@@ -14,6 +14,13 @@
           "disabled": false
         },
         "throttlingMethod": "simulate",
+        "blockedUrlPatterns": [
+          "*://*.google-analytics.com/*",
+          "*://analytics.google.com/*",
+          "*://www.facebook.com/tr*",
+          "*://us.i.posthog.com/*",
+          "*://eu.i.posthog.com/*"
+        ],
         "throttling": {
           "rttMs": 150,
           "throughputKbps": 1638.4,

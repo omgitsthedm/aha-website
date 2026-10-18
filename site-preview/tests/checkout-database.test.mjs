@@ -6,6 +6,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { createCheckoutRepository } from "../server/checkout/repository.mjs";
 import { createCheckoutService } from "../server/checkout/service.mjs";
 import { createMarketingRepository } from "../server/analytics/marketing-repository.mjs";
+import { narrowMarketingContext, restrictMarketingContext } from "../server/analytics/marketing.mjs";
 
 const migration = new URL("../netlify/database/migrations/20261015160000_custom_checkout/migration.sql", import.meta.url);
 const rootMigration = new URL("../../netlify/database/migrations/20261015160000_custom_checkout/migration.sql", import.meta.url);
@@ -84,6 +85,30 @@ test("an expired delivery worker cannot overwrite a newer marketing lease", asyn
   const [row] = await sql`SELECT state, attempt_count FROM aha_marketing_purchase_outbox WHERE id = ${leased.id}`;
   assert.equal(row.state, "sending");
   assert.equal(row.attempt_count, leased.attempt_count + 1);
+});
+
+test("compare-and-set keeps a footer withdrawal from being restored by a stale pay request", async (t) => {
+  const { repository } = await isolated(t);
+  const saved = record({ checkoutId: "checkout-marketing-race" });
+  await repository.create(saved);
+  const quoted = {
+    paymentConsentConfirmed: false, eligibleProviders: ["google", "meta"],
+    analytics: { consent: true, gaClientId: "123.456", gaSessionId: null },
+    marketing: { consent: true, gpc: false, attribution: {}, meta: {}, userAgent: "Mozilla/5.0" },
+  };
+  await repository.updateMarketing({ checkoutId: saved.checkoutId, context: quoted });
+  const paymentChoice = { analytics: { consent: true }, marketing: { consent: true, gpc: false } };
+  const withdrawal = narrowMarketingContext(quoted, { analytics: false, marketing: false, gpc: true });
+  assert.ok(await repository.compareAndSetMarketing({ checkoutId: saved.checkoutId, expected: quoted, context: withdrawal }));
+  assert.equal(await repository.compareAndSetMarketing({ checkoutId: saved.checkoutId, expected: quoted, context: restrictMarketingContext(quoted, paymentChoice) }), null);
+  const afterWithdrawal = await repository.get(saved.checkoutId);
+  const retry = restrictMarketingContext(afterWithdrawal.marketing_json, paymentChoice);
+  assert.equal(retry.analytics.consent, false);
+  assert.equal(retry.marketing.consent, false);
+  assert.ok(await repository.compareAndSetMarketing({ checkoutId: saved.checkoutId, expected: afterWithdrawal.marketing_json, context: retry }));
+  const final = await repository.get(saved.checkoutId);
+  assert.equal(final.marketing_json.analytics.consent, false);
+  assert.equal(final.marketing_json.marketing.consent, false);
 });
 
 test("Postgres permits one durable payment claim under concurrent checkout submits", async (t) => {

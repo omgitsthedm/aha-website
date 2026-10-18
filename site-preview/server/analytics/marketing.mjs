@@ -102,6 +102,39 @@ export function restrictMarketingContext(stored, paymentTime) {
   };
 }
 
+// Footer choices apply to existing opaque checkout receipts too. They only
+// remove permission and identifiers; they can never enable either provider.
+export function narrowMarketingContext(stored, choice) {
+  const before = normalizeMarketingContext(stored);
+  const current = normalizeMarketingContext({
+    analytics: { consent: choice?.analytics === true },
+    marketing: { consent: choice?.marketing === true, gpc: choice?.gpc === true },
+  });
+  const analytics = before.analytics.consent && current.analytics.consent;
+  const marketing = before.marketing.consent && current.marketing.consent && !before.marketing.gpc && !current.marketing.gpc;
+  return {
+    paymentConsentConfirmed: stored?.paymentConsentConfirmed === true,
+    eligibleProviders: storedProviders(stored),
+    analytics: {
+      consent: analytics,
+      gaClientId: analytics ? before.analytics.gaClientId : null,
+      gaSessionId: analytics ? before.analytics.gaSessionId : null,
+    },
+    marketing: {
+      consent: marketing,
+      gpc: before.marketing.gpc || current.marketing.gpc,
+      attribution: marketing ? before.marketing.attribution : {},
+      meta: marketing ? before.marketing.meta : {},
+      userAgent: marketing ? before.marketing.userAgent : null,
+    },
+  };
+}
+
+export function posthogPurchaseAllowed(session) {
+  return session?.marketing_json?.paymentConsentConfirmed === true
+    && normalizeMarketingContext(session.marketing_json).analytics.consent;
+}
+
 function lines(session) {
   return Array.isArray(session?.cart_json) ? session.cart_json
     .filter((line) => typeof line?.variationId === "string" && Number.isInteger(line?.quantity) && line.quantity > 0 && Number.isSafeInteger(line?.unitAmount) && line.unitAmount >= 0)

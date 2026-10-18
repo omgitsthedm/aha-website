@@ -19,16 +19,21 @@ export type MarketingEnvelope = {
 };
 
 type StoredAttribution = NonNullable<MarketingEnvelope["marketing"]["attribution"]>;
+type CheckoutReceipt = { checkoutId: string; checkoutToken: string; quotedAt: number; analyticsWithdrawn?: true; marketingWithdrawn?: true; gpcWithdrawn?: true; withdrawalPending?: true };
 type Gtag = (...args: unknown[]) => void;
 type TrackingWindow = { gtag?: Gtag; posthog?: { get_distinct_id?: () => unknown; get_session_id?: () => unknown }; __ahaTrackingConsent?: Consent };
 
 const CONSENT_KEY = "aha-cookie-choices-v1";
 const ATTRIBUTION_STORAGE = "aha-marketing-attribution-v1";
+const CHECKOUT_RECEIPTS_STORAGE = "aha-checkout-marketing-receipts-v1";
 const MAX_AGE = 30 * 24 * 60 * 60 * 1000;
+const RECEIPT_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+const MAX_RECEIPTS = 10;
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"] as const;
 const CLICK_KEYS = ["gclid", "gbraid", "wbraid", "fbclid"] as const;
 const SAFE_VALUE = /^[A-Za-z0-9._~-]{1,180}$/;
 const SAFE_UTM_VALUE = /^[A-Za-z0-9._~ -]{1,120}$/;
+let volatileReceipts: CheckoutReceipt[] = [];
 
 function gpcEnabled() { return (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl === true; }
 function trackingWindow() { return window as unknown as TrackingWindow; }
@@ -133,17 +138,137 @@ export function captureAttribution() {
 
 export function clearAttribution() { try { localStorage.removeItem(ATTRIBUTION_STORAGE); } catch { /* Storage is optional. */ } }
 
+function safeReceipt(value: unknown): CheckoutReceipt | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const receipt = value as Partial<CheckoutReceipt>;
+  if (typeof receipt.checkoutId !== "string" || typeof receipt.checkoutToken !== "string" || typeof receipt.quotedAt !== "number") return undefined;
+  if (!SAFE_VALUE.test(receipt.checkoutId) || !SAFE_VALUE.test(receipt.checkoutToken) || receipt.quotedAt > Date.now() || Date.now() - receipt.quotedAt > RECEIPT_MAX_AGE) return undefined;
+  if ([receipt.analyticsWithdrawn, receipt.marketingWithdrawn, receipt.gpcWithdrawn, receipt.withdrawalPending].some((flag) => flag !== undefined && flag !== true)) return undefined;
+  return {
+    checkoutId: receipt.checkoutId, checkoutToken: receipt.checkoutToken, quotedAt: receipt.quotedAt,
+    ...(receipt.analyticsWithdrawn ? { analyticsWithdrawn: true } : {}), ...(receipt.marketingWithdrawn ? { marketingWithdrawn: true } : {}),
+    ...(receipt.gpcWithdrawn ? { gpcWithdrawn: true } : {}), ...(receipt.withdrawalPending ? { withdrawalPending: true } : {}),
+  };
+}
+function checkoutReceipts() {
+  let persisted: CheckoutReceipt[] = [];
+  try {
+    const value = JSON.parse(localStorage.getItem(CHECKOUT_RECEIPTS_STORAGE) || "[]");
+    if (Array.isArray(value)) persisted = value.flatMap((item) => { const receipt = safeReceipt(item); return receipt ? [receipt] : []; });
+  } catch { /* Storage is optional. */ }
+  const receipts = [...persisted, ...volatileReceipts].flatMap((item) => { const receipt = safeReceipt(item); return receipt ? [receipt] : []; });
+  const merged = new Map<string, CheckoutReceipt>();
+  for (const receipt of receipts) {
+    const key = `${receipt.checkoutId}:${receipt.checkoutToken}`;
+    const prior = merged.get(key);
+    merged.set(key, {
+      ...receipt, quotedAt: Math.max(receipt.quotedAt, prior?.quotedAt || 0),
+      ...(receipt.analyticsWithdrawn || prior?.analyticsWithdrawn ? { analyticsWithdrawn: true } : {}),
+      ...(receipt.marketingWithdrawn || prior?.marketingWithdrawn ? { marketingWithdrawn: true } : {}),
+      ...(receipt.gpcWithdrawn || prior?.gpcWithdrawn ? { gpcWithdrawn: true } : {}),
+      ...(receipt.withdrawalPending || prior?.withdrawalPending ? { withdrawalPending: true } : {}),
+    });
+  }
+  return [...merged.values()].sort((a, b) => a.quotedAt - b.quotedAt).slice(-MAX_RECEIPTS);
+}
+function writeCheckoutReceipts(receipts: CheckoutReceipt[]) {
+  try { localStorage.setItem(CHECKOUT_RECEIPTS_STORAGE, JSON.stringify(receipts.slice(-MAX_RECEIPTS))); return true; } catch { return false; }
+}
+// A quoted checkout may create a server-side delivery context. Do not make one
+// unless its opaque receipt can be retained for a later privacy withdrawal.
+export function canPersistCheckoutReceipt() {
+  const probe = "aha-checkout-receipt-probe";
+  try { localStorage.setItem(probe, "1"); localStorage.removeItem(probe); return true; } catch { return false; }
+}
+export function retainCheckoutReceipt(checkoutId: string, checkoutToken: string) {
+  const receipt = safeReceipt({ checkoutId, checkoutToken, quotedAt: Date.now() });
+  if (!receipt) return false;
+  const receipts = [...checkoutReceipts().filter((item) => item.checkoutId !== receipt.checkoutId), receipt].slice(-MAX_RECEIPTS);
+  volatileReceipts = receipts;
+  return writeCheckoutReceipts(receipts);
+}
+
+function queueCheckoutPrivacyWithdrawal(value: Pick<Consent, "analytics" | "marketing">) {
+  const gpc = gpcEnabled();
+  if (value.analytics && value.marketing && !gpc) return true;
+  const receipts = checkoutReceipts();
+  if (!receipts.length) return true;
+  const next = receipts.map((receipt) => {
+    const analyticsWithdrawn = Boolean(receipt.analyticsWithdrawn || !value.analytics);
+    const marketingWithdrawn = Boolean(receipt.marketingWithdrawn || !value.marketing || gpc);
+    const gpcWithdrawn = Boolean(receipt.gpcWithdrawn || gpc);
+    const newlyNarrowed = analyticsWithdrawn !== Boolean(receipt.analyticsWithdrawn)
+      || marketingWithdrawn !== Boolean(receipt.marketingWithdrawn) || gpcWithdrawn !== Boolean(receipt.gpcWithdrawn);
+    return {
+      ...receipt,
+      ...(analyticsWithdrawn ? { analyticsWithdrawn: true as const } : {}), ...(marketingWithdrawn ? { marketingWithdrawn: true as const } : {}),
+      ...(gpcWithdrawn ? { gpcWithdrawn: true as const } : {}), ...(receipt.withdrawalPending || newlyNarrowed ? { withdrawalPending: true as const } : {}),
+    };
+  });
+  volatileReceipts = next;
+  return writeCheckoutReceipts(next);
+}
+async function flushCheckoutPrivacyWithdrawal() {
+  const receipts = checkoutReceipts().filter((receipt) => receipt.withdrawalPending);
+  if (!receipts.length) return true;
+  const groups = new Map<string, CheckoutReceipt[]>();
+  for (const receipt of receipts) {
+    const analytics = !receipt.analyticsWithdrawn;
+    const marketing = !receipt.marketingWithdrawn;
+    const gpc = Boolean(receipt.gpcWithdrawn);
+    const key = `${analytics}:${marketing}:${gpc}`;
+    groups.set(key, [...(groups.get(key) || []), receipt]);
+  }
+  let delivered = true;
+  for (const [key, group] of groups) {
+    const [analytics, marketing, gpc] = key.split(":").map((value) => value === "true");
+    try {
+      const response = await fetch("/api/checkout/privacy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({ checkouts: group.map(({ checkoutId, checkoutToken }) => ({ checkoutId, checkoutToken })), analytics, marketing, gpc }),
+      });
+      if (!response.ok) { delivered = false; continue; }
+      const deliveredKeys = new Set(group.map((receipt) => `${receipt.checkoutId}:${receipt.checkoutToken}`));
+      const sent = new Map(group.map((receipt) => [`${receipt.checkoutId}:${receipt.checkoutToken}`, receipt]));
+      const current = checkoutReceipts().map((receipt) => {
+        const prior = sent.get(`${receipt.checkoutId}:${receipt.checkoutToken}`);
+        if (!prior || !deliveredKeys.has(`${receipt.checkoutId}:${receipt.checkoutToken}`)) return receipt;
+        const narrowedSinceRequest = Boolean(receipt.analyticsWithdrawn && !prior.analyticsWithdrawn)
+          || Boolean(receipt.marketingWithdrawn && !prior.marketingWithdrawn) || Boolean(receipt.gpcWithdrawn && !prior.gpcWithdrawn);
+        return narrowedSinceRequest ? receipt : { ...receipt, withdrawalPending: undefined };
+      });
+      volatileReceipts = current;
+      writeCheckoutReceipts(current);
+    } catch { delivered = false; }
+  }
+  return delivered;
+}
+export async function withdrawCheckoutPrivacy(value: Pick<Consent, "analytics" | "marketing">) {
+  queueCheckoutPrivacyWithdrawal(value);
+  return flushCheckoutPrivacyWithdrawal();
+}
+export function retryCheckoutPrivacyWithdrawal() {
+  const current = storedConsent();
+  queueCheckoutPrivacyWithdrawal(current);
+  void flushCheckoutPrivacyWithdrawal();
+}
+
 export function setAttributionConsent(value: Consent) {
   trackingWindow().__ahaTrackingConsent = value;
   if (!value.marketing || gpcEnabled()) clearAttribution();
 }
 
-export async function checkoutMarketingEnvelope(): Promise<MarketingEnvelope> {
+export async function checkoutMarketingEnvelope(options: { requireReceipt?: boolean } = {}): Promise<MarketingEnvelope> {
   const consent = storedConsent();
   const gpc = gpcEnabled();
-  const marketingAllowed = consent.marketing && !gpc;
+  const receiptRequired = options.requireReceipt && (consent.analytics || (consent.marketing && !gpc));
+  const receiptAvailable = !receiptRequired || canPersistCheckoutReceipt();
+  const analyticsAllowed = consent.analytics && receiptAvailable;
+  const marketingAllowed = consent.marketing && !gpc && receiptAvailable;
   if (marketingAllowed) captureAttribution(); else clearAttribution();
-  const analytics = { consent: consent.analytics, ...(consent.analytics ? { ...posthogIds(), ...await googleIds() } : {}) };
+  const analytics = { consent: analyticsAllowed, ...(analyticsAllowed ? { ...posthogIds(), ...await googleIds() } : {}) };
   const marketing: MarketingEnvelope["marketing"] = { consent: marketingAllowed, gpc };
   if (marketingAllowed) {
     const attribution = readAttribution();

@@ -1,4 +1,4 @@
-import { captureAttribution, cleanTrackingParameters, clearAttribution, setAttributionConsent } from "./attribution";
+import { captureAttribution, cleanTrackingParameters, clearAttribution, retryCheckoutPrivacyWithdrawal, setAttributionConsent, withdrawCheckoutPrivacy } from "./attribution";
 export {};
 type Consent={analytics:boolean;marketing:boolean;at:number};
 type Queue=((...args:unknown[])=>void)&{queue?:unknown[][];loaded?:boolean;version?:string;callMethod?:(...args:unknown[])=>void;push?:Queue};
@@ -14,6 +14,8 @@ try{const raw=JSON.parse(localStorage.getItem(key)||'null');if(raw&&typeof raw.a
 // A new visitor receives the storefront default without writing a synthetic consent click.
 consent ??= {analytics:true,marketing:!gpc,at:Date.now()};
 setAttributionConsent(consent);
+retryCheckoutPrivacyWithdrawal();
+window.addEventListener("online", retryCheckoutPrivacyWithdrawal);
 // Consent decides whether a vendor request can exist. Meta parsing stays off
 // the page thread; GA uses its supported main-thread SDK after the same idle gate.
 function insert(src:string,worker:boolean){const script=document.createElement('script');script.type=worker?'text/partytown':'text/javascript';script.async=true;script.src=src;document.head.append(script);}
@@ -117,25 +119,26 @@ function clearCookies(){for(const entry of document.cookie.split(';')){const nam
 if(banner)banner.hidden=true;
 // A page prerendered on hover counts only once the visitor actually opens it.
 if((document as Document&{prerendering?:boolean}).prerendering)document.addEventListener('prerenderingchange',()=>activate(consent),{once:true});else activate(consent);
-document.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button=>button.addEventListener('click',()=>{
+document.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button=>button.addEventListener('click',async()=>{
  const value={analytics:button.dataset.consent!=='essential',marketing:button.dataset.consent==='all'&&!gpc,at:Date.now()};
  const previous=consent;
+ consent=value;
  setAttributionConsent(value);
  let persisted=true;
  try{localStorage.setItem(key,JSON.stringify(value));}catch{persisted=false;}
  if(banner)banner.hidden=true;
+ if(!value.marketing&&previous.marketing)window.fbq?.('consent','revoke');
+ if(!value.analytics&&previous.analytics){window.gtag?.('consent','update',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});window.posthog?.opt_out_capturing?.();clearPostHogStorage();}
+ if(!value.analytics||!value.marketing){clearCookies();clearAttribution();}
+ const withdrawal=withdrawCheckoutPrivacy(value);
  if(persisted){
-  window.fbq?.('consent','revoke');
-  window.gtag?.('consent','update',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
-  if(!value.analytics){window.posthog?.opt_out_capturing?.();clearPostHogStorage();}
-  clearCookies();clearAttribution();
+  // Give a same-origin response a brief chance to clear the pending marker;
+  // keepalive plus the retained receipt covers a slower or offline response.
+  await Promise.race([withdrawal,new Promise<void>(resolve=>window.setTimeout(resolve,250))]);
   location.reload();
   return;
  }
  // Storage can be blocked. Honor the selection for this document without inventing a saved choice.
- consent=value;
- if(!value.marketing&&previous.marketing)window.fbq?.('consent','revoke');
- if(!value.analytics&&previous.analytics){window.gtag?.('consent','update',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});window.posthog?.opt_out_capturing?.();clearPostHogStorage();clearCookies();clearAttribution();}
  if(value.analytics&&!previous.analytics)activate({analytics:true,marketing:false,at:value.at});
  if(value.marketing&&!previous.marketing)activate({analytics:false,marketing:true,at:value.at});
 }));

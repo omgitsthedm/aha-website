@@ -92,6 +92,52 @@ test("checkout: server quote then card payment never sends client money", async 
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain("opaque-square-token");
 });
 
+test("checkout: privacy choices retain and narrow the quoted server context across later choices", async ({ page }) => {
+  const privacyBodies: Record<string, unknown>[] = [];
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: false, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } }) }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }));
+  await page.route("**/api/checkout/privacy", async (route) => {
+    privacyBodies.push(route.request().postDataJSON() as Record<string, unknown>);
+    await route.fulfill({ contentType: "application/json", body: JSON.stringify({ accepted: true, updated: 1 }) });
+  });
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("aha-checkout-marketing-receipts-v1"))).not.toBeNull();
+  await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
+  await page.getByRole("button", { name: "Analytics only", exact: true }).click();
+  await expect.poll(() => privacyBodies.length).toBe(1);
+  expect(privacyBodies[0]).toEqual({ checkouts: [{ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token" }], analytics: true, marketing: false, gpc: false });
+  await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
+  await page.getByRole("button", { name: "Essential only", exact: true }).click();
+  await expect.poll(() => privacyBodies.length).toBe(2);
+  expect(privacyBodies[1]).toEqual({ checkouts: [{ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token" }], analytics: false, marketing: false, gpc: false });
+  expect(JSON.stringify(privacyBodies)).not.toMatch(/Avery|Tester|avery@example\.com|1 N Central Ave|Phoenix/);
+});
+
+test("checkout: a failed privacy withdrawal is retried after navigation", async ({ page }) => {
+  const privacyBodies: Record<string, unknown>[] = [];
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: false, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } }) }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }));
+  await page.route("**/api/checkout/privacy", async (route) => {
+    privacyBodies.push(route.request().postDataJSON() as Record<string, unknown>);
+    if (privacyBodies.length === 1) await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ error: "unavailable" }) });
+    else await route.fulfill({ contentType: "application/json", body: JSON.stringify({ accepted: true, updated: 1 }) });
+  });
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
+  await page.getByRole("button", { name: "Analytics only", exact: true }).click();
+  await expect.poll(() => privacyBodies.length).toBe(2);
+  expect(privacyBodies).toEqual([
+    { checkouts: [{ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token" }], analytics: true, marketing: false, gpc: false },
+    { checkouts: [{ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token" }], analytics: true, marketing: false, gpc: false },
+  ]);
+});
+
 test("checkout: rejects tampered or future saved attribution", async ({ page }) => {
   const quoteBodies: Record<string, unknown>[] = [];
   await mockSquare(page);
@@ -121,8 +167,9 @@ test("checkout: keeps only allowed campaign values and drops them after a market
   expect(JSON.stringify(first)).not.toMatch(/private%40example|do-not-keep|email|token/);
 
   await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
+  const reload = page.waitForNavigation({ waitUntil: "domcontentloaded" });
   await page.getByRole("button", { name: "Analytics only", exact: true }).click();
-  await page.waitForLoadState("domcontentloaded");
+  await reload;
   await page.getByLabel("First name").fill("Avery");
   await page.getByLabel("Last name").fill("Tester");
   await page.getByLabel("Email").fill("avery@example.com");
@@ -138,14 +185,17 @@ test("checkout: keeps only allowed campaign values and drops them after a market
 
 test("checkout: payment uses the latest privacy choice even when a prior quote allowed marketing", async ({ page }) => {
   const paymentBodies: Record<string, unknown>[] = [];
+  const quoteBodies: Record<string, unknown>[] = [];
   await page.addInitScript(() => Object.defineProperty(Storage.prototype, "setItem", { configurable: true, value: () => { throw new DOMException("Storage blocked"); } }));
   await mockSquare(page);
   await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } }) }));
-  await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }));
+  await page.route("**/api/checkout/quote", async (route) => { quoteBodies.push(route.request().postDataJSON() as Record<string, unknown>); await route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }); });
   await page.route("**/api/checkout/pay", async (route) => { paymentBodies.push(route.request().postDataJSON() as Record<string, unknown>); await route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "completed", orderId: "AHA-consent-1002" }) }); });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1&utm_source=google&gclid=google-click_2");
   await fillAddress(page);
   await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect.poll(() => quoteBodies.length).toBe(1);
+  expect(quoteBodies[0]!.marketing).toEqual({ analytics: { consent: false }, marketing: { consent: false, gpc: false } });
   await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
   await page.getByRole("button", { name: "Analytics only", exact: true }).click();
   await page.getByRole("button", { name: "Pay securely" }).click();

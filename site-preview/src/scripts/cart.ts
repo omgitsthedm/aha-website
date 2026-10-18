@@ -1,6 +1,6 @@
 import { recoverSelection, type SelectionVariant } from "./selection";
 import { catalogState, hideRetiredCards } from "./catalog-state";
-import { checkoutMarketingEnvelope } from "./attribution";
+import { checkoutMarketingEnvelope, retainCheckoutReceipt, withdrawCheckoutPrivacy } from "./attribution";
 
 const STORAGE_KEY = "aha-cart-v2";
 const PENDING_PAYMENT_KEY = "aha-pending-payment-v1";
@@ -571,11 +571,15 @@ function initCheckout() {
     showMessage("Confirming your total…");
     const requestedFingerprint = cartFingerprint(lines, form);
     try {
-      const marketing = await checkoutMarketingEnvelope();
+      const marketing = await checkoutMarketingEnvelope({ requireReceipt: true });
       const { response, data } = await requestJson<Quote>("/api/checkout/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: lines.map(({ variationId, quantity }) => ({ variationId, quantity })), shippingAddress: address, marketing }) });
       if (!response.ok || !data) { showError("We couldn’t confirm this address. Review it and try again."); return; }
       if (requestedFingerprint !== cartFingerprint(lines, form)) { clearQuote(); showError("Your bag or address changed while the total was loading. Confirm the updated total to continue."); return; }
       quote = data; quotedFingerprint = requestedFingerprint; paymentKey = freshKey();
+      // Only opaque checkout credentials are retained: never contact, address,
+      // cart, or payment data. If storage changes between preflight and quote,
+      // immediately narrow the server context and retain it in memory to retry.
+      if (!retainCheckoutReceipt(quote.checkoutId, quote.checkoutToken)) void withdrawCheckoutPrivacy({ analytics: false, marketing: false });
       setText(summary, "[data-quote-subtotal]", displayAmount(quote.subtotalAmount)); setText(summary, "[data-quote-shipping]", displayAmount(quote.shippingAmount));
       setText(summary, "[data-quote-tax-label]", quote.taxLabel || "Tax"); setText(summary, "[data-quote-tax]", displayAmount(quote.taxAmount)); setText(summary, "[data-quote-total]", displayAmount(quote.totalAmount));
       summary.hidden = false; showMessage(`Total confirmed. ${quote.shippingLabel}`);
