@@ -1,5 +1,5 @@
 function json(value) { return typeof value === "string" ? JSON.parse(value) : value; }
-function row(value) { return value ? { ...value, cart_json: json(value.cart_json), shipping_address_json: json(value.shipping_address_json), order_payload_json: json(value.order_payload_json) } : null; }
+function row(value) { return value ? { ...value, cart_json: json(value.cart_json), shipping_address_json: json(value.shipping_address_json), order_payload_json: json(value.order_payload_json), ...(value.marketing_json === undefined ? {} : { marketing_json: json(value.marketing_json) }) } : null; }
 
 export function createCheckoutRepository(db) {
   async function one(query) { return row((await query)[0]); }
@@ -18,6 +18,39 @@ export function createCheckoutRepository(db) {
           ${record.analytics?.distinctId ?? null}, ${record.analytics?.sessionId ?? null}
         ) RETURNING *
       `);
+    },
+    async updateMarketing({ checkoutId, context }) {
+      return one(db.sql`
+        UPDATE aha_checkout_sessions
+        SET marketing_json = ${JSON.stringify(context)},
+            updated_at = CASE WHEN state = 'completed' THEN updated_at ELSE now() END
+        WHERE checkout_id = ${checkoutId} RETURNING *
+      `);
+    },
+    async compareAndSetMarketing({ checkoutId, expected, context }) {
+      return one(db.sql`
+        UPDATE aha_checkout_sessions
+        SET marketing_json = ${JSON.stringify(context)},
+            updated_at = CASE WHEN state = 'completed' THEN updated_at ELSE now() END
+        WHERE checkout_id = ${checkoutId} AND marketing_json = ${JSON.stringify(expected ?? {})}::jsonb
+        RETURNING *
+      `);
+    },
+    // This is deliberately a second, optional write. Netlify must apply the
+    // additive migration before attribution becomes durable; until then a
+    // checkout still has to price and pay normally.
+    async saveMarketing({ checkoutId, context }) {
+      try { return await this.updateMarketing({ checkoutId, context }); } catch { return null; }
+    },
+    async disableOutstandingMarketing({ checkoutId, providers }) {
+      const allowed = ["google", "meta"].filter((provider) => Array.isArray(providers) && providers.includes(provider));
+      for (const provider of allowed) {
+        await db.sql`
+          UPDATE aha_marketing_purchase_outbox
+          SET state = 'disabled', lease_expires_at = NULL, last_error_code = 'consent_revoked', updated_at = now()
+          WHERE checkout_id = ${checkoutId} AND provider = ${provider} AND state IN ('pending', 'sending')
+        `;
+      }
     },
     async get(checkoutId) { return one(db.sql`SELECT * FROM aha_checkout_sessions WHERE checkout_id = ${checkoutId} LIMIT 1`); },
     async cancelUnclaimedRecovery({ checkoutId, tokenHash }) {

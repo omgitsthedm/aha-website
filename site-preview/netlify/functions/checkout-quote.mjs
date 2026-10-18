@@ -5,6 +5,12 @@ import { jsonBody, noStore } from "../../server/checkout/http.mjs";
 import { afterResponse, checkoutProperties, createPostHogCapture, posthogConfig } from "../../server/analytics/posthog.mjs";
 import { currentCatalog } from "../../server/catalog/current.mjs";
 
+function posthogIds(body) {
+  if (body?.analytics) return body.analytics;
+  const analytics = body?.marketing?.analytics;
+  return analytics?.consent === true ? { distinctId: analytics.posthogDistinctId, sessionId: analytics.posthogSessionId } : undefined;
+}
+
 export default async function checkoutQuote(request, context) {
   if (!requireProductionRequest(request, context) || request.method !== "POST") return new Response(null, { status: 404 });
   if (!allowedOrigin(request)) return errorResponse(new CheckoutError("origin_rejected", 403));
@@ -14,9 +20,12 @@ export default async function checkoutQuote(request, context) {
     const runtime = createCheckoutRuntime({ database: getDatabase(), env: Netlify.env, catalog: saleAllowList });
     if (!checkoutReady(runtime.config)) return errorResponse(new CheckoutError("checkout_unavailable", 503));
     const body = await jsonBody(request);
-    const quote = await runtime.service.quote({ items: body?.items, shippingAddress: body?.shippingAddress, analytics: body?.analytics });
+    const marketing = body?.marketing && typeof body.marketing === "object"
+      ? { ...body.marketing, marketing: { ...(body.marketing.marketing ?? {}), userAgent: request.headers.get("user-agent") } }
+      : body?.marketing;
+    const quote = await runtime.service.quote({ items: body?.items, shippingAddress: body?.shippingAddress, analytics: body?.analytics, marketing });
     // Analytics never delays or fails a quote.
-    await afterResponse(context, createPostHogCapture(posthogConfig(Netlify.env))("checkout_quoted", body?.analytics, checkoutProperties({ totalCents: quote.totalAmount, items: quote.lineItems })));
+    await afterResponse(context, createPostHogCapture(posthogConfig(Netlify.env))("checkout_quoted", posthogIds(body), checkoutProperties({ totalCents: quote.totalAmount, items: quote.lineItems })));
     return noStore(quote);
   } catch (error) { return errorResponse(error); }
 }

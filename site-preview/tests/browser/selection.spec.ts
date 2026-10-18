@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import products from "../../src/data/products.json" with { type: "json" };
 
 test("cart: new collection colors and sizes coexist with Yikes through a checkout reload", async ({ page }) => {

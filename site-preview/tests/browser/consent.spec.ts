@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './fixtures';
 
 const production = process.env.AHA_PRODUCTION_BUILD === 'approved';
 const trackers = /(?:https:\/\/www\.googletagmanager\.com\/|\/api\/partytown\/meta-pixel\/bootstrap(?:\?|$))/;
@@ -114,13 +114,15 @@ test('saved Analytics only queues product events, strips unrelated query data, a
   test.skip(!production, 'Production-only integrations stay disabled in preview.');
   await saveChoice(page,{analytics:true,marketing:false});
   const requested = await capture(page);
-  await page.goto('/shop/yikes-crewneck/?email=private%40example.com&utm_source=test');
+  await page.goto('/shop/yikes-crewneck/?email=private%40example.com&utm_source=test&utm_term=private%40example.com&gclid=safe-google-click');
   await expect.poll(()=>requested.length).toBe(1);
   expect(requested[0]).toContain('G-S092LRTVRM');
   const queue = await page.evaluate(()=>window.__ahaTrackingEvents?.ga||[]);
   const config = queue.find(v=>v[0]==='config')?.[2] as {page_location:string};
   expect(config.page_location).toContain('utm_source=test');
   expect(config.page_location).not.toContain('email=');
+  expect(config.page_location).not.toContain('utm_term=');
+  expect(config.page_location).not.toContain('gclid=');
   expect(queue.some(v=>v[0]==='event'&&v[1]==='view_item')).toBe(true);
   await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
   await page.getByRole('button',{name:'Essential only',exact:true}).click();
@@ -132,7 +134,7 @@ test('saved Analytics only queues product events, strips unrelated query data, a
 test('the default marketing setting queues only explicit product and quoted-checkout events; it never fabricates a purchase', async ({page}) => {
   test.skip(!production, 'Production-only integrations stay disabled in preview.');
   const requested = await capture(page);
-  await page.route('**/api/checkout/quote',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({checkoutId:'consent-quote',checkoutToken:'safe-token',expiresAt:'2030-01-01T00:00:00.000Z',currency:'USD',lineItems:[{variationId:'R5UCZCGSJMR3Z4HJDVOD3ZIK',quantity:1,unitAmount:5200,totalAmount:5200}],subtotalAmount:5200,shippingAmount:0,taxAmount:421,totalAmount:5621,shippingLabel:'Free domestic shipping'})}));
+  await page.route('**/api/checkout/quote',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({checkoutId:'consent-quote',checkoutToken:'safe-token',expiresAt:'2030-01-01T00:00:00.000Z',currency:'USD',lineItems:[{variationId:'WFAIFUKSQXCUDRHPTMAWO2UM',quantity:1,unitAmount:5500,totalAmount:5500}],subtotalAmount:5500,shippingAmount:0,taxAmount:446,totalAmount:5946,shippingLabel:'Free domestic shipping'})}));
   await page.route('**/api/checkout/config',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({appId:'public-app',locationId:'location',countryCode:'US',currencyCode:'USD',methods:{card:false,applePay:false,googlePay:false,afterpay:false,cashAppPay:false}})}));
   await page.goto('/shop/yikes-cropped-hoodie/');
   await expect.poll(()=>requested.length).toBe(2);
@@ -152,6 +154,7 @@ test('the default marketing setting queues only explicit product and quoted-chec
   const after = await page.evaluate(()=>({meta:window.__ahaTrackingEvents?.meta,ga:window.__ahaTrackingEvents?.ga}));
   expect(after.meta?.filter(v=>v[1]==='InitiateCheckout')).toHaveLength(1);
   expect(after.ga?.filter(v=>v[1]==='begin_checkout')).toHaveLength(1);
+  expect(after.ga?.find(v=>v[0]==='event'&&v[1]==='begin_checkout')?.[2]).toMatchObject({currency:'USD',value:55,items:[{item_id:'WFAIFUKSQXCUDRHPTMAWO2UM',price:55,quantity:1}]});
   expect(JSON.stringify(after)).not.toContain('Purchase');
 });
 
