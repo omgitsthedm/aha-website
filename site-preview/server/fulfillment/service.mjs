@@ -151,6 +151,30 @@ function providerOrderId(response) {
   return value === undefined || value === null ? null : String(value);
 }
 
+// Square also sends completed, custom-amount POS receipts to this webhook.
+// Only that narrow non-shipping shape is irrelevant to fulfillment. A known
+// catalog line, storefront reference, existing fulfillment or malformed order
+// must still go through the normal fail-closed validation below.
+function isCompletedCustomReceipt(payment, order, locationId) {
+  return payment?.status === "COMPLETED" && order?.state === "COMPLETED"
+    && payment.order_id === order.id && payment.location_id === locationId && order.location_id === locationId
+    && payment.amount_money?.currency === "USD" && order.total_money?.currency === "USD"
+    && Number.isSafeInteger(payment.amount_money?.amount) && payment.amount_money.amount === order.total_money.amount
+    && !order.reference_id
+    && (order.fulfillments === undefined || (Array.isArray(order.fulfillments) && order.fulfillments.length === 0))
+    && Array.isArray(order.line_items) && order.line_items.length > 0
+    && order.line_items.every((line) => !line.catalog_object_id);
+}
+
+// GET /Order is the documented source for the store-system ID, Apliiq ID,
+// status and shipment notices. Use one uniquely matched record for all four;
+// never join it to an unverified first row from a second response.
+function matchingProviderOrders(record, providerOrders) {
+  return Array.isArray(providerOrders)
+    ? providerOrders.filter((item) => String(item.StoreSystemOrderId ?? "") === String(record.square_order_id))
+    : [];
+}
+
 function safeProviderError(error) {
   if (Number.isInteger(error?.status)) return `apliiq_http_${error.status}`;
   return "apliiq_ambiguous";
@@ -244,6 +268,10 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     if (!payment?.order_id) return { outcome: "ignored", code: "payment_order_missing" };
     if (deadline && deadlineRemaining(deadline) < 1_000) return { outcome: "deferred", retryable: true };
     const order = await square.getOrder(payment.order_id, { timeoutMs: deadline ? deadlineRemaining(deadline) : 8_000 });
+    if (isCompletedCustomReceipt(payment, order, config.locationId)) {
+      const existing = await repository.getOrder(order.id);
+      if (!existing || existing.state === "ignored") return { outcome: "ignored", code: "non_shipping_receipt" };
+    }
     let validated;
     try {
       validated = validatePaidSquareOrder({ payment, order, locationId: config.locationId, startAt: config.startAt, catalog });
@@ -279,9 +307,12 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
   }
 
   async function reconcileProvider(record, providerOrders, deadline) {
-    const matching = Array.isArray(providerOrders)
-      ? providerOrders.find((item) => String(item.StoreSystemOrderId ?? "") === String(record.square_order_id))
-      : null;
+    const matches = matchingProviderOrders(record, providerOrders);
+    if (matches.length > 1) {
+      await repository.setProviderState({ squareOrderId: record.square_order_id, providerStatus: "id_mismatch", state: "attention", lastErrorCode: "provider_join_ambiguous" });
+      return { outcome: "attention" };
+    }
+    const matching = matches[0];
     if (!matching) return { outcome: "not_found" };
     const providerId = providerOrderId(matching);
     if (!providerId) return { outcome: "not_found" };
@@ -292,15 +323,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     if (["submitting", "uncertain", "submitted_accepted"].includes(record.state)) {
       await repository.markSubmission({ squareOrderId: record.square_order_id, state: "submitted_reconciled", apliiqOrderId: providerId, providerStatus: String(matching.Status ?? "unknown") });
     }
-    const timeoutMs = deadline ? deadlineRemaining(deadline) : 8_000;
-    if (timeoutMs < 1_000) return { outcome: "deferred" };
-    const detail = await apliiq.getOrder(providerId, { timeoutMs });
-    const providerOrder = Array.isArray(detail) ? detail[0] : detail;
-    if (String(providerOrder?.StoreSystemOrderId ?? "") !== String(record.square_order_id) || providerOrderId(providerOrder) !== providerId) {
-      await repository.setProviderState({ squareOrderId: record.square_order_id, providerStatus: "id_mismatch", state: "attention", lastErrorCode: "provider_join_mismatch" });
-      return { outcome: "attention" };
-    }
-    return applyProviderOrder(record, providerOrder, undefined, deadline);
+    return applyProviderOrder(record, matching, undefined, deadline);
   }
 
   async function runScheduled() {
@@ -399,7 +422,12 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     const expectedBySku = items.reduce((sum, item) => ({ ...sum, [item.sku]: (sum[item.sku] ?? 0) + item.quantity }), {});
     const complete = Object.keys(expectedBySku).length > 0 && Object.entries(expectedBySku).every(([sku, quantity]) => (quantities[sku] ?? 0) >= quantity);
     const notices = (providerOrder?.SN ?? []).filter((notice) => typeof notice?.TrackingNumber === "string" && notice.TrackingNumber.trim());
-    if (!notices.length) return { outcome: "pending" };
+    if (!notices.length) {
+      if (["submitting", "uncertain", "submitted_processed", "submitted_accepted", "submitted_reconciled"].includes(record.state)) {
+        await repository.setProviderState({ squareOrderId, providerStatus: providerState || "unknown", state: "submitted_reconciled" });
+      }
+      return { outcome: "pending" };
+    }
     const latest = notices.at(-1);
     const trackingNumber = typeof latest.TrackingNumber === "string" ? latest.TrackingNumber : null;
     const carrier = typeof latest.Carrier === "string" && !latest.Carrier.startsWith("http") ? latest.Carrier : (typeof latest.Service === "string" ? latest.Service : null);
@@ -452,8 +480,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     // a verified provider record before accepting it as a Square order id.
     let record = await repository.getOrder(String(externalOrderId));
     const providerOrders = await apliiq.listOrders();
-    let matching = record && Array.isArray(providerOrders)
-      ? providerOrders.find((item) => String(item.StoreSystemOrderId ?? "") === String(record.square_order_id)) : null;
+    let matching = record ? matchingProviderOrders(record, providerOrders)[0] : null;
     if (!record) {
       matching = Array.isArray(providerOrders)
         ? providerOrders.find((item) => providerOrderId(item) === String(externalOrderId)) : null;
@@ -463,19 +490,17 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     }
     if (!record) return { outcome: "ignored", code: "unknown_store_order" };
     if (!matching) return { outcome: "ignored", code: "provider_order_not_found" };
+    if (matchingProviderOrders(record, providerOrders).length !== 1) {
+      await repository.setProviderState({ squareOrderId: record.square_order_id, providerStatus: "id_mismatch", state: "attention", lastErrorCode: "provider_join_ambiguous" });
+      return { outcome: "attention" };
+    }
     const providerId = providerOrderId(matching);
     if (!providerId) return { outcome: "ignored", code: "provider_order_not_found" };
     if (record.apliiq_order_id && record.apliiq_order_id !== providerId) {
       await repository.setProviderState({ squareOrderId: record.square_order_id, providerStatus: "id_mismatch", state: "attention", lastErrorCode: "provider_id_mismatch" });
       return { outcome: "attention" };
     }
-    const detail = await apliiq.getOrder(providerId);
-    const providerOrder = Array.isArray(detail) ? detail[0] : detail;
-    if (String(providerOrder?.StoreSystemOrderId ?? "") !== String(record.square_order_id) || providerOrderId(providerOrder) !== providerId) {
-      await repository.setProviderState({ squareOrderId: record.square_order_id, providerStatus: "id_mismatch", state: "attention", lastErrorCode: "provider_join_mismatch" });
-      return { outcome: "attention" };
-    }
-    const result = await applyProviderOrder(record, providerOrder, callbackStatus);
+    const result = await applyProviderOrder(record, matching, callbackStatus);
     return result;
   }
 
