@@ -1,5 +1,5 @@
 function json(value) { return typeof value === "string" ? JSON.parse(value) : value; }
-function row(value) { return value ? { ...value, cart_json: json(value.cart_json), shipping_address_json: json(value.shipping_address_json), order_payload_json: json(value.order_payload_json) } : null; }
+function row(value) { return value ? { ...value, cart_json: json(value.cart_json), shipping_address_json: json(value.shipping_address_json), order_payload_json: json(value.order_payload_json), ...(value.marketing_json === undefined ? {} : { marketing_json: json(value.marketing_json) }) } : null; }
 
 export function createCheckoutRepository(db) {
   async function one(query) { return row((await query)[0]); }
@@ -18,6 +18,19 @@ export function createCheckoutRepository(db) {
           ${record.analytics?.distinctId ?? null}, ${record.analytics?.sessionId ?? null}
         ) RETURNING *
       `);
+    },
+    // This is deliberately a second, optional write. Netlify must apply the
+    // additive migration before attribution becomes durable; until then a
+    // checkout still has to price and pay normally.
+    async saveMarketing({ checkoutId, context }) {
+      try {
+        return await one(db.sql`
+          UPDATE aha_checkout_sessions
+          SET marketing_json = ${JSON.stringify(context)},
+              updated_at = CASE WHEN state = 'completed' THEN updated_at ELSE now() END
+          WHERE checkout_id = ${checkoutId} RETURNING *
+        `);
+      } catch { return null; }
     },
     async get(checkoutId) { return one(db.sql`SELECT * FROM aha_checkout_sessions WHERE checkout_id = ${checkoutId} LIMIT 1`); },
     async cancelUnclaimedRecovery({ checkoutId, tokenHash }) {

@@ -3,6 +3,7 @@ import { sha256, verifySquareSignature } from "../../server/fulfillment/crypto.m
 import { createRuntime, AHA_HOST, requireProductionRequest } from "../../server/fulfillment/runtime.mjs";
 import { dispatchAfterResponse } from "../../server/notifications/dispatch-after.mjs";
 import { currentCatalog } from "../../server/catalog/current.mjs";
+import { createMarketingRuntime } from "../../server/analytics/marketing-runtime.mjs";
 
 const PATH = "/api/webhooks/square";
 const json = (value, status = 200) => Response.json(value, { status, headers: { "cache-control": "no-store" } });
@@ -33,6 +34,10 @@ export default async function squareWebhook(request, context) {
     // an event whose provider retry budget expires during an outage.
     await runtime.repository.ingestSquareEvent({ eventId, paymentId, eventCreatedAt: event.created_at ?? null });
     const result = await runtime.service.processSquareEvent(eventId);
+    // The signed event can complete a payment after a client connection drops.
+    // Re-read only the matching completed checkout before queuing tracking.
+    const marketing = createMarketingRuntime({ database: getDatabase(), env: Netlify.env });
+    await dispatchAfterResponse({ service: { dispatch: () => marketing.queueSquarePayment(paymentId).then(() => marketing.service.dispatch(2)) } }, context);
     if (result.outcome !== "duplicate") await dispatchAfterResponse(runtime.notifications, context);
     return json({ accepted: true, outcome: result.outcome }, 202);
   } catch {

@@ -3,11 +3,13 @@ import { allowedOrigin, checkoutReady, createCheckoutRuntime, requireProductionR
 import { CheckoutError, errorResponse } from "../../server/checkout/errors.mjs";
 import { jsonBody, noStore } from "../../server/checkout/http.mjs";
 import { afterResponse, checkoutProperties, createPostHogCapture, posthogConfig } from "../../server/analytics/posthog.mjs";
+import { createMarketingRuntime } from "../../server/analytics/marketing-runtime.mjs";
+import { normalizeMarketingContext } from "../../server/analytics/marketing.mjs";
 
 async function capturePurchase(runtime, checkoutId) {
   const capture = createPostHogCapture(posthogConfig(Netlify.env));
   const session = await runtime.repository.get(checkoutId);
-  if (!session?.posthog_distinct_id) return false;
+  if (!session?.posthog_distinct_id || !normalizeMarketingContext(session.marketing_json).analytics.consent) return false;
   return capture("purchase_completed", { distinctId: session.posthog_distinct_id, sessionId: session.posthog_session_id }, checkoutProperties({ totalCents: session.total_cents, items: session.cart_json }));
 }
 
@@ -21,6 +23,12 @@ export default async function checkoutPay(request, context) {
     const result = await runtime.service.pay(body ?? {});
     // A server-confirmed purchase is attributed to the visitor's replay session; it never affects payment.
     if (result.state === "completed" && typeof result.checkoutId === "string") await afterResponse(context, capturePurchase(runtime, result.checkoutId));
+    // The provider outbox uses the same confirmed Square order id as the
+    // browser Purchase event. A tracking failure is isolated after payment.
+    if (result.state === "completed" && typeof result.checkoutId === "string") {
+      const marketing = createMarketingRuntime({ database: getDatabase(), env: Netlify.env });
+      await afterResponse(context, marketing.queueCheckout(result.checkoutId).then(() => marketing.service.dispatch(2)));
+    }
     return noStore(result, result.state === "pending" ? 202 : 200);
   } catch (error) { return errorResponse(error); }
 }

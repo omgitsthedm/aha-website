@@ -5,6 +5,7 @@ import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { createCheckoutRepository } from "../server/checkout/repository.mjs";
 import { createCheckoutService } from "../server/checkout/service.mjs";
+import { createMarketingRepository } from "../server/analytics/marketing-repository.mjs";
 
 const migration = new URL("../netlify/database/migrations/20261015160000_custom_checkout/migration.sql", import.meta.url);
 const rootMigration = new URL("../../netlify/database/migrations/20261015160000_custom_checkout/migration.sql", import.meta.url);
@@ -12,6 +13,8 @@ const recoveryMigration = new URL("../netlify/database/migrations/20261015180000
 const rootRecoveryMigration = new URL("../../netlify/database/migrations/20261015180000_checkout_payment_recovery/migration.sql", import.meta.url);
 const analyticsMigration = new URL("../netlify/database/migrations/20261016100000_checkout_analytics_link/migration.sql", import.meta.url);
 const rootAnalyticsMigration = new URL("../../netlify/database/migrations/20261016100000_checkout_analytics_link/migration.sql", import.meta.url);
+const marketingMigration = new URL("../netlify/database/migrations/20261018120000_marketing_purchase_outbox/migration.sql", import.meta.url);
+const rootMarketingMigration = new URL("../../netlify/database/migrations/20261018120000_marketing_purchase_outbox/migration.sql", import.meta.url);
 const tokenHash = (value) => createHash("sha256").update(value).digest("hex");
 
 async function isolated(t) {
@@ -19,8 +22,17 @@ async function isolated(t) {
   await database.exec(await readFile(migration, "utf8"));
   await database.exec(await readFile(recoveryMigration, "utf8"));
   await database.exec(await readFile(analyticsMigration, "utf8"));
+  await database.exec(await readFile(marketingMigration, "utf8"));
   const sql = async (strings, ...parameters) => (await database.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows;
-  return { database, repository: createCheckoutRepository({ sql }) };
+  return { database, sql, repository: createCheckoutRepository({ sql }), marketing: createMarketingRepository({ sql }) };
+}
+async function isolatedBeforeMarketing(t) {
+  const database = new PGlite(); t.after(() => database.close());
+  await database.exec(await readFile(migration, "utf8"));
+  await database.exec(await readFile(recoveryMigration, "utf8"));
+  await database.exec(await readFile(analyticsMigration, "utf8"));
+  const sql = async (strings, ...parameters) => (await database.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows;
+  return { repository: createCheckoutRepository({ sql }) };
 }
 function record({ checkoutId = "checkout-db-1", token = "test-token", expiresAt = "2030-01-01T00:00:00.000Z" } = {}) {
   return { checkoutId, tokenHash: tokenHash(token), currency: "USD", cart: [{ variationId: "R5UCZCGSJMR3Z4HJDVOD3ZIK", quantity: 1, unitAmount: 5200, totalAmount: 5200 }], address: { firstName: "A", lastName: "B", addressLine1: "1 Main", city: "New York", region: "NY", postalCode: "10001", country: "US", email: "a@example.com" }, orderPayload: { location_id: "TEST_LOCATION", line_items: [] }, subtotalCents: 5200, shippingCents: 0, taxCents: 0, totalCents: 5200, taxLabel: null, orderIdempotencyKey: `order-${checkoutId}`, expiresAt };
@@ -30,6 +42,48 @@ test("checkout migration remains identical at repository and Netlify discovery p
   assert.equal(await readFile(migration, "utf8"), await readFile(rootMigration, "utf8"));
   assert.equal(await readFile(recoveryMigration, "utf8"), await readFile(rootRecoveryMigration, "utf8"));
   assert.equal(await readFile(analyticsMigration, "utf8"), await readFile(rootAnalyticsMigration, "utf8"));
+  assert.equal(await readFile(marketingMigration, "utf8"), await readFile(rootMarketingMigration, "utf8"));
+});
+
+test("a not-yet-applied marketing migration never blocks a checkout record", async (t) => {
+  const { repository } = await isolatedBeforeMarketing(t);
+  const saved = record({ checkoutId: "checkout-before-marketing" });
+  await repository.create(saved);
+  assert.equal(await repository.saveMarketing({ checkoutId: saved.checkoutId, context: { paymentConsentConfirmed: false } }), null);
+  assert.equal((await repository.get(saved.checkoutId)).checkout_id, saved.checkoutId);
+});
+
+test("future checkout attribution and purchase outbox are durable and dedupe by provider plus Square order", async (t) => {
+  const { repository, marketing, sql } = await isolated(t);
+  const saved = record({ checkoutId: "checkout-marketing" });
+  await repository.create(saved);
+  await repository.saveMarketing({ checkoutId: saved.checkoutId, context: { analytics: { consent: true, gaClientId: "123.456" }, marketing: { consent: true, gpc: false, meta: {} } } });
+  await repository.complete({ checkoutId: saved.checkoutId, orderId: "square-marketing", paymentId: "payment-marketing" });
+  const checkout = await marketing.getCompletedCheckout(saved.checkoutId);
+  assert.equal(checkout.marketing_json.analytics.gaClientId, "123.456");
+  await marketing.enqueue({ provider: "google", squareOrderId: "square-marketing", checkoutId: saved.checkoutId, payload: { orderId: "square-marketing" } });
+  await marketing.enqueue({ provider: "google", squareOrderId: "square-marketing", checkoutId: saved.checkoutId, payload: { orderId: "changed-but-ignored" } });
+  const claimed = await marketing.claim(8);
+  assert.equal(claimed.length, 1);
+  assert.equal(claimed[0].payload_json.orderId, "square-marketing");
+  await marketing.retryOrAttention({ id: claimed[0].id, code: "google_http_503", retryAfterMinutes: 1 });
+  assert.equal((await marketing.claim(8)).length, 0);
+  await sql`UPDATE aha_marketing_purchase_outbox SET state = 'sending', lease_expires_at = now() - interval '1 second', next_attempt_at = now() - interval '1 second', attempt_count = 1 WHERE id = ${claimed[0].id}`;
+  assert.equal((await marketing.claim(8)).length, 1);
+});
+
+test("an expired delivery worker cannot overwrite a newer marketing lease", async (t) => {
+  const { repository, marketing, sql } = await isolated(t);
+  const saved = record({ checkoutId: "checkout-marketing-fence" });
+  await repository.create(saved);
+  await repository.complete({ checkoutId: saved.checkoutId, orderId: "square-fence", paymentId: "payment-fence" });
+  await marketing.enqueue({ provider: "google", squareOrderId: "square-fence", checkoutId: saved.checkoutId, payload: { orderId: "square-fence" } });
+  const [leased] = await marketing.claim(1);
+  await sql`UPDATE aha_marketing_purchase_outbox SET attempt_count = ${leased.attempt_count + 1}, lease_expires_at = now() + interval '90 seconds' WHERE id = ${leased.id}`;
+  assert.equal(await marketing.markSent({ id: leased.id, attemptCount: leased.attempt_count }), null);
+  const [row] = await sql`SELECT state, attempt_count FROM aha_marketing_purchase_outbox WHERE id = ${leased.id}`;
+  assert.equal(row.state, "sending");
+  assert.equal(row.attempt_count, leased.attempt_count + 1);
 });
 
 test("Postgres permits one durable payment claim under concurrent checkout submits", async (t) => {

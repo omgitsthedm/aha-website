@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import { collectionsInOrder } from "../../src/data/collections";
 
 test.beforeEach(async ({ page }) => {

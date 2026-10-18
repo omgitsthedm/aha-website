@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
 const quote = {
   checkoutId: "checkout_test_1",
@@ -55,6 +55,14 @@ test("checkout: server quote then card payment never sends client money", async 
     await route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "completed", orderId: "AHA-1001", paymentId: "payment_test" }) });
   });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  // Production activation installs its own gtag queue during navigation. Replace it
+  // after activation so the quote exercises the GA identifier callback path.
+  await page.evaluate(() => {
+    (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag = (...args) => {
+      const callback = args[3];
+      if (args[0] === "get" && typeof callback === "function") callback(args[2] === "session_id" ? 123456 : "12345.678");
+    };
+  });
   await fillAddress(page);
   await page.getByRole("button", { name: "Confirm total" }).click();
   await expect(page.locator("[data-quote-total]")).toHaveText("$56.21");
@@ -71,17 +79,79 @@ test("checkout: server quote then card payment never sends client money", async 
   await expect(page.locator("[data-cart-empty]")).toBeHidden();
   await expect(page.locator("[data-cart-subtotal]")).toBeHidden();
   expect(await page.evaluate(() => document.activeElement?.matches("[data-checkout-message]"))).toBe(true);
-  // With analytics on (production default), the quote may carry anonymous PostHog ids, depending on
-  // whether PostHog loaded before the click. Those ids are allowed; nothing else, and never money.
+  // The quote carries only a consent-gated, anonymous marketing envelope; never contact data or money.
   expect(quoteBodies).toHaveLength(1);
-  const { analytics, ...quoteBody } = quoteBodies[0] as Record<string, unknown>;
+  const { marketing, ...quoteBody } = quoteBodies[0] as Record<string, unknown>;
   expect(quoteBody).toEqual({ items: [{ variationId: "R5UCZCGSJMR3Z4HJDVOD3ZIK", quantity: 1 }], shippingAddress: { firstName: "Avery", lastName: "Tester", email: "avery@example.com", addressLine1: "1 N Central Ave", city: "Phoenix", region: "AZ", postalCode: "85004", country: "US" } });
-  if (analytics !== undefined) expect(Object.keys(analytics as object).every((key) => key === "distinctId" || key === "sessionId")).toBe(true);
+  expect(marketing).toMatchObject({ analytics: { consent: true, gaClientId: "12345.678", gaSessionId: "123456" }, marketing: { consent: true, gpc: false } });
+  expect(JSON.stringify(marketing)).not.toMatch(/Avery|Tester|avery@example\.com|1 N Central Ave|Phoenix/);
   expect(paymentBodies).toHaveLength(1);
   expect(paymentBodies[0]).toMatchObject({ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token", sourceId: "opaque-square-token" });
   expect(paymentBodies[0]).not.toHaveProperty("totalAmount");
   expect(paymentBodies[0]).not.toHaveProperty("price");
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain("opaque-square-token");
+});
+
+test("checkout: rejects tampered or future saved attribution", async ({ page }) => {
+  const quoteBodies: Record<string, unknown>[] = [];
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: false, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } }) }));
+  await page.route("**/api/checkout/quote", async (route) => { quoteBodies.push(route.request().postDataJSON() as Record<string, unknown>); await route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }); });
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await page.evaluate(() => localStorage.setItem("aha-marketing-attribution-v1", JSON.stringify({ utm: { utm_source: "private@example.com" }, gclid: "unsafe@email", landingPath: "/checkout/?token=private", capturedAt: "2999-01-01T00:00:00.000Z" })));
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect.poll(() => quoteBodies.length).toBe(1);
+  expect((quoteBodies[0]!.marketing as { marketing: { attribution?: unknown } }).marketing.attribution).toBeUndefined();
+});
+
+test("checkout: keeps only allowed campaign values and drops them after a marketing opt-out", async ({ page }) => {
+  const quoteBodies: Record<string, unknown>[] = [];
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: false, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } }) }));
+  await page.route("**/api/checkout/quote", async (route) => { quoteBodies.push(route.request().postDataJSON() as Record<string, unknown>); await route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }); });
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1&utm_source=google&utm_campaign=fall-2026&gclid=google-click_1&fbclid=meta-click_1&email=private%40example.com&token=do-not-keep");
+  await page.evaluate(() => { document.cookie = "_fbp=fb.1.123.abc_1; path=/"; document.cookie = "_fbc=fb.1.123.meta_1; path=/"; });
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect.poll(() => quoteBodies.length).toBe(1);
+  const first = quoteBodies[0]!.marketing as { marketing: { attribution?: Record<string, unknown>; meta?: Record<string, unknown> } };
+  expect(first.marketing.attribution).toMatchObject({ utm: { utm_source: "google", utm_campaign: "fall-2026" }, gclid: "google-click_1", fbclid: "meta-click_1", landingPath: "/checkout/" });
+  expect(first.marketing.meta).toEqual({ fbp: "fb.1.123.abc_1", fbc: "fb.1.123.meta_1" });
+  expect(JSON.stringify(first)).not.toMatch(/private%40example|do-not-keep|email|token/);
+
+  await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
+  await page.getByRole("button", { name: "Analytics only", exact: true }).click();
+  await page.waitForLoadState("domcontentloaded");
+  await page.getByLabel("First name").fill("Avery");
+  await page.getByLabel("Last name").fill("Tester");
+  await page.getByLabel("Email").fill("avery@example.com");
+  await page.getByLabel("Address").fill("1 N Central Ave");
+  await page.getByLabel("City").fill("Phoenix");
+  await page.getByLabel("State / province").fill("AZ");
+  await page.getByLabel("Postal code").fill("85004");
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect.poll(() => quoteBodies.length).toBe(2);
+  expect((quoteBodies[1]!.marketing as { marketing: unknown }).marketing).toEqual({ consent: false, gpc: false });
+  expect(await page.evaluate(() => localStorage.getItem("aha-marketing-attribution-v1"))).toBeNull();
+});
+
+test("checkout: payment uses the latest privacy choice even when a prior quote allowed marketing", async ({ page }) => {
+  const paymentBodies: Record<string, unknown>[] = [];
+  await page.addInitScript(() => Object.defineProperty(Storage.prototype, "setItem", { configurable: true, value: () => { throw new DOMException("Storage blocked"); } }));
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } }) }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }));
+  await page.route("**/api/checkout/pay", async (route) => { paymentBodies.push(route.request().postDataJSON() as Record<string, unknown>); await route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "completed", orderId: "AHA-consent-1002" }) }); });
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1&utm_source=google&gclid=google-click_2");
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
+  await page.getByRole("button", { name: "Analytics only", exact: true }).click();
+  await page.getByRole("button", { name: "Pay securely" }).click();
+  await expect.poll(() => paymentBodies.length).toBe(1);
+  expect(paymentBodies[0]!.marketing).toMatchObject({ analytics: { consent: true }, marketing: { consent: false, gpc: false } });
+  expect(JSON.stringify(paymentBodies[0]!.marketing)).not.toContain("google-click_2");
 });
 
 test("checkout: ambiguous payment is recovered through status without a second charge", async ({ page }) => {

@@ -2,6 +2,7 @@ import { randomBytes, createHash, randomUUID } from "node:crypto";
 import { buildSquareOrder, CURRENCY, normalizeAddress, normalizeItems } from "./catalog.mjs";
 import { CheckoutError } from "./errors.mjs";
 import { normalizeAnalyticsIds } from "../analytics/posthog.mjs";
+import { normalizeMarketingContext, restrictMarketingContext } from "../analytics/marketing.mjs";
 
 const QUOTE_TTL_MS = 15 * 60 * 1000;
 const PAYMENT_OUTCOME_GRACE_MS = 90 * 1000;
@@ -19,12 +20,15 @@ function paymentOutcomeTimedOut(session, now) {
   return Number.isFinite(started) && started > 0 && started + PAYMENT_OUTCOME_GRACE_MS <= now;
 }
 
-export function createCheckoutService({ repository, square, config, catalog, now = () => Date.now(), createId = randomUUID }) {
+export function createCheckoutService({ repository, square, config, catalog, eligibleProviders = [], now = () => Date.now(), createId = randomUUID }) {
   if (!config.locationId) throw new Error("checkout location is not configured");
-  async function quote({ items: rawItems, shippingAddress, analytics: rawAnalytics }) {
+  async function quote({ items: rawItems, shippingAddress, analytics: rawAnalytics, marketing: rawMarketing }) {
     const items = normalizeItems(rawItems, catalog);
     const address = normalizeAddress(shippingAddress);
-    const analytics = normalizeAnalyticsIds(rawAnalytics);
+    const analytics = normalizeAnalyticsIds(rawAnalytics ?? {
+      distinctId: rawMarketing?.analytics?.posthogDistinctId,
+      sessionId: rawMarketing?.analytics?.posthogSessionId,
+    });
     const checkoutId = createId();
     const checkoutToken = token();
     const orderPayload = buildSquareOrder({ items, address, locationId: config.locationId, referenceId: `AHA-${checkoutId}` });
@@ -39,6 +43,13 @@ export function createCheckoutService({ repository, square, config, catalog, now
     const taxLabel = taxCents ? "Arizona TPT (Peoria 8.1%)" : null;
     const expiresAt = new Date(now() + QUOTE_TTL_MS).toISOString();
     await repository.create({ checkoutId, tokenHash: sha256(checkoutToken), currency: CURRENCY, cart: items, address, orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel, orderIdempotencyKey: `aha-order-${checkoutId}`, expiresAt, analytics });
+    // Never reject a quote if the optional attribution migration has not been
+    // applied yet. The explicit context is normalized before it is persisted.
+    await repository.saveMarketing?.({ checkoutId, context: {
+      ...normalizeMarketingContext(rawMarketing),
+      eligibleProviders: ["google", "meta"].filter((provider) => Array.isArray(eligibleProviders) && eligibleProviders.includes(provider)),
+      paymentConsentConfirmed: false,
+    } });
     return { checkoutId, checkoutToken, expiresAt, currency: CURRENCY, shippingRegion: address.region, lineItems: lineResponse(items), subtotalAmount: subtotalCents, shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel: shippingCents ? "International shipping" : "Free U.S. shipping" };
   }
   function authorize(session, checkoutToken, { requireFreshQuote = false } = {}) {
@@ -78,9 +89,14 @@ export function createCheckoutService({ repository, square, config, catalog, now
     const publicState = session.state === "unknown" && session.payment_submission_started_at ? (paymentOutcomeTimedOut(session, now()) ? "attention" : "pending") : session.state;
     return { state: publicState, checkoutId: session.checkout_id, orderId: session.square_order_id ?? undefined, paymentId: session.square_payment_id ?? undefined, receiptUrl: safeReceiptUrl(session.square_receipt_url), error: session.last_error_code ?? undefined };
   }
-  async function pay({ checkoutId, checkoutToken, sourceId, idempotencyKey }) {
+  async function pay({ checkoutId, checkoutToken, sourceId, idempotencyKey, marketing: rawMarketing }) {
     if (typeof checkoutId !== "string" || checkoutId.length > 80 || typeof checkoutToken !== "string" || typeof sourceId !== "string" || sourceId.length < 8 || sourceId.length > 512 || !expectedIdempotency(idempotencyKey)) throw new CheckoutError("invalid_request", 400);
-    const existing = authorize(await repository.get(checkoutId), checkoutToken);
+    let existing = authorize(await repository.get(checkoutId), checkoutToken);
+    // A visitor may opt out between the quote and the payment screen. Persist
+    // only the intersection before the payment call; this optional write can
+    // never interrupt a real charge if the additive migration is still absent.
+    const restricted = await repository.saveMarketing?.({ checkoutId, context: restrictMarketingContext(existing.marketing_json, rawMarketing) });
+    if (restricted) existing = restricted;
     if (existing.state === "completed") return { state: "completed", checkoutId, orderId: existing.square_order_id, paymentId: existing.square_payment_id, receiptUrl: safeReceiptUrl(existing.square_receipt_url) };
     if (existing.state === "unknown" || existing.state === "processing") return { state: "pending", checkoutId };
     if (new Date(existing.expires_at).getTime() <= now()) throw new CheckoutError("quote_expired", 409);
