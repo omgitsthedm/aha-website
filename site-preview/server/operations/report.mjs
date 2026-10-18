@@ -57,7 +57,7 @@ export async function orderProblems(db, now = Date.now()) {
   const rows = await db.sql`
     SELECT square_order_id, state, provider_status, apliiq_order_id, last_error_code, created_at
     FROM aha_fulfillment_orders
-    WHERE state <> 'shipped' OR last_error_code IS NOT NULL
+    WHERE state <> 'ignored' AND (state <> 'shipped' OR last_error_code IS NOT NULL)
     ORDER BY created_at DESC
     LIMIT 200`;
   const problems = [];

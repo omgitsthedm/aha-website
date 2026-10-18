@@ -55,22 +55,115 @@ function memoryRepository() {
     },
     async claimForSubmission(id) { const row = rows.get(id); if (!row || row.state !== "queued") return null; row.state = "submitting"; return row; },
     async releaseSubmissionClaim(id) { const row = rows.get(id); if (!row || row.state !== "submitting") return null; row.state = "queued"; return row; },
-    async markSubmission({ squareOrderId, state, apliiqOrderId, providerStatus }) { const row = rows.get(squareOrderId); Object.assign(row, { state, apliiq_order_id: apliiqOrderId, provider_status: providerStatus }); return row; },
+    async markSubmission({ squareOrderId, state, apliiqOrderId, providerStatus, lastErrorCode = null }) { const row = rows.get(squareOrderId); Object.assign(row, { state, apliiq_order_id: apliiqOrderId, provider_status: providerStatus, last_error_code: lastErrorCode }); return row; },
     async markUncertain({ squareOrderId, code }) { const row = rows.get(squareOrderId); Object.assign(row, { state: "uncertain", last_error_code: code }); return row; },
     async getOrder(id) { return rows.get(id) ?? null; },
     async listQueued() { return [...rows.values()].filter((row) => row.state === "queued"); },
-    async listUncertain() { return [...rows.values()].filter((row) => ["submitting", "uncertain", "submitted_accepted"].includes(row.state)); },
+    async listUncertain() { return [...rows.values()].filter((row) => ["submitting", "uncertain", "submitted_processed", "submitted_accepted", "submitted_reconciled", "shipped_partial", "ready_to_ship"].includes(row.state)); },
     async ingestSquareEvent({ eventId, paymentId, eventCreatedAt = null }) { const row = squareEvents.get(eventId) ?? { square_event_id: eventId, square_payment_id: paymentId, event_created_at: eventCreatedAt, processed_at: null }; squareEvents.set(eventId, row); return row; },
     async claimSquareEvent(eventId) { const row = squareEvents.get(eventId); if (!row || row.processed_at) return null; row.lease_expires_at = "leased"; return row; },
     async listPendingSquareEvents() { return [...squareEvents.values()].filter((row) => !row.processed_at); },
     async markSquareEventProcessed(eventId) { squareEvents.get(eventId).processed_at = "done"; },
     async noteSquareEventError(eventId) { const row = squareEvents.get(eventId); if (row) row.lease_expires_at = null; },
     async touchReconciliationAttempt() {},
-    async setProviderState({ squareOrderId, providerStatus, state }) { const row = rows.get(squareOrderId); Object.assign(row, { provider_status: providerStatus, state }); return row; },
+    async setProviderState({ squareOrderId, providerStatus, state, lastErrorCode = null }) { const row = rows.get(squareOrderId); Object.assign(row, { provider_status: providerStatus, state, last_error_code: lastErrorCode }); return row; },
     async recordShipment({ squareOrderId, quantities, tracking, complete }) { const row = rows.get(squareOrderId); Object.assign(row, { shipped_line_quantities: quantities, tracking: [tracking], state: complete ? "ready_to_ship" : "shipped_partial" }); return row; },
     async markShipped({ squareOrderId }) { const row = rows.get(squareOrderId); row.state = "shipped"; return row; },
   };
 }
+
+for (const fulfillments of [undefined, []]) {
+  test(`completed custom receipts with ${fulfillments ? "empty" : "missing"} fulfillments finish the event without a hold or provider write`, async () => {
+    const repo = memoryRepository();
+    const { payment, order } = paidOrder({ order: { state: "COMPLETED", reference_id: undefined, fulfillments,
+      line_items: [{ uid: "custom", name: "Custom amount", quantity: "1", base_price_money: { amount: 5200, currency: "USD" } }] } });
+    const forbidden = () => { assert.fail("receipt must not enter submission, shipment or notification"); };
+    const service = createFulfillmentService({ repository: repo,
+      square: { getPayment: async () => payment, getOrder: async () => order, updateShipment: forbidden },
+      apliiq: { createOrder: forbidden, listOrders: forbidden },
+      notifications: { enqueueConfirmation: forbidden, enqueueShipment: forbidden },
+      config: { enabled: "true", locationId: LOCATION, startAt: "2026-10-15T00:00:00Z" } });
+    await repo.ingestSquareEvent({ eventId: "receipt-event", paymentId: payment.id });
+    assert.deepEqual(await service.processSquareEvent("receipt-event"), { outcome: "ignored", code: "non_shipping_receipt" });
+    assert.equal(repo.squareEvents.get("receipt-event").processed_at, "done");
+    assert.equal(repo.rows.size, 0);
+    assert.equal((await service.processSquareEvent("receipt-event")).outcome, "duplicate");
+  });
+}
+
+test("a missing shipment on a catalog order or storefront reference still needs attention", async () => {
+  for (const hasReference of [false, true]) {
+    const repo = memoryRepository();
+    const { payment, order } = paidOrder({ order: { state: "COMPLETED", fulfillments: [],
+      reference_id: hasReference ? "AHA-local-checkout" : undefined,
+      ...(hasReference ? { line_items: [{ uid: "custom", quantity: "1" }] } : {}) } });
+    const service = createFulfillmentService({ repository: repo,
+      square: { getPayment: async () => payment, getOrder: async () => order },
+      apliiq: { createOrder: () => assert.fail("must not submit") },
+      config: { enabled: "true", locationId: LOCATION, startAt: "2026-10-15T00:00:00Z" } });
+    assert.equal((await service.processSquarePayment(payment.id)).outcome, "held");
+    assert.equal(repo.rows.get(order.id).last_error_code, "unsupported_fulfillment_shape");
+  }
+});
+
+test("an existing supplier record can never be dismissed as a custom receipt", async () => {
+  const repo = memoryRepository();
+  const { payment, order } = paidOrder({ order: { state: "COMPLETED", reference_id: undefined, fulfillments: [], line_items: [{ uid: "custom" }] } });
+  repo.rows.set(order.id, { square_order_id: order.id, state: "submitted_processed", apliiq_order_id: "supplier-local" });
+  const service = createFulfillmentService({ repository: repo,
+    square: { getPayment: async () => payment, getOrder: async () => order }, apliiq: {},
+    config: { enabled: "true", locationId: LOCATION, startAt: "2026-10-15T00:00:00Z" } });
+  assert.equal((await service.processSquarePayment(payment.id)).outcome, "attention");
+});
+
+test("reconciliation uses the unique authenticated list association and keeps artwork pending without provider writes", async () => {
+  const repo = memoryRepository();
+  const { payment, order } = paidOrder();
+  const validated = validatePaidSquareOrder({ payment, order, locationId: LOCATION, startAt: "2026-10-15T00:00:00Z" });
+  const row = await repo.insertValidated({ ...validated, state: "submitted_reconciled", submittedItems: validated.items, apliiqPayload: validated.apliiqPayload });
+  row.apliiq_order_id = "supplier-local";
+  row.provider_status = "reconciliation_pending";
+  const forbidden = () => assert.fail("pending reconciliation must not write orders or send notifications");
+  const provider = { OrderId: "supplier-local", StoreSystemOrderId: order.id, StoreOrderId: "friendly-reference",
+    Status: "Preparing to release", AwaitingArtwork: true, SN: [{ TrackingNumber: "", Items: [{ SKU: validated.items[0].sku, Quantity: 1 }] }] };
+  const service = createFulfillmentService({ repository: repo,
+    square: { getPayment: forbidden, getOrder: forbidden, updateShipment: forbidden },
+    apliiq: { listOrders: async () => [provider], getOrder: forbidden, createOrder: forbidden },
+    notifications: { enqueueConfirmation: forbidden, enqueueShipment: forbidden }, config: { enabled: "true" } });
+  await service.runScheduled();
+  assert.equal(row.state, "submitted_reconciled");
+  assert.equal(row.provider_status, "preparing to release");
+  assert.equal(row.last_error_code, null);
+  assert.equal(provider.AwaitingArtwork, true);
+  for (const id of [order.id, "supplier-local"]) {
+    assert.equal((await service.receiveApliiqFulfillment({ providerOrderId: id })).outcome, "pending");
+  }
+});
+
+test("foreign and duplicate Apliiq associations remain attention without provider writes", async () => {
+  for (const duplicate of [false, true]) {
+    const repo = memoryRepository();
+    const row = { square_order_id: "local-order", apliiq_order_id: "supplier-expected", state: "submitted_reconciled", submitted_items: [] };
+    repo.rows.set(row.square_order_id, row);
+    const expected = { OrderId: "supplier-expected", StoreSystemOrderId: row.square_order_id, Status: "Preparing to release" };
+    const other = { ...expected, OrderId: "supplier-other" };
+    const service = createFulfillmentService({ repository: repo, square: {}, apliiq: { listOrders: async () => duplicate ? [expected, other] : [other] }, config: { enabled: "true" } });
+    await service.runScheduled();
+    assert.equal(row.state, "attention");
+    assert.equal(row.apliiq_order_id, "supplier-expected");
+    assert.equal(row.last_error_code, duplicate ? "provider_join_ambiguous" : "provider_id_mismatch");
+  }
+});
+
+test("a pending artwork callback does not erase a refund hold", async () => {
+  const repo = memoryRepository();
+  const row = { square_order_id: "local-order", apliiq_order_id: "supplier-local", state: "attention", last_error_code: "payment_refunded", submitted_items: [] };
+  repo.rows.set(row.square_order_id, row);
+  const service = createFulfillmentService({ repository: repo, square: {}, apliiq: { listOrders: async () => [{ OrderId: row.apliiq_order_id, StoreSystemOrderId: row.square_order_id, Status: "Preparing to release", SN: [] }] }, config: { enabled: "true" } });
+  await service.receiveApliiqFulfillment({ providerOrderId: row.apliiq_order_id });
+  assert.equal(row.state, "attention");
+  assert.equal(row.last_error_code, "payment_refunded");
+});
 
 test("Square signature uses the canonical public URL and raw body", () => {
   const key = "test-key";
@@ -333,7 +426,7 @@ test("a partial provider shipment stays partial and does not update Square", asy
     repository: repo,
     square: { getOrder: async () => order, updateShipment: async () => { updates += 1; } },
     apliiq: {
-      listOrders: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped" }],
+      listOrders: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped", SN: [{ TrackingNumber: "1Z", Carrier: "UPS", Items: [{ SKU: "APQ-6208401S7A1", Quantity: 0 }] }] }],
       getOrder: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped", SN: [{ TrackingNumber: "1Z", Carrier: "UPS", Items: [{ SKU: "APQ-6208401S7A1", Quantity: 0 }] }] }],
     },
     config: { enabled: "true", locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z" },
@@ -412,7 +505,7 @@ test("active fulfillment queues one plain confirmation and one tracking notifica
     square: { getPayment: async () => payment, getOrder: async () => order, updateShipment: async () => {} },
     apliiq: {
       createOrder: async () => ({ status: 200, data: { id: "apliiq-1" } }),
-      listOrders: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped" }],
+      listOrders: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped", SN: [{ TrackingNumber: "1ZEMAIL", Carrier: "UPS", Items: [{ SKU: "APQ-6208401S7A1", Quantity: 1 }] }] }],
       getOrder: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped", SN: [{ TrackingNumber: "1ZEMAIL", Carrier: "UPS", Items: [{ SKU: "APQ-6208401S7A1", Quantity: 1 }] }] }],
     },
     notifications: {

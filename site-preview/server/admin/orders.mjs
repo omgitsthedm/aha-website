@@ -9,6 +9,7 @@ const STUCK_HOURS = 48;
 const json = (value) => (typeof value === "string" ? JSON.parse(value) : value ?? null);
 
 export function orderFlags(order, now = Date.now()) {
+  if (order.state === "ignored") return [];
   const flags = [];
   const ageHours = (now - new Date(order.created_at).getTime()) / 3_600_000;
   if (ATTENTION_STATES.has(order.state)) flags.push({ code: order.state, message: order.state === "uncertain" ? "Apliiq didn't confirm this order. Check the Apliiq dashboard before anything else; never resubmit blindly." : "Held for review. Open the order in Square and Apliiq." });
@@ -26,6 +27,7 @@ export async function listOrders(db, { limit = 100 } = {}) {
            s.shipping_address_json->>'region' AS region
     FROM aha_fulfillment_orders o
     LEFT JOIN aha_checkout_sessions s ON s.square_order_id = o.square_order_id
+    WHERE o.state <> 'ignored'
     ORDER BY o.created_at DESC
     LIMIT ${Math.min(Math.max(Number(limit) || 100, 1), 500)}`;
   const now = Date.now();
@@ -48,7 +50,7 @@ export async function overview(db) {
     SELECT count(*) FILTER (WHERE created_at > now() - interval '1 day') AS today,
            count(*) FILTER (WHERE created_at > now() - interval '7 days') AS week,
            count(*) FILTER (WHERE state IN ('held', 'attention', 'uncertain') OR (state <> 'shipped' AND created_at < now() - interval '48 hours')) AS attention
-    FROM aha_fulfillment_orders`;
+    FROM aha_fulfillment_orders WHERE state <> 'ignored'`;
   const [drafts] = await db.sql`SELECT count(*) FILTER (WHERE status = 'draft') AS waiting, count(*) FILTER (WHERE status = 'approved') AS approved FROM aha_product_drafts`;
   return {
     ordersToday: Number(orders?.today ?? 0),
