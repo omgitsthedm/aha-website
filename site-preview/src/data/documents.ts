@@ -117,20 +117,20 @@ export const documents = [
     "metaTitle": "Size and fit",
     "eyebrow": "Size and fit",
     "title": "Start with what fits.",
-    "description": "Compare finished-garment measurements for the Yikes! crewneck and cropped hoodie. Measure a similar piece you own to choose your size.",
+    "description": "Compare finished-garment measurements on each product’s size chart. Measure a similar piece you own to choose your size.",
     "lead": "A piece you already wear is a useful reference.",
     "sections": [
       [
         "Use the product chart",
-        "Each Yikes! product page has its own size chart in inches. The crewneck runs XS–3XL; the cropped hoodie runs XS–2XL. The two cuts have different measurements."
+        "Every product page has its own size chart in inches. Sizes and measurements differ from one garment to the next, so check the chart for the piece you’re choosing, even if you know your size in another."
       ],
       [
         "Measure flat",
-        "Lay a similar garment flat. Compare chest width, body length and sleeve length with the product chart. Chest width is measured across the garment, not around the body."
+        "Lay a similar garment flat. Compare chest width, body length and, where the chart lists it, sleeve length with the product chart. Chest width is measured across the garment, not around the body."
       ],
       [
         "Check the crop",
-        "The hoodie has a raw cropped hem. Check its body length against a hoodie or top you already wear, especially if you prefer a particular amount of midriff coverage."
+        "The cropped hoodie has a raw hem. Check its body length against a hoodie or top you already wear, especially if you prefer a particular amount of midriff coverage."
       ],
       [
         "Earlier pieces",
@@ -210,7 +210,7 @@ export const documents = [
     "sections": [
       [
         "Current products",
-        "The shop lists the Yikes! crewneck and cropped hoodie in Bone. Prices are in USD, the same across sizes, and include domestic shipping. Applicable tax and any international shipping are shown at checkout."
+        "Each product page shows the piece’s color, available sizes and price. Prices are in USD, the same across sizes, and include domestic shipping. Applicable tax and any international shipping are shown at checkout."
       ],
       [
         "Payment and production",
