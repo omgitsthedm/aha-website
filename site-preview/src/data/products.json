@@ -170,6 +170,7 @@
     "constructionDetails": [
       "Ribbed collar, cuffs and waistband."
     ],
+    "blank": "Independent Trading Co. SS3000",
     "sleeveMeasurementGuidance": "Sleeve length is measured from the center back, including the cuff.",
     "campaignSetting": "Pinball bar"
   },
@@ -333,6 +334,7 @@
     "constructionDetails": [
       "Raw cropped hem, dropped shoulders, flat drawcords and ribbed cuffs."
     ],
+    "blank": "Independent Trading Co. AFX64CRP",
     "sleeveMeasurementGuidance": "Sleeve length is measured from the center back, including the cuff.",
     "campaignSetting": "Library steps"
   },
@@ -421,6 +423,7 @@
       "twill neck tape",
       "1x1 ribbed cuffs and waistband"
     ],
+    "blank": "Independent Trading Co. SS4500",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Dingy dive-bar exterior",
     "variants": [
@@ -622,6 +625,7 @@
       "twill neck tape",
       "1x1 ribbed cuffs and waistband"
     ],
+    "blank": "Independent Trading Co. SS4500",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Dingy dive-bar exterior",
     "variants": [
@@ -810,6 +814,7 @@
       "twill neck tape",
       "1x1 ribbed collar, cuffs and waistband"
     ],
+    "blank": "Independent Trading Co. SS3000",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Dingy dive-bar exterior",
     "variants": [
@@ -988,6 +993,7 @@
       "twill neck tape",
       "1x1 ribbed collar, cuffs and waistband"
     ],
+    "blank": "Independent Trading Co. SS3000",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Dingy dive-bar exterior",
     "variants": [
@@ -1150,6 +1156,7 @@
       "hemmed sleeves",
       "side seams"
     ],
+    "blank": "Next Level 3601",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Diner",
     "variants": [
@@ -1301,6 +1308,7 @@
       "hemmed sleeves",
       "side seams"
     ],
+    "blank": "Next Level 3601",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Record store",
     "variants": [
@@ -1458,6 +1466,7 @@
       "left-chest pocket",
       "ribbed cuffs"
     ],
+    "blank": "Comfort Colors 4410",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Pinball bar",
     "variants": [
@@ -1620,6 +1629,7 @@
       "left-chest pocket",
       "ribbed cuffs"
     ],
+    "blank": "Comfort Colors 4410",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Library stone wall",
     "variants": [
@@ -1805,6 +1815,7 @@
       "twill neck tape",
       "1x1 ribbed cuffs and waistband"
     ],
+    "blank": "Independent Trading Co. SS4500",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Queensboro Plaza, Long Island City",
     "variants": [
@@ -1991,6 +2002,7 @@
       "twill neck tape",
       "1x1 ribbed collar, cuffs and waistband"
     ],
+    "blank": "Independent Trading Co. SS3000",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Queensboro Plaza, Long Island City",
     "variants": [
@@ -2151,6 +2163,7 @@
       "hemmed sleeves",
       "side seams"
     ],
+    "blank": "Next Level 3601",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Queensboro Plaza, Long Island City",
     "variants": [
@@ -2317,6 +2330,8 @@
       "twill neck tape",
       "1x1 ribbed collar, cuffs and waistband"
     ],
+    "blank": "Independent Trading Co. SS3000",
+    "printMethod": "direct to garment (DTG)",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Old boxing gym",
     "variants": [
@@ -2493,6 +2508,8 @@
       "twill neck tape",
       "1x1 ribbed collar, cuffs and waistband"
     ],
+    "blank": "Independent Trading Co. SS3000",
+    "printMethod": "direct to garment (DTG)",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Old boxing gym",
     "variants": [
@@ -2669,6 +2686,8 @@
       "twill neck tape",
       "1x1 ribbed collar, cuffs and waistband"
     ],
+    "blank": "Independent Trading Co. SS3000",
+    "printMethod": "direct to garment (DTG)",
     "sleeveMeasurementGuidance": "",
     "campaignSetting": "Outside a neighborhood pet shop on a New York side street",
     "gallery": [

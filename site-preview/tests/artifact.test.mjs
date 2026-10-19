@@ -276,3 +276,19 @@ test("every product offer states delivery time and the 30-day free-return policy
   assert.equal(offer.hasMerchantReturnPolicy.returnFees, "https://schema.org/FreeReturn");
   assert.deepEqual([offer.shippingDetails.deliveryTime.handlingTime.minValue, offer.shippingDetails.deliveryTime.transitTime.maxValue], [5, 6]);
 });
+test("every product page names its blank and says where it's printed", async () => {
+  const all = JSON.parse(await readFile(new URL("../src/data/products.json", import.meta.url), "utf8"));
+  for (const product of all) assert.ok(product.blank, `${product.slug} has no blank`);
+  const page = (slug) => readFile(new URL(`shop/${slug}/index.html`, root), "utf8");
+  // Mighty Mick's designs are recorded as DTG (Apliiq placement 4546, service dtgprint).
+  assert.ok((await page("mighty-micks-ss3000-navy")).includes("<li>Blank: Independent Trading Co. SS3000.</li><li>Printed to order in the United States, direct to garment (DTG).</li>"));
+  // Without a recorded print method, the page doesn't guess one.
+  assert.ok((await page("insomniac-ss4500-black")).includes("<li>Blank: Independent Trading Co. SS4500.</li><li>Printed to order in the United States.</li>"));
+});
+test("The story tells the founder's story and the schema names the founder", async () => {
+  const page = await readFile(new URL("about/index.html", root), "utf8");
+  assert.match(page, /id="founder"/);
+  assert.ok(page.includes("David Marsh’s clothing label"));
+  assert.ok(page.includes("<cite>Hit the Ground Running</cite>, 2013"));
+  assert.ok(page.includes('"founder":{"@type":"Person","name":"David Marsh"}'));
+});

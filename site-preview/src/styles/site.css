@@ -510,6 +510,54 @@ select:focus-visible {
   color: var(--muted);
   max-width: 60ch;
 }
+.founder {
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+  scroll-margin-top: 24px;
+}
+.founder .label {
+  margin-bottom: 24px;
+}
+.founder-body .lede {
+  margin-bottom: 30px;
+}
+.founder-body p + p {
+  margin-top: 22px;
+}
+.founder-body p {
+  max-width: 62ch;
+}
+.founder-quote {
+  margin: 40px 0;
+  padding-left: 24px;
+  border-left: 2px solid var(--accent);
+}
+.founder-quote p {
+  font-weight: 700;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  max-width: 34ch;
+}
+.founder-quote footer {
+  margin-top: 14px;
+  font: 400 12px/1.6 var(--mono);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.founder-quote cite {
+  font-style: normal;
+}
+@media (max-width: 760px) {
+  .founder {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
 .manifesto {
   border-top: 1px solid var(--line);
   scroll-margin-top: 24px;

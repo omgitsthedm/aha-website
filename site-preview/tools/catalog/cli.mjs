@@ -36,7 +36,7 @@ import { createSquareClient, itemObject, squareIdempotencyKey, squareToken, veri
 import { productImageKeys } from "../../server/catalog/publish.mjs";
 import { PRIVATE_LABEL, SITE_ORIGIN } from "../../server/platform/client.mjs";
 
-const PRODUCT_FIELDS = ["gender", "feed", "description", "fit", "weightOz", "composition", "sizeGuide", "measurementGuidance", "collection", "typeLabel", "fabricType", "constructionDetails", "sleeveMeasurementGuidance", "campaignSetting", "gallery", "campaign"];
+const PRODUCT_FIELDS = ["gender", "feed", "description", "fit", "weightOz", "composition", "sizeGuide", "measurementGuidance", "collection", "typeLabel", "fabricType", "constructionDetails", "blank", "printMethod", "sleeveMeasurementGuidance", "campaignSetting", "gallery", "campaign"];
 
 async function loadAllowList() {
   const module = await import(`${pathToFileURL(PATHS.fulfillment).href}?t=${Date.now()}`);
@@ -50,7 +50,10 @@ function blankDefaults(blank) {
 
 function normalizeSpec(raw, file) {
   const defaults = raw.blank ? blankDefaults(raw.blank) : null;
-  const spec = { ...raw, sizes: raw.sizes ?? defaults?.sizes, product: { ...(defaults?.product ?? {}), ...(raw.product ?? {}) } };
+  // Product pages say how a piece is printed when every placement uses the same Apliiq service.
+  const services = new Set((raw.apliiq?.locations ?? []).map((location) => location.service));
+  const printMethod = services.size === 1 && services.has("dtgprint") ? { printMethod: "direct to garment (DTG)" } : {};
+  const spec = { ...raw, sizes: raw.sizes ?? defaults?.sizes, product: { ...(defaults?.product ?? {}), ...printMethod, ...(raw.product ?? {}) } };
   const required = ["slug", "title", "color", "priceCents", "sizes", "blank", "apliiq", "product", "fulfillment"];
   const missing = required.filter((key) => spec[key] === undefined);
   if (missing.length) throw new CatalogError(`${path.basename(file)}: missing ${missing.join(", ")}.`, { code: "spec_invalid" });
@@ -170,12 +173,10 @@ const commands = {
       if (variants.size !== entry.variants.length) drift.push(`${entry.slug}: variant count differs`);
     }
     for (const product of products) if (!live.some((entry) => entry.slug === product.slug)) drift.push(`${product.slug}: on the site but not in the ledger`);
-    // Every product color needs a swatch on the product page (otherwise it falls back to Bone).
-    const { readFileSync: readText } = await import("node:fs");
-    const productPage = readText(path.join(APP, "src/pages/shop/[product].astro"), "utf8");
-    const swatchLine = productPage.split("\n").find((line) => line.includes("colorSwatches")) ?? "";
+    // Every product color needs a swatch (otherwise it falls back to Bone).
+    const { COLOR_SWATCHES } = await import("../../server/catalog/garments.mjs");
     for (const color of new Set(products.map((product) => product.color))) {
-      if (!swatchLine.includes(`${color}:`) && !swatchLine.includes(`'${color}':`)) drift.push(`color "${color}" has no swatch in src/pages/shop/[product].astro`);
+      if (!COLOR_SWATCHES[color]) drift.push(`color "${color}" has no swatch in server/catalog/garments.mjs`);
     }
     const expected = fulfillmentFromLedger(ledger);
     const actual = await loadAllowList();
@@ -187,7 +188,11 @@ const commands = {
       const { readFileSync } = await import("node:fs");
       for (const file of feeds) {
         const xml = readFileSync(file, "utf8");
+        // Products off sale (src/data/off-sale.json) are left out of the built feeds.
+        const { isOffSale } = await import("../../server/catalog/off-sale.mjs");
+        const offSaleIds = new Set(products.filter((product) => isOffSale(product.slug)).flatMap((product) => product.variants.map((variant) => variant.id)));
         for (const [id, value] of Object.entries(expected)) {
+          if (offSaleIds.has(id)) { if (xml.includes(id)) drift.push(`${path.basename(file)}: lists ${id}, which is off sale`); continue; }
           if (!xml.includes(id)) drift.push(`${path.basename(file)}: missing ${id}`);
           else if (!xml.includes(`${(value.priceCents / 100).toFixed(2)} USD`)) drift.push(`${path.basename(file)}: no ${(value.priceCents / 100).toFixed(2)} USD price`);
         }
