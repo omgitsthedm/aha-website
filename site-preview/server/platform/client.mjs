@@ -27,6 +27,7 @@ export function clientConfigProblems(value) {
   need(/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value?.client?.slug ?? ""), "client.slug must be lowercase words joined by hyphens.");
   need(typeof value?.client?.name === "string" && value.client.name.trim().length > 0, "client.name is required.");
   need(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value?.client?.email ?? ""), "client.email must be an email address.");
+  need(typeof value?.client?.postalAddress === "string" && value.client.postalAddress.trim().length >= 10, "client.postalAddress is required: the mailing address shown in customer emails (CAN-SPAM).");
   need(ORIGIN.test(value?.site?.origin ?? ""), "site.origin must be an https origin with no path, e.g. https://example.com.");
   need(UUID.test(value?.site?.netlifySiteId ?? ""), "site.netlifySiteId must be the exact Netlify site ID from the fleet manifest.");
   need(value?.site?.previewOrigin === undefined || ORIGIN.test(value.site.previewOrigin), "site.previewOrigin must be an https origin.");
@@ -57,6 +58,8 @@ if (problems.length) throw new Error(`client.config.json is invalid: ${problems.
 
 export const CLIENT = Object.freeze(config);
 export const SITE_ORIGIN = config.site.origin;
+/** Shown in the footer of every customer email that isn't a receipt (CAN-SPAM). */
+export const POSTAL_ADDRESS = config.client.postalAddress;
 export const SITE_HOST = new URL(config.site.origin).host;
 export const NETLIFY_SITE_ID = config.site.netlifySiteId;
 export const SQUARE_VERSION = config.commerce.apiVersion;

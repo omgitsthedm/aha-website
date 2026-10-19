@@ -82,5 +82,7 @@ async function loadReviews() {
     return form;
   }));
   $("[data-order-reviews]").hidden = false;
+  // The review-request email links here.
+  if (location.hash === "#leave-a-review") $("[data-order-reviews]").scrollIntoView();
 }
 void load();

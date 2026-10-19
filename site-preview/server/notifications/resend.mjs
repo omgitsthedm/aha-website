@@ -19,11 +19,11 @@ export function createResendGateway({ apiKey, from, replyTo, fetchImpl = fetch, 
     return data;
   }
   return {
-    async send({ idempotencyKey, recipient, subject, html, text }) {
+    async send({ idempotencyKey, recipient, subject, html, text, headers, stream = "transactional" }) {
       return request("/emails", {
         method: "POST",
         headers: { "content-type": "application/json", "idempotency-key": idempotencyKey },
-        body: JSON.stringify({ from, to: [recipient], reply_to: replyTo, subject, html, text, tags: [{ name: "stream", value: "transactional" }] }),
+        body: JSON.stringify({ from, to: [recipient], reply_to: replyTo, subject, html, text, ...(headers ? { headers } : {}), tags: [{ name: "stream", value: stream }] }),
       });
     },
     async listDomains() { return request("/domains"); },

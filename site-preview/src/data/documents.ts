@@ -182,7 +182,7 @@ export const documents = [
       ],
       [
         "Checkout and fulfillment",
-        "At checkout, we collect the contact and shipping details needed to create and deliver your order. Square handles payment-card details and payment under its own privacy practices. We share necessary order and shipping details with Apliiq to make and deliver your piece, and use Resend to send transactional order and tracking emails. We do not use this information to add you to marketing."
+        "At checkout, we collect the contact and shipping details needed to create and deliver your order. Square handles payment-card details and payment under its own privacy practices. We share necessary order and shipping details with Apliiq to make and deliver your piece, and use Resend to send order and tracking emails. If you start checkout and don't finish, we may send one email about the pieces left in your bag, unless marketing is turned off in Privacy choices or your browser sends Global Privacy Control. After an order ships, we may ask once for a review. Both emails have a one-click unsubscribe, and we never add you to a mailing list from checkout."
       ],
       [
         "Email updates",

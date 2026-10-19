@@ -656,6 +656,19 @@ async function syncCatalogue() {
   hideRetiredCards(state.retired);
 }
 
+// "Back to your bag" in the bag-reminder email: ?bag=VARIATION:QTY,… puts those
+// lines in this browser's bag (on any device), then leaves the address bar clean.
+function restoreBagLink() {
+  const bag = new URLSearchParams(location.search).get("bag");
+  if (!bag) return;
+  const catalogue = activeCatalogue();
+  const wanted = bag.split(",").slice(0, 20).map((entry) => { const [variationId = "", quantity] = entry.split(":"); return { variationId, quantity: Number(quantity) || 1 }; });
+  writeCart(normalize([...readCart(catalogue).filter((line) => !wanted.some((entry) => entry.variationId === line.variationId)), ...wanted], catalogue));
+  const url = new URL(location.href);
+  url.searchParams.delete("bag");
+  history.replaceState(history.state, "", url);
+}
+
 async function init() {
   initAddForms();
   // Product-page extras (photo viewer, quick-add bar, bag card) load only where
@@ -665,6 +678,7 @@ async function init() {
   await syncCatalogue();
   // The quick-add bar waits until a removed product's form has been replaced.
   void extras?.then((module) => module.initBuyBar());
+  restoreBagLink();
   updateCartLinks(readCart(activeCatalogue()));
   initCheckout();
 }

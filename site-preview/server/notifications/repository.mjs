@@ -56,6 +56,16 @@ export function createNotificationRepository(db) {
         RETURNING *
       `);
     },
+    // An address that unsubscribed after the email was queued: done, nothing sent.
+    async markSuppressed({ id }) {
+      return one(db.sql`
+        UPDATE aha_order_notifications
+        SET state = 'sent', provider_message_id = NULL, lease_expires_at = NULL,
+            last_error_code = 'suppressed', sent_at = now(), updated_at = now()
+        WHERE id = ${id} AND state = 'sending'
+        RETURNING *
+      `);
+    },
     async retryOrAttention({ id, code }) {
       return one(db.sql`
         UPDATE aha_order_notifications

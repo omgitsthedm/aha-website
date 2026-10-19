@@ -3,7 +3,8 @@
   "client": {
     "slug": "after-hours-agenda",
     "name": "After Hours Agenda",
-    "email": "info@afterhoursagenda.com"
+    "email": "info@afterhoursagenda.com",
+    "postalAddress": "12415 N 69th Drive, Peoria, Arizona 85381"
   },
   "site": {
     "origin": "https://afterhoursagenda.com",
