@@ -212,7 +212,11 @@ async function renderReviews() {
     for (const [action, label] of review.status === "approved" ? [["reject", "Take down"]] : review.status === "rejected" ? [["approve", "Approve"]] : [["approve", "Approve"], ["reject", "Don’t publish"]]) {
       const button = el("button", { type: "button", className: action === "approve" ? "admin-primary" : "admin-secondary", textContent: label });
       button.addEventListener("click", async () => {
-        try { await post(`reviews/${review.id}/${action}`); say(action === "approve" ? "Approved. It shows on the product page within a minute." : "It won’t show on the site."); await renderReviews(); } catch (error) { say((error as Error).message); }
+        try {
+          const { refreshed } = await post<{ refreshed: boolean }>(`reviews/${review.id}/${action}`);
+          say(`${action === "approve" ? "Approved." : "Taken off the site."} ${refreshed ? "The product page updates within a minute." : "The site’s cache didn’t refresh, so the product page can take up to ten minutes to update."}`);
+          await renderReviews();
+        } catch (error) { say((error as Error).message); }
       });
       actions.append(button);
     }

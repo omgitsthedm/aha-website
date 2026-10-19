@@ -1,14 +1,18 @@
 // /api/reviews: approved reviews for a product page (cached at the CDN until the
 // owner approves or rejects one), and the order page's review form.
+import { purgeCache } from "@netlify/functions";
 import { currentCatalog } from "../catalog/current.mjs";
 import { SITE_ORIGIN } from "../platform/client.mjs";
 import { errorSummary } from "../updates/signups.mjs";
 import { publicReviews, reviewsForOrder, ReviewError, reviewTags, submitReview } from "./reviews.mjs";
 
 const PRIVATE = { "cache-control": "no-store", "x-robots-tag": "noindex", "referrer-policy": "no-referrer" };
+// Approving, rejecting or editing a review purges the product's tag; if a purge
+// ever fails, the CDN copy still expires within ten minutes.
+export const REVIEW_CDN_CACHE = "public, durable, s-maxage=600, stale-while-revalidate=60";
 const MAX_BODY = 8 * 1024;
 
-export async function handleReviews(request, { db, env, catalog = currentCatalog }) {
+export async function handleReviews(request, { db, env, catalog = currentCatalog, purge = (tags) => purgeCache({ tags }) }) {
   const url = new URL(request.url);
   const route = url.pathname.replace(/^\/api\/reviews\/?/, "").replace(/\/$/, "");
   try {
@@ -16,7 +20,7 @@ export async function handleReviews(request, { db, env, catalog = currentCatalog
       const slug = url.searchParams.get("product") ?? "";
       return Response.json(await publicReviews(db, slug), { headers: {
         "Cache-Control": "public, max-age=0, must-revalidate",
-        "Netlify-CDN-Cache-Control": "public, durable, s-maxage=31536000, stale-while-revalidate=86400",
+        "Netlify-CDN-Cache-Control": REVIEW_CDN_CACHE,
         "Netlify-Cache-Tag": reviewTags(slug).join(","),
       } });
     }
@@ -31,7 +35,9 @@ export async function handleReviews(request, { db, env, catalog = currentCatalog
       if (text.length > MAX_BODY) throw new ReviewError("Keep it to 600 characters.", 413);
       let input;
       try { input = JSON.parse(text || "{}"); } catch { throw new ReviewError("Request must be JSON.", 400); }
-      return Response.json(await submitReview(db, env, (await catalog()).products, input), { headers: PRIVATE });
+      const { wasPublic, ...saved } = await submitReview(db, env, (await catalog()).products, input);
+      if (wasPublic) await Promise.resolve().then(() => purge(reviewTags(saved.product))).catch(() => {});
+      return Response.json(saved, { headers: PRIVATE });
     }
     return Response.json({ error: "Not found." }, { status: 404, headers: PRIVATE });
   } catch (error) {

@@ -1239,7 +1239,7 @@ h1,h2,h3{text-wrap:balance}p,li,figcaption{text-wrap:pretty}
 .fit-form .measure-diagram{max-width:200px;justify-self:center}
 @media(max-width:540px){.measure-figure{grid-template-columns:1fr}.measure-figure svg{max-width:240px}}
 /* Campaign motion loops (MotionImage.astro, scripts/motion.ts): the loop sits exactly over its photo and fades in once it plays. */
-.motion-frame{position:relative;display:block}.hero-image .image-number{z-index:2}.motion-video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s ease;pointer-events:none}.motion-frame.is-moving .motion-video{opacity:1}.campaign-grid .motion-video{border:1px solid var(--line)}
+.motion-frame{position:relative;display:block}.hero-image .image-number{z-index:2}.motion-video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}.campaign-grid .motion-video{border:1px solid var(--line)}
 .motion-toggle{position:absolute;right:.75rem;top:.75rem;z-index:1;min-height:40px;padding:.4rem .8rem;background:var(--paper);color:var(--ink);border:1px solid var(--ink);font:700 .72rem var(--mono);letter-spacing:.05em;text-transform:uppercase;opacity:0;transition:opacity .3s,background-color .15s,color .15s}.motion-frame.is-moving .motion-toggle,.motion-toggle:focus-visible{opacity:1}.motion-toggle:hover,.motion-toggle:focus-visible{background:var(--ink);color:var(--paper)}
 .motion-note{display:none}.motion-frame.is-moving~figcaption .motion-note{display:inline}.motion-frame.is-moving~figcaption .still-note{display:none}
 @media(max-width:760px){.hero-image .motion-video{object-position:center 40%}.campaign-grid .motion-video{border:0}}

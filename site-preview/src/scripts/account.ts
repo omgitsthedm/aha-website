@@ -1,5 +1,6 @@
 // The account page: passkey sign-in (no library; the server verifies with
 // @simplewebauthn/server), saved pieces, orders and account deletion.
+import { catalogState } from "./catalog-state";
 import { ACCOUNT_FLAG, readSaved, writeSaved } from "./saved";
 
 type Order = { orderNumber: string; stage: string; paidAt: string | null; url: string | null };
@@ -31,11 +32,24 @@ async function passkey(kind: "register" | "login") {
   await call(`auth/${kind}/verify`, "POST", { handle, saved: readSaved(), response: { id: credential.id, rawId: b64(credential.rawId), type: credential.type, clientExtensionResults: credential.getClientExtensionResults(), authenticatorAttachment: credential.authenticatorAttachment ?? undefined, response } });
 }
 
-function showSaved(list: string[]) {
+// Pieces published live since the last deploy, or removed from sale, come from the live catalog.
+let live: Awaited<ReturnType<typeof catalogState>> | null = null;
+async function showSaved(list: string[]) {
   const grid = $("[data-saved-grid]");
-  const cards = new Map([...grid.querySelectorAll<HTMLElement>("[data-saved-card]")].map((card) => [card.dataset.savedCard!, card]));
-  cards.forEach((card) => { card.hidden = true; });
-  const shown = list.flatMap((slug) => cards.get(slug) ?? []);
+  const cards = () => new Map([...grid.querySelectorAll<HTMLElement>("[data-saved-card]")].map((card) => [card.dataset.savedCard!, card]));
+  if (list.length && !live) {
+    live = await catalogState();
+    for (const product of live.products) {
+      if (cards().has(product.slug)) continue;
+      const holder = Object.assign(document.createElement("div"), { hidden: true, innerHTML: product.card });
+      holder.dataset.savedCard = product.slug;
+      grid.append(holder);
+    }
+  }
+  const removed = new Set(live?.retired ?? []);
+  const all = cards();
+  all.forEach((card) => { card.hidden = true; });
+  const shown = list.flatMap((slug) => (removed.has(slug) ? [] : all.get(slug) ?? []));
   shown.forEach((card) => { card.hidden = false; });
   grid.prepend(...shown);
   $("[data-saved-empty]").hidden = shown.length > 0;
@@ -54,7 +68,7 @@ function showOrders(orders: Order[]) {
 }
 
 async function load() {
-  showSaved(readSaved());
+  await showSaved(readSaved());
   let me: { signedIn: boolean; saved?: string[]; orders?: Order[] } = { signedIn: false };
   try { me = await call("me", "GET"); } catch { /* Signed out is the safe view. */ }
   $("[data-account-out]").hidden = me.signedIn;
@@ -63,7 +77,7 @@ async function load() {
   if (!me.signedIn) { localStorage.removeItem(ACCOUNT_FLAG); return; }
   localStorage.setItem(ACCOUNT_FLAG, "1");
   writeSaved(me.saved ?? [], false);
-  showSaved(me.saved ?? []);
+  await showSaved(me.saved ?? []);
   showOrders(me.orders ?? []);
 }
 

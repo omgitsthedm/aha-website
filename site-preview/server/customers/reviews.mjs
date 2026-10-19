@@ -72,6 +72,7 @@ export async function submitReview(db, env, products, input) {
   const product = orderProducts(row, products).find((entry) => entry.slug === input?.product);
   if (!product) throw new ReviewError("That piece isn't in this order.", 404);
   const { rating, body, name } = cleanReview(input);
+  const [before] = await db.sql`SELECT status FROM aha_reviews WHERE square_order_id = ${input.o} AND product_slug = ${product.slug}`;
   const [saved] = await db.sql`
     INSERT INTO aha_reviews (square_order_id, product_slug, rating, body, display_name)
     VALUES (${input.o}, ${product.slug}, ${rating}, ${body}, ${name})
@@ -79,7 +80,8 @@ export async function submitReview(db, env, products, input) {
       SET rating = EXCLUDED.rating, body = EXCLUDED.body, display_name = EXCLUDED.display_name,
           status = 'pending', updated_at = now(), moderated_at = NULL
     RETURNING status`;
-  return { product: product.slug, status: saved.status };
+  // An approved review that changes leaves the product page until it's approved again.
+  return { product: product.slug, status: saved.status, wasPublic: before?.status === "approved" };
 }
 
 /** Approved reviews for one product page, newest first. */

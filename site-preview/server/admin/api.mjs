@@ -150,9 +150,10 @@ export async function handleAdmin(request, { db, env, context, live = createLive
     const reviewAction = /^reviews\/(\d{1,18})\/(approve|reject)$/.exec(route);
     if (reviewAction && method === "POST") {
       const result = await moderateReview(db, reviewAction[1], reviewAction[2]);
-      await live.purge(reviewTags(result.product)).catch(() => {});
-      await auth.audit(user.id, `review.${reviewAction[2]}`, reviewAction[1], result);
-      return reply(result);
+      // purge() retries once and reports false instead of throwing; the CDN copy expires within ten minutes regardless.
+      const refreshed = await Promise.resolve().then(() => live.purge(reviewTags(result.product))).catch(() => false);
+      await auth.audit(user.id, `review.${reviewAction[2]}`, reviewAction[1], { ...result, refreshed });
+      return reply({ ...result, refreshed });
     }
     const productAction = /^catalog\/([a-z0-9-]+)\/(remove|restore|delete-apliiq-design)$/.exec(route);
     if (productAction && method === "POST") {

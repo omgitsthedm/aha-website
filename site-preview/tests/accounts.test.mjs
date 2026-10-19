@@ -199,23 +199,37 @@ test("reviews: the owner approves in the admin, the product page shows them, and
   assert.equal(waiting.body.reviews[0].order, "…HIPPD2");
   assert.equal((await admin("overview")).body.reviewsWaiting, 2);
   const [first, second] = waiting.body.reviews;
-  assert.deepEqual((await admin(`reviews/${first.id}/approve`, "POST")).body, { product: crew.slug, status: "approved" });
-  assert.deepEqual((await admin(`reviews/${second.id}/approve`, "POST")).body, { product: crew.slug, status: "approved" });
+  assert.deepEqual((await admin(`reviews/${first.id}/approve`, "POST")).body, { product: crew.slug, status: "approved", refreshed: true });
+  assert.deepEqual((await admin(`reviews/${second.id}/approve`, "POST")).body, { product: crew.slug, status: "approved", refreshed: true });
   assert.deepEqual(purged, [["reviews", `reviews-${crew.slug}`], ["reviews", `reviews-${crew.slug}`]]);
+  // A purge that fails twice resolves false (server/catalog/publish.mjs); the admin says so.
+  live.purge = async () => false;
+  assert.equal((await admin(`reviews/${first.id}/approve`, "POST")).body.refreshed, false);
+  live.purge = async () => { throw new Error("purge down"); };
+  assert.equal((await admin(`reviews/${first.id}/approve`, "POST")).body.refreshed, false);
+  live.purge = async (tags) => { purged.push(tags); return true; };
   assert.equal((await admin("reviews/999/approve", "POST")).status, 404);
   const audit = await db.sql`SELECT action FROM aha_admin_audit ORDER BY id`;
-  assert.deepEqual(audit.map((row) => row.action), ["review.approve", "review.approve"]);
+  assert.deepEqual(audit.map((row) => row.action), ["review.approve", "review.approve", "review.approve", "review.approve"]);
 
   const shown = await handleReviews(new Request(`${ORIGIN}/api/reviews?product=${crew.slug}`), { db, env, catalog });
   assert.equal(shown.headers.get("netlify-cache-tag"), `reviews,reviews-${crew.slug}`);
+  assert.equal(shown.headers.get("netlify-cdn-cache-control"), "public, durable, s-maxage=600, stale-while-revalidate=60");
   const page = await shown.json();
   assert.equal(page.count, 2);
   assert.equal(page.average, 4.5);
   assert.deepEqual(page.reviews.map((entry) => [entry.rating, entry.body, entry.name]).sort(), [[4, "Print is sharp.", null], [5, "Heavy and soft.", null]]);
   assert.equal(JSON.stringify(page).includes("ORDER"), false, "order ids never reach the page");
 
-  await submit("ORDERSHIPPED", 2, "Changed my mind.");
+  // Editing an approved review takes the old text off the page at once.
+  const editPurges = [];
+  const edited = await handleReviews(new Request(`${ORIGIN}/api/reviews/order`, { method: "POST", body: JSON.stringify({ o: "ORDERSHIPPED", k: token("ORDERSHIPPED"), product: crew.slug, rating: 2, body: "Changed my mind." }), headers: { origin: ORIGIN, "x-aha-review": "1" } }), { db, env, catalog, purge: async (tags) => { editPurges.push(tags); } });
+  assert.deepEqual(await edited.json(), { product: crew.slug, status: "pending" });
+  assert.deepEqual(editPurges, [["reviews", `reviews-${crew.slug}`]]);
   assert.equal((await publicReviews(db, crew.slug)).count, 1, "the edit waits for approval again");
+  // Editing a review that was never public purges nothing.
+  await handleReviews(new Request(`${ORIGIN}/api/reviews/order`, { method: "POST", body: JSON.stringify({ o: "ORDERSHIPPED", k: token("ORDERSHIPPED"), product: crew.slug, rating: 3, body: "Changed it again." }), headers: { origin: ORIGIN, "x-aha-review": "1" } }), { db, env, catalog, purge: async (tags) => { editPurges.push(tags); } });
+  assert.equal(editPurges.length, 1);
   assert.equal((await admin(`reviews/${first.id}/reject`, "POST")).body.status, "rejected");
   assert.equal((await publicReviews(db, crew.slug)).count, 0);
   assert.equal((await handleReviews(new Request(`${ORIGIN}/api/reviews?product=Not%20a%20slug`), { db, env, catalog })).status, 404);
