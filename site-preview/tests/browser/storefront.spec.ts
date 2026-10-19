@@ -319,7 +319,7 @@ test("each collection has its own page with its pieces, campaign and share image
 });
 
 test("a collection whose pieces were all removed says so", async ({ page }) => {
-  await page.route("**/api/catalog/live", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ retired: ["pet-it-be-ss3000-maroon"], retiredVariations: [], products: [], cartLines: [] }) }));
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ known: true, retired: ["pet-it-be-ss3000-maroon"], retiredVariations: [], products: [], cartLines: [] }) }));
   await page.goto("/shop/pet-it-be/");
   await expect(page.locator("[data-collection-empty]")).toBeVisible();
   await expect(page.locator("#pieces article.product-card")).toBeHidden();
@@ -401,12 +401,25 @@ test("a product off sale stays hidden without script, and shows again if it's re
   await expect(page.locator("[data-arrival]")).toHaveCount(0);
   await expect(page.locator("[data-save]")).toHaveCount(0);
   // Restored in the admin: the card, its group and jump link come back without a deploy.
-  await page.route("**/api/catalog/live", (route) => route.fulfill({ json: { products: [], cartLines: [], retired: [], retiredVariations: [] } }));
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ json: { known: true, products: [], cartLines: [], retired: [], retiredVariations: [] } }));
   await page.goto("/shop/");
   await expect(page.locator(`article[data-off-sale="${slug}"]`)).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Jump to a collection" }).getByRole("link", { name: "Pet It Be", exact: true })).toBeVisible();
-  // If the live state can't be read, the build's decision stands.
+  await page.goto(`/shop/${slug}/`);
+  await expect(page.locator("[data-cart-form]")).toBeVisible();
+  // If the live state can't be read, the build's decision stands: a failed request,
+  // or an answer that couldn't read the admin's removed list.
   await page.route("**/api/catalog/live", (route) => route.fulfill({ status: 503, body: "" }));
   await page.goto("/shop/");
   await expect(page.locator(`article[data-off-sale="${slug}"]`)).toBeHidden();
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ json: { known: false, products: [], cartLines: [], retired: [], retiredVariations: [] } }));
+  await page.goto("/shop/");
+  await expect(page.locator(`article[data-off-sale="${slug}"]`)).toBeHidden();
+  await page.goto(`/shop/${slug}/`);
+  await expect(page.getByText("This piece is no longer available.")).toBeVisible();
+  await expect(page.locator("[data-arrival]")).toHaveCount(0);
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ status: 503, body: "" }));
+  await page.goto(`/shop/${slug}/`);
+  await expect(page.getByText("This piece is no longer available.")).toBeVisible();
+  await expect(page.locator("[data-cart-form]")).toHaveCount(0);
 });

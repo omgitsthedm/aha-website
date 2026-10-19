@@ -76,6 +76,33 @@ test("removing a product takes it off sale everywhere but keeps paid orders fulf
   await assert.rejects(actions(db).restore(PET.slug), /isn't removed/);
 });
 
+test("if the removed list can't be read, products off sale stay off sale everywhere", async (t) => {
+  const store = memoryStore();
+  const unreadable = { ...store, async get(key, options) { if (key === "retired") throw new Error("Blobs unavailable"); return store.get(key, options); } };
+  const catalog = () => { resetRetiredMemo(); resetLiveCatalogMemo(); return currentCatalog({ store, retiredStore: unreadable }); };
+  const current = await catalog();
+  assert.equal(current.retiredKnown, false);
+  assert.equal(current.saleProducts.some((product) => product.slug === PET.slug), false, "the build's off-sale list stands");
+  assert.deepEqual(current.retired, [{ slug: PET.slug }]);
+  assert.throws(() => normalizeItems([{ variationId: PET.variants[0].id, quantity: 1 }], current.saleAllowList), /invalid_cart/, "checkout refuses it");
+  const feed = await (await handleFeeds(new Request("https://afterhoursagenda.com/feeds/google.xml"), { deploy: { context: "production" } }, { catalog })).text();
+  assert.equal(feed.includes(PET.variants[0].id), false);
+  const liveJson = await (await handleLiveCatalog(new Request("https://afterhoursagenda.com/api/catalog/live"), { catalog })).json();
+  assert.equal(liveJson.known, false, "pages don't treat it as restored");
+  assert.deepEqual(liveJson.retired, [PET.slug]);
+  // retire-sync never acts on a guess.
+  const { db } = await database(t);
+  const token = "a".repeat(48);
+  const env = { get: (key) => ({ ADMIN_ORIGIN: "https://afterhoursagenda.com", ADMIN_AUTOMATION_TOKEN: token })[key] };
+  const sync = await handleAdmin(new Request("https://afterhoursagenda.com/api/admin/automation/retired", { headers: { authorization: `Bearer ${token}` } }), { db, env, context: { deploy: { context: "production" } }, live: { catalog } });
+  assert.equal(sync.status, 503);
+  // Read normally, an empty list is the owner's word: everything is on sale.
+  const readable = () => { resetRetiredMemo(); resetLiveCatalogMemo(); return currentCatalog({ store, retiredStore: store }); };
+  const restored = await (await handleLiveCatalog(new Request("https://afterhoursagenda.com/api/catalog/live"), { catalog: readable })).json();
+  assert.equal(restored.known, true);
+  assert.deepEqual(restored.retired, []);
+});
+
 test("a Square failure doesn't block removal; it is reported", async (t) => {
   const store = memoryStore();
   const { db } = await database(t);

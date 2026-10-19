@@ -155,7 +155,7 @@ test("a drop in early access asks shoppers to sign in before buying", async ({ p
 
 test("saved pieces include products published live and leave out ones removed from sale", async ({ page }) => {
   const card = '<article class="product-card"><a class="product-card-image" href="/shop/live-piece/" aria-label="Shop Live Piece in Ink"><img src="/images/mighty-micks/mighty-micks-ss3000-navy/garment-front-400.webp" alt="Live Piece" width="400" height="500"></a><div class="product-card-info"><div><h2><a href="/shop/live-piece/">Live Piece</a></h2><p>Ink · S–XL</p></div><p class="product-price">$50</p></div></article>';
-  await page.route("**/api/catalog/live", (route) => route.fulfill({ json: { products: [{ slug: "live-piece", collection: "New", card }], cartLines: [], retired: ["pet-it-be-ss3000-maroon"], retiredVariations: [] } }));
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ json: { known: true, products: [{ slug: "live-piece", collection: "New", card }], cartLines: [], retired: ["pet-it-be-ss3000-maroon"], retiredVariations: [] } }));
   await page.addInitScript(() => localStorage.setItem("aha-saved-v1", JSON.stringify(["live-piece", "pet-it-be-ss3000-maroon", "yikes-crewneck"])));
   await page.goto(`${LOCAL}/account/`);
   await expect(page.locator("[data-saved-card='live-piece']")).toBeVisible();

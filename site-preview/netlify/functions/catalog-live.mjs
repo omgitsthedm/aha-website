@@ -8,13 +8,18 @@ export async function handleLiveCatalog(_request, { catalog = currentCatalog } =
   let liveProducts = [];
   let retired = [];
   let retiredVariations = [];
+  let known = false;
   try {
     const current = await catalog();
     liveProducts = current.saleLiveProducts ?? current.liveProducts;
     retired = (current.retired ?? []).map((entry) => entry.slug);
     retiredVariations = current.retiredVariations ?? [];
+    known = current.retiredKnown !== false;
   } catch { liveProducts = []; }
   const body = {
+    // True only when the admin's removed list was read. Pages reveal a piece the
+    // build hid (src/data/off-sale.json) only on that authority.
+    known,
     // Removed from sale in the admin: pages built before the removal hide these.
     retired,
     retiredVariations,

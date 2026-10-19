@@ -5,9 +5,12 @@
 // - products / allowList: everything that may still be fulfilled. Paid orders
 //   for a product removed from sale must still reach Apliiq.
 // - saleProducts / saleAllowList: what shoppers can see and buy right now.
+// - retiredKnown: false when the admin's removed list couldn't be read. The
+//   build's list of products off sale (src/data/off-sale.json) then stands.
 import products from "../../src/data/products.json" with { type: "json" };
 import { AHA_FULFILLMENT_CATALOG } from "../fulfillment/catalog.mjs";
 import { loadLiveCatalog } from "./live.mjs";
+import { OFF_SALE } from "./off-sale.mjs";
 import { loadRetired } from "./retired.mjs";
 
 export const STATIC_PRODUCTS = products;
@@ -19,7 +22,9 @@ export async function currentCatalog(options = {}) {
   ]);
   const all = [...products, ...live.products];
   const allowList = { ...live.allowList, ...AHA_FULFILLMENT_CATALOG };
-  const retiredSlugs = new Set(Object.keys(retired.products).filter((slug) => all.some((product) => product.slug === slug)));
+  const retiredKnown = retired.known !== false;
+  const removed = retiredKnown ? Object.keys(retired.products) : OFF_SALE;
+  const retiredSlugs = new Set(removed.filter((slug) => all.some((product) => product.slug === slug)));
   const retiredVariations = all.filter((product) => retiredSlugs.has(product.slug)).flatMap((product) => product.variants.map((variant) => variant.id));
   const saleAllowList = Object.fromEntries(Object.entries(allowList).filter(([id]) => !retiredVariations.includes(id)));
   return {
@@ -29,8 +34,9 @@ export async function currentCatalog(options = {}) {
     saleProducts: all.filter((product) => !retiredSlugs.has(product.slug)),
     saleLiveProducts: live.products.filter((product) => !retiredSlugs.has(product.slug)),
     saleAllowList,
-    retired: [...retiredSlugs].map((slug) => retired.products[slug]),
+    retired: [...retiredSlugs].map((slug) => retired.products[slug] ?? { slug }),
     retiredVariations,
+    retiredKnown,
   };
 }
 

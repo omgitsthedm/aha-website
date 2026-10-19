@@ -38,12 +38,17 @@ export async function noteApliiqDeleted(slug, designId, { store = catalogStore()
 }
 
 let memo = null;
-/** Memoized per function instance; a read failure removes nothing (fail open). */
+/**
+ * Memoized per function instance. `known` is false when the store couldn't be
+ * read: callers then keep the build's list of products off sale
+ * (src/data/off-sale.json) instead of treating everything as on sale.
+ */
 export async function loadRetired({ store, ttlMs = 30_000, now = Date.now } = {}) {
   if (memo && memo.expires > now()) return memo.value;
   let value;
-  try { value = await readRetired(store ?? catalogStore()); } catch { value = { products: {} }; }
-  memo = { value, expires: now() + ttlMs };
+  try { value = { ...(await readRetired(store ?? catalogStore())), known: true }; } catch { value = { products: {}, known: false }; }
+  // A failed read is retried within seconds rather than held for the full memo time.
+  memo = { value, expires: now() + (value.known ? ttlMs : Math.min(ttlMs, 5_000)) };
   return value;
 }
 export function resetRetiredMemo() { memo = null; }

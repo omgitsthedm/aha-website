@@ -6,7 +6,7 @@ export type CatalogState = {
   cartLines: Array<Record<string, unknown>>;
   retired: string[];
   retiredVariations: string[];
-  /** False when the live state couldn't be read: pages then keep what the build decided. */
+  /** True only when the server read the admin's removed list; otherwise pages keep what the build decided. */
   known: boolean;
 };
 
@@ -15,8 +15,8 @@ let pending: Promise<CatalogState> | null = null;
 
 export function catalogState(): Promise<CatalogState> {
   pending ??= fetch("/api/catalog/live", { headers: { accept: "application/json" } })
-    .then((response) => (response.ok ? response.json().then((data) => ({ ...data, known: true })) : EMPTY))
-    .then((data: Partial<CatalogState>) => ({ ...EMPTY, ...data }))
+    .then((response) => (response.ok ? response.json() : EMPTY))
+    .then((data: Partial<CatalogState>) => ({ ...EMPTY, ...data, known: data.known === true }))
     .catch(() => EMPTY);
   return pending;
 }

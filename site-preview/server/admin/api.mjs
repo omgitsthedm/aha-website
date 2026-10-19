@@ -73,6 +73,8 @@ export async function handleAdmin(request, { db, env, context, live = createLive
       // unshipped orders using the design; the engine keeps those in the code.
       if (route === "automation/retired" && method === "GET") {
         const current = await live.catalog();
+        // Never let retire-sync act on a guess.
+        if (current.retiredKnown === false) return reply({ error: "The removed-products list couldn't be read. Try again shortly." }, 503);
         const rows = await db.sql`SELECT submitted_items FROM aha_fulfillment_orders WHERE state <> 'shipped'`;
         const skus = rows.flatMap((row) => (typeof row.submitted_items === "string" ? JSON.parse(row.submitted_items) : row.submitted_items ?? []).map((item) => String(item?.sku ?? "")));
         return reply({ products: (current.retired ?? []).map((entry) => {
