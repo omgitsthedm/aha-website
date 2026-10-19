@@ -1,13 +1,44 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { replaceUnreleased } from "../tools/catalog/replace-unreleased.mjs";
 import { createSquareClient } from "../tools/catalog/square.mjs";
+import { persistReplacement, requireReplacementState, resumeReplacement } from "../tools/catalog/replacement-state.mjs";
+import { writeTextAtomic } from "../tools/catalog/lib.mjs";
 
 const spec = { slug: "approved-tee", status: "approved", approval: { by: "Owner" }, title: "Approved Tee", color: "Ivory", priceCents: 3400, sizes: ["M"], apliiq: { productId: 1, colorId: 2, artwork: [{ key: "front", name: "Approved master", imagePath: `https://raw.githubusercontent.com/owner/repo/${"a".repeat(40)}/correct.png` }], locations: [{ id: 3, artworkKey: "front", service: "transferprint", note: "9 inches wide" }], label: { id: 6208403, placementId: 1011, placementName: "inside neck" } } };
 const current = { apliiq: { designId: 10 }, square: { itemId: "old-item" } };
+
+test("replacement checks both local records and the expected identity before provider work", () => {
+  const ledger = { products: [{ ...current, slug: "approved-tee" }] };
+  assert.throws(() => requireReplacementState(ledger, [], "approved-tee", 10), /both ledger and presentation/);
+  assert.throws(() => requireReplacementState(ledger, [{ slug: "approved-tee" }], "approved-tee", 11), /Supplier design changed/);
+  assert.equal(requireReplacementState(ledger, [{ slug: "approved-tee" }], "approved-tee", 10).entry.apliiq.designId, 10);
+});
+
+test("an interrupted catalog save resumes all three artifacts without provider writes or losing another product", () => {
+  const dir = mkdtempSync(path.join(tmpdir(), "aha-catalog-recovery-"));
+  const paths = { ledger: path.join(dir, "ledger.json"), products: path.join(dir, "products.json"), fulfillment: path.join(dir, "catalog.mjs"), intents: path.join(dir, "intents") };
+  const original = { ...current, slug: "approved-tee", status: "live", fulfillment: { product: "approved_tee" }, variants: [{ variationId: "old-M", sku: "APQ-10S7A1", size: "M", priceCents: 3400 }] };
+  const next = { ...original, apliiq: { designId: 20 }, square: { itemId: "new-item" }, variants: [{ variationId: "new-M", sku: "APQ-20S7A1", size: "M", priceCents: 3400 }] };
+  writeFileSync(paths.ledger, JSON.stringify({ products: [original] }));
+  writeFileSync(paths.products, JSON.stringify([{ slug: "approved-tee", squareItemId: "old-item" }]));
+  writeFileSync(paths.fulfillment, "old allow list");
+  let writes = 0;
+  const journal = { slug: "approved-tee", fromDesignId: 10, entry: next, product: { slug: "approved-tee", squareItemId: "new-item" }, summary: { apliiqDesignId: 20 } };
+  assert.throws(() => persistReplacement(journal, { paths, writeText: (file, content) => { if (++writes === 2) throw Error("disk interrupted"); writeTextAtomic(file, content); } }), /disk interrupted/);
+  // Unrelated catalog work after the interruption must survive recovery.
+  const ledger = JSON.parse(readFileSync(paths.ledger)); ledger.products.push({ ...original, slug: "another-tee", variants: [{ ...original.variants[0], variationId: "another-M" }] }); writeFileSync(paths.ledger, JSON.stringify(ledger));
+  assert.equal(resumeReplacement("approved-tee", 10, { paths }).recovered, true);
+  assert.equal(JSON.parse(readFileSync(paths.ledger)).products.length, 2);
+  assert.equal(JSON.parse(readFileSync(paths.products))[0].squareItemId, "new-item");
+  assert.match(readFileSync(paths.fulfillment, "utf8"), /new-M/);
+  assert.match(readFileSync(paths.fulfillment, "utf8"), /another-M/);
+  assert.doesNotMatch(readFileSync(paths.fulfillment, "utf8"), /old-M/);
+  assert.equal(resumeReplacement("approved-tee", 10, { paths }).alreadyComplete, true);
+});
 
 test("supplier replacement refuses a published page, unknown page state or ordered product before any provider write", async () => {
   for (const [pageStatus, hasOrders] of [[200, false], [503, false], [404, true]]) {

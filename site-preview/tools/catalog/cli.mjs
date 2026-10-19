@@ -33,6 +33,7 @@ const CATALOG_BLANKS = path.join(CATALOG_DIR, "blanks");
 import { buildCampaign, buildGallery } from "./images.mjs";
 import { marginReport } from "./margin.mjs";
 import { replaceUnreleased } from "./replace-unreleased.mjs";
+import { persistReplacement, requireReplacementState, resumeReplacement } from "./replacement-state.mjs";
 import { createSquareClient, itemObject, squareIdempotencyKey, squareToken, verifyItem } from "./square.mjs";
 import { productImageKeys } from "../../server/catalog/publish.mjs";
 import { PRIVATE_LABEL, SITE_ORIGIN } from "../../server/platform/client.mjs";
@@ -335,9 +336,11 @@ const commands = {
     const raw = listDesigns().find(({ spec }) => spec.slug === slug);
     if (!raw || !flags.reason || !flags["from-design-id"]) throw new CatalogError("Replacement needs slug, --from-design-id and --reason.", { code: "replacement_arguments" });
     const spec = normalizeSpec(raw.spec, raw.file);
+    const resumed = resumeReplacement(slug, flags["from-design-id"]);
+    if (resumed) return resumed;
     const ledger = loadLedger();
-    const current = ledger.products.find((entry) => entry.slug === slug);
-    if (!current || String(current.apliiq.designId) !== String(flags["from-design-id"])) throw new CatalogError("Supplier design changed; inspect before replacement.", { code: "replacement_changed" });
+    const products = readJson(PATHS.products);
+    const { entry: current } = requireReplacementState(ledger, products, slug, flags["from-design-id"]);
     const report = marginReport(spec, readJson(PATHS.costs));
     if (!report.pass) throw new CatalogError("Corrected product fails the margin floor.", { code: "replacement_margin" });
     const page = await fetch(`${SITE_ORIGIN}/shop/${slug}/`, { cache: "no-store", signal: AbortSignal.timeout(20000) });
@@ -346,14 +349,8 @@ const commands = {
     const result = await replaceUnreleased({ spec, current, square, apliiq: createApliiqClient({ credentials: apliiqCredentials() }), pageStatus: page.status, hasOrders });
     const superseded = [...(current.superseded ?? []), { at: new Date().toISOString(), reason: flags.reason, apliiq: current.apliiq, square: current.square, variants: current.variants }];
     Object.assign(current, { apliiq: { designId: result.designId, artworkIds: result.artworkIds }, square: { itemId: result.itemId, imageIds: [] }, variants: spec.sizes.map((size) => ({ variationId: result.variationIds[size], size, sku: result.skus[size], priceCents: spec.priceCents })), superseded });
-    saveLedger(ledger);
-    const products = readJson(PATHS.products);
-    const index = products.findIndex((p) => p.slug === slug);
-    if (index < 0) throw new CatalogError("Replacement has no local presentation record.", { code: "replacement_missing_page" });
-    products[index] = productRecord(spec, result.itemId, result.variationIds, result.skus);
-    writeJsonAtomic(PATHS.products, products);
-    writeTextAtomic(PATHS.fulfillment, renderFulfillmentCatalog(ledger));
-    return { slug, supersededDesign: superseded.at(-1).apliiq.designId, apliiqDesignId: result.designId, squareItemId: result.itemId, variants: spec.sizes.length, ordersChecked: true, priorPageStatus: page.status };
+    const summary = { slug, supersededDesign: superseded.at(-1).apliiq.designId, apliiqDesignId: result.designId, squareItemId: result.itemId, variants: spec.sizes.length, ordersChecked: true, priorPageStatus: page.status };
+    return persistReplacement({ slug, fromDesignId: flags["from-design-id"], entry: current, product: productRecord(spec, result.itemId, result.variationIds, result.skus), summary });
   },
 
   async "square-images"(slug) {

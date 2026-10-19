@@ -507,7 +507,7 @@
     }
   ],
   "validation": {
-    "check": "250 passing tests; lint, types and build pass",
+    "check": "252 passing unit tests; lint, types and build pass. Supplier replacement interruption/recovery is covered.",
     "browser": "76 passed, 10 production-only skipped; corrected-mapping selection and storefront tests 37 passed",
     "supplier": "Actual decorated size SKUs; private label SB-3-161622 for every product. Six never-published designs corrected through new identities after verifying zero orders.",
     "images": "Four garment views each; three campaign photos per design/setting, separate from shopping galleries and feeds."
