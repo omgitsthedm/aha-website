@@ -1,0 +1,237 @@
+{
+  "slug": "resist-rebel-6014-midnight",
+  "status": "approved",
+  "familyId": "008",
+  "title": "Resist Rebel Long Sleeve",
+  "blank": "6014",
+  "color": "Midnight",
+  "priceCents": 4500,
+  "approval": {
+    "by": "David Marsh (owner)",
+    "at": "2026-10-19T18:11:12.232Z",
+    "note": "Owner approved these designs and garments in chat and instructed “Upload them all, we’re on a deadline”, then “now do that with these new products ... pricing everything, research it then do it”. Exact retail delegated to researched free-shipping margin checks."
+  },
+  "fulfillment": {
+    "product": "resist_rebel_6014_midnight"
+  },
+  "apliiq": {
+    "productId": 460,
+    "productCode": "mens_Pigment-Dyed-Heavyweight-Long-Sleeve-T-Shirt",
+    "colorId": 527,
+    "label": {
+      "id": 6208403,
+      "placementId": 1011,
+      "placementName": "inside neck"
+    },
+    "artwork": [
+      {
+        "key": "front",
+        "name": "resist-rebel-6014-midnight-front",
+        "imagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/resist-rebel.png"
+      }
+    ],
+    "locations": [
+      {
+        "id": 6635,
+        "boxId": 1,
+        "imagePath": "https://blob.apliiq.com/sitestorage/base/6635_590_900.png",
+        "artworkKey": "front",
+        "service": "transfer_print",
+        "note": "Use exact supplied front artwork, 10 inches wide; centered on garment, top 2.5 inches below collar seam. Matte print, no sheen, transparent areas are garment negative space. No redraw, outlines, added text or manufacturer branding."
+      }
+    ],
+    "productionNote": "Resist Rebel Long Sleeve — Midnight. Match exact approved production PNGs; keep all approved letterforms and illustration. Current private label SB-3-161622 replaces manufacturer neck/seam branding. Front artwork width 10 inches. Back is plain."
+  },
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+  ],
+  "product": {
+    "collection": "Resist Rebel",
+    "gallery": [
+      {
+        "src": "/images/resist-rebel/resist-rebel-6014-midnight/garment-front-1122.webp",
+        "srcset": "/images/resist-rebel/resist-rebel-6014-midnight/garment-front-400.webp 400w, /images/resist-rebel/resist-rebel-6014-midnight/garment-front-800.webp 800w, /images/resist-rebel/resist-rebel-6014-midnight/garment-front-1122.webp 1122w",
+        "feedImage": "/images/resist-rebel/resist-rebel-6014-midnight/garment-front.jpg",
+        "width": 1122,
+        "height": 1025,
+        "alt": "Front of the Midnight Resist Rebel Long Sleeve.",
+        "role": "front"
+      },
+      {
+        "src": "/images/resist-rebel/resist-rebel-6014-midnight/garment-back-1122.webp",
+        "srcset": "/images/resist-rebel/resist-rebel-6014-midnight/garment-back-400.webp 400w, /images/resist-rebel/resist-rebel-6014-midnight/garment-back-800.webp 800w, /images/resist-rebel/resist-rebel-6014-midnight/garment-back-1122.webp 1122w",
+        "feedImage": "/images/resist-rebel/resist-rebel-6014-midnight/garment-back.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Plain back of the Midnight Resist Rebel Long Sleeve.",
+        "role": "back"
+      },
+      {
+        "src": "/images/resist-rebel/resist-rebel-6014-midnight/garment-print-detail-1122.webp",
+        "srcset": "/images/resist-rebel/resist-rebel-6014-midnight/garment-print-detail-400.webp 400w, /images/resist-rebel/resist-rebel-6014-midnight/garment-print-detail-800.webp 800w, /images/resist-rebel/resist-rebel-6014-midnight/garment-print-detail-1122.webp 1122w",
+        "feedImage": "/images/resist-rebel/resist-rebel-6014-midnight/garment-print-detail.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Close view of the front print on the Midnight Resist Rebel Long Sleeve.",
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/resist-rebel/resist-rebel-6014-midnight/garment-folded-1122.webp",
+        "srcset": "/images/resist-rebel/resist-rebel-6014-midnight/garment-folded-400.webp 400w, /images/resist-rebel/resist-rebel-6014-midnight/garment-folded-800.webp 800w, /images/resist-rebel/resist-rebel-6014-midnight/garment-folded-1122.webp 1122w",
+        "feedImage": "/images/resist-rebel/resist-rebel-6014-midnight/garment-folded.jpg",
+        "width": 1122,
+        "height": 1122,
+        "alt": "Midnight Resist Rebel Long Sleeve casually folded, with the AHA private neck label visible.",
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/resist-rebel/resist-rebel-6014-midnight/campaign-hero-1122.webp",
+        "srcset": "/images/resist-rebel/resist-rebel-6014-midnight/campaign-hero-400.webp 400w, /images/resist-rebel/resist-rebel-6014-midnight/campaign-hero-680.webp 680w, /images/resist-rebel/resist-rebel-6014-midnight/campaign-hero-800.webp 800w, /images/resist-rebel/resist-rebel-6014-midnight/campaign-hero-1122.webp 1122w",
+        "feedImage": "/images/resist-rebel/resist-rebel-6014-midnight/campaign-hero.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "True Navy Resist Rebel cotton tee worn with relaxed upright posture at a New York park wall beside dark iron railings, view 1.",
+        "role": "lifestyle-hero",
+        "productSlug": "resist-rebel-c1717-true-navy"
+      },
+      {
+        "src": "/images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-1-1122.webp",
+        "srcset": "/images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-1-400.webp 400w, /images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-1-680.webp 680w, /images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-1-800.webp 800w, /images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-1-1122.webp 1122w",
+        "feedImage": "/images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-1.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "True Navy Resist Rebel cotton tee worn with relaxed upright posture at a New York park wall beside dark iron railings, view 2.",
+        "role": "lifestyle-alternate",
+        "productSlug": "resist-rebel-c1717-true-navy"
+      },
+      {
+        "src": "/images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-2-1122.webp",
+        "srcset": "/images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-2-400.webp 400w, /images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-2-680.webp 680w, /images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-2-800.webp 800w, /images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-2-1122.webp 1122w",
+        "feedImage": "/images/resist-rebel/resist-rebel-6014-midnight/campaign-alternate-2.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "True Navy Resist Rebel cotton tee worn with relaxed upright posture at a New York park wall beside dark iron railings, view 3.",
+        "role": "lifestyle-alternate",
+        "productSlug": "resist-rebel-c1717-true-navy"
+      }
+    ],
+    "gender": "unisex",
+    "fit": "relaxed",
+    "weightOz": 6.1,
+    "composition": "100% ring-spun cotton",
+    "typeLabel": "Long sleeve",
+    "fabricType": "cotton jersey",
+    "blank": "Comfort Colors 6014",
+    "constructionDetails": [
+      "garment-dyed finish",
+      "ribbed collar",
+      "shoulder-to-shoulder twill tape",
+      "ribbed cuffs"
+    ],
+    "sizeGuide": [
+      {
+        "size": "S",
+        "chestWidth": 18.25,
+        "bodyLength": 26.625,
+        "sleeveLength": 31.875
+      },
+      {
+        "size": "M",
+        "chestWidth": 20.25,
+        "bodyLength": 28,
+        "sleeveLength": 33.75
+      },
+      {
+        "size": "L",
+        "chestWidth": 22,
+        "bodyLength": 29.375,
+        "sleeveLength": 36.875
+      },
+      {
+        "size": "XL",
+        "chestWidth": 24,
+        "bodyLength": 30.75,
+        "sleeveLength": 37.25
+      },
+      {
+        "size": "2XL",
+        "chestWidth": 26,
+        "bodyLength": 31.625,
+        "sleeveLength": 38.75
+      },
+      {
+        "size": "3XL",
+        "chestWidth": 27.75,
+        "bodyLength": 32.5,
+        "sleeveLength": 39.75
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Compare a similar garment laid flat. Allow normal manufacturing variation of about 1 inch in chest width and 1.25 inches in length.",
+    "sleeveMeasurementGuidance": "Sleeve length is measured from the center back neck, across the shoulder and down the sleeve.",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > T-Shirts > Long Sleeves"
+    },
+    "description": "Resist Rebel Long Sleeve in Midnight. A relaxed long-sleeve tee in substantial 6.1 oz ring-spun cotton. Garment-dyed finish, ribbed cuffs and a front print; the back is plain.",
+    "printMethod": "direct-to-film (DTF) transfer",
+    "galleryAlts": {
+      "front": "Front of the Midnight Resist Rebel Long Sleeve.",
+      "back": "Plain back of the Midnight Resist Rebel Long Sleeve.",
+      "print-detail": "Close view of the front print on the Midnight Resist Rebel Long Sleeve.",
+      "folded": "Midnight Resist Rebel Long Sleeve casually folded, with the AHA private neck label visible."
+    },
+    "campaignAlts": [
+      "True Navy Resist Rebel cotton tee worn with relaxed upright posture at a New York park wall beside dark iron railings, view 1.",
+      "True Navy Resist Rebel cotton tee worn with relaxed upright posture at a New York park wall beside dark iron railings, view 2.",
+      "True Navy Resist Rebel cotton tee worn with relaxed upright posture at a New York park wall beside dark iron railings, view 3."
+    ],
+    "campaignSetting": "a New York park wall beside dark iron railings"
+  },
+  "local": {
+    "folder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/008 — Resist Rebel",
+    "approvedFrontProof": {
+      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/008 — Resist Rebel/6014 — True Navy — Proof/Front — Review.png",
+      "exists": true,
+      "sha256": "0e8059919b615e0af1f5dbbf484fbe29ee80c89dbf82efc8a1f6ef54cd93c2d7"
+    },
+    "artwork": {
+      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/008 — Resist Rebel/Resist Rebel — Blue Heritage — Refined Review.png",
+      "exists": true,
+      "sha256": "46dc28c6ea8ca72e0f32c5e4d34fa731b3465d26a6c8a7e70a50c299328077e7"
+    },
+    "preparationNote": "Executable specification using approved art and owner-delegated researched pricing. Gallery and campaign are finished before storefront publication.",
+    "sourcingCorrection": "Authenticated Apliiq 6014 colors do not include True Navy; Midnight is the available navy-adjacent shade.",
+    "productionMaster": "/Users/davidmarsh/Documents/Codex/2026-10-14/o-x20/aha-upload-batch/production-artwork/fw26-approved/resist-rebel.png",
+    "launchFolder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/008 — Resist Rebel/6014 — Midnight — Launch",
+    "campaignNote": "Three photos per approved design, shared across its garment/color listings; alt text names the garment actually pictured. Campaign images remain outside product galleries and feeds."
+  },
+  "costOverride": {
+    "baseCents": 2327,
+    "surchargeCents": {
+      "S": 0,
+      "M": 0,
+      "L": 0,
+      "XL": 0,
+      "2XL": 240,
+      "3XL": 320
+    },
+    "shippingCents": {
+      "S": 596,
+      "M": 596,
+      "L": 596,
+      "XL": 596,
+      "2XL": 692,
+      "3XL": 692
+    },
+    "labelCents": 200,
+    "perItemCents": 100,
+    "source": "2026-10-19 authenticated Apliiq Product API + official VIP 20% service/blank discount, official May 12 2026 US shipping by size weight, $1/item fulfillment. Retail includes US shipping; floor checks both card and Afterpay fees."
+  }
+}

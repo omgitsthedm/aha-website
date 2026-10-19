@@ -46,6 +46,8 @@ test("Apliiq SKUs follow the decorated size codes", () => {
   assert.equal(expectedSku(6211442, "XS"), "APQ-6211442S5A1");
   assert.equal(expectedSku(6211442, "3XL"), "APQ-6211442S21A1");
   assert.equal(expectedSku(6209275, "5XL"), "APQ-6209275S62A1");
+  assert.equal(expectedSku(6220000, "One Size"), "APQ-6220000S34A1");
+  assert.equal(expectedSku(6220000, "One Size", { "One Size": 10 }), "APQ-6220000S10A1");
   assert.throws(() => expectedSku(1, "6XL"), /Unknown size/);
 });
 
@@ -93,6 +95,16 @@ test("margin gate passes a $55 crewneck and blocks a $35 one", () => {
   assert.throws(() => marginReport({ ...spec, blank: "UNKNOWN" }, costs), /no cost record/);
 });
 
+test("margin gate blocks a price that clears card fees but fails Afterpay", () => {
+  const report = marginReport({ ...spec, priceCents: 5000 }, costs);
+  const largest = report.sizes.find((row) => row.size === "3XL");
+  assert.ok(largest.contributionCents >= costs.floorCents);
+  assert.ok(largest.afterpayContributionCents < costs.floorCents);
+  assert.equal(report.pass, false);
+  assert.equal(report.worstPaymentMethod, "afterpay");
+  assert.equal(report.worstContributionCents, largest.afterpayContributionCents);
+});
+
 test("Square readback must match every requested size, SKU and price", () => {
   const skus = Object.fromEntries(spec.sizes.map((size) => [size, expectedSku(6300000, size)]));
   const object = itemObject(spec, skus);
@@ -102,6 +114,17 @@ test("Square readback must match every requested size, SKU and price", () => {
   const wrongPrice = structuredClone(item);
   wrongPrice.item_data.variations[2].item_variation_data.price_money.amount = 100;
   assert.throws(() => verifyItem(spec, skus, wrongPrice), /readback mismatch/);
+});
+
+test("current per-size shipping and VIP label quotes override historical blanket costs", () => {
+  const report = marginReport({ ...spec, priceCents: 6400, sizes: ["XS", "3XL"], costOverride: {
+    baseCents: 3475, surchargeCents: { "3XL": 360 }, labelCents: 200,
+    shippingCents: { XS: 885, "3XL": 1180 }, perItemCents: 100,
+  } }, costs);
+  assert.equal(report.worstSize, "3XL");
+  assert.equal(report.worstContributionCents, 671);
+  assert.equal(report.pass, true);
+  assert.equal(report.sizes[0].afterpayContributionCents, 1326);
 });
 
 test("garment images become the storefront's WebP/JPEG set and gallery entries", async () => {

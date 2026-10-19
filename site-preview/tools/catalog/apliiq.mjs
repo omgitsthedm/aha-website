@@ -85,7 +85,7 @@ export function designPayload(spec, artworkIds) {
     Locations: apliiq.locations.map((location) => ({
       Id: location.id,
       ImagePath: location.imagePath,
-      Artworks: [{ Id: artworkIds[location.artworkKey], Service: location.service, Note: location.note, ...(location.boxId ? { BoxId: location.boxId } : {}) }],
+      Artworks: [{ Id: artworkIds[location.artworkKey], Service: location.service, Note: location.note, ...(location.boxId ? { BoxId: location.boxId } : {}), ...(location.printColors ? { PrintColors: location.printColors } : {}) }],
     })),
     Subscriptions: [{ Placement: { Id: apliiq.label.placementId, Name: apliiq.label.placementName }, Label: { Id: apliiq.label.id } }],
     Name: spec.title + (spec.color ? ` — ${spec.color}` : ""),

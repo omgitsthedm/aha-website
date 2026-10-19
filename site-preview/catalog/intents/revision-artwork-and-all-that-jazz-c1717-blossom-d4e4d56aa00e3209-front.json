@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "revision-artwork-and-all-that-jazz-c1717-blossom-d4e4d56aa00e3209-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T19:18:39.506Z",
+  "payload": {
+    "Name": "and-all-that-jazz-c1717-blossom-front",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/4ffe006b353c57d2edb0b37dedb7dafecc27e77f/production-artwork/f/jazz-90.png"
+  },
+  "finishedAt": "2026-10-19T19:18:41.285Z",
+  "response": {
+    "WtoHRatio": 0.6146,
+    "DateCreated": "2026-10-19T19:18:41.2593486Z",
+    "Id": 8217364,
+    "Name": "and-all-that-jazz-c1717-blossom-front"
+  }
+}

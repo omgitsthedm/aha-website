@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "key": "design-after-hours-agenda-heritage-beanie-sp12-black",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:53:58.122Z",
+  "payload": {
+    "ProductId": 233,
+    "ProductCode": "mens_beanie",
+    "ColorId": 50,
+    "Locations": [
+      {
+        "Id": 2247,
+        "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/7436652220147836e4ca20ed0b548f9d77b339a2/production-artwork/fw26-proofs/beanie-black-front.jpg",
+        "Artworks": [
+          {
+            "Id": 8217164,
+            "Service": "embroidery",
+            "Note": "Direct embroidery, exactly 3.5 inches wide, centered on front turned-up cuff, not a patch. Preserve supplied custom text and sheep silhouette. Use supplied selected thread color.",
+            "BoxId": 1,
+            "PrintColors": "#f9f9ed"
+          }
+        ]
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1025,
+          "Name": "inside seam"
+        },
+        "Label": {
+          "Id": 6208403
+        }
+      }
+    ],
+    "Name": "After Hours Agenda Heritage Beanie — Black",
+    "Description": "After Hours Agenda Heritage Beanie — Black. Match exact approved production PNGs; keep all approved letterforms and illustration. Current private label SB-3-161622 replaces manufacturer neck/seam branding. Direct embroidery centered on cuff, finished logo width 3.5 inches."
+  },
+  "finishedAt": "2026-10-19T18:53:58.954Z",
+  "response": {
+    "ProductId": 233,
+    "ProductCode": "mens_beanie",
+    "ColorId": 50,
+    "Locations": [
+      {
+        "Artworks": [
+          {
+            "Service": "embroidery",
+            "PrintColors": "#f9f9ed",
+            "Note": "Direct embroidery, exactly 3.5 inches wide, centered on front turned-up cuff, not a patch. Preserve supplied custom text and sheep silhouette. Use supplied selected thread color.",
+            "BoxId": 1,
+            "Id": 8217164
+          }
+        ],
+        "Id": 2247,
+        "ImagePath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6220346_22472026-10-19-18-53-58Zbeanie-black-front.jpg"
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1025,
+          "Name": "inside seam"
+        },
+        "Label": {
+          "Id": 6208403
+        },
+        "Id": 0
+      }
+    ],
+    "Variants": [
+      {
+        "SKU": "APQ-6220346S10A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "one size"
+      }
+    ],
+    "Id": 6220346,
+    "Name": "After Hours Agenda Heritage Beanie — Black",
+    "Description": "After Hours Agenda Heritage Beanie — Black. Match exact approved production PNGs; keep all approved letterforms and illustration. Current private label SB-3-161622 replaces manufacturer neck/seam branding. Direct embroidery centered on cuff, finished logo width 3.5 inches."
+  }
+}

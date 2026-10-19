@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-for-the-record-ss4500-black-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:13:51.294Z",
+  "payload": {
+    "Name": "For the Record Hoodie approved front",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/for-the-record-front.png"
+  },
+  "finishedAt": "2026-10-19T18:13:51.594Z",
+  "response": {
+    "WtoHRatio": 6.3492,
+    "DateCreated": "2026-10-19T18:13:51.5620208Z",
+    "Id": 8217177,
+    "Name": "For the Record Hoodie approved front"
+  }
+}

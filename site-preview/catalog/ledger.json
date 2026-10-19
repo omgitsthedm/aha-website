@@ -922,6 +922,1825 @@
           "priceCents": 5500
         }
       ]
+    },
+    {
+      "slug": "camo-sheep-ind4000-forest-camo",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220094,
+        "artworkIds": {
+          "front": 8217017
+        }
+      },
+      "square": {
+        "itemId": "53K6ILAW4SVHUX5DIGDKQCJJ",
+        "imageIds": [],
+        "images": {
+          "front": "VDO37IHSHQ7IH2D3BPZBPPAO",
+          "back": "5ZXJY4FRU2D54LATIOY73I2K",
+          "print-detail": "LIZ2QGT2RDLDXCK6NACVOEDQ",
+          "folded": "OCG7TRBMS3DD5MKOEOUXOMER"
+        }
+      },
+      "fulfillment": {
+        "product": "camo_sheep_ind4000_forest_camo",
+        "title": "Camo Sheep Hoodie — Forest Camo"
+      },
+      "variants": [
+        {
+          "variationId": "KRYQLSO3UGJXOOSAZJAZDGSV",
+          "size": "XS",
+          "sku": "APQ-6220094S5A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "SH42IGDMR52PIPS27C7WPK36",
+          "size": "S",
+          "sku": "APQ-6220094S6A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "IT23FX4AWEINLONS6IU2KVWG",
+          "size": "M",
+          "sku": "APQ-6220094S7A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "3BGLY6KL3EX3QVNG3ZWXEMKH",
+          "size": "L",
+          "sku": "APQ-6220094S8A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "47IEW5FRIKTF7EJ7TIFMVKO5",
+          "size": "XL",
+          "sku": "APQ-6220094S1A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "AOAIRTLBO6VJMNTTKAIDGG5G",
+          "size": "2XL",
+          "sku": "APQ-6220094S2A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "5B2IR24SSAPNGD62IRNT7MZY",
+          "size": "3XL",
+          "sku": "APQ-6220094S21A1",
+          "priceCents": 6400
+        }
+      ]
+    },
+    {
+      "slug": "camo-sheep-ind4000-snow-camo",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220095,
+        "artworkIds": {
+          "front": 8217018
+        }
+      },
+      "square": {
+        "itemId": "FY7TIKKUDG3TXFBHT5MW7NZ7",
+        "imageIds": [],
+        "images": {
+          "front": "3GTCE2S2LXUVGT4WWUJKT6ZZ",
+          "back": "LPW3WDXCOXBLA6RZVK7QMONM",
+          "print-detail": "KOIZQCSZ24SAQNDAU24URDIE",
+          "folded": "HKMGIMDF72WSL4Q55NSDLPME"
+        }
+      },
+      "fulfillment": {
+        "product": "camo_sheep_ind4000_snow_camo",
+        "title": "Camo Sheep Hoodie — Snow Camo"
+      },
+      "variants": [
+        {
+          "variationId": "PWECN7KJ3S2HRASK7NAEZGA5",
+          "size": "XS",
+          "sku": "APQ-6220095S5A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "TJTWG3X3WN2M3MMT3F7Z2EJY",
+          "size": "S",
+          "sku": "APQ-6220095S6A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "JPVEIRAUEK3Y2W4IYHHP2VIY",
+          "size": "M",
+          "sku": "APQ-6220095S7A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "MP5FCJME55VOMK5XRCYQA3H2",
+          "size": "L",
+          "sku": "APQ-6220095S8A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "BID5XL7PNY43EYDLRVITMVAZ",
+          "size": "XL",
+          "sku": "APQ-6220095S1A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "3TQH6QGXRKXLM4YASEYBCES6",
+          "size": "2XL",
+          "sku": "APQ-6220095S2A1",
+          "priceCents": 6400
+        },
+        {
+          "variationId": "MLTDMMJ2GOXLE4XCP3HWW6FB",
+          "size": "3XL",
+          "sku": "APQ-6220095S21A1",
+          "priceCents": 6400
+        }
+      ]
+    },
+    {
+      "slug": "and-all-that-jazz-3023cl-butter",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220433,
+        "artworkIds": {
+          "front": 8217363
+        }
+      },
+      "square": {
+        "itemId": "UWA6IMUGQCL5XCLYZ2B72USN",
+        "imageIds": [],
+        "images": {
+          "front": "OLY42XTF73ZEJM36JR5C5HLB",
+          "back": "VR7VBIQCPHGLPDN2CF22CWL3",
+          "print-detail": "EYPKV7TZMZDOIHQNFD7RZNQS",
+          "folded": "GNRCLHADET6KBDPNCTSVUZVU"
+        }
+      },
+      "fulfillment": {
+        "product": "and_all_that_jazz_3023cl_butter",
+        "title": "And All That Jazz Boxy Tee — Butter"
+      },
+      "variants": [
+        {
+          "variationId": "GE4XU3UJVGUZJSQRKMM3GXAG",
+          "size": "S",
+          "sku": "APQ-6220433S6A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "PLVWR2REYRQTH3WPCCG54QL2",
+          "size": "M",
+          "sku": "APQ-6220433S7A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "BXMUMSDMSP7NAURRSXFP2LUX",
+          "size": "L",
+          "sku": "APQ-6220433S8A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "3DTPD7NDBRIRSNG7L7L5F3YV",
+          "size": "XL",
+          "sku": "APQ-6220433S1A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "SDIT5PCWHV4OL4PWHE3SMAQU",
+          "size": "2XL",
+          "sku": "APQ-6220433S2A1",
+          "priceCents": 3400
+        }
+      ],
+      "superseded": [
+        {
+          "at": "2026-10-19T19:18:33.049Z",
+          "reason": "Correct final primary artwork and native print width before first publication; legacy supplier note editor failed readback.",
+          "apliiq": {
+            "designId": 6220228,
+            "artworkIds": {
+              "front": 8217170
+            }
+          },
+          "square": {
+            "itemId": "QEZ7YJWZHVFTYWGAVF3D43TC",
+            "imageIds": [],
+            "images": {
+              "front": "OLY42XTF73ZEJM36JR5C5HLB",
+              "back": "VR7VBIQCPHGLPDN2CF22CWL3",
+              "print-detail": "EYPKV7TZMZDOIHQNFD7RZNQS",
+              "folded": "GNRCLHADET6KBDPNCTSVUZVU"
+            }
+          },
+          "variants": [
+            {
+              "variationId": "GDJIXKBJ3IIG675CQXWFAMTT",
+              "size": "S",
+              "sku": "APQ-6220228S6A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "XLEB3SXI7IZ6FQS64UBQFMXD",
+              "size": "M",
+              "sku": "APQ-6220228S7A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "JMYF5AJVAZUT6F2JU3EFQOA7",
+              "size": "L",
+              "sku": "APQ-6220228S8A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "33LPYNC7LGYJNRQXHQ7UI547",
+              "size": "XL",
+              "sku": "APQ-6220228S1A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "TMY77KRYNFK4JJF66ZVGJMWM",
+              "size": "2XL",
+              "sku": "APQ-6220228S2A1",
+              "priceCents": 3400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "and-all-that-jazz-c1717-blossom",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220434,
+        "artworkIds": {
+          "front": 8217364
+        }
+      },
+      "square": {
+        "itemId": "MTXGKZPKFRYWWP7MZX46SS47",
+        "imageIds": [],
+        "images": {
+          "front": "UUK7OWG3OFRV4RQJUUKKFJN4",
+          "back": "AOEWLF63TDAOIET36TYR4END",
+          "print-detail": "XFFSYVCGBAAS5YGK6X5OQOMT",
+          "folded": "YFIITHUYQZUKAWPF5726AHYD"
+        }
+      },
+      "fulfillment": {
+        "product": "and_all_that_jazz_c1717_blossom",
+        "title": "And All That Jazz T-Shirt — Blossom"
+      },
+      "variants": [
+        {
+          "variationId": "FRIL43EDBWI4UTVTT3QKOCI4",
+          "size": "S",
+          "sku": "APQ-6220434S6A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "27ENYOYFMGVP24PPP6Z5UDW7",
+          "size": "M",
+          "sku": "APQ-6220434S7A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "UJWOQDXITLZDQKIIZTECAL2F",
+          "size": "L",
+          "sku": "APQ-6220434S8A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "MUBMWC5ZRZSWWZDOKFCQ4INX",
+          "size": "XL",
+          "sku": "APQ-6220434S1A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "35FCGXS2EVA4X6RB6R43SBJX",
+          "size": "2XL",
+          "sku": "APQ-6220434S2A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "56QGRMYOE3GOZ7M5XB2DEJJP",
+          "size": "3XL",
+          "sku": "APQ-6220434S21A1",
+          "priceCents": 3400
+        }
+      ],
+      "superseded": [
+        {
+          "at": "2026-10-19T19:18:42.810Z",
+          "reason": "Correct final primary artwork and native print width before first publication; legacy supplier note editor failed readback.",
+          "apliiq": {
+            "designId": 6220229,
+            "artworkIds": {
+              "front": 8217171
+            }
+          },
+          "square": {
+            "itemId": "47FKTTBDEDVBTQJFWU25DYEE",
+            "imageIds": [],
+            "images": {
+              "front": "UUK7OWG3OFRV4RQJUUKKFJN4",
+              "back": "AOEWLF63TDAOIET36TYR4END",
+              "print-detail": "XFFSYVCGBAAS5YGK6X5OQOMT",
+              "folded": "YFIITHUYQZUKAWPF5726AHYD"
+            }
+          },
+          "variants": [
+            {
+              "variationId": "LDSMZ64QPUZEQTWZMUJ7OKK5",
+              "size": "S",
+              "sku": "APQ-6220229S6A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "EH7ZSTASHIGFTRLHMPSE7SKJ",
+              "size": "M",
+              "sku": "APQ-6220229S7A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "2UEHC2YDJPYZTCUSABZ3ARV2",
+              "size": "L",
+              "sku": "APQ-6220229S8A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "4IA5LBH7QSFEPETCKAKLEO5T",
+              "size": "XL",
+              "sku": "APQ-6220229S1A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "FP4AJVXQZIBYMFFUQQ6RULWP",
+              "size": "2XL",
+              "sku": "APQ-6220229S2A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "ABHR7K4H6W54BFLGNPVDYMLN",
+              "size": "3XL",
+              "sku": "APQ-6220229S21A1",
+              "priceCents": 3400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "and-all-that-jazz-c1717-mustard",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220435,
+        "artworkIds": {
+          "front": 8217365
+        }
+      },
+      "square": {
+        "itemId": "X4CNRBW3M4YKW3TD2UZ4ADSJ",
+        "imageIds": [],
+        "images": {
+          "front": "CQMGC7X77P5ER3WGIRNU7DJR",
+          "back": "ICZLEIDXMS35RLDGT5EZJIRX",
+          "print-detail": "ADK6VGPIVQDPLNZPDX6VNIXC",
+          "folded": "BVCHE27DM6D7CKPJE2FCMMSA"
+        }
+      },
+      "fulfillment": {
+        "product": "and_all_that_jazz_c1717_mustard",
+        "title": "And All That Jazz Tee — Mustard"
+      },
+      "variants": [
+        {
+          "variationId": "RZQL5W65GHWBG4NFSIIE3AQK",
+          "size": "S",
+          "sku": "APQ-6220435S6A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "IVGW6PNSH7S5XHRLFXVF2DTP",
+          "size": "M",
+          "sku": "APQ-6220435S7A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "ZCT3ARDHDIJTZODMZJCWB4NB",
+          "size": "L",
+          "sku": "APQ-6220435S8A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "YEWJ6RHYJSBEDS2JSVHSWAFJ",
+          "size": "XL",
+          "sku": "APQ-6220435S1A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "DKJC7DPJRB5OUFVEWWUOQOZ5",
+          "size": "2XL",
+          "sku": "APQ-6220435S2A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "N4RZOOI52ASURXW362LMBN5B",
+          "size": "3XL",
+          "sku": "APQ-6220435S21A1",
+          "priceCents": 3400
+        }
+      ],
+      "superseded": [
+        {
+          "at": "2026-10-19T19:18:50.065Z",
+          "reason": "Correct final primary artwork and native print width before first publication; legacy supplier note editor failed readback.",
+          "apliiq": {
+            "designId": 6220230,
+            "artworkIds": {
+              "front": 8217172
+            }
+          },
+          "square": {
+            "itemId": "B2WBHDLGIF4FIKUY53IEKA6K",
+            "imageIds": [],
+            "images": {
+              "front": "CQMGC7X77P5ER3WGIRNU7DJR",
+              "back": "ICZLEIDXMS35RLDGT5EZJIRX",
+              "print-detail": "ADK6VGPIVQDPLNZPDX6VNIXC",
+              "folded": "BVCHE27DM6D7CKPJE2FCMMSA"
+            }
+          },
+          "variants": [
+            {
+              "variationId": "HWXKHJMU65GBTVA7BTNVWPZR",
+              "size": "S",
+              "sku": "APQ-6220230S6A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "XVMGBFZ7FOUIAIBWVPNNC46Z",
+              "size": "M",
+              "sku": "APQ-6220230S7A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "FUSAU6N67LVJGHOIPTVMKJDH",
+              "size": "L",
+              "sku": "APQ-6220230S8A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "YUYVQN3IMYY4N5FIBEI2PSOX",
+              "size": "XL",
+              "sku": "APQ-6220230S1A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "CIAWPTGPNMQA6KKLE6CPGLBJ",
+              "size": "2XL",
+              "sku": "APQ-6220230S2A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "TB2PLQ6WJ542T7FYQA2JGPNH",
+              "size": "3XL",
+              "sku": "APQ-6220230S21A1",
+              "priceCents": 3400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "and-all-that-jazz-ss3000-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220436,
+        "artworkIds": {
+          "front": 8217366
+        }
+      },
+      "square": {
+        "itemId": "KFMGPYOMANNTZDQVBKOMKTQO",
+        "imageIds": [],
+        "images": {
+          "front": "6Y6IY7LPGSCEAQ2YXVNBU54O",
+          "back": "SAEQDHISRBQVYXBHQVJUOT5C",
+          "print-detail": "E23QXPY5DEETQ5FWJRFE3F6L",
+          "folded": "EYUMLKURP5DH5VNJ3GUIPQKF"
+        }
+      },
+      "fulfillment": {
+        "product": "and_all_that_jazz_ss3000_black",
+        "title": "And All That Jazz Crewneck — Black"
+      },
+      "variants": [
+        {
+          "variationId": "7PZZWIHIEXIK5ZL2FX4K6G5O",
+          "size": "XS",
+          "sku": "APQ-6220436S5A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "AZL6HAZGQWV2B3GACQD7NB3Y",
+          "size": "S",
+          "sku": "APQ-6220436S6A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "4CSVEHA2VHZJTSFYBFWNJPAW",
+          "size": "M",
+          "sku": "APQ-6220436S7A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "E6ZXL5TGY7I3BCGDRFVKWNT4",
+          "size": "L",
+          "sku": "APQ-6220436S8A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "DE4YN7NYRKE5T5ECD6KXSR4X",
+          "size": "XL",
+          "sku": "APQ-6220436S1A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "LWY76EBYPJGTOVGW5WJY3BKF",
+          "size": "2XL",
+          "sku": "APQ-6220436S2A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "YHZRGLBGSMLZ2YSOL4METJVU",
+          "size": "3XL",
+          "sku": "APQ-6220436S21A1",
+          "priceCents": 4500
+        }
+      ],
+      "superseded": [
+        {
+          "at": "2026-10-19T19:18:57.212Z",
+          "reason": "Correct final primary artwork and native print width before first publication; legacy supplier note editor failed readback.",
+          "apliiq": {
+            "designId": 6220231,
+            "artworkIds": {
+              "front": 8217173
+            }
+          },
+          "square": {
+            "itemId": "V6H5FLUNRL3BFEXHCZSBNAJS",
+            "imageIds": [],
+            "images": {
+              "front": "6Y6IY7LPGSCEAQ2YXVNBU54O",
+              "back": "SAEQDHISRBQVYXBHQVJUOT5C",
+              "print-detail": "E23QXPY5DEETQ5FWJRFE3F6L",
+              "folded": "EYUMLKURP5DH5VNJ3GUIPQKF"
+            }
+          },
+          "variants": [
+            {
+              "variationId": "MT5JX524HGZ473BZLAMZ4XOX",
+              "size": "XS",
+              "sku": "APQ-6220231S5A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "4J74C3NDTKPHC3BM6WSTSQM4",
+              "size": "S",
+              "sku": "APQ-6220231S6A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "PNUTKVN2HD32IDD2BBL4E7QO",
+              "size": "M",
+              "sku": "APQ-6220231S7A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "45FLG2EAOCRFKLM5CNPQIUWA",
+              "size": "L",
+              "sku": "APQ-6220231S8A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "FJDDZTRN7VEKSLXXWP6GFMVW",
+              "size": "XL",
+              "sku": "APQ-6220231S1A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "GCXMAVFFEN663AXIPB2XEKCV",
+              "size": "2XL",
+              "sku": "APQ-6220231S2A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "VSKIJNDSQZ674WZ52RFEGUUA",
+              "size": "3XL",
+              "sku": "APQ-6220231S21A1",
+              "priceCents": 4500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "and-all-that-jazz-ss3000-light-pink",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220437,
+        "artworkIds": {
+          "front": 8217369
+        }
+      },
+      "square": {
+        "itemId": "WR3QOY44ZAQOYGAFNSFLZCRQ",
+        "imageIds": [],
+        "images": {
+          "front": "27QEUG4EH4JPEFNAKZVTDADZ",
+          "back": "PIVK4PZSRXRTWNBJKB3EV2MK",
+          "print-detail": "AQ6WRA72KAFCK4AXSFQUKKSP",
+          "folded": "EUMOWPFNAJEMBZXTDJGXQB7D"
+        }
+      },
+      "fulfillment": {
+        "product": "and_all_that_jazz_ss3000_light_pink",
+        "title": "And All That Jazz Crewneck — Light Pink"
+      },
+      "variants": [
+        {
+          "variationId": "E7UNV5U6XMHZAM64CZ32T76D",
+          "size": "XS",
+          "sku": "APQ-6220437S5A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "VTP4GQ753UWOQQDSOCW5OZDO",
+          "size": "S",
+          "sku": "APQ-6220437S6A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "K427BICLRLWOMR2CXKIT26ZS",
+          "size": "M",
+          "sku": "APQ-6220437S7A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "GE2ZEFZYS4XEBVZ7G5ZYQCSI",
+          "size": "L",
+          "sku": "APQ-6220437S8A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "MSC5WNGZUF56ZTQROUS2QPPS",
+          "size": "XL",
+          "sku": "APQ-6220437S1A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "TPDGCEDUU645WAR6ZDBSNBKW",
+          "size": "2XL",
+          "sku": "APQ-6220437S2A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "ERMUPFWQETVRHRK2WKEUPB3F",
+          "size": "3XL",
+          "sku": "APQ-6220437S21A1",
+          "priceCents": 4500
+        }
+      ],
+      "superseded": [
+        {
+          "at": "2026-10-19T19:19:04.626Z",
+          "reason": "Correct final primary artwork and native print width before first publication; legacy supplier note editor failed readback.",
+          "apliiq": {
+            "designId": 6220232,
+            "artworkIds": {
+              "front": 8217174
+            }
+          },
+          "square": {
+            "itemId": "HHLEL33S3SD4RQZRBNOUFQVA",
+            "imageIds": [],
+            "images": {
+              "front": "27QEUG4EH4JPEFNAKZVTDADZ",
+              "back": "PIVK4PZSRXRTWNBJKB3EV2MK",
+              "print-detail": "AQ6WRA72KAFCK4AXSFQUKKSP",
+              "folded": "EUMOWPFNAJEMBZXTDJGXQB7D"
+            }
+          },
+          "variants": [
+            {
+              "variationId": "3ADCJU44PGAFKACDVVXVKQVR",
+              "size": "XS",
+              "sku": "APQ-6220232S5A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "AK2CZEEYN5CCRZZD6VHDWEGE",
+              "size": "S",
+              "sku": "APQ-6220232S6A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "QVFSYZOERNHVNKETJYYIWFZ4",
+              "size": "M",
+              "sku": "APQ-6220232S7A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "5GH2T3ODGVOMQSQ2MWHW7RKA",
+              "size": "L",
+              "sku": "APQ-6220232S8A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "43KFVQAFLXDN4LHZ6ZNKHXJO",
+              "size": "XL",
+              "sku": "APQ-6220232S1A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "ST665WYV2CTD3L7FYMIQBNKN",
+              "size": "2XL",
+              "sku": "APQ-6220232S2A1",
+              "priceCents": 4500
+            },
+            {
+              "variationId": "2HDCUBHKBD6TWWB2WGK5PU4Z",
+              "size": "3XL",
+              "sku": "APQ-6220232S21A1",
+              "priceCents": 4500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "fashion-kills-3023cl-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220438,
+        "artworkIds": {
+          "front": 8217175
+        }
+      },
+      "square": {
+        "itemId": "ZOJOKG2PZA4TK3W4VFKSWNYX",
+        "imageIds": [],
+        "images": {
+          "front": "P3T5GOIZXDPKVR3WVR4UIJCL",
+          "back": "TUFAPOPTEEHFWIJXKUCQRSR3",
+          "print-detail": "DBSPCNLSNSP6DR5WWCQ2H2FJ",
+          "folded": "EJQ4SS3IHQQBHU4SOCU3NZUV"
+        }
+      },
+      "fulfillment": {
+        "product": "fashion_kills_3023cl_black",
+        "title": "Fashion Kills Boxy Tee — Black"
+      },
+      "variants": [
+        {
+          "variationId": "PU2TWTOIWGZLNIHPPSXHFQMK",
+          "size": "S",
+          "sku": "APQ-6220438S6A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "ZUYV5RDOHYMFRQHRXBNHM7QA",
+          "size": "M",
+          "sku": "APQ-6220438S7A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "HMVHMJXJSEWNBAKSK7W2EHSP",
+          "size": "L",
+          "sku": "APQ-6220438S8A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "LYRYNBYKRZM2FAM46WAQPZTA",
+          "size": "XL",
+          "sku": "APQ-6220438S1A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "CQVI36QOSGUVYC2UMPMIVCDS",
+          "size": "2XL",
+          "sku": "APQ-6220438S2A1",
+          "priceCents": 3400
+        }
+      ],
+      "superseded": [
+        {
+          "at": "2026-10-19T19:19:11.858Z",
+          "reason": "Correct final primary artwork and native print width before first publication; legacy supplier note editor failed readback.",
+          "apliiq": {
+            "designId": 6220233,
+            "artworkIds": {
+              "front": 8217175
+            }
+          },
+          "square": {
+            "itemId": "TXFC3WTCNB7WO74L3VLIZQSI",
+            "imageIds": [],
+            "images": {
+              "front": "P3T5GOIZXDPKVR3WVR4UIJCL",
+              "back": "TUFAPOPTEEHFWIJXKUCQRSR3",
+              "print-detail": "DBSPCNLSNSP6DR5WWCQ2H2FJ",
+              "folded": "EJQ4SS3IHQQBHU4SOCU3NZUV"
+            }
+          },
+          "variants": [
+            {
+              "variationId": "6RDOU7ZQI4ZT5RGEEFVYD5WJ",
+              "size": "S",
+              "sku": "APQ-6220233S6A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "SMYQZUX4WBPL5HIZKQX56NAW",
+              "size": "M",
+              "sku": "APQ-6220233S7A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "YPWUOB3WAICXQEDV3M7W54QQ",
+              "size": "L",
+              "sku": "APQ-6220233S8A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "CT7D6V4DGBPAZIVVC5FNMUYY",
+              "size": "XL",
+              "sku": "APQ-6220233S1A1",
+              "priceCents": 3400
+            },
+            {
+              "variationId": "TJIJB3DRVAA2R7H43D5IGPRP",
+              "size": "2XL",
+              "sku": "APQ-6220233S2A1",
+              "priceCents": 3400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "fashion-kills-ss3000-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220234,
+        "artworkIds": {
+          "front": 8217176
+        }
+      },
+      "square": {
+        "itemId": "JO62R5KJO7LJPVDOIHRIKULM",
+        "imageIds": [],
+        "images": {
+          "front": "3I3TO3HDWCIWTKCLZI3QLZI5",
+          "back": "SAEQDHISRBQVYXBHQVJUOT5C",
+          "print-detail": "BB3VSHWMACQFPNASWAOFIFVA",
+          "folded": "SOTRRE3CUDGBWEX7Y4QUI6NW"
+        }
+      },
+      "fulfillment": {
+        "product": "fashion_kills_ss3000_black",
+        "title": "Fashion Kills Crewneck — Black"
+      },
+      "variants": [
+        {
+          "variationId": "S43J5W5FQH2EDFNMERQFNCNT",
+          "size": "XS",
+          "sku": "APQ-6220234S5A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "FSIMLUSNJGD2WL5JRQYLKXGW",
+          "size": "S",
+          "sku": "APQ-6220234S6A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "CQOL4SY2RTIKNMBEZV7QJ7KJ",
+          "size": "M",
+          "sku": "APQ-6220234S7A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "JCCEERW5GCM43R6GLAMI4JOQ",
+          "size": "L",
+          "sku": "APQ-6220234S8A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "5MOW5CWOSMGQOGTX5NS64QF3",
+          "size": "XL",
+          "sku": "APQ-6220234S1A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "P5Q4OVYOJQV63UJ6WQWCSEBF",
+          "size": "2XL",
+          "sku": "APQ-6220234S2A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "ZVVNVZAUXGJBGH7WFQV5DKJN",
+          "size": "3XL",
+          "sku": "APQ-6220234S21A1",
+          "priceCents": 4500
+        }
+      ]
+    },
+    {
+      "slug": "for-the-record-ss4500-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220235,
+        "artworkIds": {
+          "front": 8217177,
+          "back": 8217178
+        }
+      },
+      "square": {
+        "itemId": "HNWTANGPQBRHI4WXSECVFWL5",
+        "imageIds": [],
+        "images": {
+          "front": "5L26KHQSB46TYMNO7M65BO6O",
+          "back": "Y5EDOXVQA3OOSFPQJW4CV4JG",
+          "print-detail": "GL7PWOV73PAK3ETKLJ7PZ7WH",
+          "folded": "6KPGAORHASLQGLZKFWLKAI6X"
+        }
+      },
+      "fulfillment": {
+        "product": "for_the_record_ss4500_black",
+        "title": "For the Record Hoodie — Black"
+      },
+      "variants": [
+        {
+          "variationId": "UWCBSFNCDFV4TYDJ5N52A4VW",
+          "size": "XS",
+          "sku": "APQ-6220235S5A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "3PUMFG5EUDFOWMDBLGOGA6BB",
+          "size": "S",
+          "sku": "APQ-6220235S6A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "R45YALCDGKP3PJTFNIWNABRZ",
+          "size": "M",
+          "sku": "APQ-6220235S7A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "QMKNJZUYW7OSPS43UGSXKBQW",
+          "size": "L",
+          "sku": "APQ-6220235S8A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "3Q4TL74YTGCCEPVOJ6GJBCGF",
+          "size": "XL",
+          "sku": "APQ-6220235S1A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "PN7FNLQ6CIZZVCUVVIDJIE63",
+          "size": "2XL",
+          "sku": "APQ-6220235S2A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "4PHSXQ3CQBCNG5EDUFNDN5MC",
+          "size": "3XL",
+          "sku": "APQ-6220235S21A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "7QBPNI5LXZNSVGOWANCR4T4T",
+          "size": "4XL",
+          "sku": "APQ-6220235S61A1",
+          "priceCents": 5500
+        },
+        {
+          "variationId": "6Q5HKKDPUZS5N5V7LZNIHTVB",
+          "size": "5XL",
+          "sku": "APQ-6220235S62A1",
+          "priceCents": 5500
+        }
+      ]
+    },
+    {
+      "slug": "nonna-s-sunday-supper-society-c1717-ivory",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220236,
+        "artworkIds": {
+          "front": 8217179
+        }
+      },
+      "square": {
+        "itemId": "6ID3G6WIXWWQSZQ2GLDNVDSC",
+        "imageIds": [],
+        "images": {
+          "front": "4QUFZ7HZMD7VJ66Z3KVXJ42I",
+          "back": "2BALWRGWHHUEBS4OITS23IUS",
+          "print-detail": "VZCKDOBOBVF2MRDFVACIEZI6",
+          "folded": "EVJH6VDY2CT6X2XY2ZRXFLHG"
+        }
+      },
+      "fulfillment": {
+        "product": "nonna_s_sunday_supper_society_c1717_ivory",
+        "title": "Nonna’s Sunday Supper Society Tee — Ivory"
+      },
+      "variants": [
+        {
+          "variationId": "4YVPSNSIH2C2C2STSRAQAHL4",
+          "size": "S",
+          "sku": "APQ-6220236S6A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "IN6NOPEJLG4JBANIMQARWQIW",
+          "size": "M",
+          "sku": "APQ-6220236S7A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "NA4NL3RTCKJA5ZLJPORZE2WE",
+          "size": "L",
+          "sku": "APQ-6220236S8A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "RHZCSTTJBXQYJIKCSG6UJZXA",
+          "size": "XL",
+          "sku": "APQ-6220236S1A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "OPKIC4J4DN6PMBBFVW5YBQNG",
+          "size": "2XL",
+          "sku": "APQ-6220236S2A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "KL3OVVBRA7M3A5Q4QYRF7QFI",
+          "size": "3XL",
+          "sku": "APQ-6220236S21A1",
+          "priceCents": 3400
+        }
+      ]
+    },
+    {
+      "slug": "nonna-s-sunday-supper-society-ss3000-bone",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220242,
+        "artworkIds": {
+          "front": 8217179
+        }
+      },
+      "square": {
+        "itemId": "IECIFRS3J636TMXZ3XWMLERB",
+        "imageIds": [],
+        "images": {
+          "front": "2IJCWCB7C2SWOTKR4BL34HZD",
+          "back": "HU4BTS6WPVE3F4CSPJFMKSX6",
+          "print-detail": "B2V6MHXZJNYZKASPLW2W2ANS",
+          "folded": "UUPWWOJCD3MRCMD7EE64ZKAB"
+        }
+      },
+      "fulfillment": {
+        "product": "nonna_s_sunday_supper_society_ss3000_bone",
+        "title": "Nonna’s Sunday Supper Society Crewneck — Bone"
+      },
+      "variants": [
+        {
+          "variationId": "DXCZDWOBMYOFJPBY5LK6NUPS",
+          "size": "XS",
+          "sku": "APQ-6220242S5A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "GINOYVKMFXISJOXNGKMD3CGM",
+          "size": "S",
+          "sku": "APQ-6220242S6A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "GWEBERWVJCHXL7ERMYGJBELN",
+          "size": "M",
+          "sku": "APQ-6220242S7A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "56V3JL237EL4QU57BHGG3VB5",
+          "size": "L",
+          "sku": "APQ-6220242S8A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "2GZGSFRO3LA34QH2V6XPHYV5",
+          "size": "XL",
+          "sku": "APQ-6220242S1A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "MEY4CCIR2PT7KKHBDSONOH6W",
+          "size": "2XL",
+          "sku": "APQ-6220242S2A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "WSDNVMFMN4ATDGJKOSGOQR6V",
+          "size": "3XL",
+          "sku": "APQ-6220242S21A1",
+          "priceCents": 4500
+        }
+      ]
+    },
+    {
+      "slug": "resist-rebel-6014-midnight",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220243,
+        "artworkIds": {
+          "front": 8217187
+        }
+      },
+      "square": {
+        "itemId": "LRD534UZVFTBIMAOUZHKHO3J",
+        "imageIds": [],
+        "images": {
+          "front": "VHWRFJ2QDDDNHQVQ3NIBNBUJ",
+          "back": "EPGG54OAMSBPZWZIYQ4GF4BQ",
+          "print-detail": "FYLF4WOH4NCBW76CBHTO2LD4",
+          "folded": "5C7L2BL7UDGSMRO3QLLCV4U2"
+        }
+      },
+      "fulfillment": {
+        "product": "resist_rebel_6014_midnight",
+        "title": "Resist Rebel Long Sleeve — Midnight"
+      },
+      "variants": [
+        {
+          "variationId": "55M7EAD4RDKCYNK4GLBGSHLT",
+          "size": "S",
+          "sku": "APQ-6220243S6A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "HB6NDJT6Q6LNF5COLRZTQGN2",
+          "size": "M",
+          "sku": "APQ-6220243S7A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "WOUOK7H35ERK55CMB7FUZKXR",
+          "size": "L",
+          "sku": "APQ-6220243S8A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "FUHLRW7LIM6H74UJN4Z52YLH",
+          "size": "XL",
+          "sku": "APQ-6220243S1A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "OOTNRXTUHTLZUZDIL42YDIFY",
+          "size": "2XL",
+          "sku": "APQ-6220243S2A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "AED4PQZSQMTKPZKAQDJZSHRK",
+          "size": "3XL",
+          "sku": "APQ-6220243S21A1",
+          "priceCents": 4500
+        }
+      ]
+    },
+    {
+      "slug": "resist-rebel-c1717-true-navy",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220244,
+        "artworkIds": {
+          "front": 8217187
+        }
+      },
+      "square": {
+        "itemId": "XFWH76IHF75Y7HAW3WO6YLNS",
+        "imageIds": [],
+        "images": {
+          "front": "NJIXOL5NOQKDSMTBWN37FLQY",
+          "back": "WHLSFKW6TLW6CRRSCMQLMB3S",
+          "print-detail": "FIRL2APSCI2WPUP74J6LB7ER",
+          "folded": "ZKG4BM67FWJ2IQ4KFTX4FT3Q"
+        }
+      },
+      "fulfillment": {
+        "product": "resist_rebel_c1717_true_navy",
+        "title": "Resist Rebel Tee — True Navy"
+      },
+      "variants": [
+        {
+          "variationId": "XOUCIN5UT2N6TTPHYXPGRFD5",
+          "size": "S",
+          "sku": "APQ-6220244S6A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "GWUFXJRGV3ITTXFHTDNUACX6",
+          "size": "M",
+          "sku": "APQ-6220244S7A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "7XSU2UFJRIQKCT5MMOXJEY2T",
+          "size": "L",
+          "sku": "APQ-6220244S8A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "PMVRXY66YF3A5YFLSNVS6CPB",
+          "size": "XL",
+          "sku": "APQ-6220244S1A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "GSVPOSAXBJHSY5OLE6NRQBKQ",
+          "size": "2XL",
+          "sku": "APQ-6220244S2A1",
+          "priceCents": 3400
+        },
+        {
+          "variationId": "XJ4MZF5EKAM2IKMO347TSTM6",
+          "size": "3XL",
+          "sku": "APQ-6220244S21A1",
+          "priceCents": 3400
+        }
+      ]
+    },
+    {
+      "slug": "resist-rebel-ss3000-navy",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220245,
+        "artworkIds": {
+          "front": 8217187
+        }
+      },
+      "square": {
+        "itemId": "RCEND4XWFW5PCWCMFY2TLF3K",
+        "imageIds": [],
+        "images": {
+          "front": "XFVIN3NOLYOIRE2XLDAQCZGG",
+          "back": "B3W6JXRDUJYHPYFDTKKWO5SL",
+          "print-detail": "KL4VVBEHWEORUUDVFKJ47GTB",
+          "folded": "CAVQUH4G4MFOLFR3POJYWFPH"
+        }
+      },
+      "fulfillment": {
+        "product": "resist_rebel_ss3000_navy",
+        "title": "Resist Rebel Crewneck — Navy"
+      },
+      "variants": [
+        {
+          "variationId": "NVMIH5KQBZH7US2COXW2MOPD",
+          "size": "XS",
+          "sku": "APQ-6220245S5A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "DYICTNEOHSDNSS4IVO3E6FXC",
+          "size": "S",
+          "sku": "APQ-6220245S6A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "ELU5DQLU4AB5NJV2YPZAOO6E",
+          "size": "M",
+          "sku": "APQ-6220245S7A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "GUCIFWLOCXIBNSKDKVHOHFL2",
+          "size": "L",
+          "sku": "APQ-6220245S8A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "HINEUO4UV6WT7SCRF72QD73K",
+          "size": "XL",
+          "sku": "APQ-6220245S1A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "7KMR3JKPVXJDUIVLCC54Y4WY",
+          "size": "2XL",
+          "sku": "APQ-6220245S2A1",
+          "priceCents": 4500
+        },
+        {
+          "variationId": "FSHFLYCE5LMUGJY2NWDYICVX",
+          "size": "3XL",
+          "sku": "APQ-6220245S21A1",
+          "priceCents": 4500
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-black",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220346,
+        "artworkIds": {
+          "front": 8217164
+        }
+      },
+      "square": {
+        "itemId": "OPXN63CZDXVB2FTSRE5NLJDB",
+        "imageIds": [],
+        "images": {
+          "front": "UV5CF5XMEATTNRUMLPNAGX7E",
+          "back": "UNKEM4UDZ6DP47YDDATNW36O",
+          "print-detail": "ZZF3Y2YIXBYWGV5PPZCIJE2H",
+          "folded": "MK2DDKFTRIMZ6D6I6VSH32N6"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_black",
+        "title": "After Hours Agenda Heritage Beanie — Black"
+      },
+      "variants": [
+        {
+          "variationId": "PM5FQUG3SWBWKOTARZ3O4SKZ",
+          "size": "One Size",
+          "sku": "APQ-6220346S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-blaze-orange",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220367,
+        "artworkIds": {
+          "front": 8217321
+        }
+      },
+      "square": {
+        "itemId": "HXVCVBB76HCIOJXV2GUDCAYL",
+        "imageIds": [],
+        "images": {
+          "front": "GMJUY2AWKGAWCPUT5ES3FUQL",
+          "back": "65NN6V3E4J5YOO76EX2CGRXB",
+          "print-detail": "GKODYN34ADUQJHCXMAI3NXNZ",
+          "folded": "Z5BEG4QX5O7MCPZGPN3LEDTW"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_blaze_orange",
+        "title": "After Hours Agenda Heritage Beanie — Blaze Orange"
+      },
+      "variants": [
+        {
+          "variationId": "YEFI4SF6KE5KPOZTF75JCRGZ",
+          "size": "One Size",
+          "sku": "APQ-6220367S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-camel",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220368,
+        "artworkIds": {
+          "front": 8217321
+        }
+      },
+      "square": {
+        "itemId": "P6TYVPJ75U5MTET4K7BEQZL6",
+        "imageIds": [],
+        "images": {
+          "front": "C7UAKZMRXYDMLQ7SBGBNKPSG",
+          "back": "V4DAHWMADPG5PTN5JPNQ6HYH",
+          "print-detail": "MR5I2WOSVA3NAFDTTATBO7TR",
+          "folded": "EQEGFGHNSKMLGQPHH4AHVGKY"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_camel",
+        "title": "After Hours Agenda Heritage Beanie — Camel"
+      },
+      "variants": [
+        {
+          "variationId": "57TO2ZX6PQDAQIQWLUSVEUJZ",
+          "size": "One Size",
+          "sku": "APQ-6220368S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-cardinal",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220369,
+        "artworkIds": {
+          "front": 8217164
+        }
+      },
+      "square": {
+        "itemId": "S7HDUFGFA3MSA6VAP3AIPNKT",
+        "imageIds": [],
+        "images": {
+          "front": "G45VWHHZ27YK475X4IORU4LN",
+          "back": "K5UXBXUP5ESKIFW5TDREB4C6",
+          "print-detail": "AUGCWFO4RCWCOWFYZXBLXPET",
+          "folded": "CEOKD7EBIDMMPC26KSRHLDO4"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_cardinal",
+        "title": "After Hours Agenda Heritage Beanie — Cardinal"
+      },
+      "variants": [
+        {
+          "variationId": "ZTFDDVOVQVGHMQBXACDI7DCU",
+          "size": "One Size",
+          "sku": "APQ-6220369S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-dark-heather-grey",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220370,
+        "artworkIds": {
+          "front": 8217164
+        }
+      },
+      "square": {
+        "itemId": "W53QXLKTSAYJNNCZTEDQRIBN",
+        "imageIds": [],
+        "images": {
+          "front": "SALJVRUNF6QS4LPM2E6SPHDP",
+          "back": "PJZPGQG7F63ARZOJAAGYMOJR",
+          "print-detail": "BNLTYF6VKBH5J2SXEL52BUG7",
+          "folded": "XNZ5NDCQIS6VE447JMDKSDLM"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_dark_heather_grey",
+        "title": "After Hours Agenda Heritage Beanie — Dark Heather Grey"
+      },
+      "variants": [
+        {
+          "variationId": "FIDGUUDK7ON3PELDESVAVSEL",
+          "size": "One Size",
+          "sku": "APQ-6220370S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-forest-green",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220371,
+        "artworkIds": {
+          "front": 8217164
+        }
+      },
+      "square": {
+        "itemId": "POGP7KYQIYYLBWEZCEKDD6FY",
+        "imageIds": [],
+        "images": {
+          "front": "ESVTVPVXVQOKNOHN7VT2U7QW",
+          "back": "4KSSAF2PUXQQGKQZC6OUJ6FU",
+          "print-detail": "L7XCNYY6ASY2BNPXPHLHJFSC",
+          "folded": "NDWJZN74K4OH4TZCCBHLH44X"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_forest_green",
+        "title": "After Hours Agenda Heritage Beanie — Forest Green"
+      },
+      "variants": [
+        {
+          "variationId": "ML73KUMXQP4XNPUNLPZLZDVD",
+          "size": "One Size",
+          "sku": "APQ-6220371S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-fuchsia",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220372,
+        "artworkIds": {
+          "front": 8217321
+        }
+      },
+      "square": {
+        "itemId": "YKA3G3HLO6RQCAQKAAVHEJPP",
+        "imageIds": [],
+        "images": {
+          "front": "QAVYW73NIL2HPVSE2XX745E3",
+          "back": "PVYFW2GPDFHKXSRPFRIYR673",
+          "print-detail": "DKIWVLEQ5OVTQCXQLLWDKF46",
+          "folded": "5G22EZSVIJNI2XIQUXF7MIMI"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_fuchsia",
+        "title": "After Hours Agenda Heritage Beanie — Fuchsia"
+      },
+      "variants": [
+        {
+          "variationId": "MNA3ISCDKXIMK7PNFIO4ASAO",
+          "size": "One Size",
+          "sku": "APQ-6220372S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-gold",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220373,
+        "artworkIds": {
+          "front": 8217321
+        }
+      },
+      "square": {
+        "itemId": "XLNG2RLZCJX2ET2I6B7I225P",
+        "imageIds": [],
+        "images": {
+          "front": "HNEVBJWUMCFKK2WURIIYGYKT",
+          "back": "WCL6I2JC5UL46ZDHT7CTRR3M",
+          "print-detail": "EFOY2SVN2IBXUJIUVTDYREGK",
+          "folded": "52YX2ZRUVXPWTANUKLNI2UYS"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_gold",
+        "title": "After Hours Agenda Heritage Beanie — Gold"
+      },
+      "variants": [
+        {
+          "variationId": "W22JKX7VDJRUF7CNTLDMODFJ",
+          "size": "One Size",
+          "sku": "APQ-6220373S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-heather-grey",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220374,
+        "artworkIds": {
+          "front": 8217321
+        }
+      },
+      "square": {
+        "itemId": "QPXGJSBWZL5YZGRCM44XJL4U",
+        "imageIds": [],
+        "images": {
+          "front": "TAEPBLSPVWKT3S7AD6J6TBNM",
+          "back": "SYT7Z42JB3MAA3UDZYH4A4RF",
+          "print-detail": "KEBYU4S43GZSOUCXN6DSTLPQ",
+          "folded": "AHAJZ3RSTLBZ62X7DKNADHXL"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_heather_grey",
+        "title": "After Hours Agenda Heritage Beanie — Heather Grey"
+      },
+      "variants": [
+        {
+          "variationId": "W2XE6EF4WSX5S47YTRWPCOPB",
+          "size": "One Size",
+          "sku": "APQ-6220374S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-kelly-green",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220375,
+        "artworkIds": {
+          "front": 8217164
+        }
+      },
+      "square": {
+        "itemId": "WJKLDKPDHJ4OHS4X35FWAQ7I",
+        "imageIds": [],
+        "images": {
+          "front": "VQOVEI6TCNTVXRO6TABUFIUW",
+          "back": "2FKDWQN23VNAO33ZMMEKZ2BW",
+          "print-detail": "B7VMTXASGUKUZDBPWQ7A6EI4",
+          "folded": "7E4BSLJJFZBKBJ3A32HHVI53"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_kelly_green",
+        "title": "After Hours Agenda Heritage Beanie — Kelly Green"
+      },
+      "variants": [
+        {
+          "variationId": "ZH6B7MTI4F2FKOKODFV3JWTQ",
+          "size": "One Size",
+          "sku": "APQ-6220375S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-navy",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220376,
+        "artworkIds": {
+          "front": 8217164
+        }
+      },
+      "square": {
+        "itemId": "CJVDHT6JFAU7FRVNPIKWTNNJ",
+        "imageIds": [],
+        "images": {
+          "front": "N7JBRTEGKI47WKBSCDZ3AZVL",
+          "back": "2365AUJZJTWQY6MH234VC67O",
+          "print-detail": "MTQBXWGF6JFNGIUJ3VL24P7D",
+          "folded": "CDK2DEZ5RYZ7RGDP5VIU3ISK"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_navy",
+        "title": "After Hours Agenda Heritage Beanie — Navy"
+      },
+      "variants": [
+        {
+          "variationId": "JVWOZ3BTSN4Y7I2VAFJWMJWA",
+          "size": "One Size",
+          "sku": "APQ-6220376S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-pink",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220377,
+        "artworkIds": {
+          "front": 8217321
+        }
+      },
+      "square": {
+        "itemId": "QX4ECCHL2NPTF6VYBGCJRYMH",
+        "imageIds": [],
+        "images": {
+          "front": "PHZ7AG54Q3PC4FLQAY3C32WC",
+          "back": "OXDK3IQPUKTNT6GZJUQLA5SF",
+          "print-detail": "74TC4ZSGR64MHHLVL4WB33AC",
+          "folded": "CVIGKG4BFINBVTX2IXCCJXDR"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_pink",
+        "title": "After Hours Agenda Heritage Beanie — Pink"
+      },
+      "variants": [
+        {
+          "variationId": "FYNTCB4L7CCR5USM4IL3OUWZ",
+          "size": "One Size",
+          "sku": "APQ-6220377S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-red",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220378,
+        "artworkIds": {
+          "front": 8217164
+        }
+      },
+      "square": {
+        "itemId": "NCWQ6VTXRXFN62YFSN2A2OHV",
+        "imageIds": [],
+        "images": {
+          "front": "WIOWKXKZYALU4S4D4CG7JWSF",
+          "back": "B6QKZ4E2PXP23IDU3JQ666MI",
+          "print-detail": "RZBFSYMT4LLGF2ISMPINZO6O",
+          "folded": "7H2ASQDGQ7VRRTIWHE755EF7"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_red",
+        "title": "After Hours Agenda Heritage Beanie — Red"
+      },
+      "variants": [
+        {
+          "variationId": "O3W6LTGRTMJOE5W77NRTYFGS",
+          "size": "One Size",
+          "sku": "APQ-6220378S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-royal-blue",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220379,
+        "artworkIds": {
+          "front": 8217164
+        }
+      },
+      "square": {
+        "itemId": "JE7TLLUAB7OPMGEZ5YIUTCVF",
+        "imageIds": [],
+        "images": {
+          "front": "NLZK64JXKOZSXNOP42UAU2ZP",
+          "back": "V3UIVFADBCS7RTW4L2TE2HE7",
+          "print-detail": "VQTB4IQ45OKYM5HMLSKXYUR6",
+          "folded": "E663H43DCUVSYFVKUPWRH6EH"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_royal_blue",
+        "title": "After Hours Agenda Heritage Beanie — Royal Blue"
+      },
+      "variants": [
+        {
+          "variationId": "7L4XZN5ZHSL3RLQ5DUTKZKL3",
+          "size": "One Size",
+          "sku": "APQ-6220379S10A1",
+          "priceCents": 2900
+        }
+      ]
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-white",
+      "status": "live",
+      "apliiq": {
+        "designId": 6220380,
+        "artworkIds": {
+          "front": 8217321
+        }
+      },
+      "square": {
+        "itemId": "EJTVYMUCGTJ4ZWLZTQGGJNVJ",
+        "imageIds": [],
+        "images": {
+          "front": "JI4N7XLSB6ZGNA7Y2KML555S",
+          "back": "OUNR7NZ3RHYEI7JJORSFLY4Z",
+          "print-detail": "OQT7R3NWLPDPJ36N7IKVL4GL",
+          "folded": "FJMUKESICAHCOAGCXGGYQW7D"
+        }
+      },
+      "fulfillment": {
+        "product": "after_hours_agenda_heritage_beanie_sp12_white",
+        "title": "After Hours Agenda Heritage Beanie — White"
+      },
+      "variants": [
+        {
+          "variationId": "BHDWU2QDTYWKNZLZ4GORPQ3D",
+          "size": "One Size",
+          "sku": "APQ-6220380S10A1",
+          "priceCents": 2900
+        }
+      ]
     }
   ]
 }

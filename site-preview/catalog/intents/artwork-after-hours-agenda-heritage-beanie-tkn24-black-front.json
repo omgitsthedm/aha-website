@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-after-hours-agenda-heritage-beanie-tkn24-black-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:12:02.305Z",
+  "payload": {
+    "Name": "After Hours Agenda Heritage Beanie approved front",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/heritage-sheep-cream.png"
+  },
+  "finishedAt": "2026-10-19T18:12:02.968Z",
+  "response": {
+    "WtoHRatio": 1.256,
+    "DateCreated": "2026-10-19T18:12:02.8792577Z",
+    "Id": 8217164,
+    "Name": "After Hours Agenda Heritage Beanie approved front"
+  }
+}

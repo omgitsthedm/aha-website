@@ -9,7 +9,7 @@ import { getStore } from "@netlify/blobs";
 export const STORE = "aha-catalog";
 export const IMAGE_STORE = "aha-catalog-images";
 const KEY = "products";
-const SIZES = new Set(["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"]);
+const SIZES = new Set(["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "One Size"]);
 const ROLES = ["front", "back", "print-detail", "folded"];
 const SQUARE_ID = /^[A-Z0-9]{20,30}$/;
 const SKU = /^APQ-(\d+)S(\d+)A1$/;
@@ -48,8 +48,13 @@ export function validateLiveProduct(input) {
   if (!Array.isArray(input.sizeGuide) || !input.sizeGuide.length) fail("sizeGuide is required.");
   for (const row of input.sizeGuide) {
     if (!SIZES.has(row?.size)) fail(`sizeGuide size ${row?.size} is not supported.`);
-    num(row.chestWidth, `${row.size} chestWidth`);
-    num(row.bodyLength, `${row.size} bodyLength`);
+    if (input.typeLabel === "Beanie") {
+      if (row.size !== "One Size") fail("Beanies must use One Size.");
+      num(row.height, "Unfolded beanie height");
+    } else {
+      num(row.chestWidth, `${row.size} chestWidth`);
+      num(row.bodyLength, `${row.size} bodyLength`);
+    }
     if ("sleeveLength" in row) num(row.sleeveLength, `${row.size} sleeveLength`);
   }
   if (!Array.isArray(input.gallery) || input.gallery.length !== 4) fail("gallery needs exactly four garment images.");

@@ -1,0 +1,216 @@
+{
+  "slug": "camo-sheep-ind4000-snow-camo",
+  "status": "approved",
+  "approval": {
+    "by": "David Marsh (owner)",
+    "at": "2026-10-19T17:57:23.640Z",
+    "note": "Approved Camo Sheep art/garments in chat: “Ok do it all”. Latest instruction: “look at how you uploaded the products in this session previously ... now do that with these new products ... pricing everything, research it then do it”. Owner delegates researched pricing and upload/publication for this batch."
+  },
+  "title": "Camo Sheep Hoodie",
+  "blank": "IND4000",
+  "color": "Snow Camo",
+  "priceCents": 6400,
+  "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+  ],
+  "fulfillment": {
+    "product": "camo_sheep_ind4000_snow_camo"
+  },
+  "apliiq": {
+    "productId": 1789,
+    "productCode": "mens_Snow-Camo-Heavyweight-Hoodie",
+    "colorId": 4344,
+    "label": {
+      "id": 6208403,
+      "placementId": 1011,
+      "placementName": "inside neck"
+    },
+    "artwork": [
+      {
+        "key": "front",
+        "name": "Camo Sheep Pink 9x6in",
+        "imagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/02ad6632ad0e536e8117de549fdb267ead57c462/production-artwork/camo-sheep/camo-sheep-pink-2700.png"
+      }
+    ],
+    "locations": [
+      {
+        "id": 8155,
+        "boxId": 1,
+        "imagePath": "https://blob.apliiq.com/sitestorage/base/8155_590_900.png",
+        "artworkKey": "front",
+        "service": "transfer_print",
+        "note": "Front only, exact pink artwork at 9 inches wide × 6 inches high, centered above the pouch pocket. Top approximately 3 inches below front collar seam. One matte opaque transfer print. Preserve all lettering and the sheep; transparent areas reveal Snow Camo fabric. Blank back. No embroidery, patch, background rectangle, redraw or added distress. Scale down proportionally only when the smallest garment requires it."
+      }
+    ],
+    "productionNote": "Exact single pink chest print on Snow Camo IND4000. Current AHA private label inside neck; remove original brand label while retaining required care/fiber/origin information."
+  },
+  "costOverride": {
+    "baseCents": 3475,
+    "surchargeCents": {
+      "2XL": 200,
+      "3XL": 360
+    },
+    "labelCents": 200,
+    "perItemCents": 100,
+    "shippingCents": {
+      "XS": 885,
+      "S": 885,
+      "M": 1180,
+      "L": 1180,
+      "XL": 1180,
+      "2XL": 1180,
+      "3XL": 1180
+    },
+    "source": "2026-10-19 authenticated Apliiq Product API: blank $35.95, size premiums $2.50/$4.50; official VIP 20% off blank+transfer print $7.49 and private label $2.50. Shipping from official 2026-05-12 Apliiq rates by API size weights; $1 fulfillment. One price includes U.S. shipping."
+  },
+  "product": {
+    "collection": "Camo Sheep",
+    "description": "A heavyweight camouflage pullover hoodie with a single pink chest print. Generous fit, fleece-lined hood, front pouch pocket and ribbed cuffs and waistband. Independent Trading Company IND4000; 10 oz cotton-blend fleece, 75% cotton and 25% polyester for camo colors.",
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Hoodies"
+    },
+    "fit": "generous",
+    "weightOz": 10,
+    "composition": "75% cotton / 25% polyester",
+    "blank": "Independent Trading Co. IND4000",
+    "typeLabel": "Hoodie",
+    "fabricType": "cotton-blend fleece",
+    "printMethod": "direct-to-film (DTF) transfer",
+    "constructionDetails": [
+      "fleece-lined hood",
+      "front pouch pocket",
+      "split-stitch double-needle seams",
+      "ribbed cuffs and waistband"
+    ],
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 27.5,
+        "chestWidth": 20.5,
+        "sleeveLength": 34.5
+      },
+      {
+        "size": "S",
+        "bodyLength": 28.5,
+        "chestWidth": 21,
+        "sleeveLength": 35.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 29.5,
+        "chestWidth": 23,
+        "sleeveLength": 36.5
+      },
+      {
+        "size": "L",
+        "bodyLength": 30.5,
+        "chestWidth": 24.5,
+        "sleeveLength": 37.5
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31.5,
+        "chestWidth": 26.5,
+        "sleeveLength": 38.5
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32.5,
+        "chestWidth": 27.5,
+        "sleeveLength": 39.5
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 33.5,
+        "chestWidth": 28.5,
+        "sleeveLength": 40.5
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare body length from high-point shoulder and chest width 1 inch below the armhole. Sleeve length is measured from center back neck to the cuff.",
+    "campaignSetting": "Brick patio at dusk",
+    "gallery": [
+      {
+        "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-front-1122.webp",
+        "srcset": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-front-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-front-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-front-1122.webp 1122w",
+        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-front.jpg",
+        "width": 1122,
+        "height": 748,
+        "alt": "Front of the Snow Camo Camo Sheep Hoodie.",
+        "role": "front"
+      },
+      {
+        "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-back-1122.webp",
+        "srcset": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-back-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-back-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-back-1122.webp 1122w",
+        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-back.jpg",
+        "width": 1122,
+        "height": 748,
+        "alt": "Plain back of the Snow Camo Camo Sheep Hoodie.",
+        "role": "back"
+      },
+      {
+        "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-print-detail-1122.webp",
+        "srcset": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-print-detail-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-print-detail-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-print-detail-1122.webp 1122w",
+        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-print-detail.jpg",
+        "width": 1122,
+        "height": 748,
+        "alt": "Close view of the Camo Sheep Hoodie print on Snow Camo fleece.",
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-folded-1122.webp",
+        "srcset": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-folded-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-folded-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-folded-1122.webp 1122w",
+        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-folded.jpg",
+        "width": 1122,
+        "height": 748,
+        "alt": "Snow Camo Camo Sheep Hoodie casually folded.",
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-hero-1122.webp",
+        "srcset": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-hero-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-hero-680.webp 680w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-hero-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-hero-1122.webp 1122w",
+        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-hero.jpg",
+        "width": 1122,
+        "height": 748,
+        "alt": "Snow Camo Camo Sheep hoodie worn with relaxed posture beside a brick wall and green doorway on a bar patio, view 1.",
+        "role": "lifestyle-hero",
+        "productSlug": "camo-sheep-ind4000-snow-camo"
+      },
+      {
+        "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-1-1122.webp",
+        "srcset": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-1-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-1-680.webp 680w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-1-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-1-1122.webp 1122w",
+        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-1.jpg",
+        "width": 1122,
+        "height": 748,
+        "alt": "Snow Camo Camo Sheep hoodie worn with relaxed posture beside a brick wall and green doorway on a bar patio, view 2.",
+        "role": "lifestyle-alternate",
+        "productSlug": "camo-sheep-ind4000-snow-camo"
+      },
+      {
+        "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-2-1122.webp",
+        "srcset": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-2-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-2-680.webp 680w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-2-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-2-1122.webp 1122w",
+        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-2.jpg",
+        "width": 1122,
+        "height": 748,
+        "alt": "Snow Camo Camo Sheep hoodie worn with relaxed posture beside a brick wall and green doorway on a bar patio, view 3.",
+        "role": "lifestyle-alternate",
+        "productSlug": "camo-sheep-ind4000-snow-camo"
+      }
+    ]
+  },
+  "familyId": "012",
+  "local": {
+    "folder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/012 — Camo Sheep",
+    "launchFolder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/012 — Camo Sheep/IND4000 — Snow Camo — Pink",
+    "productionMaster": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/012 — Camo Sheep/Print Artwork/Camo Sheep — Pink — 2700px.png"
+  }
+}

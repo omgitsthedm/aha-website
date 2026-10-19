@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "key": "design-after-hours-agenda-heritage-beanie-tkn24-black",
+  "state": "abandoned",
+  "createdAt": "2026-10-19T18:33:55.133Z",
+  "payload": {
+    "ProductId": 876,
+    "ProductCode": "mens_USA-Made-Cuffed-Beanie",
+    "ColorId": 545,
+    "Locations": [
+      {
+        "Id": 5067,
+        "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/7436652220147836e4ca20ed0b548f9d77b339a2/production-artwork/fw26-proofs/beanie-black-front.jpg",
+        "Artworks": [
+          {
+            "Id": 8217164,
+            "Service": "embroidery",
+            "Note": "Direct embroidery, exactly 3.5 inches wide, centered on front turned-up cuff, not a patch. Preserve supplied custom text and sheep silhouette. Use supplied selected thread color.",
+            "PrintColors": "#f9f9ed"
+          }
+        ]
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1025,
+          "Name": "inside seam"
+        },
+        "Label": {
+          "Id": 6208403
+        }
+      }
+    ],
+    "Name": "After Hours Agenda Heritage Beanie \u2014 Black",
+    "Description": "After Hours Agenda Heritage Beanie \u2014 Black. Match exact approved production PNGs; keep all approved letterforms and illustration. Current private label SB-3-161622 replaces manufacturer neck/seam branding. Direct embroidery centered on cuff, finished logo width 3.5 inches."
+  },
+  "finishedAt": "2026-10-19T18:33:55.553Z",
+  "error": "Apliiq POST /Design failed (500).",
+  "reconciledAt": "2026-10-19T19:00:00Z",
+  "disposition": "Unsupported TKN24 candidate retired after multiple saved-design dashboard reconciliations found no matching saved beanie. Never retry this intent. Current approved beanies are mapped to successfully created SP12 designs.",
+  "evidence": "Local staging/fw26-2026-10-19/reconciled-design-beanie-first-attempt.json and reconciled-beanie-second-attempt.json"
+}

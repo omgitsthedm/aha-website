@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "key": "design-camo-sheep-ind4000-snow-camo",
+  "state": "complete",
+  "createdAt": "2026-10-19T17:59:45.969Z",
+  "payload": {
+    "ProductId": 1789,
+    "ProductCode": "mens_Snow-Camo-Heavyweight-Hoodie",
+    "ColorId": 4344,
+    "Locations": [
+      {
+        "Id": 8155,
+        "ImagePath": "https://blob.apliiq.com/sitestorage/base/8155_590_900.png",
+        "Artworks": [
+          {
+            "Id": 8217018,
+            "Service": "transfer_print",
+            "Note": "Front only, exact pink artwork at 9 inches wide × 6 inches high, centered above the pouch pocket. Top approximately 3 inches below front collar seam. One matte opaque transfer print. Preserve all lettering and the sheep; transparent areas reveal Snow Camo fabric. Blank back. No embroidery, patch, background rectangle, redraw or added distress. Scale down proportionally only when the smallest garment requires it.",
+            "BoxId": 1
+          }
+        ]
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        }
+      }
+    ],
+    "Name": "Camo Sheep Hoodie — Snow Camo",
+    "Description": "Exact single pink chest print on Snow Camo IND4000. Current AHA private label inside neck; remove original brand label while retaining required care/fiber/origin information."
+  },
+  "finishedAt": "2026-10-19T17:59:46.201Z",
+  "response": {
+    "ProductId": 1789,
+    "ProductCode": "mens_Snow-Camo-Heavyweight-Hoodie",
+    "ColorId": 4344,
+    "Locations": [
+      {
+        "Artworks": [
+          {
+            "Service": "transfer_print",
+            "Note": "Front only, exact pink artwork at 9 inches wide × 6 inches high, centered above the pouch pocket. Top approximately 3 inches below front collar seam. One matte opaque transfer print. Preserve all lettering and the sheep; transparent areas reveal Snow Camo fabric. Blank back. No embroidery, patch, background rectangle, redraw or added distress. Scale down proportionally only when the smallest garment requires it.",
+            "BoxId": 1,
+            "Id": 8217018
+          }
+        ],
+        "Id": 8155,
+        "ImagePath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6220095_81552026-10-19-17-59-46Z8155_590_900.png"
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        },
+        "Id": 0
+      }
+    ],
+    "Variants": [
+      {
+        "SKU": "APQ-6220095S5A1",
+        "Weight": "15.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "xs"
+      },
+      {
+        "SKU": "APQ-6220095S6A1",
+        "Weight": "15.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "s"
+      },
+      {
+        "SKU": "APQ-6220095S7A1",
+        "Weight": "19 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "m"
+      },
+      {
+        "SKU": "APQ-6220095S8A1",
+        "Weight": "20 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "l"
+      },
+      {
+        "SKU": "APQ-6220095S1A1",
+        "Weight": "21 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "xl"
+      },
+      {
+        "SKU": "APQ-6220095S2A1",
+        "Weight": "23 oz",
+        "PlusSize_Fee": 2.5,
+        "Id": 0,
+        "Name": "xxl"
+      },
+      {
+        "SKU": "APQ-6220095S21A1",
+        "Weight": "25 oz",
+        "PlusSize_Fee": 4.5,
+        "Id": 0,
+        "Name": "xxxl"
+      }
+    ],
+    "Id": 6220095,
+    "Name": "Camo Sheep Hoodie — Snow Camo",
+    "Description": "Exact single pink chest print on Snow Camo IND4000. Current AHA private label inside neck; remove original brand label while retaining required care/fiber/origin information."
+  }
+}

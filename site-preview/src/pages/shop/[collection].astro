@@ -6,7 +6,7 @@ import ProductCard from '../../components/ProductCard.astro';
 import ProductImage from '../../components/ProductImage.astro';
 import MotionImage from '../../components/MotionImage.astro';
 import { motionFor } from '../../data/motion';
-import { collectionCopy, collectionSlug, collectionsInOrder } from '../../data/collections';
+import { campaignProducts, collectionCopy, collectionSlug, collectionsInOrder } from '../../data/collections';
 import { allOffSale, isOffSale } from '../../../server/catalog/off-sale.mjs';
 export function getStaticPaths() {
   return collectionsInOrder().filter(([, pieces]) => pieces.length).map(([name, pieces]) => ({ params: { collection: collectionSlug(name) }, props: { name, pieces } }));
@@ -14,14 +14,15 @@ export function getStaticPaths() {
 const { name, pieces } = Astro.props;
 const origin = Astro.site!.origin;
 const slug = collectionSlug(name);
-const lead = pieces[0]!;
+const photographed = campaignProducts(pieces);
+const lead = photographed[0]!;
 const hero = lead.campaign[0]!;
 const film = motionFor(hero.src);
 const copy = collectionCopy(name);
 // Nothing on sale (src/data/off-sale.json): not indexed, and the page says so without script.
 const offSale = allOffSale(pieces);
 const from = Math.min(...pieces.map((product) => product.price));
-const campaign = pieces.flatMap((product) => product.campaign.map((shot) => ({ shot, product }))).slice(0, 6);
+const campaign = photographed.flatMap((product) => product.campaign.map((shot) => ({ shot, product }))).slice(0, 6);
 const heroSizes = '(max-width: 760px) calc(100vw - 40px), 50vw';
 const schema = {
   '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${name} collection`, url: `${origin}/shop/${slug}/`, description: copy,

@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "key": "revision-design-fashion-kills-3023cl-black-faf5ad98646b0fbc",
+  "state": "complete",
+  "createdAt": "2026-10-19T19:19:10.110Z",
+  "payload": {
+    "ProductId": 1369,
+    "ProductCode": "womens_Womens-Boxy-T-Shirt",
+    "ColorId": 50,
+    "Locations": [
+      {
+        "Id": 6554,
+        "ImagePath": "https://blob.apliiq.com/sitestorage/base/6554_590_900.png",
+        "Artworks": [
+          {
+            "Id": 8217175,
+            "Service": "transfer_print",
+            "Note": "Use exact attached approved master, 8 inches wide, centered 2.5 inches below front neckline. Keep all original artwork and lettering. Matte print. Plain back. No added branding.",
+            "BoxId": 1
+          }
+        ]
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        }
+      }
+    ],
+    "Name": "Fashion Kills Boxy Tee — Black",
+    "Description": "Fashion Kills Boxy Tee — Black. Exact approved primary artwork at 8 inches wide. Plain back. Current private label SB-3-161622 replaces manufacturer neck branding."
+  },
+  "finishedAt": "2026-10-19T19:19:10.455Z",
+  "response": {
+    "ProductId": 1369,
+    "ProductCode": "womens_Womens-Boxy-T-Shirt",
+    "ColorId": 50,
+    "Locations": [
+      {
+        "Artworks": [
+          {
+            "Service": "transfer_print",
+            "Note": "Use exact attached approved master, 8 inches wide, centered 2.5 inches below front neckline. Keep all original artwork and lettering. Matte print. Plain back. No added branding.",
+            "BoxId": 1,
+            "Id": 8217175
+          }
+        ],
+        "Id": 6554,
+        "ImagePath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6220438_65542026-10-19-19-19-10Z6554_590_900.png"
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        },
+        "Id": 0
+      }
+    ],
+    "Variants": [
+      {
+        "SKU": "APQ-6220438S6A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "s"
+      },
+      {
+        "SKU": "APQ-6220438S7A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "m"
+      },
+      {
+        "SKU": "APQ-6220438S8A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "l"
+      },
+      {
+        "SKU": "APQ-6220438S1A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "xl"
+      },
+      {
+        "SKU": "APQ-6220438S2A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 2.5,
+        "Id": 0,
+        "Name": "xxl"
+      }
+    ],
+    "Id": 6220438,
+    "Name": "Fashion Kills Boxy Tee — Black",
+    "Description": "Fashion Kills Boxy Tee — Black. Exact approved primary artwork at 8 inches wide. Plain back. Current private label SB-3-161622 replaces manufacturer neck branding."
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "key": "revision-design-and-all-that-jazz-ss3000-light-pink-79bcf768d7abd60f",
+  "state": "complete",
+  "createdAt": "2026-10-19T19:19:02.949Z",
+  "payload": {
+    "ProductId": 391,
+    "ProductCode": "mens_Independent-Mid-Weight-Sweatshirt",
+    "ColorId": 659,
+    "Locations": [
+      {
+        "Id": 4546,
+        "ImagePath": "https://blob.apliiq.com/sitestorage/base/4546_590_900.png",
+        "Artworks": [
+          {
+            "Id": 8217369,
+            "Service": "dtgprint",
+            "Note": "Use exact attached approved master, 9 inches wide, centered 2.5 inches below front neckline. Keep all original artwork and lettering, including black trousers and hair. Matte print. Plain back. No added branding.",
+            "BoxId": 1
+          }
+        ]
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        }
+      }
+    ],
+    "Name": "And All That Jazz Crewneck — Light Pink",
+    "Description": "And All That Jazz Crewneck — Light Pink. Exact approved primary artwork at 9 inches wide. Plain back. Current private label SB-3-161622 replaces manufacturer neck branding."
+  },
+  "finishedAt": "2026-10-19T19:19:03.197Z",
+  "response": {
+    "ProductId": 391,
+    "ProductCode": "mens_Independent-Mid-Weight-Sweatshirt",
+    "ColorId": 659,
+    "Locations": [
+      {
+        "Artworks": [
+          {
+            "Service": "dtgprint",
+            "Note": "Use exact attached approved master, 9 inches wide, centered 2.5 inches below front neckline. Keep all original artwork and lettering, including black trousers and hair. Matte print. Plain back. No added branding.",
+            "BoxId": 1,
+            "Id": 8217369
+          }
+        ],
+        "Id": 4546,
+        "ImagePath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6220437_45462026-10-19-19-19-03Z4546_590_900.png"
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        },
+        "Id": 0
+      }
+    ],
+    "Variants": [
+      {
+        "SKU": "APQ-6220437S5A1",
+        "Weight": "7.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "xs"
+      },
+      {
+        "SKU": "APQ-6220437S6A1",
+        "Weight": "7.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "s"
+      },
+      {
+        "SKU": "APQ-6220437S7A1",
+        "Weight": "10 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "m"
+      },
+      {
+        "SKU": "APQ-6220437S8A1",
+        "Weight": "11.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "l"
+      },
+      {
+        "SKU": "APQ-6220437S1A1",
+        "Weight": "11.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "xl"
+      },
+      {
+        "SKU": "APQ-6220437S2A1",
+        "Weight": "15.9 oz",
+        "PlusSize_Fee": 2,
+        "Id": 0,
+        "Name": "xxl"
+      },
+      {
+        "SKU": "APQ-6220437S21A1",
+        "Weight": "15.9 oz",
+        "PlusSize_Fee": 4,
+        "Id": 0,
+        "Name": "xxxl"
+      }
+    ],
+    "Id": 6220437,
+    "Name": "And All That Jazz Crewneck — Light Pink",
+    "Description": "And All That Jazz Crewneck — Light Pink. Exact approved primary artwork at 9 inches wide. Plain back. Current private label SB-3-161622 replaces manufacturer neck branding."
+  }
+}

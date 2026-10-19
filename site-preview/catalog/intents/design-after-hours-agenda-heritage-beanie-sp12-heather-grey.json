@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "key": "design-after-hours-agenda-heritage-beanie-sp12-heather-grey",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:57:41.782Z",
+  "payload": {
+    "ProductId": 233,
+    "ProductCode": "mens_beanie",
+    "ColorId": 112,
+    "Locations": [
+      {
+        "Id": 2247,
+        "ImagePath": "https://blob.apliiq.com/sitestorage/base/2247_590_900.png",
+        "Artworks": [
+          {
+            "Id": 8217321,
+            "Service": "embroidery",
+            "Note": "Direct embroidery, exactly 3.5 inches wide, centered on front turned-up cuff, not a patch. Preserve supplied custom text and sheep silhouette. Use supplied selected thread color.",
+            "BoxId": 1,
+            "PrintColors": "#000000"
+          }
+        ]
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1025,
+          "Name": "inside seam"
+        },
+        "Label": {
+          "Id": 6208403
+        }
+      }
+    ],
+    "Name": "After Hours Agenda Heritage Beanie — Heather Grey",
+    "Description": "AHA heritage sheep direct embroidery on Heather Grey Sportsman SP12. Center exact 3.5 inch wide design on adjustable 3 inch cuff; preserve lettering and sheep. One black thread color. Current private label SB-3-161622 inside seam."
+  },
+  "finishedAt": "2026-10-19T18:57:41.978Z",
+  "response": {
+    "ProductId": 233,
+    "ProductCode": "mens_beanie",
+    "ColorId": 112,
+    "Locations": [
+      {
+        "Artworks": [
+          {
+            "Service": "embroidery",
+            "PrintColors": "#000000",
+            "Note": "Direct embroidery, exactly 3.5 inches wide, centered on front turned-up cuff, not a patch. Preserve supplied custom text and sheep silhouette. Use supplied selected thread color.",
+            "BoxId": 1,
+            "Id": 8217321
+          }
+        ],
+        "Id": 2247,
+        "ImagePath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6220374_22472026-10-19-18-57-41Z2247_590_900.png"
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1025,
+          "Name": "inside seam"
+        },
+        "Label": {
+          "Id": 6208403
+        },
+        "Id": 0
+      }
+    ],
+    "Variants": [
+      {
+        "SKU": "APQ-6220374S10A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "one size"
+      }
+    ],
+    "Id": 6220374,
+    "Name": "After Hours Agenda Heritage Beanie — Heather Grey",
+    "Description": "AHA heritage sheep direct embroidery on Heather Grey Sportsman SP12. Center exact 3.5 inch wide design on adjustable 3 inch cuff; preserve lettering and sheep. One black thread color. Current private label SB-3-161622 inside seam."
+  }
+}

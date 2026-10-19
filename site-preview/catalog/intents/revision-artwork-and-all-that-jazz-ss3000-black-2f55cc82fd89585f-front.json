@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "revision-artwork-and-all-that-jazz-ss3000-black-2f55cc82fd89585f-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T19:18:54.855Z",
+  "payload": {
+    "Name": "and-all-that-jazz-ss3000-black-front",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/4ffe006b353c57d2edb0b37dedb7dafecc27e77f/production-artwork/f/jazz-90.png"
+  },
+  "finishedAt": "2026-10-19T19:18:55.714Z",
+  "response": {
+    "WtoHRatio": 0.6146,
+    "DateCreated": "2026-10-19T19:18:55.6546638Z",
+    "Id": 8217366,
+    "Name": "and-all-that-jazz-ss3000-black-front"
+  }
+}

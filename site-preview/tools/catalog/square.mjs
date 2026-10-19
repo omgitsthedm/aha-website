@@ -26,6 +26,17 @@ export function createSquareClient({ token, fetchImpl = fetch, timeoutMs = 20_00
     return data;
   }
   return {
+    hasOrdersForVariations: async (ids) => {
+      const locations = (await call("/locations")).locations ?? [];
+      if (!locations.length) throw new CatalogError("No Square locations available for the order-history check.", { code: "square_locations_missing" });
+      let cursor;
+      do {
+        const data = await call("/orders/search", { method: "POST", body: JSON.stringify({ location_ids: locations.map((location) => location.id), limit: 100, ...(cursor ? { cursor } : {}) }) });
+        if ((data.orders ?? []).some((order) => (order.line_items ?? []).some((line) => ids.includes(line.catalog_object_id)))) return true;
+        cursor = data.cursor;
+      } while (cursor);
+      return false;
+    },
     readItem: async (itemId) => (await call(`/catalog/object/${encodeURIComponent(itemId)}`)).object,
     batchRetrieve: async (ids) => {
       const objects = [];
@@ -40,9 +51,13 @@ export function createSquareClient({ token, fetchImpl = fetch, timeoutMs = 20_00
     },
     createItem: async (object, idempotencyKey) => (await call("/catalog/object", { method: "POST", body: JSON.stringify({ idempotency_key: idempotencyKey, object }) })).catalog_object,
     uploadImage: async ({ itemId, file, name, caption, isPrimary, idempotencyKey }) => {
+      const bytes = readFileSync(file);
+      // A corrected unpublished product has a new item ID but keeps its slug
+      // and photo paths. Scope retries to the complete request, not that path.
+      const requestKey = `aha-image-${sha256({ idempotencyKey, itemId, name, caption, isPrimary, filename: path.basename(file), content: sha256(bytes.toString("base64")) })}`;
       const form = new FormData();
-      form.set("request", JSON.stringify({ idempotency_key: idempotencyKey, object_id: itemId, is_primary: isPrimary, image: { type: "IMAGE", id: "#image", image_data: { name, caption } } }));
-      form.set("file", new Blob([readFileSync(file)], { type: "image/jpeg" }), path.basename(file));
+      form.set("request", JSON.stringify({ idempotency_key: requestKey, object_id: itemId, is_primary: isPrimary, image: { type: "IMAGE", id: "#image", image_data: { name, caption } } }));
+      form.set("file", new Blob([bytes], { type: "image/jpeg" }), path.basename(file));
       return (await call("/catalog/images", { method: "POST", body: form })).image;
     },
   };

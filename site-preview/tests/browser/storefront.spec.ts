@@ -192,6 +192,16 @@ test("the lookbook has one set per collection, three looks each, every look link
   }
   await expect(page.locator(".campaign-set .look-chip").first()).toHaveAttribute("href", /^\/shop\/[a-z0-9-]+\/$/);
   await expect(sets.first().getByRole("link", { name: `Shop ${names[0]} →` })).toHaveAttribute("href", `/shop/${collectionSlug(names[0]!)}/`);
+  // A shared Light Pink crewneck shoot cannot advertise the Butter tee or Black crew.
+  const jazz = page.getByRole("region", { name: "And All That Jazz", exact: true });
+  await expect(jazz.locator(".look-chip")).toHaveCount(3);
+  for (const link of await jazz.locator(".look-chip").all())
+    await expect(link).toHaveAttribute("href", "/shop/and-all-that-jazz-ss3000-light-pink/");
+  await expect(jazz.locator(".still-note")).toHaveText(["01 / Light Pink crewneck", "02 / Light Pink crewneck", "03 / Light Pink crewneck"]);
+  await page.goto("/shop/and-all-that-jazz/");
+  await expect(page.locator(".campaign-grid figure")).toHaveCount(3);
+  for (const link of await page.locator(".campaign-grid .look-chip").all())
+    await expect(link).toHaveAttribute("href", "/shop/and-all-that-jazz-ss3000-light-pink/");
 });
 
 test("the footer sign-up reports its section of the site, and Home keeps only its band", async ({ page }) => {
@@ -308,7 +318,10 @@ test("each collection has its own page with its pieces, campaign and share image
     await page.goto(`/shop/${collectionSlug(name)}/`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(name);
     await expect(page.locator("#pieces article.product-card")).toHaveCount(pieces.length);
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", new RegExp(`${pieces[0]!.campaign[0]!.feedImage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
+    const firstShot = pieces[0]!.campaign[0]!;
+    const picturedSlug = 'productSlug' in firstShot ? firstShot.productSlug : pieces[0]!.slug;
+    const pictured = pieces.find(piece => piece.slug === picturedSlug)!;
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", new RegExp(`${pictured.campaign[0]!.feedImage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
     const schema = JSON.parse((await page.locator('script[type="application/ld+json"]').last().textContent())!);
     expect(schema["@type"]).toBe("CollectionPage");
     expect(schema.mainEntity.itemListElement).toHaveLength(pieces.length);
@@ -338,9 +351,9 @@ test("product pages show how to measure, and Find my size repeats the drawing", 
 test.describe("campaign motion", () => {
   test.use({ reducedMotion: "no-preference" });
 
-  test("the home hero photo comes first, then its labeled film plays and can be paused", async ({ page }) => {
-    await page.goto("/");
-    const frame = page.locator(".hero-image .motion-frame");
+  test("a collection with a film shows its photo first, then plays and can be paused", async ({ page }) => {
+    await page.goto("/shop/mighty-micks/");
+    const frame = page.locator(".collection-hero-image .motion-frame");
     await expect(frame.locator("img")).toBeVisible();
     await expect(frame).toHaveClass(/is-moving/, { timeout: 15_000 });
     // The film's layer shows the photo's own file until the film plays (see motion.ts).
@@ -348,8 +361,8 @@ test.describe("campaign motion", () => {
     const video = frame.locator("video");
     await expect(video).toHaveAttribute("aria-hidden", "true");
     expect(await video.evaluate((element: HTMLVideoElement) => element.muted && element.loop && !element.paused)).toBe(true);
-    await expect(page.locator(".hero-image figcaption")).toContainText(/garment shots AI-generated/);
-    await expect(page.locator(".hero-image figcaption .still-note")).toBeHidden();
+    await expect(page.locator(".collection-hero-image figcaption")).toContainText(/garment shots AI-generated/);
+    await expect(page.locator(".collection-hero-image figcaption .still-note")).toBeHidden();
     const toggle = frame.getByRole("button", { name: "Pause the motion" });
     await toggle.click();
     expect(await video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(true);
@@ -360,7 +373,7 @@ test.describe("campaign motion", () => {
   test("the full-screen phone lookbook gets the film cut for its crop", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/lookbook/");
-    const frame = page.locator(".campaign-set .motion-frame").first();
+    const frame = page.locator(".campaign-set .motion-frame[data-motion]").first();
     await frame.scrollIntoViewIfNeeded();
     await expect(frame.locator("video")).toHaveCount(1, { timeout: 15_000 });
     expect(await frame.getAttribute("data-motion-small")).toMatch(/-600t\.mp4$/);
@@ -369,10 +382,10 @@ test.describe("campaign motion", () => {
 
   test("phones get the lighter film", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/");
-    const video = page.locator(".hero-image video");
+    await page.goto("/shop/mighty-micks/");
+    const video = page.locator(".collection-hero-image video");
     await expect(video).toHaveCount(1, { timeout: 15_000 });
-    await expect(video).toHaveAttribute("src", (await page.locator(".hero-image .motion-frame").getAttribute("data-motion-small"))!, { timeout: 15_000 });
+    await expect(video).toHaveAttribute("src", (await page.locator(".collection-hero-image .motion-frame").getAttribute("data-motion-small"))!, { timeout: 15_000 });
   });
 });
 

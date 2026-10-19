@@ -1,0 +1,229 @@
+{
+  "slug": "and-all-that-jazz-3023cl-butter",
+  "status": "approved",
+  "familyId": "022",
+  "title": "And All That Jazz Boxy Tee",
+  "blank": "3023CL",
+  "color": "Butter",
+  "priceCents": 3400,
+  "approval": {
+    "by": "David Marsh (owner)",
+    "at": "2026-10-19T18:11:10.331Z",
+    "note": "Owner approved these designs and garments in chat and instructed “Upload them all, we’re on a deadline”, then “now do that with these new products ... pricing everything, research it then do it”. Exact retail delegated to researched free-shipping margin checks."
+  },
+  "fulfillment": {
+    "product": "and_all_that_jazz_3023cl_butter"
+  },
+  "apliiq": {
+    "productId": 1369,
+    "productCode": "womens_Womens-Boxy-T-Shirt",
+    "colorId": 2482,
+    "label": {
+      "id": 6208403,
+      "placementId": 1011,
+      "placementName": "inside neck"
+    },
+    "artwork": [
+      {
+        "key": "front",
+        "name": "and-all-that-jazz-3023cl-butter-front",
+        "imagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/4ffe006b353c57d2edb0b37dedb7dafecc27e77f/production-artwork/f/jazz-90.png"
+      }
+    ],
+    "locations": [
+      {
+        "id": 6554,
+        "boxId": 1,
+        "imagePath": "https://blob.apliiq.com/sitestorage/base/6554_590_900.png",
+        "artworkKey": "front",
+        "service": "transfer_print",
+        "note": "Use exact attached approved master, 9 inches wide, centered 2.5 inches below front neckline. Keep all original artwork and lettering, including black trousers and hair. Matte print. Plain back. No added branding."
+      }
+    ],
+    "productionNote": "And All That Jazz Boxy Tee — Butter. Exact approved primary artwork at 9 inches wide. Plain back. Current private label SB-3-161622 replaces manufacturer neck branding."
+  },
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "product": {
+    "collection": "And All That Jazz",
+    "gallery": [
+      {
+        "src": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-front-1060.webp",
+        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-front-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-front-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-front-1060.webp 1060w",
+        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-front.jpg",
+        "width": 1060,
+        "height": 1484,
+        "alt": "Front of the Butter And All That Jazz Boxy Tee.",
+        "role": "front"
+      },
+      {
+        "src": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-back-1122.webp",
+        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-back-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-back-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-back-1122.webp 1122w",
+        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-back.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Plain back of the Butter And All That Jazz Boxy Tee.",
+        "role": "back"
+      },
+      {
+        "src": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-print-detail-1122.webp",
+        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-print-detail-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-print-detail-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-print-detail-1122.webp 1122w",
+        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-print-detail.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Close view of the front print on the Butter And All That Jazz Boxy Tee.",
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-folded-1122.webp",
+        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-folded-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-folded-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-folded-1122.webp 1122w",
+        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/garment-folded.jpg",
+        "width": 1122,
+        "height": 1122,
+        "alt": "Butter And All That Jazz Boxy Tee casually folded, with the AHA private neck label visible.",
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-hero-1122.webp",
+        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-hero-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-hero-680.webp 680w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-hero-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-hero-1122.webp 1122w",
+        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-hero.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Light Pink And All That Jazz crewneck worn with relaxed upright posture at a brick theater side entrance with a black door and warm wall lamp, view 1.",
+        "role": "lifestyle-hero",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
+      },
+      {
+        "src": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-1-1122.webp",
+        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-1-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-1-680.webp 680w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-1-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-1-1122.webp 1122w",
+        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-1.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Light Pink And All That Jazz crewneck worn with relaxed upright posture at a brick theater side entrance with a black door and warm wall lamp, view 2.",
+        "role": "lifestyle-alternate",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
+      },
+      {
+        "src": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-2-1122.webp",
+        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-2-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-2-680.webp 680w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-2-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-2-1122.webp 1122w",
+        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-3023cl-butter/campaign-alternate-2.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Light Pink And All That Jazz crewneck worn with relaxed upright posture at a brick theater side entrance with a black door and warm wall lamp, view 3.",
+        "role": "lifestyle-alternate",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
+      }
+    ],
+    "gender": "female",
+    "fit": "boxy, mid-length",
+    "weightOz": 6.1,
+    "composition": "100% ring-spun cotton",
+    "typeLabel": "Boxy tee",
+    "fabricType": "cotton jersey",
+    "blank": "Comfort Colors 3023CL",
+    "constructionDetails": [
+      "garment-dyed finish",
+      "ribbed collar",
+      "shoulder-to-shoulder twill tape"
+    ],
+    "sizeGuide": [
+      {
+        "size": "S",
+        "chestWidth": 18.25,
+        "bodyLength": 20
+      },
+      {
+        "size": "M",
+        "chestWidth": 20.25,
+        "bodyLength": 21
+      },
+      {
+        "size": "L",
+        "chestWidth": 22,
+        "bodyLength": 22
+      },
+      {
+        "size": "XL",
+        "chestWidth": 24,
+        "bodyLength": 23
+      },
+      {
+        "size": "2XL",
+        "chestWidth": 26,
+        "bodyLength": 24
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Compare a similar garment laid flat. Allow normal manufacturing variation of about 1 inch in chest width and 1.25 inches in length.",
+    "sleeveMeasurementGuidance": "",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > T-Shirts"
+    },
+    "description": "And All That Jazz Boxy Tee in Butter. A mid-length, boxy tee in substantial 6.1 oz ring-spun cotton. Garment-dyed finish, relaxed width and a printed front; the back is plain.",
+    "printMethod": "direct-to-film (DTF) transfer",
+    "galleryAlts": {
+      "front": "Front of the Butter And All That Jazz Boxy Tee.",
+      "back": "Plain back of the Butter And All That Jazz Boxy Tee.",
+      "print-detail": "Close view of the front print on the Butter And All That Jazz Boxy Tee.",
+      "folded": "Butter And All That Jazz Boxy Tee casually folded, with the AHA private neck label visible."
+    },
+    "campaignAlts": [
+      "Light Pink And All That Jazz crewneck worn with relaxed upright posture at a brick theater side entrance with a black door and warm wall lamp, view 1.",
+      "Light Pink And All That Jazz crewneck worn with relaxed upright posture at a brick theater side entrance with a black door and warm wall lamp, view 2.",
+      "Light Pink And All That Jazz crewneck worn with relaxed upright posture at a brick theater side entrance with a black door and warm wall lamp, view 3."
+    ],
+    "campaignSetting": "a brick theater side entrance with a black door and warm wall lamp"
+  },
+  "local": {
+    "folder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse",
+    "approvedFrontProof": {
+      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse/3023CL — Butter — Proof/Front review.png",
+      "exists": true,
+      "sha256": "ba6d650270dd428106db42d7570ecc74c22c79539305a07f9a4505c4b33c5bc6"
+    },
+    "artwork": {
+      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse/Fosse — And All That Jazz — Review.png",
+      "exists": true,
+      "sha256": "41ebfc5228b863b5b2338ed0731bfee9397f6797149b6a321cd92180db1abb15"
+    },
+    "preparationNote": "Executable specification using approved art and owner-delegated researched pricing. Gallery and campaign are finished before storefront publication.",
+    "productionMaster": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse/Print Artwork — Full color — transparent.png",
+    "launchFolder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse/3023CL — Butter — Launch",
+    "campaignNote": "Three photos per approved design, shared across its garment/color listings; alt text names the garment actually pictured. Campaign images remain outside product galleries and feeds.",
+    "finalPrimaryMasterVerified": {
+      "at": "2026-10-19T19:18:33.070Z",
+      "source": "https://raw.githubusercontent.com/omgitsthedm/aha-website/4ffe006b353c57d2edb0b37dedb7dafecc27e77f/production-artwork/f/jazz-90.png",
+      "widthInches": 9,
+      "priorDesign": 6220228,
+      "currentDesign": 6220433,
+      "reason": "Correct final primary artwork and native print width before first publication; legacy supplier note editor failed readback."
+    }
+  },
+  "costOverride": {
+    "baseCents": 1483,
+    "surchargeCents": {
+      "S": 0,
+      "M": 0,
+      "L": 0,
+      "XL": 0,
+      "2XL": 200
+    },
+    "shippingCents": {
+      "S": 596,
+      "M": 596,
+      "L": 596,
+      "XL": 596,
+      "2XL": 596
+    },
+    "labelCents": 200,
+    "perItemCents": 100,
+    "source": "2026-10-19 authenticated Apliiq Product API + official VIP 20% service/blank discount, official May 12 2026 US shipping by size weight, $1/item fulfillment. Retail includes US shipping; floor checks both card and Afterpay fees."
+  }
+}

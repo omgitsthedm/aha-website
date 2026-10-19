@@ -1,0 +1,114 @@
+[
+  {
+    "file": "fashion-kills.png",
+    "source": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/007 — Fashion Kills/Print Artwork/Fashion Kills — Approved Print.png",
+    "native": [
+      829,
+      1227
+    ],
+    "output": [
+      2400,
+      3552
+    ],
+    "widthInches": 8,
+    "note": "Exact approved transparent art; conventional crop/resize only, no new detail claimed."
+  },
+  {
+    "file": "nonna-red.png",
+    "source": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/011 — Nonna’s Sunday Supper Society/Print Artwork/Nonna’s — Red Only — Print — 300ppi.png",
+    "native": [
+      2999,
+      3256
+    ],
+    "output": [
+      3000,
+      3257
+    ],
+    "widthInches": 10,
+    "note": "Exact approved transparent art; conventional crop/resize only, no new detail claimed."
+  },
+  {
+    "file": "resist-rebel.png",
+    "source": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/008 — Resist Rebel/Print Artwork/Resist Rebel — Blue Heritage — Transparent.png",
+    "native": [
+      1159,
+      910
+    ],
+    "output": [
+      3000,
+      2355
+    ],
+    "widthInches": 10,
+    "note": "Exact approved transparent art; conventional crop/resize only, no new detail claimed."
+  },
+  {
+    "file": "for-the-record-back.png",
+    "source": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/023 — Noted/Print Artwork/For the Record — Back — Transparent — 300ppi.png",
+    "native": [
+      2094,
+      2310
+    ],
+    "output": [
+      2100,
+      2317
+    ],
+    "widthInches": 7,
+    "note": "Exact approved transparent art; conventional crop/resize only, no new detail claimed."
+  },
+  {
+    "file": "and-all-that-jazz.png",
+    "source": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse/Fosse — And All That Jazz — Review.png",
+    "native": [
+      877,
+      1427
+    ],
+    "output": [
+      2700,
+      4393
+    ],
+    "widthInches": 9,
+    "note": "Remove black background to garment negative space; preserve original colored pixels and shape."
+  },
+  {
+    "file": "for-the-record-front.png",
+    "source": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/023 — Noted/Black Hoodie — Approved Design/Front.png",
+    "native": [
+      368,
+      58
+    ],
+    "output": [
+      2400,
+      378
+    ],
+    "widthInches": 8,
+    "note": "Extract only approved two-line cream typography; no obsolete checkbox; preserve exact shapes."
+  },
+  {
+    "file": "heritage-sheep-cream.png",
+    "source": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/009 — Black Sheep Knitwear/AHA Heritage Sheep — Approved Beanie Design.png",
+    "native": [
+      378,
+      301
+    ],
+    "output": [
+      1050,
+      836
+    ],
+    "widthInches": 3.5,
+    "note": "Flatten approved cream embroidery from black cuff, preserving lettering and owned sheep; no background knit."
+  },
+  {
+    "file": "heritage-sheep-black.png",
+    "source": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/009 — Black Sheep Knitwear/AHA Heritage Sheep — Approved Beanie Design.png",
+    "native": [
+      378,
+      301
+    ],
+    "output": [
+      1050,
+      836
+    ],
+    "widthInches": 3.5,
+    "note": "Same exact approved logo in black for light colorways."
+  }
+]

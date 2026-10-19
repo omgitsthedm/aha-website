@@ -1,4 +1,30 @@
 {
+  "6014": {
+    "front": {
+      "file": "bases/6014-front.webp",
+      "centerX": 295,
+      "collarY": 155,
+      "pxPerInch": 13.5,
+      "crop": {
+        "left": 0,
+        "top": 180,
+        "width": 590,
+        "height": 540
+      }
+    },
+    "back": {
+      "file": "bases/6014-back.webp",
+      "centerX": 295,
+      "collarY": 245,
+      "pxPerInch": 13.5,
+      "crop": {
+        "left": 0,
+        "top": 180,
+        "width": 590,
+        "height": 540
+      }
+    }
+  },
   "_note": "Blank-garment photos (supplier references, white studio background). pxPerInch is measured from the torso width of the photographed size; collarY is the front neckline. Re-measure when a base is replaced.",
   "SS3000": {
     "front": {
@@ -115,6 +141,86 @@
         "top": 64,
         "width": 590,
         "height": 770
+      }
+    }
+  },
+  "C1717": {
+    "front": {
+      "file": "bases/C1717-front.webp",
+      "centerX": 295,
+      "collarY": 195,
+      "pxPerInch": 13.5,
+      "crop": {
+        "left": 0,
+        "top": 180,
+        "width": 590,
+        "height": 540
+      }
+    },
+    "back": {
+      "file": "bases/C1717-back.webp",
+      "centerX": 295,
+      "collarY": 245,
+      "pxPerInch": 13.5,
+      "crop": {
+        "left": 0,
+        "top": 180,
+        "width": 590,
+        "height": 540
+      }
+    }
+  },
+  "3023CL": {
+    "front": {
+      "file": "bases/3023CL-front.webp",
+      "centerX": 295,
+      "collarY": 250,
+      "pxPerInch": 13,
+      "crop": {
+        "left": 0,
+        "top": 180,
+        "width": 590,
+        "height": 540
+      }
+    },
+    "back": {
+      "file": "bases/3023CL-back.webp",
+      "centerX": 295,
+      "collarY": 245,
+      "pxPerInch": 13,
+      "crop": {
+        "left": 0,
+        "top": 180,
+        "width": 590,
+        "height": 540
+      }
+    }
+  },
+  "TKN24": {
+    "front": {
+      "file": "bases/TKN24-front.webp",
+      "centerX": 295,
+      "collarY": 545,
+      "pxPerInch": 50,
+      "crop": {
+        "left": 0,
+        "top": 155,
+        "width": 590,
+        "height": 580
+      }
+    }
+  },
+  "SP12": {
+    "back": {
+      "file": "bases/SP12-front.webp",
+      "centerX": 295,
+      "collarY": 545,
+      "pxPerInch": 45,
+      "crop": {
+        "left": 73,
+        "top": 180,
+        "width": 434,
+        "height": 490
       }
     }
   }

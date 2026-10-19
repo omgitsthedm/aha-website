@@ -1,16 +1,131 @@
 {
   "schemaVersion": 1,
   "source": "Apliiq saved-design dropship dialogs (2026-10-15/16) and one-unit domestic checkout quotes to the saved Arizona address (2026-10-15). Refresh before every drop: Apliiq can change costs without notice.",
-  "cardFee": { "percent": 3.3, "fixedCents": 30, "note": "Square Online standard card rate; Afterpay is 6% + $0.30." },
-  "afterpayFee": { "percent": 6, "fixedCents": 30 },
+  "cardFee": {
+    "percent": 3.3,
+    "fixedCents": 30,
+    "note": "Square Online standard card rate; Afterpay is 6% + $0.30."
+  },
+  "afterpayFee": {
+    "percent": 6,
+    "fixedCents": 30
+  },
   "perItemCents": 100,
   "labelCents": 250,
   "floorCents": 500,
-  "largeSizes": ["2XL", "3XL", "4XL", "5XL"],
+  "largeSizes": [
+    "2XL",
+    "3XL",
+    "4XL",
+    "5XL"
+  ],
   "blanks": {
-    "SS3000": { "name": "Independent Trading Co. SS3000 crewneck", "baseCents": 2639, "surchargeCents": { "2XL": 200, "3XL": 400 }, "shippingCents": 692, "largeShippingCents": 885 },
-    "SS4500": { "name": "Independent Trading Co. SS4500 hoodie", "baseCents": 2689, "surchargeCents": { "2XL": 200, "3XL": 400, "4XL": 600, "5XL": 800 }, "shippingCents": 692, "largeShippingCents": 885 },
-    "AFX64CRP": { "name": "Independent Trading Co. AFX64CRP cropped hoodie", "baseCents": 2884, "surchargeCents": { "2XL": 200 }, "shippingCents": 596, "largeShippingCents": 692 },
-    "NL3601": { "name": "Next Level 3601 long sleeve", "baseCents": 1649, "surchargeCents": { "2XL": 200 }, "shippingCents": 692, "largeShippingCents": 692 }
+    "6014": {
+      "name": "Comfort Colors 6014",
+      "baseCents": 2327,
+      "surchargeCents": {
+        "S": 0,
+        "M": 0,
+        "L": 0,
+        "XL": 0,
+        "2XL": 240,
+        "3XL": 320
+      },
+      "shippingCents": 692,
+      "largeShippingCents": 692
+    },
+    "SS3000": {
+      "name": "Independent Trading Co. SS3000 crewneck",
+      "baseCents": 2639,
+      "surchargeCents": {
+        "2XL": 200,
+        "3XL": 400
+      },
+      "shippingCents": 692,
+      "largeShippingCents": 885
+    },
+    "SS4500": {
+      "name": "Independent Trading Co. SS4500 hoodie",
+      "baseCents": 2689,
+      "surchargeCents": {
+        "2XL": 200,
+        "3XL": 400,
+        "4XL": 600,
+        "5XL": 800
+      },
+      "shippingCents": 692,
+      "largeShippingCents": 885
+    },
+    "AFX64CRP": {
+      "name": "Independent Trading Co. AFX64CRP cropped hoodie",
+      "baseCents": 2884,
+      "surchargeCents": {
+        "2XL": 200
+      },
+      "shippingCents": 596,
+      "largeShippingCents": 692
+    },
+    "NL3601": {
+      "name": "Next Level 3601 long sleeve",
+      "baseCents": 1649,
+      "surchargeCents": {
+        "2XL": 200
+      },
+      "shippingCents": 692,
+      "largeShippingCents": 692
+    },
+    "IND4000": {
+      "name": "Independent Trading Co. IND4000 camo hoodie",
+      "baseCents": 3475,
+      "surchargeCents": {
+        "2XL": 200,
+        "3XL": 360
+      },
+      "shippingCents": 1180,
+      "largeShippingCents": 1180
+    },
+    "C1717": {
+      "name": "Comfort Colors 1717",
+      "baseCents": 1363,
+      "surchargeCents": {
+        "S": 0,
+        "M": 0,
+        "L": 0,
+        "XL": 0,
+        "2XL": 160,
+        "3XL": 320
+      },
+      "shippingCents": 596,
+      "largeShippingCents": 596
+    },
+    "3023CL": {
+      "name": "Comfort Colors 3023CL",
+      "baseCents": 1483,
+      "surchargeCents": {
+        "S": 0,
+        "M": 0,
+        "L": 0,
+        "XL": 0,
+        "2XL": 200
+      },
+      "shippingCents": 596,
+      "largeShippingCents": 596
+    },
+    "TKN24": {
+      "name": "Bayside TKN24",
+      "baseCents": 1448,
+      "surchargeCents": {
+        "One Size": 0
+      },
+      "shippingCents": 596,
+      "largeShippingCents": 596
+    },
+    "SP12": {
+      "name": "Sportsman SP12 cuffed beanie",
+      "baseCents": 1224,
+      "surchargeCents": {},
+      "shippingCents": 596,
+      "largeShippingCents": 596
+    }
   }
 }

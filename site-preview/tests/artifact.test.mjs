@@ -51,7 +51,7 @@ test("every route has unique metadata, entity data and correct indexing mode", a
     assert.ok(html.includes(`data-tracking-enabled="${production}"`),route);
   }
 });
-test("all inline script content is covered by CSP hashes", async () => {
+test("executable inline scripts are covered by CSP without per-product JSON hashes", async () => {
   const { createHash } = await import("node:crypto");
   const headers = await readFile(new URL("_headers", root), "utf8");
   for (const route of [...routes, "/404.html"]) {
@@ -59,14 +59,19 @@ test("all inline script content is covered by CSP hashes", async () => {
       ? route.slice(1)
       : `${route.slice(1)}index.html`;
     const html = await readFile(new URL(file, root), "utf8");
-    for (const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))
-      if (match[1])
+    for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
+      if (!match[2]) continue;
+      const hash = createHash("sha256").update(match[2]).digest("base64");
+      if (/\btype\s*=\s*(["'])application\/(?:ld\+)?json\1/i.test(match[1])) {
+        assert.doesNotThrow(() => JSON.parse(match[2]), `${route}: valid embedded data`);
+        assert.ok(!headers.includes(hash), `${route}: inert data must not expand script policy`);
+      } else
         assert.ok(
-          headers.includes(
-            createHash("sha256").update(match[1]).digest("base64"),
-          ),
+          headers.includes(hash), `${route}: executable script must be authorized`,
         );
+    }
   }
+  assert.ok(headers.length < 6000, `Security headers must stay compact as the catalog grows (${headers.length} bytes)`);
   const scriptPolicy = headers.match(/script-src ([^;]+)/)?.[1] ?? "";
   assert.ok(!scriptPolicy.includes("unsafe-inline"));
   assert.match(headers, /style-src 'self' 'unsafe-inline'/, "Square requires its dynamic UI styles");

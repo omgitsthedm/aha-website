@@ -27,11 +27,13 @@ import { pathToFileURL } from "node:url";
 import { apliiqCredentials, createApliiqClient, designPayload, withIntent } from "./apliiq.mjs";
 import { renderFulfillmentCatalog } from "./generate.mjs";
 import { fulfillmentFromLedger, ledgerFromLive, loadLedger, saveLedger, validateLedger } from "./ledger.mjs";
-import { APP, CATALOG_DIR, CatalogError, PATHS, expectedSku, listDesigns, log, readJson, sha256, writeJsonAtomic, writeTextAtomic } from "./lib.mjs";
+import { APP, CATALOG_DIR, CatalogError, PATHS, confirmedArtworkId, expectedSku, listDesigns, log, readJson, sha256, writeJsonAtomic, writeTextAtomic } from "./lib.mjs";
 
 const CATALOG_BLANKS = path.join(CATALOG_DIR, "blanks");
 import { buildCampaign, buildGallery } from "./images.mjs";
 import { marginReport } from "./margin.mjs";
+import { replaceUnreleased } from "./replace-unreleased.mjs";
+import { persistReplacement, requireReplacementState, resumeReplacement } from "./replacement-state.mjs";
 import { createSquareClient, itemObject, squareIdempotencyKey, squareToken, verifyItem } from "./square.mjs";
 import { productImageKeys } from "../../server/catalog/publish.mjs";
 import { PRIVATE_LABEL, SITE_ORIGIN } from "../../server/platform/client.mjs";
@@ -60,7 +62,7 @@ function normalizeSpec(raw, file) {
   if (!/^[a-z0-9-]+$/.test(spec.slug)) throw new CatalogError(`${spec.slug}: slug must be lowercase letters, numbers and hyphens.`, { code: "spec_invalid" });
   if (!Number.isSafeInteger(spec.priceCents) || spec.priceCents < 100) throw new CatalogError(`${spec.slug}: priceCents must be whole cents.`, { code: "spec_invalid" });
   if (!spec.apliiq.designId && PRIVATE_LABEL && spec.apliiq.label?.id !== PRIVATE_LABEL.id) throw new CatalogError(`${spec.slug}: only the approved ${PRIVATE_LABEL.code} label (${PRIVATE_LABEL.id}) may be used.`, { code: "spec_invalid" });
-  for (const size of spec.sizes) expectedSku(1, size);
+  for (const size of spec.sizes) expectedSku(1, size, spec.apliiq.sizeCodes);
   return { ...spec, description: spec.product.description, file };
 }
 
@@ -135,7 +137,7 @@ const commands = {
     // A product already applied keeps products.json in step with its spec.
     const products = readJson(PATHS.products);
     const live = products.findIndex((item) => item.slug === slug);
-    if (live >= 0) { products[live] = { ...products[live], gallery: product.gallery, campaign: product.campaign, campaignSetting: product.campaignSetting }; writeJsonAtomic(PATHS.products, products); }
+    if (live >= 0) { products[live] = { ...products[live], ...(product.description ? { description: product.description } : {}), gallery: product.gallery, campaign: product.campaign, campaignSetting: product.campaignSetting }; writeJsonAtomic(PATHS.products, products); }
     return { slug, garment: product.gallery?.length ?? 0, campaign: product.campaign?.length ?? 0, updatedLiveProduct: live >= 0 };
   },
 
@@ -263,10 +265,12 @@ const commands = {
       let design;
       if (spec.apliiq.designId) {
         // Designed in Apliiq and sent with Add to Store: the design and its SKUs already exist.
-        design = { Id: spec.apliiq.designId, Variants: (spec.apliiq.skus ?? spec.sizes.map((size) => expectedSku(spec.apliiq.designId, size))).map((sku) => ({ SKU: sku })) };
+        design = { Id: spec.apliiq.designId, Variants: (spec.apliiq.skus ?? spec.sizes.map((size) => expectedSku(spec.apliiq.designId, size, spec.apliiq.sizeCodes))).map((sku) => ({ SKU: sku })) };
       } else {
         for (const art of spec.apliiq.artwork) {
           if (art.id) { artworkIds[art.key] = art.id; continue; }
+          const confirmed = confirmedArtworkId(art.imagePath);
+          if (confirmed) { artworkIds[art.key] = confirmed; continue; }
           const response = await withIntent(`artwork-${spec.slug}-${art.key}`, { Name: art.name, ImagePath: art.imagePath }, apliiq.createArtwork);
           artworkIds[art.key] = response.Id;
         }
@@ -274,7 +278,7 @@ const commands = {
       }
       const skus = {};
       for (const size of spec.sizes) {
-        const sku = expectedSku(design.Id, size);
+        const sku = expectedSku(design.Id, size, spec.apliiq.sizeCodes);
         if (!(design.Variants ?? []).some((variant) => variant?.SKU === sku)) throw new CatalogError(`${spec.slug} ${size}: Apliiq design ${design.Id} did not return ${sku}. Check the size range in Apliiq.`, { code: "apliiq_sku_missing" });
         skus[size] = sku;
       }
@@ -328,6 +332,27 @@ const commands = {
     return { checked: objects.length, drift, applied: true, verified: after.length };
   },
 
+  async "replace-unreleased"(slug, flags) {
+    const raw = listDesigns().find(({ spec }) => spec.slug === slug);
+    if (!raw || !flags.reason || !flags["from-design-id"]) throw new CatalogError("Replacement needs slug, --from-design-id and --reason.", { code: "replacement_arguments" });
+    const spec = normalizeSpec(raw.spec, raw.file);
+    const resumed = resumeReplacement(slug, flags["from-design-id"]);
+    if (resumed) return resumed;
+    const ledger = loadLedger();
+    const products = readJson(PATHS.products);
+    const { entry: current } = requireReplacementState(ledger, products, slug, flags["from-design-id"]);
+    const report = marginReport(spec, readJson(PATHS.costs));
+    if (!report.pass) throw new CatalogError("Corrected product fails the margin floor.", { code: "replacement_margin" });
+    const page = await fetch(`${SITE_ORIGIN}/shop/${slug}/`, { cache: "no-store", signal: AbortSignal.timeout(20000) });
+    const square = createSquareClient({ token: squareToken() });
+    const hasOrders = await square.hasOrdersForVariations(current.variants.map((v) => v.variationId));
+    const result = await replaceUnreleased({ spec, current, square, apliiq: createApliiqClient({ credentials: apliiqCredentials() }), pageStatus: page.status, hasOrders });
+    const superseded = [...(current.superseded ?? []), { at: new Date().toISOString(), reason: flags.reason, apliiq: current.apliiq, square: current.square, variants: current.variants }];
+    Object.assign(current, { apliiq: { designId: result.designId, artworkIds: result.artworkIds }, square: { itemId: result.itemId, imageIds: [] }, variants: spec.sizes.map((size) => ({ variationId: result.variationIds[size], size, sku: result.skus[size], priceCents: spec.priceCents })), superseded });
+    const summary = { slug, supersededDesign: superseded.at(-1).apliiq.designId, apliiqDesignId: result.designId, squareItemId: result.itemId, variants: spec.sizes.length, ordersChecked: true, priorPageStatus: page.status };
+    return persistReplacement({ slug, fromDesignId: flags["from-design-id"], entry: current, product: productRecord(spec, result.itemId, result.variationIds, result.skus), summary });
+  },
+
   async "square-images"(slug) {
     // Upload any gallery view Square doesn't have yet (front first), so Square matches the site.
     if (!slug) throw new CatalogError("square-images requires a slug.", { code: "slug_missing" });
@@ -364,11 +389,13 @@ const commands = {
     const keys = productImageKeys(product);
     const missing = keys.filter((key) => !existsSync(path.join(APP, "public/images", key)));
     if (missing.length) throw new CatalogError(`${slug} is missing image files.`, { code: "images_missing", exit: 5, details: missing });
-    for (const key of keys) {
+    let imageCursor = 0;
+    await Promise.all(Array.from({ length: Math.min(4, keys.length) }, async () => { while (imageCursor < keys.length) {
+      const key = keys[imageCursor++];
       const upload = () => automation(`live-images/${key}`, { method: "PUT", body: readFileSync(path.join(APP, "public/images", key)), contentType: "application/octet-stream" });
       // One retry for a transient failure; images are idempotent by path.
       try { await upload(); } catch (error) { if (error.code !== "automation_failed") throw error; await new Promise((resolve) => { setTimeout(resolve, 2_000); }); await upload(); }
-    }
+    } }));
     const result = await automation(`live-products/${encodeURIComponent(slug)}`, { method: "PUT", body: JSON.stringify(product) });
     // Smoke check against the live site: the page answers with this product.
     const response = await fetch(`${SITE}/shop/${slug}/`, { signal: AbortSignal.timeout(20_000) });
@@ -495,6 +522,8 @@ function parse(argv) {
     else if (token === "--files") { flags.files = []; while (rest[index + 1] && !rest[index + 1].startsWith("--")) flags.files.push(rest[++index]); }
     else if (token === "--campaign") { flags.campaign = []; while (rest[index + 1] && !rest[index + 1].startsWith("--")) flags.campaign.push(rest[++index]); }
     else if (token === "--setting") flags.setting = rest[++index];
+    else if (token === "--from-design-id") flags["from-design-id"] = rest[++index];
+    else if (token === "--reason") flags.reason = rest[++index];
     else if (token === "--skip-checks") flags["skip-checks"] = true;
     else if (token === "--no-live") flags["no-live"] = true;
     else if (token === "--apply") flags.apply = true;

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-nonna-s-sunday-supper-society-c1717-ivory-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:13:53.584Z",
+  "payload": {
+    "Name": "Nonna’s Sunday Supper Society Tee approved front",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/nonna-red.png"
+  },
+  "finishedAt": "2026-10-19T18:13:54.100Z",
+  "response": {
+    "WtoHRatio": 0.9211,
+    "DateCreated": "2026-10-19T18:13:54.0629259Z",
+    "Id": 8217179,
+    "Name": "Nonna’s Sunday Supper Society Tee approved front"
+  }
+}

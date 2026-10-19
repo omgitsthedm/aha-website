@@ -33,6 +33,7 @@ function liveProduct(slug = "night-shift-ss3000-maroon") {
   return {
     ...structuredClone(pet), slug, title: "Night Shift Crewneck", collection: "Night Shift", squareItemId: "LIVEITEMNIGHTSHIFT000001",
     gallery: pet.gallery.map((shot) => ({ ...shot, src: move(shot.src), srcset: move(shot.srcset), feedImage: move(shot.feedImage) })),
+    campaign: pet.campaign.map((shot) => ({ ...shot, src: move(shot.src), srcset: move(shot.srcset), feedImage: move(shot.feedImage) })),
     variants: pet.variants.map((variant, index) => ({ ...variant, id: variantIds[index], sku: variant.sku.replace("6211854", "6299999") })),
     fulfillment: { product: "night_shift_ss3000_maroon", title: "Night Shift Crewneck — Maroon" },
   };
@@ -105,6 +106,7 @@ test("a snapshot read failure fails closed: live products vanish, built ones are
 
 test("checkout prices and fulfillment SKUs for a live product come only from the merged allow list", () => {
   const product = liveProduct();
+  assert.ok(productImageKeys(product).includes(product.campaign[0].src.replace(/^\/images\//, "")), "campaign images ship with the product, separately from its shopping gallery");
   const merged = { ...liveAllowList([product], AHA_FULFILLMENT_CATALOG), ...AHA_FULFILLMENT_CATALOG };
   const medium = product.variants[2];
   assert.throws(() => normalizeItems([{ variationId: medium.id, quantity: 1 }]), /invalid_cart/);

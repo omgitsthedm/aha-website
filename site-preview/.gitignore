@@ -9,4 +9,5 @@ playwright-report/
 !.env.example
 tools/catalog/logs/
 catalog/plans/
+catalog/staging/
 tools/images/out/
