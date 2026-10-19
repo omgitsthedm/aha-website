@@ -118,7 +118,9 @@ http
       // built artifact has nothing published live, so it is always empty here.
       if (pathname === "/api/catalog/live") {
         // AHA_LOCAL_RETIRED=slug,slug simulates products removed in the admin (local checks only).
-        const retired = (process.env.AHA_LOCAL_RETIRED || "").split(",").map((slug) => slug.trim()).filter(Boolean);
+        // By default the local server agrees with production: products off sale stay off sale.
+        const offSale = JSON.parse(await readFile(resolve(root, "../src/data/off-sale.json"), "utf8")).products;
+        const retired = (process.env.AHA_LOCAL_RETIRED ?? offSale.join(",")).split(",").map((slug) => slug.trim()).filter(Boolean);
         const products = JSON.parse(await readFile(resolve(root, "../src/data/products.json"), "utf8"));
         const retiredVariations = products.filter((product) => retired.includes(product.slug)).flatMap((product) => product.variants.map((variant) => variant.id));
         const body = Buffer.from(JSON.stringify({ retired, retiredVariations, products: [], cartLines: [] }));

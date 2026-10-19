@@ -49,7 +49,7 @@ const drops = (pendingDrops() as Drop[]).flatMap((drop) => {
     {drops.length ? (
       <ul class="account-drops">{drops.map(({ drop, product }) => <li><a href={`/shop/${product.slug}/`}>{product.title} — {product.color}</a> {dropNote(drop)}</li>)}</ul>
     ) : (
-      <p>When a new drop is announced, account holders can buy it before everyone else. Drops are announced on the <a href="/updates/">Updates</a> page.</p>
+      <p>When a new drop is announced, account holders can buy it before everyone else. To hear about the next one, sign up on the <a href="/updates/">Updates</a> page.</p>
     )}
   </section>
 </Site>

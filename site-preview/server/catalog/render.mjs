@@ -6,6 +6,8 @@
 // src/components/ProductCard.astro / ProductImage.astro change.
 import { garmentGroup, hoverView, MEASURE_DIAGRAM, otherColors, swatchFor } from "./garments.mjs";
 import { dropFor, dropNote, dropStage } from "./drops.mjs";
+import { isOffSale } from "./off-sale.mjs";
+import { RETURN_POLICY, SHIPPING_DETAILS } from "./offer-terms.mjs";
 
 const ESCAPABLE = /[&<>'"]/g;
 const ENTITIES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
@@ -27,7 +29,7 @@ export function productCard(product) {
   const last = product.variants.at(-1)?.size;
   const swap = hoverView(product);
   const swapAttrs = swap ? ` data-swap-src="${attr(swap.src)}" data-swap-srcset="${attr(swap.srcset)}"` : "";
-  return `<article class="product-card" data-type="${attr(garmentGroup(product.typeLabel))}"><a class="product-card-image" href="/shop/${attr(product.slug)}/" aria-label="${attr(`Shop ${product.title} in ${product.color}`)}"${swapAttrs}>${image(product.gallery[0], { sizes: "(max-width: 760px) calc(50vw - 28px), (max-width: 1440px) calc(45.6vw - 16px), 640px", name: `p-${product.slug}` })}</a><div class="product-card-info"><div><h2><a href="/shop/${attr(product.slug)}/">${text(product.title)}</a></h2><p>${text(product.color)} · ${text(first)}–${text(last)}</p></div><p class="product-price">$${text(product.price)}</p></div></article>`;
+  return `<article class="product-card" data-type="${attr(garmentGroup(product.typeLabel))}"${isOffSale(product.slug) ? ` data-off-sale="${attr(product.slug)}" hidden` : ""}><a class="product-card-image" href="/shop/${attr(product.slug)}/" aria-label="${attr(`Shop ${product.title} in ${product.color}`)}"${swapAttrs}>${image(product.gallery[0], { sizes: "(max-width: 760px) calc(50vw - 28px), (max-width: 1440px) calc(45.6vw - 16px), 640px", name: `p-${product.slug}` })}</a><div class="product-card-info"><div><h2><a href="/shop/${attr(product.slug)}/">${text(product.title)}</a></h2><p>${text(product.color)} · ${text(first)}–${text(last)}</p></div><p class="product-price">$${text(product.price)}</p></div></article>`;
 }
 
 function productSchema(product, gallery, origin) {
@@ -37,7 +39,7 @@ function productSchema(product, gallery, origin) {
     image: gallery.map((shot) => new URL(shot.feedImage, origin).href), variesBy: ["https://schema.org/size"],
     hasVariant: product.variants.map((variant) => ({
       "@type": "Product", name: `${product.title} — ${product.color} — ${variant.size}`, sku: variant.sku, size: variant.size, color: product.color, image: new URL(gallery[0].feedImage, origin).href,
-      offers: { "@type": "Offer", url: `${origin}/shop/${product.slug}/?size=${encodeURIComponent(variant.size)}`, price: product.price, priceCurrency: "USD", availability: "https://schema.org/InStock", itemCondition: "https://schema.org/NewCondition", seller: { "@type": "Organization", name: "After Hours Agenda" }, shippingDetails: { "@type": "OfferShippingDetails", shippingRate: { "@type": "MonetaryAmount", value: 0, currency: "USD" }, shippingDestination: { "@type": "DefinedRegion", addressCountry: "US" } } },
+      offers: { "@type": "Offer", url: `${origin}/shop/${product.slug}/?size=${encodeURIComponent(variant.size)}`, price: product.price, priceCurrency: "USD", availability: isOffSale(product.slug) ? "https://schema.org/Discontinued" : "https://schema.org/InStock", itemCondition: "https://schema.org/NewCondition", seller: { "@type": "Organization", name: "After Hours Agenda" }, shippingDetails: SHIPPING_DETAILS, hasMerchantReturnPolicy: RETURN_POLICY },
     })),
   };
 }
@@ -117,6 +119,9 @@ export function renderLivePage(shellHtml, product, products) {
   head = replaceOnce(head, /<title>[^<]*<\/title>/, `<title>${text(title)} | After Hours Agenda</title>`, "title");
   head = replaceOnce(head, /<meta name="description" content="[^"]*">/, `<meta name="description" content="${attr(product.description)}">`, "description");
   head = replaceOnce(head, /<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${attr(canonical)}">`, "canonical");
+  // Off-sale pages are noindex in the build (src/pages/shop/[product].astro). The shell is
+  // always an on-sale page, so its robots tag is already right for everything else.
+  if (isOffSale(product.slug)) head = replaceOnce(head, /<meta name="robots" content="[^"]*">/, `<meta name="robots" content="noindex, noarchive">`, "robots");
   const meta = { "og:title": `${title} | After Hours Agenda`, "og:description": product.description, "og:url": canonical, "og:image": new URL(cover.feedImage, origin).href, "og:image:width": String(cover.width), "og:image:height": String(cover.height), "og:image:alt": cover.alt };
   for (const [property, value] of Object.entries(meta)) head = replaceOnce(head, new RegExp(`<meta property="${property}" content="[^"]*">`), `<meta property="${property}" content="${attr(value)}">`, property);
   const twitter = { "twitter:title": `${title} | After Hours Agenda`, "twitter:description": product.description, "twitter:image": new URL(cover.feedImage, origin).href };

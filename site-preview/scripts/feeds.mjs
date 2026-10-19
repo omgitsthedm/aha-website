@@ -2,6 +2,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import {gzipSync} from 'node:zlib';
 import products from '../src/data/products.json' with {type:'json'};
 import {releasedProducts} from '../server/catalog/drops.mjs';
+import {onSale} from '../server/catalog/off-sale.mjs';
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&apos;');
 const tag=(name,value)=>`<g:${name}>${escape(value)}</g:${name}>`;
 function feedMetadata(product){
@@ -69,8 +70,8 @@ export const gzipFeed=(text)=>{const out=gzipSync(Buffer.from(text),{level:9});o
 
 export async function writeFeeds(dist,origin){
  await mkdir(new URL('feeds/',dist),{recursive:true});
- // Drops not yet open to everyone stay out (server/catalog/drops.mjs).
- const listed=releasedProducts(products);
+ // Drops not yet open to everyone, and products off sale, stay out.
+ const listed=releasedProducts(onSale(products));
  await writeFile(new URL('feeds/google.xml',dist),feedXml(listed,origin,'google'));
  await writeFile(new URL('feeds/meta.xml',dist),feedXml(listed,origin,'meta'));
  await writeFile(new URL('feeds/openai.jsonl.gz',dist),gzipFeed(openAiFeedJsonl(listed,origin)));

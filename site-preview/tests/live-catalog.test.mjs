@@ -11,6 +11,7 @@ import { STATIC_PRODUCTS } from "../server/catalog/current.mjs";
 import { liveAllowList, liveOnly, loadLiveCatalog, resetLiveCatalogMemo, validateLiveProduct } from "../server/catalog/live.mjs";
 import { createLivePublisher, productImageKeys } from "../server/catalog/publish.mjs";
 import { renderLivePage } from "../server/catalog/render.mjs";
+import { onSale } from "../server/catalog/off-sale.mjs";
 import { AHA_FULFILLMENT_CATALOG } from "../server/fulfillment/catalog.mjs";
 import { validatePaidSquareOrder } from "../server/fulfillment/service.mjs";
 import { handleFeeds } from "../netlify/functions/catalog-feeds.mjs";
@@ -52,7 +53,9 @@ const WEBP = () => { const bytes = new Uint8Array(32); bytes.set([0x52, 0x49, 0x
 
 test("a live render of every built product is byte-identical to Astro's build", { skip: !existsSync(new URL("shop/", dist)) && "needs npm run build" }, async () => {
   for (const [index, product] of STATIC_PRODUCTS.entries()) {
-    const shell = await built(STATIC_PRODUCTS[(index + 1) % STATIC_PRODUCTS.length].slug);
+    // The function always uses an on-sale page as the shell (catalog-product.mjs).
+    const shells = onSale(STATIC_PRODUCTS);
+    const shell = await built(shells[(index + 1) % shells.length].slug);
     assert.equal(renderLivePage(shell, product, STATIC_PRODUCTS), await built(product.slug), product.slug);
   }
 });
@@ -194,12 +197,17 @@ test("live images are served from the store with the right type, and only real p
 
 test("feeds equal the build with nothing live, and advertise a live product the moment it can be bought", async () => {
   const production = { deploy: { context: "production" } };
-  const empty = async () => ({ products: STATIC_PRODUCTS, liveProducts: [], allowList: AHA_FULFILLMENT_CATALOG });
+  // Production's removed list matches src/data/off-sale.json, so the live feed equals the build.
+  const empty = async () => ({ products: STATIC_PRODUCTS, saleProducts: onSale(STATIC_PRODUCTS), liveProducts: [], saleLiveProducts: [], allowList: AHA_FULFILLMENT_CATALOG });
   const baseline = await (await handleFeeds(new Request("https://afterhoursagenda.com/feeds/google.xml"), production, { catalog: empty })).text();
-  assert.equal(baseline, feedXml(STATIC_PRODUCTS, "https://afterhoursagenda.com"));
+  assert.equal(baseline, feedXml(onSale(STATIC_PRODUCTS), "https://afterhoursagenda.com"));
   if (process.env.AHA_PRODUCTION_BUILD === "approved") assert.equal(baseline, await readFile(new URL("feeds/google.xml", dist), "utf8"));
   const product = liveProduct();
   const withLive = async () => ({ products: [...STATIC_PRODUCTS, product], liveProducts: [product], allowList: {} });
+  // Restored in the admin: the live feed lists it again before the next deploy.
+  const restored = async () => ({ products: STATIC_PRODUCTS, saleProducts: STATIC_PRODUCTS, liveProducts: [], saleLiveProducts: [], allowList: {} });
+  const back = await (await handleFeeds(new Request("https://afterhoursagenda.com/feeds/google.xml"), production, { catalog: restored })).text();
+  assert.equal(back, feedXml(STATIC_PRODUCTS, "https://afterhoursagenda.com"));
   const feed = await handleFeeds(new Request("https://afterhoursagenda.com/feeds/meta.xml"), production, { catalog: withLive });
   assert.equal(feed.headers.get("netlify-cache-tag"), "catalog,feeds");
   const xml = await feed.text();
@@ -241,14 +249,14 @@ test("live publishing API needs the automation token and only writes on producti
 
 test("OpenAI feed: every size has the required fields, groups by product, and includes live products", async () => {
   const production = { deploy: { context: "production" } };
-  const empty = async () => ({ products: STATIC_PRODUCTS, liveProducts: [], allowList: AHA_FULFILLMENT_CATALOG });
+  const empty = async () => ({ products: STATIC_PRODUCTS, saleProducts: onSale(STATIC_PRODUCTS), liveProducts: [], saleLiveProducts: [], allowList: AHA_FULFILLMENT_CATALOG });
   const response = await handleFeeds(new Request("https://afterhoursagenda.com/feeds/openai.jsonl.gz"), production, { catalog: empty });
   assert.equal(response.headers.get("content-type"), "application/gzip");
   const body = Buffer.from(await response.arrayBuffer());
-  assert.deepEqual(body, gzipFeed(openAiFeedJsonl(STATIC_PRODUCTS, "https://afterhoursagenda.com")));
+  assert.deepEqual(body, gzipFeed(openAiFeedJsonl(onSale(STATIC_PRODUCTS), "https://afterhoursagenda.com")));
   if (process.env.AHA_PRODUCTION_BUILD === "approved") assert.deepEqual(body, await readFile(new URL("feeds/openai.jsonl.gz", dist)));
   const rows = gunzipSync(body).toString("utf8").trim().split("\n").map((line) => JSON.parse(line));
-  assert.equal(rows.length, STATIC_PRODUCTS.reduce((sum, product) => sum + product.variants.length, 0));
+  assert.equal(rows.length, onSale(STATIC_PRODUCTS).reduce((sum, product) => sum + product.variants.length, 0));
   for (const row of rows) {
     for (const field of ["item_id", "title", "description", "url", "brand", "seller_name", "image_url", "availability", "price"]) assert.ok(typeof row[field] === "string" && row[field].length > 0, `${row.item_id} ${field}`);
     assert.match(row.price, /^\d+\.\d{2} USD$/);

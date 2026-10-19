@@ -2,12 +2,15 @@
 import ProductImage from './ProductImage.astro';
 import products from '../data/products.json';
 import { garmentGroup, hoverView } from '../../server/catalog/garments.mjs';
+import { isOffSale } from '../../server/catalog/off-sale.mjs';
 interface Props {product: typeof products[number]}
 const {product}=Astro.props;
 // Hover devices swap to this view (src/scripts/catalog-state.ts); phones never load it.
 const swap = hoverView(product);
+// Off sale (src/data/off-sale.json): built hidden; catalog-state shows it again if restored.
+const offSale = isOffSale(product.slug);
 ---
-<article class="product-card" data-type={garmentGroup(product.typeLabel)}>
+<article class="product-card" data-type={garmentGroup(product.typeLabel)} data-off-sale={offSale ? product.slug : undefined} hidden={offSale}>
   <a class="product-card-image" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} in ${product.color}`} data-swap-src={swap?.src} data-swap-srcset={swap?.srcset}><ProductImage image={product.gallery[0]!} sizes="(max-width: 760px) calc(50vw - 28px), (max-width: 1440px) calc(45.6vw - 16px), 640px" name={`p-${product.slug}`} /></a>
   <div class="product-card-info"><div><h2><a href={`/shop/${product.slug}/`}>{product.title}</a></h2><p>{product.color} · {product.variants[0]?.size}–{product.variants.at(-1)?.size}</p></div><p class="product-price">${product.price}</p></div>
 </article>

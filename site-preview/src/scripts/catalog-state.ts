@@ -6,14 +6,16 @@ export type CatalogState = {
   cartLines: Array<Record<string, unknown>>;
   retired: string[];
   retiredVariations: string[];
+  /** False when the live state couldn't be read: pages then keep what the build decided. */
+  known: boolean;
 };
 
-const EMPTY: CatalogState = { products: [], cartLines: [], retired: [], retiredVariations: [] };
+const EMPTY: CatalogState = { products: [], cartLines: [], retired: [], retiredVariations: [], known: false };
 let pending: Promise<CatalogState> | null = null;
 
 export function catalogState(): Promise<CatalogState> {
   pending ??= fetch("/api/catalog/live", { headers: { accept: "application/json" } })
-    .then((response) => (response.ok ? response.json() : EMPTY))
+    .then((response) => (response.ok ? response.json().then((data) => ({ ...data, known: true })) : EMPTY))
     .then((data: Partial<CatalogState>) => ({ ...EMPTY, ...data }))
     .catch(() => EMPTY);
   return pending;
@@ -22,9 +24,25 @@ export function catalogState(): Promise<CatalogState> {
 const slugFromHref = (href: string | null) => /^\/shop\/([a-z0-9-]+)\/$/.exec(href ?? "")?.[1] ?? null;
 
 /** Hide product cards, lookbook sets and emptied collection rows (with their jump links) for products removed from sale. */
-export function hideRetiredCards(retired: string[]) {
-  if (!retired.length) return;
+export function hideRetiredCards(retired: string[], known: boolean) {
   const removed = new Set(retired);
+  // Pieces off sale at build time start hidden (src/data/off-sale.json). One restored
+  // in the admin since shows again, with its collection group, look set and jump link.
+  if (known) {
+    document.querySelectorAll<HTMLElement>("[data-off-sale]").forEach((piece) => { piece.hidden = removed.has(piece.dataset.offSale ?? ""); });
+    document.querySelectorAll<HTMLElement>(".collection-group, [data-look-set]").forEach((group) => {
+      const pieces = [...group.querySelectorAll<HTMLElement>("article.product-card, [data-product-set]")];
+      if (!pieces.length || !pieces.some((piece) => piece.dataset.offSale)) return;
+      group.hidden = pieces.every((piece) => piece.hidden);
+      const heading = group.getAttribute("aria-labelledby");
+      if (heading) document.querySelectorAll<HTMLElement>(`[data-jump="${heading}"]`).forEach((link) => { link.hidden = group.hidden; });
+    });
+    document.querySelectorAll<HTMLElement>("[data-collection-empty]").forEach((note) => {
+      const cards = [...document.querySelectorAll<HTMLElement>("#pieces article.product-card")];
+      note.hidden = !cards.length || cards.some((card) => !card.hidden);
+    });
+  }
+  if (!retired.length) return;
   document.querySelectorAll<HTMLElement>("article.product-card").forEach((card) => {
     const slug = slugFromHref(card.querySelector("a")?.getAttribute("href") ?? null);
     if (slug && removed.has(slug)) card.hidden = true;

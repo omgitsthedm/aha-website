@@ -652,8 +652,10 @@ async function syncCatalogue() {
     note.setAttribute("role", "status");
     note.textContent = "This piece is no longer available.";
     form.replaceWith(note);
+    // No delivery estimate, Save button or quick-add bar for a piece that can't be bought.
+    document.querySelectorAll("[data-arrival], [data-save], [data-drop]").forEach((element) => element.remove());
   }
-  hideRetiredCards(state.retired);
+  hideRetiredCards(state.retired, state.known);
 }
 
 // "Back to your bag" in the bag-reminder email: ?bag=VARIATION:QTY,… puts those
