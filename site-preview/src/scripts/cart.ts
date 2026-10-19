@@ -5,6 +5,7 @@ import { checkoutMarketingEnvelope, retainCheckoutReceipt, withdrawCheckoutPriva
 
 const STORAGE_KEY = "aha-cart-v2";
 const PENDING_PAYMENT_KEY = "aha-pending-payment-v1";
+const EXPRESS_PENDING_KEY = "aha-pending-express-v1";
 const COMPLETED_ORDER_KEY = "aha-completed-orders-v1";
 const CASH_APP_RESUME_KEY = "aha-cash-app-resume-v1";
 const MAX_QUANTITY = 10;
@@ -101,14 +102,15 @@ function freshKey() { return crypto.randomUUID(); }
 type PurchaseSummary = { currency: string; subtotalAmount: number; shippingAmount: number; taxAmount: number; totalAmount: number; items: Array<{ id: string; name: string; unitAmount: number; quantity: number }> };
 type PendingPayment = { checkoutId: string; checkoutToken: string; idempotencyKey: string; createdAt: number; summary?: PurchaseSummary };
 type CashAppResume = { quote: Quote; address: ReturnType<typeof shippingAddress>; paymentKey: string; fingerprint: string; createdAt: number };
-function readPending(): PendingPayment | null {
+// The bag's payment attempt, or (EXPRESS_PENDING_KEY) a product page's wallet payment.
+function readPending(key = PENDING_PAYMENT_KEY): PendingPayment | null {
   try {
-    const value = JSON.parse(localStorage.getItem(PENDING_PAYMENT_KEY) || "null") as Partial<PendingPayment> | null;
+    const value = JSON.parse(localStorage.getItem(key) || "null") as Partial<PendingPayment> | null;
     return value && typeof value.checkoutId === "string" && typeof value.checkoutToken === "string" && typeof value.idempotencyKey === "string" && typeof value.createdAt === "number" && Date.now() - value.createdAt < 24 * 60 * 60 * 1000 ? value as PendingPayment : null;
   } catch { return null; }
 }
-function writePending(value: PendingPayment) { try { localStorage.setItem(PENDING_PAYMENT_KEY, JSON.stringify(value)); } catch { /* Storage can be unavailable. */ } }
-function clearPending() { try { localStorage.removeItem(PENDING_PAYMENT_KEY); } catch { /* Storage can be unavailable. */ } }
+function writePending(value: PendingPayment, key = PENDING_PAYMENT_KEY) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* Storage can be unavailable. */ } }
+function clearPending(key = PENDING_PAYMENT_KEY) { try { localStorage.removeItem(key); } catch { /* Storage can be unavailable. */ } }
 function readCashAppResume(): CashAppResume | null {
   try {
     const value = JSON.parse(sessionStorage.getItem(CASH_APP_RESUME_KEY) || "null") as Partial<CashAppResume> | null;
@@ -677,9 +679,10 @@ const JSON_POST = { method: "POST", headers: { "Content-Type": "application/json
 function initExpress() {
   const box = document.querySelector<HTMLElement>("[data-express]");
   const form = box?.closest<HTMLFormElement>("[data-cart-form]");
-  const slug = /^\/shop\/([a-z0-9-]+)\/$/.exec(location.pathname)?.[1];
-  // Not for pieces off sale or drops not yet open to everyone; the server refuses both too.
-  if (!box || !form || !slug || offSale.products.includes(slug) || document.querySelector("[data-drop]")) return;
+  // A piece off sale has no form by now (syncCatalogue replaced it, and keeps it for
+  // a piece restored in the admin). Drops not yet open to everyone are skipped; the
+  // server refuses both anyway.
+  if (!box || !form || document.querySelector("[data-drop]")) return;
   const status = box.querySelector<HTMLElement>("[data-express-status]")!;
   const apple = box.querySelector<HTMLButtonElement>("[data-express-apple]")!;
   const google = box.querySelector<HTMLElement>("[data-express-google]")!;
@@ -710,17 +713,18 @@ function initExpress() {
     emitVerifiedPurchase(result.orderId, summary);
     apple.hidden = true;
     google.replaceChildren();
-    say(`Payment confirmed${result.orderId ? ` · order ${result.orderId}` : ""}. Your order email has the details.`, true);
+    say(`Payment confirmed${result.orderId ? ` · order ${result.orderId}` : ""}.`, true);
     if (result.receiptUrl) { const link = document.createElement("a"); link.href = result.receiptUrl; link.textContent = " View receipt."; status.append(link); }
   };
   // A payment Square hasn't confirmed yet: follow it here, never pay again.
-  const follow = async (quote: Quote, summary: PurchaseSummary, tries = 0): Promise<void> => {
-    const { data } = await requestJson<PayResult>(`/api/checkout/status?checkoutId=${encodeURIComponent(quote.checkoutId)}&checkoutToken=${encodeURIComponent(quote.checkoutToken)}`).catch(() => ({ data: null }));
-    if (data?.state === "completed") return confirmed(data, summary);
-    if (data?.state === "failed" || data?.state === "quoted") return say("The payment didn’t go through.");
-    if (data?.state === "attention" || tries > 60) return say(`Square is still confirming this payment. Please don’t pay again; write to info@afterhoursagenda.com${data?.orderId ? ` about order ${data.orderId}` : ""}.`, true);
+  const follow = async (attempt: PendingPayment, tries = 0): Promise<void> => {
+    const { data } = await requestJson<PayResult>(`/api/checkout/status?checkoutId=${encodeURIComponent(attempt.checkoutId)}&checkoutToken=${encodeURIComponent(attempt.checkoutToken)}`).catch(() => ({ data: null }));
+    if (data?.state === "completed" || data?.state === "failed" || data?.state === "quoted") clearPending(EXPRESS_PENDING_KEY);
+    if (data?.state === "completed") return confirmed(data, attempt.summary!);
+    if (data?.state === "failed" || data?.state === "quoted") { done = false; changed(); return say("The payment didn’t go through."); }
+    if (data?.state === "attention" || tries > 60) return say("Still confirming this payment. Please don’t pay again; write to info@afterhoursagenda.com.", true);
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    return follow(quote, summary, tries + 1);
+    return follow(attempt, tries + 1);
   };
   const pay = (method: SquareMethod) => async () => {
     if (busy || done) return;
@@ -734,7 +738,7 @@ function initExpress() {
       const contact = result.details?.shipping?.contact ?? {};
       const lines = contact.addressLines ?? [];
       const address = { firstName: contact.givenName ?? "", lastName: contact.familyName ?? "", email: contact.email || result.details?.billing?.email || "", phone: contact.phone || undefined, addressLine1: lines[0] ?? "", addressLine2: lines.slice(1).join(", ") || undefined, city: contact.city ?? "", region: contact.state ?? "", postalCode: contact.postalCode ?? "", country: contact.countryCode ?? "" };
-      if (!picked || !validAddress(address)) return say("Your wallet didn’t share a full name, email and address.");
+      if (!picked || !validAddress(address)) return say("Your wallet didn’t share a full address and email.");
       status.textContent = "Confirming your total…";
       const { response, data: quote } = await requestJson<Quote & { errorCode?: string }>("/api/checkout/quote", { ...JSON_POST, body: JSON.stringify({ items: [{ variationId: picked.item.id, quantity: picked.quantity }], shippingAddress: address, marketing: await checkoutMarketingEnvelope({ requireReceipt: true }) }) });
       if (!response.ok || !quote) return say(quote?.errorCode === "early_access_only" ? "This piece isn’t released yet." : "We couldn’t confirm that address.");
@@ -744,14 +748,16 @@ function initExpress() {
       const items = quote.lineItems.map((entry) => ({ id: entry.variationId, name: picked.item.title, unitAmount: entry.unitAmount, quantity: entry.quantity }));
       const summary: PurchaseSummary = { currency: quote.currency, subtotalAmount: quote.subtotalAmount, shippingAmount: quote.shippingAmount, taxAmount: quote.taxAmount, totalAmount: quote.totalAmount, items };
       document.dispatchEvent(new CustomEvent("aha:checkout-quoted", { detail: { value: quote.totalAmount / 100, items: items.map((entry) => ({ id: entry.id, name: entry.name, price: entry.unitAmount / 100, quantity: entry.quantity })) } }));
-      status.textContent = "Confirming your payment… Please keep this page open.";
+      status.textContent = "Confirming your payment…";
+      // Saved before paying: a reload or lost response is followed, never paid again.
+      const attempt: PendingPayment = { checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, idempotencyKey: freshKey(), createdAt: Date.now(), summary };
+      writePending(attempt, EXPRESS_PENDING_KEY);
       let paid: { response: Response; data: PayResult | null };
-      try { paid = await requestJson<PayResult>("/api/checkout/pay", { ...JSON_POST, body: JSON.stringify({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: result.token, idempotencyKey: freshKey(), marketing: await checkoutMarketingEnvelope() }) }); } catch { return follow(quote, summary); }
-      if (paid.response.ok && paid.data?.state === "completed") return confirmed(paid.data, summary);
-      if (paid.response.status === 402) return say("The payment was declined.");
-      if (paid.response.status === 409) return say("That total expired; tap to pay again.");
-      return follow(quote, summary);
-    } catch { say("Wallet payment isn’t available right now; add it to your bag instead."); }
+      try { paid = await requestJson<PayResult>("/api/checkout/pay", { ...JSON_POST, body: JSON.stringify({ checkoutId: attempt.checkoutId, checkoutToken: attempt.checkoutToken, sourceId: result.token, idempotencyKey: attempt.idempotencyKey, marketing: await checkoutMarketingEnvelope() }) }); } catch { return follow(attempt); }
+      if (paid.response.ok && paid.data?.state === "completed") { clearPending(EXPRESS_PENDING_KEY); return confirmed(paid.data, summary); }
+      if (paid.response.status === 402 || paid.response.status === 409) { clearPending(EXPRESS_PENDING_KEY); return say(paid.response.status === 402 ? "The payment was declined." : "That total expired; tap to pay again."); }
+      return follow(attempt);
+    } catch { say("Wallet payment isn’t available; use Add to bag."); }
     finally { busy = false; }
   };
   const start = () => starting ??= (async () => {
@@ -778,7 +784,9 @@ function initExpress() {
   // Wallets load once a size is chosen, so the page itself stays light.
   const changed = () => { if (!done && choice()) void start().then(() => request?.update?.(sheet())).catch(() => { /* Add to bag still works. */ }); };
   form.addEventListener("change", changed);
-  changed();
+  // A wallet payment still being confirmed (from before a reload) is followed first.
+  const saved = readPending(EXPRESS_PENDING_KEY);
+  if (saved) { done = true; box.hidden = false; say("Checking your last wallet payment…", true); void follow(saved); } else changed();
 }
 
 // "Back to your bag" in the bag-reminder email: ?bag=VARIATION:QTY,… puts those

@@ -107,3 +107,39 @@ test("wallets stay off where nothing can be bought this way", async ({ page }) =
   await page.waitForTimeout(300);
   await expect(page.locator("[data-express]")).toBeHidden();
 });
+
+test("a wallet payment still being confirmed survives a reload and is never paid twice", async ({ page }) => {
+  await mockSquare(page);
+  const calls = await routes(page);
+  let state = "pending";
+  await page.route("**/api/checkout/status?*", (route) => route.fulfill({ json: { state, checkoutId: "checkout_express_1", orderId: "AHA-1001" } }));
+  // The payment request reaches Square but its response is lost.
+  await page.route("**/api/checkout/pay", (route) => { calls.pay!.push(route.request().postDataJSON()); return route.abort("connectionreset"); });
+  await page.goto("/shop/yikes-crewneck/");
+  await page.getByRole("radio", { name: "M", exact: true }).check();
+  await expect(page.getByRole("button", { name: "Buy with GPay" })).toBeVisible();
+  await page.evaluate(() => (window as Wallet).__address!({ city: "Phoenix", state: "AZ", postalCode: "85004", countryCode: "US" }));
+  await page.getByRole("button", { name: "Buy with GPay" }).click();
+  await expect.poll(() => calls.pay!.length).toBe(1);
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("aha-pending-express-v1") || "null"));
+  expect(saved).toMatchObject({ checkoutId: "checkout_express_1", checkoutToken: "safe-checkout-token", idempotencyKey: calls.pay![0]!.idempotencyKey });
+  // Reloaded while Square confirms: no wallet is offered, the attempt is followed.
+  await page.reload();
+  await expect(page.locator("[data-express-status]")).toHaveText("Checking your last wallet payment…");
+  await page.getByRole("radio", { name: "M", exact: true }).check();
+  await expect(page.getByRole("button", { name: "Buy with GPay" })).toHaveCount(0);
+  state = "completed";
+  await expect(page.locator("[data-express-status]")).toContainText("Payment confirmed · order AHA-1001", { timeout: 10_000 });
+  expect(await page.evaluate(() => localStorage.getItem("aha-pending-express-v1"))).toBeNull();
+  expect(calls.pay).toHaveLength(1);
+  expect(calls.quote).toHaveLength(1);
+});
+
+test("a piece restored in the admin gets the wallets back without a deploy", async ({ page }) => {
+  await mockSquare(page);
+  await routes(page);
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ json: { known: true, products: [], cartLines: [], retired: [], retiredVariations: [] } }));
+  await page.goto("/shop/pet-it-be-ss3000-maroon/");
+  await page.getByRole("radio", { name: "M", exact: true }).check();
+  await expect(page.getByRole("button", { name: "Buy with GPay" })).toBeVisible();
+});

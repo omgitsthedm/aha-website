@@ -84,10 +84,10 @@ Built on October 19, 2026 at the owner's request ("Do this task here: One-tap Ap
   3. After approval, the page quotes the wallet's full address through `/api/checkout/quote` and pays through `/api/checkout/pay`: the same durable session, signed callbacks and fulfillment hold as the bag.
 - **Safeguards:**
   - The payment goes through only if the quote's total equals the total the sheet showed. Otherwise nothing is charged and the shopper is asked to tap again.
-  - A pending payment is followed through `/api/checkout/status`, never paid twice.
+  - Each attempt is saved in `aha-pending-express-v1` before paying. After a reload or a lost response, the page follows it through `/api/checkout/status` and offers no wallet until it settles, so it is never paid twice.
   - The shopper's bag is left alone.
-- **Never offered** for products off sale or for drops not yet open to everyone. The estimate endpoint applies the same sale list and early-access locks as the quote.
-- **Script budget:** public storefront JavaScript was about 64.6 KB of its 65 KB cap after this, so the next addition needs a trim first.
+- **Never offered** for products off sale (their form is replaced first; a piece restored in the admin gets the wallets back) or for drops not yet open to everyone. The estimate endpoint applies the same sale list and early-access locks as the quote.
+- **Script budget:** public storefront JavaScript was 64,794 bytes of its 65,000-byte cap after this, so the next addition needs a trim first.
 
 ## Catalog, checkout, fulfillment, and tracking safeguards
 
