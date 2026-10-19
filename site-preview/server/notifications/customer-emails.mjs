@@ -78,6 +78,24 @@ export function bagFromCart(cart, products, origin = SITE_ORIGIN) {
   return { items: lines.map(({ title, size, quantity }) => ({ title, size, quantity })), bagUrl: `${origin}/checkout/?bag=${lines.map((line) => `${line.variationId}:${line.quantity}`).join(",")}` };
 }
 
+/** Right before sending: is a queued customer email still wanted? (No purchase or review since.) */
+export async function stillDue(db, row) {
+  const [subject] = String(row?.dedupe_key ?? "").split(":");
+  if (row?.kind === "cart_reminder") {
+    const [bought] = await db.sql`
+      SELECT 1 AS found FROM aha_checkout_sessions s
+      WHERE s.checkout_id = ${subject} AND (
+        EXISTS (SELECT 1 FROM aha_checkout_sessions c WHERE lower(c.shipping_address_json->>'email') = lower(s.shipping_address_json->>'email') AND c.state <> 'quoted' AND c.created_at > s.created_at - interval '1 day')
+        OR EXISTS (SELECT 1 FROM aha_fulfillment_orders f WHERE lower(f.customer_email) = lower(s.shipping_address_json->>'email') AND f.created_at > s.created_at - interval '1 day'))`;
+    return !bought;
+  }
+  if (row?.kind === "review_request") {
+    const [reviewed] = await db.sql`SELECT 1 AS found FROM aha_reviews WHERE square_order_id = ${subject} LIMIT 1`;
+    return !reviewed;
+  }
+  return true;
+}
+
 /** Queue whatever is due. Safe to run every hour: each email has a unique dedupe key. */
 export async function queueCustomerEmails({ db, service, products, env }) {
   if (!customerEmailsEnabled(env)) return { enabled: false, cartReminders: 0, reviewRequests: 0 };

@@ -7,7 +7,7 @@ const CUSTOMER_KINDS = new Set(["cart_reminder", "review_request"]);
 function validEmail(value) { return typeof value === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }
 function clean(value, fallback) { return typeof value === "string" && value.trim() ? value.trim() : fallback; }
 
-export function createNotificationService({ repository, gateway, config, orderLink = () => null, unsubscribeLinks = () => null, suppressed = async () => false, now = () => Date.now() }) {
+export function createNotificationService({ repository, gateway, config, orderLink = () => null, unsubscribeLinks = () => null, suppressed = async () => false, customerEmailsEnabled = () => true, stillDue = async () => true, now = () => Date.now() }) {
   const enabled = () => config.enabled === true && Boolean(config.apiKey && config.from && config.replyTo);
   async function enqueueConfirmation({ recipient, orderId, orderNumber, totalAmount, currency, items }) {
     if (!enabled() || !validEmail(recipient)) return null;
@@ -50,7 +50,13 @@ export function createNotificationService({ repository, gateway, config, orderLi
       attempted += 1;
       try {
         const customer = CUSTOMER_KINDS.has(row.kind);
-        if (customer && await suppressed(row.recipient)) { await repository.markSuppressed({ id: row.id }); continue; }
+        // Checked again at send time: the kill switch, an unsubscribe, or a purchase or
+        // review since the email was queued.
+        const skip = !customer ? null
+          : !customerEmailsEnabled() ? "customer_emails_disabled"
+            : await suppressed(row.recipient) ? "suppressed"
+              : !(await stillDue(row)) ? "no_longer_due" : null;
+        if (skip) { await repository.markSkipped({ id: row.id, code: skip }); continue; }
         const links = customer ? unsubscribeLinks(row.id) : null;
         // A customer email without a working unsubscribe link is never sent.
         if (customer && !links) throw new Error("unsubscribe_unavailable");

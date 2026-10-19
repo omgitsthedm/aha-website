@@ -48,7 +48,8 @@ Approved by the owner on October 19, 2026 ("yes" to abandoned-cart and review-re
 - **Neither email** covers anything from before its program started (`aha_email_programs`, set when migration `20261019120000_customer_emails` ran). Both are queued by the hourly `notification-dispatch` run and go out through Resend on the `marketing` stream.
 - **Every customer email** carries the postal address, a reason line, an unsubscribe link and RFC 8058 one-click headers (`List-Unsubscribe`, `List-Unsubscribe-Post`). A customer email with no working unsubscribe link is never sent.
 - **Unsubscribe links** are signed per notification row, so no address appears in a URL. Unsubscribing (`/unsubscribe/`, `/api/email/unsubscribe`) stores only a SHA-256 hash of the address, stops both emails, and removes the address from the email sign-up list. Receipts and shipping emails continue.
-- **Kill switch:** `AHA_CUSTOMER_EMAILS_ENABLED=false` stops both emails. Order emails still need `AHA_ORDER_EMAIL_ENABLED=true`.
+- **Kill switch:** `AHA_CUSTOMER_EMAILS_ENABLED=false` stops both emails, including ones already queued. Order emails still need `AHA_ORDER_EMAIL_ENABLED=true`.
+- **Checked again at send time:** the kill switch, an unsubscribe, and whether the shopper has since bought (bag reminder) or reviewed (review request). A row that no longer qualifies is closed without sending (`last_error_code` `customer_emails_disabled`, `suppressed` or `no_longer_due`).
 - **Not authorized:** newsletters or any other bulk send. Those need the owner's separate instruction.
 
 ## Catalog, checkout, fulfillment, and tracking safeguards

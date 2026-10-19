@@ -3,7 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import products from "../src/data/products.json" with { type: "json" };
-import { bagFromCart, cartReminderCandidates, queueCustomerEmails, reviewRequestCandidates } from "../server/notifications/customer-emails.mjs";
+import { bagFromCart, cartReminderCandidates, queueCustomerEmails, reviewRequestCandidates, stillDue } from "../server/notifications/customer-emails.mjs";
 import { createNotificationRepository } from "../server/notifications/repository.mjs";
 import { createNotificationService } from "../server/notifications/service.mjs";
 import { renderCartReminder, renderReviewRequest } from "../server/notifications/templates.mjs";
@@ -166,4 +166,36 @@ test("unsubscribing: signed per email, one click or the page, stored as a hash, 
   assert.deepEqual(await db.sql`SELECT email_sha256, source FROM aha_email_suppressions`, [{ email_sha256: emailHash("fan@example.com"), source: "cart_reminder" }]);
   assert.equal((await db.sql`SELECT count(*)::int AS n FROM aha_email_signups`)[0].n, 0, "removed from the email list too");
   assert.deepEqual(await call({ method: "POST", body: JSON.stringify({ n: row.id, k }) }), { status: 200, body: { unsubscribed: true } }, "again is fine");
+});
+
+test("at send time: the kill switch holds queued emails, and a purchase or review since the email was queued cancels it", async (t) => {
+  const db = await isolated(t);
+  const repository = createNotificationRepository(db);
+  const sent = [];
+  const gateway = { send: async (message) => { sent.push(message); return { id: `msg_${sent.length}` }; } };
+  let enabled = false;
+  const service = createNotificationService({ repository, gateway, config: { enabled: true, apiKey: "k", from: "f", replyTo: "r" }, orderLink: (order) => `${ORIGIN}/order/?o=${order}&k=sig`, unsubscribeLinks: (id) => unsubscribeLinks(id, env()), customerEmailsEnabled: () => enabled, stillDue: (row) => stillDue(db, row) });
+  const bought = await checkout(db, { email: "buyer@example.com", hoursAgo: 4 });
+  const waiting = await checkout(db, { email: "waiting@example.com", hoursAgo: 4 });
+  await shipped(db, { order: "ORDERREVIEWD" });
+  await shipped(db, { order: "ORDERNOTREVD", email: "quiet@example.com" });
+  const cart = { items: [{ title: "X", size: "M", quantity: 1 }], bagUrl: `${ORIGIN}/checkout/?bag=X:1` };
+  await service.enqueueCartReminder({ recipient: "buyer@example.com", checkoutId: bought, ...cart });
+  await service.enqueueCartReminder({ recipient: "waiting@example.com", checkoutId: waiting, ...cart });
+  await service.enqueueReviewRequest({ recipient: "buyer@example.com", orderId: "ORDERREVIEWD", orderNumber: "1" });
+  await service.enqueueReviewRequest({ recipient: "quiet@example.com", orderId: "ORDERNOTREVD", orderNumber: "2" });
+  await service.enqueueConfirmation({ recipient: "receipt@example.com", orderId: "ORDERRECEIPT", orderNumber: "3", totalAmount: 100, currency: "USD", items: [] });
+  // Switched off: customer emails are held back, receipts still go.
+  assert.deepEqual(await service.dispatch(10), { configured: true, attempted: 5, sent: 1, deferred: 0 });
+  assert.deepEqual(sent.map((message) => message.recipient), ["receipt@example.com"]);
+  assert.deepEqual((await db.sql`SELECT last_error_code AS code, count(*)::int AS n FROM aha_order_notifications WHERE kind IN ('cart_reminder', 'review_request') GROUP BY 1`), [{ code: "customer_emails_disabled", n: 4 }]);
+  // Switched on: since queuing, one shopper bought and one order was reviewed.
+  await db.sql`UPDATE aha_order_notifications SET state = 'pending', sent_at = NULL, last_error_code = NULL WHERE kind IN ('cart_reminder', 'review_request')`;
+  enabled = true;
+  await checkout(db, { email: "BUYER@example.com", hoursAgo: 1, state: "completed" });
+  await db.sql`INSERT INTO aha_reviews (square_order_id, product_slug, rating, body) VALUES ('ORDERREVIEWD', ${crew.slug}, 5, 'Great')`;
+  sent.length = 0;
+  assert.deepEqual(await service.dispatch(10), { configured: true, attempted: 4, sent: 2, deferred: 0 });
+  assert.deepEqual(sent.map((message) => message.recipient).sort(), ["quiet@example.com", "waiting@example.com"]);
+  assert.deepEqual((await db.sql`SELECT dedupe_key FROM aha_order_notifications WHERE last_error_code = 'no_longer_due'`).map((row) => row.dedupe_key).sort(), ["ORDERREVIEWD:review_request", `${bought}:cart_reminder`].sort());
 });
