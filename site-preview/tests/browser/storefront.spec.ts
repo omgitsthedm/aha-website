@@ -318,7 +318,10 @@ test("each collection has its own page with its pieces, campaign and share image
     await page.goto(`/shop/${collectionSlug(name)}/`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(name);
     await expect(page.locator("#pieces article.product-card")).toHaveCount(pieces.length);
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", new RegExp(`${pieces[0]!.campaign[0]!.feedImage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
+    const firstShot = pieces[0]!.campaign[0]!;
+    const picturedSlug = 'productSlug' in firstShot ? firstShot.productSlug : pieces[0]!.slug;
+    const pictured = pieces.find(piece => piece.slug === picturedSlug)!;
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", new RegExp(`${pictured.campaign[0]!.feedImage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
     const schema = JSON.parse((await page.locator('script[type="application/ld+json"]').last().textContent())!);
     expect(schema["@type"]).toBe("CollectionPage");
     expect(schema.mainEntity.itemListElement).toHaveLength(pieces.length);
