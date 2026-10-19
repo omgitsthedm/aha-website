@@ -151,9 +151,10 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
   const customerPages = [...routes.map((route) => `${route.slice(1)}index.html`), "404.html", "checkout/index.html"];
   const customerScripts = new Set((await Promise.all(customerPages.map(referenced))).flat());
   for (const name of (await Promise.all(adminPages.map(referenced))).flat()) if (!customerScripts.has(name)) adminOnly.add(name);
-  for (const name of (await Promise.all(["order/index.html", "account/index.html"].map(referenced))).flat()) if (!customerScripts.has(name)) privateOnly.add(name);
+  for (const name of (await Promise.all(["order/index.html", "account/index.html", "unsubscribe/index.html"].map(referenced))).flat()) if (!customerScripts.has(name)) privateOnly.add(name);
   assert.ok(adminOnly.size > 0, "the admin script is found");
-  assert.equal(privateOnly.size, 2, "the order and account page scripts are found");
+  // The unsubscribe page's script is small enough that Astro inlines it (CSP-hashed).
+  assert.ok(privateOnly.size >= 2, "the order and account page scripts are found");
   let jsBytes = 0;
   let adminBytes = 0;
   let privateBytes = 0;
@@ -184,7 +185,7 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
   };
   await walk(root);
   assert.ok(jsBytes < 65000, `All public storefront first-party JS including checkout must stay under 65 KB; got ${jsBytes}`);
-  assert.ok(privateBytes < 12000, `The private order and account page scripts must stay under 12 KB; got ${privateBytes}`);
+  assert.ok(privateBytes < 12000, `The private order, account and unsubscribe page scripts must stay under 12 KB; got ${privateBytes}`);
   assert.ok(adminBytes < 40000, `The private admin script must stay under 40 KB; got ${adminBytes}`);
   assert.ok(workerVendorBytes > 0 && workerVendorBytes < 160000, `The complete deferred third-party worker runtime must stay under 160 KB; got ${workerVendorBytes}`);
 });

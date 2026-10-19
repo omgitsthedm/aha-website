@@ -1258,3 +1258,4 @@ h1,h2,h3{text-wrap:balance}p,li,figcaption{text-wrap:pretty}
 .review-form label{display:grid;gap:6px;font-weight:700;font-size:.92rem}.review-form textarea,.review-form input[name=name]{font:inherit;font-weight:400;padding:12px;border:1px solid var(--control);background:var(--paper);color:var(--ink)}
 .review-rating{display:flex;flex-wrap:wrap;gap:8px;border:0;margin:0;padding:0}.review-rating legend{font-weight:700;font-size:.92rem;margin-bottom:8px}.review-rating label{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;border:1px solid var(--control);font-weight:400;cursor:pointer}.review-rating input{accent-color:var(--accent)}.review-rating label:has(input:checked){border-color:var(--ink);font-weight:700}
 .review-form .button{justify-self:start}.review-status{min-height:1.5em;margin:0}
+.unsubscribe-panel{padding-bottom:60px}.unsubscribe-status{min-height:1.5em;font-weight:700}

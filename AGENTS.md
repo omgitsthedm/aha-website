@@ -39,6 +39,19 @@ Built on October 19, 2026 after the owner said "do and fix it all" about the rem
 - **Script budget:** public storefront scripts stay under 65 KB. The private order and account page scripts have their own 12 KB cap (`tests/artifact.test.mjs`).
 - **Local testing:** `AHA_LOCAL_ACCOUNTS=1` makes `scripts/serve.mjs` run the real account, review and order-status handlers on an in-memory database (`scripts/local-accounts.mjs`). Playwright turns this on, and `tests/browser/accounts.spec.ts` creates and uses real passkeys with Chrome's virtual authenticator on `localhost`.
 
+## Customer emails: bag reminders and review requests
+
+Approved by the owner on October 19, 2026 ("yes" to abandoned-cart and review-request emails; mailing address "12415 N 69th Drive, Peoria, Arizona 85381", stored as `client.postalAddress` in `site-preview/client.config.json`). The owner also decided that free returns stay.
+
+- **Bag reminder** (`server/notifications/customer-emails.mjs`): one email, three hours after a checkout is quoted and not paid. Sent only when the shopper's marketing choice was on at checkout (off for Privacy choices opt-outs and Global Privacy Control), nothing was bought since, no reminder went to that address in 30 days, and the address hasn't unsubscribed. Checkouts older than three days are skipped. The "Back to your bag" link (`/checkout/?bag=VARIATION:QTY,…`) refills the bag on any device.
+- **Review request:** one email per order, ten days after its shipping email, unless a review already exists. It links to the order page's review form (`#leave-a-review`).
+- **Neither email** covers anything from before its program started (`aha_email_programs`, set when migration `20261019120000_customer_emails` ran). Both are queued by the hourly `notification-dispatch` run and go out through Resend on the `marketing` stream.
+- **Every customer email** carries the postal address, a reason line, an unsubscribe link and RFC 8058 one-click headers (`List-Unsubscribe`, `List-Unsubscribe-Post`). A customer email with no working unsubscribe link is never sent.
+- **Unsubscribe links** are signed per notification row, so no address appears in a URL. Unsubscribing (`/unsubscribe/`, `/api/email/unsubscribe`) stores only a SHA-256 hash of the address, stops both emails, and removes the address from the email sign-up list. Receipts and shipping emails continue.
+- **Kill switch:** `AHA_CUSTOMER_EMAILS_ENABLED=false` stops both emails, including ones already queued. Order emails still need `AHA_ORDER_EMAIL_ENABLED=true`.
+- **Checked again at send time:** the kill switch, an unsubscribe, and whether the shopper has since bought (bag reminder) or reviewed (review request). A row that no longer qualifies is closed without sending (`last_error_code` `customer_emails_disabled`, `suppressed` or `no_longer_due`).
+- **Not authorized:** newsletters or any other bulk send. Those need the owner's separate instruction.
+
 ## Catalog, checkout, fulfillment, and tracking safeguards
 
 - Product, price, mapping, and availability changes go through `site-preview/tools/catalog` and `site-preview/catalog/ledger.json`; never use ad-hoc provider writes. Read `.agents/skills/aha-catalog/SKILL.md` for that workflow. Generated fulfillment catalog code must remain generated from the ledger. Preserve static/runtime product-page and feed parity.

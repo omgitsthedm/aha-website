@@ -1,0 +1,30 @@
+---
+import Site from "../layouts/Site.astro";
+---
+<Site title="Unsubscribe" description="Stop bag reminders, review requests and news emails from After Hours Agenda." noindex>
+  <header class="page-head shell">
+    <p class="label">Email</p>
+    <h1>Unsubscribe.</h1>
+    <p class="lede" data-unsubscribe-note>Stop bag reminders, review requests and news from After Hours Agenda. Receipts and shipping emails still come for anything you buy.</p>
+  </header>
+  <section class="shell unsubscribe-panel" aria-live="polite">
+    <button type="button" class="button" data-unsubscribe hidden>Unsubscribe me</button>
+    <p class="unsubscribe-status" data-unsubscribe-status role="status"></p>
+    <noscript><p>Write to <a href="mailto:info@afterhoursagenda.com">info@afterhoursagenda.com</a> and we’ll take you off.</p></noscript>
+  </section>
+</Site>
+<script>
+  const params = new URLSearchParams(location.search);
+  const button = document.querySelector<HTMLButtonElement>("[data-unsubscribe]")!;
+  const status = document.querySelector<HTMLElement>("[data-unsubscribe-status]")!;
+  if (params.get("n") && params.get("k")) button.hidden = false;
+  else status.textContent = "Open the unsubscribe link from one of our emails, or write to info@afterhoursagenda.com.";
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    const response = await fetch("/api/email/unsubscribe", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ n: params.get("n"), k: params.get("k") }) }).catch(() => null);
+    const data = response ? await response.json().catch(() => ({})) : {};
+    if (response?.ok) { button.hidden = true; status.textContent = "You’re unsubscribed. You won’t get these emails again."; return; }
+    button.disabled = false;
+    status.textContent = (data as { error?: string }).error ?? "That didn’t work. Try again, or write to info@afterhoursagenda.com.";
+  });
+</script>
