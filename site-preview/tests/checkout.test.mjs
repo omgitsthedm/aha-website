@@ -223,3 +223,29 @@ test("privacy does not acknowledge a transient receipt lookup failure", async ()
     /database unavailable/,
   );
 });
+
+test("a wallet estimate prices the partial address exactly like the quote and stores nothing", async () => {
+  const ctx = service();
+  const items = [{ variationId: crewM, quantity: 2 }];
+  // Apple Pay shares only city, region, postal code and country before approval.
+  const estimate = await ctx.service.estimate({ items, destination: { city: "Peoria", region: "Arizona", postalCode: "85345", country: "us" } });
+  assert.deepEqual(estimate, { currency: "USD", subtotalAmount: 10_400, shippingAmount: 0, taxAmount: 842, totalAmount: 11_242, taxLabel: "Arizona TPT (Peoria 8.1%)", shippingLabel: "Free U.S. shipping" });
+  assert.equal(ctx.repository.rows.size, 0);
+  const quote = await ctx.service.quote({ items, shippingAddress: address() });
+  assert.equal(quote.totalAmount, estimate.totalAmount);
+  const abroad = await ctx.service.estimate({ items, destination: { country: "GB", postalCode: "SW1A" } });
+  assert.deepEqual([abroad.shippingAmount, abroad.taxAmount, abroad.totalAmount, abroad.shippingLabel], [2500, 0, 12_900, "International shipping"]);
+  const elsewhere = await ctx.service.estimate({ items, destination: { region: "NY", postalCode: "10001", country: "US" } });
+  assert.equal(elsewhere.totalAmount, 10_400);
+});
+
+test("a wallet estimate refuses what the quote refuses", async () => {
+  const ctx = service();
+  await assert.rejects(ctx.service.estimate({ items: [{ variationId: crewM, quantity: 1 }], destination: { country: "BR" } }), (error) => error instanceof CheckoutError && error.code === "unsupported_destination");
+  await assert.rejects(ctx.service.estimate({ items: [{ variationId: crewM, quantity: 1 }], destination: { country: "US", region: "AZ" } }), (error) => error.code === "invalid_address");
+  await assert.rejects(ctx.service.estimate({ items: [{ variationId: "UNKNOWNVARIATION00000", quantity: 1 }], destination: { country: "US", region: "AZ", postalCode: "85345" } }), (error) => error.code === "invalid_cart");
+  // Products off sale are left out of the catalog the endpoint passes in.
+  const offSale = createCheckoutService({ repository: fakeRepo(), square: fakeSquare(), config, catalog: {} });
+  await assert.rejects(offSale.estimate({ items: [{ variationId: crewM, quantity: 1 }], destination: { country: "US", region: "AZ", postalCode: "85345" } }), (error) => error.code === "invalid_cart");
+  assert.equal(ctx.square.calls.calculate.length, 0);
+});

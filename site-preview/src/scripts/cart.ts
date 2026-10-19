@@ -131,6 +131,20 @@ function recordCompletedOrder(orderId: string) {
   return true;
 }
 
+// Square's script loads only when a shopper is about to pay.
+async function loadSquare(config: CheckoutConfig) {
+  if (!window.Square) {
+    const script = document.createElement("script"); script.src = config.environment === "sandbox" || config.appId.startsWith("sandbox-") ? "https://sandbox.web.squarecdn.com/v1/square.js" : "https://web.squarecdn.com/v1/square.js"; script.async = true;
+    await new Promise<void>((resolve, reject) => { script.onload = () => resolve(); script.onerror = () => reject(new Error("Square failed to load")); document.head.append(script); });
+  }
+  if (!window.Square) throw new Error("Square unavailable");
+  return window.Square.payments(config.appId, config.locationId);
+}
+function emitVerifiedPurchase(orderId: string | undefined, summary: PurchaseSummary | undefined | null) {
+  if (!orderId || !summary || !Number.isSafeInteger(summary.subtotalAmount) || !Number.isSafeInteger(summary.shippingAmount) || !Number.isSafeInteger(summary.taxAmount) || !Number.isSafeInteger(summary.totalAmount) || !summary.currency || !summary.items.length || !recordCompletedOrder(orderId)) return;
+  document.dispatchEvent(new CustomEvent("aha:purchase-confirmed", { detail: { orderId, value: summary.subtotalAmount / 100, shipping: summary.shippingAmount / 100, tax: summary.taxAmount / 100, currency: summary.currency, items: summary.items.map((item) => ({ id: item.id, name: item.name, price: item.unitAmount / 100, quantity: item.quantity })) } }));
+}
+
 function updateCartLinks(lines: CartLine[]) {
   const itemCount = count(lines);
   document.querySelectorAll<HTMLElement>("[data-cart-count]").forEach((node) => node.textContent = String(itemCount));
@@ -390,10 +404,6 @@ function initCheckout() {
       }),
     };
   };
-  const emitVerifiedPurchase = (orderId: string | undefined, summary: PurchaseSummary | undefined | null) => {
-    if (!orderId || !summary || !Number.isSafeInteger(summary.subtotalAmount) || !Number.isSafeInteger(summary.shippingAmount) || !Number.isSafeInteger(summary.taxAmount) || !Number.isSafeInteger(summary.totalAmount) || !summary.currency || !summary.items.length || !recordCompletedOrder(orderId)) return;
-    document.dispatchEvent(new CustomEvent("aha:purchase-confirmed", { detail: { orderId, value: summary.subtotalAmount / 100, shipping: summary.shippingAmount / 100, tax: summary.taxAmount / 100, currency: summary.currency, items: summary.items.map((item) => ({ id: item.id, name: item.name, price: item.unitAmount / 100, quantity: item.quantity })) } }));
-  };
   const finishPayment = (orderId?: string, receiptUrl?: string, completedSummary?: PurchaseSummary) => {
     const summary = completedSummary || unresolvedPayment?.summary || quoteSummary();
     clearPending(); unresolvedPayment = null;
@@ -519,12 +529,7 @@ function initCheckout() {
   };
   const readySquare = async () => {
     if (!config || !config.methods.card) return;
-    if (!window.Square) {
-      const script = document.createElement("script"); script.src = config.environment === "sandbox" || config.appId.startsWith("sandbox-") ? "https://sandbox.web.squarecdn.com/v1/square.js" : "https://web.squarecdn.com/v1/square.js"; script.async = true;
-      await new Promise<void>((resolve, reject) => { script.onload = () => resolve(); script.onerror = () => reject(new Error("Square failed to load")); document.head.append(script); });
-    }
-    if (!window.Square) throw new Error("Square unavailable");
-    payments = window.Square.payments(config.appId, config.locationId);
+    payments = await loadSquare(config);
     card = await payments.card(); await card.attach?.("#aha-card");
     setText(page, "[data-card-status]", "Card details are encrypted by Square.");
     if (config.methods.giftCard && payments.giftCard) {
@@ -661,6 +666,121 @@ async function syncCatalogue() {
   hideRetiredCards(state.retired, state.known);
 }
 
+type Estimate = { totalAmount: number; shippingAmount: number; taxAmount: number; taxLabel?: string | null; shippingLabel: string; errorCode?: string };
+type WalletContact = { givenName?: string; familyName?: string; email?: string; phone?: string; addressLines?: string[]; city?: string; state?: string; postalCode?: string; countryCode?: string };
+type PayResult = { state?: string; orderId?: string; receiptUrl?: string; errorCode?: string };
+const JSON_POST = { method: "POST", headers: { "Content-Type": "application/json" } };
+
+// Apple Pay and Google Pay on product pages. The wallet shares the address, the
+// server prices it (estimate), then quotes and charges through the same checkout
+// session as the bag. The bag itself is left alone.
+function initExpress() {
+  const box = document.querySelector<HTMLElement>("[data-express]");
+  const form = box?.closest<HTMLFormElement>("[data-cart-form]");
+  const slug = /^\/shop\/([a-z0-9-]+)\/$/.exec(location.pathname)?.[1];
+  // Not for pieces off sale or drops not yet open to everyone; the server refuses both too.
+  if (!box || !form || !slug || offSale.products.includes(slug) || document.querySelector("[data-drop]")) return;
+  const status = box.querySelector<HTMLElement>("[data-express-status]")!;
+  const apple = box.querySelector<HTMLButtonElement>("[data-express-apple]")!;
+  const google = box.querySelector<HTMLElement>("[data-express-google]")!;
+  let request: (SquarePaymentRequest & { update?: (value: unknown) => boolean }) | null = null;
+  let starting: Promise<void> | null = null;
+  let shown = 0; // the total the wallet sheet last showed for an address, in cents
+  let busy = false;
+  let done = false;
+  const say = (text: string, charged = false) => { status.textContent = charged ? text : `${text} Nothing was charged.`; };
+  const choice = () => {
+    const id = form.querySelector<HTMLInputElement>("[data-cart-variant]:checked")?.value;
+    const quantity = Number(form.querySelector<HTMLInputElement>("[data-cart-quantity]")?.value);
+    const item = activeCatalogue().find((entry) => entry.id === id);
+    return item && quantity >= 1 && quantity <= MAX_QUANTITY ? { item, quantity: Math.floor(quantity) } : null;
+  };
+  const line = (label: string, cents: number, pending: boolean) => ({ label, amount: (cents / 100).toFixed(2), pending });
+  // Shipping and tax stay pending until the wallet shares an address.
+  const sheet = (estimate?: Estimate) => {
+    const { item, quantity } = choice()!;
+    shown = estimate?.totalAmount ?? 0;
+    return {
+      lineItems: [line(`${item.title}, ${item.size} × ${quantity}`, item.priceCents * quantity, false), line(estimate?.shippingLabel ?? "Shipping", estimate?.shippingAmount ?? 0, !estimate), line(estimate?.taxLabel ?? "Tax", estimate?.taxAmount ?? 0, !estimate)],
+      total: line("After Hours Agenda", estimate?.totalAmount ?? item.priceCents * quantity, !estimate),
+    };
+  };
+  const confirmed = (result: PayResult, summary: PurchaseSummary) => {
+    done = true;
+    emitVerifiedPurchase(result.orderId, summary);
+    apple.hidden = true;
+    google.replaceChildren();
+    say(`Payment confirmed${result.orderId ? ` · order ${result.orderId}` : ""}. Your order email has the details.`, true);
+    if (result.receiptUrl) { const link = document.createElement("a"); link.href = result.receiptUrl; link.textContent = " View receipt."; status.append(link); }
+  };
+  // A payment Square hasn't confirmed yet: follow it here, never pay again.
+  const follow = async (quote: Quote, summary: PurchaseSummary, tries = 0): Promise<void> => {
+    const { data } = await requestJson<PayResult>(`/api/checkout/status?checkoutId=${encodeURIComponent(quote.checkoutId)}&checkoutToken=${encodeURIComponent(quote.checkoutToken)}`).catch(() => ({ data: null }));
+    if (data?.state === "completed") return confirmed(data, summary);
+    if (data?.state === "failed" || data?.state === "quoted") return say("The payment didn’t go through.");
+    if (data?.state === "attention" || tries > 60) return say(`Square is still confirming this payment. Please don’t pay again; write to info@afterhoursagenda.com${data?.orderId ? ` about order ${data.orderId}` : ""}.`, true);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    return follow(quote, summary, tries + 1);
+  };
+  const pay = (method: SquareMethod) => async () => {
+    if (busy || done) return;
+    // Tokenize first, inside the tap: Apple Pay only opens from a user gesture.
+    const tokenizing = method.tokenize() as Promise<TokenResult & { details?: { shipping?: { contact?: WalletContact }; billing?: WalletContact } }>;
+    busy = true;
+    try {
+      const result = await tokenizing;
+      if (result.status !== "OK" || !result.token) return;
+      const picked = choice();
+      const contact = result.details?.shipping?.contact ?? {};
+      const lines = contact.addressLines ?? [];
+      const address = { firstName: contact.givenName ?? "", lastName: contact.familyName ?? "", email: contact.email || result.details?.billing?.email || "", phone: contact.phone || undefined, addressLine1: lines[0] ?? "", addressLine2: lines.slice(1).join(", ") || undefined, city: contact.city ?? "", region: contact.state ?? "", postalCode: contact.postalCode ?? "", country: contact.countryCode ?? "" };
+      if (!picked || !validAddress(address)) return say("Your wallet didn’t share a full name, email and address.");
+      status.textContent = "Confirming your total…";
+      const { response, data: quote } = await requestJson<Quote & { errorCode?: string }>("/api/checkout/quote", { ...JSON_POST, body: JSON.stringify({ items: [{ variationId: picked.item.id, quantity: picked.quantity }], shippingAddress: address, marketing: await checkoutMarketingEnvelope({ requireReceipt: true }) }) });
+      if (!response.ok || !quote) return say(quote?.errorCode === "early_access_only" ? "This piece isn’t released yet." : "We couldn’t confirm that address.");
+      if (!retainCheckoutReceipt(quote.checkoutId, quote.checkoutToken)) void withdrawCheckoutPrivacy({ analytics: false, marketing: false });
+      // Charge only the total the shopper saw in the wallet.
+      if (quote.totalAmount !== shown) { request?.update?.(sheet()); return say(`The total for that address is ${displayAmount(quote.totalAmount)}; tap to pay again.`); }
+      const items = quote.lineItems.map((entry) => ({ id: entry.variationId, name: picked.item.title, unitAmount: entry.unitAmount, quantity: entry.quantity }));
+      const summary: PurchaseSummary = { currency: quote.currency, subtotalAmount: quote.subtotalAmount, shippingAmount: quote.shippingAmount, taxAmount: quote.taxAmount, totalAmount: quote.totalAmount, items };
+      document.dispatchEvent(new CustomEvent("aha:checkout-quoted", { detail: { value: quote.totalAmount / 100, items: items.map((entry) => ({ id: entry.id, name: entry.name, price: entry.unitAmount / 100, quantity: entry.quantity })) } }));
+      status.textContent = "Confirming your payment… Please keep this page open.";
+      let paid: { response: Response; data: PayResult | null };
+      try { paid = await requestJson<PayResult>("/api/checkout/pay", { ...JSON_POST, body: JSON.stringify({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: result.token, idempotencyKey: freshKey(), marketing: await checkoutMarketingEnvelope() }) }); } catch { return follow(quote, summary); }
+      if (paid.response.ok && paid.data?.state === "completed") return confirmed(paid.data, summary);
+      if (paid.response.status === 402) return say("The payment was declined.");
+      if (paid.response.status === 409) return say("That total expired; tap to pay again.");
+      return follow(quote, summary);
+    } catch { say("Wallet payment isn’t available right now; add it to your bag instead."); }
+    finally { busy = false; }
+  };
+  const start = () => starting ??= (async () => {
+    const { data: config } = await requestJson<CheckoutConfig>("/api/checkout/config");
+    if (!config || (!config.methods.applePay && !config.methods.googlePay)) return;
+    const payments = await loadSquare(config);
+    request = payments.paymentRequest({ countryCode: "US", currencyCode: "USD", requestShippingContact: true, ...sheet() });
+    request.addEventListener?.("shippingcontactchanged", async (value) => {
+      const contact = value as WalletContact;
+      const picked = choice();
+      const { response, data } = picked ? await requestJson<Estimate>("/api/checkout/estimate", { ...JSON_POST, body: JSON.stringify({ items: [{ variationId: picked.item.id, quantity: picked.quantity }], destination: { country: contact.countryCode, region: contact.state, postalCode: contact.postalCode, city: contact.city } }) }).catch(() => ({ response: null, data: null })) : { response: null, data: null };
+      if (response?.ok && data) return sheet(data);
+      shown = 0;
+      return { error: data?.errorCode === "unsupported_destination" ? "We don’t ship to this country yet." : "We couldn’t price delivery to this address." };
+    });
+    if (config.methods.applePay && payments.applePay) {
+      try { apple.onclick = pay(await payments.applePay(request)); apple.hidden = false; } catch { /* Not Safari, or no card in Wallet. */ }
+    }
+    if (config.methods.googlePay && payments.googlePay) {
+      try { const method = await payments.googlePay(request); await method.attach?.("#aha-express-google", { buttonSizeMode: "fill" }); google.onclick = pay(method); } catch { /* This browser can't use Google Pay. */ }
+    }
+    box.hidden = apple.hidden && !google.childElementCount;
+  })();
+  // Wallets load once a size is chosen, so the page itself stays light.
+  const changed = () => { if (!done && choice()) void start().then(() => request?.update?.(sheet())).catch(() => { /* Add to bag still works. */ }); };
+  form.addEventListener("change", changed);
+  changed();
+}
+
 // "Back to your bag" in the bag-reminder email: ?bag=VARIATION:QTY,… puts those
 // lines in this browser's bag (on any device), then leaves the address bar clean.
 function restoreBagLink() {
@@ -686,5 +806,6 @@ async function init() {
   restoreBagLink();
   updateCartLinks(readCart(activeCatalogue()));
   initCheckout();
+  initExpress();
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => { void init(); }, { once: true }); else void init();

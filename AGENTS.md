@@ -74,6 +74,21 @@ Added on October 19, 2026 at the owner's request ("print method and blank names 
 - **Print method:** `printMethod` appears only where a record shows it. Mighty Mick's and Pet It Be are DTG (Apliiq service `dtgprint`). The other designs' methods are only visible in the signed-in Apliiq dashboard, so their pages say "Printed to order in the United States" without naming a method. The catalog engine sets `printMethod` for new designs whose placements all use `dtgprint`. Add it for the others only after reading the design in Apliiq.
 - **Founder story:** The story (`/about/#founder`) comes from David Marsh's 2013 interview "Hit the Ground Running, Episode 1" in the brand archive. Keep it to what the interview says. Don't publish the video (it shows faces), don't name customers, and don't name the TV appearance's celebrity.
 
+## Apple Pay and Google Pay on product pages
+
+Built on October 19, 2026 at the owner's request ("Do this task here: One-tap Apple Pay / Google Pay on product pages"):
+
+- **Flow** (`initExpress` in `src/scripts/cart.ts`):
+  1. Once a size is chosen, the page loads `/api/checkout/config` and Square's script, and shows the wallets production has switched on.
+  2. While the shopper picks an address in the wallet sheet, `/api/checkout/estimate` prices it from what the wallet shares (country, region, postal code, city). It uses the same Square calculation as the quote and stores nothing.
+  3. After approval, the page quotes the wallet's full address through `/api/checkout/quote` and pays through `/api/checkout/pay`: the same durable session, signed callbacks and fulfillment hold as the bag.
+- **Safeguards:**
+  - The payment goes through only if the quote's total equals the total the sheet showed. Otherwise nothing is charged and the shopper is asked to tap again.
+  - A pending payment is followed through `/api/checkout/status`, never paid twice.
+  - The shopper's bag is left alone.
+- **Never offered** for products off sale or for drops not yet open to everyone. The estimate endpoint applies the same sale list and early-access locks as the quote.
+- **Script budget:** public storefront JavaScript was about 64.6 KB of its 65 KB cap after this, so the next addition needs a trim first.
+
 ## Catalog, checkout, fulfillment, and tracking safeguards
 
 - Product, price, mapping, and availability changes go through `site-preview/tools/catalog` and `site-preview/catalog/ledger.json`; never use ad-hoc provider writes. Read `.agents/skills/aha-catalog/SKILL.md` for that workflow. Generated fulfillment catalog code must remain generated from the ledger. Preserve static/runtime product-page and feed parity.
