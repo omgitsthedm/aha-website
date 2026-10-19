@@ -4,7 +4,7 @@
 // every built product this way and requires byte-identical output to Astro's
 // build, so this file must change whenever src/pages/shop/[product].astro or
 // src/components/ProductCard.astro / ProductImage.astro change.
-import { garmentGroup, hoverView, MEASURE_DIAGRAM, otherColors, swatchFor } from "./garments.mjs";
+import { garmentGroup, hoverView, measurementGuide, otherColors, swatchFor } from "./garments.mjs";
 import { dropFor, dropNote, dropStage } from "./drops.mjs";
 import { isOffSale } from "./off-sale.mjs";
 import { RETURN_POLICY, SHIPPING_DETAILS } from "./offer-terms.mjs";
@@ -18,7 +18,6 @@ export const attr = (value) => String(value ?? "").replace(/&/g, "&amp;").replac
 const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 
 const GALLERY_LABELS = { front: "Front", back: "Back", "print-detail": "Print detail", folded: "Folded" };
-const measurement = (value) => value.toLocaleString("en-US", { maximumFractionDigits: 2 });
 
 function image(shot, { priority = false, sizes, name }) {
   return `<img src="${attr(shot.src)}" srcset="${attr(shot.srcset)}" sizes="${attr(sizes)}" alt="${attr(shot.alt)}" width="${attr(shot.width)}" height="${attr(shot.height)}" loading="${priority ? "eager" : "lazy"}" fetchpriority="${priority ? "high" : "low"}" decoding="${priority ? "sync" : "async"}"${name ? ` style="${attr(`view-transition-name:${name}`)}"` : ""}>`;
@@ -51,8 +50,6 @@ export function renderProductMain(product, products, { origin, pageScript }) {
     ...products.filter((entry) => entry.slug !== product.slug && entry.collection === product.collection),
     ...products.filter((entry) => entry.slug !== product.slug && entry.collection !== product.collection),
   ].slice(0, 4);
-  const sizeGuide = product.sizeGuide.map((row) => ({ ...row, sleeveLength: "sleeveLength" in row ? row.sleeveLength : undefined }));
-  const sleeves = sizeGuide.every((row) => typeof row.sleeveLength === "number");
   const swatch = swatchFor(product.color);
   const siblings = otherColors(product, products);
   const drop = dropStage(dropFor(product.slug)) === "released" ? null : dropFor(product.slug);
@@ -74,13 +71,10 @@ export function renderProductMain(product, products, { origin, pageScript }) {
     product.variants.map((variant) => `<label><input type="radio" name="size" value="${attr(variant.id)}" data-cart-variant data-size="${attr(variant.size)}" data-sku="${attr(variant.sku)}"><span>${text(variant.size)}</span></label>`).join(""),
     `</div><label class="quantity-field">Quantity <input data-cart-quantity name="quantity" type="number" min="1" max="10" step="1" value="1" inputmode="numeric"></label><button type="submit" class="button add-to-bag">Add to bag <span aria-hidden="true">+</span></button><button type="submit" class="button button-secondary buy-now" data-buy-now>Buy now <span aria-hidden="true">→</span></button><button type="button" class="text-button save-piece" data-save="${attr(product.slug)}" aria-pressed="false" hidden>Save for later</button><p class="cart-add-status" data-cart-add-status aria-live="polite"></p><div class="express-pay" data-express hidden><p class="label">Or pay now</p><button type="button" class="apple-pay-button" data-express-apple aria-label="Buy with Apple Pay" hidden><span aria-hidden="true"> Pay</span></button><div id="aha-express-google" data-express-google></div><p class="checkout-note" data-express-status aria-live="polite"></p></div></form>`,
     `<a class="text-link size-link" href="#size-guide">Check measurements ↓</a><p class="checkout-note">Free domestic shipping. Final tax and payment options are shown securely at checkout.</p>`,
-    `<details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>${text(product.fit)}.</li><li>${text(product.weightOz)} oz ${text(product.fabricType)}.</li><li>${text(product.composition)}.</li>${product.constructionDetails.map((detail) => `<li>${text(detail)}</li>`).join("")}${product.blank ? `<li>Blank: ${text(product.blank)}.</li>` : ""}<li>Printed to order in the United States${product.printMethod ? `, ${text(product.printMethod)}` : ""}.</li></ul></details>`,
+    `<details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>${text(product.fit)}.</li>${product.typeLabel !== "Beanie" ? `<li>${text(product.weightOz)} oz ${text(product.fabricType)}.</li>` : ""}<li>${text(product.composition)}.</li>${product.constructionDetails.map((detail) => `<li>${text(detail)}</li>`).join("")}${product.blank ? `<li>Blank: ${text(product.blank)}.</li>` : ""}<li>${product.typeLabel === "Beanie" ? "Embroidered" : "Printed"} to order in the United States${product.printMethod ? `, ${text(product.printMethod)}` : ""}.</li></ul></details>`,
     `<details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>`,
-    `<details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the print.</p></details></div></section>`,
-    `<section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches</p><h2 id="size-title">Find your fit.</h2><p>${text(product.measurementGuidance)}</p>${product.sleeveMeasurementGuidance ? `<p>${text(product.sleeveMeasurementGuidance)}</p>` : ""}${MEASURE_DIAGRAM}`,
-    `<div class="size-table-wrap" role="region" aria-label="${attr(`${product.title} measurements`)}" tabindex="0"><table><thead><tr><th scope="col">Size</th><th scope="col">Chest width</th><th scope="col">Body length</th>${sleeves ? `<th scope="col">Sleeve length</th>` : ""}</tr></thead><tbody>`,
-    sizeGuide.map((row) => `<tr><th scope="row">${text(row.size)}</th><td>${text(measurement(row.chestWidth))}</td><td>${text(measurement(row.bodyLength))}</td>${sleeves ? `<td>${typeof row.sleeveLength === "number" ? text(measurement(row.sleeveLength)) : ""}</td>` : ""}</tr>`).join(""),
-    `</tbody></table></div></section>`,
+    `<details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the ${product.typeLabel === "Beanie" ? "embroidery" : "print"}.</p></details></div></section>`,
+    measurementGuide(product),
     `<section class="shell section reviews" id="reviews" aria-labelledby="reviews-title" data-reviews="${attr(product.slug)}" hidden><p class="label">From people who bought it</p><h2 id="reviews-title">Reviews.</h2><p class="reviews-summary" data-review-summary></p><ul class="review-list" data-review-list></ul></section>`,
     `<section class="section shell"><div class="section-header"><h2>More pieces.</h2><a href="/shop/" class="text-link">Shop all →</a></div><div class="product-grid related-products">${related.map(productCard).join("")}</div></section>`,
     products.flatMap((entry) => entry.variants.map((variant) => `<template data-cart-catalog data-id="${attr(variant.id)}" data-sku="${attr(variant.sku)}" data-size="${attr(variant.size)}" data-slug="${attr(entry.slug)}" data-title="${attr(`${entry.title} — ${entry.color}`)}" data-color="${attr(entry.color)}" data-price-cents="${attr(entry.price * 100)}" data-image="${attr(entry.gallery[0].src)}" data-image-alt="${attr(entry.gallery[0].alt)}"></template>`)).join(""),

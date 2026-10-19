@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-for-the-record-ss4500-black-back",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:13:51.595Z",
+  "payload": {
+    "Name": "For the Record approved back",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/for-the-record-back.png"
+  },
+  "finishedAt": "2026-10-19T18:13:52.018Z",
+  "response": {
+    "WtoHRatio": 0.9063,
+    "DateCreated": "2026-10-19T18:13:51.988219Z",
+    "Id": 8217178,
+    "Name": "For the Record approved back"
+  }
+}

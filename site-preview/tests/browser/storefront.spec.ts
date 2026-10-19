@@ -338,9 +338,9 @@ test("product pages show how to measure, and Find my size repeats the drawing", 
 test.describe("campaign motion", () => {
   test.use({ reducedMotion: "no-preference" });
 
-  test("the home hero photo comes first, then its labeled film plays and can be paused", async ({ page }) => {
-    await page.goto("/");
-    const frame = page.locator(".hero-image .motion-frame");
+  test("a collection with a film shows its photo first, then plays and can be paused", async ({ page }) => {
+    await page.goto("/shop/mighty-micks/");
+    const frame = page.locator(".collection-hero-image .motion-frame");
     await expect(frame.locator("img")).toBeVisible();
     await expect(frame).toHaveClass(/is-moving/, { timeout: 15_000 });
     // The film's layer shows the photo's own file until the film plays (see motion.ts).
@@ -348,8 +348,8 @@ test.describe("campaign motion", () => {
     const video = frame.locator("video");
     await expect(video).toHaveAttribute("aria-hidden", "true");
     expect(await video.evaluate((element: HTMLVideoElement) => element.muted && element.loop && !element.paused)).toBe(true);
-    await expect(page.locator(".hero-image figcaption")).toContainText(/garment shots AI-generated/);
-    await expect(page.locator(".hero-image figcaption .still-note")).toBeHidden();
+    await expect(page.locator(".collection-hero-image figcaption")).toContainText(/garment shots AI-generated/);
+    await expect(page.locator(".collection-hero-image figcaption .still-note")).toBeHidden();
     const toggle = frame.getByRole("button", { name: "Pause the motion" });
     await toggle.click();
     expect(await video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(true);
@@ -360,7 +360,7 @@ test.describe("campaign motion", () => {
   test("the full-screen phone lookbook gets the film cut for its crop", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/lookbook/");
-    const frame = page.locator(".campaign-set .motion-frame").first();
+    const frame = page.locator(".campaign-set .motion-frame[data-motion]").first();
     await frame.scrollIntoViewIfNeeded();
     await expect(frame.locator("video")).toHaveCount(1, { timeout: 15_000 });
     expect(await frame.getAttribute("data-motion-small")).toMatch(/-600t\.mp4$/);
@@ -369,10 +369,10 @@ test.describe("campaign motion", () => {
 
   test("phones get the lighter film", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/");
-    const video = page.locator(".hero-image video");
+    await page.goto("/shop/mighty-micks/");
+    const video = page.locator(".collection-hero-image video");
     await expect(video).toHaveCount(1, { timeout: 15_000 });
-    await expect(video).toHaveAttribute("src", (await page.locator(".hero-image .motion-frame").getAttribute("data-motion-small"))!, { timeout: 15_000 });
+    await expect(video).toHaveAttribute("src", (await page.locator(".collection-hero-image .motion-frame").getAttribute("data-motion-small"))!, { timeout: 15_000 });
   });
 });
 

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-resist-rebel-6014-midnight-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:16:31.158Z",
+  "payload": {
+    "Name": "resist-rebel-6014-midnight-front",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/resist-rebel.png"
+  },
+  "finishedAt": "2026-10-19T18:16:32.007Z",
+  "response": {
+    "WtoHRatio": 1.2739,
+    "DateCreated": "2026-10-19T18:16:31.9692462Z",
+    "Id": 8217187,
+    "Name": "resist-rebel-6014-midnight-front"
+  }
+}

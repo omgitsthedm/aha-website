@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "key": "revision-design-and-all-that-jazz-c1717-mustard-dd4cb41df969953b",
+  "state": "complete",
+  "createdAt": "2026-10-19T19:18:48.622Z",
+  "payload": {
+    "ProductId": 409,
+    "ProductCode": "mens_Comfort-Colors-Heavyweight-T-Shirt",
+    "ColorId": 798,
+    "Locations": [
+      {
+        "Id": 6868,
+        "ImagePath": "https://blob.apliiq.com/sitestorage/base/6868_590_900.png",
+        "Artworks": [
+          {
+            "Id": 8217365,
+            "Service": "transfer_print",
+            "Note": "Use exact attached approved master, 9 inches wide, centered 2.5 inches below front neckline. Keep all original artwork and lettering, including black trousers and hair. Matte print. Plain back. No added branding.",
+            "BoxId": 1
+          }
+        ]
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        }
+      }
+    ],
+    "Name": "And All That Jazz Tee — Mustard",
+    "Description": "And All That Jazz Tee — Mustard. Exact approved primary artwork at 9 inches wide. Plain back. Current private label SB-3-161622 replaces manufacturer neck branding."
+  },
+  "finishedAt": "2026-10-19T19:18:48.899Z",
+  "response": {
+    "ProductId": 409,
+    "ProductCode": "mens_Comfort-Colors-Heavyweight-T-Shirt",
+    "ColorId": 798,
+    "Locations": [
+      {
+        "Artworks": [
+          {
+            "Service": "transfer_print",
+            "Note": "Use exact attached approved master, 9 inches wide, centered 2.5 inches below front neckline. Keep all original artwork and lettering, including black trousers and hair. Matte print. Plain back. No added branding.",
+            "BoxId": 1,
+            "Id": 8217365
+          }
+        ],
+        "Id": 6868,
+        "ImagePath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6220435_68682026-10-19-19-18-48Z6868_590_900.png"
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        },
+        "Id": 0
+      }
+    ],
+    "Variants": [
+      {
+        "SKU": "APQ-6220435S6A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "s"
+      },
+      {
+        "SKU": "APQ-6220435S7A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "m"
+      },
+      {
+        "SKU": "APQ-6220435S8A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "l"
+      },
+      {
+        "SKU": "APQ-6220435S1A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "xl"
+      },
+      {
+        "SKU": "APQ-6220435S2A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 2,
+        "Id": 0,
+        "Name": "xxl"
+      },
+      {
+        "SKU": "APQ-6220435S21A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 4,
+        "Id": 0,
+        "Name": "xxxl"
+      }
+    ],
+    "Id": 6220435,
+    "Name": "And All That Jazz Tee — Mustard",
+    "Description": "And All That Jazz Tee — Mustard. Exact approved primary artwork at 9 inches wide. Plain back. Current private label SB-3-161622 replaces manufacturer neck branding."
+  }
+}

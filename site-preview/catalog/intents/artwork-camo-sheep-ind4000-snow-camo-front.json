@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-camo-sheep-ind4000-snow-camo-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T17:59:45.639Z",
+  "payload": {
+    "Name": "Camo Sheep Pink 9x6in",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/02ad6632ad0e536e8117de549fdb267ead57c462/production-artwork/camo-sheep/camo-sheep-pink-2700.png"
+  },
+  "finishedAt": "2026-10-19T17:59:45.968Z",
+  "response": {
+    "WtoHRatio": 1.5,
+    "DateCreated": "2026-10-19T17:59:45.9371195Z",
+    "Id": 8217018,
+    "Name": "Camo Sheep Pink 9x6in"
+  }
+}

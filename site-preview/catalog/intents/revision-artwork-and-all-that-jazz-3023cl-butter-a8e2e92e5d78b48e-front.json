@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "revision-artwork-and-all-that-jazz-3023cl-butter-a8e2e92e5d78b48e-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T19:18:29.248Z",
+  "payload": {
+    "Name": "and-all-that-jazz-3023cl-butter-front",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/4ffe006b353c57d2edb0b37dedb7dafecc27e77f/production-artwork/f/jazz-90.png"
+  },
+  "finishedAt": "2026-10-19T19:18:31.156Z",
+  "response": {
+    "WtoHRatio": 0.6146,
+    "DateCreated": "2026-10-19T19:18:31.1320037Z",
+    "Id": 8217363,
+    "Name": "and-all-that-jazz-3023cl-butter-front"
+  }
+}

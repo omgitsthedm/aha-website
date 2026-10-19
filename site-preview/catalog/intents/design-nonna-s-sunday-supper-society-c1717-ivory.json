@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "key": "design-nonna-s-sunday-supper-society-c1717-ivory",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:13:54.102Z",
+  "payload": {
+    "ProductId": 409,
+    "ProductCode": "mens_Comfort-Colors-Heavyweight-T-Shirt",
+    "ColorId": 855,
+    "Locations": [
+      {
+        "Id": 6868,
+        "ImagePath": "https://blob.apliiq.com/sitestorage/base/6868_590_900.png",
+        "Artworks": [
+          {
+            "Id": 8217179,
+            "Service": "transfer_print",
+            "Note": "Use exact supplied front artwork, 10 inches wide; centered on garment, top 2.5 inches below collar seam. Matte print, no sheen, transparent areas are garment negative space. No redraw, outlines, added text or manufacturer branding.",
+            "BoxId": 1
+          }
+        ]
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        }
+      }
+    ],
+    "Name": "Nonna’s Sunday Supper Society Tee — Ivory",
+    "Description": "Nonna’s Sunday Supper Society Tee — Ivory. Match exact approved production PNGs; keep all approved letterforms and illustration. Current private label SB-3-161622 replaces manufacturer neck/seam branding. Front artwork width 10 inches. Back is plain."
+  },
+  "finishedAt": "2026-10-19T18:13:54.297Z",
+  "response": {
+    "ProductId": 409,
+    "ProductCode": "mens_Comfort-Colors-Heavyweight-T-Shirt",
+    "ColorId": 855,
+    "Locations": [
+      {
+        "Artworks": [
+          {
+            "Service": "transfer_print",
+            "Note": "Use exact supplied front artwork, 10 inches wide; centered on garment, top 2.5 inches below collar seam. Matte print, no sheen, transparent areas are garment negative space. No redraw, outlines, added text or manufacturer branding.",
+            "BoxId": 1,
+            "Id": 8217179
+          }
+        ],
+        "Id": 6868,
+        "ImagePath": "//blob.apliiq.com/sitestorage/_release/Overrides/ProductImage/6220236_68682026-10-19-18-13-54Z6868_590_900.png"
+      }
+    ],
+    "Subscriptions": [
+      {
+        "Placement": {
+          "Id": 1011,
+          "Name": "inside neck"
+        },
+        "Label": {
+          "Id": 6208403
+        },
+        "Id": 0
+      }
+    ],
+    "Variants": [
+      {
+        "SKU": "APQ-6220236S6A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "s"
+      },
+      {
+        "SKU": "APQ-6220236S7A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "m"
+      },
+      {
+        "SKU": "APQ-6220236S8A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "l"
+      },
+      {
+        "SKU": "APQ-6220236S1A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 0,
+        "Id": 0,
+        "Name": "xl"
+      },
+      {
+        "SKU": "APQ-6220236S2A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 2,
+        "Id": 0,
+        "Name": "xxl"
+      },
+      {
+        "SKU": "APQ-6220236S21A1",
+        "Weight": "3.9 oz",
+        "PlusSize_Fee": 4,
+        "Id": 0,
+        "Name": "xxxl"
+      }
+    ],
+    "Id": 6220236,
+    "Name": "Nonna’s Sunday Supper Society Tee — Ivory",
+    "Description": "Nonna’s Sunday Supper Society Tee — Ivory. Match exact approved production PNGs; keep all approved letterforms and illustration. Current private label SB-3-161622 replaces manufacturer neck/seam branding. Front artwork width 10 inches. Back is plain."
+  }
+}

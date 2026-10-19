@@ -21,7 +21,7 @@ const SIGNATURES = {
 SIGNATURES.jpeg = SIGNATURES.jpg;
 
 export function productImageKeys(product) {
-  const paths = product.gallery.flatMap((shot) => [shot.src, shot.feedImage, ...shot.srcset.split(",").map((part) => part.trim().split(/\s+/)[0])]);
+  const paths = [...product.gallery, ...(product.campaign ?? [])].flatMap((shot) => [shot.src, shot.feedImage, ...shot.srcset.split(",").map((part) => part.trim().split(/\s+/)[0])]);
   return [...new Set(paths.map((value) => value.replace(/^\/images\//, "")))];
 }
 

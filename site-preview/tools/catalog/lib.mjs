@@ -20,7 +20,7 @@ export const PATHS = {
 };
 
 /** Apliiq's size codes inside decorated SKUs (APQ-<design>S<code>A1). */
-export const SIZE_CODES = Object.freeze({ XS: 5, S: 6, M: 7, L: 8, XL: 1, "2XL": 2, "3XL": 21, "4XL": 61, "5XL": 62 });
+export const SIZE_CODES = Object.freeze({ XS: 5, S: 6, M: 7, L: 8, XL: 1, "2XL": 2, "3XL": 21, "4XL": 61, "5XL": 62, "One Size": 34 });
 export const SKU_PATTERN = /^APQ-(\d+)S(\d+)A1$/;
 
 export class CatalogError extends Error {
@@ -74,8 +74,18 @@ export function skuDesignId(sku) {
   return match ? Number(match[1]) : null;
 }
 
-export function expectedSku(designId, size) {
-  const code = SIZE_CODES[size];
+/** Reuse a confirmed upload of the exact immutable art, including across colors. */
+export function confirmedArtworkId(imagePath, directory = PATHS.intents) {
+  if (!/^https:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/[a-f0-9]{40}\//.test(imagePath ?? "") || !existsSync(directory)) return null;
+  for (const name of readdirSync(directory).filter((name) => name.startsWith("artwork-") && name.endsWith(".json"))) {
+    const intent = readJson(path.join(directory, name));
+    if (intent.state === "complete" && intent.payload?.ImagePath === imagePath && Number.isSafeInteger(intent.response?.Id)) return intent.response.Id;
+  }
+  return null;
+}
+
+export function expectedSku(designId, size, sizeCodes = SIZE_CODES) {
+  const code = sizeCodes[size];
   if (!code) throw new CatalogError(`Unknown size ${size}; add its Apliiq code to SIZE_CODES after verifying it.`, { code: "unknown_size" });
   return `APQ-${designId}S${code}A1`;
 }

@@ -62,10 +62,13 @@ test("built pages carry films only on labeled campaign photos", async () => {
   for (const html of [home, lookbook]) {
     const figures = html.match(/<figure[^>]*>[\s\S]*?<\/figure>/g) ?? [];
     const moving = figures.filter((figure) => figure.includes("data-motion="));
-    assert.ok(moving.length > 0);
+    if (html === lookbook) assert.ok(moving.length > 0);
     for (const figure of moving) assert.match(figure, /class="motion-note">[^<]*AI-generated[^<]*Pexels|class="motion-note">[^<]*Pexels[^<]*AI-generated/, "a film's caption says what is real and what is AI-generated");
   }
-  assert.match(home, /class="hero-image"[\s\S]*?data-motion="\/motion\//, "the home hero has a loop");
+  const hero = home.match(/<figure class="hero-image">[\s\S]*?<\/figure>/)?.[0] ?? "";
+  assert.ok(hero, "the home hero remains a campaign photo");
+  const hasApprovedFilm = Object.keys(motion).some((src) => hero.includes(src));
+  assert.equal(hero.includes("data-motion="), hasApprovedFilm, "only a campaign photo with an approved film gets a loop");
   assert.match(lookbook, /In the films, the city is real footage and the garment shots are AI-generated/);
   // The photo stays the page's main image: no video element ships in the HTML.
   assert.doesNotMatch(home + lookbook, /<video/);

@@ -115,3 +115,27 @@ test("cart: bag reflows at 320px and the checkout fallback remains useful withou
   await expect(fallback.getByRole("link", { name: "Browse the current pieces" })).toBeVisible();
   await context.close();
 });
+
+
+test("cart: a new tee and one-size beanie retain exact supplier variations together", async ({ page }) => {
+  const selections = [
+    { slug: "nonna-s-sunday-supper-society-c1717-ivory", size: "M" },
+    { slug: "after-hours-agenda-heritage-beanie-sp12-black", size: "One Size" },
+  ].map((selection) => ({ ...selection, product: products.find((product) => product.slug === selection.slug)! }));
+  for (const { product, size } of selections) {
+    await page.goto(`/shop/${product.slug}/`);
+    await page.getByRole("radio", { name: size, exact: true }).check();
+    if (size === "One Size") {
+      await expect(page.getByRole("img", { name: "How to measure a top" })).toHaveCount(0);
+      await expect(page.getByRole("columnheader", { name: "Unfolded height" })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Find my size" })).toBeHidden();
+    }
+    await page.getByRole("button", { name: "Add to bag", exact: true }).click();
+    await expect(page.locator("[data-cart-add-status]")).toContainText("added");
+  }
+  await page.goto("/checkout/");
+  await page.reload();
+  await expect(page.locator(".bag-line")).toHaveCount(2);
+  await expect(page.locator("[data-cart-subtotal]")).toHaveText("$63.00");
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("aha-cart-v2") || "[]"))).toEqual(selections.map(({ product, size }) => ({ variationId: product.variants.find((variant) => variant.size === size)!.id, quantity: 1 })));
+});

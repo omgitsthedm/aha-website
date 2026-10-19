@@ -1,0 +1,277 @@
+{
+  "slug": "for-the-record-ss4500-black",
+  "status": "approved",
+  "familyId": "023",
+  "title": "For the Record Hoodie",
+  "blank": "SS4500",
+  "color": "Black",
+  "priceCents": 5500,
+  "approval": {
+    "by": "David Marsh (owner)",
+    "at": "2026-10-19T18:11:11.633Z",
+    "note": "Owner approved these designs and garments in chat and instructed “Upload them all, we’re on a deadline”, then “now do that with these new products ... pricing everything, research it then do it”. Exact retail delegated to researched free-shipping margin checks."
+  },
+  "fulfillment": {
+    "product": "for_the_record_ss4500_black"
+  },
+  "apliiq": {
+    "productId": 372,
+    "productCode": "mens_independent-pullover-hoody",
+    "colorId": 50,
+    "label": {
+      "id": 6208403,
+      "placementId": 1011,
+      "placementName": "inside neck"
+    },
+    "artwork": [
+      {
+        "key": "front",
+        "name": "for-the-record-ss4500-black-front",
+        "imagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/for-the-record-front.png"
+      },
+      {
+        "key": "back",
+        "name": "for-the-record-ss4500-black-back",
+        "imagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/for-the-record-back.png"
+      }
+    ],
+    "locations": [
+      {
+        "id": 6998,
+        "boxId": 1,
+        "imagePath": "https://blob.apliiq.com/sitestorage/base/6998_590_900.png",
+        "artworkKey": "front",
+        "service": "dtgprint",
+        "note": "Use exact supplied front artwork, 8 inches wide; centered on garment, top 3 inches below collar seam. Matte print, no sheen, transparent areas are garment negative space. No redraw, outlines, added text or manufacturer branding."
+      },
+      {
+        "id": 7001,
+        "boxId": 1,
+        "imagePath": "https://blob.apliiq.com/sitestorage/base/7001_590_900.png",
+        "artworkKey": "back",
+        "service": "dtgprint",
+        "note": "Exact eight-line redaction artwork at 7 inches wide, 7.7 inches tall. Center on back, top begins 1 inch BELOW the bottom of resting hood. Preserve separate word-sized blocks and FREEDOM / OF / THE / PRESS. Warm-stone cream ink. No print on hood."
+      }
+    ],
+    "productionNote": "For the Record Hoodie — Black. Match exact approved production PNGs; keep all approved letterforms and illustration. Current private label SB-3-161622 replaces manufacturer neck/seam branding. Front artwork width 8 inches. Two-sided print as specified."
+  },
+  "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL",
+    "5XL"
+  ],
+  "product": {
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
+      "productType": "Clothing > Sweatshirts > Hoodies",
+      "gender": "unisex",
+      "condition": "new"
+    },
+    "fit": "standard",
+    "weightOz": 8.5,
+    "composition": "80% cotton / 20% polyester",
+    "sizeGuide": [
+      {
+        "size": "XS",
+        "bodyLength": 27,
+        "chestWidth": 19,
+        "sleeveLength": 33.5
+      },
+      {
+        "size": "S",
+        "bodyLength": 28,
+        "chestWidth": 20,
+        "sleeveLength": 34.5
+      },
+      {
+        "size": "M",
+        "bodyLength": 29,
+        "chestWidth": 22,
+        "sleeveLength": 35.5
+      },
+      {
+        "size": "L",
+        "bodyLength": 30,
+        "chestWidth": 24,
+        "sleeveLength": 36.5
+      },
+      {
+        "size": "XL",
+        "bodyLength": 31,
+        "chestWidth": 26,
+        "sleeveLength": 37.5
+      },
+      {
+        "size": "2XL",
+        "bodyLength": 32,
+        "chestWidth": 27,
+        "sleeveLength": 38.5
+      },
+      {
+        "size": "3XL",
+        "bodyLength": 33,
+        "chestWidth": 28,
+        "sleeveLength": 39.5
+      },
+      {
+        "size": "4XL",
+        "bodyLength": 34,
+        "chestWidth": 29.5,
+        "sleeveLength": 40
+      },
+      {
+        "size": "5XL",
+        "bodyLength": 34.5,
+        "chestWidth": 31,
+        "sleeveLength": 40.5
+      }
+    ],
+    "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare its chest width and body length with the chart below.",
+    "typeLabel": "Hoodie",
+    "fabricType": "cotton-blend fleece",
+    "constructionDetails": [
+      "ring-spun cotton face",
+      "jersey-lined hood",
+      "metal eyelets",
+      "twill neck tape",
+      "1x1 ribbed cuffs and waistband"
+    ],
+    "blank": "Independent Trading Co. SS4500",
+    "sleeveMeasurementGuidance": "",
+    "collection": "For the Record",
+    "gallery": [
+      {
+        "src": "/images/for-the-record/for-the-record-ss4500-black/garment-front-1122.webp",
+        "srcset": "/images/for-the-record/for-the-record-ss4500-black/garment-front-400.webp 400w, /images/for-the-record/for-the-record-ss4500-black/garment-front-800.webp 800w, /images/for-the-record/for-the-record-ss4500-black/garment-front-1122.webp 1122w",
+        "feedImage": "/images/for-the-record/for-the-record-ss4500-black/garment-front.jpg",
+        "width": 1122,
+        "height": 1025,
+        "alt": "Front of the Black For the Record Hoodie.",
+        "role": "front"
+      },
+      {
+        "src": "/images/for-the-record/for-the-record-ss4500-black/garment-back-1122.webp",
+        "srcset": "/images/for-the-record/for-the-record-ss4500-black/garment-back-400.webp 400w, /images/for-the-record/for-the-record-ss4500-black/garment-back-800.webp 800w, /images/for-the-record/for-the-record-ss4500-black/garment-back-1122.webp 1122w",
+        "feedImage": "/images/for-the-record/for-the-record-ss4500-black/garment-back.jpg",
+        "width": 1122,
+        "height": 1025,
+        "alt": "Back of the black For the Record hoodie, showing the cream redacted-document print below the hood.",
+        "role": "back"
+      },
+      {
+        "src": "/images/for-the-record/for-the-record-ss4500-black/garment-print-detail-1122.webp",
+        "srcset": "/images/for-the-record/for-the-record-ss4500-black/garment-print-detail-400.webp 400w, /images/for-the-record/for-the-record-ss4500-black/garment-print-detail-800.webp 800w, /images/for-the-record/for-the-record-ss4500-black/garment-print-detail-1122.webp 1122w",
+        "feedImage": "/images/for-the-record/for-the-record-ss4500-black/garment-print-detail.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Close view of the front print on the Black For the Record Hoodie.",
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/for-the-record/for-the-record-ss4500-black/garment-folded-1122.webp",
+        "srcset": "/images/for-the-record/for-the-record-ss4500-black/garment-folded-400.webp 400w, /images/for-the-record/for-the-record-ss4500-black/garment-folded-800.webp 800w, /images/for-the-record/for-the-record-ss4500-black/garment-folded-1122.webp 1122w",
+        "feedImage": "/images/for-the-record/for-the-record-ss4500-black/garment-folded.jpg",
+        "width": 1122,
+        "height": 1122,
+        "alt": "Black For the Record Hoodie casually folded, with the AHA private neck label visible.",
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/for-the-record/for-the-record-ss4500-black/campaign-hero-1122.webp",
+        "srcset": "/images/for-the-record/for-the-record-ss4500-black/campaign-hero-400.webp 400w, /images/for-the-record/for-the-record-ss4500-black/campaign-hero-680.webp 680w, /images/for-the-record/for-the-record-ss4500-black/campaign-hero-800.webp 800w, /images/for-the-record/for-the-record-ss4500-black/campaign-hero-1122.webp 1122w",
+        "feedImage": "/images/for-the-record/for-the-record-ss4500-black/campaign-hero.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Black For the Record hoodie worn with relaxed upright posture at old stone civic-building steps with a deep doorway, view 1.",
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/for-the-record/for-the-record-ss4500-black/campaign-alternate-1-1122.webp",
+        "srcset": "/images/for-the-record/for-the-record-ss4500-black/campaign-alternate-1-400.webp 400w, /images/for-the-record/for-the-record-ss4500-black/campaign-alternate-1-680.webp 680w, /images/for-the-record/for-the-record-ss4500-black/campaign-alternate-1-800.webp 800w, /images/for-the-record/for-the-record-ss4500-black/campaign-alternate-1-1122.webp 1122w",
+        "feedImage": "/images/for-the-record/for-the-record-ss4500-black/campaign-alternate-1.jpg",
+        "width": 1122,
+        "height": 1101,
+        "alt": "Black For the Record hoodie worn with relaxed upright posture at old stone civic-building steps with a deep doorway, back view.",
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/for-the-record/for-the-record-ss4500-black/campaign-alternate-2-1122.webp",
+        "srcset": "/images/for-the-record/for-the-record-ss4500-black/campaign-alternate-2-400.webp 400w, /images/for-the-record/for-the-record-ss4500-black/campaign-alternate-2-680.webp 680w, /images/for-the-record/for-the-record-ss4500-black/campaign-alternate-2-800.webp 800w, /images/for-the-record/for-the-record-ss4500-black/campaign-alternate-2-1122.webp 1122w",
+        "feedImage": "/images/for-the-record/for-the-record-ss4500-black/campaign-alternate-2.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Black For the Record hoodie worn with relaxed upright posture at old stone civic-building steps with a deep doorway, view 3.",
+        "role": "lifestyle-alternate"
+      }
+    ],
+    "description": "For the Record Hoodie in Black. A standard-fit pullover hoodie in 8.5 oz cotton-blend fleece. Small two-line front print and a separate back print below the hood. Jersey-lined hood, matching drawcord and front pouch pocket.",
+    "printMethod": "direct to garment (DTG)",
+    "galleryAlts": {
+      "front": "Front of the Black For the Record Hoodie.",
+      "back": "Back of the black For the Record hoodie, showing the cream redacted-document print below the hood.",
+      "print-detail": "Close view of the front print on the Black For the Record Hoodie.",
+      "folded": "Black For the Record Hoodie casually folded, with the AHA private neck label visible."
+    },
+    "campaignAlts": [
+      "Black For the Record hoodie worn with relaxed upright posture at old stone civic-building steps with a deep doorway, view 1.",
+      "Black For the Record hoodie worn with relaxed upright posture at old stone civic-building steps with a deep doorway, back view.",
+      "Black For the Record hoodie worn with relaxed upright posture at old stone civic-building steps with a deep doorway, view 3."
+    ],
+    "campaignSetting": "old stone civic-building steps with a deep doorway"
+  },
+  "local": {
+    "folder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/023 — Noted",
+    "approvedFrontProof": {
+      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/023 — Noted/Black Hoodie — Approved Design/Front.png",
+      "exists": true,
+      "sha256": "cb7863e4ffea616e42030fd1d257a5a8d9cabdabf3222c024936c5a0c2982297"
+    },
+    "artwork": {
+      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/023 — Noted/For the Record — Minimal Redaction — Review.png",
+      "exists": true,
+      "sha256": "5805a27d01bb37b54dc4405238340d9ab6e595b82a3a0c728e74aae33f521983"
+    },
+    "preparationNote": "Executable specification using approved art and owner-delegated researched pricing. Gallery and campaign are finished before storefront publication.",
+    "backProductionMaster": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/023 — Noted/Print Artwork/For the Record — Back — Transparent.svg",
+    "productionMaster": "/Users/davidmarsh/Documents/Codex/2026-10-14/o-x20/aha-upload-batch/production-artwork/fw26-approved/for-the-record-front.png",
+    "launchFolder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/023 — Noted/SS4500 — Black — Launch",
+    "campaignNote": "Three photos per approved design, shared across its garment/color listings; alt text names the garment actually pictured. Campaign images remain outside product galleries and feeds."
+  },
+  "costOverride": {
+    "baseCents": 2750,
+    "surchargeCents": {
+      "XS": 0,
+      "S": 0,
+      "M": 0,
+      "L": 0,
+      "XL": 0,
+      "2XL": 160,
+      "3XL": 320,
+      "4XL": 480,
+      "5XL": 640
+    },
+    "shippingCents": {
+      "XS": 692,
+      "S": 692,
+      "M": 692,
+      "L": 885,
+      "XL": 885,
+      "2XL": 885,
+      "3XL": 885,
+      "4XL": 885,
+      "5XL": 885
+    },
+    "labelCents": 200,
+    "perItemCents": 100,
+    "source": "2026-10-19 authenticated Apliiq Product API + official VIP 20% service/blank discount, official May 12 2026 US shipping by size weight, $1/item fulfillment. Retail includes US shipping; floor checks both card and Afterpay fees."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-camo-sheep-ind4000-forest-camo-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T17:59:43.533Z",
+  "payload": {
+    "Name": "Camo Sheep Orange 9x6in",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/02ad6632ad0e536e8117de549fdb267ead57c462/production-artwork/camo-sheep/camo-sheep-orange-2700.png"
+  },
+  "finishedAt": "2026-10-19T17:59:44.073Z",
+  "response": {
+    "WtoHRatio": 1.5,
+    "DateCreated": "2026-10-19T17:59:44.0250575Z",
+    "Id": 8217017,
+    "Name": "Camo Sheep Orange 9x6in"
+  }
+}

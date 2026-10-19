@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-and-all-that-jazz-c1717-mustard-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:13:42.161Z",
+  "payload": {
+    "Name": "And All That Jazz Tee approved front",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/and-all-that-jazz.png"
+  },
+  "finishedAt": "2026-10-19T18:13:42.755Z",
+  "response": {
+    "WtoHRatio": 0.6146,
+    "DateCreated": "2026-10-19T18:13:42.7250884Z",
+    "Id": 8217172,
+    "Name": "And All That Jazz Tee approved front"
+  }
+}

@@ -72,6 +72,7 @@ To let signed-in account holders buy a new product before everyone else, add `{ 
 - `npm run catalog -- verify`: ledger ↔ products.json ↔ allow list ↔ built feeds.
 - `npm run catalog -- explain <slug>`: ledger entry, site status, spec status and intents for one product.
 - `npm run catalog -- square-images <slug>`: upload any gallery view Square doesn't have yet.
+- `npm run catalog -- replace-unreleased <slug> --from-design-id <id> --reason "…"`: correct an approved primary master before first publication when a saved supplier entry cannot be corrected reliably. Requires a confirmed 404 product page and a complete Square order-history check with no references to its old variations. Creates a new supplier design and new Square item/variations, records the superseded mapping, and renames the old Square item. Never use this for a published or ordered product; never edit decorated SKUs by hand. Re-sync its four Square images afterwards.
 - `npm run catalog -- publish-live <slug>` / `unpublish-live <slug>`: put an applied product on the live site without a site build, or take it down.
 - `npm run catalog -- usage [days]`: runs, time and provider calls per command.
 - `npm run catalog -- retire-sync`: products the owner removed in the admin leave products.json, the ledger (status `retired`) and the allow list, so the next build drops their pages. Products with unshipped orders wait. Commit and open a PR afterwards.

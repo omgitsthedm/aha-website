@@ -1,0 +1,515 @@
+{
+  "date": "2026-10-19",
+  "ownerScope": "Upload all approved new designs with researched pricing and publish them for sale.",
+  "products": [
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-black",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220346,
+      "squareItemId": "OPXN63CZDXVB2FTSRE5NLJDB",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-kelly-green",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220375,
+      "squareItemId": "WJKLDKPDHJ4OHS4X35FWAQ7I",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-pink",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220377,
+      "squareItemId": "QX4ECCHL2NPTF6VYBGCJRYMH",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "and-all-that-jazz-3023cl-butter",
+      "priceCents": 3400,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "apliiqDesignId": 6220433,
+      "squareItemId": "UWA6IMUGQCL5XCLYZ2B72USN",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-forest-green",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220371,
+      "squareItemId": "POGP7KYQIYYLBWEZCEKDD6FY",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "fashion-kills-3023cl-black",
+      "priceCents": 3400,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "apliiqDesignId": 6220438,
+      "squareItemId": "ZOJOKG2PZA4TK3W4VFKSWNYX",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-heather-grey",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220374,
+      "squareItemId": "QPXGJSBWZL5YZGRCM44XJL4U",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-navy",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220376,
+      "squareItemId": "CJVDHT6JFAU7FRVNPIKWTNNJ",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "and-all-that-jazz-c1717-blossom",
+      "priceCents": 3400,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220434,
+      "squareItemId": "MTXGKZPKFRYWWP7MZX46SS47",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "nonna-s-sunday-supper-society-ss3000-bone",
+      "priceCents": 4500,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220242,
+      "squareItemId": "IECIFRS3J636TMXZ3XWMLERB",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "camo-sheep-ind4000-forest-camo",
+      "priceCents": 6400,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220094,
+      "squareItemId": "53K6ILAW4SVHUX5DIGDKQCJJ",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "and-all-that-jazz-ss3000-black",
+      "priceCents": 4500,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220436,
+      "squareItemId": "KFMGPYOMANNTZDQVBKOMKTQO",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "resist-rebel-ss3000-navy",
+      "priceCents": 4500,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220245,
+      "squareItemId": "RCEND4XWFW5PCWCMFY2TLF3K",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-blaze-orange",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220367,
+      "squareItemId": "HXVCVBB76HCIOJXV2GUDCAYL",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-red",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220378,
+      "squareItemId": "NCWQ6VTXRXFN62YFSN2A2OHV",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-dark-heather-grey",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220370,
+      "squareItemId": "W53QXLKTSAYJNNCZTEDQRIBN",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "nonna-s-sunday-supper-society-c1717-ivory",
+      "priceCents": 3400,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220236,
+      "squareItemId": "6ID3G6WIXWWQSZQ2GLDNVDSC",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-camel",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220368,
+      "squareItemId": "P6TYVPJ75U5MTET4K7BEQZL6",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-royal-blue",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220379,
+      "squareItemId": "JE7TLLUAB7OPMGEZ5YIUTCVF",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "resist-rebel-c1717-true-navy",
+      "priceCents": 3400,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220244,
+      "squareItemId": "XFWH76IHF75Y7HAW3WO6YLNS",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-white",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220380,
+      "squareItemId": "EJTVYMUCGTJ4ZWLZTQGGJNVJ",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "resist-rebel-6014-midnight",
+      "priceCents": 4500,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220243,
+      "squareItemId": "LRD534UZVFTBIMAOUZHKHO3J",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "for-the-record-ss4500-black",
+      "priceCents": 5500,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL",
+        "4XL",
+        "5XL"
+      ],
+      "apliiqDesignId": 6220235,
+      "squareItemId": "HNWTANGPQBRHI4WXSECVFWL5",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-fuchsia",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220372,
+      "squareItemId": "YKA3G3HLO6RQCAQKAAVHEJPP",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "camo-sheep-ind4000-snow-camo",
+      "priceCents": 6400,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220095,
+      "squareItemId": "FY7TIKKUDG3TXFBHT5MW7NZ7",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-gold",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220373,
+      "squareItemId": "XLNG2RLZCJX2ET2I6B7I225P",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    },
+    {
+      "slug": "and-all-that-jazz-ss3000-light-pink",
+      "priceCents": 4500,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220437,
+      "squareItemId": "WR3QOY44ZAQOYGAFNSFLZCRQ",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "and-all-that-jazz-c1717-mustard",
+      "priceCents": 3400,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220435,
+      "squareItemId": "X4CNRBW3M4YKW3TD2UZ4ADSJ",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "fashion-kills-ss3000-black",
+      "priceCents": 4500,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "apliiqDesignId": 6220234,
+      "squareItemId": "JO62R5KJO7LJPVDOIHRIKULM",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1011,
+        "placementName": "inside neck"
+      }
+    },
+    {
+      "slug": "after-hours-agenda-heritage-beanie-sp12-cardinal",
+      "priceCents": 2900,
+      "sizes": [
+        "One Size"
+      ],
+      "apliiqDesignId": 6220369,
+      "squareItemId": "S7HDUFGFA3MSA6VAP3AIPNKT",
+      "privateLabel": {
+        "id": 6208403,
+        "placementId": 1025,
+        "placementName": "inside seam"
+      }
+    }
+  ],
+  "validation": {
+    "check": "250 passing tests; lint, types and build pass",
+    "browser": "76 passed, 10 production-only skipped; corrected-mapping selection and storefront tests 37 passed",
+    "supplier": "Actual decorated size SKUs; private label SB-3-161622 for every product. Six never-published designs corrected through new identities after verifying zero orders.",
+    "images": "Four garment views each; three campaign photos per design/setting, separate from shopping galleries and feeds."
+  }
+}

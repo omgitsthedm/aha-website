@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-after-hours-agenda-heritage-beanie-sp12-blaze-orange-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:57:32.764Z",
+  "payload": {
+    "Name": "AHA heritage sheep black",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/heritage-sheep-black.png"
+  },
+  "finishedAt": "2026-10-19T18:57:33.252Z",
+  "response": {
+    "WtoHRatio": 1.256,
+    "DateCreated": "2026-10-19T18:57:33.2204458Z",
+    "Id": 8217321,
+    "Name": "AHA heritage sheep black"
+  }
+}

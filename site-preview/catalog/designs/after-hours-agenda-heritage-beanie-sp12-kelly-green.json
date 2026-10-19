@@ -1,0 +1,188 @@
+{
+  "slug": "after-hours-agenda-heritage-beanie-sp12-kelly-green",
+  "status": "approved",
+  "familyId": "009",
+  "title": "After Hours Agenda Heritage Beanie",
+  "blank": "SP12",
+  "color": "Kelly Green",
+  "priceCents": 2900,
+  "approval": {
+    "by": "David Marsh (owner)",
+    "at": "2026-10-19T18:11:12.781Z",
+    "note": "Owner approved these designs and garments in chat and instructed “Upload them all, we’re on a deadline”, then “now do that with these new products ... pricing everything, research it then do it”. Exact retail delegated to researched free-shipping margin checks. Cuffed beanie type and branding approved; TKN24 supplier candidate replaced by equivalent SP12 after verified save failures."
+  },
+  "fulfillment": {
+    "product": "after_hours_agenda_heritage_beanie_sp12_kelly_green"
+  },
+  "apliiq": {
+    "productId": 233,
+    "productCode": "mens_beanie",
+    "colorId": 370,
+    "label": {
+      "id": 6208403,
+      "placementId": 1025,
+      "placementName": "inside seam"
+    },
+    "artwork": [
+      {
+        "key": "front",
+        "name": "AHA heritage sheep cream",
+        "imagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/heritage-sheep-cream.png"
+      }
+    ],
+    "locations": [
+      {
+        "id": 2247,
+        "imagePath": "https://blob.apliiq.com/sitestorage/base/2247_590_900.png",
+        "artworkKey": "front",
+        "service": "embroidery",
+        "note": "Direct embroidery, exactly 3.5 inches wide, centered on front turned-up cuff, not a patch. Preserve supplied custom text and sheep silhouette. Use supplied selected thread color.",
+        "printColors": "#f9f9ed",
+        "boxId": 1
+      }
+    ],
+    "productionNote": "AHA heritage sheep direct embroidery on Kelly Green Sportsman SP12. Center exact 3.5 inch wide design on adjustable 3 inch cuff; preserve lettering and sheep. One off-white thread color. Current private label SB-3-161622 inside seam.",
+    "sizeCodes": {
+      "One Size": 10
+    }
+  },
+  "sizes": [
+    "One Size"
+  ],
+  "product": {
+    "collection": "Black Sheep Knitwear",
+    "gallery": [
+      {
+        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-front-1122.webp",
+        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-front-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-front-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-front-1122.webp 1122w",
+        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-front.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Front cuff of the Kelly Green AHA Heritage Beanie with direct sheep-logo embroidery.",
+        "role": "front"
+      },
+      {
+        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-back-1122.webp",
+        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-back-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-back-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-back-1122.webp 1122w",
+        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-back.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Plain reverse of the Kelly Green adjustable-cuff knit beanie.",
+        "role": "back"
+      },
+      {
+        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-print-detail-1122.webp",
+        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-print-detail-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-print-detail-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-print-detail-1122.webp 1122w",
+        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-print-detail.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Close view of the embroidered sheep and custom lettering on the Kelly Green cuff.",
+        "role": "print-detail"
+      },
+      {
+        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-folded-1122.webp",
+        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-folded-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-folded-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-folded-1122.webp 1122w",
+        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/garment-folded.jpg",
+        "width": 1122,
+        "height": 1403,
+        "alt": "Kelly Green AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "role": "folded"
+      }
+    ],
+    "campaign": [
+      {
+        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-hero-1122.webp",
+        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-hero-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-hero-680.webp 680w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-hero-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-hero-1122.webp 1122w",
+        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-hero.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Black AHA Heritage Beanie carried on a canvas bag beside a New York park wall, campaign view 1.",
+        "role": "lifestyle-hero"
+      },
+      {
+        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-1-1122.webp",
+        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-1-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-1-680.webp 680w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-1-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-1-1122.webp 1122w",
+        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-1.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Black AHA Heritage Beanie carried on a canvas bag beside a New York park wall, campaign view 2.",
+        "role": "lifestyle-alternate"
+      },
+      {
+        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-2-1122.webp",
+        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-2-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-2-680.webp 680w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-2-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-2-1122.webp 1122w",
+        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-kelly-green/campaign-alternate-2.jpg",
+        "width": 1122,
+        "height": 1402,
+        "alt": "Black AHA Heritage Beanie carried on a canvas bag beside a New York park wall, campaign view 3.",
+        "role": "lifestyle-alternate"
+      }
+    ],
+    "gender": "unisex",
+    "feed": {
+      "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
+      "productType": "Accessories > Hats > Beanies"
+    },
+    "fit": "one size, stretch knit",
+    "weightOz": 3.9,
+    "composition": "100% acrylic",
+    "sizeGuide": [
+      {
+        "size": "One Size",
+        "height": 12
+      }
+    ],
+    "measurementGuidance": "One size. The unfolded knit measures 12 inches high; turn up the cuff to adjust the fit. Stretch rib knit.",
+    "sleeveMeasurementGuidance": "",
+    "typeLabel": "Beanie",
+    "fabricType": "acrylic rib knit",
+    "blank": "Sportsman SP12",
+    "constructionDetails": [
+      "12-inch unfolded knit",
+      "adjustable turn-up cuff"
+    ],
+    "description": "Kelly Green cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "printMethod": "direct embroidery",
+    "galleryAlts": {
+      "front": "Front cuff of the Kelly Green AHA Heritage Beanie with direct sheep-logo embroidery.",
+      "back": "Plain reverse of the Kelly Green adjustable-cuff knit beanie.",
+      "print-detail": "Close view of the embroidered sheep and custom lettering on the Kelly Green cuff.",
+      "folded": "Kelly Green AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam."
+    },
+    "campaignSetting": "a New York park stone wall beside iron railings",
+    "campaignAlts": [
+      "Black AHA Heritage Beanie carried on a canvas bag beside a New York park wall, campaign view 1.",
+      "Black AHA Heritage Beanie carried on a canvas bag beside a New York park wall, campaign view 2.",
+      "Black AHA Heritage Beanie carried on a canvas bag beside a New York park wall, campaign view 3."
+    ]
+  },
+  "local": {
+    "folder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/009 — Black Sheep Knitwear",
+    "artwork": {
+      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/009 — Black Sheep Knitwear/AHA Heritage Sheep — Approved Beanie Design.png",
+      "exists": true,
+      "sha256": "d9325776d3e7e6d6b2e5cac8437b8de8157eda1aaf38d7489d7fa4cdd11c28f1"
+    },
+    "preparationNote": "Executable specification using approved art and owner-delegated researched pricing. Gallery and campaign are finished before storefront publication.",
+    "productionMaster": "/Users/davidmarsh/Documents/Codex/2026-10-14/o-x20/aha-upload-batch/production-artwork/fw26-approved/heritage-sheep-cream.png",
+    "sourcingCorrection": "Cap America TKN24 was a supplier candidate, not a locked blank. Its design saves fail in both official API and UI. Sportsman SP12 is an equivalent 12-inch adjustable-cuff acrylic beanie with the approved direct embroidery, current private label and actual supported size code 10. No USA manufacture claim.",
+    "launchFolder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/009 — Black Sheep Knitwear/SP12 — Kelly Green — Launch",
+    "providerColorName": "kelly",
+    "ink": "cream",
+    "photoNote": "Color derivatives preserve original embroidery and satin label; supplier swatch colors are approximate. Plain reverse composed from actual SP12 supplier base. Campaign set shared across colors and names black beanie actually shown."
+  },
+  "costOverride": {
+    "baseCents": 1224,
+    "surchargeCents": {
+      "One Size": 0
+    },
+    "shippingCents": {
+      "One Size": 596
+    },
+    "labelCents": 200,
+    "perItemCents": 100,
+    "source": "Authenticated Apliiq SP12 quote 2026-10-19: $5.30 blank + $10 embroidery, VIP 20% discount; $2 label, $5.96 domestic shipping, $1 fulfillment; card and Afterpay checked.",
+    "oneTimeSetupCents": 1100,
+    "setupNote": "Apliiq first-order embroidery digitization per unique artwork, excluded from recurring margin and absorbed by brand; no paid order placed."
+  }
+}

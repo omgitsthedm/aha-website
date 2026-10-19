@@ -10,20 +10,24 @@ export function marginReport(spec, costs) {
   const baseCents = spec.costOverride?.baseCents ?? blank.baseCents;
   const sizes = spec.sizes.map((size) => {
     const supplier = baseCents + (spec.costOverride?.surchargeCents?.[size] ?? blank.surchargeCents?.[size] ?? 0);
-    const shipping = costs.largeSizes.includes(size) ? blank.largeShippingCents : blank.shippingCents;
-    const cost = supplier + shipping + costs.perItemCents + costs.labelCents + fee(costs.cardFee, spec.priceCents);
+    const shipping = spec.costOverride?.shippingCents?.[size] ?? (costs.largeSizes.includes(size) ? blank.largeShippingCents : blank.shippingCents);
+    const label = spec.costOverride?.labelCents ?? costs.labelCents;
+    const fulfillment = spec.costOverride?.perItemCents ?? costs.perItemCents;
+    const cost = supplier + shipping + fulfillment + label + fee(costs.cardFee, spec.priceCents);
     const afterpayCost = cost - fee(costs.cardFee, spec.priceCents) + fee(costs.afterpayFee, spec.priceCents);
     return { size, costCents: cost, contributionCents: spec.priceCents - cost, afterpayContributionCents: spec.priceCents - afterpayCost };
   });
-  const worst = sizes.reduce((low, row) => (row.contributionCents < low.contributionCents ? row : low), sizes[0]);
+  const minimum = (row) => Math.min(row.contributionCents, row.afterpayContributionCents);
+  const worst = sizes.reduce((low, row) => (minimum(row) < minimum(low) ? row : low), sizes[0]);
   return {
     slug: spec.slug,
     priceCents: spec.priceCents,
     estimate: !spec.costOverride,
     floorCents: costs.floorCents,
-    pass: sizes.every((row) => row.contributionCents >= costs.floorCents),
+    pass: sizes.every((row) => minimum(row) >= costs.floorCents),
     worstSize: worst.size,
-    worstContributionCents: worst.contributionCents,
+    worstPaymentMethod: worst.afterpayContributionCents < worst.contributionCents ? "afterpay" : "card",
+    worstContributionCents: minimum(worst),
     sizes,
   };
 }

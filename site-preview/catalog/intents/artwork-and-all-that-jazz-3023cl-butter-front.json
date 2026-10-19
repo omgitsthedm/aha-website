@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "key": "artwork-and-all-that-jazz-3023cl-butter-front",
+  "state": "complete",
+  "createdAt": "2026-10-19T18:13:37.188Z",
+  "payload": {
+    "Name": "And All That Jazz Boxy Tee approved front",
+    "ImagePath": "https://raw.githubusercontent.com/omgitsthedm/aha-website/e5a262c8623c25571e7ae6130dc031d0e3a68775/production-artwork/fw26-approved/and-all-that-jazz.png"
+  },
+  "finishedAt": "2026-10-19T18:13:38.372Z",
+  "response": {
+    "WtoHRatio": 0.6146,
+    "DateCreated": "2026-10-19T18:13:38.3000842Z",
+    "Id": 8217170,
+    "Name": "And All That Jazz Boxy Tee approved front"
+  }
+}

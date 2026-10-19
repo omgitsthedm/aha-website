@@ -3,7 +3,7 @@ import Site from '../../layouts/Site.astro';
 import ProductImage from '../../components/ProductImage.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import products from '../../data/products.json';
-import { MEASURE_DIAGRAM, otherColors, swatchFor } from '../../../server/catalog/garments.mjs';
+import { measurementGuide, otherColors, swatchFor } from '../../../server/catalog/garments.mjs';
 import { dropFor, dropNote, dropStage } from '../../../server/catalog/drops.mjs';
 import { isOffSale } from '../../../server/catalog/off-sale.mjs';
 import { RETURN_POLICY, SHIPPING_DETAILS } from '../../../server/catalog/offer-terms.mjs';
@@ -12,16 +12,10 @@ const {product}=Astro.props;
 const origin=Astro.site!.origin;
 const gallery = product.gallery.slice(0, 4);
 const galleryLabels: Record<string, string> = { front: 'Front', back: 'Back', 'print-detail': 'Print detail', folded: 'Folded' };
-const measurement = (value: number) => value.toLocaleString('en-US', { maximumFractionDigits: 2 });
 const relatedProducts = [
  ...products.filter((entry) => entry.slug !== product.slug && entry.collection === product.collection),
  ...products.filter((entry) => entry.slug !== product.slug && entry.collection !== product.collection),
 ].slice(0, 4);
-const sizeGuide = product.sizeGuide.map((row) => ({
-  ...row,
-  sleeveLength: 'sleeveLength' in row ? row.sleeveLength : undefined,
-}));
-const hasSleeveMeasurements = sizeGuide.every((row) => typeof row.sleeveLength === 'number');
 const colorSwatch = swatchFor(product.color);
 const siblings: typeof products = otherColors(product, products);
 const drop = dropStage(dropFor(product.slug)) === 'released' ? null : dropFor(product.slug);
@@ -66,12 +60,12 @@ const productSchema={
    </form>
    <a class="text-link size-link" href="#size-guide">Check measurements ↓</a>
    <p class="checkout-note">Free domestic shipping. Final tax and payment options are shown securely at checkout.</p>
-   <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li><li>{product.weightOz} oz {product.fabricType}.</li><li>{product.composition}.</li>{product.constructionDetails.map((detail) => <li>{detail}</li>)}{product.blank && <li>Blank: {product.blank}.</li>}<li>Printed to order in the United States{product.printMethod ? `, ${product.printMethod}` : ""}.</li></ul></details>
+   <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li>{product.typeLabel !== "Beanie" && <li>{product.weightOz} oz {product.fabricType}.</li>}<li>{product.composition}.</li>{product.constructionDetails.map((detail) => <li>{detail}</li>)}{product.blank && <li>Blank: {product.blank}.</li>}<li>{product.typeLabel === "Beanie" ? "Embroidered" : "Printed"} to order in the United States{product.printMethod ? `, ${product.printMethod}` : ""}.</li></ul></details>
    <details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>
-   <details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the print.</p></details>
+   <details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the {product.typeLabel === "Beanie" ? "embroidery" : "print"}.</p></details>
   </div>
  </section>
- <section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches</p><h2 id="size-title">Find your fit.</h2><p>{product.measurementGuidance}</p>{product.sleeveMeasurementGuidance && <p>{product.sleeveMeasurementGuidance}</p>}<Fragment set:html={MEASURE_DIAGRAM} /><div class="size-table-wrap" role="region" aria-label={`${product.title} measurements`} tabindex="0"><table><thead><tr><th scope="col">Size</th><th scope="col">Chest width</th><th scope="col">Body length</th>{hasSleeveMeasurements && <th scope="col">Sleeve length</th>}</tr></thead><tbody>{sizeGuide.map(row=><tr><th scope="row">{row.size}</th><td>{measurement(row.chestWidth)}</td><td>{measurement(row.bodyLength)}</td>{hasSleeveMeasurements && <td>{typeof row.sleeveLength === 'number' ? measurement(row.sleeveLength) : ''}</td>}</tr>)}</tbody></table></div></section>
+ <Fragment set:html={measurementGuide(product)} />
  <section class="shell section reviews" id="reviews" aria-labelledby="reviews-title" data-reviews={product.slug} hidden><p class="label">From people who bought it</p><h2 id="reviews-title">Reviews.</h2><p class="reviews-summary" data-review-summary></p><ul class="review-list" data-review-list></ul></section>
  <section class="section shell"><div class="section-header"><h2>More pieces.</h2><a href="/shop/" class="text-link">Shop all →</a></div><div class="product-grid related-products">{relatedProducts.map(p=><ProductCard product={p}/>)}</div></section>
  {products.flatMap(entry=>entry.variants.map(variant=><template data-cart-catalog data-id={variant.id} data-sku={variant.sku} data-size={variant.size} data-slug={entry.slug} data-title={`${entry.title} — ${entry.color}`} data-color={entry.color} data-price-cents={entry.price*100} data-image={entry.gallery[0]!.src} data-image-alt={entry.gallery[0]!.alt}></template>))}
