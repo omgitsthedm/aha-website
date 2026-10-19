@@ -65,7 +65,7 @@ const productSchema={
    </form>
    <a class="text-link size-link" href="#size-guide">Check measurements ↓</a>
    <p class="checkout-note">Free domestic shipping. Final tax and payment options are shown securely at checkout.</p>
-   <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li><li>{product.weightOz} oz {product.fabricType}.</li><li>{product.composition}.</li>{product.constructionDetails.map((detail) => <li>{detail}</li>)}</ul></details>
+   <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li><li>{product.weightOz} oz {product.fabricType}.</li><li>{product.composition}.</li>{product.constructionDetails.map((detail) => <li>{detail}</li>)}{product.blank && <li>Blank: {product.blank}.</li>}<li>Printed to order in the United States{product.printMethod ? `, ${product.printMethod}` : ""}.</li></ul></details>
    <details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>
    <details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the print.</p></details>
   </div>

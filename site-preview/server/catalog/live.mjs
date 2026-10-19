@@ -41,6 +41,8 @@ export function validateLiveProduct(input) {
   str(input.feed?.googleProductCategory, "feed.googleProductCategory");
   str(input.feed?.productType, "feed.productType");
   num(input.weightOz, "weightOz");
+  // The garment it's printed on, and how, when known (src/data/products.json).
+  for (const field of ["blank", "printMethod"]) if (input[field] != null) str(input[field], field, 120);
   if (!Array.isArray(input.constructionDetails)) fail("constructionDetails must be a list.");
   input.constructionDetails.forEach((detail, index) => str(detail, `constructionDetails[${index}]`, 300));
   if (!Array.isArray(input.sizeGuide) || !input.sizeGuide.length) fail("sizeGuide is required.");

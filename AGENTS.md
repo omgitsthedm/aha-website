@@ -66,6 +66,14 @@ Fixed on October 19, 2026 after a site audit the owner asked for ("do it all"):
 - **Google tag and the CSP:** since GA4 was linked to Google Ads, gtag also sends each hit to `https://www.google.com/g/collect`. Production `connect-src` allows that path only (`scripts/security-headers.mjs`); before October 19 the policy blocked it with a console error on every page.
 - **Lighthouse Best Practices:** 56–61 on live pages before that fix. A full report on October 19 traced it to the Meta pixel (its `fr` third-party cookie, and Chrome's FencedFrame deprecation inside the Partytown sandbox that hosts it) and to the blocked Google hit above. The pixel's share is the cost of the owner's default-on tracking choice.
 
+## Blanks, print method and the founder story
+
+Added on October 19, 2026 at the owner's request ("print method and blank names from Apliiq … here's the founder story attached"):
+
+- **Blank:** every product in `src/data/products.json` names its blank (`blank`), confirmed against the catalog records and Apliiq's catalog: Independent Trading Co. SS3000, SS4500 and AFX64CRP, Comfort Colors 4410 and Next Level 3601. New products get it from `catalog/blanks/<code>.json`.
+- **Print method:** `printMethod` appears only where a record shows it. Mighty Mick's and Pet It Be are DTG (Apliiq service `dtgprint`). The other designs' methods are only visible in the signed-in Apliiq dashboard, so their pages say "Printed to order in the United States" without naming a method. The catalog engine sets `printMethod` for new designs whose placements all use `dtgprint`. Add it for the others only after reading the design in Apliiq.
+- **Founder story:** The story (`/about/#founder`) comes from David Marsh's 2013 interview "Hit the Ground Running, Episode 1" in the brand archive. Keep it to what the interview says. Don't publish the video (it shows faces), don't name customers, and don't name the TV appearance's celebrity.
+
 ## Catalog, checkout, fulfillment, and tracking safeguards
 
 - Product, price, mapping, and availability changes go through `site-preview/tools/catalog` and `site-preview/catalog/ledger.json`; never use ad-hoc provider writes. Read `.agents/skills/aha-catalog/SKILL.md` for that workflow. Generated fulfillment catalog code must remain generated from the ledger. Preserve static/runtime product-page and feed parity.
