@@ -63,6 +63,10 @@ The product is then on sale with no site build. Push the branch and open a PR so
 - No paid test orders, emails, ads or provider deletions without the owner's explicit instruction.
 - Lifestyle/campaign images never go in shopping galleries or feeds.
 
+## Early access for a drop
+
+To let signed-in account holders buy a new product before everyone else, add `{ "slug": "<product slug>", "earlyAccessAt": "<UTC time>", "releaseAt": "<UTC time>" }` to `site-preview/src/data/drops.json`, run `npm run check`, and deploy (the owner's release instruction is still required). Checkout enforces the window, and feeds leave the product out until `releaseAt`. Remove the entry after the release. Details: `AGENTS.md`, "Customer accounts, saved pieces, reviews and early access".
+
 ## Other commands
 
 - `npm run catalog -- verify`: ledger ↔ products.json ↔ allow list ↔ built feeds.

@@ -13,6 +13,7 @@ import { LiveCatalogError } from "../catalog/live.mjs";
 import { createLivePublisher } from "../catalog/publish.mjs";
 import { listOrders, overview } from "./orders.mjs";
 import { errorSummary, listSignups, removeSignup, signupCounts } from "../updates/signups.mjs";
+import { listReviews, moderateReview, pendingReviewCount, ReviewError, reviewTags } from "../customers/reviews.mjs";
 
 const HEADERS = { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" };
 const reply = (body, status = 200, extra = {}) => Response.json(body, { status, headers: { ...HEADERS, ...extra } });
@@ -132,7 +133,7 @@ export async function handleAdmin(request, { db, env, context, live = createLive
 
     if (route === "auth/logout" && method === "POST") { await auth.endSession(request); return reply({ ok: true }, 200, { "set-cookie": clearedCookie() }); }
     if (route === "me" && method === "GET") return reply({ email: user.email });
-    if (route === "overview" && method === "GET") return reply({ ...await overview(db), signups: await signupCounts(db), reports: await latestReports(db) });
+    if (route === "overview" && method === "GET") return reply({ ...await overview(db), signups: await signupCounts(db), reviewsWaiting: await pendingReviewCount(db), reports: await latestReports(db) });
     if (route === "orders" && method === "GET") return reply({ orders: await listOrders(db) });
     if (route === "catalog" && method === "GET") return reply(await catalogSummary(live.catalog));
     // Email list: addresses from the storefront sign-up form. Removal is by row id,
@@ -143,6 +144,15 @@ export async function handleAdmin(request, { db, env, context, live = createLive
       const removed = await removeSignup(db, signupAction[1]);
       await auth.audit(user.id, "signup.removed", signupAction[1], { removed });
       return reply({ removed });
+    }
+    // Reviews wait here until approved; approving or rejecting refreshes the product's cached reviews.
+    if (route === "reviews" && method === "GET") return reply(await listReviews(db, url.searchParams.get("status") ?? "pending"));
+    const reviewAction = /^reviews\/(\d{1,18})\/(approve|reject)$/.exec(route);
+    if (reviewAction && method === "POST") {
+      const result = await moderateReview(db, reviewAction[1], reviewAction[2]);
+      await live.purge(reviewTags(result.product)).catch(() => {});
+      await auth.audit(user.id, `review.${reviewAction[2]}`, reviewAction[1], result);
+      return reply(result);
     }
     const productAction = /^catalog\/([a-z0-9-]+)\/(remove|restore|delete-apliiq-design)$/.exec(route);
     if (productAction && method === "POST") {
@@ -202,6 +212,7 @@ export async function handleAdmin(request, { db, env, context, live = createLive
     if (error instanceof AdminAuthError) return reply({ error: error.message }, error.status);
     if (error instanceof DraftValidationError || error instanceof LiveCatalogError) return reply({ error: error.message }, 422);
     if (error instanceof CatalogActionError) return reply({ error: error.message }, error.status);
+    if (error instanceof ReviewError) return reply({ error: error.message }, error.status);
     // Error names and codes only: never request bodies, cookies, headers or query parameters.
     console.error(JSON.stringify({ event: "admin_api_error", route, error: errorSummary(error) }));
     return reply({ error: "Something went wrong. Try again." }, 500);

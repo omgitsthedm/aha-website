@@ -141,16 +141,22 @@ test("existing Google and Bing ownership files remain byte-identical", async () 
   }
 });
 test("no server bundle, sensitive files or source maps enter the artifact", async () => {
-  // Scripts only the private admin pages load don't count toward the customer budget.
+  // Scripts only the private admin pages load don't count toward the storefront
+  // budget, and neither do the scripts only the private order and account pages
+  // load (they have their own cap): the 65 KB keeps the public pages fast.
   const adminOnly = new Set();
+  const privateOnly = new Set();
   const referenced = async (file) => [...(await readFile(new URL(file, root), "utf8")).matchAll(/<script[^>]+src="\/_astro\/([^"]+\.js)"/g)].map((match) => match[1]);
   const adminPages = (await readdir(new URL("admin/", root), { recursive: true })).filter((file) => file.endsWith("index.html")).map((file) => `admin/${file}`);
-  const customerPages = [...routes.map((route) => `${route.slice(1)}index.html`), "404.html"];
+  const customerPages = [...routes.map((route) => `${route.slice(1)}index.html`), "404.html", "checkout/index.html"];
   const customerScripts = new Set((await Promise.all(customerPages.map(referenced))).flat());
   for (const name of (await Promise.all(adminPages.map(referenced))).flat()) if (!customerScripts.has(name)) adminOnly.add(name);
+  for (const name of (await Promise.all(["order/index.html", "account/index.html"].map(referenced))).flat()) if (!customerScripts.has(name)) privateOnly.add(name);
   assert.ok(adminOnly.size > 0, "the admin script is found");
+  assert.equal(privateOnly.size, 2, "the order and account page scripts are found");
   let jsBytes = 0;
   let adminBytes = 0;
+  let privateBytes = 0;
   let workerVendorBytes = 0;
   const workerFiles = new Set(['partytown-sandbox-sw.html', 'partytown-sw.js', 'partytown-atomics.js', 'partytown.js', 'partytown-media.js']);
   const walk = async (dir) => {
@@ -171,12 +177,14 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
       } else if (item.name.endsWith(".js")) {
         const size = (await stat(new URL(item.name, dir))).size;
         if (adminOnly.has(item.name)) adminBytes += size;
+        else if (privateOnly.has(item.name)) privateBytes += size;
         else jsBytes += size;
       }
     }
   };
   await walk(root);
-  assert.ok(jsBytes < 65000, `All customer-facing first-party JS including checkout must stay under 65 KB; got ${jsBytes}`);
+  assert.ok(jsBytes < 65000, `All public storefront first-party JS including checkout must stay under 65 KB; got ${jsBytes}`);
+  assert.ok(privateBytes < 12000, `The private order and account page scripts must stay under 12 KB; got ${privateBytes}`);
   assert.ok(adminBytes < 40000, `The private admin script must stay under 40 KB; got ${adminBytes}`);
   assert.ok(workerVendorBytes > 0 && workerVendorBytes < 160000, `The complete deferred third-party worker runtime must stay under 160 KB; got ${workerVendorBytes}`);
 });

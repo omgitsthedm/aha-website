@@ -30,7 +30,11 @@ function attach(frame: HTMLElement) {
     if (pausing) video.pause();
     else void video.play();
   });
-  video.addEventListener("playing", () => frame.classList.add("is-moving"), { once: true });
+  video.addEventListener("playing", () => {
+    frame.classList.add("is-moving");
+    // Analytics (src/scripts/tracking.ts) records which film started, never who watched.
+    document.dispatchEvent(new CustomEvent("aha:film-played", { detail: { film: /\/motion\/([a-z0-9-]+?)-\d+t?\.mp4$/.exec(video.src)?.[1] ?? "film" } }));
+  }, { once: true });
   frame.append(video, toggle);
   video.play().catch(() => { video.remove(); toggle.remove(); });
   return video;

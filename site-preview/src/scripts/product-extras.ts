@@ -3,6 +3,7 @@
 // profile. Loaded by cart.ts on demand.
 import { deliveryLines } from "./delivery";
 import { fitSummary, recommendSize, type Fit, type SizeRow } from "./fit";
+import { readSaved, writeSaved } from "./saved";
 
 const MONEY = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
@@ -212,11 +213,65 @@ function initFit() {
   open.addEventListener("click", () => { dialog ??= build(); (dialog as HTMLDialogElement & { refreshView: () => void }).refreshView(); dialog.showModal(); });
 }
 
-/** As soon as the module loads: the photo viewer, the bag card, delivery dates and the fit profile. */
+// Save for later: kept in this browser, and in the account when signed in.
+function initSave() {
+  const button = document.querySelector<HTMLButtonElement>("[data-save]");
+  if (!button) return;
+  const slug = button.dataset.save!;
+  const show = () => button.setAttribute("aria-pressed", String(readSaved().includes(slug)));
+  button.hidden = false;
+  show();
+  button.addEventListener("click", () => {
+    const saving = button.getAttribute("aria-pressed") !== "true";
+    writeSaved(saving ? [slug, ...readSaved().filter((entry) => entry !== slug)] : readSaved().filter((entry) => entry !== slug));
+    show();
+    const status = document.querySelector("[data-cart-add-status]");
+    if (status) status.innerHTML = saving ? 'Saved. <a href="/account/#saved">See your saved pieces</a>' : "Removed from your saved pieces.";
+  });
+}
+
+// Approved reviews, if there are any. None are shown otherwise.
+type Review = { rating: number; body: string; name: string | null; date: string };
+async function initReviews() {
+  const section = document.querySelector<HTMLElement>("[data-reviews]");
+  if (!section) return;
+  try {
+    const response = await fetch(`/api/reviews?product=${encodeURIComponent(section.dataset.reviews!)}`, { headers: { accept: "application/json" } });
+    const data = response.ok ? await response.json() as { count: number; average: number | null; reviews: Review[] } : null;
+    if (!data?.count) return;
+    section.querySelector("[data-review-summary]")!.textContent = `${data.average} out of 5 · ${data.count} ${data.count === 1 ? "review" : "reviews"}`;
+    section.querySelector("[data-review-list]")!.replaceChildren(...data.reviews.map((review) => {
+      const item = document.createElement("li");
+      const stars = Object.assign(document.createElement("p"), { className: "review-stars", textContent: "★".repeat(review.rating) + "☆".repeat(5 - review.rating) });
+      stars.setAttribute("aria-label", `${review.rating} out of 5`);
+      item.append(stars, Object.assign(document.createElement("p"), { textContent: review.body }), Object.assign(document.createElement("p"), { className: "review-by", textContent: `${review.name ?? "Verified buyer"} · ${new Date(`${review.date}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", year: "numeric" })}` }));
+      return item;
+    }));
+    section.hidden = false;
+  } catch { /* Reviews are optional. */ }
+}
+
+// A drop not yet released: buying waits for early access (signed in) or the release.
+async function initDrop() {
+  const note = document.querySelector<HTMLElement>("[data-drop]");
+  if (!note) return;
+  const now = Date.now();
+  if (now >= Date.parse(note.dataset.release!)) { note.hidden = true; return; }
+  const early = now >= Date.parse(note.dataset.early!);
+  const signedIn = early && await fetch("/api/account/me").then((response) => response.ok ? response.json() : {}).then((data) => Boolean((data as { signedIn?: boolean }).signedIn)).catch(() => false);
+  if (signedIn) { note.textContent = "Early access is open for your account."; return; }
+  document.querySelectorAll<HTMLButtonElement>(".add-to-bag, .buy-now").forEach((button) => { button.disabled = true; });
+  note.append(" ", Object.assign(document.createElement("a"), { href: "/account/", className: "text-link", textContent: early ? "Sign in for early access" : "Create an account for early access" }));
+}
+
+/** As soon as the module loads: the photo viewer, the bag card, delivery dates, the fit profile, Save, reviews and early access. */
 export function initProductExtras() {
   initGallery();
   initArrival();
   initFit();
+  initSave();
+  void initReviews();
+  void initDrop();
   document.addEventListener("aha:bag-added", (event) => showBagPanel((event as CustomEvent<BagAdded>).detail));
 }
 export { initBuyBar };

@@ -573,7 +573,7 @@ function initCheckout() {
     try {
       const marketing = await checkoutMarketingEnvelope({ requireReceipt: true });
       const { response, data } = await requestJson<Quote>("/api/checkout/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: lines.map(({ variationId, quantity }) => ({ variationId, quantity })), shippingAddress: address, marketing }) });
-      if (!response.ok || !data) { showError("We couldn’t confirm this address. Review it and try again."); return; }
+      if (!response.ok || !data) { showError((data as { errorCode?: string } | null)?.errorCode === "early_access_only" ? "A piece in your bag isn’t released yet. Account holders can buy it early: sign in on your account page, or remove it." : "We couldn’t confirm this address. Review it and try again."); return; }
       if (requestedFingerprint !== cartFingerprint(lines, form)) { clearQuote(); showError("Your bag or address changed while the total was loading. Confirm the updated total to continue."); return; }
       quote = data; quotedFingerprint = requestedFingerprint; paymentKey = freshKey();
       // Only opaque checkout credentials are retained: never contact, address,

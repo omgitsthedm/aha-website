@@ -173,6 +173,19 @@ document.addEventListener('aha:cart-added',(event)=>{
  if(consent.marketing&&!gpc)meta('track','AddToCart',{content_ids:[detail.id],content_type:'product',value,currency:'USD'});
 });
 
+// Collection films: which film started playing. Accounts: that one was created.
+document.addEventListener('aha:film-played',(event)=>{
+ if(!enabled||!consent?.analytics)return;
+ const film=(event as CustomEvent<{film?:unknown}>).detail?.film;
+ const name=typeof film==='string'&&/^[a-z0-9-]{1,40}$/.test(film)?film:'film';
+ ga('event','film_play',{film:name});
+ if(!gpc)ph('film_played',{film:name});
+});
+document.addEventListener('aha:account-created',()=>{
+ if(!enabled||!consent?.analytics)return;
+ ga('event','sign_up',{method:'passkey'});
+ if(!gpc)ph('account_created',{method:'passkey'});
+});
 // Email sign-up: the page it came from only, never the address.
 document.addEventListener('aha:signed-up',(event)=>{
  if(!enabled||!consent)return;

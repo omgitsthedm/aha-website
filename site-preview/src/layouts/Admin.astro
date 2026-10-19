@@ -1,12 +1,13 @@
 ---
 import "../styles/site.css";
 import "../styles/admin.css";
-interface Props { title: string; page: "overview" | "orders" | "products" | "signups" | "analytics" }
+interface Props { title: string; page: "overview" | "orders" | "products" | "reviews" | "signups" | "analytics" }
 const { title, page } = Astro.props;
 const links = [
   { href: "/admin/", label: "Overview", key: "overview" },
   { href: "/admin/orders/", label: "Orders", key: "orders" },
   { href: "/admin/products/", label: "Products", key: "products" },
+  { href: "/admin/reviews/", label: "Reviews", key: "reviews" },
   { href: "/admin/signups/", label: "Email list", key: "signups" },
   { href: "/admin/analytics/", label: "Analytics", key: "analytics" },
 ];

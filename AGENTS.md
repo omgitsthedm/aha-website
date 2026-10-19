@@ -27,6 +27,18 @@ Set by the owner on October 17, 2026 (“Consolidate: merge Manifesto into The s
 - The lookbook shows one three-look set per collection in shop order (`looksFor` in `src/pages/lookbook.astro`); removed products hide their looks, and a set with every look removed hides too.
 - The header has one Shop link, the first navigation item.
 
+## Customer accounts, saved pieces, reviews and early access
+
+Built on October 19, 2026 after the owner said "do and fix it all" about the remaining plan (Phase 3).
+
+- **Accounts** (`/account/`, `server/customers/`, `netlify/functions/account-api.mjs`) sign in with passkeys only. No password, name or email address is asked for or stored, only each passkey's public key, so the site sends no account email. Sessions last 90 days in the `__Host-aha_account` cookie, stored as SHA-256 hashes. Deleting an account removes its passkeys, sessions, saved pieces and order links. The account page script does WebAuthn without a library; the server verifies with `@simplewebauthn/server`.
+- **Saved pieces:** Save for later on product pages keeps a list in the browser (`aha-saved-v1`). Signing in merges that list into the account, and it syncs while signed in.
+- **Orders in an account:** the order page's Add to my account links an order through its signed order link. An order belongs to one account.
+- **Reviews** (`/api/reviews`, `server/customers/reviews.mjs`) come only from an order's private link after it ships, one per product per order. Every review waits in Admin → Reviews until the owner approves it, and an edit goes back for approval. Product pages show approved reviews only, fetched at runtime and cached at the CDN until a moderation purges the `reviews-<slug>` tag. Never invent, import or seed reviews. Review-request emails still need the owner's OK.
+- **Early access:** `src/data/drops.json` lists `{ slug, earlyAccessAt, releaseAt }` in UTC. Before `releaseAt`, the checkout quote refuses the product unless the shopper is signed in and `earlyAccessAt` has passed. Feeds leave the product out until release, and their CDN copy expires at the release. The product page shows both times and locks Add to bag and Buy now for everyone else. Editing the file needs a deploy; remove an entry after its release.
+- **Script budget:** public storefront scripts stay under 65 KB. The private order and account page scripts have their own 12 KB cap (`tests/artifact.test.mjs`).
+- **Local testing:** `AHA_LOCAL_ACCOUNTS=1` makes `scripts/serve.mjs` run the real account, review and order-status handlers on an in-memory database (`scripts/local-accounts.mjs`). Playwright turns this on, and `tests/browser/accounts.spec.ts` creates and uses real passkeys with Chrome's virtual authenticator on `localhost`.
+
 ## Catalog, checkout, fulfillment, and tracking safeguards
 
 - Product, price, mapping, and availability changes go through `site-preview/tools/catalog` and `site-preview/catalog/ledger.json`; never use ad-hoc provider writes. Read `.agents/skills/aha-catalog/SKILL.md` for that workflow. Generated fulfillment catalog code must remain generated from the ledger. Preserve static/runtime product-page and feed parity.

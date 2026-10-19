@@ -170,9 +170,12 @@ const schema = {
           </a>
         ))}
       </nav>
-      <a class="header-cart" href="/checkout/" data-cart-link aria-label="Bag, 0 items">
-        Bag <span data-cart-count aria-hidden="true">0</span>
-      </a>
+      <div class="header-tools">
+        <a class="header-account" href="/account/" aria-current={path === "/account/" ? "page" : undefined}>Account</a>
+        <a class="header-cart" href="/checkout/" data-cart-link aria-label="Bag, 0 items">
+          Bag <span data-cart-count aria-hidden="true">0</span>
+        </a>
+      </div>
       <details class="mobile-nav">
         <summary>
           Menu <span aria-hidden="true">+</span>
@@ -187,6 +190,7 @@ const schema = {
             </a>
           ))}
           <a href="/checkout/" data-cart-link aria-label="Bag, 0 items">Bag <span data-cart-count aria-hidden="true">0</span></a>
+          <a href="/account/">Your account</a>
           <a href="/updates/">Stay close ↗</a>
         </nav>
       </details>

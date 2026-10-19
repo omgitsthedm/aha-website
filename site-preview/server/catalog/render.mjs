@@ -5,6 +5,7 @@
 // build, so this file must change whenever src/pages/shop/[product].astro or
 // src/components/ProductCard.astro / ProductImage.astro change.
 import { garmentGroup, hoverView, MEASURE_DIAGRAM, otherColors, swatchFor } from "./garments.mjs";
+import { dropFor, dropNote, dropStage } from "./drops.mjs";
 
 const ESCAPABLE = /[&<>'"]/g;
 const ENTITIES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
@@ -52,6 +53,7 @@ export function renderProductMain(product, products, { origin, pageScript }) {
   const sleeves = sizeGuide.every((row) => typeof row.sleeveLength === "number");
   const swatch = swatchFor(product.color);
   const siblings = otherColors(product, products);
+  const drop = dropStage(dropFor(product.slug)) === "released" ? null : dropFor(product.slug);
   return [
     `<main id="main" tabindex="-1">`,
     `<div class="shell product-breadcrumb"><a href="/shop/">← All pieces</a><span>Fall / Winter 2026</span></div>`,
@@ -62,12 +64,13 @@ export function renderProductMain(product, products, { origin, pageScript }) {
     `<div class="product-details"><p class="label">${text(product.collection)} / ${text(product.typeLabel)}</p><h1>${text(product.title)}</h1>`,
     `<div class="product-price-row"><p class="product-price">$${text(product.price)}<span> USD</span></p><p>Free domestic shipping</p></div>`,
     `<div class="arrival" data-arrival><p>Made to order: production takes about a week, then shipping.</p></div>`,
+    drop ? `<p class="drop-note" data-drop data-early="${attr(drop.earlyAccessAt)}" data-release="${attr(drop.releaseAt)}">${text(dropNote(drop))}</p>` : "",
     `<p class="color-choice"><span class="color-swatch" style="${attr(`--swatch:${swatch}`)}" aria-hidden="true"></span> ${text(product.color)}</p>`,
     siblings.length ? `<p class="color-options">Also in ${siblings.map((entry) => `<a class="color-option" href="/shop/${attr(entry.slug)}/"><span class="color-swatch" style="${attr(`--swatch:${swatchFor(entry.color)}`)}" aria-hidden="true"></span> ${text(entry.color)}</a>`).join("")}</p>` : "",
     `<p>${text(product.description)}</p>`,
     `<form class="product-purchase" data-cart-form><div class="size-head"><p class="label">Choose a size</p><button type="button" class="text-button fit-open" data-fit-open hidden>Find my size</button></div><div class="size-options" role="radiogroup" aria-label="${attr(`${product.title} size`)}" aria-required="true">`,
     product.variants.map((variant) => `<label><input type="radio" name="size" value="${attr(variant.id)}" data-cart-variant data-size="${attr(variant.size)}" data-sku="${attr(variant.sku)}"><span>${text(variant.size)}</span></label>`).join(""),
-    `</div><label class="quantity-field">Quantity <input data-cart-quantity name="quantity" type="number" min="1" max="10" step="1" value="1" inputmode="numeric"></label><button type="submit" class="button add-to-bag">Add to bag <span aria-hidden="true">+</span></button><button type="submit" class="button button-secondary buy-now" data-buy-now>Buy now <span aria-hidden="true">→</span></button><p class="cart-add-status" data-cart-add-status aria-live="polite"></p></form>`,
+    `</div><label class="quantity-field">Quantity <input data-cart-quantity name="quantity" type="number" min="1" max="10" step="1" value="1" inputmode="numeric"></label><button type="submit" class="button add-to-bag">Add to bag <span aria-hidden="true">+</span></button><button type="submit" class="button button-secondary buy-now" data-buy-now>Buy now <span aria-hidden="true">→</span></button><button type="button" class="text-button save-piece" data-save="${attr(product.slug)}" aria-pressed="false" hidden>Save for later</button><p class="cart-add-status" data-cart-add-status aria-live="polite"></p></form>`,
     `<a class="text-link size-link" href="#size-guide">Check measurements ↓</a><p class="checkout-note">Free domestic shipping. Final tax and payment options are shown securely at checkout.</p>`,
     `<details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>${text(product.fit)}.</li><li>${text(product.weightOz)} oz ${text(product.fabricType)}.</li><li>${text(product.composition)}.</li>${product.constructionDetails.map((detail) => `<li>${text(detail)}</li>`).join("")}</ul></details>`,
     `<details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>`,
@@ -76,6 +79,7 @@ export function renderProductMain(product, products, { origin, pageScript }) {
     `<div class="size-table-wrap" role="region" aria-label="${attr(`${product.title} measurements`)}" tabindex="0"><table><thead><tr><th scope="col">Size</th><th scope="col">Chest width</th><th scope="col">Body length</th>${sleeves ? `<th scope="col">Sleeve length</th>` : ""}</tr></thead><tbody>`,
     sizeGuide.map((row) => `<tr><th scope="row">${text(row.size)}</th><td>${text(measurement(row.chestWidth))}</td><td>${text(measurement(row.bodyLength))}</td>${sleeves ? `<td>${typeof row.sleeveLength === "number" ? text(measurement(row.sleeveLength)) : ""}</td>` : ""}</tr>`).join(""),
     `</tbody></table></div></section>`,
+    `<section class="shell section reviews" id="reviews" aria-labelledby="reviews-title" data-reviews="${attr(product.slug)}" hidden><p class="label">From people who bought it</p><h2 id="reviews-title">Reviews.</h2><p class="reviews-summary" data-review-summary></p><ul class="review-list" data-review-list></ul></section>`,
     `<section class="section shell"><div class="section-header"><h2>More pieces.</h2><a href="/shop/" class="text-link">Shop all →</a></div><div class="product-grid related-products">${related.map(productCard).join("")}</div></section>`,
     products.flatMap((entry) => entry.variants.map((variant) => `<template data-cart-catalog data-id="${attr(variant.id)}" data-sku="${attr(variant.sku)}" data-size="${attr(variant.size)}" data-slug="${attr(entry.slug)}" data-title="${attr(`${entry.title} — ${entry.color}`)}" data-color="${attr(entry.color)}" data-price-cents="${attr(entry.price * 100)}" data-image="${attr(entry.gallery[0].src)}" data-image-alt="${attr(entry.gallery[0].alt)}"></template>`)).join(""),
     `<script type="application/ld+json">${json(productSchema(product, gallery, origin))}</script>`,
