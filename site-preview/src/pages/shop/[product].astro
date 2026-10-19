@@ -29,7 +29,7 @@ const productSchema={
  offers:{'@type':'Offer',url:`${origin}/shop/${product.slug}/?size=${encodeURIComponent(v.size)}`,price:product.price,priceCurrency:'USD',availability:offSale?'https://schema.org/Discontinued':'https://schema.org/InStock',itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:'After Hours Agenda'},shippingDetails:SHIPPING_DETAILS,hasMerchantReturnPolicy:RETURN_POLICY}}))
 };
 ---
-<Site title={`${product.title} — ${product.color}`} description={product.description} image={gallery[0]!.feedImage} imageAlt={gallery[0]!.alt} imageWidth={gallery[0]!.width} imageHeight={gallery[0]!.height} noindex={offSale}>
+<Site title={`${product.title} — ${product.color}`} description={product.description} image={gallery[0]!.feedImage} imageAlt={gallery[0]!.alt} imageWidth={gallery[0]!.width} imageHeight={gallery[0]!.height} noindex={offSale} preloadImage={{src:gallery[0]!.src,srcset:gallery[0]!.srcset,sizes:'(max-width: 760px) 100vw, 55vw'}}>
  <div class="shell product-breadcrumb"><a href="/shop/">← All pieces</a><span>Fall / Winter 2026</span></div>
  <section class="shell product-layout" data-product-id={product.squareItemId} data-product-name={product.title} data-product-color={product.color} data-product-price={product.price}>
   <div class="product-visuals">

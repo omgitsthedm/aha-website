@@ -113,6 +113,7 @@ export function renderLivePage(shellHtml, product, products) {
   head = replaceOnce(head, /<title>[^<]*<\/title>/, `<title>${text(title)} | After Hours Agenda</title>`, "title");
   head = replaceOnce(head, /<meta name="description" content="[^"]*">/, `<meta name="description" content="${attr(product.description)}">`, "description");
   head = replaceOnce(head, /<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${attr(canonical)}">`, "canonical");
+  head = replaceOnce(head, /<link rel="preload" as="image"[^>]*>/, `<link rel="preload" as="image" href="${attr(cover.src)}" imagesrcset="${attr(cover.srcset)}" imagesizes="(max-width: 760px) 100vw, 55vw" fetchpriority="high">`, "primary image preload");
   // Off-sale pages are noindex in the build (src/pages/shop/[product].astro). The shell is
   // always an on-sale page, so its robots tag is already right for everything else.
   if (isOffSale(product.slug)) head = replaceOnce(head, /<meta name="robots" content="[^"]*">/, `<meta name="robots" content="noindex, noarchive">`, "robots");

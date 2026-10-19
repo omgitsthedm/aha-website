@@ -4,7 +4,7 @@
   "approval": {
     "by": "David Marsh (owner)",
     "at": "2026-10-19T17:57:23.640Z",
-    "note": "Approved Camo Sheep art/garments in chat: \u201cOk do it all\u201d. Latest instruction: \u201clook at how you uploaded the products in this session previously ... now do that with these new products ... pricing everything, research it then do it\u201d. Owner delegates researched pricing and upload/publication for this batch."
+    "note": "Approved Camo Sheep art/garments in chat: “Ok do it all”. Latest instruction: “look at how you uploaded the products in this session previously ... now do that with these new products ... pricing everything, research it then do it”. Owner delegates researched pricing and upload/publication for this batch."
   },
   "title": "Camo Sheep Hoodie",
   "blank": "IND4000",
@@ -45,7 +45,7 @@
         "imagePath": "https://blob.apliiq.com/sitestorage/base/8155_590_900.png",
         "artworkKey": "front",
         "service": "transfer_print",
-        "note": "Front only, exact pink artwork at 9 inches wide \u00d7 6 inches high, centered above the pouch pocket. Top approximately 3 inches below front collar seam. One matte opaque transfer print. Preserve all lettering and the sheep; transparent areas reveal Snow Camo fabric. Blank back. No embroidery, patch, background rectangle, redraw or added distress. Scale down proportionally only when the smallest garment requires it."
+        "note": "Front only, exact pink artwork at 9 inches wide × 6 inches high, centered above the pouch pocket. Top approximately 3 inches below front collar seam. One matte opaque transfer print. Preserve all lettering and the sheep; transparent areas reveal Snow Camo fabric. Blank back. No embroidery, patch, background rectangle, redraw or added distress. Scale down proportionally only when the smallest garment requires it."
       }
     ],
     "productionNote": "Exact single pink chest print on Snow Camo IND4000. Current AHA private label inside neck; remove original brand label while retaining required care/fiber/origin information."
@@ -135,7 +135,7 @@
       }
     ],
     "measurementGuidance": "Measurements are in inches. Lay a similar garment flat and compare body length from high-point shoulder and chest width 1 inch below the armhole. Sleeve length is measured from center back neck to the cuff.",
-    "campaignSetting": "Same Phoenix warehouse-district dive-bar patio at dusk: weathered reddish brick wall, dark forest green painted steel service door with a small amber bulkhead lamp above, low brick sitting ledge, dark concrete ground, warm dim interior beyond doorway, distant patrons secondary. No readable environmental signage or brands. Direct on-camera hard flash, 28mm full-frame look from close torso distance, f/8, ambient 1.5 stops darker, realistic focus and flash falloff; background recognizable but visually secondary, no fake portrait blur. Candid 2000s fashion editorial, slight natural grain, honest textile/skin, no airbrushed or swirling AI textures.",
+    "campaignSetting": "Brick patio at dusk",
     "gallery": [
       {
         "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/garment-front-1122.webp",
@@ -206,8 +206,8 @@
   },
   "familyId": "012",
   "local": {
-    "folder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop \u2014 Fall 2026/01 Designs/012 \u2014 Camo Sheep",
-    "launchFolder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop \u2014 Fall 2026/01 Designs/012 \u2014 Camo Sheep/IND4000 \u2014 Snow Camo \u2014 Pink",
-    "productionMaster": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop \u2014 Fall 2026/01 Designs/012 \u2014 Camo Sheep/Print Artwork/Camo Sheep \u2014 Pink \u2014 2700px.png"
+    "folder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/012 — Camo Sheep",
+    "launchFolder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/012 — Camo Sheep/IND4000 — Snow Camo — Pink",
+    "productionMaster": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/012 — Camo Sheep/Print Artwork/Camo Sheep — Pink — 2700px.png"
   }
 }

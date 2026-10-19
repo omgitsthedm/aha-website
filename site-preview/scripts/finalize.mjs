@@ -35,10 +35,12 @@ async function walk(dir, prefix = "") {
       if (entry.name.endsWith(".html"))
         for (const match of buffer
           .toString()
-          .matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))
-          if (match[1])
+          .matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g))
+          // JSON data blocks do not execute and are not checked by script-src.
+          // Hashing each product's data inflated every asset response header.
+          if (match[2] && !/\btype\s*=\s*(["'])application\/(?:ld\+)?json\1/i.test(match[1]))
             scriptHashes.add(
-              `'sha256-${createHash("sha256").update(match[1]).digest("base64")}'`,
+              `'sha256-${createHash("sha256").update(match[2]).digest("base64")}'`,
             );
     }
   }
