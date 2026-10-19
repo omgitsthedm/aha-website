@@ -182,7 +182,8 @@
         "width": 1122,
         "height": 748,
         "alt": "Snow Camo Camo Sheep hoodie worn with relaxed posture beside a brick wall and green doorway on a bar patio, view 1.",
-        "role": "lifestyle-hero"
+        "role": "lifestyle-hero",
+        "productSlug": "camo-sheep-ind4000-snow-camo"
       },
       {
         "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-1-1122.webp",
@@ -191,7 +192,8 @@
         "width": 1122,
         "height": 748,
         "alt": "Snow Camo Camo Sheep hoodie worn with relaxed posture beside a brick wall and green doorway on a bar patio, view 2.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "camo-sheep-ind4000-snow-camo"
       },
       {
         "src": "/images/camo-sheep/camo-sheep-ind4000-snow-camo/campaign-alternate-2-1122.webp",
@@ -200,7 +202,8 @@
         "width": 1122,
         "height": 748,
         "alt": "Snow Camo Camo Sheep hoodie worn with relaxed posture beside a brick wall and green doorway on a bar patio, view 3.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "camo-sheep-ind4000-snow-camo"
       }
     ]
   },

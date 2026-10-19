@@ -5,7 +5,7 @@ import { gallery } from "../data/site";
 import manifest from "../data/images.json";
 import MotionImage from '../components/MotionImage.astro';
 import { motionFor } from '../data/motion';
-import { collectionSlug, collectionsInOrder, type Product } from '../data/collections';
+import { campaignProducts, collectionSlug, collectionsInOrder, type Product } from '../data/collections';
 import { allOffSale, isOffSale } from '../../server/catalog/off-sale.mjs';
 // One set per collection, in the shop's order (newest drop first, removed products last).
 // Three looks: the lead piece's first photo, which carries the collection film, then the
@@ -23,7 +23,7 @@ function looksFor(pieces: readonly Product[]) {
   });
 }
 const sets = collectionsInOrder().filter(([, pieces]) => pieces.length).map(([name, pieces]) => {
-  const looks = looksFor(pieces);
+  const looks = looksFor(campaignProducts(pieces));
   return { name, slug: collectionSlug(name), looks, settings: [...new Set(looks.map(({ product }) => product.campaignSetting))].join(" / ") };
 });
 const leadCampaignImage = sets[0]?.looks[0]?.shot;

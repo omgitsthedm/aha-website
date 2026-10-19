@@ -192,6 +192,16 @@ test("the lookbook has one set per collection, three looks each, every look link
   }
   await expect(page.locator(".campaign-set .look-chip").first()).toHaveAttribute("href", /^\/shop\/[a-z0-9-]+\/$/);
   await expect(sets.first().getByRole("link", { name: `Shop ${names[0]} →` })).toHaveAttribute("href", `/shop/${collectionSlug(names[0]!)}/`);
+  // A shared Light Pink crewneck shoot cannot advertise the Butter tee or Black crew.
+  const jazz = page.getByRole("region", { name: "And All That Jazz", exact: true });
+  await expect(jazz.locator(".look-chip")).toHaveCount(3);
+  for (const link of await jazz.locator(".look-chip").all())
+    await expect(link).toHaveAttribute("href", "/shop/and-all-that-jazz-ss3000-light-pink/");
+  await expect(jazz.locator(".still-note")).toHaveText(["01 / Light Pink crewneck", "02 / Light Pink crewneck", "03 / Light Pink crewneck"]);
+  await page.goto("/shop/and-all-that-jazz/");
+  await expect(page.locator(".campaign-grid figure")).toHaveCount(3);
+  for (const link of await page.locator(".campaign-grid .look-chip").all())
+    await expect(link).toHaveAttribute("href", "/shop/and-all-that-jazz-ss3000-light-pink/");
 });
 
 test("the footer sign-up reports its section of the site, and Home keeps only its band", async ({ page }) => {

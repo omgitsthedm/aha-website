@@ -97,7 +97,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Black Fashion Kills crewneck worn with relaxed upright posture at a dim New York corner bar with green booths and mahogany trim, view 1.",
-        "role": "lifestyle-hero"
+        "role": "lifestyle-hero",
+        "productSlug": "fashion-kills-ss3000-black"
       },
       {
         "src": "/images/fashion-kills/fashion-kills-3023cl-black/campaign-alternate-1-1122.webp",
@@ -106,7 +107,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Black Fashion Kills crewneck worn with relaxed upright posture at a dim New York corner bar with green booths and mahogany trim, view 2.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "fashion-kills-ss3000-black"
       },
       {
         "src": "/images/fashion-kills/fashion-kills-3023cl-black/campaign-alternate-2-1122.webp",
@@ -115,7 +117,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Black Fashion Kills crewneck worn with relaxed upright posture at a dim New York corner bar with green booths and mahogany trim, view 3.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "fashion-kills-ss3000-black"
       }
     ],
     "gender": "female",

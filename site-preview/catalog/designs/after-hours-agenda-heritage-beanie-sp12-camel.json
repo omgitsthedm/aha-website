@@ -97,7 +97,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Black AHA Heritage Beanie carried on a canvas bag beside a New York park wall, campaign view 1.",
-        "role": "lifestyle-hero"
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-black"
       },
       {
         "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/campaign-alternate-1-1122.webp",
@@ -106,7 +107,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Black AHA Heritage Beanie carried on a canvas bag beside a New York park wall, campaign view 2.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-black"
       },
       {
         "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/campaign-alternate-2-1122.webp",
@@ -115,7 +117,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Black AHA Heritage Beanie carried on a canvas bag beside a New York park wall, campaign view 3.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-black"
       }
     ],
     "gender": "unisex",

@@ -24,6 +24,11 @@ test('approved catalog records are expansion-safe and keep garment and campaign 
   assert.deepEqual(product.gallery.map(shot=>shot.role).sort(),['back','folded','front','print-detail']);
   assert.ok(['front','back'].includes(product.gallery[0].role),'lead image must show a complete garment');
   assert.equal(product.campaign.length,3);
+  for(const shot of product.campaign) if(shot.productSlug){
+   const pictured=products.find(piece=>piece.slug===shot.productSlug);
+   assert.ok(pictured,`${product.slug}: campaign must name an existing piece`);
+   assert.equal(pictured.collection,product.collection,'shared campaign must stay in its collection');
+  }
   for(const variant of product.variants){
    assert.match(variant.size,/\S/);assert.match(variant.id,/^[A-Z0-9]{20,30}$/);assert.match(variant.sku,/^APQ-\d+S\d+A1$/);
    variantIds.push(variant.id);supplierSkus.push(variant.sku);

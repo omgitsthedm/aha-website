@@ -9,7 +9,7 @@
   "approval": {
     "by": "David Marsh (owner)",
     "at": "2026-10-19T18:11:10.799Z",
-    "note": "Owner approved these designs and garments in chat and instructed \u201cUpload them all, we\u2019re on a deadline\u201d, then \u201cnow do that with these new products ... pricing everything, research it then do it\u201d. Exact retail delegated to researched free-shipping margin checks."
+    "note": "Owner approved these designs and garments in chat and instructed “Upload them all, we’re on a deadline”, then “now do that with these new products ... pricing everything, research it then do it”. Exact retail delegated to researched free-shipping margin checks."
   },
   "fulfillment": {
     "product": "and_all_that_jazz_ss3000_black"
@@ -40,7 +40,7 @@
         "note": "Use exact attached approved master, 9 inches wide, centered 2.5 inches below front neckline. Keep all original artwork and lettering, including black trousers and hair. Matte print. Plain back. No added branding."
       }
     ],
-    "productionNote": "And All That Jazz Crewneck \u2014 Black. Exact approved primary artwork at 9 inches wide. Plain back. Current private label SB-3-161622 replaces manufacturer neck branding."
+    "productionNote": "And All That Jazz Crewneck — Black. Exact approved primary artwork at 9 inches wide. Plain back. Current private label SB-3-161622 replaces manufacturer neck branding."
   },
   "sizes": [
     "XS",
@@ -161,7 +161,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Light Pink And All That Jazz crewneck worn with relaxed upright posture at a brick theater side entrance with a black door and warm wall lamp, view 1.",
-        "role": "lifestyle-hero"
+        "role": "lifestyle-hero",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
       },
       {
         "src": "/images/and-all-that-jazz/and-all-that-jazz-ss3000-black/campaign-alternate-1-1122.webp",
@@ -170,7 +171,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Light Pink And All That Jazz crewneck worn with relaxed upright posture at a brick theater side entrance with a black door and warm wall lamp, view 2.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
       },
       {
         "src": "/images/and-all-that-jazz/and-all-that-jazz-ss3000-black/campaign-alternate-2-1122.webp",
@@ -179,7 +181,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Light Pink And All That Jazz crewneck worn with relaxed upright posture at a brick theater side entrance with a black door and warm wall lamp, view 3.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
       }
     ],
     "description": "And All That Jazz Crewneck in Black. A standard-fit crewneck in 8.5 oz cotton-blend fleece with a printed front and a plain back. Ribbed collar, cuffs and waistband; cotton face and taped neck.",
@@ -198,20 +201,20 @@
     "campaignSetting": "a brick theater side entrance with a black door and warm wall lamp"
   },
   "local": {
-    "folder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop \u2014 Fall 2026/01 Designs/022 \u2014 Fosse",
+    "folder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse",
     "approvedFrontProof": {
-      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop \u2014 Fall 2026/01 Designs/022 \u2014 Fosse/SS3000 \u2014 Black \u2014 Proof/Front review.png",
+      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse/SS3000 — Black — Proof/Front review.png",
       "exists": true,
       "sha256": "94fce4e53e44d8543109fbfcf1e194ec4b49254c033a2798e02dbdcb9d7b435f"
     },
     "artwork": {
-      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop \u2014 Fall 2026/01 Designs/022 \u2014 Fosse/Fosse \u2014 And All That Jazz \u2014 Review.png",
+      "path": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse/Fosse — And All That Jazz — Review.png",
       "exists": true,
       "sha256": "41ebfc5228b863b5b2338ed0731bfee9397f6797149b6a321cd92180db1abb15"
     },
     "preparationNote": "Executable specification using approved art and owner-delegated researched pricing. Gallery and campaign are finished before storefront publication.",
-    "productionMaster": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop \u2014 Fall 2026/01 Designs/022 \u2014 Fosse/Print Artwork \u2014 Full color \u2014 transparent.png",
-    "launchFolder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop \u2014 Fall 2026/01 Designs/022 \u2014 Fosse/SS3000 \u2014 Black \u2014 Launch",
+    "productionMaster": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse/Print Artwork — Full color — transparent.png",
+    "launchFolder": "/Users/davidmarsh/Desktop/After Hours Agenda/00 Current Drop — Fall 2026/01 Designs/022 — Fosse/SS3000 — Black — Launch",
     "campaignNote": "Three photos per approved design, shared across its garment/color listings; alt text names the garment actually pictured. Campaign images remain outside product galleries and feeds.",
     "finalPrimaryMasterVerified": {
       "at": "2026-10-19T19:18:57.236Z",

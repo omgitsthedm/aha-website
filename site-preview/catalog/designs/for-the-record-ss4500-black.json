@@ -192,7 +192,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Black For the Record hoodie worn with relaxed upright posture at old stone civic-building steps with a deep doorway, view 1.",
-        "role": "lifestyle-hero"
+        "role": "lifestyle-hero",
+        "productSlug": "for-the-record-ss4500-black"
       },
       {
         "src": "/images/for-the-record/for-the-record-ss4500-black/campaign-alternate-1-1122.webp",
@@ -201,7 +202,8 @@
         "width": 1122,
         "height": 1101,
         "alt": "Black For the Record hoodie worn with relaxed upright posture at old stone civic-building steps with a deep doorway, back view.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "for-the-record-ss4500-black"
       },
       {
         "src": "/images/for-the-record/for-the-record-ss4500-black/campaign-alternate-2-1122.webp",
@@ -210,7 +212,8 @@
         "width": 1122,
         "height": 1402,
         "alt": "Black For the Record hoodie worn with relaxed upright posture at old stone civic-building steps with a deep doorway, view 3.",
-        "role": "lifestyle-alternate"
+        "role": "lifestyle-alternate",
+        "productSlug": "for-the-record-ss4500-black"
       }
     ],
     "description": "For the Record Hoodie in Black. A standard-fit pullover hoodie in 8.5 oz cotton-blend fleece. Small two-line front print and a separate back print below the hood. Jersey-lined hood, matching drawcord and front pouch pocket.",

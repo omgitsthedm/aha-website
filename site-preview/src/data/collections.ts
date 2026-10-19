@@ -5,6 +5,13 @@ import products from "./products.json" with { type: "json" };
 
 export type Product = (typeof products)[number];
 
+/** Shared campaign files describe the actual photographed piece, not every color. */
+export function campaignProducts(pieces: readonly Product[]) {
+  const pictured = new Set(pieces.flatMap(product => product.campaign.map(shot =>
+    'productSlug' in shot && typeof shot.productSlug === 'string' ? shot.productSlug : product.slug)));
+  return pieces.filter(product => pictured.has(product.slug));
+}
+
 export const COLLECTION_ORDER = ["Camo Sheep", "Black Sheep Knitwear", "And All That Jazz", "For the Record", "Resist Rebel", "Nonna’s Sunday Supper Society", "Fashion Kills", "Mighty Mick’s", "The City", "Insomniac", "Yikes!"];
 
 export function collectionsInOrder(pieces: Product[] = products) {
