@@ -1,6 +1,7 @@
 import products from "./products.json" with { type: "json" };
 import client from "../../client.config.json" with { type: "json" };
 import { collectionSlug, collectionsInOrder } from "./collections.ts";
+import { allOffSale, onSale } from "../../server/catalog/off-sale.mjs";
 
 export const brand = {
   name: client.client.name,
@@ -18,7 +19,7 @@ export const navigation = [
   { label: "Shop", href: "/shop/" },
   { label: "The story", href: "/about/" },
   { label: "Lookbook", href: "/lookbook/" },
-  { label: "Answers", href: "/faq/" },
+  { label: "Questions", href: "/faq/" },
   { label: "Contact", href: "/contact/" },
 ];
 export const topics = [
@@ -111,8 +112,9 @@ export const routes = [
   "/updates/",
   "/faq/",
   "/shop/",
-  ...collectionsInOrder().filter(([, pieces]) => pieces.length).map(([name]) => `/shop/${collectionSlug(name)}/`),
-  ...products.map((product) => `/shop/${product.slug}/`),
+  // Products off sale (src/data/off-sale.json) and collections with nothing on sale stay out of the sitemap.
+  ...collectionsInOrder().filter(([, pieces]) => pieces.length && !allOffSale(pieces)).map(([name]) => `/shop/${collectionSlug(name)}/`),
+  ...(onSale(products) as typeof products).map((product) => `/shop/${product.slug}/`),
   "/privacy/",
   "/terms/",
   "/accessibility/",

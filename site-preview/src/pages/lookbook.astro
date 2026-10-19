@@ -6,6 +6,7 @@ import manifest from "../data/images.json";
 import MotionImage from '../components/MotionImage.astro';
 import { motionFor } from '../data/motion';
 import { collectionSlug, collectionsInOrder, type Product } from '../data/collections';
+import { allOffSale, isOffSale } from '../../server/catalog/off-sale.mjs';
 // One set per collection, in the shop's order (newest drop first, removed products last).
 // Three looks: the lead piece's first photo, which carries the collection film, then the
 // pieces that add a new setting or garment, each at the next photo so poses don't repeat.
@@ -48,7 +49,7 @@ const leadCampaignImage = sets[0]?.looks[0]?.shot;
     </p>
   </header>
   {sets.map((set, setIndex) => (
-    <section class="shell campaign-set" data-look-set aria-labelledby={`look-${set.slug}`}>
+    <section class="shell campaign-set" data-look-set aria-labelledby={`look-${set.slug}`} hidden={allOffSale(set.looks.map(({ product }) => product))}>
       <div class="section-header">
         <div>
           <p class="label">{set.settings}</p>
@@ -58,7 +59,7 @@ const leadCampaignImage = sets[0]?.looks[0]?.shot;
       </div>
       <div class="campaign-grid">
         {set.looks.map(({ product, shot }, index) => (
-          <figure data-product-set={product.slug}>
+          <figure data-product-set={product.slug} data-off-sale={isOffSale(product.slug) ? product.slug : undefined} hidden={isOffSale(product.slug)}>
             <MotionImage image={shot} priority={setIndex === 0 && index === 0} sizes="(max-width: 760px) 100vw, 33vw" tall />
             <a class="look-chip" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} — ${product.color}`}>Shop <span aria-hidden="true">→</span></a>
             <figcaption><span class="still-note">0{index + 1} / {product.color} {product.typeLabel.toLowerCase()}</span>{motionFor(shot.src) && <span class="motion-note">{motionFor(shot.src)!.label}</span>}</figcaption>

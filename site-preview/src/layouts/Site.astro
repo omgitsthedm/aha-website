@@ -1,6 +1,6 @@
 ---
 import "../styles/site.css";
-import { brand, navigation } from "../data/site";
+import { answers, brand, navigation } from "../data/site";
 import Consent from '../components/Consent.astro';
 import EmailSignup from '../components/EmailSignup.astro';
 interface Props {
@@ -46,7 +46,7 @@ const schema = {
       inLanguage: "en-US",
     },
     {
-      "@type": path === "/about/" ? "AboutPage" : path === "/contact/" ? "ContactPage" : "WebPage",
+      "@type": path === "/about/" ? "AboutPage" : path === "/contact/" ? "ContactPage" : path === "/faq/" ? "FAQPage" : "WebPage",
       "@id": canonical,
       url: canonical,
       name: title,
@@ -54,6 +54,7 @@ const schema = {
       isPartOf: { "@id": `${origin}/#website` },
       about: { "@id": `${brand.official}/#organization` },
       inLanguage: "en-US",
+      ...(path === "/faq/" ? { mainEntity: answers.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })) } : {}),
     },
     ...(path !== "/"
       ? [

@@ -31,6 +31,8 @@ for (const [label, width, height] of [
         `${label} ${path}`,
       ).toBe(true);
       for (const image of await page.locator("img").all()) {
+        // Pieces off sale (src/data/off-sale.json) stay hidden, so their images never load.
+        if (await image.evaluate((img) => Boolean(img.closest("[data-off-sale]")) && !img.checkVisibility())) continue;
         await image.scrollIntoViewIfNeeded();
         await expect
           .poll(() =>
@@ -45,6 +47,7 @@ for (const [label, width, height] of [
         .locator("img")
         .evaluateAll((images) =>
           (images as HTMLImageElement[])
+            .filter((x) => !(x.closest("[data-off-sale]") && !x.checkVisibility()))
             .filter((x) => !x.complete || !x.naturalWidth)
             .map((x) => x.src),
         );

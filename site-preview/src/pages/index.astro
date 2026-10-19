@@ -8,8 +8,9 @@ import { motionFor } from '../data/motion';
 import ProductCard from '../components/ProductCard.astro';
 import products from '../data/products.json';
 import { collectionsInOrder } from '../data/collections';
+import { onSale } from '../../server/catalog/off-sale.mjs';
 // One piece per collection, newest drop first; the newest also leads the hero.
-const featuredProducts = collectionsInOrder().slice(0, 4).map(([, pieces]) => pieces.find((product) => product.typeLabel === 'Hoodie') ?? pieces[0]!);
+const featuredProducts = collectionsInOrder(onSale(products)).slice(0, 4).map(([, pieces]) => pieces.find((product) => product.typeLabel === 'Hoodie') ?? pieces[0]!);
 const heroProduct = featuredProducts[0] ?? products[0]!;
 // The lookbook teaser opens on the next collection so it doesn't repeat the hero.
 const teaserProduct = featuredProducts[1] ?? heroProduct;

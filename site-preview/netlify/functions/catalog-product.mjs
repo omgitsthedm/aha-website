@@ -1,5 +1,6 @@
 import { catalogCacheHeaders, currentCatalog, STATIC_PRODUCTS } from "../../server/catalog/current.mjs";
 import { renderLivePage } from "../../server/catalog/render.mjs";
+import { onSale } from "../../server/catalog/off-sale.mjs";
 
 // Product pages for products published live. Built pages always win
 // (preferStatic), so this only ever runs for a slug the build doesn't have.
@@ -21,7 +22,8 @@ export async function handleProductPage(request, { catalog = currentCatalog, fet
   const products = current.saleProducts ?? current.products;
   const product = (current.saleLiveProducts ?? current.liveProducts).find((entry) => entry.slug === slug);
   if (!product) return notFound(url.origin, fetchImpl);
-  const shell = await fetchImpl(`${url.origin}/shop/${STATIC_PRODUCTS[0].slug}/`);
+  // The shell must be an on-sale page (its robots tag and cards carry over).
+  const shell = await fetchImpl(`${url.origin}/shop/${onSale(STATIC_PRODUCTS)[0].slug}/`);
   if (!shell.ok) return new Response("Temporarily unavailable", { status: 503, headers: { "cache-control": "no-store", "retry-after": "30" } });
   const headers = new Headers({ "content-type": "text/html; charset=utf-8", ...catalogCacheHeaders([`product:${slug}`]) });
   for (const name of SECURITY_HEADERS) { const value = shell.headers.get(name); if (value) headers.set(name, value); }

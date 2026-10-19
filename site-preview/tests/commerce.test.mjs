@@ -49,7 +49,9 @@ test('Yikes remains the immutable 13-variant launch baseline',()=>{
 });
 
 test('Google and Meta feeds enumerate each approved variant with garment imagery only',async()=>{
- const variants=products.flatMap(product=>product.variants.map(variant=>({product,variant})));
+ // Products off sale (src/data/off-sale.json) aren't in the built feeds.
+ const {onSale}=await import('../server/catalog/off-sale.mjs');
+ const variants=onSale(products).flatMap(product=>product.variants.map(variant=>({product,variant})));
  for(const name of ['google.xml','meta.xml']){
   const xml=await readFile(new URL(`../dist/feeds/${name}`,import.meta.url),'utf8');
   assert.equal((xml.match(/<item>/g)||[]).length,variants.length);

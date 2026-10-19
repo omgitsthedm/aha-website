@@ -1,5 +1,6 @@
 import { test, expect } from "./fixtures";
 import { collectionSlug, collectionsInOrder } from "../../src/data/collections";
+import { allOffSale, OFF_SALE } from "../../server/catalog/off-sale.mjs";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({ analytics: false, marketing: false, at: Date.now() })));
@@ -56,7 +57,8 @@ test("shop jump links reach every collection on a phone", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/shop/");
   const jump = page.getByRole("navigation", { name: "Jump to a collection" });
-  const names = collectionsInOrder().map(([name]) => name);
+  // Collections with nothing on sale (src/data/off-sale.json) are built hidden.
+  const names = collectionsInOrder().filter(([, pieces]) => !allOffSale(pieces)).map(([name]) => name);
   await expect(jump.getByRole("link")).toHaveText(names);
   await jump.getByRole("link", { name: "The City" }).click();
   await expect(page).toHaveURL(/#collection-the-city$/);
@@ -317,7 +319,7 @@ test("each collection has its own page with its pieces, campaign and share image
 });
 
 test("a collection whose pieces were all removed says so", async ({ page }) => {
-  await page.route("**/api/catalog/live", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ retired: ["pet-it-be-ss3000-maroon"], retiredVariations: [], products: [], cartLines: [] }) }));
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ known: true, retired: ["pet-it-be-ss3000-maroon"], retiredVariations: [], products: [], cartLines: [] }) }));
   await page.goto("/shop/pet-it-be/");
   await expect(page.locator("[data-collection-empty]")).toBeVisible();
   await expect(page.locator("#pieces article.product-card")).toBeHidden();
@@ -380,4 +382,44 @@ test("reduced motion keeps the still photos", async ({ page }) => {
   await page.waitForTimeout(3000);
   await expect(page.locator(".motion-frame video")).toHaveCount(0);
   await expect(page.locator(".hero-image figcaption .motion-note")).toBeHidden();
+});
+
+test("a product off sale stays hidden without script, and shows again if it's restored in the admin", async ({ page, browser }) => {
+  const slug = OFF_SALE[0]!;
+  // Without script: hidden card, hidden collection group and jump link, noindex product page.
+  const noScript = await browser.newContext({ javaScriptEnabled: false });
+  const plain = await noScript.newPage();
+  await plain.goto(`${process.env.BASE_URL || "http://127.0.0.1:48379"}/shop/`);
+  await expect(plain.locator(`article[data-off-sale="${slug}"]`)).toBeHidden();
+  await expect(plain.getByRole("link", { name: "Pet It Be", exact: true })).toHaveCount(0);
+  await plain.goto(`${process.env.BASE_URL || "http://127.0.0.1:48379"}/shop/${slug}/`);
+  await expect(plain.locator("meta[name=robots]")).toHaveAttribute("content", /noindex/);
+  await noScript.close();
+  // Live state says it's still removed: stays hidden, and its page offers nothing to buy.
+  await page.goto(`/shop/${slug}/`);
+  await expect(page.getByText("This piece is no longer available.")).toBeVisible();
+  await expect(page.locator("[data-arrival]")).toHaveCount(0);
+  await expect(page.locator("[data-save]")).toHaveCount(0);
+  // Restored in the admin: the card, its group and jump link come back without a deploy.
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ json: { known: true, products: [], cartLines: [], retired: [], retiredVariations: [] } }));
+  await page.goto("/shop/");
+  await expect(page.locator(`article[data-off-sale="${slug}"]`)).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Jump to a collection" }).getByRole("link", { name: "Pet It Be", exact: true })).toBeVisible();
+  await page.goto(`/shop/${slug}/`);
+  await expect(page.locator("[data-cart-form]")).toBeVisible();
+  // If the live state can't be read, the build's decision stands: a failed request,
+  // or an answer that couldn't read the admin's removed list.
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ status: 503, body: "" }));
+  await page.goto("/shop/");
+  await expect(page.locator(`article[data-off-sale="${slug}"]`)).toBeHidden();
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ json: { known: false, products: [], cartLines: [], retired: [], retiredVariations: [] } }));
+  await page.goto("/shop/");
+  await expect(page.locator(`article[data-off-sale="${slug}"]`)).toBeHidden();
+  await page.goto(`/shop/${slug}/`);
+  await expect(page.getByText("This piece is no longer available.")).toBeVisible();
+  await expect(page.locator("[data-arrival]")).toHaveCount(0);
+  await page.route("**/api/catalog/live", (route) => route.fulfill({ status: 503, body: "" }));
+  await page.goto(`/shop/${slug}/`);
+  await expect(page.getByText("This piece is no longer available.")).toBeVisible();
+  await expect(page.locator("[data-cart-form]")).toHaveCount(0);
 });

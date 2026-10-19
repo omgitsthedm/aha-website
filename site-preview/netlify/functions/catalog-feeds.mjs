@@ -2,6 +2,7 @@ import { feedXml, gzipFeed, openAiFeedJsonl } from "../../scripts/feeds.mjs";
 import { catalogCacheHeaders, currentCatalog, STATIC_PRODUCTS } from "../../server/catalog/current.mjs";
 import { SITE_ORIGIN } from "../../server/platform/client.mjs";
 import { DROPS, releasedProducts, secondsToNextRelease } from "../../server/catalog/drops.mjs";
+import { onSale } from "../../server/catalog/off-sale.mjs";
 
 // Google/Meta feeds and the live-product sitemap. The feeds replace the built
 // files so products published live are advertised the moment they can be
@@ -11,7 +12,8 @@ const PRODUCTION_ORIGIN = SITE_ORIGIN;
 export async function handleFeeds(request, context, { catalog = currentCatalog, drops = DROPS, now = Date.now() } = {}) {
   const url = new URL(request.url);
   const origin = context?.deploy?.context === "production" ? PRODUCTION_ORIGIN : url.origin;
-  let products = STATIC_PRODUCTS;
+  // If the live state can't be read, the build's list of what's on sale stands.
+  let products = onSale(STATIC_PRODUCTS);
   let live = [];
   try {
     const current = await catalog();

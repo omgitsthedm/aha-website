@@ -73,6 +73,8 @@ test("all inline script content is covered by CSP hashes", async () => {
   assert.match(headers, /payment=\(self/, "Wallet payment requests must be permitted");
   assert.ok(!headers.includes("unsafe-eval"));
   assert.match(headers, /connect-src 'self'/);
+  // Since GA4 was linked to Google Ads, gtag also sends each hit to www.google.com/g/collect.
+  assert.equal(/connect-src [^;\n]*https:\/\/www\.google\.com\/g\/[ ;\n]/.test(headers), production);
   assert.match(headers, /form-action 'none'/);
   assert.equal(headers.includes("X-Robots-Tag: noindex"), !production);
 });
@@ -127,6 +129,12 @@ test("FAQ answers stay short and point to the page that owns each topic", () => 
     assert.ok(a.length <= 140, `${q} has a ${a.length}-character answer`);
     assert.ok(href.startsWith("https://") || routes.includes(href), q);
   }
+});
+test("the FAQ page marks up every question and answer", async () => {
+  const page = await readFile(new URL("faq/index.html", root), "utf8");
+  const graph = JSON.parse(page.match(/<script type="application\/ld\+json">(\{"@context":"https:\/\/schema.org","@graph"[\s\S]*?)<\/script>/)[1])["@graph"];
+  const faq = graph.find((node) => node["@type"] === "FAQPage");
+  assert.deepEqual(faq.mainEntity.map((item) => [item.name, item.acceptedAnswer.text]), answers.map((item) => [item.q, item.a]));
 });
 test("existing Google and Bing ownership files remain byte-identical", async () => {
   for (const file of [
@@ -229,4 +237,42 @@ test("release digest covers every published file except its own receipt", async 
       )
       .digest("hex"),
   );
+});
+
+test("products off sale leave the sitemap, llms.txt and feeds, and their pages are noindex and discontinued", async () => {
+  const { OFF_SALE, onSale } = await import("../server/catalog/off-sale.mjs");
+  const all = JSON.parse(await readFile(new URL("../src/data/products.json", import.meta.url), "utf8"));
+  assert.ok(OFF_SALE.length && OFF_SALE.every((slug) => all.some((product) => product.slug === slug)), "every off-sale slug is a product");
+  const sitemap = await readFile(new URL("sitemap.xml", root), "utf8");
+  const llms = await readFile(new URL("llms.txt", root), "utf8");
+  const feed = await readFile(new URL("feeds/google.xml", root), "utf8");
+  for (const slug of OFF_SALE) {
+    const product = all.find((entry) => entry.slug === slug);
+    assert.ok(!sitemap.includes(`/shop/${slug}/`), `${slug} in sitemap`);
+    assert.ok(!llms.includes(`${product.title}: $${product.price}, ${product.color}`), `${slug} in llms.txt`);
+    assert.ok(!feed.includes(product.variants[0].id), `${slug} in feed`);
+    const page = await readFile(new URL(`shop/${slug}/index.html`, root), "utf8");
+    assert.match(page, /<meta name="robots" content="noindex, noarchive">/);
+    assert.ok(page.includes('"availability":"https://schema.org/Discontinued"'));
+    assert.match(await readFile(new URL("shop/index.html", root), "utf8"), new RegExp(`<article class="product-card" data-type="[a-z-]+" data-off-sale="${slug}" hidden>`));
+  }
+  for (const product of onSale(all)) assert.ok(sitemap.includes(`/shop/${product.slug}/`), product.slug);
+  // Dates come from the built commit, not a fixed day.
+  const [lastmod] = sitemap.match(/<lastmod>([^<]+)<\/lastmod>/).slice(1);
+  assert.match(lastmod, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(JSON.parse(await readFile(new URL("release.json", root), "utf8")).reviewed, lastmod);
+  assert.ok(llms.includes("Updated ") && !llms.includes("Reviewed October 15"));
+});
+test("search and shopping crawlers are welcome; AI training crawlers are not", async () => {
+  const robots = await readFile(new URL("robots.txt", root), "utf8");
+  for (const bot of ["OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-User", "PerplexityBot"]) assert.ok(robots.includes(`User-agent: ${bot}\nAllow: /`), bot);
+  for (const bot of ["GPTBot", "ClaudeBot"]) assert.ok(robots.includes(`User-agent: ${bot}\nDisallow: /`), bot);
+});
+test("every product offer states delivery time and the 30-day free-return policy", async () => {
+  const page = await readFile(new URL("shop/yikes-crewneck/index.html", root), "utf8");
+  const schema = JSON.parse(page.match(/<script type="application\/ld\+json">(\{"@context":"https:\/\/schema.org","@type":"ProductGroup"[\s\S]*?)<\/script>/)[1]);
+  const offer = schema.hasVariant[0].offers;
+  assert.equal(offer.hasMerchantReturnPolicy.merchantReturnDays, 30);
+  assert.equal(offer.hasMerchantReturnPolicy.returnFees, "https://schema.org/FreeReturn");
+  assert.deepEqual([offer.shippingDetails.deliveryTime.handlingTime.minValue, offer.shippingDetails.deliveryTime.transitTime.maxValue], [5, 6]);
 });

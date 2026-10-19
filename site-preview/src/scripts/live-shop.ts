@@ -4,7 +4,7 @@ import { catalogState, hideRetiredCards } from "./catalog-state";
 
 async function updateShop() {
   const state = await catalogState();
-  hideRetiredCards(state.retired);
+  hideRetiredCards(state.retired, state.known);
   const section = document.querySelector<HTMLElement>("[data-live-products]");
   const grid = section?.querySelector<HTMLElement>("[data-live-grid]");
   if (!section || !grid) return;

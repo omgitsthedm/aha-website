@@ -1,5 +1,6 @@
 import { recoverSelection, type SelectionVariant } from "./selection";
 import { catalogState, hideRetiredCards } from "./catalog-state";
+import offSale from "../data/off-sale.json";
 import { checkoutMarketingEnvelope, retainCheckoutReceipt, withdrawCheckoutPrivacy } from "./attribution";
 
 const STORAGE_KEY = "aha-cart-v2";
@@ -646,14 +647,18 @@ async function syncCatalogue() {
   }
   const slug = /^\/shop\/([a-z0-9-]+)\/$/.exec(location.pathname)?.[1];
   const form = document.querySelector<HTMLElement>("[data-cart-form]");
-  if (slug && form && state.retired.includes(slug)) {
+  // A piece off sale at build time stays unbuyable unless the server confirms it was restored.
+  const builtOffSale = Boolean(slug && offSale.products.includes(slug));
+  if (slug && form && (state.retired.includes(slug) || (builtOffSale && !state.known))) {
     const note = document.createElement("p");
     note.className = "checkout-note";
     note.setAttribute("role", "status");
     note.textContent = "This piece is no longer available.";
     form.replaceWith(note);
+    // No delivery estimate, Save button or quick-add bar for a piece that can't be bought.
+    document.querySelectorAll("[data-arrival], [data-save], [data-drop]").forEach((element) => element.remove());
   }
-  hideRetiredCards(state.retired);
+  hideRetiredCards(state.retired, state.known);
 }
 
 // "Back to your bag" in the bag-reminder email: ?bag=VARIATION:QTY,… puts those
