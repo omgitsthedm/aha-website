@@ -341,6 +341,8 @@ test.describe("campaign motion", () => {
     const frame = page.locator(".hero-image .motion-frame");
     await expect(frame.locator("img")).toBeVisible();
     await expect(frame).toHaveClass(/is-moving/, { timeout: 15_000 });
+    // The film's layer shows the photo's own file until the film plays (see motion.ts).
+    expect(await frame.locator("video").evaluate((element: HTMLVideoElement) => element.poster)).toBe(await frame.locator("img").evaluate((element: HTMLImageElement) => element.currentSrc));
     const video = frame.locator("video");
     await expect(video).toHaveAttribute("aria-hidden", "true");
     expect(await video.evaluate((element: HTMLVideoElement) => element.muted && element.loop && !element.paused)).toBe(true);
@@ -360,7 +362,7 @@ test.describe("campaign motion", () => {
     await frame.scrollIntoViewIfNeeded();
     await expect(frame.locator("video")).toHaveCount(1, { timeout: 15_000 });
     expect(await frame.getAttribute("data-motion-small")).toMatch(/-600t\.mp4$/);
-    expect(await frame.locator("video").getAttribute("src")).toBe(await frame.getAttribute("data-motion-small"));
+    await expect(frame.locator("video")).toHaveAttribute("src", (await frame.getAttribute("data-motion-small"))!, { timeout: 15_000 });
   });
 
   test("phones get the lighter film", async ({ page }) => {
@@ -368,7 +370,7 @@ test.describe("campaign motion", () => {
     await page.goto("/");
     const video = page.locator(".hero-image video");
     await expect(video).toHaveCount(1, { timeout: 15_000 });
-    expect(await video.getAttribute("src")).toBe(await page.locator(".hero-image .motion-frame").getAttribute("data-motion-small"));
+    await expect(video).toHaveAttribute("src", (await page.locator(".hero-image .motion-frame").getAttribute("data-motion-small"))!, { timeout: 15_000 });
   });
 });
 

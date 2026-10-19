@@ -1,0 +1,12 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+---
+<Admin title="Reviews" page="reviews">
+  <p class="admin-meta" data-admin-review-count>Reviews from shipped orders. Nothing appears on a product page until you approve it.</p>
+  <div class="admin-actions" role="group" aria-label="Show reviews">
+    <button type="button" class="admin-secondary" data-review-filter="pending" aria-pressed="true">Waiting</button>
+    <button type="button" class="admin-secondary" data-review-filter="approved" aria-pressed="false">Approved</button>
+    <button type="button" class="admin-secondary" data-review-filter="rejected" aria-pressed="false">Not published</button>
+  </div>
+  <div class="admin-list" data-admin-reviews aria-live="polite"></div>
+</Admin>

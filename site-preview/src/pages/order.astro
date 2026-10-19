@@ -16,7 +16,28 @@ import Site from "../layouts/Site.astro";
     <p class="order-note" data-order-note></p>
     <div class="order-tracking" data-order-tracking hidden></div>
     <ul class="order-items" data-order-items hidden></ul>
+    <div class="order-keep" data-order-keep hidden>
+      <button type="button" class="button button-secondary" data-order-keep-button>Add to my account</button>
+      <p data-order-keep-status role="status"></p>
+    </div>
     <p class="order-help">Questions about this order? Write to <a href="mailto:info@afterhoursagenda.com">info@afterhoursagenda.com</a> with your order number.</p>
   </section>
+  <section class="shell section order-reviews" aria-labelledby="review-title" data-order-reviews hidden>
+    <h2 id="review-title">How are your pieces?</h2>
+    <p>Reviews appear on the product page after we read them. Use a first name or initials if you’d like a name shown.</p>
+    <div data-review-forms></div>
+  </section>
+  <template data-review-template>
+    <form class="review-form" novalidate>
+      <h3></h3>
+      <fieldset class="review-rating"><legend>Your rating</legend>
+        {[5, 4, 3, 2, 1].map((stars) => <label><input type="radio" name="rating" value={stars} required /><span>{stars} {stars === 1 ? "star" : "stars"}</span></label>)}
+      </fieldset>
+      <label>Your review <textarea name="body" rows="4" maxlength="600" required></textarea></label>
+      <label>Name to show (optional) <input name="name" maxlength="40" autocomplete="given-name" /></label>
+      <button type="submit" class="button">Send review</button>
+      <p class="review-status" role="status"></p>
+    </form>
+  </template>
 </Site>
 <script src="../scripts/order-status.ts"></script>

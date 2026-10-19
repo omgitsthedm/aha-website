@@ -258,6 +258,8 @@ select:focus-visible {
   text-decoration-color: var(--accent);
   text-decoration-thickness: 2px;
 }
+.header-tools{display:flex;align-items:center;gap:22px}.header-account{display:inline-flex;align-items:center;min-height:44px;padding:.4rem .2rem;font:700 12px var(--mono);text-decoration:none;white-space:nowrap}.header-account[aria-current]{text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px}
+@media (max-width:760px){.header-account{display:none}}
 .header-cart{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:44px;padding:.4rem .2rem;font:700 12px var(--mono);text-decoration:none;white-space:nowrap}.header-cart span{display:inline-grid;place-items:center;min-width:1.35rem;height:1.35rem;padding-inline:.22rem;background:var(--ink);color:var(--paper);font-size:.68rem;font-variant-numeric:tabular-nums}
 .mobile-nav {
   display: none;
@@ -1237,7 +1239,22 @@ h1,h2,h3{text-wrap:balance}p,li,figcaption{text-wrap:pretty}
 .fit-form .measure-diagram{max-width:200px;justify-self:center}
 @media(max-width:540px){.measure-figure{grid-template-columns:1fr}.measure-figure svg{max-width:240px}}
 /* Campaign motion loops (MotionImage.astro, scripts/motion.ts): the loop sits exactly over its photo and fades in once it plays. */
-.motion-frame{position:relative;display:block}.hero-image .image-number{z-index:2}.motion-video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s ease;pointer-events:none}.motion-frame.is-moving .motion-video{opacity:1}.campaign-grid .motion-video{border:1px solid var(--line)}
+.motion-frame{position:relative;display:block}.hero-image .image-number{z-index:2}.motion-video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}.campaign-grid .motion-video{border:1px solid var(--line)}
 .motion-toggle{position:absolute;right:.75rem;top:.75rem;z-index:1;min-height:40px;padding:.4rem .8rem;background:var(--paper);color:var(--ink);border:1px solid var(--ink);font:700 .72rem var(--mono);letter-spacing:.05em;text-transform:uppercase;opacity:0;transition:opacity .3s,background-color .15s,color .15s}.motion-frame.is-moving .motion-toggle,.motion-toggle:focus-visible{opacity:1}.motion-toggle:hover,.motion-toggle:focus-visible{background:var(--ink);color:var(--paper)}
 .motion-note{display:none}.motion-frame.is-moving~figcaption .motion-note{display:inline}.motion-frame.is-moving~figcaption .still-note{display:none}
 @media(max-width:760px){.hero-image .motion-video{object-position:center 40%}.campaign-grid .motion-video{border:0}}
+
+/* Accounts, saved pieces, reviews and early access (src/pages/account.astro, product and order pages). */
+.save-piece{justify-self:start;min-height:44px}.save-piece::before{content:"♡ ";color:var(--accent)}.save-piece[aria-pressed="true"]::before{content:"♥ "}
+.drop-note{margin:0 0 18px;padding:12px 14px;border:1px solid var(--accent);font-size:.92rem;line-height:1.5}.drop-note .text-link{white-space:nowrap}
+.reviews-summary{font:700 13px var(--mono);letter-spacing:.04em}
+.review-list{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:0;max-width:760px}.review-list li{padding:22px 0;border-top:1px solid var(--line)}.review-list li p{margin:0 0 8px}
+.review-stars{color:var(--accent);letter-spacing:.12em;font-size:1.05rem}.review-by{font:12px var(--mono);color:var(--muted)}
+.account-panel{padding-bottom:40px}.account-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:0 0 16px}.account-note{max-width:60ch;color:var(--muted);font-size:.92rem}.account-status{min-height:1.5em;font-weight:700}
+.account-section{border-top:1px solid var(--line)}.account-section>h2,.order-reviews>h2{margin:0 0 22px}.account-section>p,.order-reviews>p{max-width:60ch}.saved-grid>[data-saved-card]:not([hidden]){display:contents}
+.account-orders,.account-drops{list-style:none;margin:18px 0 0;padding:0;max-width:760px}.account-orders li,.account-drops li{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;padding:16px 0;border-top:1px solid var(--line)}
+.order-keep{margin:28px 0 0}.order-keep p{min-height:1.5em;margin:10px 0 0}
+.order-reviews{border-top:1px solid var(--line)}.review-form{display:grid;gap:16px;max-width:640px;padding:26px 0;border-top:1px solid var(--line)}.review-form h3{margin:0;font-size:1.15rem}
+.review-form label{display:grid;gap:6px;font-weight:700;font-size:.92rem}.review-form textarea,.review-form input[name=name]{font:inherit;font-weight:400;padding:12px;border:1px solid var(--control);background:var(--paper);color:var(--ink)}
+.review-rating{display:flex;flex-wrap:wrap;gap:8px;border:0;margin:0;padding:0}.review-rating legend{font-weight:700;font-size:.92rem;margin-bottom:8px}.review-rating label{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;border:1px solid var(--control);font-weight:400;cursor:pointer}.review-rating input{accent-color:var(--accent)}.review-rating label:has(input:checked){border-color:var(--ink);font-weight:700}
+.review-form .button{justify-self:start}.review-status{min-height:1.5em;margin:0}

@@ -167,9 +167,9 @@ export const documents = [
   {
     "slug": "privacy",
     "metaTitle": "Privacy and your information",
-    "eyebrow": "Privacy · October 16, 2026",
+    "eyebrow": "Privacy · October 19, 2026",
     "title": "Your information.",
-    "description": "How After Hours Agenda uses website information, analytics and marketing tools, email sign-ups, secure Square payments and order information.",
+    "description": "How After Hours Agenda uses website information, analytics and marketing tools, email sign-ups, accounts, reviews, secure Square payments and order information.",
     "lead": "This site uses analytics and marketing tools by default. You can change those choices in the footer.",
     "sections": [
       [
@@ -187,6 +187,14 @@ export const documents = [
       [
         "Email updates",
         "If you sign up for email updates, we keep your email address, the page you signed up on and the date, and use them only to send After Hours Agenda news about new pieces. We never sell or share the list. Every email we send will include a way to unsubscribe, and you can ask us to remove your address at any time by writing to info@afterhoursagenda.com. Signing up doesn't add you to anything else, and buying something doesn't sign you up."
+      ],
+      [
+        "Accounts and saved pieces",
+        "Pieces you save are kept in this browser. If you create an account, you sign in with a passkey that your device or password manager keeps; we store only the passkey's public key, never a name, email address or password. An account holds the pieces you save and the orders you choose to add from your order link. Signing in uses a cookie that keeps you signed in on that device for up to 90 days. Delete my account on your account page removes the account, its passkey, saved pieces and order list; your orders themselves aren't affected."
+      ],
+      [
+        "Reviews",
+        "After an order ships, its order link lets you review the pieces in it. We keep the rating, your words and the name you choose to show, linked to that order. Reviews appear on the product page only after we read them, with your chosen name or “Verified buyer”. To change or remove a review, edit it from the same link or write to info@afterhoursagenda.com."
       ],
       [
         "Contact",

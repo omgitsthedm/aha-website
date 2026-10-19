@@ -1,0 +1,56 @@
+---
+import Site from "../layouts/Site.astro";
+import ProductCard from "../components/ProductCard.astro";
+import products from "../data/products.json";
+import { dropNote, pendingDrops } from "../../server/catalog/drops.mjs";
+type Drop = { slug: string; earlyAccessAt: string; releaseAt: string };
+const drops = (pendingDrops() as Drop[]).flatMap((drop) => {
+  const product = products.find((entry) => entry.slug === drop.slug);
+  return product ? [{ drop, product }] : [];
+});
+---
+<Site title="Your account" description="Save pieces, keep your After Hours Agenda orders together and get early access to new drops. Sign in with a passkey: no password, no email." noindex>
+  <header class="page-head shell">
+    <p class="label">Your account</p>
+    <h1>Your pieces, in one place.</h1>
+    <p class="lede">Save pieces, keep your orders together and get early access to new drops. You sign in with a passkey: no password and no email address.</p>
+  </header>
+  <section class="shell account-panel" aria-label="Sign in" aria-live="polite">
+    <div data-account-out>
+      <div class="account-actions">
+        <button type="button" class="button" data-account-create>Create an account</button>
+        <button type="button" class="button button-secondary" data-account-signin>Sign in</button>
+      </div>
+      <p class="account-note">Your phone, computer or password manager keeps the passkey. We store only its public key, never your name, email address or a password.</p>
+    </div>
+    <div data-account-in hidden>
+      <p>You’re signed in on this device.</p>
+      <div class="account-actions">
+        <button type="button" class="button button-secondary" data-account-signout>Sign out</button>
+        <button type="button" class="text-button" data-account-delete>Delete my account</button>
+      </div>
+    </div>
+    <p class="account-status" data-account-status role="status"></p>
+  </section>
+  <section class="shell section account-section" id="saved" aria-labelledby="saved-title">
+    <h2 id="saved-title">Saved pieces.</h2>
+    <p data-saved-empty>Nothing saved yet. Choose Save for later on any piece and it shows up here.</p>
+    <div class="product-grid saved-grid" data-saved-grid>
+      {products.map((product) => <div data-saved-card={product.slug} hidden><ProductCard product={product} /></div>)}
+    </div>
+  </section>
+  <section class="shell section account-section" id="orders" aria-labelledby="orders-title" data-account-orders hidden>
+    <h2 id="orders-title">Your orders.</h2>
+    <p data-orders-empty>To add an order, open the link in your order email and choose Add to my account.</p>
+    <ul class="account-orders" data-orders-list></ul>
+  </section>
+  <section class="shell section account-section" id="early-access" aria-labelledby="early-title">
+    <h2 id="early-title">Early access.</h2>
+    {drops.length ? (
+      <ul class="account-drops">{drops.map(({ drop, product }) => <li><a href={`/shop/${product.slug}/`}>{product.title} — {product.color}</a> {dropNote(drop)}</li>)}</ul>
+    ) : (
+      <p>When a new drop is announced, account holders can buy it before everyone else. Drops are announced on the <a href="/updates/">Updates</a> page.</p>
+    )}
+  </section>
+</Site>
+<script src="../scripts/account.ts"></script>

@@ -16,6 +16,8 @@ export default defineConfig({
     ? undefined
     : {
         command: 'node scripts/serve.mjs',
+        // Real account and review handlers on an in-memory database (scripts/local-accounts.mjs).
+        env: { AHA_LOCAL_ACCOUNTS: '1' },
         url: 'http://127.0.0.1:48379',
         reuseExistingServer: false,
         timeout: 15000,

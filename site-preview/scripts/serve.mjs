@@ -64,10 +64,13 @@ function headersFor(pathname) {
   }
   return result;
 }
+// Browser tests run the real account and review handlers on an in-memory database.
+const localAccounts = process.env.AHA_LOCAL_ACCOUNTS === "1" ? await (await import("./local-accounts.mjs")).createLocalAccounts(port) : null;
 http
   .createServer(async (req, res) => {
     let headers = headersFor("/");
     try {
+      if (localAccounts && await localAccounts(req, res, new URL(req.url, "http://localhost").pathname)) return;
       if (!["GET", "HEAD"].includes(req.method)) {
         res.writeHead(405, headers);
         res.end();

@@ -84,7 +84,7 @@ function card(value: number | string, label: string, href?: string, alert = fals
 
 async function renderOverview() {
   type Report = { ok: boolean; createdAt: string; summary: { problems?: string[] } };
-  const [me, data] = await Promise.all([api<{ email: string }>("me"), api<{ ordersToday: number; ordersThisWeek: number; ordersNeedingAttention: number; draftsWaiting: number; draftsApproved: number; signups?: { total: number; last7Days: number }; reports?: { daily_health?: Report; weekly_digest?: Report } }>("overview")]);
+  const [me, data] = await Promise.all([api<{ email: string }>("me"), api<{ ordersToday: number; ordersThisWeek: number; ordersNeedingAttention: number; draftsWaiting: number; draftsApproved: number; reviewsWaiting?: number; signups?: { total: number; last7Days: number }; reports?: { daily_health?: Report; weekly_digest?: Report } }>("overview")]);
   const target = document.querySelector("[data-admin-overview]")!;
   target.replaceChildren(
     card(data.ordersToday, "Orders today", "/admin/orders/"),
@@ -92,6 +92,7 @@ async function renderOverview() {
     card(data.ordersNeedingAttention, "Orders needing attention", "/admin/orders/", data.ordersNeedingAttention > 0),
     card(data.draftsWaiting, "Drafts waiting for you", "/admin/products/", data.draftsWaiting > 0),
     card(data.draftsApproved, "Approved, not yet published", "/admin/products/"),
+    card(data.reviewsWaiting ?? 0, "Reviews waiting for you", "/admin/reviews/", (data.reviewsWaiting ?? 0) > 0),
     card(data.signups?.total ?? 0, `Email sign-ups (${data.signups?.last7Days ?? 0} this week)`, "/admin/signups/"),
   );
   const health = data.reports?.daily_health;
@@ -199,6 +200,38 @@ async function renderSignups() {
   }));
 }
 
+type AdminReview = { id: string; order: string; product: string; rating: number; body: string; name: string | null; status: string; updatedAt: string };
+let reviewFilter = "pending";
+async function renderReviews() {
+  const { counts, reviews } = await api<{ counts: Record<string, number>; reviews: AdminReview[] }>(`reviews?status=${reviewFilter}`);
+  document.querySelector("[data-admin-review-count]")!.textContent = `${counts.pending} waiting, ${counts.approved} approved, ${counts.rejected} not published. Nothing appears on a product page until you approve it.`;
+  const list = document.querySelector("[data-admin-reviews]")!;
+  if (!reviews.length) { list.replaceChildren(el("p", { className: "admin-empty", textContent: reviewFilter === "pending" ? "No reviews waiting." : "None here." })); return; }
+  list.replaceChildren(...reviews.map((review) => {
+    const actions = el("div", { className: "admin-actions" });
+    for (const [action, label] of review.status === "approved" ? [["reject", "Take down"]] : review.status === "rejected" ? [["approve", "Approve"]] : [["approve", "Approve"], ["reject", "Don’t publish"]]) {
+      const button = el("button", { type: "button", className: action === "approve" ? "admin-primary" : "admin-secondary", textContent: label });
+      button.addEventListener("click", async () => {
+        try {
+          const { refreshed } = await post<{ refreshed: boolean }>(`reviews/${review.id}/${action}`);
+          say(`${action === "approve" ? "Approved." : "Taken off the site."} ${refreshed ? "The product page updates within a minute." : "The site’s cache didn’t refresh, so the product page can take up to ten minutes to update."}`);
+          await renderReviews();
+        } catch (error) { say((error as Error).message); }
+      });
+      actions.append(button);
+    }
+    return el("article", { className: "admin-row" },
+      el("header", {}, el("h3", { textContent: `${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)} · ${review.product}` }), actions),
+      el("p", { textContent: review.body }),
+      el("p", { className: "admin-meta" }, el("span", { textContent: review.name ?? "Verified buyer" }), el("span", { textContent: `Order ${review.order}` }), el("span", { textContent: when.format(new Date(review.updatedAt)) })));
+  }));
+}
+document.querySelectorAll<HTMLButtonElement>("[data-review-filter]").forEach((button) => button.addEventListener("click", async () => {
+  reviewFilter = button.dataset.reviewFilter ?? "pending";
+  document.querySelectorAll<HTMLButtonElement>("[data-review-filter]").forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+  await renderReviews().catch((error) => say((error as Error).message));
+}));
+
 let draftFilter = "draft";
 async function renderDrafts() {
   const { drafts } = await api<{ drafts: Draft[] }>(`drafts?status=${encodeURIComponent(draftFilter)}`);
@@ -264,6 +297,7 @@ async function load() {
     if (page === "overview") await renderOverview();
     if (page === "orders") await renderOrders();
     if (page === "products") { await renderCatalog(); await renderDrafts(); }
+    if (page === "reviews") await renderReviews();
     if (page === "signups") await renderSignups();
     if (page === "analytics") await renderAnalytics();
   } catch (error) {
