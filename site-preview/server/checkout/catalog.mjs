@@ -47,6 +47,21 @@ export function normalizeAddress(raw) {
   return Object.freeze({ firstName, lastName, addressLine1, addressLine2, city, region, postalCode, country, email, phone });
 }
 
+/**
+ * The part of an address Apple Pay and Google Pay share before the buyer approves
+ * the payment: country, region, postal code and city. Enough to price shipping and
+ * tax for the wallet sheet; the full address comes with the payment token.
+ */
+export function normalizeDestination(raw) {
+  if (!raw || typeof raw !== "object") throw new CheckoutError("invalid_address", 422);
+  const country = text(raw.country, 2).toUpperCase();
+  if (!/^[A-Z]{2}$/.test(country) || !SUPPORTED_COUNTRIES.has(country)) throw new CheckoutError("unsupported_destination", 422);
+  let region = text(raw.region, 80, false) ?? "";
+  const postalCode = text(raw.postalCode, 20, false) ?? "";
+  if (country === "US") { region = normalizeUsRegion(region); if (!US_STATES.has(region) || !/^\d{5}(?:-\d{4})?$/.test(postalCode)) throw new CheckoutError("invalid_address", 422); }
+  return Object.freeze({ firstName: "Wallet", lastName: "Estimate", addressLine1: "Address pending", addressLine2: null, city: text(raw.city, 80, false) ?? "Pending", region: region || "Pending", postalCode: postalCode || "Pending", country, email: null, phone: null });
+}
+
 export function appliesArizonaTax(address) {
   return address.country === "US" && (address.region.toUpperCase() === "AZ" || /^(85|86)/.test(address.postalCode));
 }

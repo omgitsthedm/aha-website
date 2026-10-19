@@ -62,6 +62,7 @@ const productSchema={
     <button type="submit" class="button button-secondary buy-now" data-buy-now>Buy now <span aria-hidden="true">→</span></button>
     <button type="button" class="text-button save-piece" data-save={product.slug} aria-pressed="false" hidden>Save for later</button>
     <p class="cart-add-status" data-cart-add-status aria-live="polite"></p>
+    <div class="express-pay" data-express hidden><p class="label">Or pay now</p><button type="button" class="apple-pay-button" data-express-apple aria-label="Buy with Apple Pay" hidden><span aria-hidden="true"> Pay</span></button><div id="aha-express-google" data-express-google></div><p class="checkout-note" data-express-status aria-live="polite"></p></div>
    </form>
    <a class="text-link size-link" href="#size-guide">Check measurements ↓</a>
    <p class="checkout-note">Free domestic shipping. Final tax and payment options are shown securely at checkout.</p>

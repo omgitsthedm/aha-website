@@ -1,5 +1,5 @@
 import { randomBytes, createHash, randomUUID } from "node:crypto";
-import { buildSquareOrder, CURRENCY, normalizeAddress, normalizeItems } from "./catalog.mjs";
+import { buildSquareOrder, CURRENCY, normalizeAddress, normalizeDestination, normalizeItems } from "./catalog.mjs";
 import { CheckoutError } from "./errors.mjs";
 import { normalizeAnalyticsIds } from "../analytics/posthog.mjs";
 import { narrowMarketingContext, normalizeMarketingContext, restrictMarketingContext } from "../analytics/marketing.mjs";
@@ -22,6 +22,26 @@ function paymentOutcomeTimedOut(session, now) {
 
 export function createCheckoutService({ repository, square, config, catalog, eligibleProviders = [], now = () => Date.now(), createId = randomUUID }) {
   if (!config.locationId) throw new Error("checkout location is not configured");
+  // Square prices the order; the quote and the wallet estimate share this exactly.
+  async function price(items, address, referenceId) {
+    const orderPayload = buildSquareOrder({ items, address, locationId: config.locationId, referenceId });
+    let priced;
+    try { priced = await square.calculateOrder(orderPayload); } catch { throw new CheckoutError("checkout_unavailable", 503); }
+    const totalCents = total(priced);
+    if (totalCents === null || priced.location_id !== config.locationId) throw new CheckoutError("checkout_unavailable", 503);
+    const subtotalCents = items.reduce((sum, item) => sum + item.totalAmount, 0);
+    const shippingCents = address.country === "US" ? 0 : 2500;
+    const taxCents = Number(priced.total_tax_money?.amount ?? 0);
+    if (!Number.isSafeInteger(taxCents) || totalCents !== subtotalCents + shippingCents + taxCents) throw new CheckoutError("checkout_unavailable", 503);
+    return { orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel: taxCents ? "Arizona TPT (Peoria 8.1%)" : null, shippingLabel: shippingCents ? "International shipping" : "Free U.S. shipping" };
+  }
+  // The total a wallet sheet shows while the shopper picks an address. Nothing is
+  // stored: the quote made from the approved payment's full address is what's charged.
+  async function estimate({ items: rawItems, destination }) {
+    const items = normalizeItems(rawItems, catalog);
+    const { subtotalCents, shippingCents, taxCents, totalCents, taxLabel, shippingLabel } = await price(items, normalizeDestination(destination), "AHA-estimate");
+    return { currency: CURRENCY, subtotalAmount: subtotalCents, shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel };
+  }
   async function quote({ items: rawItems, shippingAddress, analytics: rawAnalytics, marketing: rawMarketing }) {
     const items = normalizeItems(rawItems, catalog);
     const address = normalizeAddress(shippingAddress);
@@ -31,16 +51,7 @@ export function createCheckoutService({ repository, square, config, catalog, eli
     });
     const checkoutId = createId();
     const checkoutToken = token();
-    const orderPayload = buildSquareOrder({ items, address, locationId: config.locationId, referenceId: `AHA-${checkoutId}` });
-    let priced;
-    try { priced = await square.calculateOrder(orderPayload); } catch { throw new CheckoutError("checkout_unavailable", 503); }
-    const totalCents = total(priced);
-    if (totalCents === null || priced.location_id !== config.locationId) throw new CheckoutError("checkout_unavailable", 503);
-    const subtotalCents = items.reduce((sum, item) => sum + item.totalAmount, 0);
-    const shippingCents = address.country === "US" ? 0 : 2500;
-    const taxCents = Number(priced.total_tax_money?.amount ?? 0);
-    if (!Number.isSafeInteger(taxCents) || totalCents !== subtotalCents + shippingCents + taxCents) throw new CheckoutError("checkout_unavailable", 503);
-    const taxLabel = taxCents ? "Arizona TPT (Peoria 8.1%)" : null;
+    const { orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel, shippingLabel } = await price(items, address, `AHA-${checkoutId}`);
     const expiresAt = new Date(now() + QUOTE_TTL_MS).toISOString();
     await repository.create({ checkoutId, tokenHash: sha256(checkoutToken), currency: CURRENCY, cart: items, address, orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel, orderIdempotencyKey: `aha-order-${checkoutId}`, expiresAt, analytics });
     // Never reject a quote if the optional attribution migration has not been
@@ -50,7 +61,7 @@ export function createCheckoutService({ repository, square, config, catalog, eli
       eligibleProviders: ["google", "meta"].filter((provider) => Array.isArray(eligibleProviders) && eligibleProviders.includes(provider)),
       paymentConsentConfirmed: false,
     } });
-    return { checkoutId, checkoutToken, expiresAt, currency: CURRENCY, shippingRegion: address.region, lineItems: lineResponse(items), subtotalAmount: subtotalCents, shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel: shippingCents ? "International shipping" : "Free U.S. shipping" };
+    return { checkoutId, checkoutToken, expiresAt, currency: CURRENCY, shippingRegion: address.region, lineItems: lineResponse(items), subtotalAmount: subtotalCents, shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel };
   }
   async function persistNarrowedMarketing(session, derive, { required = false } = {}) {
     let current = session;
@@ -183,7 +194,7 @@ export function createCheckoutService({ repository, square, config, catalog, eli
     }
     return { accepted: true, updated };
   }
-  return { quote, pay, status, privacy };
+  return { estimate, quote, pay, status, privacy };
 }
 
 export function publicCheckoutResult(result) {
