@@ -13,4 +13,5 @@ const garmentFilters = GARMENT_GROUPS.filter(group => pieces.some(product => gar
   <section class="shell shop-end"><p>See how it’s worn.</p><a class="text-link" href="/lookbook/">Explore the lookbook</a></section>
 </Site>
 <script src="../../scripts/live-shop.ts"></script>
-<style>.shop-garments{display:grid;gap:34px}@media(max-width:760px){.shop-garments{gap:28px}}</style>
+<noscript><style is:inline>#main [data-type-filter][hidden]{display:none!important}</style></noscript>
+<style>.shop-garments{display:grid;gap:34px}.type-filter[hidden]{display:flex!important;visibility:hidden}@media(max-width:760px){.shop-garments{gap:28px}}</style>

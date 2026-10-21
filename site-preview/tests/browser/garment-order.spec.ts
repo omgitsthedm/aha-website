@@ -34,3 +34,18 @@ test('the phone menu includes every garment style and links to the cropped hoodi
   await expect(page).toHaveURL(/\/shop\/\?type=cropped-hoodies$/);
   await expect(page.locator('article.product-card:visible')).toHaveCount(1);
 });
+
+test('phone filters reserve their space before scripts arrive', async ({ page }) => {
+  await page.setViewportSize({ width: 412, height: 823 });
+  let release!: () => void;
+  const scripts = new Promise<void>(resolve => { release = resolve; });
+  await page.route('**/_astro/*.js', async route => { await scripts; await route.continue(); });
+  await page.goto('/shop/', { waitUntil: 'commit' });
+  const search = page.getByRole('searchbox', { name: 'Find a garment, color or design' });
+  await expect(search).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  const before = (await search.boundingBox())!.y;
+  release();
+  await expect(page.locator('[data-type-filter]')).toBeVisible();
+  expect(Math.abs((await search.boundingBox())!.y - before)).toBeLessThan(1);
+});
