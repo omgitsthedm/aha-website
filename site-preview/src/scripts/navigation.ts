@@ -46,6 +46,9 @@ input.addEventListener('input', async () => {
   const current = ++request, term = input.value.trim().toLowerCase();
   results.hidden = !term; browse.hidden = Boolean(term);
   if (!term) { status.textContent = ''; return; }
+  // Keep unused search cards out of the document until someone searches.
+  const catalog = query<HTMLTemplateElement>(results, 'template');
+  if (catalog) catalog.replaceWith(catalog.content);
   status.textContent = 'Finding pieces…';
   const state = await catalogState();
   if (current !== request) return;
