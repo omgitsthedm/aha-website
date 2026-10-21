@@ -45,6 +45,9 @@ if (filter) {
     applyFilter();
   });
 }
+// The built catalog can be filtered immediately, even on a slow catalog request.
+// Filter again when newly published or retired pieces arrive.
+applyFilter();
 void updateShop().then(applyFilter);
 
 searchField?.addEventListener("input", applyFilter);

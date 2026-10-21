@@ -6,6 +6,7 @@
 - The committed catalog source contains 45 on-sale garment/color products and 215 on-sale size variants; one retired product remains hidden for account history and restore controls. This is source inventory, not a fresh claim about channel approvals.
 - Current campaign photographs are registered in `site-preview/src/data/photography.json`. They replace editorial views only; garment-only galleries and provider/checkout data remain intact. Supplied AI metadata is retained in responsive WebP/AVIF display exports.
 - Garment-only images use the reviewed white-background exports under `/images/white-2026-10/`, with AVIF display sources and WebP fallback. Original garment pixels and supplied source metadata are preserved; full fabric close-ups stay intact. The lookbook headline is “Out & About It.”
+- Link-preview cards are committed 1200×630 JPEGs under `/brand/share-fw26-20261020/`, mapped in `site-preview/src/data/social-cards.json`: 45 current product cards, 11 design cards and four editorial/shop cards. Content-hashed image URLs change when a card changes; runtime and static product metadata must agree.
 - Verify deployment from the exact site's current published deploy, GitHub `main` and `/release.json`. Older snapshots below are dated evidence and do not establish current channel or purchase status.
 
 ## Historical verification snapshot — October 18, 2026

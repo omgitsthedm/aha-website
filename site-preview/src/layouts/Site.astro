@@ -3,6 +3,7 @@ import "../styles/storefront.css";
 import ProductTools from "../components/ProductTools.astro";
 import Navigation from "../components/Navigation.astro";
 import avif from "../data/avif.json";
+import socialCards from "../data/social-cards.json";
 import { answers, brand } from "../data/site";
 import Consent from '../components/Consent.astro';
 import EmailSignup from '../components/EmailSignup.astro';
@@ -21,7 +22,12 @@ const { title, description, path = Astro.url.pathname, noindex = false, image, i
 const origin = Astro.site!.origin;
 const canonical = new URL(path, origin).href;
 const isPreview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
-const shareImage=image?new URL(image,origin).href:`${origin}/brand/og-fw26.jpg`;
+const card = (socialCards as Record<string, {src: string; alt: string; width: number; height: number}>)[path];
+const fallbackCard = socialCards['/'];
+const shareImage = new URL(card?.src ?? image ?? fallbackCard.src, origin).href;
+const shareAlt = card?.alt ?? imageAlt ?? fallbackCard.alt;
+const shareWidth = card?.width ?? (image ? imageWidth : fallbackCard.width);
+const shareHeight = card?.height ?? (image ? imageHeight : fallbackCard.height);
 // One sign-up form per page: Home and Updates have their own, and the bag and order
 // pages stay clear. Every product page shares this footer (the live renderer reuses
 // it), so the form reports the section of the site, not the exact page.
@@ -119,15 +125,17 @@ const schema = {
       property="og:image"
       content={shareImage}
     />
-    <meta property="og:image:width" content={String(imageWidth)} />
-    <meta property="og:image:height" content={String(imageHeight)} />
+    <meta property="og:image:type" content={shareImage.endsWith('.webp') ? 'image/webp' : 'image/jpeg'} />
+    <meta property="og:image:width" content={String(shareWidth)} />
+    <meta property="og:image:height" content={String(shareHeight)} />
     <meta
       property="og:image:alt"
-      content={imageAlt || 'Graphic tees beside the headline Get comfortable making an impression, on Rose.'}
+      content={shareAlt}
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${title} | After Hours Agenda`} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image:alt" content={shareAlt} />
     <meta
       name="twitter:image"
       content={shareImage}

@@ -70,9 +70,26 @@ test("menu categories and search reach the matching garments on a phone", async 
   await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).fill('');
   await menu.getByRole('link', { name: /^Tees/ }).click();
   await expect(page).toHaveURL(/type=tees/);
+  await expect(page.locator('[data-filter="tees"]')).toHaveAttribute('aria-pressed', 'true');
   const cards = page.locator('article.product-card:visible');
   expect(await cards.count()).toBeGreaterThan(0);
   expect(await cards.evaluateAll(items => items.every(item => (item as HTMLElement).dataset.type === 'tees'))).toBe(true);
+});
+
+test("a category filters the built garments while the live catalog is still loading", async ({ page }) => {
+  let releaseCatalog!: () => void;
+  const catalogReady = new Promise<void>(resolve => { releaseCatalog = resolve; });
+  await page.route('**/api/catalog/live', async route => {
+    await catalogReady;
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ products: [], retired: [], known: true }) });
+  });
+  try {
+    await page.goto('/shop/?type=tees', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('[data-filter="tees"]')).toHaveAttribute('aria-pressed', 'true');
+    const cards = page.locator('article.product-card:visible');
+    expect(await cards.count()).toBeGreaterThan(0);
+    expect(await cards.evaluateAll(items => items.every(item => (item as HTMLElement).dataset.type === 'tees'))).toBe(true);
+  } finally { releaseCatalog(); }
 });
 
 test("product pages on a phone keep price and the next step in a bar until the size picker is in view", async ({ page }) => {

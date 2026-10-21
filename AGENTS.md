@@ -21,6 +21,8 @@ The owner approved the photography-first website: Paper #FAFAFA, Ink #1A1A1A and
 
 The lookbook headline is “Out & About It.” Product mockups use one white studio background, not a mix of grey, cream and white. The owner authorized conventional background masking on October 20: preserve the supplied garment and print pixels, retain originals, inspect every view and check difficult edges before publishing. Fabric-filled close-ups keep their actual fabric color and texture. Version replacement image URLs so returning customers do not keep cached older backgrounds.
 
+Link previews use the current 1200×630 JPEGs in `site-preview/src/data/social-cards.json`, with content-hashed filenames. Regenerate with `tools/images/social-cards.mjs` after approved garment or campaign changes, review every card and preserve exact garment/color matches. Homepage, shop, lookbook, story, current products and design pages have dedicated cards; support pages use the current home card. Keep Open Graph and Twitter metadata and the runtime product renderer aligned. Social-platform caches are external; new image URLs avoid reusing old image bytes.
+
 ## Source, application, and release
 
 - Work in the current isolated task checkout only when assigned. The primary working clone is `/Users/davidmarsh/Code/LiFi NYC/Clients/After Hours Agenda/aha-website`; the registered push checkout is `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`. Preserve its branch and use it only for the guarded fetch-and-push path when a separately authorized release requires it.

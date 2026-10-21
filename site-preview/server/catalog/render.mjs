@@ -9,6 +9,7 @@ import { dropFor, dropNote, dropStage } from "./drops.mjs";
 import { isOffSale } from "./off-sale.mjs";
 import { RETURN_POLICY, SHIPPING_DETAILS } from "./offer-terms.mjs";
 import avifSources from "../../src/data/avif.json" with { type: "json" };
+import socialCards from "../../src/data/social-cards.json" with { type: "json" };
 
 const ESCAPABLE = /[&<>'"]/g;
 const ENTITIES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
@@ -110,6 +111,7 @@ export function renderLivePage(shellHtml, product, products) {
   const title = `${product.title} — ${product.color}`;
   const canonical = `${origin}/shop/${product.slug}/`;
   const cover = product.gallery[0];
+  const share = socialCards[`/shop/${product.slug}/`] ?? { src: cover.feedImage, width: cover.width, height: cover.height, alt: cover.alt };
   const avifCover = avifSources[cover.src];
   let head = shell.html.slice(0, shell.mainStart);
   const tail = shell.html.slice(shell.mainEnd);
@@ -120,9 +122,9 @@ export function renderLivePage(shellHtml, product, products) {
   // Off-sale pages are noindex in the build (src/pages/shop/[product].astro). The shell is
   // always an on-sale page, so its robots tag is already right for everything else.
   if (isOffSale(product.slug)) head = replaceOnce(head, /<meta name="robots" content="[^"]*">/, `<meta name="robots" content="noindex, noarchive">`, "robots");
-  const meta = { "og:title": `${title} | After Hours Agenda`, "og:description": product.description, "og:url": canonical, "og:image": new URL(cover.feedImage, origin).href, "og:image:width": String(cover.width), "og:image:height": String(cover.height), "og:image:alt": cover.alt };
+  const meta = { "og:title": `${title} | After Hours Agenda`, "og:description": product.description, "og:url": canonical, "og:image": new URL(share.src, origin).href, "og:image:type": share.src.endsWith('.webp') ? 'image/webp' : 'image/jpeg', "og:image:width": String(share.width), "og:image:height": String(share.height), "og:image:alt": share.alt };
   for (const [property, value] of Object.entries(meta)) head = replaceOnce(head, new RegExp(`<meta property="${property}" content="[^"]*">`), `<meta property="${property}" content="${attr(value)}">`, property);
-  const twitter = { "twitter:title": `${title} | After Hours Agenda`, "twitter:description": product.description, "twitter:image": new URL(cover.feedImage, origin).href };
+  const twitter = { "twitter:title": `${title} | After Hours Agenda`, "twitter:description": product.description, "twitter:image": new URL(share.src, origin).href, "twitter:image:alt": share.alt };
   for (const [name, value] of Object.entries(twitter)) head = replaceOnce(head, new RegExp(`<meta name="${name}" content="[^"]*">`), `<meta name="${name}" content="${attr(value)}">`, name);
   head = replaceOnce(head, /<script type="application\/ld\+json">([\s\S]*?)<\/script>/, (_match, body) => {
     const schema = JSON.parse(body.replace(/\\u003c/g, "<"));
