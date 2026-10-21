@@ -69,7 +69,7 @@ test("menu categories and search reach the matching garments on a phone", async 
   await expect(menu.locator('#menu-browse')).toBeVisible();
   await expect(menu.locator('#menu-results')).toBeHidden();
   await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).fill('');
-  await menu.getByRole('link', { name: /^Tees/ }).click();
+  await menu.getByRole('link', { name: /^T-shirts/ }).click();
   await expect(page).toHaveURL(/type=tees/);
   await expect(page.locator('[data-filter="tees"]')).toHaveAttribute('aria-pressed', 'true');
   const cards = page.locator('article.product-card:visible');
