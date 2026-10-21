@@ -1,5 +1,6 @@
 import { photographedProduct, photosFor } from "../../src/data/photography";
 import products from "../../src/data/products.json" with { type: "json" };
+import socialCards from "../../src/data/social-cards.json" with { type: "json" };
 import { test, expect } from "./fixtures";
 import { campaignProducts, collectionSlug, collectionsInOrder } from "../../src/data/collections";
 import { OFF_SALE } from "../../server/catalog/off-sale.mjs";
@@ -340,7 +341,15 @@ test("each collection has its own page with its pieces, campaign and share image
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(name);
     await expect(page.locator("#pieces article.product-card")).toHaveCount(pieces.length);
     const pictured = campaignProducts(pieces.map(photographedProduct))[0]!;
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', new URL(pictured.campaign[0]!.feedImage, 'https://afterhoursagenda.com').href.replace('https://afterhoursagenda.com', new URL((await page.locator('link[rel="canonical"]').getAttribute('href'))!).origin));
+    const card = (socialCards as Record<string, { src: string }>)[`/shop/${collectionSlug(name)}/`];
+    const origin = new URL((await page.locator('link[rel="canonical"]').getAttribute('href'))!).origin;
+    const image = new URL(card?.src ?? pictured.campaign[0]!.feedImage, origin).href;
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', image);
+    await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', image);
+    if (card) {
+      await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute('content', '1200');
+      await expect(page.locator('meta[property="og:image:height"]')).toHaveAttribute('content', '630');
+    }
     const schema = JSON.parse((await page.locator('script[type="application/ld+json"]').last().textContent())!);
     expect(schema["@type"]).toBe("CollectionPage");
     expect(schema.mainEntity.itemListElement).toHaveLength(pieces.length);
