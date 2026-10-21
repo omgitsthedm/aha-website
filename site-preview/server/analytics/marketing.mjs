@@ -20,6 +20,15 @@ function cleanUtm(value) {
 
 function cleanPath(value) { return typeof value === "string" && PATH.test(value) ? value : null; }
 function cleanUserAgent(value) { return typeof value === "string" && value.length > 0 && value.length <= 500 && /^[\x20-\x7e]+$/.test(value) ? value : null; }
+// The connecting address Netlify saw at quote time: an IPv4 or IPv6 literal only.
+const IPV4 = /^(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)$/;
+const IPV6 = /^[0-9A-Fa-f:.]{2,45}$/;
+export function cleanClientIp(value) {
+  if (typeof value !== "string") return null;
+  const ip = value.trim();
+  if (IPV4.test(ip)) return ip;
+  return ip.includes(":") && IPV6.test(ip) && (ip.match(/:/g) || []).length >= 2 ? ip : null;
+}
 
 /**
  * Accept the public checkout envelope, then retain only bounded anonymous
@@ -59,6 +68,7 @@ export function normalizeMarketingContext(value) {
       attribution: marketingGranted ? safeAttribution : {},
       meta: marketingGranted ? { ...(fbp ? { fbp } : {}), ...(fbc ? { fbc } : {}) } : {},
       userAgent: marketingGranted ? cleanUserAgent(marketing?.userAgent) : null,
+      clientIp: marketingGranted ? cleanClientIp(marketing?.clientIp) : null,
     },
   };
 }
@@ -98,6 +108,7 @@ export function restrictMarketingContext(stored, paymentTime) {
       attribution: marketing ? before.marketing.attribution : {},
       meta: marketing ? before.marketing.meta : {},
       userAgent: marketing ? before.marketing.userAgent : null,
+      clientIp: marketing ? before.marketing.clientIp : null,
     },
   };
 }
@@ -126,6 +137,7 @@ export function narrowMarketingContext(stored, choice) {
       attribution: marketing ? before.marketing.attribution : {},
       meta: marketing ? before.marketing.meta : {},
       userAgent: marketing ? before.marketing.userAgent : null,
+      clientIp: marketing ? before.marketing.clientIp : null,
     },
   };
 }
@@ -209,7 +221,11 @@ export function metaPurchaseRequest(payload) {
         content_type: "product",
         num_items: payload.items.reduce((sum, item) => sum + item.quantity, 0),
       },
-      user_data: { ...context.marketing.meta, client_user_agent: context.marketing.userAgent },
+      user_data: {
+        ...context.marketing.meta,
+        client_user_agent: context.marketing.userAgent,
+        ...(context.marketing.clientIp ? { client_ip_address: context.marketing.clientIp } : {}),
+      },
     }],
   };
 }

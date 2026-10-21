@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createGoogleDelivery, createMarketingService, createMetaDelivery, googlePurchaseRequest, metaPurchaseRequest, normalizeMarketingContext, posthogPurchaseAllowed, purchasePayload, restrictMarketingContext } from "../server/analytics/marketing.mjs";
+import { cleanClientIp, createGoogleDelivery, createMarketingService, createMetaDelivery, googlePurchaseRequest, metaPurchaseRequest, narrowMarketingContext, normalizeMarketingContext, posthogPurchaseAllowed, purchasePayload, restrictMarketingContext } from "../server/analytics/marketing.mjs";
 
 function session(overrides = {}) {
   return {
@@ -11,7 +11,7 @@ function session(overrides = {}) {
       paymentConsentConfirmed: true,
       eligibleProviders: ["google", "meta"],
       analytics: { consent: true, gaClientId: "123456.789012", gaSessionId: "1720000000" },
-      marketing: { consent: true, gpc: false, userAgent: "Mozilla/5.0 test", attribution: { utm: { utm_source: "instagram" }, fbclid: "facebook-click" }, meta: { fbp: "fb.1.1.2", fbc: "fb.1.3.4" } },
+      marketing: { consent: true, gpc: false, userAgent: "Mozilla/5.0 test", clientIp: "203.0.113.9", attribution: { utm: { utm_source: "instagram" }, fbclid: "facebook-click" }, meta: { fbp: "fb.1.1.2", fbc: "fb.1.3.4" } },
     },
     ...overrides,
   };
@@ -86,6 +86,8 @@ test("server requests contain purchase facts and anonymous identifiers, never ch
   assert.equal(meta.data[0].event_id, "square-order-1");
   assert.equal(meta.data[0].user_data.fbp, "fb.1.1.2");
   assert.equal(meta.data[0].user_data.client_user_agent, "Mozilla/5.0 test");
+  assert.equal(meta.data[0].user_data.client_ip_address, "203.0.113.9");
+  assert.equal(google.events[0].params.client_ip_address, undefined);
   assert.equal(meta.data[0].event_source_url, "https://afterhoursagenda.com/checkout/");
   assert.equal(meta.data[0].custom_data.value, 110);
   const sent = JSON.stringify({ google, meta });
@@ -177,4 +179,28 @@ test("Meta and Google gateways use secure provider endpoints without customer da
 test("Meta leaves an unaccepted provider response retryable without customer data", async () => {
   const meta = createMetaDelivery({ datasetId: "1815233516346046", accessToken: "meta-secret", fetchImpl: async () => new Response('{"events_received":0}', { status: 200 }) });
   await assert.rejects(meta.send(purchasePayload(session())), (error) => error?.code === "meta_not_accepted");
+});
+
+test("the connecting address is kept only as a valid IP literal and only with marketing consent", () => {
+  assert.equal(cleanClientIp("203.0.113.9"), "203.0.113.9");
+  assert.equal(cleanClientIp(" 2001:db8::1 "), "2001:db8::1");
+  for (const bad of ["999.1.1.1", "203.0.113.9, 10.0.0.1", "localhost", "ada@example.com", "2001:db8", "", 12, null]) assert.equal(cleanClientIp(bad), null, String(bad));
+  const granted = normalizeMarketingContext({ marketing: { consent: true, gpc: false, userAgent: "Mozilla/5.0 test", clientIp: "203.0.113.9" } });
+  assert.equal(granted.marketing.clientIp, "203.0.113.9");
+  const optedOut = normalizeMarketingContext({ marketing: { consent: false, gpc: false, clientIp: "203.0.113.9" } });
+  assert.equal(optedOut.marketing.clientIp, null);
+  const gpc = normalizeMarketingContext({ marketing: { consent: true, gpc: true, clientIp: "203.0.113.9" } });
+  assert.equal(gpc.marketing.clientIp, null);
+});
+
+test("a later opt-out removes the stored address from the Meta purchase event", () => {
+  const quote = session().marketing_json;
+  const restricted = restrictMarketingContext(quote, { analytics: { consent: true }, marketing: { consent: false, gpc: false } });
+  assert.equal(restricted.marketing.clientIp, null);
+  const kept = restrictMarketingContext(quote, { analytics: { consent: true }, marketing: { consent: true, gpc: false } });
+  assert.equal(kept.marketing.clientIp, "203.0.113.9");
+  const narrowed = narrowMarketingContext(quote, { analytics: true, marketing: false, gpc: false });
+  assert.equal(narrowed.marketing.clientIp, null);
+  const withoutIp = metaPurchaseRequest(purchasePayload(session({ marketing_json: { ...quote, marketing: { ...quote.marketing, clientIp: null } } })));
+  assert.equal("client_ip_address" in withoutIp.data[0].user_data, false);
 });
