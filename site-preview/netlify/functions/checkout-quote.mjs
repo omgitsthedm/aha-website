@@ -26,7 +26,7 @@ export default async function checkoutQuote(request, context) {
     if (!checkoutReady(runtime.config)) return errorResponse(new CheckoutError("checkout_unavailable", 503));
     if (Array.isArray(body?.items) && body.items.some((item) => locked.has(item?.variationId))) return errorResponse(new CheckoutError("early_access_only", 403));
     const marketing = body?.marketing && typeof body.marketing === "object"
-      ? { ...body.marketing, marketing: { ...(body.marketing.marketing ?? {}), userAgent: request.headers.get("user-agent") } }
+      ? { ...body.marketing, marketing: { ...(body.marketing.marketing ?? {}), userAgent: request.headers.get("user-agent"), clientIp: context?.ip ?? request.headers.get("x-nf-client-connection-ip") } }
       : body?.marketing;
     const quote = await runtime.service.quote({ items: body?.items, shippingAddress: body?.shippingAddress, analytics: body?.analytics, marketing });
     // Analytics never delays or fails a quote.

@@ -7,7 +7,12 @@ type Queue=((...args:unknown[])=>void)&{queue?:unknown[][];loaded?:boolean;versi
 type PostHog=unknown[]&{__SV?:number;_i?:unknown[][];init?:(key:string,config:Record<string,unknown>)=>void;capture?:(event:string,properties?:Record<string,unknown>)=>void;opt_out_capturing?:()=>void;get_distinct_id?:()=>string|undefined;get_session_id?:()=>string|undefined;[method:string]:unknown};
 declare global {interface Window {dataLayer:unknown[];gtag:(...args:unknown[])=>void;fbq?:Queue;_fbq?:Queue;posthog?:PostHog;__ahaTrackingEvents?:{ga:unknown[][];meta:unknown[][];posthog?:unknown[][]};}}
 const banner=document.querySelector<HTMLElement>('.cookie-banner');
-const enabled=banner?.dataset.trackingEnabled==='true';
+// Only the live host reports to the providers. A local or hosted copy of the approved build
+// (Lighthouse, a preview, a developer's browser) would otherwise pollute Meta's audiences and
+// catalog match rate: 127.0.0.1 sent most of the dataset's events before October 21, 2026.
+// Automated browser tests keep the queue so they can assert on it; their network is stubbed.
+const liveHost=/(^|\.)afterhoursagenda\.com$/.test(location.hostname)||navigator.webdriver===true;
+const enabled=banner?.dataset.trackingEnabled==='true'&&liveHost;
 const key='aha-cookie-choices-v1';
 const maxAge=180*24*60*60*1000;
 const gpc=(navigator as Navigator&{globalPrivacyControl?:boolean}).globalPrivacyControl===true;
