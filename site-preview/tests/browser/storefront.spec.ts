@@ -173,8 +173,8 @@ test("product pages link the same garment in its other colors", async ({ page })
 test("the shop filter and search narrow the flat garment grid", async ({ page }) => {
   await page.goto("/shop/");
   const filter = page.getByRole("group", { name: "Show" });
-  await filter.getByRole("button", { name: "Hoodies" }).click();
-  await expect(filter.getByRole("button", { name: "Hoodies" })).toHaveAttribute("aria-pressed", "true");
+  await filter.getByRole("button", { name: "Hoodies", exact: true }).click();
+  await expect(filter.getByRole("button", { name: "Hoodies", exact: true })).toHaveAttribute("aria-pressed", "true");
   const visible = page.locator("article.product-card:visible");
   expect(await visible.evaluateAll((cards) => cards.every((card) => (card as HTMLElement).dataset.type === "hoodies"))).toBe(true);
   expect(await visible.count()).toBeGreaterThan(0);
@@ -209,11 +209,13 @@ test("phone product photos show a count and open full screen", async ({ page }) 
   await expect(viewer).toBeHidden();
 });
 
-test("the lookbook has one set per collection, three looks each, every look linking to its piece", async ({ page }) => {
+test("the lookbook has apparel shoots without location tags or knitwear, with every look linking to its piece", async ({ page }) => {
   await page.goto("/lookbook/");
-  const names = collectionsInOrder().map(([name]) => name);
+  const names = collectionsInOrder().filter(([, pieces]) => pieces.some(product => product.typeLabel !== 'Beanie')).map(([name]) => name);
   const sets = page.locator("[data-look-set]");
   await expect(sets.locator("h2")).toHaveText(names);
+  await expect(sets.locator('.section-header .label')).toHaveCount(0);
+  await expect(sets.locator('[data-product-set^="after-hours-agenda-heritage-beanie-"]')).toHaveCount(0);
   for (const set of await sets.all()) {
     await expect(set.locator("figure")).toHaveCount(3);
     await expect(set.locator(".look-chip")).toHaveCount(3);

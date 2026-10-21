@@ -8,7 +8,7 @@ import { photographedProduct } from '../data/photography';
 import { motionFor } from '../data/motion';
 import { campaignProducts, collectionSlug, collectionsInOrder, type Product } from '../data/collections';
 import { allOffSale, isOffSale } from '../../server/catalog/off-sale.mjs';
-// One set per collection, in the shop's order (newest drop first, removed products last).
+// Apparel shoots only: knitwear remains available in the shop.
 // Three looks: the lead piece's first photo, which carries the collection film, then the
 // pieces that add a new setting or garment, each at the next photo so poses don't repeat.
 function looksFor(pieces: readonly Product[]) {
@@ -23,16 +23,16 @@ function looksFor(pieces: readonly Product[]) {
     return { product, shot: product.campaign[index % product.campaign.length]! };
   });
 }
-const sets = collectionsInOrder().filter(([, pieces]) => pieces.length).map(([name, pieces]) => {
+const sets = collectionsInOrder().filter(([, pieces]) => pieces.some(product => product.typeLabel !== 'Beanie')).map(([name, pieces]) => {
   const looks = looksFor(campaignProducts(pieces.map(photographedProduct)));
-  return { name, slug: collectionSlug(name), looks, settings: [...new Set(looks.map(({ product }) => product.campaignSetting))].join(" / ") };
+  return { name, slug: collectionSlug(name), looks };
 });
 const leadCampaignImage = sets[0]?.looks[0]?.shot;
 ---
 
 <Site
   title="Out & About It."
-  description="Explore the Fall / Winter 2026 campaign, styling ideas for graphic tees, fleece and knitwear, and the original After Hours Agenda brand archive."
+  description="Explore the Fall / Winter 2026 campaign, styling ideas for graphic tees and fleece, and the original After Hours Agenda brand archive."
   preloadImage={leadCampaignImage ? { src: leadCampaignImage.src, srcset: leadCampaignImage.srcset, sizes: "(max-width: 760px) calc(100vw - 40px), 30vw" } : undefined}
 >
   <header class="page-head shell editorial-head"><div><p class="label">The lookbook · Fall / Winter 2026</p><h1>OUT <span class="accent">&amp; ABOUT IT.</span></h1><p class="lede">Everyday plans. A little dressing up. Tap a photograph to find the piece.</p></div><p class="status-copy">Campaign imagery is AI-generated. Films pair licensed city footage with AI-generated garment shots. Product pages show garment views and measurements.</p></header>
@@ -40,7 +40,6 @@ const leadCampaignImage = sets[0]?.looks[0]?.shot;
     <section class="shell campaign-set lookbook-set" data-look-set aria-labelledby={`look-${set.slug}`} hidden={allOffSale(set.looks.map(({ product }) => product))}>
       <div class="section-header">
         <div>
-          <p class="label">{set.settings}</p>
           <h2 id={`look-${set.slug}`}>{set.name}</h2>
         </div>
         <a class="text-link" href={`/shop/${set.slug}/`}>Shop the pieces</a>

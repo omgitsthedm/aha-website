@@ -47,7 +47,8 @@ Set by the owner on October 17, 2026 (“Consolidate: merge Manifesto into The s
 - The manifesto lives in The story at `/about/#manifesto`. Moved pages are listed in `moved` in `site-preview/src/data/site.ts`; `scripts/finalize.mjs` appends them as 301s to `_redirects` after the Meta feed rewrites that `scripts/feeds.mjs` writes (never replace those), `scripts/serve.mjs` honors them locally, and `scripts/verify-live.mjs` checks both after a release.
 - FAQ answers are one or two sentences (140 characters at most, enforced by the artifact test) that link to the page owning the topic.
 - One email sign-up form per page: the band on Home, the form on `/updates/`, and a compact footer form everywhere else except `/checkout/` and `/order/`. The footer form reports the first path segment as its source, so every product page keeps the byte-identical footer the live renderer and `tests/live-catalog.test.mjs` require.
-- The lookbook shows one three-look set per collection in shop order (`looksFor` in `src/pages/lookbook.astro`); removed products hide their looks, and a set with every look removed hides too.
+- The shop is ordered by garment style: cropped hoodies and T-shirts lead, then long sleeves, crewnecks, hoodies and beanies. The first seven light layers occupy the desktop's first two rows. Live additions join their garment style; they do not jump ahead in a separate "Just added" group. Filters use the same shared garment order.
+- The lookbook shows one three-look set per apparel collection (`looksFor` in `src/pages/lookbook.astro`), without location tags. The owner removed the entire beanie knitwear section from this page; beanies remain for sale. Removed products hide their looks, and a set with every look removed hides too.
 - The header has one Shop link, the first navigation item.
 
 ## Customer accounts, saved pieces, reviews and early access
