@@ -4,6 +4,7 @@
 import { currentCatalog } from "../catalog/current.mjs";
 import { customerView, orderStatusUrl, verifyOrderToken } from "../orders/status.mjs";
 import { errorSummary } from "../updates/signups.mjs";
+import { boundedText } from "../http/body.mjs";
 import { AccountError, accountCookie, accountFor, accountRelyingParty, clearedAccountCookie, createAccountAuth } from "./auth.mjs";
 
 const HEADERS = { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow", "referrer-policy": "no-referrer" };
@@ -12,8 +13,12 @@ const MAX_BODY = 32 * 1024;
 export const MAX_SAVED = 60;
 
 async function body(request) {
-  const text = await request.text();
-  if (text.length > MAX_BODY) throw new AccountError("Request too large.", 413);
+  let text;
+  try { text = await boundedText(request, MAX_BODY); }
+  catch (error) {
+    if (error instanceof Error && error.message === "request_size") throw new AccountError("Request too large.", 413);
+    throw new AccountError("Request must be JSON.", 400);
+  }
   if (!text) return {};
   try { return JSON.parse(text); } catch { throw new AccountError("Request must be JSON.", 400); }
 }
@@ -76,6 +81,15 @@ export async function handleAccount(request, { db, env, context, catalog = curre
     const customerId = await accountFor(request, db);
     if (route === "me" && method === "GET" && !customerId) return reply({ signedIn: false });
     if (!customerId) return reply({ error: "Sign in to your account first." }, 401);
+
+    if (route === "auth/backup/options" && method === "POST") {
+      const input = await body(request);
+      return reply(await auth.backupOptions({ customerId, handle: input.handle, response: input.response, clientKey }));
+    }
+    if (route === "auth/backup/verify" && method === "POST") {
+      const input = await body(request);
+      return reply(await auth.backupVerify({ customerId, handle: input.handle, response: input.response, clientKey }));
+    }
 
     if (route === "me" && method === "GET") return reply({ signedIn: true, saved: await savedFor(db, customerId), orders: await ordersFor(db, env, customerId) });
     if (route === "saved" && method === "PUT") {

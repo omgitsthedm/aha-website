@@ -1,7 +1,7 @@
 // Render reviewed product pixels and approved campaign photographs into link cards.
 // Run manually after a photography/catalog update; normal builds use committed assets.
 import { chromium } from '@playwright/test';
-import { readFile, writeFile, mkdir, readdir, unlink } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { collectionsInOrder, collectionSlug } from '../../src/data/collections.ts';
 import { photosFor } from '../../src/data/photography.ts';
@@ -62,7 +62,5 @@ try {
   }
 } finally { await browser.close(); }
 await writeFile(new URL('../../src/data/social-cards.json', import.meta.url), `${JSON.stringify(manifest, null, 2)}\n`);
-const current = new Set(Object.values(manifest).map(card => card.src.split('/').at(-1)));
-for (const file of await readdir(new URL(`${folder}/`, publicRoot)))
-  if (file.endsWith('.jpg') && !current.has(file)) await unlink(new URL(`${folder}/${file}`, publicRoot));
+// Keep prior content-addressed cards available for cached/shared older URLs.
 console.log(`Prepared ${cards.length} current, versioned link-preview cards.`);

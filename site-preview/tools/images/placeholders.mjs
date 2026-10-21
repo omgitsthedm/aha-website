@@ -11,7 +11,8 @@ const root = new URL("../../", import.meta.url);
 const read = async (path) => JSON.parse(await readFile(new URL(path, root), "utf8"));
 const products = await read("src/data/products.json");
 const editorial = await read("src/data/images.json");
-const sources = [...new Set([...products.flatMap((product) => product.campaign.map((shot) => shot.src)), ...Object.values(editorial).map((image) => image.src)])].sort();
+const photography = await read("src/data/photography.json");
+const sources = [...new Set([...products.flatMap((product) => product.campaign.map((shot) => shot.src)), ...Object.values(editorial).map((image) => image.src), ...Object.values(photography).flatMap(set => set.photos.map(shot => shot.src))])].sort();
 const hex = (r, g, b) => `#${[r, g, b].map((value) => value.toString(16).padStart(2, "0")).join("")}`;
 const placeholders = {};
 for (const src of sources) {

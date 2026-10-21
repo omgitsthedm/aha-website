@@ -48,7 +48,8 @@
         "seed": 5402,
         "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
       }
-    ]
+    ],
+    "collectionId": "mighty-micks"
   },
   "/images/the-city/the-city-ss4500-black/campaign-1-1122.webp": {
     "large": "/motion/the-city-800.mp4",
@@ -99,7 +100,8 @@
         "seed": 6401,
         "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
       }
-    ]
+    ],
+    "collectionId": "the-city"
   },
   "/images/yikes/yikes-crewneck/campaign-1-1122.webp": {
     "large": "/motion/yikes-800.mp4",
@@ -150,7 +152,8 @@
         "seed": 8401,
         "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
       }
-    ]
+    ],
+    "collectionId": "yikes"
   },
   "/images/insomniac/insomniac-ss4500-black/campaign-1-1122.webp": {
     "large": "/motion/insomniac-800.mp4",
@@ -201,6 +204,7 @@
         "seed": 7401,
         "generator": "AI image-to-video: LTX-2.3 distilled, run locally from the campaign photo; first half-second only; the 1972 film treatment is added afterwards"
       }
-    ]
+    ],
+    "collectionId": "insomniac"
   }
 }

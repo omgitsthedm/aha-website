@@ -30,7 +30,7 @@ export const documents = [
     "eyebrow": "Shipping",
     "title": "Made for your order.",
     "description": "Free domestic shipping on After Hours Agenda orders. Each piece is made to order, with production usually taking about a week before shipping.",
-    "lead": "Domestic shipping is free. Each piece is printed and prepared for your order.",
+    "lead": "Domestic shipping is free. Each piece is made and prepared for your order.",
     "sections": [
       [
         "Production and delivery",
@@ -62,15 +62,15 @@ export const documents = [
   },
   {
     "slug": "returns",
-    "metaTitle": "Return and damage requests",
-    "eyebrow": "Returns and quality",
+    "metaTitle": "Exchanges and refunds",
+    "eyebrow": "Exchanges and refunds",
     "title": "Let’s sort it out.",
-    "description": "Request a return within 30 days for an unworn After Hours Agenda item. We cover approved return shipping. Contact support for damage, misprints or incorrect pieces.",
-    "lead": "Contact us first so we can arrange the right next step.",
+    "description": "Need an exchange or refund? Contact us within 30 days of delivery. No return shipment is required for an approved request.",
+    "lead": "An exchange or a refund? Absolutely. Get in touch and we’ll help.",
     "sections": [
       [
-        "Returns",
-        "Request a return within 30 days of delivery for an unworn, unwashed item. We cover return shipping and send a prepaid label after reviewing the request. Made-to-order production fees may be non-refundable once printing starts; we will explain any applicable deduction before the return."
+        "Exchanges",
+        "Need a different size or piece? Contact us within 30 days of delivery with your order number and what you’d like instead. We’ll confirm the available options and arrange the next step with you."
       ],
       [
         "Damaged or incorrect pieces",
@@ -78,14 +78,18 @@ export const documents = [
       ],
       [
         "Refunds",
-        "Wait for instructions before returning anything. Approved refunds go back through the original payment method. Never send payment-card details by email."
+        "Prefer a refund? Absolutely—contact us within 30 days of delivery. Once we confirm your request, we’ll refund the item’s purchase price to your original payment method, without a production-fee deduction. Never send payment-card details by email."
+      ],
+      [
+        "No return shipment",
+        "You won’t need to send the item back for an approved exchange or refund. Contact us first and we’ll explain the next step personally."
       ],
       [
         "Earlier orders",
         "Previous purchases retain the terms shown when the order was placed."
       ]
     ],
-    "action": "Ask about a return ",
+    "action": "Ask about an exchange or refund",
     "href": "/contact/?topic=returns"
   },
   {
@@ -106,10 +110,10 @@ export const documents = [
       ],
       [
         "About this page",
-        "Order links show status and items only: never names, addresses or payment details. Do not send card numbers, passwords or security codes. The contact page prepares an email for you to review."
+        "Order links show status and items only: never names, addresses or payment details. Do not send card numbers, passwords or security codes. The contact page lets you send a message to support."
       ]
     ],
-    "action": "Prepare an order question ",
+    "action": "Ask an order question",
     "href": "/contact/?topic=order"
   },
   {
@@ -122,7 +126,7 @@ export const documents = [
     "sections": [
       [
         "Use the product chart",
-        "Every product page has its own size chart in inches. Sizes and measurements differ from one garment to the next, so check the chart for the piece you’re choosing, even if you know your size in another."
+        "Every product page has its own size chart in inches and centimeters. Sizes and measurements differ from one garment to the next, so check the chart for the piece you’re choosing, even if you know your size in another."
       ],
       [
         "Measure flat",
@@ -198,7 +202,7 @@ export const documents = [
       ],
       [
         "Contact",
-        "The contact form prepares an email locally; it does not submit it automatically. When you send an email, we use the information you provide to respond and support your order. Please do not include passwords or payment-card numbers."
+        "When you send the contact form, your name, email address, message and optional order number are delivered to our support inbox through Resend. We use them to respond and support your order, never to sign you up for marketing. Limited hashed connection and email information helps prevent repeated unwanted submissions. Please do not include passwords or payment-card numbers."
       ],
       [
         "Your information",
@@ -226,7 +230,7 @@ export const documents = [
       ],
       [
         "Shipping and returns",
-        "Our Shipping and Returns pages explain timing, rates and the 30-day return-request window. Approved return shipping is covered. Made-to-order production fees may be non-refundable after printing starts. Contact us before returning an item."
+        "Our Shipping and Returns pages explain delivery and the 30-day exchange or refund request window. Contact us to arrange your request. Approved refunds return the item’s purchase price without a production-fee deduction, and no return shipment is required."
       ],
       [
         "Existing orders",

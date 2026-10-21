@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev --host 127.0.0.1 --port 48378",
-    "build": "node scripts/guard-build.mjs && astro build && node scripts/finalize.mjs",
+    "build": "node scripts/guard-build.mjs && node scripts/version-images.mjs && astro build && node scripts/finalize.mjs",
     "preview": "node scripts/serve.mjs",
     "typecheck": "astro check",
     "lint": "eslint . --max-warnings=0",
@@ -26,7 +26,8 @@
     "@netlify/functions": "6.0.2",
     "@simplewebauthn/browser": "14.0.0",
     "@simplewebauthn/server": "14.0.3",
-    "astro": "7.3.8"
+    "astro": "7.3.8",
+    "web-vitals": "6.2.3"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",

@@ -80,12 +80,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Cardinal AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Cardinal Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -144,13 +144,13 @@
       "12-inch unfolded knit",
       "adjustable turn-up cuff"
     ],
-    "description": "Cardinal cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "printMethod": "direct embroidery",
     "galleryAlts": {
       "front": "Front cuff of the Cardinal AHA Heritage Beanie with direct sheep-logo embroidery.",
       "back": "Plain reverse of the Cardinal adjustable-cuff knit beanie.",
       "print-detail": "Close view of the embroidered sheep and custom lettering on the Cardinal cuff.",
-      "folded": "Cardinal AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam."
+      "folded": "Cardinal Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff."
     },
     "campaignSetting": "a New York park stone wall beside iron railings",
     "campaignAlts": [

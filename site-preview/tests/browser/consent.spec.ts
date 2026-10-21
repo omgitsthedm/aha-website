@@ -23,8 +23,24 @@ test('new visitors use the storefront default without a banner or synthetic save
   await expect.poll(()=>requested.length).toBe(2);
   expect(requested).toEqual(expect.arrayContaining([expect.stringContaining('googletagmanager.com'),expect.stringContaining('/api/partytown/meta-pixel/bootstrap')]));
   const queue = await page.evaluate(()=>window.__ahaTrackingEvents);
-  expect(queue?.ga.some(v=>v[0]==='event'&&v[1]==='view_item')).toBe(true);
+  expect(queue?.ga.some(v=>v[0]==='event'&&v[1]==='product_group_view')).toBe(true);
+  expect(queue?.ga.some(v=>v[0]==='event'&&v[1]==='view_item')).toBe(false);
+  await page.getByRole('radio',{name:'M',exact:true}).check();
+  await expect.poll(()=>page.evaluate(()=>window.__ahaTrackingEvents?.ga.filter(v=>v[0]==='event'&&v[1]==='view_item')||[])).toHaveLength(1);
+  const selected=await page.evaluate(()=>window.__ahaTrackingEvents?.ga.find(v=>v[0]==='event'&&v[1]==='view_item')?.[2] as {items:Array<{item_id:string}>});
+  expect(selected).toMatchObject({items:[{item_id:'R5UCZCGSJMR3Z4HJDVOD3ZIK'}]});
+  await page.getByRole('radio',{name:'M',exact:true}).click();
+  expect(await page.evaluate(()=>window.__ahaTrackingEvents?.ga.filter(v=>v[0]==='event'&&v[1]==='view_item')||[])).toHaveLength(1);
   expect(queue?.meta?.some(v=>v[1]==='ViewContent')).toBe(true);
+});
+
+test('a sole One Size variation receives the same GA4 item id without a shopper selection', async ({page}) => {
+  test.skip(!production, 'Production-only integrations stay disabled in preview.');
+  await capture(page);
+  await page.goto('/shop/after-hours-agenda-heritage-beanie-sp12-black/');
+  await expect.poll(()=>page.evaluate(()=>window.__ahaTrackingEvents?.ga.filter(v=>v[0]==='event'&&v[1]==='view_item')||[])).toHaveLength(1);
+  const selected=await page.evaluate(()=>window.__ahaTrackingEvents?.ga.find(v=>v[0]==='event'&&v[1]==='view_item')?.[2] as {items:Array<{item_id:string}>});
+  expect(selected).toMatchObject({items:[{item_id:'PM5FQUG3SWBWKOTARZ3O4SKZ'}]});
 });
 
 test('saved Essential only remains off and the footer exposes privacy controls', async ({page}) => {
@@ -123,7 +139,10 @@ test('saved Analytics only queues product events, strips unrelated query data, a
   expect(config.page_location).not.toContain('email=');
   expect(config.page_location).not.toContain('utm_term=');
   expect(config.page_location).not.toContain('gclid=');
-  expect(queue.some(v=>v[0]==='event'&&v[1]==='view_item')).toBe(true);
+  expect(queue.some(v=>v[0]==='event'&&v[1]==='product_group_view')).toBe(true);
+  expect(queue.some(v=>v[0]==='event'&&v[1]==='view_item')).toBe(false);
+  await page.getByRole('radio',{name:'M',exact:true}).check();
+  await expect.poll(()=>page.evaluate(()=>window.__ahaTrackingEvents?.ga.some(v=>v[0]==='event'&&v[1]==='view_item')??false)).toBe(true);
   await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
   await page.getByRole('button',{name:'Essential only',exact:true}).click();
   await page.waitForLoadState('domcontentloaded');
@@ -154,6 +173,8 @@ test('the default marketing setting queues only explicit product and quoted-chec
   const after = await page.evaluate(()=>({meta:window.__ahaTrackingEvents?.meta,ga:window.__ahaTrackingEvents?.ga}));
   expect(after.meta?.filter(v=>v[1]==='InitiateCheckout')).toHaveLength(1);
   expect(after.ga?.filter(v=>v[1]==='begin_checkout')).toHaveLength(1);
+  expect(after.ga?.filter(v=>v[1]==='checkout_quote_completed')).toHaveLength(1);
+  expect(after.ga?.find(v=>v[0]==='event'&&v[1]==='checkout_quote_completed')?.[2]).toEqual({currency:'USD',value:59.46,item_count:1});
   expect(after.ga?.find(v=>v[0]==='event'&&v[1]==='begin_checkout')?.[2]).toMatchObject({currency:'USD',value:55,items:[{item_id:'WFAIFUKSQXCUDRHPTMAWO2UM',price:55,quantity:1}]});
   expect(JSON.stringify(after)).not.toContain('Purchase');
 });
@@ -243,5 +264,8 @@ test('a page prerendered on hover sends nothing until the visitor opens it', asy
   await page.waitForTimeout(300);
   expect(await page.evaluate(() => window.__ahaTrackingEvents?.ga.length ?? 0)).toBe(0);
   await page.evaluate(() => { (window as Window & {__opened?: boolean}).__opened = true; document.dispatchEvent(new Event('prerenderingchange')); });
+  await expect.poll(() => page.evaluate(() => window.__ahaTrackingEvents?.ga.some((entry) => entry[0] === 'event' && entry[1] === 'product_group_view') ?? false)).toBe(true);
+  expect(await page.evaluate(() => window.__ahaTrackingEvents?.ga.some((entry) => entry[0] === 'event' && entry[1] === 'view_item') ?? false)).toBe(false);
+  await page.getByRole('radio',{name:'M',exact:true}).check();
   await expect.poll(() => page.evaluate(() => window.__ahaTrackingEvents?.ga.some((entry) => entry[0] === 'event' && entry[1] === 'view_item') ?? false)).toBe(true);
 });

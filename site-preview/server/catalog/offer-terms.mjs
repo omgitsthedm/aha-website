@@ -1,7 +1,8 @@
 // Shipping and return terms in every product's structured data (the build and
 // the live renderer use the same objects, so their pages stay byte-identical).
 // Delivery days come from src/data/delivery.json; the return terms match the
-// returns page: 30 days from delivery, by mail, return shipping covered.
+// returns page: request within 30 days, no production deduction or return shipment.
+// Do not advertise ReturnByMail for the owner’s contact-led, returnless resolution.
 import delivery from "../../src/data/delivery.json" with { type: "json" };
 
 const [productionMin, productionMax] = delivery.productionBusinessDays;
@@ -23,6 +24,7 @@ export const RETURN_POLICY = Object.freeze({
   applicableCountry: "US",
   returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
   merchantReturnDays: 30,
-  returnMethod: "https://schema.org/ReturnByMail",
+  merchantReturnLink: "https://afterhoursagenda.com/returns/",
+  refundType: "https://schema.org/FullRefund",
   returnFees: "https://schema.org/FreeReturn",
 });

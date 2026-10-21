@@ -50,6 +50,33 @@ test("the accounts migration is identical at both discovery paths", async () => 
   assert.equal(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"), await readFile(new URL(`../../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
 });
 
+test("backup passkeys require an account, fresh passkey proof and an account-bound challenge", async (t) => {
+  const db = await isolated(t);
+  assert.equal((await account(db, "auth/backup/options", { method: "POST", body: {} })).status, 401);
+  const session = await customer(db, "cus_backup");
+  assert.equal((await account(db, "auth/backup/options", { method: "POST", session, body: {} })).status, 401);
+  const handle = "wrong-account-registration-handle";
+  await db.sql`INSERT INTO aha_customer_challenges (id_sha256, challenge, purpose, expires_at) VALUES (${hash(handle)}, ${JSON.stringify({ challenge: "fresh-challenge", customerId: "cus_someone_else" })}, 'register', now() + interval '5 minutes')`;
+  const wrongAccount = await account(db, "auth/backup/verify", { method: "POST", session, body: { handle, response: {} } });
+  assert.equal(wrongAccount.status, 401);
+  assert.match(wrongAccount.body.error, /your own account/);
+  const replay = await account(db, "auth/backup/verify", { method: "POST", session, body: { handle, response: {} } });
+  assert.equal(replay.status, 401);
+  const [count] = await db.sql`SELECT count(*) AS total FROM aha_customer_credentials WHERE customer_id = 'cus_backup'`;
+  assert.equal(Number(count.total), 0);
+});
+
+test("accounts reject a chunked oversized passkey response before parsing it", async () => {
+  const stream = new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode("x".repeat(40_000))); } });
+  const request = new Request(`${ORIGIN}/api/account/auth/login/verify`, {
+    method: "POST", duplex: "half", body: stream,
+    headers: { origin: ORIGIN, "x-aha-account": "1", "content-type": "application/json" },
+  });
+  const response = await handleAccount(request, { db: { sql: async () => { throw new Error("body must reject before database work"); } }, env, context: { ip: "198.51.100.7" }, catalog });
+  assert.equal(response.status, 413);
+  assert.deepEqual(await response.json(), { error: "Request too large." });
+});
+
 test("drops: the data file is valid, and early access opens only to signed-in account holders", () => {
   assert.deepEqual(dropProblems(DROPS, products), []);
   assert.deepEqual(dropProblems([{ slug: "nope", earlyAccessAt: "2026-11-07T15:00:00Z", releaseAt: "2026-11-06T15:00:00Z" }], products), ["nope is not a product.", "nope: early access must open before the release."]);

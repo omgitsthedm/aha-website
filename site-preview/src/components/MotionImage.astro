@@ -7,12 +7,13 @@ import { motionFor } from '../data/motion';
 interface Props {
   image: {src:string; srcset:string; alt:string; width:number; height:number};
   priority?: boolean;
+  motionKey?: string;
   sizes?: string;
   /** Shown full-screen on phones (the lookbook): use the film cut for that crop. */
   tall?: boolean;
 }
-const {image,priority=false,sizes,tall=false}=Astro.props;
-const motion = motionFor(image.src);
+const {image,priority=false,sizes,tall=false,motionKey}=Astro.props;
+const motion = motionFor(motionKey ?? image.src);
 ---
 {motion ? <div class="motion-frame" data-motion={motion.large} data-motion-small={tall ? motion.tall : motion.small}><ProductImage image={image} priority={priority} sizes={sizes} /></div> : <ProductImage image={image} priority={priority} sizes={sizes} />}
 <script>import "../scripts/motion";</script>

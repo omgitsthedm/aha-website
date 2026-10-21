@@ -21,6 +21,16 @@
         "height": 683,
         "role": "lifestyle-hero",
         "productSlug": "mighty-micks-ss3000-navy"
+      },
+      {
+        "src": "/images/editorial/fw26/01-02-1024.webp",
+        "srcset": "/images/editorial/fw26/01-02-320.webp 320w, /images/editorial/fw26/01-02-480.webp 480w, /images/editorial/fw26/01-02-680.webp 680w, /images/editorial/fw26/01-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/01-02-1024.webp",
+        "alt": "Navy Mighty Mick’s Crewneck, elevated angle, in a rec gym. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "mighty-micks-ss3000-navy"
       }
     ],
     "setting": "recreation gym"
@@ -119,6 +129,16 @@
         "height": 683,
         "role": "lifestyle-hero",
         "productSlug": "resist-rebel-6014-midnight"
+      },
+      {
+        "src": "/images/editorial/fw26/04-02-1024.webp",
+        "srcset": "/images/editorial/fw26/04-02-320.webp 320w, /images/editorial/fw26/04-02-480.webp 480w, /images/editorial/fw26/04-02-680.webp 680w, /images/editorial/fw26/04-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/04-02-1024.webp",
+        "alt": "Midnight Resist Rebel Long Sleeve, elevated angle, in a elevated platform. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "resist-rebel-6014-midnight"
       }
     ],
     "setting": "elevated platform"
@@ -145,6 +165,16 @@
         "height": 1238,
         "role": "lifestyle-hero",
         "productSlug": "camo-sheep-ind4000-forest-camo"
+      },
+      {
+        "src": "/images/editorial/fw26/05-03-1024.webp",
+        "srcset": "/images/editorial/fw26/05-03-320.webp 320w, /images/editorial/fw26/05-03-480.webp 480w, /images/editorial/fw26/05-03-680.webp 680w, /images/editorial/fw26/05-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/05-03-1024.webp",
+        "alt": "Forest Camo Camo Sheep Hoodie, longer lens context, in a corner store. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "camo-sheep-ind4000-forest-camo"
       }
     ],
     "setting": "corner store"
@@ -167,6 +197,16 @@
         "srcset": "/images/editorial/fw26/06-04-320.webp 320w, /images/editorial/fw26/06-04-480.webp 480w, /images/editorial/fw26/06-04-680.webp 680w, /images/editorial/fw26/06-04-1024.webp 1024w",
         "feedImage": "/images/editorial/fw26/06-04-1024.webp",
         "alt": "Black For the Record Hoodie, back print, in a music venue foyer. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "for-the-record-ss4500-black"
+      },
+      {
+        "src": "/images/editorial/fw26/06-02-1024.webp",
+        "srcset": "/images/editorial/fw26/06-02-320.webp 320w, /images/editorial/fw26/06-02-480.webp 480w, /images/editorial/fw26/06-02-680.webp 680w, /images/editorial/fw26/06-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/06-02-1024.webp",
+        "alt": "Black For the Record Hoodie, elevated angle, in a music venue foyer. AI-generated campaign photograph.",
         "width": 1024,
         "height": 1536,
         "role": "lifestyle-hero",
@@ -197,6 +237,16 @@
         "height": 1280,
         "role": "lifestyle-hero",
         "productSlug": "insomniac-ss3000-black"
+      },
+      {
+        "src": "/images/editorial/fw26/07-02-1024.webp",
+        "srcset": "/images/editorial/fw26/07-02-320.webp 320w, /images/editorial/fw26/07-02-480.webp 480w, /images/editorial/fw26/07-02-680.webp 680w, /images/editorial/fw26/07-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/07-02-1024.webp",
+        "alt": "Black Insomniac Crewneck, elevated angle, in a apartment kitchen. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-ss3000-black"
       }
     ],
     "setting": "apartment kitchen"
@@ -211,6 +261,26 @@
         "alt": "Black Insomniac Hoodie, longer lens context, in a corner store entrance. AI-generated campaign photograph.",
         "width": 1024,
         "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-ss4500-black"
+      },
+      {
+        "src": "/images/editorial/fw26/09-01-1024.webp",
+        "srcset": "/images/editorial/fw26/09-01-320.webp 320w, /images/editorial/fw26/09-01-480.webp 480w, /images/editorial/fw26/09-01-680.webp 680w, /images/editorial/fw26/09-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/09-01-1024.webp",
+        "alt": "Black Insomniac Hoodie, front hero, in a corner store entrance. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-ss4500-black"
+      },
+      {
+        "src": "/images/editorial/fw26/09-02-1024.webp",
+        "srcset": "/images/editorial/fw26/09-02-320.webp 320w, /images/editorial/fw26/09-02-480.webp 480w, /images/editorial/fw26/09-02-680.webp 680w, /images/editorial/fw26/09-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/09-02-1024.webp",
+        "alt": "Black Insomniac Hoodie, elevated angle, in a corner store entrance. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
         "role": "lifestyle-hero",
         "productSlug": "insomniac-ss4500-black"
       }
@@ -229,6 +299,26 @@
         "height": 1280,
         "role": "lifestyle-hero",
         "productSlug": "insomniac-next-level-3601-black"
+      },
+      {
+        "src": "/images/editorial/fw26/11-01-1024.webp",
+        "srcset": "/images/editorial/fw26/11-01-320.webp 320w, /images/editorial/fw26/11-01-480.webp 480w, /images/editorial/fw26/11-01-680.webp 680w, /images/editorial/fw26/11-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/11-01-1024.webp",
+        "alt": "Black Insomniac Long Sleeve, front hero, in a pool hall. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-next-level-3601-black"
+      },
+      {
+        "src": "/images/editorial/fw26/11-03-1024.webp",
+        "srcset": "/images/editorial/fw26/11-03-320.webp 320w, /images/editorial/fw26/11-03-480.webp 480w, /images/editorial/fw26/11-03-680.webp 680w, /images/editorial/fw26/11-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/11-03-1024.webp",
+        "alt": "Black Insomniac Long Sleeve, longer lens context, in a pool hall. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-next-level-3601-black"
       }
     ],
     "setting": "pool hall"
@@ -243,6 +333,26 @@
         "alt": "Grey Insomniac Pocket Long Sleeve, elevated angle, in a bakery. AI-generated campaign photograph.",
         "width": 1024,
         "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-comfort-colors-4410-grey"
+      },
+      {
+        "src": "/images/editorial/fw26/14-01-1024.webp",
+        "srcset": "/images/editorial/fw26/14-01-320.webp 320w, /images/editorial/fw26/14-01-480.webp 480w, /images/editorial/fw26/14-01-680.webp 680w, /images/editorial/fw26/14-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/14-01-1024.webp",
+        "alt": "Grey Insomniac Pocket Long Sleeve, front hero, in a bakery. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-comfort-colors-4410-grey"
+      },
+      {
+        "src": "/images/editorial/fw26/14-03-1024.webp",
+        "srcset": "/images/editorial/fw26/14-03-320.webp 320w, /images/editorial/fw26/14-03-480.webp 480w, /images/editorial/fw26/14-03-680.webp 680w, /images/editorial/fw26/14-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/14-03-1024.webp",
+        "alt": "Grey Insomniac Pocket Long Sleeve, longer lens context, in a bakery. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
         "role": "lifestyle-hero",
         "productSlug": "insomniac-comfort-colors-4410-grey"
       }
@@ -269,6 +379,16 @@
         "alt": "Butter And All That Jazz Boxy Tee, longer lens context, in a gallery. AI-generated campaign photograph.",
         "width": 1024,
         "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "and-all-that-jazz-3023cl-butter"
+      },
+      {
+        "src": "/images/editorial/fw26/16-02-1024.webp",
+        "srcset": "/images/editorial/fw26/16-02-320.webp 320w, /images/editorial/fw26/16-02-480.webp 480w, /images/editorial/fw26/16-02-680.webp 680w, /images/editorial/fw26/16-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/16-02-1024.webp",
+        "alt": "Butter And All That Jazz Boxy Tee, elevated angle, in a gallery. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1434,
         "role": "lifestyle-hero",
         "productSlug": "and-all-that-jazz-3023cl-butter"
       }
@@ -542,5 +662,41 @@
       }
     ],
     "setting": "ferry waiting area"
+  },
+  "insomniac-comfort-colors-4410-black": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/13-01-1024.webp",
+        "srcset": "/images/editorial/fw26/13-01-320.webp 320w, /images/editorial/fw26/13-01-480.webp 480w, /images/editorial/fw26/13-01-680.webp 680w, /images/editorial/fw26/13-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/13-01-1024.webp",
+        "alt": "Black Insomniac Pocket Long Sleeve, front hero, in a karaoke room. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-comfort-colors-4410-black"
+      },
+      {
+        "src": "/images/editorial/fw26/13-02-1024.webp",
+        "srcset": "/images/editorial/fw26/13-02-320.webp 320w, /images/editorial/fw26/13-02-480.webp 480w, /images/editorial/fw26/13-02-680.webp 680w, /images/editorial/fw26/13-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/13-02-1024.webp",
+        "alt": "Black Insomniac Pocket Long Sleeve, elevated angle, in a karaoke room. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-comfort-colors-4410-black"
+      },
+      {
+        "src": "/images/editorial/fw26/13-03-1024.webp",
+        "srcset": "/images/editorial/fw26/13-03-320.webp 320w, /images/editorial/fw26/13-03-480.webp 480w, /images/editorial/fw26/13-03-680.webp 680w, /images/editorial/fw26/13-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/13-03-1024.webp",
+        "alt": "Black Insomniac Pocket Long Sleeve, longer lens context, in a karaoke room. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-comfort-colors-4410-black"
+      }
+    ],
+    "setting": "karaoke room"
   }
 }

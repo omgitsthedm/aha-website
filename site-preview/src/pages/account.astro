@@ -26,10 +26,12 @@ const drops = (pendingDrops() as Drop[]).flatMap((drop) => {
     <div data-account-in hidden>
       <p>You’re signed in on this device.</p>
       <div class="account-actions">
+        <button type="button" class="button button-secondary" data-account-backup>Add a backup passkey</button>
         <button type="button" class="button button-secondary" data-account-signout>Sign out</button>
         <button type="button" class="text-button" data-account-delete>Delete my account</button>
       </div>
     </div>
+    <details class="account-recovery"><summary>Using another device or lost access?</summary><p>Try the same password manager or cloud keychain that saved your passkey. Your browser may also offer a QR code to sign in with a nearby phone.</p><p>While you can still sign in, add a backup passkey on another device or password manager. We’ll first ask for your existing passkey to confirm it’s you.</p><p>If none of your passkeys are available, we can’t reset the account by email because it has no email address or password. You can still shop as a guest and use the private links in your order emails. <a href="/contact/?topic=order">Contact us for order help</a>.</p></details>
     <p class="account-status" data-account-status role="status"></p>
   </section>
   <section class="shell section account-section" id="saved" aria-labelledby="saved-title">

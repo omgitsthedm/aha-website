@@ -80,12 +80,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Navy AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Navy Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -144,13 +144,13 @@
       "12-inch unfolded knit",
       "adjustable turn-up cuff"
     ],
-    "description": "Navy cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "printMethod": "direct embroidery",
     "galleryAlts": {
       "front": "Front cuff of the Navy AHA Heritage Beanie with direct sheep-logo embroidery.",
       "back": "Plain reverse of the Navy adjustable-cuff knit beanie.",
       "print-detail": "Close view of the embroidered sheep and custom lettering on the Navy cuff.",
-      "folded": "Navy AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam."
+      "folded": "Navy Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff."
     },
     "campaignSetting": "a New York park stone wall beside iron railings",
     "campaignAlts": [

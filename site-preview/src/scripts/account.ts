@@ -18,18 +18,30 @@ async function call<T>(path: string, method = "POST", body?: unknown): Promise<T
 const bytes = (value: string) => Uint8Array.from(atob(value.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(value.length / 4) * 4, "=")), (char) => char.charCodeAt(0));
 const b64 = (buffer: ArrayBuffer | null) => buffer ? btoa(String.fromCharCode(...new Uint8Array(buffer))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "") : undefined;
 
-async function passkey(kind: "register" | "login") {
-  const { options, handle } = await call<{ options: Record<string, any>; handle: string }>(`auth/${kind}/options`);
+async function credentialResponse(kind: "register" | "login", options: Record<string, any>) {
   const publicKey = { ...options, challenge: bytes(options.challenge) };
   // Accounts use discoverable passkeys, so the server never lists credential IDs.
   const credential = (kind === "register"
-    ? await navigator.credentials.create({ publicKey: { ...publicKey, user: { ...options.user, id: bytes(options.user.id) } } as unknown as PublicKeyCredentialCreationOptions })
+    ? await navigator.credentials.create({ publicKey: { ...publicKey, user: { ...options.user, id: bytes(options.user.id) }, excludeCredentials: (options.excludeCredentials ?? []).map((entry: any) => ({ ...entry, id: bytes(entry.id) })) } as unknown as PublicKeyCredentialCreationOptions })
     : await navigator.credentials.get({ publicKey: publicKey as unknown as PublicKeyCredentialRequestOptions })) as PublicKeyCredential;
   const result = credential.response as AuthenticatorAttestationResponse & AuthenticatorAssertionResponse;
   const response = kind === "register"
     ? { clientDataJSON: b64(result.clientDataJSON), attestationObject: b64(result.attestationObject), transports: result.getTransports?.() ?? [] }
     : { clientDataJSON: b64(result.clientDataJSON), authenticatorData: b64(result.authenticatorData), signature: b64(result.signature), userHandle: b64(result.userHandle) };
-  await call(`auth/${kind}/verify`, "POST", { handle, saved: readSaved(), response: { id: credential.id, rawId: b64(credential.rawId), type: credential.type, clientExtensionResults: credential.getClientExtensionResults(), authenticatorAttachment: credential.authenticatorAttachment ?? undefined, response } });
+  return { id: credential.id, rawId: b64(credential.rawId), type: credential.type, clientExtensionResults: credential.getClientExtensionResults(), authenticatorAttachment: credential.authenticatorAttachment ?? undefined, response };
+}
+
+async function passkey(kind: "register" | "login") {
+  const { options, handle } = await call<{ options: Record<string, any>; handle: string }>(`auth/${kind}/options`);
+  await call(`auth/${kind}/verify`, "POST", { handle, saved: readSaved(), response: await credentialResponse(kind, options) });
+}
+
+async function backup() {
+  const proof = await call<{ options: Record<string, any>; handle: string }>("auth/login/options");
+  const response = await credentialResponse("login", proof.options);
+  const registration = await call<{ options: Record<string, any>; handle: string }>("auth/backup/options", "POST", { handle: proof.handle, response });
+  say("Choose another device or password manager for your backup passkey…");
+  await call("auth/backup/verify", "POST", { handle: registration.handle, response: await credentialResponse("register", registration.options) });
 }
 
 // Pieces published live since the last deploy, or removed from sale, come from the live catalog.
@@ -83,9 +95,13 @@ async function load() {
 
 function act(selector: string, work: () => Promise<unknown>, busy: string) {
   $(selector).addEventListener("click", async () => {
+    const button = $(selector) as HTMLButtonElement;
+    if (button.disabled) return;
+    button.disabled = true;
     say(busy);
-    try { await work(); say(""); await load(); }
+    try { await work(); say(selector === "[data-account-backup]" ? "Backup passkey saved. You can use either passkey to sign in." : ""); await load(); }
     catch (error) { say(error instanceof DOMException && error.name === "NotAllowedError" ? "The passkey prompt closed. Try again when you’re ready." : (error as Error).message); }
+    finally { button.disabled = false; }
   });
 }
 
@@ -95,6 +111,7 @@ if (!window.PublicKeyCredential) {
 }
 act("[data-account-create]", () => passkey("register").then(() => document.dispatchEvent(new CustomEvent("aha:account-created"))), "Follow the passkey prompt to create your account…");
 act("[data-account-signin]", () => passkey("login"), "Follow the passkey prompt to sign in…");
+act("[data-account-backup]", backup, "Confirm your existing passkey first…");
 act("[data-account-signout]", () => call("auth/logout").then(() => localStorage.removeItem(ACCOUNT_FLAG)), "Signing out…");
 act("[data-account-delete]", async () => {
   if (!confirm("Delete your account? Your passkey link, saved pieces in the account and order list are removed. Your orders themselves aren’t affected.")) throw new Error("");

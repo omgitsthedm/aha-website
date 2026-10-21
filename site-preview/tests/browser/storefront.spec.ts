@@ -4,6 +4,7 @@ import socialCards from "../../src/data/social-cards.json" with { type: "json" }
 import { test, expect } from "./fixtures";
 import { campaignProducts, collectionSlug, collectionsInOrder } from "../../src/data/collections";
 import { OFF_SALE } from "../../server/catalog/off-sale.mjs";
+import { imageUrl } from "../../server/catalog/image-urls.mjs";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({ analytics: false, marketing: false, at: Date.now() })));
@@ -57,6 +58,10 @@ test("home shows the approved four pieces and both hero garments", async ({ page
 });
 
 test("menu categories and search reach the matching garments on a phone", async ({ page }) => {
+  await page.addInitScript(() => {
+    (window as unknown as { searchEvents?: unknown[] }).searchEvents = [];
+    document.addEventListener("aha:search", (event) => (window as unknown as { searchEvents: unknown[] }).searchEvents.push((event as CustomEvent).detail));
+  });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
@@ -64,6 +69,9 @@ test("menu categories and search reach the matching garments on a phone", async 
   await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).fill('Yikes');
   await expect(menu.locator('#menu-result-status')).toHaveText('2 pieces found');
   await expect(menu.locator('#menu-results a:visible')).toHaveCount(2);
+  await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).fill('sweatshirt');
+  await expect(menu.locator('#menu-results a:visible')).not.toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => (window as unknown as { searchEvents: unknown[] }).searchEvents.at(-1))).toEqual({ surface: 'menu', result_count: expect.any(Number), query_kind: 'garment' });
   await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).press('Escape');
   await expect(menu.getByRole('searchbox', { name: 'Find a piece', exact: true })).toHaveValue('');
   await expect(menu.locator('#menu-browse')).toBeVisible();
@@ -170,7 +178,7 @@ test("product pages link the same garment in its other colors", async ({ page })
   await expect(page.locator(".color-options")).toHaveCount(0);
 });
 
-test("the shop filter and search narrow the flat garment grid", async ({ page }) => {
+test("shop filters retain their state and group true color variants", async ({ page }) => {
   await page.goto("/shop/");
   const filter = page.getByRole("group", { name: "Show" });
   await filter.getByRole("button", { name: "Hoodies", exact: true }).click();
@@ -179,9 +187,36 @@ test("the shop filter and search narrow the flat garment grid", async ({ page })
   expect(await visible.evaluateAll((cards) => cards.every((card) => (card as HTMLElement).dataset.type === "hoodies"))).toBe(true);
   expect(await visible.count()).toBeGreaterThan(0);
   await filter.getByRole("button", { name: "All pieces", exact: true }).click();
-  await expect(page.locator('article.product-card:visible')).toHaveCount(45);
+  await expect(page.locator('article.product-card:visible')).toHaveCount(24);
   await page.getByRole('searchbox', { name: 'Find a garment, color or design' }).fill('Mighty');
-  await expect(page.locator('article.product-card:visible')).toHaveCount(2);
+  await expect(page.locator('article.product-card:visible')).toHaveCount(1);
+  await expect(page.locator('article.product-card:visible .color-family')).toContainText('2 colors');
+  const sizes = page.getByRole("group", { name: "Size" });
+  await sizes.getByRole("button", { name: "M", exact: true }).click();
+  await expect(page).toHaveURL(/size=M/);
+  await expect(sizes.getByRole("button", { name: "M", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await page.locator("[data-color-filter]").selectOption("Navy");
+  await expect(page).toHaveURL(/color=Navy/);
+  await expect(page.locator('article.product-card:visible')).toHaveCount(1);
+  await page.reload();
+  await expect(page.locator("[data-color-filter]")).toHaveValue("Navy");
+  await expect(sizes.getByRole("button", { name: "M", exact: true })).toHaveAttribute("aria-pressed", "true");
+});
+
+test("shop search recognizes garment terms and links useful support topics", async ({ page }) => {
+  await page.addInitScript(() => {
+    (window as unknown as { searchEvents?: unknown[] }).searchEvents = [];
+    document.addEventListener("aha:search", (event) => (window as unknown as { searchEvents: unknown[] }).searchEvents.push((event as CustomEvent).detail));
+  });
+  await page.goto("/shop/");
+  const search = page.getByRole('searchbox', { name: 'Find a garment, color or design' });
+  await search.fill('sweatshirt');
+  await expect(page.locator('article.product-card:visible')).not.toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => (window as unknown as { searchEvents: unknown[] }).searchEvents.at(-1))).toEqual({ surface: 'shop', result_count: expect.any(Number), query_kind: 'garment' });
+  await search.fill('returns');
+  const status = page.locator('[data-shop-status]');
+  await expect(status.getByRole('link', { name: 'Returns' })).toHaveAttribute('href', '/returns/');
+  await expect(status.getByRole('link', { name: 'Shipping' })).toHaveAttribute('href', '/shipping/');
 });
 
 test("hovering a product card swaps to its second view; the image loads only on hover", async ({ page }) => {
@@ -204,7 +239,10 @@ test("phone product photos show a count and open full screen", async ({ page }) 
   await page.getByRole("button", { name: "Enlarge photo: Front" }).click();
   const viewer = page.locator("dialog.photo-viewer");
   await expect(viewer).toBeVisible();
-  await expect(viewer.locator("img")).toHaveJSProperty("complete", true);
+  await expect(viewer.locator(".photo-viewer-frame img")).toHaveJSProperty("complete", true);
+  await expect(viewer.getByRole("button", { name: "Show Back view" })).toBeVisible();
+  await viewer.getByRole("button", { name: "Show Back view" }).click();
+  await expect(viewer.getByRole("button", { name: "Show Back view" })).toHaveAttribute("aria-current", "true");
   await page.keyboard.press("Escape");
   await expect(viewer).toBeHidden();
 });
@@ -229,7 +267,7 @@ test("the lookbook has apparel shoots without location tags or knitwear, with ev
     const slug = await figure.getAttribute('data-product-set');
     const product = products.find(product => product.slug === slug)!;
     await expect(figure.locator('.look-chip')).toHaveAttribute('href', `/shop/${slug}/`);
-    expect(photosFor(product).map(shot => shot.src)).toContain(await figure.locator('img').getAttribute('src'));
+    expect(photosFor(product).map(shot => imageUrl(shot.src))).toContain(await figure.locator('img').getAttribute('src'));
   }
 });
 
@@ -285,23 +323,24 @@ test("product pages show a delivery estimate in the space reserved for it", asyn
   await expect(page.locator("[data-arrival]")).toContainText(/Estimated U\.S\. arrival: \w{3}, \w{3} \d{1,2} – \w{3}, \w{3} \d{1,2}/);
 });
 
-test("the fit profile suggests a size from the visitor's own top and remembers it", async ({ page }) => {
+test("the fit profile compares finished measurements, supports centimeters, and remembers it", async ({ page }) => {
   await page.goto("/shop/the-city-ss4500-black/");
   await page.getByRole("button", { name: "Find my size" }).click();
-  const dialog = page.getByRole("dialog", { name: "Find your size" });
-  await dialog.getByLabel("Chest width").fill("21.5");
-  await dialog.getByLabel("Body length").fill("28");
-  await dialog.getByRole("button", { name: "Show my size" }).click();
-  await expect(dialog.getByRole("status")).toContainText(/^Compared with your own top, \w+ is/);
+  const dialog = page.getByRole("dialog", { name: "Compare measurements" });
+  await dialog.getByRole("radio", { name: "Centimeters" }).check();
+  await dialog.getByLabel("Chest width centimeters").fill("54.61");
+  await dialog.getByLabel("Body length centimeters").fill("71.12");
+  await dialog.getByRole("button", { name: "Compare measurements" }).click();
+  await expect(dialog.getByRole("status")).toContainText(/^Closest width: \w+ is/);
   const pick = (await dialog.getByRole("button", { name: /^Select / }).textContent())!.replace("Select ", "");
   await dialog.getByRole("button", { name: `Select ${pick}` }).click();
   await expect(dialog).toBeHidden();
   await expect(page.getByRole("radio", { name: pick, exact: true })).toBeChecked();
-  await expect(page.getByRole("button", { name: `Your size: ${pick}` })).toBeVisible();
+  await expect(page.getByRole("button", { name: `Closest width: ${pick}` })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("button", { name: `Your size: ${pick}` })).toBeVisible();
+  await expect(page.getByRole("button", { name: `Closest width: ${pick}` })).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("aha-fit-v1"))).toBe(JSON.stringify({ chest: 21.5, length: 28 }));
-  await page.getByRole("button", { name: `Your size: ${pick}` }).click();
+  await page.getByRole("button", { name: `Closest width: ${pick}` }).click();
   await page.getByRole("button", { name: "Forget my measurements" }).click();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("button", { name: "Find my size" })).toBeVisible();
@@ -469,4 +508,49 @@ test("a product off sale stays hidden without script, and shows again if it's re
   await page.goto(`/shop/${slug}/`);
   await expect(page.getByText("This piece is no longer available.")).toBeVisible();
   await expect(page.locator("[data-cart-form]")).toHaveCount(0);
+});
+
+
+test("optional garment tools wait for interaction and fit works without browser storage", async ({ page }) => {
+  const requested: string[] = [];
+  page.on("request", request => { if (request.url().includes("/_astro/")) requested.push(request.url()); });
+  await page.addInitScript(() => Object.defineProperty(Storage.prototype, "setItem", { configurable: true, value: () => { throw new DOMException("Storage blocked"); } }));
+  await page.goto("/shop/the-city-ss4500-black/", { waitUntil: "networkidle" });
+  expect(requested.some(url => /product-(fit|viewer|bag)\./.test(url))).toBe(false);
+  await page.getByRole("button", { name: "Find my size" }).click();
+  const dialog = page.getByRole("dialog", { name: "Compare measurements" });
+  await dialog.getByRole("radio", { name: "Centimeters" }).check();
+  await expect(dialog.getByLabel("Chest width centimeters")).toHaveValue("");
+  await dialog.getByLabel("Chest width centimeters").fill("54.61");
+  await dialog.getByLabel("Body length centimeters").fill("71.12");
+  await dialog.getByRole("button", { name: "Compare measurements" }).click();
+  await expect(dialog.getByRole("status")).toContainText("Closest width:");
+  await dialog.getByRole("button", { name: "Forget my measurements" }).click();
+  await expect(dialog.getByRole("radio", { name: "Inches", exact: true })).toBeChecked();
+  await expect(dialog.getByLabel("Chest width inches")).toHaveAttribute("min", "12");
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: /^Enlarge photo:/ }).first().click();
+  await expect(page.locator(".photo-viewer")).toBeVisible();
+  expect(requested.some(url => /product-viewer\./.test(url))).toBe(true);
+});
+
+test("the bag survives a catalog refresh when browser storage is blocked", async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(Storage.prototype, "setItem", { configurable: true, value: () => { throw new DOMException("Storage blocked"); } }));
+  await page.goto("/shop/the-city-ss4500-black/");
+  await page.getByRole("radio", { name: "M", exact: true }).check();
+  await page.getByRole("button", { name: "Add to bag" }).click();
+  await expect(page.getByRole("region", { name: "Added to your bag" })).toContainText("Size M · Qty 1");
+  await expect(page.locator("[data-cart-count]").first()).toHaveText("1");
+  // A restored back-forward page refreshes the catalog; the in-memory bag must stay.
+  await page.evaluate(() => new Promise<void>((resolve) => {
+    document.addEventListener("aha:catalog-synced", () => resolve(), { once: true });
+    window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: true }));
+  }));
+  await expect(page.locator("[data-cart-count]").first()).toHaveText("1");
+  await expect(page.locator("[data-cart-link]").first()).toHaveAttribute("aria-label", "Bag, 1 item");
+  // A second piece joins the first instead of replacing a bag that was never stored.
+  await page.getByRole("radio", { name: "L", exact: true }).check();
+  await page.getByRole("button", { name: "Add to bag" }).click();
+  await expect(page.getByRole("region", { name: "Added to your bag" })).toContainText("Bag subtotal · 2 items");
+  await expect(page.locator("[data-cart-count]").first()).toHaveText("2");
 });

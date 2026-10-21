@@ -1,10 +1,11 @@
-// Short collection films, keyed by the campaign photo they play over. The photo stays
+// Short collection films resolved by a stable collection ID, with legacy photo keys retained. The photo stays
 // the page's main image; the film fades in over it after load (src/scripts/motion.ts).
 // Each film cuts high-angle New York night footage (real, Pexels license) with
 // sub-second torso shots of the pieces (AI-generated from the campaign photos).
 import films from "./motion.json" with { type: "json" };
 
 export interface Motion {
+  collectionId: string;
   /** Film for wider screens. */
   large: string;
   /** Lighter film for phones (home and collection heroes). */
@@ -21,4 +22,4 @@ export interface Motion {
   garments: { photo: string; seed: number; generator: string }[];
 }
 
-export const motionFor = (src: string): Motion | undefined => (films as Record<string, Motion>)[src];
+export const motionFor = (key: string): Motion | undefined => Object.values(films).find(film => film.collectionId === key) ?? (films as Record<string, Motion>)[key];

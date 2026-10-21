@@ -1,5 +1,6 @@
 import { query, queryAll } from "./dom";
 import { catalogState } from './catalog-state';
+import { matchesSearch, searchEventDispatcher } from "./search";
 
 const dialog = query<HTMLDialogElement>(document, '#site-menu')!;
 const triggers = [...queryAll<HTMLButtonElement>(document, '[data-open-menu]')];
@@ -11,6 +12,7 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 let trigger: HTMLButtonElement | undefined;
 let closing: ReturnType<typeof setTimeout> | undefined;
 let request = 0;
+const reportMenuSearch = searchEventDispatcher("menu");
 
 function close() {
   if (!dialog.open || closing) return;
@@ -42,8 +44,8 @@ dialog.addEventListener('keydown', event => {
   if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
   else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
 });
-['input', 'search'].forEach(event => input.addEventListener(event, async () => {
-  const current = ++request, term = input.value.trim().toLowerCase();
+async function updateMenuSearch() {
+  const current = ++request, term = input.value.trim();
   results.hidden = !term; browse.hidden = Boolean(term);
   if (!term) { status.textContent = ''; return; }
   // Keep unused search cards out of the document until someone searches.
@@ -54,9 +56,11 @@ dialog.addEventListener('keydown', event => {
   if (current !== request) return;
   let count = 0;
   queryAll<HTMLAnchorElement>(results, '[data-menu-piece]').forEach(link => {
-    link.hidden = state.retired.includes(link.dataset.menuPiece ?? '') || !term.split(/\s+/).every(word => link.dataset.query?.includes(word));
+    link.hidden = state.retired.includes(link.dataset.menuPiece ?? '') || !matchesSearch(link.dataset.query ?? '', term);
     if (!link.hidden) { count++; const image = query(link, 'img')!; image.src = image.dataset.src!; }
   });
   status.textContent = count ? `${count} ${count === 1 ? 'piece' : 'pieces'} found` : 'No pieces found. Try a garment, color or design name.';
-}));
+  reportMenuSearch(term, count);
+}
+['input', 'search'].forEach(event => input.addEventListener(event, () => { void updateMenuSearch(); }));
 query(document, '.menu-search')?.addEventListener('submit', event => { if (!input.value.trim()) event.preventDefault(); });

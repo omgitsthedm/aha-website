@@ -18,7 +18,7 @@ const slug = collectionSlug(name);
 const photographed = campaignProducts(pieces.map(photographedProduct));
 const lead = photographed[0]!;
 const hero = lead.campaign[0]!;
-const film = motionFor(hero.src);
+const film = motionFor(slug);
 const copy = collectionCopy(name);
 // Nothing on sale (src/data/off-sale.json): not indexed, and the page says so without script.
 const offSale = allOffSale(pieces);
@@ -40,7 +40,7 @@ const schema = {
       <a class="button" href="#pieces">Shop the pieces </a>
     </div>
     <figure class="collection-hero-image">
-      <MotionImage image={hero} priority sizes={heroSizes} />
+      <MotionImage motionKey={slug} image={hero} priority sizes={heroSizes} />
       <figcaption><span class="still-note">{lead.title} · Campaign mockup · AI-generated</span>{film && <span class="motion-note">{film.label}</span>}</figcaption>
     </figure>
   </section>

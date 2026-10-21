@@ -5,7 +5,7 @@ import { brand, topics } from "../data/site";
 
 <Site
   title="Talk to us"
-  description="Contact After Hours Agenda for help with an existing order, a piece, fit, returns or accessibility. Prepare an email draft or write to info@afterhoursagenda.com."
+  description="Contact After Hours Agenda for help with an existing order, a piece, fit, returns or accessibility. Send a message or write to info@afterhoursagenda.com."
 >
   <header class="page-head shell">
     <p class="label">Here to help</p>
@@ -55,8 +55,7 @@ import { brand, topics } from "../data/site";
     <section class="brief-panel" aria-labelledby="brief-title">
       <h2 id="brief-title">A little context helps.</h2>
       <p>
-        This prepares an email for you to review and send. Your details stay in
-        this page until you choose to open your email app or copy them.
+        Send your question here and we’ll reply by email. Your message won’t add you to a mailing list.
       </p>
       <noscript>
         <p class="reading">
@@ -137,41 +136,16 @@ import { brand, topics } from "../data/site";
           <p class="field-error" id="message-error" hidden></p>
         </div>
         <p class="form-footnote">
-          * Required. This form creates a draft. It does not submit a request.
+          * Required. We use these details to answer your request.
         </p>
+        <div hidden aria-hidden="true"><label>Company<input name="company" tabindex="-1" autocomplete="off" /></label></div>
         <button class="button" type="submit">
-          Prepare my email
+          Send message
         </button>
       </form>
       <div class="brief-result" id="brief-result" hidden>
-        <h3 id="result-title" tabindex="-1">
-          Your email is ready to review.
-        </h3>
-        <p>
-          Nothing has been sent. Open your email app, check the draft and send
-          when you’re ready. If your email app does not open, copy the text and
-          write to {brand.email}.
-        </p>
-        <label for="draft-text" class="label">
-          Your message
-        </label>
-        <textarea
-          id="draft-text"
-          readonly
-          aria-label="Prepared email message"
-        ></textarea>
-        <div class="result-actions">
-          <a id="email-draft" class="button" href={`mailto:${brand.email}`}>
-            Open email draft
-          </a>
-          <button class="button button-secondary" type="button" id="copy-draft">
-            Copy message
-          </button>
-          <button class="button button-secondary" type="button" id="edit-draft">
-            Edit details
-          </button>
-        </div>
-        <p class="copy-status" id="copy-status" role="status"></p>
+        <h3 id="result-title" tabindex="-1">Your message has been received.</h3>
+        <p>We’ll reply to the email address you provided. Keep an eye on your inbox.</p>
       </div>
       <p id="form-status" class="field-error" role="status"></p>
     </section>
@@ -182,7 +156,6 @@ import { brand, topics } from "../data/site";
     const result = document.querySelector<HTMLElement>("#brief-result")!;
     const topic = document.querySelector<HTMLSelectElement>("#topic")!;
     const status = document.querySelector<HTMLElement>("#form-status")!;
-    const draft = document.querySelector<HTMLTextAreaElement>("#draft-text")!;
     form.hidden = false;
     const requested = new URLSearchParams(location.search).get("topic");
     if (
@@ -190,8 +163,11 @@ import { brand, topics } from "../data/site";
       [...topic.options].some((option) => option.value === requested)
     )
       topic.value = requested;
-    form.addEventListener("submit", (event) => {
+    const requestId = crypto.randomUUID();
+    let sending = false;
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (sending) return;
       const values = Object.fromEntries(new FormData(form));
       const errors = validateBrief(values);
       for (const name of ["name", "email", "message"]) {
@@ -210,32 +186,36 @@ import { brand, topics } from "../data/site";
       }
       status.textContent = "";
       const prepared = createBrief(values);
-      draft.value = prepared.body;
-      document.querySelector<HTMLAnchorElement>("#email-draft")!.href =
-        prepared.url;
-      form.hidden = true;
-      result.hidden = false;
-      document.getElementById("result-title")!.focus();
-    });
-    document.querySelector("#edit-draft")!.addEventListener("click", () => {
-      result.hidden = true;
-      form.hidden = false;
-      document.getElementById("name")!.focus();
-    });
-    document
-      .querySelector("#copy-draft")!
-      .addEventListener("click", async () => {
-        const copyStatus = document.getElementById("copy-status")!;
-        try {
-          await navigator.clipboard.writeText(draft.value);
-          copyStatus.textContent =
-            "Message copied. Paste it into your email. Nothing has been sent.";
-        } catch {
-          draft.focus();
-          draft.select();
-          copyStatus.textContent =
-            "Copy is unavailable here. Your message is selected; use your device’s Copy command.";
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      sending = true;
+      button.disabled = true;
+      button.textContent = "Sending…";
+      try {
+        const response = await fetch("/api/support", {
+          method: "POST", headers: { "content-type": "application/json", "x-aha-support": "1" },
+          body: JSON.stringify({ ...values, requestId }), signal: AbortSignal.timeout(15_000),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.ok !== true) throw new Error(data.error || "We couldn’t confirm receipt. Your message is still here. Try again or email us directly.");
+        form.hidden = true;
+        result.hidden = false;
+        document.getElementById("result-title")!.focus();
+      } catch (error) {
+        status.textContent = error instanceof Error && error.name !== "TimeoutError" ? error.message : "We couldn’t confirm receipt. Your message is still here. Try again or email us directly.";
+        let fallback = form.querySelector<HTMLAnchorElement>("[data-support-fallback]");
+        if (!fallback) {
+          fallback = document.createElement("a");
+          fallback.dataset.supportFallback = "";
+          fallback.className = "text-link";
+          fallback.textContent = "Open this message in your email app";
+          form.append(fallback);
         }
-      });
+        fallback.href = prepared.url;
+      } finally {
+        sending = false;
+        button.disabled = false;
+        button.textContent = "Send message";
+      }
+    });
   </script>
 </Site>

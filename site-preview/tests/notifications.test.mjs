@@ -95,4 +95,12 @@ test("Resend gateway sends no provider token to the browser and keeps only a req
   assert.equal(received.init.headers.authorization, "Bearer secret");
   assert.equal(received.init.headers["idempotency-key"], "square-3:order_confirmed");
   assert.doesNotMatch(received.init.body, /secret/);
+  assert.equal(JSON.parse(received.init.body).reply_to, "info@afterhoursagenda.com", "transactional mail keeps the configured reply address");
+});
+
+test("Resend gateway allows the support sender to supply its validated reply address", async () => {
+  let received;
+  const gateway = createResendGateway({ apiKey: "secret", from: "After Hours Agenda <orders@afterhoursagenda.com>", replyTo: "info@afterhoursagenda.com", fetchImpl: async (_url, init) => { received = init; return new Response(JSON.stringify({ id: "email-1" }), { status: 200 }); } });
+  await gateway.send({ idempotencyKey: "support-1", recipient: "info@afterhoursagenda.com", replyTo: "buyer@example.com", subject: "Support", html: "<p>Support</p>", text: "Support" });
+  assert.equal(JSON.parse(received.body).reply_to, "buyer@example.com");
 });

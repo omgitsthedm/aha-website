@@ -11,7 +11,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Crewnecks"
     },
-    "description": "A Bone crewneck with a standard, full-length fit and a yellow-and-blue YIKES! chest print. The 8.5 oz fleece uses an 80% cotton, 20% polyester blend with a smooth cotton face. Ribbing finishes the collar, cuffs and waistband, with double-needle seams and twill neck tape.",
+    "description": "Midweight fleece with a full-length, standard fit. The yellow-and-blue chest print sits above a ribbed hem and pairs easily with denim.",
     "fit": "standard, full-length crewneck",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -186,7 +186,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Cropped Hoodies"
     },
-    "description": "A cropped hoodie in Bone with a raw hem, dropped shoulders and a yellow-and-blue YIKES! chest print. The 6.5 oz fleece uses an 80% cotton, 20% polyester blend with a smooth cotton face. Flat drawcords adjust the hood, and ribbed cuffs finish the sleeves.",
+    "description": "Lightweight fleece with dropped shoulders and a raw cropped hem. The yellow-and-blue chest print adds color to the relaxed, shorter silhouette.",
     "fit": "cropped raw-hem silhouette; dropped shoulders",
     "weightOz": 6.5,
     "composition": "80% cotton / 20% polyester",
@@ -352,7 +352,7 @@
       "gender": "unisex",
       "condition": "new"
     },
-    "description": "An 8.5 oz midweight pullover hoodie in Black with a small left-chest print and a full back print. It has a standard fit, a ring-spun cotton face, a jersey-lined hood, metal eyelets, twill neck tape, and ribbed cuffs and waistband.",
+    "description": "Midweight fleece with a jersey-lined hood and a standard fit. A small chest sketch keeps the front simple; the full drawing fills the back.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -555,7 +555,7 @@
       "gender": "unisex",
       "condition": "new"
     },
-    "description": "An 8.5 oz midweight pullover hoodie in Grey Heather with a small left-chest print and a full back print. It has a standard fit, a jersey-lined hood, metal eyelets, twill neck tape, and ribbed cuffs and waistband.",
+    "description": "Midweight fleece with a jersey-lined hood and a standard fit. A small chest sketch keeps the front simple; the full drawing fills the back.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "75% cotton / 25% polyester",
@@ -757,7 +757,7 @@
       "gender": "unisex",
       "condition": "new"
     },
-    "description": "An 8.5 oz midweight crewneck sweatshirt in Black with a small left-chest print and a full back print. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs, and waistband.",
+    "description": "Midweight fleece with a standard fit and ribbed edges. A small chest sketch and a full back drawing give each side its own detail.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -936,7 +936,7 @@
       "gender": "unisex",
       "condition": "new"
     },
-    "description": "An 8.5 oz midweight crewneck sweatshirt in Heather Grey with a small left-chest print and a full back print. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs, and waistband.",
+    "description": "Midweight fleece with a standard fit and ribbed edges. A small chest sketch and a full back drawing give each side its own detail.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "75% cotton / 25% polyester",
@@ -1115,7 +1115,7 @@
       "gender": "unisex",
       "condition": "new"
     },
-    "description": "A 4.3 oz long-sleeve crewneck T-shirt in Black with a small left-chest print and a full back print. It has a standard fit, combed ring-spun cotton, a baby-rib collar, hemmed sleeves, and side seams.",
+    "description": "Lightweight cotton jersey for wearing on its own or under a jacket. A small chest sketch and full back drawing sit on a standard-fit long sleeve.",
     "fit": "standard",
     "weightOz": 4.3,
     "composition": "100% combed ring-spun cotton",
@@ -1268,7 +1268,7 @@
       "gender": "unisex",
       "condition": "new"
     },
-    "description": "A 4.3 oz long-sleeve crewneck T-shirt in Heather Grey with a small left-chest print and a full back print. It has a standard fit, a baby-rib collar, hemmed sleeves, and side seams.",
+    "description": "Lightweight cotton jersey for wearing on its own or under a jacket. A small chest sketch and full back drawing sit on a standard-fit long sleeve.",
     "fit": "standard",
     "weightOz": 4.3,
     "composition": "90% cotton / 10% recycled polyester",
@@ -1420,7 +1420,7 @@
       "gender": "unisex",
       "condition": "new"
     },
-    "description": "A 6.1 oz garment-dyed long-sleeve pocket T-shirt in Black with a small left-chest print and a full back print. It has a relaxed fit, ring-spun cotton, a left-chest pocket, and ribbed cuffs.",
+    "description": "Substantial garment-dyed cotton with a relaxed fit, chest pocket and ribbed cuffs. The small front mark is paired with a full back sketch.",
     "fit": "relaxed",
     "weightOz": 6.1,
     "composition": "100% ring-spun cotton",
@@ -1583,7 +1583,7 @@
       "gender": "unisex",
       "condition": "new"
     },
-    "description": "A 6.1 oz garment-dyed long-sleeve pocket T-shirt in Grey with a small left-chest print and a full back print. It has a relaxed fit, ring-spun cotton, a left-chest pocket, and ribbed cuffs.",
+    "description": "Substantial garment-dyed cotton with a relaxed fit, chest pocket and ribbed cuffs. The small front mark is paired with a full back sketch.",
     "fit": "relaxed",
     "weightOz": 6.1,
     "composition": "100% ring-spun cotton",
@@ -1744,7 +1744,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Hoodies"
     },
-    "description": "An 8.5 oz midweight pullover hoodie in Black with a full back print and a plain front. It has a standard fit, a ring-spun cotton face, a jersey-lined hood, metal eyelets, twill neck tape, and ribbed cuffs and waistband.",
+    "description": "Midweight fleece with a jersey-lined hood and a standard fit. A plain front gives way to the blue-and-orange city graphic across the back.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -1945,7 +1945,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Crewnecks"
     },
-    "description": "An 8.5 oz midweight crewneck sweatshirt in Black with a full back print and a plain front. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs and waistband.",
+    "description": "A standard-fit crewneck in midweight fleece. The front stays plain, with the blue-and-orange city graphic across the back.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -2122,7 +2122,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Shirts & Tops > T-Shirts"
     },
-    "description": "A 4.3 oz long-sleeve crewneck T-shirt in Black with a full back print and a plain front. It has a standard fit, combed ring-spun cotton, a baby-rib collar, hemmed sleeves, and side seams.",
+    "description": "A standard-fit long sleeve in lightweight cotton jersey. The front stays plain, with the blue-and-orange city graphic across the back.",
     "fit": "standard",
     "weightOz": 4.3,
     "composition": "100% combed ring-spun cotton",
@@ -2273,7 +2273,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Crewnecks"
     },
-    "description": "An 8.5 oz midweight crewneck sweatshirt in Navy with a muted gold front print. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs and waistband.",
+    "description": "A standard-fit crewneck in midweight fleece, finished with ribbed edges. The vintage boxing graphic is printed in muted gold across the chest.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -2451,7 +2451,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Crewnecks"
     },
-    "description": "An 8.5 oz midweight crewneck sweatshirt in Dark Green with a buttercream front print. It has a standard fit, a cotton face, neck tape, and ribbed collar, cuffs and waistband.",
+    "description": "A standard-fit crewneck in midweight fleece, finished with ribbed edges. The vintage boxing graphic is printed in buttercream across the chest.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -2807,7 +2807,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Hoodies"
     },
-    "description": "A heavyweight camouflage pullover hoodie with a single orange chest print. Generous fit, fleece-lined hood, front pouch pocket and ribbed cuffs and waistband. Independent Trading Company IND4000; 10 oz cotton-blend fleece, 75% cotton and 25% polyester for camo colors.",
+    "description": "Heavyweight camouflage fleece with a generous fit and a fleece-lined hood. A single orange chest print keeps the graphic clear against the camo.",
     "fit": "generous",
     "weightOz": 10,
     "composition": "75% cotton / 25% polyester",
@@ -2988,7 +2988,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Hoodies"
     },
-    "description": "A heavyweight camouflage pullover hoodie with a single pink chest print. Generous fit, fleece-lined hood, front pouch pocket and ribbed cuffs and waistband. Independent Trading Company IND4000; 10 oz cotton-blend fleece, 75% cotton and 25% polyester for camo colors.",
+    "description": "Heavyweight camouflage fleece with a generous fit and a fleece-lined hood. A single pink chest print keeps the graphic clear against the camo.",
     "fit": "generous",
     "weightOz": 10,
     "composition": "75% cotton / 25% polyester",
@@ -3169,7 +3169,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > T-Shirts"
     },
-    "description": "And All That Jazz Boxy Tee in Butter. A mid-length, boxy tee in substantial 6.1 oz ring-spun cotton. Garment-dyed finish, relaxed width and a printed front; the back is plain.",
+    "description": "A mid-length, boxy cut in substantial garment-dyed cotton. The red-and-gold front graphic gives the relaxed silhouette a bright focal point.",
     "fit": "boxy, mid-length",
     "weightOz": 6.1,
     "composition": "100% ring-spun cotton",
@@ -3323,7 +3323,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > T-Shirts"
     },
-    "description": "And All That Jazz T-Shirt in Blossom. A relaxed tee in substantial 6.1 oz ring-spun cotton. Garment-dyed finish, taped shoulders and a printed front; the back is plain.",
+    "description": "Substantial garment-dyed cotton with a relaxed fit. The red-and-gold front graphic sits on a classic tee with taped shoulders and a plain back.",
     "fit": "relaxed",
     "weightOz": 6.1,
     "composition": "100% ring-spun cotton",
@@ -3487,7 +3487,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > T-Shirts"
     },
-    "description": "And All That Jazz Tee in Mustard. A relaxed tee in substantial 6.1 oz ring-spun cotton. Garment-dyed finish, taped shoulders and a printed front; the back is plain.",
+    "description": "Substantial garment-dyed cotton with a relaxed fit. The red-and-gold front graphic sits on a classic tee with taped shoulders and a plain back.",
     "fit": "relaxed",
     "weightOz": 6.1,
     "composition": "100% ring-spun cotton",
@@ -3651,7 +3651,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Crewnecks"
     },
-    "description": "And All That Jazz Crewneck in Black. A standard-fit crewneck in 8.5 oz cotton-blend fleece with a printed front and a plain back. Ribbed collar, cuffs and waistband; cotton face and taped neck.",
+    "description": "Midweight fleece with a standard fit and ribbed edges. The red-and-gold front graphic brings color to a simple crewneck silhouette.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -3832,7 +3832,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Crewnecks"
     },
-    "description": "And All That Jazz Crewneck in Light Pink. A standard-fit crewneck in 8.5 oz cotton-blend fleece with a printed front and a plain back. Ribbed collar, cuffs and waistband; cotton face and taped neck.",
+    "description": "Midweight fleece with a standard fit and ribbed edges. The red-and-gold front graphic brings color to a simple crewneck silhouette.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -4013,7 +4013,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > T-Shirts"
     },
-    "description": "Fashion Kills Boxy Tee in Black. A mid-length, boxy tee in substantial 6.1 oz ring-spun cotton. Garment-dyed finish, relaxed width and a printed front; the back is plain.",
+    "description": "A mid-length, boxy tee in substantial garment-dyed cotton. The pink-and-cream perfume-bottle print fills the front; the back stays plain.",
     "fit": "boxy, mid-length",
     "weightOz": 6.1,
     "composition": "100% ring-spun cotton",
@@ -4167,7 +4167,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Crewnecks"
     },
-    "description": "Fashion Kills Crewneck in Black. A standard-fit crewneck in 8.5 oz cotton-blend fleece with a printed front and a plain back. Ribbed collar, cuffs and waistband; cotton face and taped neck.",
+    "description": "Midweight fleece with a standard fit and ribbed edges. The pink-and-cream perfume-bottle graphic is printed across the front.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -4350,7 +4350,7 @@
       "gender": "unisex",
       "condition": "new"
     },
-    "description": "For the Record Hoodie in Black. A standard-fit pullover hoodie in 8.5 oz cotton-blend fleece. Small two-line front print and a separate back print below the hood. Jersey-lined hood, matching drawcord and front pouch pocket.",
+    "description": "A standard-fit fleece hoodie with small type at the chest and a redacted-document graphic below the hood. A front pouch pocket finishes the pullover shape.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -4555,7 +4555,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > T-Shirts"
     },
-    "description": "Nonna’s Sunday Supper Society Tee in Ivory. A relaxed tee in substantial 6.1 oz ring-spun cotton. Garment-dyed finish, taped shoulders and a printed front; the back is plain.",
+    "description": "Substantial garment-dyed cotton with a relaxed fit. The vintage-style illustration is printed in red, letting the ivory fabric show through.",
     "fit": "relaxed",
     "weightOz": 6.1,
     "composition": "100% ring-spun cotton",
@@ -4719,7 +4719,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Crewnecks"
     },
-    "description": "Nonna’s Sunday Supper Society Crewneck in Bone. A standard-fit crewneck in 8.5 oz cotton-blend fleece with a printed front and a plain back. Ribbed collar, cuffs and waistband; cotton face and taped neck.",
+    "description": "Midweight fleece with a standard fit and ribbed edges. The vintage-style illustration is printed in red against the bone fabric.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -4900,7 +4900,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > T-Shirts > Long Sleeves"
     },
-    "description": "Resist Rebel Long Sleeve in Midnight. A relaxed long-sleeve tee in substantial 6.1 oz ring-spun cotton. Garment-dyed finish, ribbed cuffs and a front print; the back is plain.",
+    "description": "A relaxed long sleeve in substantial garment-dyed cotton, finished with ribbed cuffs. The textured blue-and-cream flower graphic fills the front.",
     "fit": "relaxed",
     "weightOz": 6.1,
     "composition": "100% ring-spun cotton",
@@ -4966,11 +4966,11 @@
         "role": "front"
       },
       {
-        "src": "/images/white-2026-10/resist-rebel-6014-midnight/back-1122.webp",
-        "srcset": "/images/white-2026-10/resist-rebel-6014-midnight/back-400.webp 400w, /images/white-2026-10/resist-rebel-6014-midnight/back-800.webp 800w, /images/white-2026-10/resist-rebel-6014-midnight/back-1122.webp 1122w",
-        "feedImage": "/images/white-2026-10/resist-rebel-6014-midnight/back.jpg",
+        "src": "/images/audit-fix-2026-10/resist-rebel-6014-midnight/back-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/resist-rebel-6014-midnight/back-400.webp 400w, /images/audit-fix-2026-10/resist-rebel-6014-midnight/back-800.webp 800w, /images/audit-fix-2026-10/resist-rebel-6014-midnight/back-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/resist-rebel-6014-midnight/back.jpg",
         "width": 1122,
-        "height": 1403,
+        "height": 1404,
         "alt": "Plain back of the Midnight Resist Rebel Long Sleeve.",
         "role": "back"
       },
@@ -5071,7 +5071,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > T-Shirts"
     },
-    "description": "Resist Rebel Tee in True Navy. A relaxed tee in substantial 6.1 oz ring-spun cotton. Garment-dyed finish, taped shoulders and a printed front; the back is plain.",
+    "description": "Substantial garment-dyed cotton with a relaxed fit and taped shoulders. The textured blue-and-cream flower graphic is printed across the front.",
     "fit": "relaxed",
     "weightOz": 6.1,
     "composition": "100% ring-spun cotton",
@@ -5235,7 +5235,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing > Shirts & Tops",
       "productType": "Clothing > Sweatshirts > Crewnecks"
     },
-    "description": "Resist Rebel Crewneck in Navy. A standard-fit crewneck in 8.5 oz cotton-blend fleece with a printed front and a plain back. Ribbed collar, cuffs and waistband; cotton face and taped neck.",
+    "description": "Midweight fleece with a standard fit and ribbed edges. The textured blue-and-cream flower graphic sits against navy fabric.",
     "fit": "standard",
     "weightOz": 8.5,
     "composition": "80% cotton / 20% polyester",
@@ -5416,7 +5416,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Black cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -5466,12 +5466,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-black/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Black AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Black Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -5528,7 +5528,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Blaze Orange cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -5578,12 +5578,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Blaze Orange AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Blaze Orange Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -5640,7 +5640,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Camel cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -5690,12 +5690,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Camel AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Camel Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -5752,7 +5752,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Cardinal cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -5802,12 +5802,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Cardinal AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Cardinal Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -5864,7 +5864,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Dark Heather Grey cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 50% acrylic / 50% polyester; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "50% acrylic / 50% polyester",
@@ -5914,12 +5914,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Dark Heather Grey AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Dark Heather Grey Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -5976,7 +5976,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Forest Green cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -6026,12 +6026,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Forest Green AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Forest Green Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -6088,7 +6088,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Fuchsia cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -6138,12 +6138,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Fuchsia AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Fuchsia Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -6200,7 +6200,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Gold cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -6250,12 +6250,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Gold AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Gold Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -6312,7 +6312,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Heather Grey cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 62% acrylic / 38% polyester; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "62% acrylic / 38% polyester",
@@ -6362,12 +6362,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Heather Grey AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Heather Grey Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -6424,7 +6424,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Kelly Green cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -6474,12 +6474,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Kelly Green AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Kelly Green Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -6536,7 +6536,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Navy cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -6586,12 +6586,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Navy AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Navy Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -6648,7 +6648,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Pink cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -6698,12 +6698,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Pink AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Pink Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -6760,7 +6760,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Red cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -6810,12 +6810,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Red AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Red Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -6872,7 +6872,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "Royal Blue cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -6922,12 +6922,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "Royal Blue AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "Royal Blue Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
@@ -6984,7 +6984,7 @@
       "googleProductCategory": "Apparel & Accessories > Clothing Accessories > Hats",
       "productType": "Accessories > Hats > Beanies"
     },
-    "description": "White cuffed rib-knit beanie with the sheep and custom lettering embroidered directly onto its adjustable cuff. 100% acrylic; one size, 12 inches unfolded.",
+    "description": "Ribbed knit with an adjustable fold-over cuff. The sheep and custom lettering are embroidered directly into the cuff; wear it folded to suit your fit.",
     "fit": "one size, stretch knit",
     "weightOz": 3.9,
     "composition": "100% acrylic",
@@ -7034,12 +7034,12 @@
         "role": "print-detail"
       },
       {
-        "src": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded-1122.webp",
-        "srcset": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded-400.webp 400w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded-800.webp 800w, /images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded-1122.webp 1122w",
-        "feedImage": "/images/mockup-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded.jpg",
+        "src": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded-1122.webp",
+        "srcset": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded-400.webp 400w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded-800.webp 800w, /images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded-1122.webp 1122w",
+        "feedImage": "/images/audit-fix-2026-10/after-hours-agenda-heritage-beanie-sp12-white/folded.jpg",
         "width": 1122,
         "height": 1402,
-        "alt": "White AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
+        "alt": "White Heritage Beanie loosely folded to show its ribbed knit and embroidered cuff.",
         "role": "folded"
       }
     ],
