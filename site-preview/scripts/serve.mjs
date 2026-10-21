@@ -115,6 +115,16 @@ http
         res.end(req.method === "HEAD" ? undefined : body);
         return;
       }
+      // netlify/functions/checkout-config.mjs answers this in production. A
+      // One Size piece selects itself, so its page asks at once which wallets
+      // are on; the local preview has no Square, so every method is off and
+      // the page loads nothing more (tests mock this route when they need it).
+      if (pathname === "/api/checkout/config") {
+        const body = Buffer.from(JSON.stringify({ appId: "local-preview", applicationId: "local-preview", locationId: "local-preview", countryCode: "US", currencyCode: "USD", methods: { card: false, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } }));
+        res.writeHead(200, { ...headers, "Content-Type": "application/json", "Content-Length": body.length, "Cache-Control": "no-store" });
+        res.end(req.method === "HEAD" ? undefined : body);
+        return;
+      }
       // netlify/functions/catalog-live.mjs answers this in production; the
       // built artifact has nothing published live, so it is always empty here.
       if (pathname === "/api/catalog/live") {

@@ -17,7 +17,7 @@ export function createBrief(values: Values) {
   const labels: Record<string, string> = {
     order: "Existing order",
     product: "Product or fit question",
-    returns: "Return or quality question",
+    returns: "Exchange, refund or quality question",
     accessibility: "Accessibility issue",
     general: "General question",
   };

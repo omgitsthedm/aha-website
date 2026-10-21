@@ -164,3 +164,29 @@ test("saved pieces include products published live and leave out ones removed fr
   await expect(page.locator("[data-saved-card='pet-it-be-ss3000-maroon']")).toBeHidden();
   await expect(page.locator("[data-saved-empty]")).toBeHidden();
 });
+
+
+test("a backup passkey signs into the same account when the original device is unavailable", async ({ page }) => {
+  const client = await page.context().newCDPSession(page);
+  await client.send("WebAuthn.enable");
+  const options = { protocol: "ctap2" as const, transport: "internal" as const, hasResidentKey: true, hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true };
+  const first = await client.send("WebAuthn.addVirtualAuthenticator", {options});
+  await page.goto(`${LOCAL}/account/`);
+  await page.getByRole("button", {name:"Create an account"}).click();
+  await expect(page.getByText("You’re signed in on this device.")).toBeVisible();
+  await page.evaluate(() => fetch("/api/account/saved", {method:"PUT",headers:{"content-type":"application/json","x-aha-account":"1"},body:JSON.stringify({saved:["yikes-crewneck"]})}));
+  await page.route("**/api/account/auth/backup/options", async route => {
+    const response = await route.fetch();
+    expect(response.status()).toBe(200);
+    await client.send("WebAuthn.removeVirtualAuthenticator", {authenticatorId:first.authenticatorId});
+    await client.send("WebAuthn.addVirtualAuthenticator", {options});
+    await route.fulfill({response});
+  });
+  await page.getByRole("button", {name:"Add a backup passkey"}).click();
+  await expect(page.locator("[data-account-status]")).toContainText("Backup passkey saved");
+  await page.getByRole("button", {name:"Sign out"}).click();
+  await page.evaluate(() => localStorage.removeItem("aha-saved-v1"));
+  await page.getByRole("button", {name:"Sign in", exact:true}).click();
+  await expect(page.getByText("You’re signed in on this device.")).toBeVisible();
+  await expect(page.locator("[data-saved-card='yikes-crewneck']")).toBeVisible();
+});

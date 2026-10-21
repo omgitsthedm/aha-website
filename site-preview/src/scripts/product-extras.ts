@@ -3,49 +3,8 @@ import { query, queryAll } from "./dom";
 // on phones, the card shown after Add to bag, delivery estimates and the fit
 // profile. Loaded by cart.ts on demand.
 import { deliveryLines } from "./delivery";
-import { fitSummary, recommendSize, type Fit, type SizeRow } from "./fit";
+import { recommendSize, type Fit, type SizeRow } from "./fit";
 import { readSaved, writeSaved } from "./saved";
-
-const MONEY = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
-
-// After "Add to bag": a card in the corner (a sheet on phones) with the piece, the
-// bag subtotal and Checkout. It never blocks the page: Escape, Close, Keep shopping
-// or a click elsewhere puts it away, and focus returns where it was.
-let bagPanel: HTMLElement | null = null;
-let returnFocus: HTMLElement | null = null;
-function closeBagPanel() {
-  if (!bagPanel || bagPanel.hidden) return;
-  bagPanel.hidden = true;
-  returnFocus?.focus({ preventScroll: true });
-}
-type BagAdded = { title: string; size: string; image: string; added: number; lineCents: number; items: number; subtotalCents: number };
-function showBagPanel({ title, size, image, added, lineCents, items, subtotalCents }: BagAdded) {
-  if (!bagPanel) {
-    bagPanel = document.createElement("section");
-    bagPanel.className = "bag-panel";
-    bagPanel.tabIndex = -1;
-    bagPanel.setAttribute("aria-labelledby", "bag-panel-title");
-    bagPanel.append(query<HTMLTemplateElement>(document, "#bag-content")!.content.cloneNode(true));
-    document.body.append(bagPanel);
-    queryAll(bagPanel, "[data-close]").forEach((button) => button.addEventListener("click", closeBagPanel));
-    document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeBagPanel(); });
-    document.addEventListener("pointerdown", (event) => {
-      const target = event.target as Element;
-      if (bagPanel && !bagPanel.contains(target) && !target.closest?.("[data-cart-form], .buy-bar")) closeBagPanel();
-    });
-  }
-  query(bagPanel, "img")!.src = image;
-  const [name, detail, price] = queryAll<HTMLElement>(bagPanel, ".bag-panel-item strong, .bag-panel-item span");
-  name!.textContent = title;
-  detail!.textContent = `Size ${size} · Qty ${added}`;
-  price!.textContent = MONEY.format(lineCents / 100);
-  query(bagPanel, ".bag-panel-total span")!.textContent = `Bag subtotal · ${items} ${items === 1 ? "item" : "items"}`;
-  query(bagPanel, ".bag-panel-total strong")!.textContent = MONEY.format(subtotalCents / 100);
-  query(bagPanel, ".bag-panel-arrival")!.textContent = deliveryLines()[0]!;
-  returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-  bagPanel.hidden = false;
-  bagPanel.focus({ preventScroll: true });
-}
 
 // Product photos: a "1 / 4" count on the phone carousel, and tap or click for a full-screen view.
 function initGallery() {
@@ -62,36 +21,25 @@ function initGallery() {
   };
   gallery.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
   update();
-  // The viewer is built on first use, so pages carry no empty image.
-  let viewer: HTMLDialogElement | null = null;
-  const openViewer = () => {
-    if (viewer) return viewer;
-    const dialog = document.createElement("dialog");
-    dialog.className = "photo-viewer";
-    dialog.append(query<HTMLTemplateElement>(document, "#photo-content")!.content.cloneNode(true));
-    document.body.append(dialog);
-    query(dialog, "button")!.addEventListener("click", () => dialog.close());
-    dialog.addEventListener("click", (event) => { if (event.target === dialog || event.target === query(dialog, ".photo-viewer-frame")) dialog.close(); });
-    return (viewer = dialog);
-  };
-  figures.forEach((figure) => {
+  let viewer: Promise<ReturnType<typeof import("./product-viewer").createPhotoViewer>> | undefined;
+  figures.forEach((figure, index) => {
     const image = query(figure, "img");
     if (!image) return;
     const open = document.createElement("button");
     open.type = "button";
     open.className = "photo-zoom";
     open.setAttribute("aria-label", `Enlarge photo: ${query(figure, "figcaption")?.textContent ?? "view"}`);
-    open.addEventListener("click", () => {
-      const dialog = openViewer();
-      const large = query(dialog, "img")!;
-      large.alt = image.alt;
-      large.sizes = "200vw";
-      large.srcset = image.srcset;
-      large.src = image.currentSrc || image.src;
-      dialog.setAttribute("aria-label", image.alt);
-      dialog.showModal();
-      const frame = large.parentElement!;
-      requestAnimationFrame(() => { frame.scrollLeft = (frame.scrollWidth - frame.clientWidth) / 2; });
+    open.addEventListener("click", async () => {
+      open.disabled = true;
+      try {
+        viewer ??= import("./product-viewer").then(({ createPhotoViewer }) => createPhotoViewer(figures));
+        const view = await viewer;
+        view.show(index);
+        view.dialog.showModal();
+      } catch {
+        viewer = undefined;
+        open.setAttribute("aria-label", "Photo did not open. Try enlarging again.");
+      } finally { open.disabled = false; }
     });
     figure.append(open);
   });
@@ -146,72 +94,47 @@ function initArrival() {
 // Fit profile: two measurements of a top the visitor already likes, kept only in
 // this browser, matched against the finished-garment measurements on the page.
 const FIT_KEY = "aha-fit-v1";
+let currentFit: Fit | null | undefined;
 
 function readFit(): Fit | null {
-  try { const value = JSON.parse(localStorage.getItem(FIT_KEY) || "null"); return value && Number.isFinite(value.chest) && Number.isFinite(value.length) ? value : null; } catch { return null; }
+  if (currentFit !== undefined) return currentFit;
+  try { const value = JSON.parse(localStorage.getItem(FIT_KEY) || "null"); return (currentFit = value && Number.isFinite(value.chest) && Number.isFinite(value.length) ? value : null); } catch { return null; }
 }
 function sizeRows(): SizeRow[] {
-  return [...queryAll<HTMLTableRowElement>(document, ".size-table-wrap tbody tr")].map((row) => ({ size: query(row, "th")?.textContent?.trim() ?? "", chest: Number(row.cells[1]?.textContent), length: Number(row.cells[2]?.textContent) })).filter((row) => row.size && Number.isFinite(row.chest) && Number.isFinite(row.length));
+  return [...queryAll<HTMLTableRowElement>(document, ".size-table-wrap tbody tr")].map((row) => ({ size: query(row, "th")?.textContent?.trim() ?? "", chest: Number.parseFloat(row.cells[1]?.textContent ?? ""), length: Number.parseFloat(row.cells[2]?.textContent ?? "") })).filter((row) => row.size && Number.isFinite(row.chest) && Number.isFinite(row.length));
 }
 function initFit() {
   const open = query<HTMLButtonElement>(document, "[data-fit-open]");
   const form = query<HTMLFormElement>(document, "[data-cart-form]");
   const rows = sizeRows();
   if (!open || !form || !rows.length) return;
-  let dialog: HTMLDialogElement | null = null;
+  let dialog: Promise<ReturnType<typeof import("./product-fit").createFitDialog>> | undefined;
   const refresh = () => {
     const fit = readFit();
     const pick = fit ? recommendSize(rows, fit) : null;
-    open.textContent = pick ? `Your size: ${pick.size}` : "Find my size";
+    open.textContent = pick ? `Closest width: ${pick.size}` : fit ? "Compare measurements" : "Find my size";
     queryAll<HTMLLabelElement>(form, ".size-options label").forEach((label) => label.classList.toggle("is-recommended", Boolean(pick) && query<HTMLInputElement>(label, "input")?.dataset.size === pick!.size));
     return { fit, pick };
   };
-  const build = () => {
-    const element = document.createElement("dialog");
-    element.className = "fit-dialog";
-    element.setAttribute("aria-labelledby", "fit-title");
-    element.append(query<HTMLTemplateElement>(document, "#fit-content")!.content.cloneNode(true));
-    document.body.append(element);
-    const drawing = query(document, ".measure-diagram")?.cloneNode(true) as SVGElement | undefined;
-    if (drawing) {
-      drawing.removeAttribute("role"); drawing.removeAttribute("aria-labelledby"); drawing.setAttribute("aria-hidden", "true");
-      queryAll(drawing, "title, desc").forEach((node) => node.remove());
-      query(element, ".fit-form > p")?.before(drawing);
-    }
-    const fitForm = query<HTMLFormElement>(element, "form")!;
-    const result = query<HTMLElement>(element, "[data-fit-result]")!;
-    const select = query<HTMLButtonElement>(element, "[data-fit-select]")!;
-    const forget = query<HTMLButtonElement>(element, "[data-fit-forget]")!;
-    const show = () => {
-      const { fit, pick } = refresh();
-      result.textContent = fit && pick ? fitSummary(pick, fit) : "";
-      select.hidden = forget.hidden = !pick;
-      if (pick) select.textContent = `Select ${pick.size}`;
-      if (fit) { (fitForm.elements.namedItem("chest") as HTMLInputElement).value = String(fit.chest); (fitForm.elements.namedItem("length") as HTMLInputElement).value = String(fit.length); }
-    };
-    query(element, "[data-fit-close]")!.addEventListener("click", () => element.close());
-    element.addEventListener("click", (event) => { if (event.target === element) element.close(); });
-    fitForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const chest = Number((fitForm.elements.namedItem("chest") as HTMLInputElement).value);
-      const length = Number((fitForm.elements.namedItem("length") as HTMLInputElement).value);
-      if (!(chest >= 12 && chest <= 40 && length >= 16 && length <= 40)) { result.textContent = "Enter both measurements in inches: chest 12–40, length 16–40."; return; }
-      try { localStorage.setItem(FIT_KEY, JSON.stringify({ chest, length })); } catch { /* Storage can be blocked; the result still shows. */ }
-      show();
-    });
-    select.addEventListener("click", () => {
-      const { pick } = refresh();
-      const input = pick && query<HTMLInputElement>(form, `[data-cart-variant][data-size="${pick.size}"]`);
-      if (input) { input.checked = true; input.dispatchEvent(new Event("change", { bubbles: true })); }
-      element.close();
-      input?.focus();
-    });
-    forget.addEventListener("click", () => { try { localStorage.removeItem(FIT_KEY); } catch { /* ignore */ } fitForm.reset(); show(); });
-    return Object.assign(element, { refreshView: show });
-  };
   open.hidden = false;
   refresh();
-  open.addEventListener("click", () => { dialog ??= build(); (dialog as HTMLDialogElement & { refreshView: () => void }).refreshView(); dialog.showModal(); });
+  open.addEventListener("click", async () => {
+    open.disabled = true;
+    try {
+      dialog ??= import("./product-fit").then(({ createFitDialog }) => createFitDialog(form, refresh, (fit) => {
+        currentFit = fit;
+        try { if (fit) localStorage.setItem(FIT_KEY, JSON.stringify(fit)); else localStorage.removeItem(FIT_KEY); } catch { /* The current-page comparison remains usable without storage. */ }
+      }));
+      const view = await dialog;
+      view.refreshView();
+      view.showModal();
+      document.dispatchEvent(new CustomEvent("aha:fit", { detail: { action: "open", matched: Boolean(refresh().pick) } }));
+    } catch {
+      dialog = undefined;
+      open.textContent = "Try size comparison again";
+      query<HTMLElement>(document, "#size-guide")?.scrollIntoView({ block: "start" });
+    } finally { open.disabled = false; }
+  });
 }
 
 // Save for later: kept in this browser, and in the account when signed in.
@@ -273,6 +196,9 @@ export function initProductExtras() {
   initSave();
   void initReviews();
   void initDrop();
-  document.addEventListener("aha:bag-added", (event) => showBagPanel((event as CustomEvent<BagAdded>).detail));
+  document.addEventListener("aha:bag-added", (event) => {
+    const detail = (event as CustomEvent<import("./product-bag").BagAdded>).detail;
+    void import("./product-bag").then(({ showBagPanel }) => showBagPanel(detail)).catch(() => { /* Inline add confirmation and the header bag remain available. */ });
+  });
 }
 export { initBuyBar };

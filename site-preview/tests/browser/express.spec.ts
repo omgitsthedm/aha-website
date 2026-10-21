@@ -143,3 +143,18 @@ test("a piece restored in the admin gets the wallets back without a deploy", asy
   await page.getByRole("radio", { name: "M", exact: true }).check();
   await expect(page.getByRole("button", { name: "Buy with GPay" })).toBeVisible();
 });
+
+test("bag wallets price the saved bag before a card form is completed", async ({ page }) => {
+  await mockSquare(page);
+  const calls = await routes(page);
+  await page.goto(`/checkout/?products=${crewM}%3A1`);
+  const express = page.locator("[data-express-bag]");
+  await expect(express.getByRole("button", { name: "Buy with GPay" })).toBeVisible();
+  expect(await page.evaluate(() => (window as Wallet).__request)).toMatchObject({ requestShippingContact: true, total: { amount: "52.00", pending: true } });
+  await page.evaluate(() => (window as Wallet).__address!({ city: "Phoenix", state: "AZ", postalCode: "85004", countryCode: "US" }));
+  expect(calls.estimate![0]).toEqual({ items: [{ variationId: crewM, quantity: 1 }], destination: { country: "US", region: "AZ", postalCode: "85004", city: "Phoenix" } });
+  await express.getByRole("button", { name: "Buy with GPay" }).click();
+  await expect(express.locator("[data-express-status]")).toContainText("Payment confirmed · order AHA-1001");
+  expect(calls.quote![0]).toMatchObject({ items: [{ variationId: crewM, quantity: 1 }] });
+  expect(calls.pay![0]).toMatchObject({ checkoutId: "checkout_express_1", checkoutToken: "safe-checkout-token", sourceId: "opaque-wallet-token" });
+});

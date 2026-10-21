@@ -1,6 +1,8 @@
 import { captureAttribution, cleanTrackingParameters, clearAttribution, retryCheckoutPrivacyWithdrawal, setAttributionConsent, withdrawCheckoutPrivacy } from "./attribution";
+import { startRum } from "./rum.mjs";
 export {};
 type Consent={analytics:boolean;marketing:boolean;at:number};
+type RumMetric={metric:string;value:number;delta:number;id:string;template:string;device:string};
 type Queue=((...args:unknown[])=>void)&{queue?:unknown[][];loaded?:boolean;version?:string;callMethod?:(...args:unknown[])=>void;push?:Queue};
 type PostHog=unknown[]&{__SV?:number;_i?:unknown[][];init?:(key:string,config:Record<string,unknown>)=>void;capture?:(event:string,properties?:Record<string,unknown>)=>void;opt_out_capturing?:()=>void;get_distinct_id?:()=>string|undefined;get_session_id?:()=>string|undefined;[method:string]:unknown};
 declare global {interface Window {dataLayer:unknown[];gtag:(...args:unknown[])=>void;fbq?:Queue;_fbq?:Queue;posthog?:PostHog;__ahaTrackingEvents?:{ga:unknown[][];meta:unknown[][];posthog?:unknown[][]};}}
@@ -47,13 +49,58 @@ function scheduleSdk(kind:'analytics'|'marketing'|'posthog',src:string){
  if(document.readyState==='complete')afterPaint();else window.addEventListener('load',afterPaint,{once:true});
 }
 function cleanLocation(marketingAllowed=consent.marketing&&!gpc){const url=new URL(location.pathname,location.origin);url.search=cleanTrackingParameters(marketingAllowed).toString();return url.href;}
-function product(){const node=document.querySelector<HTMLElement>('[data-product-id]');return node?{item_id:node.dataset.productId,item_name:node.dataset.productName,price:Number(node.dataset.productPrice),item_brand:'After Hours Agenda',item_variant:node.dataset.productColor,quantity:1}:null;}
+function product(){const node=document.querySelector<HTMLElement>('[data-product-id]');const id=node?.dataset.productId;if(!node||!id)return null;return {item_id:id,item_name:node.dataset.productName,price:Number(node.dataset.productPrice),item_brand:'After Hours Agenda',item_variant:node.dataset.productColor,item_identity_level:'product_group',quantity:1};}
 function events(){return window.__ahaTrackingEvents??=( {ga:[],meta:[]} );}
 function ga(...args:unknown[]){events().ga.push(args);window.gtag?.(...args);}
 function meta(...args:unknown[]){events().meta.push(args);window.fbq?.(...args);}
-function gaItemValue(items:Array<{price:number;quantity:number}>){return Math.round(items.reduce((total,item)=>total+item.price*item.quantity,0)*100)/100;}
 // PostHog gets product ids, sizes, quantities and prices only — never customer details.
 function ph(event:string,properties:Record<string,unknown>={}){const log=events();(log.posthog??=[]).push([event,properties]);window.posthog?.capture?.(event,properties);}
+const viewedProductGroups=new Set<string>();
+const viewedVariantIds=new Set<string>();
+function selectedVariant(choice?:HTMLInputElement|null){
+ const option=choice??document.querySelector<HTMLInputElement>('[data-cart-variant]:checked');
+ const group=product();
+ const itemId=option?.value.trim()||'';
+ if(!option?.checked||!group||!itemId||itemId.length>100)return null;
+ return {...group,item_id:itemId,item_group_id:group.item_id,item_identity_level:'variant'};
+}
+function recordProductGroupView(){
+ if(!enabled||!consent.analytics||!banner?.dataset.gaId)return;
+ const item=product();
+ if(!item||viewedProductGroups.has(item.item_id))return;
+ viewedProductGroups.add(item.item_id);
+ // A size has not necessarily been chosen. This is a discovery event, not a GA commerce item.
+ ga('event','product_group_view',{product_group_id:item.item_id,product_group_name:item.item_name,color:item.item_variant});
+}
+function recordSelectedVariant(choice?:HTMLInputElement|null){
+ if(!enabled||!consent.analytics||!banner?.dataset.gaId)return;
+ const item=selectedVariant(choice);
+ if(!item||viewedVariantIds.has(item.item_id))return;
+ viewedVariantIds.add(item.item_id);
+ ga('event','view_item',{currency:'USD',value:item.price,items:[item]});
+}
+function observeSelectedVariant(){
+ document.addEventListener('change',(event)=>{
+  if(!(event.target instanceof HTMLInputElement)||!event.target.matches('[data-cart-variant]'))return;
+  recordSelectedVariant(event.target);
+ });
+ // cart.ts selects a sole One Size option during its deferred module setup.
+ // DOMContentLoaded runs after that setup without making apparel selections for shoppers.
+ const initial=()=>recordSelectedVariant();
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initial,{once:true});else queueMicrotask(initial);
+}
+observeSelectedVariant();
+let rumStarted=false;
+function rumSampled(){return Math.random()<0.1;}
+function measureVitals(){
+ if(rumStarted)return;
+ rumStarted=startRum({
+  analyticsAllowed:()=>enabled&&consent.analytics,
+  sampled:rumSampled,
+  report:(metric:RumMetric)=>ga('event','web_vital',metric),
+  context:()=>({template:location.pathname.split('/')[1]||'home',device:innerWidth<600?'small':innerWidth<1024?'medium':'large'}),
+ });
+}
 const posthogMethods=['capture','register','register_once','unregister','identify','reset','opt_in_capturing','opt_out_capturing','startSessionRecording','stopSessionRecording'];
 function posthogStub():PostHog{
  // Same queue contract as PostHog's official loader: array.js replays _i and queued calls.
@@ -83,7 +130,10 @@ function activate(value:Consent){
   ga('consent','update',{analytics_storage:'granted'});
   ga('js',new Date());
   ga('config',banner.dataset.gaId,{page_location:cleanLocation(value.marketing&&!gpc),page_referrer:document.referrer?new URL(document.referrer).origin:'',allow_google_signals:false,allow_ad_personalization_signals:false,send_page_view:true});
-  if(item)ga('event','view_item',{currency:'USD',value:item.price,items:[item]});
+  recordProductGroupView();
+  // Only an actual selected size emits GA4 view_item. Cart and purchase use the same variation id.
+  recordSelectedVariant();
+  measureVitals();
   scheduleSdk('analytics',`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(banner.dataset.gaId)}`);
  }
  if(value.marketing&&!gpc&&banner?.dataset.metaId){
@@ -143,22 +193,58 @@ document.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button=>b
  if(value.marketing&&!previous.marketing)activate({analytics:false,marketing:true,at:value.at});
 }));
 document.querySelectorAll<HTMLButtonElement>('[data-privacy-settings]').forEach(button=>button.addEventListener('click',()=>{if(banner){banner.hidden=false;banner.querySelector<HTMLButtonElement>('button')?.focus();}}));
+document.addEventListener('aha:checkout-started',(event)=>{
+ if(!enabled||!consent)return;
+ const detail=(event as CustomEvent<{value:number;items:Array<{id:string;name:string;price:number;quantity:number}>}>).detail;
+ if(!detail||!Number.isFinite(detail.value)||!Array.isArray(detail.items))return;
+ const items=detail.items.map(item=>({item_id:item.id,item_name:item.name,item_brand:'After Hours Agenda',item_identity_level:'variant',price:item.price,quantity:item.quantity}));
+ if(consent.analytics){ga('event','view_cart',{currency:'USD',value:detail.value,items});ga('event','begin_checkout',{currency:'USD',value:detail.value,items});}
+});
+// A quoted total is later than checkout entry. The custom GA event is a successful server quote,
+// not payment readiness: payment methods mount afterward and expose no equivalent verified boundary.
 document.addEventListener('aha:checkout-quoted',(event)=>{
  if(!enabled||!consent)return;
  const detail=(event as CustomEvent<{value:number;items:Array<{id:string;name:string;price:number;quantity:number}>}>).detail;
  if(!detail||!Number.isFinite(detail.value)||!Array.isArray(detail.items))return;
- const items=detail.items.map(item=>({item_id:item.id,item_name:item.name,item_brand:'After Hours Agenda',price:item.price,quantity:item.quantity}));
- if(consent.analytics)ga('event','begin_checkout',{currency:'USD',value:gaItemValue(items),items});
- if(consent.analytics&&!gpc)ph('checkout_started',{value:detail.value,currency:'USD',item_count:detail.items.reduce((total,item)=>total+item.quantity,0),product_ids:detail.items.map(item=>item.id)});
- if(consent.marketing&&!gpc)meta('track','InitiateCheckout',{content_ids:detail.items.map(item=>item.id),content_type:'product',num_items:detail.items.reduce((total,item)=>total+item.quantity,0),value:detail.value,currency:'USD'});
+ const itemCount=detail.items.reduce((total,item)=>total+item.quantity,0);
+ if(consent.analytics)ga('event','checkout_quote_completed',{currency:'USD',value:detail.value,item_count:itemCount});
+ if(consent.analytics&&!gpc)ph('checkout_started',{value:detail.value,currency:'USD',item_count:itemCount,product_ids:detail.items.map(item=>item.id)});
+ if(consent.marketing&&!gpc)meta('track','InitiateCheckout',{content_ids:detail.items.map(item=>item.id),content_type:'product',num_items:itemCount,value:detail.value,currency:'USD'});
+});
+
+document.addEventListener('aha:checkout-friction',(event)=>{
+ if(!enabled||!consent?.analytics)return;
+ const reason=(event as CustomEvent<{reason?:unknown}>).detail?.reason;
+ if(typeof reason!=='string'||!['validation','quote_failed','payment_unavailable'].includes(reason))return;
+ ga('event','checkout_friction',{reason});
+});
+
+// Search terms and fit measurements stay in the browser. The aggregate event
+// shape is deliberately closed so callers cannot add accidental identifiers.
+document.addEventListener('aha:search',(event)=>{
+ if(!enabled||!consent?.analytics)return;
+ const detail=(event as CustomEvent<{surface?:unknown;result_count?:unknown;query_kind?:unknown}>).detail;
+ const surface=detail?.surface;
+ const resultCount=detail?.result_count;
+ const queryKind=detail?.query_kind;
+ if((surface!=='menu'&&surface!=='shop')||typeof resultCount!=='number'||!Number.isSafeInteger(resultCount)||resultCount<0||resultCount>1000||(queryKind!=='garment'&&queryKind!=='other'))return;
+ ga('event','search',{surface,result_count:resultCount,query_kind:queryKind});
+});
+document.addEventListener('aha:fit',(event)=>{
+ if(!enabled||!consent?.analytics)return;
+ const detail=(event as CustomEvent<{action?:unknown;matched?:unknown}>).detail;
+ const action=detail?.action;
+ const matched=detail?.matched;
+ if((action!=='open'&&action!=='compare'&&action!=='select')||typeof matched!=='boolean')return;
+ ga('event','fit_interaction',{action,matched});
 });
 
 document.addEventListener('aha:purchase-confirmed',(event)=>{
  if(!enabled||!consent)return;
  const detail=(event as CustomEvent<{orderId:string;value:number;shipping:number;tax:number;currency:string;items:Array<{id:string;name:string;price:number;quantity:number}>}>).detail;
  if(!detail||typeof detail.orderId!=='string'||!Number.isFinite(detail.value)||!Number.isFinite(detail.shipping)||!Number.isFinite(detail.tax)||typeof detail.currency!=='string'||!Array.isArray(detail.items))return;
- const items=detail.items.map(item=>({item_id:item.id,item_name:item.name,item_brand:'After Hours Agenda',price:item.price,quantity:item.quantity}));
- if(consent.analytics)ga('event','purchase',{transaction_id:detail.orderId,currency:detail.currency,value:gaItemValue(items),shipping:detail.shipping,tax:detail.tax,items});
+ const items=detail.items.map(item=>({item_id:item.id,item_name:item.name,item_brand:'After Hours Agenda',item_identity_level:'variant',price:item.price,quantity:item.quantity}));
+ if(consent.analytics)ga('event','purchase',{transaction_id:detail.orderId,currency:detail.currency,value:detail.value,shipping:detail.shipping,tax:detail.tax,items});
  if(consent.analytics&&!gpc)ph('purchase',{order_id:detail.orderId,value:detail.value,currency:detail.currency,item_count:detail.items.reduce((total,item)=>total+item.quantity,0),product_ids:detail.items.map(item=>item.id)});
  if(consent.marketing&&!gpc)meta('track','Purchase',{content_ids:detail.items.map(item=>item.id),content_type:'product',num_items:detail.items.reduce((total,item)=>total+item.quantity,0),value:detail.value,currency:detail.currency},{eventID:detail.orderId});
 });
@@ -168,7 +254,7 @@ document.addEventListener('aha:cart-added',(event)=>{
  const detail=(event as CustomEvent<{id:string;name:string;size:string;color:string;price:number;quantity:number}>).detail;
  if(!detail||typeof detail.id!=='string'||!Number.isFinite(detail.price)||!Number.isInteger(detail.quantity))return;
  const value=detail.price*detail.quantity;
- if(consent.analytics)ga('event','add_to_cart',{currency:'USD',value,items:[{item_id:detail.id,item_name:detail.name,item_brand:'After Hours Agenda',item_variant:detail.color,price:detail.price,quantity:detail.quantity}]});
+ if(consent.analytics)ga('event','add_to_cart',{currency:'USD',value,items:[{item_id:detail.id,item_name:detail.name,item_brand:'After Hours Agenda',item_variant:detail.color,item_identity_level:'variant',price:detail.price,quantity:detail.quantity}]});
  if(consent.analytics&&!gpc)ph('add_to_cart',{product_id:detail.id,product_name:detail.name,size:detail.size,color:detail.color,price:detail.price,quantity:detail.quantity});
  if(consent.marketing&&!gpc)meta('track','AddToCart',{content_ids:[detail.id],content_type:'product',value,currency:'USD'});
 });

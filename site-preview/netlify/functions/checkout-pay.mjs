@@ -18,9 +18,9 @@ export default async function checkoutPay(request, context) {
   if (!requireProductionRequest(request, context) || request.method !== "POST") return new Response(null, { status: 404 });
   if (!allowedOrigin(request)) return errorResponse(new CheckoutError("origin_rejected", 403));
   try {
+    const body = await jsonBody(request);
     const runtime = createCheckoutRuntime({ database: getDatabase(), env: Netlify.env });
     if (!checkoutReady(runtime.config)) return errorResponse(new CheckoutError("checkout_unavailable", 503));
-    const body = await jsonBody(request);
     const result = await runtime.service.pay(body ?? {});
     // A server-confirmed purchase is attributed to the visitor's replay session; it never affects payment.
     if (!result.trackingSuppressed && result.state === "completed" && typeof result.checkoutId === "string") await afterResponse(context, capturePurchase(runtime, result.checkoutId));

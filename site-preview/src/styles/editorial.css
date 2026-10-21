@@ -130,7 +130,6 @@ picture{display:block}
 .signup-row .button{min-width:100px;justify-content:center}
 .signup-note,.signup-status{font-size:12px;line-height:1.7}
 .site-footer{padding-top:64px;padding-bottom:max(24px,env(safe-area-inset-bottom))}
-.footer-tagline{font-size:clamp(24px,3.5vw,42px);line-height:1.2;max-width:20ch;letter-spacing:-.04em}
 .footer-links{padding-block:36px}
 .footer-links a,.footer-bottom a,.privacy-button{min-height:44px;display:inline-flex;align-items:center;font-size:13px}
 .footer-links p:not(.label){font-size:14px;max-width:32ch}
@@ -271,7 +270,6 @@ picture{display:block}
  .product-details h1{font-size:clamp(28px,4vw,42px)}
 }
 @media(max-width:760px){
- html:has(.campaign-set){scroll-snap-type:none}
  html{scroll-padding-top:112px}
  .site-header-bar .site-header{min-height:64px;padding-block:10px;gap:16px}
  .site-header .identity{font-size:12px;gap:9px}
@@ -323,10 +321,6 @@ picture{display:block}
  .updates-inner{grid-template-columns:1fr;gap:30px}
  .updates-inner h2{font-size:36px;max-width:14ch}
  .site-footer{padding-top:40px}
- .footer-tagline{font-size:23px}
- .footer-top{gap:25px;align-items:start}
- .footer-top .identity{font-size:12px;gap:9px}
- .footer-top .identity img{width:34px}
  .footer-links{padding-block:28px}
  .footer-bottom{align-items:start;font-size:12px}
  .page-head{padding-top:36px;padding-bottom:32px}
@@ -387,7 +381,7 @@ picture{display:block}
  .menu-garments a{min-height:55px;font-size:18px}
  .menu-help{gap:0 22px;margin-top:24px}
 }
-@media(max-width:370px){.menu-garments{grid-template-columns:1fr}.menu-garments a{min-height:48px}.photo-label,.photo-label strong{font-size:11px}.wear-story-side{grid-template-columns:1fr}.wear-story-detail{height:360px}.footer-top{flex-wrap:wrap}}
+@media(max-width:370px){.menu-garments{grid-template-columns:1fr}.menu-garments a{min-height:48px}.photo-label,.photo-label strong{font-size:11px}.wear-story-side{grid-template-columns:1fr}.wear-story-detail{height:360px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 /* One large view and a visible next frame keep the buy controls close on phones. */
@@ -399,3 +393,12 @@ picture{display:block}
 .no-script-nav{margin-left:auto}.no-script-nav summary{min-height:44px;display:flex;align-items:center;font-size:13px;font-weight:700;cursor:pointer}.no-script-nav nav{position:absolute;right:20px;top:100%;display:grid;gap:4px;min-width:220px;padding:20px;background:var(--ink);color:var(--paper)}.no-script-nav a{display:flex;align-items:center;min-height:44px}
 /* Keep shopping fields readable and avoid iOS focus zoom. */
 .checkout-panel input,.checkout-panel select,.quantity-field input,.bag-line select{font-size:max(16px,1rem)}
+
+/* Keep the whole editorial photo actionable and the sizing link beside its choice. */
+.look-photo-link{display:block;color:inherit}
+.look-photo-link:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.size-head{flex-wrap:wrap;column-gap:16px;row-gap:4px}
+.size-head .size-link{margin:0;min-height:44px;display:inline-flex;align-items:center;font-size:.78rem}
+.account-recovery{max-width:65ch;margin-top:24px}
+.account-recovery summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700}
+.account-recovery p{font-size:.9rem;line-height:1.7}

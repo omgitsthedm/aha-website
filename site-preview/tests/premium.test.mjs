@@ -6,9 +6,10 @@ const read = async (path) => JSON.parse(await readFile(new URL(path, import.meta
 const products = await read("../src/data/products.json");
 const editorial = await read("../src/data/images.json");
 const placeholders = await read("../src/data/placeholders.json");
+const photography = await read("../src/data/photography.json");
 
 test("every campaign and editorial photo has a two-tone placeholder; garment shots have none", () => {
-  const photos = [...products.flatMap((product) => product.campaign.map((shot) => shot.src)), ...Object.values(editorial).map((image) => image.src)];
+  const photos = [...products.flatMap((product) => product.campaign.map((shot) => shot.src)), ...Object.values(editorial).map((image) => image.src), ...Object.values(photography).flatMap(set => set.photos.map(shot => shot.src))];
   const missing = photos.filter((src) => !placeholders[src]);
   assert.deepEqual(missing, [], "run npm run images:placeholders after adding photos");
   for (const tones of Object.values(placeholders)) assert.ok(tones.length === 2 && tones.every((tone) => /^#[0-9a-f]{6}$/.test(tone)));

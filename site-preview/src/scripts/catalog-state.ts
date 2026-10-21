@@ -14,11 +14,19 @@ export type CatalogState = {
 const EMPTY: CatalogState = { products: [], cartLines: [], retired: [], retiredVariations: [], known: false };
 let pending: Promise<CatalogState> | null = null;
 
-export function catalogState(): Promise<CatalogState> {
-  pending ??= fetch("/api/catalog/live", { headers: { accept: "application/json" } })
+function loadCatalog(): Promise<CatalogState> {
+  const controller = new AbortController();
+  const deadline = window.setTimeout(() => controller.abort(), 4_000);
+  return fetch("/api/catalog/live", { headers: { accept: "application/json" }, signal: controller.signal })
     .then((response) => (response.ok ? response.json() : EMPTY))
     .then((data: Partial<CatalogState>) => ({ ...EMPTY, ...data, known: data.known === true }))
-    .catch(() => EMPTY);
+    .catch(() => EMPTY)
+    .finally(() => window.clearTimeout(deadline));
+}
+
+export function catalogState({ fresh = false }: { fresh?: boolean } = {}): Promise<CatalogState> {
+  if (fresh) pending = null;
+  pending ??= loadCatalog();
   return pending;
 }
 

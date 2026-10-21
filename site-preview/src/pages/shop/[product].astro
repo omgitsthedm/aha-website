@@ -4,6 +4,8 @@ import ProductImage from '../../components/ProductImage.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import products from '../../data/products.json';
 import { measurementGuide, otherColors, swatchFor } from '../../../server/catalog/garments.mjs';
+import { recommendationsFor } from '../../../server/catalog/recommendations.mjs';
+import { productDescription } from '../../../server/catalog/metadata.mjs';
 import { dropFor, dropNote, dropStage } from '../../../server/catalog/drops.mjs';
 import { isOffSale } from '../../../server/catalog/off-sale.mjs';
 import { RETURN_POLICY, SHIPPING_DETAILS } from '../../../server/catalog/offer-terms.mjs';
@@ -12,10 +14,7 @@ const {product}=Astro.props;
 const origin=Astro.site!.origin;
 const gallery = product.gallery.slice(0, 4);
 const galleryLabels: Record<string, string> = { front: 'Front', back: 'Back', 'print-detail': 'Print detail', folded: 'Folded' };
-const relatedProducts = [
- ...products.filter((entry) => entry.slug !== product.slug && entry.collection === product.collection),
- ...products.filter((entry) => entry.slug !== product.slug && entry.collection !== product.collection),
-].slice(0, 4);
+const relatedProducts: typeof products = recommendationsFor(product, products);
 const colorSwatch = swatchFor(product.color);
 const siblings: typeof products = otherColors(product, products);
 const drop = dropStage(dropFor(product.slug)) === 'released' ? null : dropFor(product.slug);
@@ -29,12 +28,12 @@ const productSchema={
  offers:{'@type':'Offer',url:`${origin}/shop/${product.slug}/?size=${encodeURIComponent(v.size)}`,price:product.price,priceCurrency:'USD',availability:offSale?'https://schema.org/Discontinued':'https://schema.org/InStock',itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:'After Hours Agenda'},shippingDetails:SHIPPING_DETAILS,hasMerchantReturnPolicy:RETURN_POLICY}}))
 };
 ---
-<Site title={`${product.title} — ${product.color}`} description={product.description} image={gallery[0]!.feedImage} imageAlt={gallery[0]!.alt} imageWidth={gallery[0]!.width} imageHeight={gallery[0]!.height} noindex={offSale} preloadImage={{src:gallery[0]!.src,srcset:gallery[0]!.srcset,sizes:'(max-width: 760px) 100vw, 55vw'}}>
+<Site title={`${product.title} — ${product.color}`} description={productDescription(product)} image={gallery[0]!.feedImage} imageAlt={gallery[0]!.alt} imageWidth={gallery[0]!.width} imageHeight={gallery[0]!.height} noindex={offSale} preloadImage={{src:gallery[0]!.src,srcset:gallery[0]!.srcset,sizes:'(max-width: 760px) calc(88vw - 36px), 46vw'}}>
  <div class="shell product-breadcrumb"><a href="/shop/"> All pieces</a><span>Fall / Winter 2026</span></div>
  <section class="shell product-layout" data-product-id={product.squareItemId} data-product-name={product.title} data-product-color={product.color} data-product-price={product.price}>
   <div class="product-visuals">
    <div class="product-gallery" role="region" tabindex="0" aria-label={`${product.title} garment views; scroll to see all four`}>
-    {gallery.map((shot,i)=><figure id={`view-${i+1}`}><ProductImage image={shot} priority={i===0} sizes="(max-width: 760px) 100vw, 55vw" name={i===0 ? `p-${product.slug}` : undefined}/><figcaption>{galleryLabels[shot.role]}</figcaption></figure>)}
+    {gallery.map((shot,i)=><figure id={`view-${i+1}`}><ProductImage image={shot} priority={i===0} sizes={i===0 ? "(max-width: 760px) calc(88vw - 36px), 46vw" : "(max-width: 760px) calc(88vw - 36px), 22vw"} name={i===0 ? `p-${product.slug}` : undefined}/><figcaption>{galleryLabels[shot.role]}</figcaption></figure>)}
    </div>
    <p class="image-note">Product mockups. Colors and print placement can vary slightly in production.</p>
   </div>
@@ -47,7 +46,7 @@ const productSchema={
    {siblings.length > 0 && <p class="color-options">Also in {siblings.map((entry) => <a class="color-option" href={`/shop/${entry.slug}/`}><span class="color-swatch" style={`--swatch:${swatchFor(entry.color)}`} aria-hidden="true"></span> {entry.color}</a>)}</p>}
    <p>{product.description}</p>
    <form class="product-purchase" data-cart-form>
-    <div class="size-head"><p class="label">Choose a size</p><button type="button" class="text-button fit-open" data-fit-open hidden>Find my size</button></div>
+    <div class="size-head"><p class="label">Choose a size</p><a class="text-link size-link" href="#size-guide">Size chart &amp; measurements</a><button type="button" class="text-button fit-open" data-fit-open hidden>Find my size</button></div>
     <div class="size-options" role="radiogroup" aria-label={`${product.title} size`} aria-required="true">
      {product.variants.map(v=><label><input type="radio" name="size" value={v.id} data-cart-variant data-size={v.size} data-sku={v.sku}/><span>{v.size}</span></label>)}
     </div>
@@ -58,16 +57,16 @@ const productSchema={
     <p class="cart-add-status" data-cart-add-status aria-live="polite"></p>
     <div class="express-pay" data-express hidden><p class="label">Or pay now</p><button type="button" class="apple-pay-button" data-express-apple aria-label="Buy with Apple Pay" hidden><span aria-hidden="true"> Pay</span></button><div id="aha-express-google" data-express-google></div><p class="checkout-note" data-express-status aria-live="polite"></p></div>
    </form>
-   <a class="text-link size-link" href="#size-guide">Check measurements </a>
+
    <p class="checkout-note">Free domestic shipping. Final tax and payment options are shown securely at checkout.</p>
    <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li>{product.typeLabel !== "Beanie" && <li>{product.weightOz} oz {product.fabricType}.</li>}<li>{product.composition}.</li>{product.constructionDetails.map((detail) => <li>{detail}</li>)}{product.blank && <li>Blank: {product.blank}.</li>}<li>{product.typeLabel === "Beanie" ? "Embroidered" : "Printed"} to order in the United States{product.printMethod ? `, ${product.printMethod}` : ""}.</li></ul></details>
-   <details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>
+   <details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Need an exchange or refund? Absolutely. Contact us within 30 days of delivery and we’ll help. No return shipment is required for an approved request.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Exchanges &amp; refunds</a></p></details>
    <details><summary>Care</summary><p>Follow the label on your garment. Where permitted, wash cold and inside out. Do not iron directly on the {product.typeLabel === "Beanie" ? "embroidery" : "print"}.</p></details>
   </div>
  </section>
  <Fragment set:html={measurementGuide(product)} />
  <section class="shell section reviews" id="reviews" aria-labelledby="reviews-title" data-reviews={product.slug} hidden><p class="label">From people who bought it</p><h2 id="reviews-title">Reviews.</h2><p class="reviews-summary" data-review-summary></p><ul class="review-list" data-review-list></ul></section>
- <section class="section shell"><div class="section-header"><h2>More pieces.</h2><a href="/shop/" class="text-link">Shop all </a></div><div class="product-grid related-products">{relatedProducts.map(p=><ProductCard product={p}/>)}</div></section>
+ {relatedProducts.length >= 2 && <section class="section shell"><div class="section-header"><h2>More pieces.</h2><a href="/shop/" class="text-link">Shop all </a></div><div class="product-grid related-products">{relatedProducts.map(p=><ProductCard product={p}/>)}</div></section>}
  {products.flatMap(entry=>entry.variants.map(variant=><template data-cart-catalog data-id={variant.id} data-sku={variant.sku} data-size={variant.size} data-slug={entry.slug} data-title={`${entry.title} — ${entry.color}`} data-color={entry.color} data-price-cents={entry.price*100} data-image={entry.gallery[0]!.src} data-image-alt={entry.gallery[0]!.alt}></template>))}
  <script type="application/ld+json" set:html={JSON.stringify(productSchema).replace(/</g,'\\u003c')}/>
  <script>

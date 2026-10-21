@@ -123,11 +123,12 @@ export function createAccountAuth({ db, env, now = () => new Date() }) {
     return { options, handle: await saveChallenge(options.challenge, "login") };
   }
 
-  async function loginVerify({ handle, response, clientKey }) {
+  async function loginVerify({ handle, response, clientKey, expectedCustomerId, issueSession = true }) {
     await throttle(clientKey);
     const challenge = await takeChallenge(handle, "login");
     const [stored] = await db.sql`SELECT * FROM aha_customer_credentials WHERE id = ${String(response?.id ?? "").slice(0, 1024)} LIMIT 1`;
     if (!stored) throw new AccountError("That passkey isn't linked to an account here. Create an account instead.");
+    if (expectedCustomerId && stored.customer_id !== expectedCustomerId) throw new AccountError("Use a passkey for the account you’re signed into.");
     let result;
     try {
       result = await verifyAuthenticationResponse({
@@ -137,8 +138,43 @@ export function createAccountAuth({ db, env, now = () => new Date() }) {
     } catch { throw new AccountError("Your passkey couldn't be checked. Try again."); }
     if (!result.verified) throw new AccountError("Your passkey couldn't be checked. Try again.");
     await db.sql`UPDATE aha_customer_credentials SET counter = ${result.authenticationInfo.newCounter}, last_used_at = now() WHERE id = ${stored.id}`;
-    return { customerId: stored.customer_id, token: await startSession(stored.customer_id) };
+    return { customerId: stored.customer_id, ...(issueSession ? { token: await startSession(stored.customer_id) } : {}) };
   }
 
-  return { endSession, registrationOptions, registrationVerify, loginOptions, loginVerify };
+  async function backupOptions({ customerId, handle, response, clientKey }) {
+    // A cookie alone cannot enroll a permanent credential: prove possession first.
+    await loginVerify({ handle, response, clientKey, expectedCustomerId: customerId, issueSession: false });
+    const credentials = await db.sql`SELECT id, transports FROM aha_customer_credentials WHERE customer_id = ${customerId}`;
+    if (credentials.length >= 5) throw new AccountError("Five passkeys are already saved for this account.", 422);
+    const options = await generateRegistrationOptions({
+      rpName: rp.rpName, rpID: rp.rpID, userName: `After Hours Agenda ${customerId.slice(-6)}`, userDisplayName: "After Hours Agenda",
+      userID: new Uint8Array(Buffer.from(customerId)), attestationType: "none",
+      excludeCredentials: credentials.map(({ id, transports }) => ({ id, transports })),
+      authenticatorSelection: { residentKey: "required", userVerification: "required" }, timeout: PROMPT_TIMEOUT_MS,
+    });
+    // Bind the single-use challenge to the signed-in account without a new schema.
+    const bound = JSON.stringify({ challenge: options.challenge, customerId });
+    return { options, handle: await saveChallenge(bound, "register") };
+  }
+
+  async function backupVerify({ customerId, handle, response, clientKey }) {
+    await throttle(clientKey);
+    const saved = await takeChallenge(handle, "register");
+    let bound;
+    try { bound = JSON.parse(saved.challenge); } catch { throw new AccountError("Start again from Add a backup passkey."); }
+    if (bound.customerId !== customerId || typeof bound.challenge !== "string") throw new AccountError("Start again from your own account.");
+    const [count] = await db.sql`SELECT count(*) AS total FROM aha_customer_credentials WHERE customer_id = ${customerId}`;
+    if (Number(count?.total ?? 0) >= 5) throw new AccountError("Five passkeys are already saved for this account.", 422);
+    let result;
+    try {
+      result = await verifyRegistrationResponse({ response, expectedChallenge: bound.challenge, expectedOrigin: rp.origin, expectedRPID: rp.rpID, requireUserVerification: true });
+    } catch { throw new AccountError("Your new passkey couldn’t be checked. Try again."); }
+    if (!result.verified) throw new AccountError("Your new passkey couldn’t be checked. Try again.");
+    const { credential } = result.registrationInfo;
+    const inserted = await db.sql`INSERT INTO aha_customer_credentials (id, customer_id, public_key, counter, transports) VALUES (${credential.id}, ${customerId}, ${b64url(credential.publicKey)}, ${credential.counter}, ${credential.transports ?? []}) ON CONFLICT (id) DO NOTHING RETURNING id`;
+    if (!inserted.length) throw new AccountError("That passkey is already saved. Choose another device or password manager.", 409);
+    return { ok: true };
+  }
+
+  return { endSession, registrationOptions, registrationVerify, loginOptions, loginVerify, backupOptions, backupVerify };
 }

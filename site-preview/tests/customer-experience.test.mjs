@@ -3,7 +3,11 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { addBusinessDays, arrivalWindow, deliveryLines, holidayCutoff } from "../src/scripts/delivery.ts";
-import { fitSummary, recommendSize } from "../src/scripts/fit.ts";
+import { recommendSize } from "../src/scripts/fit.ts";
+import { fitSummary } from "../src/scripts/fit-summary.ts";
+import products from "../src/data/products.json" with { type: "json" };
+import { measurementGuide } from "../server/catalog/garments.mjs";
+import { recommendationsFor } from "../server/catalog/recommendations.mjs";
 import { customerView, handleOrderStatus, orderStatusUrl, stageFor, verifyOrderToken } from "../server/orders/status.mjs";
 import orderStatusFunction, { config as orderStatusConfig } from "../netlify/functions/order-status.mjs";
 import { renderOrderConfirmation, renderShipment } from "../server/notifications/templates.mjs";
@@ -23,13 +27,33 @@ test("delivery estimates count business days and skip closed dates", () => {
   assert.match(deliveryLines(day("2026-12-10"))[1], /expected to arrive after December 24/);
 });
 
-test("fit profile picks the smallest size at least as wide as the visitor's own top", () => {
+test("fit profile picks the closest available width and declines an out-of-range top", () => {
   const rows = [{ size: "S", chest: 20, length: 27 }, { size: "M", chest: 22, length: 28 }, { size: "L", chest: 24, length: 29 }];
   assert.equal(recommendSize(rows, { chest: 21.5, length: 28 }).size, "M");
   assert.equal(recommendSize(rows, { chest: 22.2, length: 28 }).size, "M", "a quarter inch narrower still counts");
-  assert.equal(recommendSize(rows, { chest: 26, length: 30 }).size, "L", "the largest when none is wide enough");
-  assert.equal(fitSummary(rows[1], { chest: 21.5, length: 29 }), "Compared with your own top, M is 0.5 in roomier across the chest and 1 in shorter.");
-  assert.equal(fitSummary(rows[1], { chest: 22, length: 28.1 }), "Compared with your own top, M is the same width across the chest and the same length.");
+  assert.equal(recommendSize(rows, { chest: 26, length: 30 }), null, "a largest-size fallback would overpromise fit");
+  assert.equal(fitSummary(rows[1], { chest: 21.5, length: 29 }), "Closest width: M is 0.5 in roomier across the chest and 1 in shorter. Length describes the garment's cut; it does not change this width comparison.");
+  assert.equal(fitSummary(rows[1], { chest: 22, length: 28.1 }), "Closest width: M is the same width across the chest and the same length. Length describes the garment's cut; it does not change this width comparison.");
+});
+
+test("measurement tables state both source inches and exact centimeter conversions", () => {
+  const apparel = products.find((product) => product.typeLabel !== "Beanie");
+  const beanie = products.find((product) => product.typeLabel === "Beanie");
+  assert.match(measurementGuide(apparel), /Finished garment measurements · inches \/ centimeters/);
+  assert.match(measurementGuide(apparel), /Chest width<br><span aria-hidden="true">in \/ cm<\/span>/);
+  assert.match(measurementGuide(apparel), /in \/ [\d.]+ cm/);
+  assert.match(measurementGuide(beanie), /Unfolded height/);
+  assert.doesNotMatch(measurementGuide(beanie), /head circumference/i);
+});
+
+test("recommendations favor complementary cuts and never repeat a color family", () => {
+  const product = products.find((entry) => entry.slug === "insomniac-ss4500-black");
+  const recommended = recommendationsFor(product, products);
+  assert.ok(recommended.length >= 2);
+  assert.equal(recommended[0].collection, product.collection);
+  assert.notEqual(recommended[0].typeLabel, product.typeLabel);
+  assert.equal(new Set(recommended.map((entry) => JSON.stringify([entry.title, entry.collection, entry.typeLabel]))).size, recommended.length);
+  assert.ok(recommended.every((entry) => entry.slug !== product.slug));
 });
 
 const env = (values = {}) => ({ get: (key) => ({ AHA_SQUARE_WEBHOOK_SIGNATURE_KEY: "s".repeat(32), ...values })[key] });

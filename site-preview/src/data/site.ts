@@ -25,7 +25,7 @@ export const navigation = [
 export const topics = [
   { slug: "order", name: "An existing order" },
   { slug: "product", name: "A piece or its fit" },
-  { slug: "returns", name: "A return or quality issue" },
+  { slug: "returns", name: "An exchange, refund or quality issue" },
   { slug: "accessibility", name: "An accessibility issue" },
   { slug: "general", name: "Something else" },
 ];
@@ -62,10 +62,10 @@ export const answers = [
     label: "Find your order",
   },
   {
-    q: "How do I ask about a return or damaged item?",
-    a: "Write to us with your order number and photos of any damage. Wait for instructions before sending anything back.",
+    q: "Can I ask for an exchange or refund?",
+    a: "Absolutely. Contact us within 30 days of delivery. We’ll help with an exchange or refund; no return shipment is needed.",
     href: "/returns/",
-    label: "Returns and damage",
+    label: "Exchanges and refunds",
   },
   {
     q: "Can I change an address?",

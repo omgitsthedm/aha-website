@@ -43,7 +43,7 @@ const leadCampaignImage = sets[0]?.looks[0]?.shot;
       <div class="campaign-grid">
         {set.looks.map(({ product, shot }, index) => (
           <figure data-product-set={product.slug} data-off-sale={isOffSale(product.slug) ? product.slug : undefined} hidden={isOffSale(product.slug)}>
-            <ProductImage image={shot} priority={setIndex === 0 && index === 0} sizes={index === 0 ? "(max-width:760px) calc(100vw - 40px), 30vw" : "(max-width:760px) calc((100vw - 52px) / 2), 30vw"} />
+            <a class="look-photo-link" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} in ${product.color}`}><ProductImage image={shot} priority={setIndex === 0 && index === 0} sizes={index === 0 ? "(max-width:760px) calc(100vw - 40px), 30vw" : "(max-width:760px) calc((100vw - 52px) / 2), 30vw"} /></a>
             <a class="look-chip" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} — ${product.color}`}>Shop </a>
             <figcaption><span class="still-note">0{index + 1} / {product.color} {product.typeLabel.toLowerCase()}</span></figcaption>
           </figure>

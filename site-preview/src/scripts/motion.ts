@@ -43,7 +43,7 @@ function attach(frame: HTMLElement) {
     toggle.textContent = pausing ? "Play" : "Pause";
     toggle.setAttribute("aria-label", pausing ? "Play the motion" : "Pause the motion");
     if (pausing) video.pause();
-    else void video.play();
+    else void video.play().catch(() => { toggle.textContent = "Play"; toggle.setAttribute("aria-label", "Play the motion"); });
   });
   video.addEventListener("playing", () => {
     frame.classList.add("is-moving");
@@ -62,11 +62,20 @@ function start() {
       const frame = entry.target as HTMLElement;
       const video = frame.querySelector("video");
       if (!video?.src) { if (entry.isIntersecting) attach(frame); continue; }
-      if (entry.isIntersecting && !frame.hasAttribute("data-motion-paused")) void video.play().catch(() => {});
+      if (entry.isIntersecting && !document.hidden && !frame.hasAttribute("data-motion-paused")) void video.play().catch(() => {});
       else video.pause();
     }
   }, { rootMargin: "120px 0px" });
   document.querySelectorAll<HTMLElement>("[data-motion]").forEach((frame) => observer.observe(frame));
+  document.addEventListener("visibilitychange", () => {
+    document.querySelectorAll<HTMLVideoElement>("[data-motion] video").forEach(video => {
+      if (document.hidden) video.pause();
+      else if (!reduce.matches && !video.parentElement?.hasAttribute("data-motion-paused")) {
+        const box = video.getBoundingClientRect();
+        if (box.top < innerHeight && box.bottom > 0) void video.play().catch(() => {});
+      }
+    });
+  });
   // Turning on reduced motion mid-visit stops everything and goes back to the photos.
   reduce.addEventListener("change", () => {
     if (!reduce.matches) return;

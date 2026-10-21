@@ -5,6 +5,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { abandonedCartStats } from "../server/analytics/abandoned-carts.mjs";
 import { checkoutProperties, createPostHogCapture, normalizeAnalyticsIds } from "../server/analytics/posthog.mjs";
 import { createCheckoutRepository } from "../server/checkout/repository.mjs";
+import { startRum } from "../src/scripts/rum.mjs";
 
 const migrations = [
   "20261015160000_custom_checkout",
@@ -92,4 +93,62 @@ test("PostHog loads only with a key, analytics consent and no Global Privacy Con
   assert.match(source, /maskAllInputs:true/);
   assert.match(source, /disable_session_recording:!record/);
   assert.match(source, /kind==='posthog'\?\(!consent\.analytics\|\|gpc\)/);
+});
+
+test("browser measurement keeps checkout timing and field performance non-personal", async () => {
+  const source = await readFile(new URL("../src/scripts/tracking.ts", import.meta.url), "utf8");
+  assert.match(source, /aha:checkout-started/);
+  assert.match(source, /view_cart/);
+  assert.match(source, /aha:checkout-quoted/);
+  assert.match(source, /aha:checkout-friction/);
+  assert.match(source, /web_vital/);
+  assert.match(source, /rumSampled/);
+  assert.match(source, /item_identity_level:'product_group'/);
+  assert.match(source, /item_identity_level:'variant'/);
+  assert.doesNotMatch(source, /default_size|all_sizes|email.*web_vital/i);
+});
+
+test("search and fit telemetry accept only aggregate, non-personal event fields", async () => {
+  const source = await readFile(new URL("../src/scripts/tracking.ts", import.meta.url), "utf8");
+  const search = source.slice(source.indexOf("document.addEventListener('aha:search'"), source.indexOf("document.addEventListener('aha:fit'"));
+  const fit = source.slice(source.indexOf("document.addEventListener('aha:fit'"), source.indexOf("document.addEventListener('aha:purchase-confirmed'"));
+  assert.match(search, /surface!=='menu'&&surface!=='shop/);
+  assert.match(search, /typeof resultCount!=='number'.*Number\.isSafeInteger\(resultCount\).*resultCount<0.*resultCount>1000/);
+  assert.match(search, /queryKind!=='garment'&&queryKind!=='other/);
+  assert.match(search, /ga\('event','search',\{surface,result_count:resultCount,query_kind:queryKind\}\)/);
+  assert.doesNotMatch(search, /detail\?\.query\b|term|measurement|product_id/);
+  assert.match(fit, /action!=='open'&&action!=='compare'&&action!=='select/);
+  assert.match(fit, /typeof matched!=='boolean'/);
+  assert.match(fit, /ga\('event','fit_interaction',\{action,matched\}\)/);
+  assert.doesNotMatch(fit, /measurement|chest|length|size/);
+});
+
+test("RUM dynamically loads only a sampled allowed visit, includes zero CLS, and drops late reports after withdrawal", async () => {
+  let allowed = false;
+  let loaded = 0;
+  const callbacks = {};
+  const reports = [];
+  const load = async () => {
+    loaded += 1;
+    return {
+      onCLS: (callback) => { callbacks.CLS = callback; },
+      onINP: (callback) => { callbacks.INP = callback; },
+      onLCP: (callback) => { callbacks.LCP = callback; },
+    };
+  };
+  const options = { analyticsAllowed: () => allowed, sampled: () => true, load, report: (metric) => reports.push(metric), context: () => ({ template: "shop", device: "small" }) };
+  assert.equal(startRum(options), false);
+  assert.equal(loaded, 0, "no consent means no dynamic import");
+  allowed = true;
+  assert.equal(startRum({ ...options, sampled: () => false }), false);
+  assert.equal(loaded, 0, "an unsampled visit means no dynamic import");
+  assert.equal(startRum(options), true);
+  await new Promise((resolve) => queueMicrotask(resolve));
+  assert.equal(loaded, 1);
+  callbacks.CLS({ name: "CLS", value: 0, delta: 0, id: "v3-0" });
+  assert.deepEqual(reports, [{ metric: "CLS", value: 0, delta: 0, id: "v3-0", template: "shop", device: "small" }]);
+  allowed = false;
+  callbacks.LCP({ name: "LCP", value: 1200, delta: 1200, id: "v3-lcp" });
+  assert.equal(reports.length, 1, "withdrawn consent drops an already-registered callback");
+  assert.deepEqual(Object.keys(reports[0]).sort(), ["delta", "device", "id", "metric", "template", "value"]);
 });

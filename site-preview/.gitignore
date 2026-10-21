@@ -11,3 +11,6 @@ tools/catalog/logs/
 catalog/plans/
 catalog/staging/
 tools/images/out/
+
+# Rebuilt, byte-identical editorial copies with content-hash filenames.
+public/images/immutable/

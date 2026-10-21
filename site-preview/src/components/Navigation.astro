@@ -9,7 +9,7 @@ const active = onSale(products) as typeof products;
 const counts = new Map(categories.map(([key]) => [key, active.filter(p => key === 'all' || garmentGroup(p.typeLabel) === key).length]));
 ---
 <div class="site-header-bar" data-header-bar>
-  <div class="benefit-bar"><a href="/shipping/">Free U.S. shipping</a><span>Printed to order. Made to keep.</span><a href="/size-guide/">Size &amp; fit help</a></div>
+  <div class="benefit-bar"><a href="/shipping/">Free U.S. shipping</a><span>Made to order. Made to keep.</span><a href="/size-guide/">Size &amp; fit help</a></div>
   <header class="site-header shell">
     <a class="identity" href="/" aria-label="After Hours Agenda home"><img src="/brand/sheep.svg" width="46" height="36" alt="" /><span>AFTER HOURS<br />AGENDA</span></a>
     <nav class="desktop-nav" aria-label="Main navigation">

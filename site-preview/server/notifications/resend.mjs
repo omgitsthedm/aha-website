@@ -1,6 +1,6 @@
 const RESEND_API = "https://api.resend.com";
 
-export function createResendGateway({ apiKey, from, replyTo, fetchImpl = fetch, timeoutMs = 8_000 }) {
+export function createResendGateway({ apiKey, from, replyTo: defaultReplyTo, fetchImpl = fetch, timeoutMs = 8_000 }) {
   async function request(path, init = {}) {
     const response = await fetchImpl(`${RESEND_API}${path}`, {
       ...init,
@@ -19,7 +19,7 @@ export function createResendGateway({ apiKey, from, replyTo, fetchImpl = fetch, 
     return data;
   }
   return {
-    async send({ idempotencyKey, recipient, subject, html, text, headers, stream = "transactional" }) {
+    async send({ idempotencyKey, recipient, subject, html, text, headers, replyTo = defaultReplyTo, stream = "transactional" }) {
       return request("/emails", {
         method: "POST",
         headers: { "content-type": "application/json", "idempotency-key": idempotencyKey },

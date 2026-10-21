@@ -26,6 +26,9 @@ export function garmentGroup(typeLabel) {
   return "other";
 }
 
+/** A stable, data-safe identifier for true color variants of one garment. */
+export const familyKey = (product) => JSON.stringify([product.title, product.collection, product.typeLabel]);
+
 /** Merchandise by cut, preserving the existing order within each garment style. */
 export function garmentsInOrder(products) {
   const rank = (product) => {
@@ -49,7 +52,8 @@ export const MEASURE_DIAGRAM = '<figure class="measure-figure"><svg class="measu
 export function measurementGuide(product) {
   const esc = (value) => String(value ?? "").replace(/[&<>'"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[c]);
   const measure = (value) => Number(value).toLocaleString("en-US", { maximumFractionDigits: 2 });
+  const dualMeasure = (value) => `${measure(value)} in / ${(Number(value) * 2.54).toLocaleString("en-US", { maximumFractionDigits: 1 })} cm`;
   const beanie = product.typeLabel === "Beanie";
   const sleeves = !beanie && product.sizeGuide.every((row) => typeof row.sleeveLength === "number");
-  return `<section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches</p><h2 id="size-title">Find your fit.</h2><p>${esc(product.measurementGuidance)}</p>${product.sleeveMeasurementGuidance ? `<p>${esc(product.sleeveMeasurementGuidance)}</p>` : ""}${beanie ? "" : MEASURE_DIAGRAM}<div class="size-table-wrap" role="region" aria-label="${esc(product.title)} measurements" tabindex="0"><table><thead><tr><th scope="col">Size</th>${beanie ? `<th scope="col">Unfolded height</th>` : `<th scope="col">Chest width</th><th scope="col">Body length</th>${sleeves ? `<th scope="col">Sleeve length</th>` : ""}`}</tr></thead><tbody>${product.sizeGuide.map((row) => `<tr><th scope="row">${esc(row.size)}</th>${beanie ? `<td>${measure(row.height)}</td>` : `<td>${measure(row.chestWidth)}</td><td>${measure(row.bodyLength)}</td>${sleeves ? `<td>${measure(row.sleeveLength)}</td>` : ""}`}</tr>`).join("")}</tbody></table></div></section>`;
+  return `<section class="shell section size-guide" id="size-guide" aria-labelledby="size-title"><p class="label">Finished garment measurements · inches / centimeters</p><h2 id="size-title">Find your fit.</h2><p>${esc(product.measurementGuidance)}</p>${product.sleeveMeasurementGuidance ? `<p>${esc(product.sleeveMeasurementGuidance)}</p>` : ""}${beanie ? "" : MEASURE_DIAGRAM}<div class="size-table-wrap" role="region" aria-label="${esc(product.title)} measurements in inches and centimeters" tabindex="0"><table><thead><tr><th scope="col">Size</th>${beanie ? `<th scope="col">Unfolded height<br><span aria-hidden="true">in / cm</span></th>` : `<th scope="col">Chest width<br><span aria-hidden="true">in / cm</span></th><th scope="col">Body length<br><span aria-hidden="true">in / cm</span></th>${sleeves ? `<th scope="col">Sleeve length<br><span aria-hidden="true">in / cm</span></th>` : ""}`}</tr></thead><tbody>${product.sizeGuide.map((row) => `<tr><th scope="row">${esc(row.size)}</th>${beanie ? `<td>${dualMeasure(row.height)}</td>` : `<td>${dualMeasure(row.chestWidth)}</td><td>${dualMeasure(row.bodyLength)}</td>${sleeves ? `<td>${dualMeasure(row.sleeveLength)}</td>` : ""}`}</tr>`).join("")}</tbody></table></div></section>`;
 }

@@ -176,6 +176,7 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
   let adminBytes = 0;
   let privateBytes = 0;
   let workerVendorBytes = 0;
+  let vitalsVendorBytes = 0;
   const workerFiles = new Set(['partytown-sandbox-sw.html', 'partytown-sw.js', 'partytown-atomics.js', 'partytown.js', 'partytown-media.js']);
   const walk = async (dir) => {
     for (const item of await readdir(dir, { withFileTypes: true })) {
@@ -196,12 +197,48 @@ test("no server bundle, sensitive files or source maps enter the artifact", asyn
         const size = (await stat(new URL(item.name, dir))).size;
         if (adminOnly.has(item.name)) adminBytes += size;
         else if (privateOnly.has(item.name)) privateBytes += size;
+        else if (/^web-vitals\.[^/]+\.js$/.test(item.name)) vitalsVendorBytes += size;
         else jsBytes += size;
       }
     }
   };
   await walk(root);
-  assert.ok(jsBytes < 65000, `All public storefront first-party JS including checkout must stay under 65 KB; got ${jsBytes}`);
+  // Approved audit adds support, safeguards and optional tools. Measure what a
+  // page actually loads as well as the complete cacheable pool; the two are not
+  // interchangeable. Vendor RUM is separately capped and sampled, never eager.
+  assert.ok(jsBytes < 85000, `Complete first-party public module pool must stay under 85 KB; got ${jsBytes}`);
+  assert.ok(vitalsVendorBytes > 0 && vitalsVendorBytes < 12000, `Sampled web-vitals runtime must stay under 12 KB; got ${vitalsVendorBytes}`);
+  const modules = new Map(await Promise.all((await readdir(new URL("_astro/", root))).filter((name) => name.endsWith(".js")).map(async (name) => [name, await readFile(new URL(`_astro/${name}`, root), "utf8")])));
+  const { brotliCompressSync } = await import("node:zlib");
+  for (const page of customerPages) {
+    const loaded = new Set();
+    const visit = (name) => {
+      if (loaded.has(name)) return;
+      const source = modules.get(name);
+      assert.ok(source !== undefined, `Missing script ${name}`);
+      loaded.add(name);
+      for (const match of source.matchAll(/(?:\bfrom\s*|\bimport\s*)["']\.\/([^"']+\.js)["']/g)) visit(match[1]);
+    };
+    for (const entry of await referenced(page)) visit(entry);
+    const html = await readFile(new URL(page, root), "utf8");
+    if (html.includes("data-cart-form")) {
+      const extras = [...modules.keys()].find((name) => name.startsWith("product-extras."));
+      assert.ok(extras, "PDP enhancement module is present");
+      visit(extras);
+    }
+    // The bag and payment form script loads at once on the checkout page, so it
+    // counts there; product and shop pages never fetch it.
+    if (html.includes("data-checkout-page")) {
+      const checkoutModule = [...modules.keys()].find((name) => /^checkout\.[^.]+\.js$/.test(name));
+      assert.ok(checkoutModule, "checkout page module is present");
+      visit(checkoutModule);
+    }
+    const raw = [...loaded].reduce((sum, name) => sum + Buffer.byteLength(modules.get(name)), 0);
+    const transferred = [...loaded].reduce((sum, name) => sum + brotliCompressSync(modules.get(name)).length, 0);
+    assert.ok(raw < 65000, `${page} initial first-party JavaScript must remain under 65 KB; got ${raw}`);
+    assert.ok(transferred < 24000, `${page} compressed initial JavaScript must remain under 24 KB; got ${transferred}`);
+    assert.ok(![...loaded].some((name) => /^(web-vitals|product-fit|product-viewer)\./.test(name)), `${page} must not eagerly import optional tools or RUM`);
+  }
   assert.ok(privateBytes < 12000, `The private order, account and unsubscribe page scripts must stay under 12 KB; got ${privateBytes}`);
   assert.ok(adminBytes < 40000, `The private admin script must stay under 40 KB; got ${adminBytes}`);
   assert.ok(workerVendorBytes > 0 && workerVendorBytes < 160000, `The complete deferred third-party worker runtime must stay under 160 KB; got ${workerVendorBytes}`);
@@ -263,7 +300,10 @@ test("products off sale leave the sitemap, llms.txt and feeds, and their pages a
     const page = await readFile(new URL(`shop/${slug}/index.html`, root), "utf8");
     assert.match(page, /<meta name="robots" content="noindex, noarchive">/);
     assert.ok(page.includes('"availability":"https://schema.org/Discontinued"'));
-    assert.match(await readFile(new URL("shop/index.html", root), "utf8"), new RegExp(`<article class="product-card" data-type="[a-z-]+" data-off-sale="${slug}" hidden>`));
+    const cards = (await readFile(new URL("shop/index.html", root), "utf8")).match(/<article\b[^>]*>/g) ?? [];
+    const retired = cards.find(card => card.includes(`data-off-sale="${slug}"`));
+    assert.ok(retired, `${slug} must remain identifiable for restoring to sale`);
+    assert.match(retired, /\bhidden(?:\s|>)/, `${slug} must remain hidden`);
   }
   for (const product of onSale(all)) assert.ok(sitemap.includes(`/shop/${product.slug}/`), product.slug);
   // Dates come from the built commit, not a fixed day.

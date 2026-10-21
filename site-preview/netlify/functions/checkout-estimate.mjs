@@ -11,14 +11,14 @@ export default async function checkoutEstimate(request, context) {
   if (!requireProductionRequest(request, context) || request.method !== "POST") return new Response(null, { status: 404 });
   if (!allowedOrigin(request)) return errorResponse(new CheckoutError("origin_rejected", 403));
   try {
+    const body = await jsonBody(request);
     const { saleAllowList, products } = await currentCatalog();
     const locked = await earlyAccessLocks(request, products, { db: getDatabase });
     const catalog = locked.size ? Object.fromEntries(Object.entries(saleAllowList).filter(([id]) => !locked.has(id))) : saleAllowList;
     const runtime = createCheckoutRuntime({ database: getDatabase(), env: Netlify.env, catalog });
     if (!checkoutReady(runtime.config)) return errorResponse(new CheckoutError("checkout_unavailable", 503));
-    const body = await jsonBody(request);
     if (Array.isArray(body?.items) && body.items.some((item) => locked.has(item?.variationId))) return errorResponse(new CheckoutError("early_access_only", 403));
     return noStore(await runtime.service.estimate({ items: body?.items, destination: body?.destination }));
   } catch (error) { return errorResponse(error); }
 }
-export const config = { path: "/api/checkout/estimate", method: ["POST"] };
+export const config = { path: "/api/checkout/estimate", method: ["POST"], rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ["ip", "domain"] } };

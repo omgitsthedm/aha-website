@@ -4,6 +4,8 @@ import test from 'node:test';
 import squareWebhook from '../netlify/functions/square-webhook.mjs';
 import apliiqWebhook from '../netlify/functions/apliiq-fulfillment-webhook.mjs';
 import health from '../netlify/functions/fulfillment-health.mjs';
+import { config as quoteConfig } from '../netlify/functions/checkout-quote.mjs';
+import { config as estimateConfig } from '../netlify/functions/checkout-estimate.mjs';
 
 const context = { site: { id: '275b4115-16bf-42fb-9b36-6bce9bb93608' }, deploy: { context: 'production', published: true } };
 const base = 'https://afterhoursagenda.com';
@@ -44,6 +46,22 @@ test('unsigned webhooks and unauthenticated health cannot read or change orders'
   assert.equal((await squareWebhook(new Request(base + '/api/webhooks/square', { method: 'POST', body: '{}' }), context)).status, 403);
   assert.equal((await apliiqWebhook(new Request(base + '/api/webhooks/apliiq/fulfillment', { method: 'POST', body: '{}' }), context)).status, 403);
   assert.equal((await health(new Request(base + '/api/fulfillment/health'), context)).status, 401);
+});
+
+test('webhooks bound unsigned bodies before database, catalog, or provider setup', async (t) => {
+  isolate(t);
+  const body = 'x'.repeat(131_073);
+  for (const [handler, path] of [[squareWebhook, '/api/webhooks/square'], [apliiqWebhook, '/api/webhooks/apliiq/fulfillment']]) {
+    const response = await handler(new Request(base + path, { method: 'POST', body, headers: { 'content-length': String(body.length) } }), context);
+    assert.equal(response.status, 413);
+  }
+});
+
+test('checkout quote and estimate export Netlify-compatible per-client bounds', () => {
+  for (const config of [quoteConfig, estimateConfig]) {
+    assert.deepEqual(config.rateLimit, { windowLimit: 30, windowSize: 60, aggregateBy: ['ip', 'domain'] });
+    assert.deepEqual(config.method, ['POST']);
+  }
 });
 
 test('valid signatures do not bypass the merchant or supported-event checks', async (t) => {

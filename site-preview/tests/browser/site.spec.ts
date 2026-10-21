@@ -102,49 +102,33 @@ test("native mobile menu works by keyboard and Escape restores focus", async ({
     .click();
   await expect(page).toHaveURL(/lookbook\//);
 });
-test("contact validates, preserves details and prepares an unsent email", async ({
-  page,
-}) => {
-  // Keep this no-message assertion separate from the default-on analytics tests.
+test("contact preserves a failed request and confirms only an accepted submission", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({analytics:false,marketing:false,at:Date.now()})));
-  const writes: string[] = [];
-  page.on("request", (r) => {
-    if (!["GET", "HEAD"].includes(r.method())) writes.push(r.url());
+  const requests: unknown[] = [];
+  await page.route("**/api/support", async route => {
+    requests.push(route.request().postDataJSON());
+    await route.fulfill({ status: requests.length === 1 ? 503 : 200, json: requests.length === 1 ? {error:"We couldn’t confirm receipt. Your message is still here."} : {ok:true} });
   });
   await page.goto("/contact/?topic=order");
   await expect(page.locator("#topic")).toHaveValue("order");
-  await page.getByRole("button", { name: "Prepare my email" }).click();
+  await page.getByRole("button", {name:"Send message"}).click();
   await expect(page.locator("#name")).toBeFocused();
-  await expect(page.locator("#name-error")).toBeVisible();
+  expect(requests).toHaveLength(0);
   await page.getByLabel("Your name").fill("Preview Tester");
   await page.getByLabel("Your email").fill("preview@example.com");
   await page.getByLabel("Order number").fill("Review only");
-  await page
-    .getByLabel("How can we help")
-    .fill("Testing the local email draft. This is not a support request.");
-  await page.getByRole("button", { name: "Prepare my email" }).click();
-  await expect(page.locator("#brief-result")).toBeVisible();
+  await page.getByLabel("How can we help").fill("Local automated verification. Do not send this message.");
+  await page.getByRole("button", {name:"Send message"}).click();
+  await expect(page.locator("#form-status")).toContainText("couldn’t confirm receipt");
+  await expect(page.getByLabel("Your name")).toHaveValue("Preview Tester");
+  await expect(page.locator("[data-support-fallback]")).toHaveAttribute("href", /^mailto:info@afterhoursagenda.com/);
+  await expect(page.locator("#brief-result")).toBeHidden();
+  await page.getByRole("button", {name:"Send message"}).click();
+  await expect(page.locator("#result-title")).toHaveText("Your message has been received.");
   await expect(page.locator("#result-title")).toBeFocused();
-  const href = await page
-    .getByRole("link", { name: "Open email draft" })
-    .getAttribute("href");
-  const url = new URL(href!);
-  expect(url.protocol).toBe("mailto:");
-  expect(url.pathname).toBe("info@afterhoursagenda.com");
-  expect(url.searchParams.get("body")).toContain("Existing order");
-  await page.evaluate(() => {
-    Object.defineProperty(navigator, "clipboard", {
-      value: { writeText: () => Promise.reject(new Error("blocked")) },
-      configurable: true,
-    });
-  });
-  await page.getByRole("button", { name: "Copy message" }).click();
-  await expect(page.locator("#copy-status")).toContainText(
-    "Copy is unavailable",
-  );
-  await page.getByRole("button", { name: "Edit details" }).click();
-  await expect(page.locator("#name")).toHaveValue("Preview Tester");
-  expect(writes).toEqual([]);
+  await expect(page.locator("#brief-form")).toBeHidden();
+  expect(requests).toHaveLength(2);
+  expect((requests[0] as {requestId:string}).requestId).toBe((requests[1] as {requestId:string}).requestId);
 });
 test("all content, menu and contact fallback work without JavaScript", async ({
   browser,

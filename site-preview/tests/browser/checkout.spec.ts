@@ -131,8 +131,18 @@ test("checkout: a failed privacy withdrawal is retried after navigation", async 
   await page.getByRole("button", { name: "Confirm total" }).click();
   await expect.poll(() => page.evaluate(() => localStorage.getItem("aha-checkout-marketing-receipts-v1"))).not.toBeNull();
   await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
+  // A saved choice reloads the page after giving the withdrawal 250 ms; a goto
+  // issued during that reload is aborted, so wait for it like the test below.
+  const reload = page.waitForNavigation({ waitUntil: "domcontentloaded" });
   await page.getByRole("button", { name: "Analytics only", exact: true }).click();
+  await reload;
+  // The failed same-origin withdrawal leaves a receipt locally; the next page
+  // load, rather than a timer retry, submits that receipt once, and a further
+  // load does not submit it again.
   await expect.poll(() => privacyBodies.length).toBe(2);
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await page.waitForLoadState("networkidle");
+  expect(privacyBodies.length).toBe(2);
   expect(privacyBodies).toEqual([
     { checkouts: [{ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token" }], analytics: true, marketing: false, gpc: false },
     { checkouts: [{ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token" }], analytics: true, marketing: false, gpc: false },
@@ -370,4 +380,31 @@ test("checkout: the gift card option stays hidden when turned off", async ({ pag
   await page.getByRole("button", { name: "Confirm total" }).click();
   await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
   await expect(page.locator("[data-gift-card]")).toBeHidden();
+});
+
+test("checkout: flags the first missing delivery field and requires French fulfillment details before quoting", async ({ page }) => {
+  const quoteBodies: Record<string, unknown>[] = [];
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ json: { appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: false, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } } }));
+  await page.route("**/api/checkout/quote", async (route) => { quoteBodies.push(route.request().postDataJSON() as Record<string, unknown>); await route.fulfill({ json: quote }); });
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect(page.locator("[data-checkout-errors]")).toContainText("First name");
+  await expect(page.getByLabel("First name")).toBeFocused();
+  await page.getByLabel("First name").fill("Avery");
+  await page.getByLabel("Last name").fill("Tester");
+  await page.getByLabel("Email").fill("avery@example.com");
+  await page.getByLabel("Address").fill("10 Rue de Rivoli");
+  await page.getByLabel("City").fill("Paris");
+  await page.getByLabel("Country").selectOption("FR");
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect(page.locator("[data-checkout-errors]")).toContainText("State, province or region, Postal code");
+  await expect(page.getByLabel("State / province")).toBeFocused();
+  expect(quoteBodies).toHaveLength(0);
+  await page.getByLabel("State / province").fill("Île-de-France");
+  await page.getByLabel("Postal code").fill("75001");
+  await page.getByRole("button", { name: "Confirm total" }).click();
+  await expect.poll(() => quoteBodies.length).toBe(1);
+  expect((quoteBodies[0]!.shippingAddress as Record<string, unknown>).region).toBe("Île-de-France");
+  expect((quoteBodies[0]!.shippingAddress as Record<string, unknown>).postalCode).toBe("75001");
 });

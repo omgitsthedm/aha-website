@@ -60,7 +60,7 @@ Built on October 19, 2026 after the owner said "do and fix it all" about the rem
 - **Orders in an account:** the order page's Add to my account links an order through its signed order link. An order belongs to one account.
 - **Reviews** (`/api/reviews`, `server/customers/reviews.mjs`) come only from an order's private link after it ships, one per product per order. Every review waits in Admin → Reviews until the owner approves it, and an edit goes back for approval. Product pages show approved reviews only, fetched at runtime. Approving, rejecting or editing a published review purges the `reviews-<slug>` tag, and the CDN copy expires within ten minutes even if a purge fails (the admin says when it did). Saved pieces published live since the last deploy, or removed from sale, come from `/api/catalog/live` on the account page. Never invent, import or seed reviews. Approve every genuine review, positive or negative (the FTC's consumer-review rule); the Reviews page says so.
 - **Early access:** `src/data/drops.json` lists `{ slug, earlyAccessAt, releaseAt }` in UTC. Before `releaseAt`, the checkout quote refuses the product unless the shopper is signed in and `earlyAccessAt` has passed. Feeds leave the product out until release, and their CDN copy expires at the release. The product page shows both times and locks Add to bag and Buy now for everyone else. Editing the file needs a deploy; remove an entry after its release.
-- **Script budget:** public storefront scripts stay under 65 KB. The private order and account page scripts have their own 12 KB cap (`tests/artifact.test.mjs`).
+- **Script budget:** each public route stays under 65 KB initial first-party JavaScript and 24 KB Brotli. The complete cacheable public first-party pool stays under 85 KB; interaction-only fit/photo tools are not initial-load code. Sampled web-vitals has its own 12 KB cap. The private order and account page scripts have their own 12 KB cap (`tests/artifact.test.mjs`).
 - **Local testing:** `AHA_LOCAL_ACCOUNTS=1` makes `scripts/serve.mjs` run the real account, review and order-status handlers on an in-memory database (`scripts/local-accounts.mjs`). Playwright turns this on, and `tests/browser/accounts.spec.ts` creates and uses real passkeys with Chrome's virtual authenticator on `localhost`.
 
 ## Customer emails: bag reminders and review requests
@@ -111,7 +111,7 @@ Built on October 19, 2026 at the owner's request ("Do this task here: One-tap Ap
   - Each attempt is saved in `aha-pending-express-v1` before paying. After a reload or a lost response, the page follows it through `/api/checkout/status` and offers no wallet until it settles, so it is never paid twice.
   - The shopper's bag is left alone.
 - **Never offered** for products off sale (their form is replaced first; a piece restored in the admin gets the wallets back) or for drops not yet open to everyone. The estimate endpoint applies the same sale list and early-access locks as the quote.
-- **Script budget:** public storefront JavaScript was 64,794 bytes of its 65,000-byte cap after this, so the next addition needs a trim first.
+- **Script budget:** historical October 19 aggregate was 64,794 bytes. The approved October 21 audit uses the route-level plus aggregate caps above; measure the built artifact and browser loads, and do not silently broaden those caps.
 
 ## Catalog, checkout, fulfillment, and tracking safeguards
 
@@ -127,3 +127,7 @@ Built on October 19, 2026 at the owner's request ("Do this task here: One-tap Ap
 - Keep credentials in approved private settings only. Never print, commit, publish, or place secrets in fixtures; preserve existing provider accounts, payment history, fulfillment contracts, database data, and customer data.
 - Treat checkout, webhooks, provider mappings, fulfillment, migrations, and database operations as high risk. Preserve root and `site-preview/` Netlify configurations together when a task legitimately changes release behavior.
 - From `site-preview/` on Node `24.21.0`, run the relevant `npm run check`, targeted tests, `npm run test:e2e`, `npm audit`, build, and local visual checks before an authorized deploy. Validate actual coverage and do not claim a paid-production round trip from a sandbox or browser check.
+
+## Exchanges and refunds — October 21, 2026
+
+Owner confirmed a contact-led, returnless policy: welcome both exchange and refund requests, resolve them personally, and ask the customer to pass the garment on rather than ship it back. Preserve the existing 30-day request window. Remove undefined production-fee deductions and prepaid-return-label promises. Approved refunds return the item purchase price through the original payment method. Do not automatically issue refunds or replacements from this wording. Real delivered-garment photos will follow future orders; do not invent physical fit or construction proof.

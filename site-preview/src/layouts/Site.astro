@@ -1,4 +1,5 @@
 ---
+import { imageUrl, imageSrcset } from '../../server/catalog/image-urls.mjs';
 import "../styles/storefront.css";
 import ProductTools from "../components/ProductTools.astro";
 import Navigation from "../components/Navigation.astro";
@@ -114,7 +115,7 @@ const schema = {
     <meta name="theme-color" content="#FF6B6B" />
     <meta name="color-scheme" content="light" />
     {['poppins-latin-400', 'poppins-latin-700', 'poppins-latin-900', 'jetbrains-mono-400'].map(font => <link rel="preload" href={`/fonts/${font}.woff2`} as="font" type="font/woff2" crossorigin="anonymous" />)}
-    {preloadImage && <link rel="preload" as="image" href={(avif as Record<string, string>)[preloadImage.src] ? preloadImage.src.replace(/\.webp$/, ".avif") : preloadImage.src} type={(avif as Record<string, string>)[preloadImage.src] ? "image/avif" : undefined} imagesrcset={(avif as Record<string, string>)[preloadImage.src] ?? preloadImage.srcset} imagesizes={preloadImage.sizes} fetchpriority="high" />}
+    {preloadImage && <link rel="preload" as="image" href={imageUrl((avif as Record<string, string>)[preloadImage.src] ? preloadImage.src.replace(/\.webp$/, ".avif") : preloadImage.src)} type={(avif as Record<string, string>)[preloadImage.src] ? "image/avif" : undefined} imagesrcset={imageSrcset((avif as Record<string, string>)[preloadImage.src] ?? preloadImage.srcset)} imagesizes={preloadImage.sizes} fetchpriority="high" />}
     <meta name="facebook-domain-verification" content="83wsdo81kg6b428satufegpkljq0w6" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={brand.name} />
@@ -171,17 +172,6 @@ const schema = {
       <slot />
     </main>
     <footer class="site-footer shell">
-      <div class="footer-top">
-        <p class="footer-tagline">Graphic tees, fleece<br />and ribbed knitwear.</p>
-        <a class="identity" href="/" aria-label="After Hours Agenda home">
-          <img src="/brand/sheep.svg" width="46" height="36" alt="" />
-          <span>
-            AFTER HOURS
-            <br />
-            AGENDA
-          </span>
-        </a>
-      </div>
       {footerSignup && (
         <div class="footer-signup">
           <EmailSignup source={footerSignup} label="Get new drops by email" />

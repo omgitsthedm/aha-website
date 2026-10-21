@@ -25,24 +25,31 @@ import products from '../data/products.json';
         <p class="label">Secure checkout</p>
         <h2 id="checkout-title">Delivery &amp; payment</h2>
         <p class="checkout-note">We only use these details to price, pay for and deliver this order.</p>
+        <div class="express-pay" data-express data-express-bag hidden>
+          <p class="label">Or pay now</p>
+          <button type="button" class="apple-pay-button" data-express-apple aria-label="Buy with Apple Pay" hidden><span aria-hidden="true"> Pay</span></button>
+          <div id="aha-express-google" data-express-google></div>
+          <p class="checkout-note" data-express-status aria-live="polite"></p>
+        </div>
         <form data-checkout-form novalidate>
+          <div id="checkout-errors" class="checkout-errors" data-checkout-errors role="alert" tabindex="-1" hidden></div>
           <fieldset>
             <legend>Contact</legend>
             <div class="checkout-fields two-up">
-              <label>First name<input name="firstName" autocomplete="given-name" required /></label>
-              <label>Last name<input name="lastName" autocomplete="family-name" required /></label>
+              <label>First name<input name="firstName" autocomplete="given-name" required aria-describedby="checkout-errors" /></label>
+              <label>Last name<input name="lastName" autocomplete="family-name" required aria-describedby="checkout-errors" /></label>
             </div>
-            <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+            <label>Email<input name="email" type="email" autocomplete="email" required aria-describedby="checkout-errors" /></label>
             <label>Phone <span class="field-optional">optional</span><input name="phone" type="tel" autocomplete="tel" /></label>
           </fieldset>
           <fieldset>
             <legend>Shipping address</legend>
-            <label>Address<input name="addressLine1" autocomplete="address-line1" required /></label>
+            <label>Address<input name="addressLine1" autocomplete="address-line1" required aria-describedby="checkout-errors" /></label>
             <label>Apartment, suite, etc. <span class="field-optional">optional</span><input name="addressLine2" autocomplete="address-line2" /></label>
             <div class="checkout-fields address-row">
-              <label>City<input name="city" autocomplete="address-level2" required /></label>
-              <label>State / province<input name="region" autocomplete="address-level1" required /></label>
-              <label>Postal code<input name="postalCode" autocomplete="postal-code" required /></label>
+              <label>City<input name="city" autocomplete="address-level2" required aria-describedby="checkout-errors" /></label>
+              <label data-region-label>State / province<span class="field-optional" data-region-optional> optional</span><input name="region" autocomplete="address-level1" aria-describedby="checkout-errors" /></label>
+              <label data-postal-label>Postal code<span class="field-optional" data-postal-optional> optional</span><input name="postalCode" autocomplete="postal-code" aria-describedby="checkout-errors" /></label>
             </div>
             <label>Country<select name="country" autocomplete="country" required><option value="US">United States</option><option value="AU">Australia</option><option value="AT">Austria</option><option value="BE">Belgium</option><option value="CA">Canada</option><option value="CZ">Czechia</option><option value="DK">Denmark</option><option value="FI">Finland</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="JP">Japan</option><option value="NL">Netherlands</option><option value="NO">Norway</option><option value="PL">Poland</option><option value="PT">Portugal</option><option value="ES">Spain</option><option value="SE">Sweden</option><option value="CH">Switzerland</option><option value="TR">Türkiye</option><option value="GB">United Kingdom</option></select></label>
           </fieldset>
@@ -80,3 +87,7 @@ import products from '../data/products.json';
   </section>
 </Site>
 <script src="../scripts/cart.ts"></script>
+<style>
+  .checkout-errors { margin-top: 1rem; padding: .8rem 1rem; border-left: 3px solid var(--rose); background: var(--surface); font-size: .86rem; line-height: 1.5; }
+  .checkout-panel :global([aria-invalid="true"]) { border-color: var(--rose); }
+</style>
