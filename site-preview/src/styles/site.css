@@ -1220,7 +1220,6 @@ select:focus-visible {
     :root{--scroll-view:view()}
     .ticker{flex:none;justify-content:flex-start;gap:4.5rem;width:max-content;animation-name:drift;animation-timing-function:linear;animation-fill-mode:both;animation-duration:auto;animation-timeline:var(--scroll-view);animation-range:cover 0% cover 100%}
     .ticker span,.ticker span[aria-hidden],.ticker span:nth-child(2){display:inline;white-space:nowrap}
-    .product-grid .product-card-image,.campaign-grid img,.teaser-grid img,.campaign-grid .motion-frame,.teaser-grid .motion-frame,.story-grid .archive-image img,.statement img{animation-name:rise;animation-timing-function:linear;animation-fill-mode:both;animation-duration:auto;animation-timeline:var(--scroll-view);animation-range:entry 0% entry 45%}
     /* A photo with a motion loop rises as one piece with its loop. */
     .motion-frame img{animation-name:none}
     .section-header h2,.statement h2,.updates-inner h2,.size-guide h2,.page-head h1{animation-name:unmask;animation-timing-function:linear;animation-fill-mode:both;animation-duration:auto;animation-timeline:var(--scroll-view);animation-range:entry 0% entry 55%}
