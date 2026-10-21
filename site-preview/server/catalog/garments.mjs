@@ -7,21 +7,32 @@ export const swatchFor = (color) => COLOR_SWATCHES[color] ?? "#eae6db";
 
 /** Shop filter groups, in the order the filter shows them. */
 export const GARMENT_GROUPS = [
-  { key: "hoodies", label: "Hoodies" },
-  { key: "crewnecks", label: "Crewnecks" },
-  { key: "long-sleeves", label: "Long sleeves" },
+  { key: "cropped-hoodies", label: "Cropped hoodies" },
   { key: "tees", label: "T-shirts" },
+  { key: "long-sleeves", label: "Long sleeves" },
+  { key: "crewnecks", label: "Crewnecks" },
+  { key: "hoodies", label: "Hoodies" },
   { key: "beanies", label: "Beanies" },
 ];
 
 export function garmentGroup(typeLabel) {
   const type = String(typeLabel ?? "").toLowerCase();
+  if (type.includes("cropped") && type.includes("hoodie")) return "cropped-hoodies";
   if (type.includes("hoodie")) return "hoodies";
   if (type.includes("long sleeve")) return "long-sleeves";
   if (type.includes("crewneck")) return "crewnecks";
   if (type.includes("tee") || type.includes("t-shirt")) return "tees";
   if (type.includes("beanie")) return "beanies";
   return "other";
+}
+
+/** Merchandise by cut, preserving the existing order within each garment style. */
+export function garmentsInOrder(products) {
+  const rank = (product) => {
+    const index = GARMENT_GROUPS.findIndex(group => group.key === garmentGroup(product.typeLabel));
+    return index < 0 ? GARMENT_GROUPS.length : index;
+  };
+  return [...products].sort((a, b) => rank(a) - rank(b));
 }
 
 /** The same garment in its other colors. */

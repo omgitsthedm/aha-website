@@ -2,17 +2,23 @@ import { query, queryAll } from "./dom";
 // Shop page: show products published live since this page was built, and hide
 // any removed from sale. The server renders and escapes each card.
 import { catalogState, hideRetiredCards } from "./catalog-state";
+import { GARMENT_GROUPS } from "../../server/catalog/garments.mjs";
 
 async function updateShop() {
   const state = await catalogState();
-  hideRetiredCards(state.retired, state.known);
-  const section = query<HTMLElement>(document, "[data-live-products]");
-  const grid = section?.querySelector<HTMLElement>("[data-live-grid]");
-  if (!section || !grid) return;
+  const grid = query<HTMLElement>(document, '[data-shop-grid="light"]');
+  const layers = query<HTMLElement>(document, '[data-shop-grid="layers"]');
+  if (!grid || !layers) return;
   const cards = state.products.map((product) => product.card).filter((card): card is string => typeof card === "string");
-  if (!cards.length) return;
-  grid.innerHTML = cards.join("");
-  section.hidden = false;
+  grid.insertAdjacentHTML("beforeend", cards.join(""));
+  // New pieces join their garment style instead of jumping above the first tees.
+  const rank = (card: HTMLElement) => {
+    const index = GARMENT_GROUPS.findIndex(group => group.key === card.dataset.type);
+    return index < 0 ? GARMENT_GROUPS.length : index;
+  };
+  const ordered = [...queryAll<HTMLElement>(document, "[data-shop-grid] article.product-card")].sort((a, b) => rank(a) - rank(b));
+  ordered.forEach(card => (rank(card) < 2 ? grid : layers).append(card));
+  hideRetiredCards(state.retired, state.known);
 }
 // Garment filter: hides cards of other garment types, then any collection (and its
 // jump link) left empty. Removed products stay hidden either way.
@@ -24,6 +30,7 @@ const resultStatus = query<HTMLElement>(document, "[data-shop-status]");
 function applyFilter() {
   queryAll<HTMLElement>(document, "article.product-card").forEach((card) => card.classList.toggle("is-filtered", (garment !== "all" && card.dataset.type !== garment) || !(searchField?.value.trim().toLowerCase().split(/\s+/).every(word => card.textContent?.toLowerCase().includes(word)) ?? true)));
   const count = [...queryAll<HTMLElement>(document, "article.product-card")].filter(card => !card.hidden && !card.classList.contains("is-filtered")).length;
+  queryAll<HTMLElement>(document, '[data-shop-grid]').forEach(grid => { grid.hidden = !grid.querySelector('article:not([hidden]):not(.is-filtered)'); });
   if (resultStatus) resultStatus.textContent = count ? `${count} ${count === 1 ? 'piece' : 'pieces'}` : 'No pieces found. Try another garment, color or design.';
   const url = new URL(location.href);
   if (garment === 'all') url.searchParams.delete('type'); else url.searchParams.set('type', garment);

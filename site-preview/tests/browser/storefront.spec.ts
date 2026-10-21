@@ -69,7 +69,7 @@ test("menu categories and search reach the matching garments on a phone", async 
   await expect(menu.locator('#menu-browse')).toBeVisible();
   await expect(menu.locator('#menu-results')).toBeHidden();
   await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).fill('');
-  await menu.getByRole('link', { name: /^Tees/ }).click();
+  await menu.getByRole('link', { name: /^T-shirts/ }).click();
   await expect(page).toHaveURL(/type=tees/);
   await expect(page.locator('[data-filter="tees"]')).toHaveAttribute('aria-pressed', 'true');
   const cards = page.locator('article.product-card:visible');
@@ -173,8 +173,8 @@ test("product pages link the same garment in its other colors", async ({ page })
 test("the shop filter and search narrow the flat garment grid", async ({ page }) => {
   await page.goto("/shop/");
   const filter = page.getByRole("group", { name: "Show" });
-  await filter.getByRole("button", { name: "Hoodies" }).click();
-  await expect(filter.getByRole("button", { name: "Hoodies" })).toHaveAttribute("aria-pressed", "true");
+  await filter.getByRole("button", { name: "Hoodies", exact: true }).click();
+  await expect(filter.getByRole("button", { name: "Hoodies", exact: true })).toHaveAttribute("aria-pressed", "true");
   const visible = page.locator("article.product-card:visible");
   expect(await visible.evaluateAll((cards) => cards.every((card) => (card as HTMLElement).dataset.type === "hoodies"))).toBe(true);
   expect(await visible.count()).toBeGreaterThan(0);
@@ -209,11 +209,15 @@ test("phone product photos show a count and open full screen", async ({ page }) 
   await expect(viewer).toBeHidden();
 });
 
-test("the lookbook has one set per collection, three looks each, every look linking to its piece", async ({ page }) => {
+test("the lookbook has apparel shoots without location tags or knitwear, with every look linking to its piece", async ({ page }) => {
   await page.goto("/lookbook/");
-  const names = collectionsInOrder().map(([name]) => name);
+  const names = collectionsInOrder().filter(([, pieces]) => pieces.some(product => product.typeLabel !== 'Beanie')).map(([name]) => name);
   const sets = page.locator("[data-look-set]");
   await expect(sets.locator("h2")).toHaveText(names);
+  await expect(sets.locator('.section-header .label')).toHaveCount(0);
+  await expect(sets.locator('[data-product-set^="after-hours-agenda-heritage-beanie-"]')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'From the beginning.' })).toHaveCount(0);
+  await expect(page.locator('.gallery')).toHaveCount(0);
   for (const set of await sets.all()) {
     await expect(set.locator("figure")).toHaveCount(3);
     await expect(set.locator(".look-chip")).toHaveCount(3);
@@ -398,14 +402,16 @@ test.describe("campaign motion", () => {
     await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(false);
   });
 
-  test("the full-screen phone lookbook gets the film cut for its crop", async ({ page }) => {
+  test("the phone lookbook stays photography only even when motion is allowed", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
+    const media: string[] = [];
+    page.on('request', request => { if (/\.(mp4|webm)(\?|$)/.test(request.url())) media.push(request.url()); });
     await page.goto("/lookbook/");
-    const frame = page.locator(".campaign-set .motion-frame[data-motion]").first();
-    await frame.scrollIntoViewIfNeeded();
-    await expect(frame.locator("video")).toHaveCount(1, { timeout: 15_000 });
-    expect(await frame.getAttribute("data-motion-small")).toMatch(/-600t\.mp4$/);
-    await expect(frame.locator("video")).toHaveAttribute("src", (await frame.getAttribute("data-motion-small"))!, { timeout: 15_000 });
+    await page.locator('.campaign-set picture').first().scrollIntoViewIfNeeded();
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('.campaign-set img').first()).toBeVisible();
+    await expect(page.locator('video, [data-motion], .motion-note')).toHaveCount(0);
+    expect(media).toEqual([]);
   });
 
   test("phones get the lighter film", async ({ page }) => {

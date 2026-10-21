@@ -1,4 +1,4 @@
-// The order the shop, home page and lookbook show collections: newest drop first. Put a
+// The order design pages and the lookbook show collections: newest drop first. Put a
 // new collection at the front to feature it. Collections not listed follow in
 // catalog order, so a product removed from sale never leads the page.
 import products from "./products.json" with { type: "json" };
