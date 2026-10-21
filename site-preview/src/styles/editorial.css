@@ -394,3 +394,5 @@ picture{display:block}
 @supports(animation-timeline:scroll()){.reading-progress{animation:reading-progress linear;animation-timeline:scroll(root)}@keyframes reading-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}}
 @media(max-width:760px){:root{--header-offset:94px}}
 .no-script-nav{margin-left:auto}.no-script-nav summary{min-height:44px;display:flex;align-items:center;font-size:13px;font-weight:700;cursor:pointer}.no-script-nav nav{position:absolute;right:20px;top:100%;display:grid;gap:4px;min-width:220px;padding:20px;background:var(--ink);color:var(--paper)}.no-script-nav a{display:flex;align-items:center;min-height:44px}
+/* Keep shopping fields readable and avoid iOS focus zoom. */
+.checkout-panel input,.checkout-panel select,.quantity-field input,.bag-line select{font-size:max(16px,1rem)}
