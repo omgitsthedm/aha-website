@@ -1,6 +1,8 @@
+import { photographedProduct, photosFor } from "../../src/data/photography";
+import products from "../../src/data/products.json" with { type: "json" };
 import { test, expect } from "./fixtures";
-import { collectionSlug, collectionsInOrder } from "../../src/data/collections";
-import { allOffSale, OFF_SALE } from "../../server/catalog/off-sale.mjs";
+import { campaignProducts, collectionSlug, collectionsInOrder } from "../../src/data/collections";
+import { OFF_SALE } from "../../server/catalog/off-sale.mjs";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({ analytics: false, marketing: false, at: Date.now() })));
@@ -17,19 +19,19 @@ test("email sign-up checks the address and sends only the address and its page",
   const form = page.locator("[data-signup]");
   const email = form.getByLabel("Get new drops by email");
   await email.fill("not-an-address");
-  await form.getByRole("button", { name: "Sign me up" }).click();
+  await form.getByRole("button", { name: "Sign up" }).click();
   await expect(form.locator("[data-signup-status]")).toHaveText("Enter a full email address, like name@example.com.");
   await expect(email).toHaveAttribute("aria-invalid", "true");
   expect(sent).toEqual([]);
   await email.fill("  fan@example.com ");
-  await form.getByRole("button", { name: "Sign me up" }).click();
+  await form.getByRole("button", { name: "Sign up" }).click();
   await expect(form.locator("[data-signup-status]")).toHaveText("You're on the list. We'll write when something new is ready.");
   await expect(email).toBeHidden();
   expect(sent).toEqual([{ email: "fan@example.com", source: "updates", company: "" }]);
   expect(page.url()).not.toContain("fan");
 });
 
-test("the Stay close band signs up from the home page and reports a failure plainly", async ({ page }) => {
+test("the new-pieces band signs up from the home page and reports a failure plainly", async ({ page }) => {
   const sources: string[] = [];
   await page.route("**/api/updates/subscribe", async (route) => {
     sources.push((route.request().postDataJSON() as { source: string }).source);
@@ -38,31 +40,35 @@ test("the Stay close band signs up from the home page and reports a failure plai
   await page.goto("/");
   const form = page.locator(".updates-band [data-signup]");
   await form.getByLabel("Get new drops by email").fill("fan@example.com");
-  await form.getByRole("button", { name: "Sign me up" }).click();
+  await form.getByRole("button", { name: "Sign up" }).click();
   await expect(form.locator("[data-signup-status]")).toHaveText("That didn't go through. Try again, or write to info@afterhoursagenda.com.");
   await expect(form.getByLabel("Get new drops by email")).toBeVisible();
   expect(sources).toEqual(["home"]);
 });
 
-test("home features one piece from each collection, newest drop first", async ({ page }) => {
+test("home shows the approved four pieces and both hero garments", async ({ page }) => {
   await page.goto("/");
-  const expected = collectionsInOrder().slice(0, 4).map(([, pieces]) => pieces.find((product) => product.typeLabel === "Hoodie") ?? pieces[0]!);
-  await expect(page.locator("section[aria-labelledby='new-pieces'] article.product-card")).toHaveCount(4);
-  const links = await page.locator("section[aria-labelledby='new-pieces'] article.product-card a").evaluateAll((items) => [...new Set(items.map((item) => item.getAttribute("href")))]);
-  expect(links).toEqual(expected.map((product) => `/shop/${product.slug}/`));
-  await expect(page.locator(".hero-image figcaption")).toContainText(expected[0]!.title);
+  const expected = ['nonna-s-sunday-supper-society-c1717-ivory', 'yikes-cropped-hoodie', 'mighty-micks-ss3000-navy', 'after-hours-agenda-heritage-beanie-sp12-black'];
+  const links = await page.locator(".home-selection article.product-card a").evaluateAll(items => [...new Set(items.map(item => item.getAttribute('href')))]);
+  expect(links).toEqual(expected.map(slug => `/shop/${slug}/`));
+  await expect(page.locator('.hero-photo a')).toHaveCount(2);
+  await expect(page.locator('.hero-words .button')).toHaveText('Shop it all');
 });
 
-test("shop jump links reach every collection on a phone", async ({ page }) => {
+test("menu categories and search reach the matching garments on a phone", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/shop/");
-  const jump = page.getByRole("navigation", { name: "Jump to a collection" });
-  // Collections with nothing on sale (src/data/off-sale.json) are built hidden.
-  const names = collectionsInOrder().filter(([, pieces]) => !allOffSale(pieces)).map(([name]) => name);
-  await expect(jump.getByRole("link")).toHaveText(names);
-  await jump.getByRole("link", { name: "The City" }).click();
-  await expect(page).toHaveURL(/#collection-the-city$/);
-  await expect(page.getByRole("heading", { name: "The City", exact: true })).toBeInViewport();
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
+  const menu = page.getByRole('dialog', { name: 'Find your fit.' });
+  await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).fill('Yikes');
+  await expect(menu.locator('#menu-result-status')).toHaveText('2 pieces found');
+  await expect(menu.locator('#menu-results a:visible')).toHaveCount(2);
+  await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).fill('');
+  await menu.getByRole('link', { name: /^Tees/ }).click();
+  await expect(page).toHaveURL(/type=tees/);
+  const cards = page.locator('article.product-card:visible');
+  expect(await cards.count()).toBeGreaterThan(0);
+  expect(await cards.evaluateAll(items => items.every(item => (item as HTMLElement).dataset.type === 'tees'))).toBe(true);
 });
 
 test("product pages on a phone keep price and the next step in a bar until the size picker is in view", async ({ page }) => {
@@ -84,8 +90,8 @@ test("product pages on a phone keep price and the next step in a bar until the s
   await expect(added).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(added).toBeHidden();
-  await expect(bar.getByRole("button", { name: "View bag →" })).toBeVisible();
-  await bar.getByRole("button", { name: "View bag →" }).click();
+  await expect(bar.getByRole("button", { name: "View bag" })).toBeVisible();
+  await bar.getByRole("button", { name: "View bag" }).click();
   await expect(page).toHaveURL(/\/checkout\/$/);
 });
 
@@ -142,7 +148,7 @@ test("product pages link the same garment in its other colors", async ({ page })
   await expect(page.locator(".color-options")).toHaveCount(0);
 });
 
-test("the shop filter shows one garment type and hides collections left empty", async ({ page }) => {
+test("the shop filter and search narrow the flat garment grid", async ({ page }) => {
   await page.goto("/shop/");
   const filter = page.getByRole("group", { name: "Show" });
   await filter.getByRole("button", { name: "Hoodies" }).click();
@@ -150,10 +156,10 @@ test("the shop filter shows one garment type and hides collections left empty", 
   const visible = page.locator("article.product-card:visible");
   expect(await visible.evaluateAll((cards) => cards.every((card) => (card as HTMLElement).dataset.type === "hoodies"))).toBe(true);
   expect(await visible.count()).toBeGreaterThan(0);
-  await expect(page.getByRole("heading", { name: "Mighty Mick’s", exact: true })).toBeHidden();
-  await expect(page.getByRole("navigation", { name: "Jump to a collection" }).getByRole("link", { name: "Mighty Mick’s" })).toBeHidden();
-  await filter.getByRole("button", { name: "All" }).click();
-  await expect(page.getByRole("heading", { name: "Mighty Mick’s", exact: true })).toBeVisible();
+  await filter.getByRole("button", { name: "All pieces", exact: true }).click();
+  await expect(page.locator('article.product-card:visible')).toHaveCount(45);
+  await page.getByRole('searchbox', { name: 'Find a garment, color or design' }).fill('Mighty');
+  await expect(page.locator('article.product-card:visible')).toHaveCount(2);
 });
 
 test("hovering a product card swaps to its second view; the image loads only on hover", async ({ page }) => {
@@ -191,17 +197,14 @@ test("the lookbook has one set per collection, three looks each, every look link
     await expect(set.locator(".look-chip")).toHaveCount(3);
   }
   await expect(page.locator(".campaign-set .look-chip").first()).toHaveAttribute("href", /^\/shop\/[a-z0-9-]+\/$/);
-  await expect(sets.first().getByRole("link", { name: `Shop ${names[0]} →` })).toHaveAttribute("href", `/shop/${collectionSlug(names[0]!)}/`);
-  // A shared Light Pink crewneck shoot cannot advertise the Butter tee or Black crew.
-  const jazz = page.getByRole("region", { name: "And All That Jazz", exact: true });
-  await expect(jazz.locator(".look-chip")).toHaveCount(3);
-  for (const link of await jazz.locator(".look-chip").all())
-    await expect(link).toHaveAttribute("href", "/shop/and-all-that-jazz-ss3000-light-pink/");
-  await expect(jazz.locator(".still-note")).toHaveText(["01 / Light Pink crewneck", "02 / Light Pink crewneck", "03 / Light Pink crewneck"]);
-  await page.goto("/shop/and-all-that-jazz/");
-  await expect(page.locator(".campaign-grid figure")).toHaveCount(3);
-  for (const link of await page.locator(".campaign-grid .look-chip").all())
-    await expect(link).toHaveAttribute("href", "/shop/and-all-that-jazz-ss3000-light-pink/");
+  await expect(sets.first().getByRole("link", { name: `Shop the pieces` })).toHaveAttribute("href", `/shop/${collectionSlug(names[0]!)}/`);
+  // Every frame must link to the exact garment shown, including newly supplied shoots.
+  for (const figure of await page.locator('[data-product-set]').all()) {
+    const slug = await figure.getAttribute('data-product-set');
+    const product = products.find(product => product.slug === slug)!;
+    await expect(figure.locator('.look-chip')).toHaveAttribute('href', `/shop/${slug}/`);
+    expect(photosFor(product).map(shot => shot.src)).toContain(await figure.locator('img').getAttribute('src'));
+  }
 });
 
 test("the footer sign-up reports its section of the site, and Home keeps only its band", async ({ page }) => {
@@ -213,7 +216,7 @@ test("the footer sign-up reports its section of the site, and Home keeps only it
   await page.goto("/shop/the-city-ss4500-black/");
   const form = page.locator(".footer-signup [data-signup]");
   await form.getByLabel("Get new drops by email").fill("fan@example.com");
-  await form.getByRole("button", { name: "Sign me up" }).click();
+  await form.getByRole("button", { name: "Sign up" }).click();
   await expect(form.locator("[data-signup-status]")).toHaveText("You're on the list. We'll write when something new is ready.");
   expect(sent).toEqual([{ email: "fan@example.com", source: "shop", company: "" }]);
   await page.goto("/");
@@ -221,11 +224,11 @@ test("the footer sign-up reports its section of the site, and Home keeps only it
   await expect(page.locator(".footer-signup")).toHaveCount(0);
 });
 
-test("the header has one Shop link, in the main navigation", async ({ page }) => {
+test("the header has one Shop trigger, in the main navigation", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/about/");
-  await expect(page.locator(".site-header a[href='/shop/']:visible")).toHaveCount(1);
-  await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "Shop", exact: true })).toBeVisible();
+  await expect(page.locator(".site-header [data-open-menu]:visible")).toHaveCount(1);
+  await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Shop", exact: true })).toBeVisible();
 });
 
 test("the old manifesto address moves permanently to The story", async ({ page, request }) => {
@@ -236,22 +239,19 @@ test("the old manifesto address moves permanently to The story", async ({ page, 
   }
   await page.goto("/manifesto/");
   await expect(page).toHaveURL(/\/about\/#manifesto$/);
-  await expect(page.getByRole("heading", { name: /BUILD A LIFE/ })).toBeInViewport();
+  await expect(page.getByRole("heading", { name: /MADE TO WEAR/ })).toBeInViewport();
 });
 
-test("the header tucks away while scrolling down and returns on scroll up", async ({ page }) => {
+test("the shared header stays available while browsing", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/shop/");
   const bar = page.locator("[data-header-bar]");
   await page.mouse.wheel(0, 900);
-  await expect(bar).toHaveClass(/is-tucked/);
-  await page.mouse.wheel(0, -300);
-  await expect(bar).not.toHaveClass(/is-tucked/);
   await expect(bar).toBeInViewport();
-  await page.mouse.wheel(0, 900);
-  await expect(bar).toHaveClass(/is-tucked/);
-  await page.getByRole("link", { name: "After Hours Agenda home" }).first().focus();
-  await expect(bar).not.toHaveClass(/is-tucked/);
+  await page.mouse.wheel(0, -300);
+  await expect(bar).toBeInViewport();
+  await page.getByRole('button', { name: 'Shop', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Find your fit.' })).toBeVisible();
 });
 
 test("product pages show a delivery estimate in the space reserved for it", async ({ page }) => {
@@ -318,16 +318,14 @@ test("each collection has its own page with its pieces, campaign and share image
     await page.goto(`/shop/${collectionSlug(name)}/`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(name);
     await expect(page.locator("#pieces article.product-card")).toHaveCount(pieces.length);
-    const firstShot = pieces[0]!.campaign[0]!;
-    const picturedSlug = 'productSlug' in firstShot ? firstShot.productSlug : pieces[0]!.slug;
-    const pictured = pieces.find(piece => piece.slug === picturedSlug)!;
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", new RegExp(`${pictured.campaign[0]!.feedImage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
+    const pictured = campaignProducts(pieces.map(photographedProduct))[0]!;
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', new URL(pictured.campaign[0]!.feedImage, 'https://afterhoursagenda.com').href.replace('https://afterhoursagenda.com', new URL((await page.locator('link[rel="canonical"]').getAttribute('href'))!).origin));
     const schema = JSON.parse((await page.locator('script[type="application/ld+json"]').last().textContent())!);
     expect(schema["@type"]).toBe("CollectionPage");
     expect(schema.mainEntity.itemListElement).toHaveLength(pieces.length);
   }
-  await page.goto("/shop/");
-  await page.locator(".collection-group").filter({ hasText: "The City" }).getByRole("link", { name: "The collection →" }).click();
+  await page.goto("/lookbook/");
+  await page.getByRole("region", { name: "The City", exact: true }).getByRole("link", { name: "Shop the pieces", exact: true }).click();
   await expect(page).toHaveURL(/\/shop\/the-city\/$/);
 });
 
@@ -352,7 +350,7 @@ test.describe("campaign motion", () => {
   test.use({ reducedMotion: "no-preference" });
 
   test("a collection with a film shows its photo first, then plays and can be paused", async ({ page }) => {
-    await page.goto("/shop/mighty-micks/");
+    await page.goto("/shop/yikes/");
     const frame = page.locator(".collection-hero-image .motion-frame");
     await expect(frame.locator("img")).toBeVisible();
     await expect(frame).toHaveClass(/is-moving/, { timeout: 15_000 });
@@ -382,7 +380,7 @@ test.describe("campaign motion", () => {
 
   test("phones get the lighter film", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/shop/mighty-micks/");
+    await page.goto("/shop/yikes/");
     const video = page.locator(".collection-hero-image video");
     await expect(video).toHaveCount(1, { timeout: 15_000 });
     await expect(video).toHaveAttribute("src", (await page.locator(".collection-hero-image .motion-frame").getAttribute("data-motion-small"))!, { timeout: 15_000 });
@@ -394,7 +392,7 @@ test("reduced motion keeps the still photos", async ({ page }) => {
   await page.waitForLoadState("load");
   await page.waitForTimeout(3000);
   await expect(page.locator(".motion-frame video")).toHaveCount(0);
-  await expect(page.locator(".hero-image figcaption .motion-note")).toBeHidden();
+  await expect(page.locator(".hero-photo video")).toBeHidden();
 });
 
 test("a product off sale stays hidden without script, and shows again if it's restored in the admin", async ({ page, browser }) => {
@@ -417,7 +415,7 @@ test("a product off sale stays hidden without script, and shows again if it's re
   await page.route("**/api/catalog/live", (route) => route.fulfill({ json: { known: true, products: [], cartLines: [], retired: [], retiredVariations: [] } }));
   await page.goto("/shop/");
   await expect(page.locator(`article[data-off-sale="${slug}"]`)).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Jump to a collection" }).getByRole("link", { name: "Pet It Be", exact: true })).toBeVisible();
+  await expect(page.locator(`article[data-off-sale="${slug}"] a`).first()).toHaveAttribute("href", `/shop/${slug}/`);
   await page.goto(`/shop/${slug}/`);
   await expect(page.locator("[data-cart-form]")).toBeVisible();
   // If the live state can't be read, the build's decision stands: a failed request,

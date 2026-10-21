@@ -4,6 +4,7 @@ import Image from "../components/EditorialImage.astro";
 import { gallery } from "../data/site";
 import manifest from "../data/images.json";
 import MotionImage from '../components/MotionImage.astro';
+import { photographedProduct } from '../data/photography';
 import { motionFor } from '../data/motion';
 import { campaignProducts, collectionSlug, collectionsInOrder, type Product } from '../data/collections';
 import { allOffSale, isOffSale } from '../../server/catalog/off-sale.mjs';
@@ -23,45 +24,32 @@ function looksFor(pieces: readonly Product[]) {
   });
 }
 const sets = collectionsInOrder().filter(([, pieces]) => pieces.length).map(([name, pieces]) => {
-  const looks = looksFor(campaignProducts(pieces));
+  const looks = looksFor(campaignProducts(pieces.map(photographedProduct)));
   return { name, slug: collectionSlug(name), looks, settings: [...new Set(looks.map(({ product }) => product.campaignSetting))].join(" / ") };
 });
 const leadCampaignImage = sets[0]?.looks[0]?.shot;
 ---
 
 <Site
-  title="Fall / Winter 2026 lookbook and brand archive"
-  description="Explore the Fall / Winter 2026 campaign, one set per collection, and the original After Hours Agenda brand archive."
+  title="The lookbook"
+  description="Explore the Fall / Winter 2026 campaign, styling ideas for graphic tees, fleece and knitwear, and the original After Hours Agenda brand archive."
   preloadImage={leadCampaignImage ? { src: leadCampaignImage.src, srcset: leadCampaignImage.srcset, sizes: "(max-width: 760px) 100vw, 33vw" } : undefined}
 >
-  <header class="page-head shell">
-    <p class="label">Fall–Winter 2026</p>
-    <h1>
-      FOR YOU.
-      <br />
-      <span class="accent">AND YOUR PEOPLE.</span>
-    </h1>
-    <p class="lede">
-      The current collection, out in the city.
-    </p>
-    <p class="status-copy">
-      Campaign mockups were created with AI. In the films, the city is real footage and the garment shots are AI-generated. Shop pages show garment views and measurements.
-    </p>
-  </header>
+  <header class="page-head shell editorial-head"><div><p class="label">The lookbook · Fall / Winter 2026</p><h1>OUT <span class="accent">&amp; ABOUT.</span></h1><p class="lede">Everyday plans. A little dressing up. Tap a photograph to find the piece.</p></div><p class="status-copy">Campaign imagery is AI-generated. Films pair licensed city footage with AI-generated garment shots. Product pages show garment views and measurements.</p></header>
   {sets.map((set, setIndex) => (
-    <section class="shell campaign-set" data-look-set aria-labelledby={`look-${set.slug}`} hidden={allOffSale(set.looks.map(({ product }) => product))}>
+    <section class="shell campaign-set lookbook-set" data-look-set aria-labelledby={`look-${set.slug}`} hidden={allOffSale(set.looks.map(({ product }) => product))}>
       <div class="section-header">
         <div>
           <p class="label">{set.settings}</p>
           <h2 id={`look-${set.slug}`}>{set.name}</h2>
         </div>
-        <a class="text-link" href={`/shop/${set.slug}/`}>Shop {set.name} →</a>
+        <a class="text-link" href={`/shop/${set.slug}/`}>Shop the pieces</a>
       </div>
       <div class="campaign-grid">
         {set.looks.map(({ product, shot }, index) => (
           <figure data-product-set={product.slug} data-off-sale={isOffSale(product.slug) ? product.slug : undefined} hidden={isOffSale(product.slug)}>
             <MotionImage image={shot} priority={setIndex === 0 && index === 0} sizes="(max-width: 760px) 100vw, 33vw" tall />
-            <a class="look-chip" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} — ${product.color}`}>Shop <span aria-hidden="true">→</span></a>
+            <a class="look-chip" href={`/shop/${product.slug}/`} aria-label={`Shop ${product.title} — ${product.color}`}>Shop </a>
             <figcaption><span class="still-note">0{index + 1} / {product.color} {product.typeLabel.toLowerCase()}</span>{motionFor(shot.src) && <span class="motion-note">{motionFor(shot.src)!.label}</span>}</figcaption>
           </figure>
         ))}

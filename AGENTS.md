@@ -2,6 +2,23 @@
 
 This is the current operating contract. It replaces dated launch narratives and does not itself authorize production writes, provider changes, payments, customer messages, ad spend, or publishing.
 
+
+## Non-negotiable customer-copy rule
+
+Owner instruction, October 20, 2026: **NO REFERENCE TO “AFTER HOURS” OR “AGENDA” IN COPY.**
+
+- Never use either term, the full brand name, or their meanings as a creative hook, pun, metaphor, headline, slogan, CTA or campaign theme. Do not infer nightlife, late nights, after dark, off-the-clock, schedules or calendars from the brand name.
+- This applies to all customer-facing website, product, SEO, email, advertising, social and campaign copy, including mockups and drafts. It is a mandatory rejection criterion, not an optional tone preference.
+- Write for the customer about the clothing: artwork, styling, fit, fabric, construction, quality and useful purchase information. No copy addressed to the director or about the internal production workflow.
+- The exact brand name is identification only: the wordmark, required legal attribution and factual metadata. It is never permission for brand-name wordplay or themed marketing prose.
+- Approved artwork, product identifiers and factual color/design names are not rewritten under this copy rule. This rule authorizes no catalog, provider or production changes.
+- Before presenting any draft, read all its customer-facing copy against this rule. Rewrite violations before showing them to the owner.
+
+
+## Website visual direction (October 20, 2026)
+
+The owner approved the photography-first website: Paper #FAFAFA, Ink #1A1A1A and Rose #FF6B6B, with accessible Rose text #CE3D56. No pink UI grounds. Preserve Poppins, JetBrains Mono, the official sheep and hairline frames. The homepage headline is “GET COMFORTABLE MAKING AN IMPRESSION.” and its primary CTA is “Shop it all”. No decorative arrows, Unicode arrows or generic arrow icons in customer-facing UI. Use clear text and verified custom assets. Editorial photography is separate from garment-only shopping galleries; never alter approved print artwork. Treat older origami and brand-name wordplay directions as superseded by these explicit owner decisions.
+
 ## Source, application, and release
 
 - Work in the current isolated task checkout only when assigned. The primary working clone is `/Users/davidmarsh/Code/LiFi NYC/Clients/After Hours Agenda/aha-website`; the registered push checkout is `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`. Preserve its branch and use it only for the guarded fetch-and-push path when a separately authorized release requires it.
@@ -13,7 +30,7 @@ This is the current operating contract. It replaces dated launch narratives and 
 ## Brand, customer content, and creative assets
 
 - The customer-facing business is **After Hours Agenda**. Do not substitute agency/client identities, invented city-origin claims, other businesses' details, or unsupported social channels. There is no TikTok work or account in scope.
-- Preserve the established paper/ink/rose system, Poppins 400/700/900, JetBrains Mono, black-sheep mark, hairline frames, and warm plain clothing-brand voice. Customer copy may not make puns on the brand name, night/time of day, or “agenda.”
+- Preserve the established paper/ink/rose system, Poppins 400/700/900, JetBrains Mono, black-sheep mark, hairline frames, and warm plain clothing-brand voice.
 - Shopping images are garment-only; campaign/editorial images remain separate. Campaign imagery is torso-only with no faces and no readable text except a garment’s own graphic (generic environmental signs allowed). Keep accurate AI/archive/provider labels and IPTC AI metadata where supplied. Check crops by eye as well as with Apple Vision: Vision finds no face in a chin without eyes (the six Mighty Mick’s photos were re-cropped to the collar on October 17 for that reason), so review a contact sheet of the top of every campaign photo.
 - The collection films use licensed Pexels city footage and locally generated torso garment clips. Keep the photo as the primary image, reduced-motion/data-saver safeguards, pause control, and real/AI caption. Recheck new garment frames for faces. A frame on screen at load gets its film layer immediately, with the photo's own file as the poster (`src/scripts/motion.ts`). Chrome then times that layer's LCP by the poster, so the film's later first frame can't make LCP late (it did in CI on PR #134). Keep it that way. The Fall 2026 advert and its YouTube-sourced footage/commercial music are not publishable.
 

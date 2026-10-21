@@ -8,15 +8,14 @@ import { brand, topics } from "../data/site";
   description="Contact After Hours Agenda for help with an existing order, a piece, fit, returns or accessibility. Prepare an email draft or write to info@afterhoursagenda.com."
 >
   <header class="page-head shell">
-    <p class="label">Real people. A real conversation.</p>
+    <p class="label">Here to help</p>
     <h1>
       TALK
       <br />
       <span class="accent">TO US.</span>
     </h1>
     <p class="lede">
-      An order question, a piece you love, or something you need a hand with. We
-      are here.
+      Help with your fit, a garment detail or an existing order. Tell us what you need.
     </p>
   </header>
   <div class="contact-layout shell">
@@ -25,7 +24,7 @@ import { brand, topics } from "../data/site";
         <div class="contact-option">
           <p class="label">Write directly</p>
           <h2 class="contact-address">
-            <a href={`mailto:${brand.email}`}>{brand.email} ↗</a>
+            <a href={`mailto:${brand.email}`}>{brand.email} </a>
           </h2>
           <p>
             No form needed. Email us with a little context and we will take it
@@ -48,7 +47,7 @@ import { brand, topics } from "../data/site";
             your order number when asking about a purchase.
           </p>
           <a class="text-link" href="/faq/">
-            Common questions →
+            Common questions
           </a>
         </div>
       </div>
@@ -141,7 +140,7 @@ import { brand, topics } from "../data/site";
           * Required. This form creates a draft. It does not submit a request.
         </p>
         <button class="button" type="submit">
-          Prepare my email <span aria-hidden="true">↗</span>
+          Prepare my email
         </button>
       </form>
       <div class="brief-result" id="brief-result" hidden>
@@ -163,7 +162,7 @@ import { brand, topics } from "../data/site";
         ></textarea>
         <div class="result-actions">
           <a id="email-draft" class="button" href={`mailto:${brand.email}`}>
-            Open email draft <span aria-hidden="true">↗</span>
+            Open email draft
           </a>
           <button class="button button-secondary" type="button" id="copy-draft">
             Copy message

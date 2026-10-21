@@ -1,3 +1,4 @@
+import { query, queryAll } from "./dom";
 // Product pages only: the full-screen photo viewer and count, the quick-add bar
 // on phones, the card shown after Add to bag, delivery estimates and the fit
 // profile. Loaded by cart.ts on demand.
@@ -24,23 +25,23 @@ function showBagPanel({ title, size, image, added, lineCents, items, subtotalCen
     bagPanel.className = "bag-panel";
     bagPanel.tabIndex = -1;
     bagPanel.setAttribute("aria-labelledby", "bag-panel-title");
-    bagPanel.innerHTML = `<div class="bag-panel-head"><p class="label" id="bag-panel-title">Added to your bag</p><button type="button" class="bag-panel-close" aria-label="Close" data-close>×</button></div><div class="bag-panel-item"><img alt="" width="72" height="90"><p><strong></strong><span></span><span></span></p></div><p class="bag-panel-total"><span></span><strong></strong></p><p class="bag-panel-arrival"></p><a class="button bag-panel-checkout" href="/checkout/">Checkout <span aria-hidden="true">→</span></a><button type="button" class="text-button" data-close>Keep shopping</button>`;
+    bagPanel.append(query<HTMLTemplateElement>(document, "#bag-content")!.content.cloneNode(true));
     document.body.append(bagPanel);
-    bagPanel.querySelectorAll("[data-close]").forEach((button) => button.addEventListener("click", closeBagPanel));
+    queryAll(bagPanel, "[data-close]").forEach((button) => button.addEventListener("click", closeBagPanel));
     document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeBagPanel(); });
     document.addEventListener("pointerdown", (event) => {
       const target = event.target as Element;
       if (bagPanel && !bagPanel.contains(target) && !target.closest?.("[data-cart-form], .buy-bar")) closeBagPanel();
     });
   }
-  bagPanel.querySelector("img")!.src = image;
-  const [name, detail, price] = bagPanel.querySelectorAll<HTMLElement>(".bag-panel-item strong, .bag-panel-item span");
+  query(bagPanel, "img")!.src = image;
+  const [name, detail, price] = queryAll<HTMLElement>(bagPanel, ".bag-panel-item strong, .bag-panel-item span");
   name!.textContent = title;
   detail!.textContent = `Size ${size} · Qty ${added}`;
   price!.textContent = MONEY.format(lineCents / 100);
-  bagPanel.querySelector(".bag-panel-total span")!.textContent = `Bag subtotal · ${items} ${items === 1 ? "item" : "items"}`;
-  bagPanel.querySelector(".bag-panel-total strong")!.textContent = MONEY.format(subtotalCents / 100);
-  bagPanel.querySelector(".bag-panel-arrival")!.textContent = deliveryLines()[0]!;
+  query(bagPanel, ".bag-panel-total span")!.textContent = `Bag subtotal · ${items} ${items === 1 ? "item" : "items"}`;
+  query(bagPanel, ".bag-panel-total strong")!.textContent = MONEY.format(subtotalCents / 100);
+  query(bagPanel, ".bag-panel-arrival")!.textContent = deliveryLines()[0]!;
   returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   bagPanel.hidden = false;
   bagPanel.focus({ preventScroll: true });
@@ -48,8 +49,8 @@ function showBagPanel({ title, size, image, added, lineCents, items, subtotalCen
 
 // Product photos: a "1 / 4" count on the phone carousel, and tap or click for a full-screen view.
 function initGallery() {
-  const gallery = document.querySelector<HTMLElement>(".product-gallery");
-  const figures = gallery ? [...gallery.querySelectorAll<HTMLElement>("figure")] : [];
+  const gallery = query<HTMLElement>(document, ".product-gallery");
+  const figures = gallery ? [...queryAll<HTMLElement>(gallery, "figure")] : [];
   if (!gallery || figures.length < 2) return;
   const counter = document.createElement("p");
   counter.className = "gallery-count";
@@ -67,22 +68,22 @@ function initGallery() {
     if (viewer) return viewer;
     const dialog = document.createElement("dialog");
     dialog.className = "photo-viewer";
-    dialog.innerHTML = `<button type="button" class="photo-viewer-close" aria-label="Close">×</button><div class="photo-viewer-frame"><img alt=""></div>`;
+    dialog.append(query<HTMLTemplateElement>(document, "#photo-content")!.content.cloneNode(true));
     document.body.append(dialog);
-    dialog.querySelector("button")!.addEventListener("click", () => dialog.close());
-    dialog.addEventListener("click", (event) => { if (event.target === dialog || event.target === dialog.querySelector(".photo-viewer-frame")) dialog.close(); });
+    query(dialog, "button")!.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => { if (event.target === dialog || event.target === query(dialog, ".photo-viewer-frame")) dialog.close(); });
     return (viewer = dialog);
   };
   figures.forEach((figure) => {
-    const image = figure.querySelector("img");
+    const image = query(figure, "img");
     if (!image) return;
     const open = document.createElement("button");
     open.type = "button";
     open.className = "photo-zoom";
-    open.setAttribute("aria-label", `Enlarge photo: ${figure.querySelector("figcaption")?.textContent ?? "view"}`);
+    open.setAttribute("aria-label", `Enlarge photo: ${query(figure, "figcaption")?.textContent ?? "view"}`);
     open.addEventListener("click", () => {
       const dialog = openViewer();
-      const large = dialog.querySelector("img")!;
+      const large = query(dialog, "img")!;
       large.alt = image.alt;
       large.sizes = "200vw";
       large.srcset = image.srcset;
@@ -99,9 +100,9 @@ function initGallery() {
 // Phones: the photos fill the first screen, so a bar along the bottom keeps the
 // price and the next step in reach until the size picker scrolls into view.
 function initBuyBar() {
-  const form = document.querySelector<HTMLFormElement>("[data-cart-form]");
-  const title = document.querySelector(".product-details h1")?.textContent?.trim();
-  const price = document.querySelector(".product-details .product-price")?.firstChild?.textContent?.trim();
+  const form = query<HTMLFormElement>(document, "[data-cart-form]");
+  const title = query(document, ".product-details h1")?.textContent?.trim();
+  const price = query(document, ".product-details .product-price")?.firstChild?.textContent?.trim();
   if (!form || !title || !price || !("IntersectionObserver" in window)) return;
   const bar = document.createElement("div");
   bar.className = "buy-bar";
@@ -118,13 +119,13 @@ function initBuyBar() {
   action.className = "button";
   bar.append(text, action);
   let added = false;
-  const selected = () => form.querySelector<HTMLInputElement>("[data-cart-variant]:checked");
-  const refresh = () => { const size = selected()?.dataset.size; action.textContent = added ? "View bag →" : size ? `Add ${size} to bag` : "Choose a size"; };
+  const selected = () => query<HTMLInputElement>(form, "[data-cart-variant]:checked");
+  const refresh = () => { const size = selected()?.dataset.size; action.textContent = added ? "View bag " : size ? `Add ${size} to bag` : "Choose a size"; };
   action.addEventListener("click", () => {
     if (added) { location.href = "/checkout/"; return; }
     if (selected()) { form.requestSubmit(); return; }
     form.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
-    form.querySelector<HTMLInputElement>("[data-cart-variant]")?.focus({ preventScroll: true });
+    query<HTMLInputElement>(form, "[data-cart-variant]")?.focus({ preventScroll: true });
   });
   form.addEventListener("change", () => { added = false; refresh(); });
   document.addEventListener("aha:cart-added", () => { added = true; refresh(); });
@@ -137,7 +138,7 @@ function initBuyBar() {
 
 // Delivery estimate under the price; the page reserves its space so nothing moves.
 function initArrival() {
-  const target = document.querySelector<HTMLElement>("[data-arrival]");
+  const target = query<HTMLElement>(document, "[data-arrival]");
   if (!target) return;
   target.replaceChildren(...deliveryLines().map((line, index) => Object.assign(document.createElement("p"), { textContent: line, className: index ? "arrival-holiday" : "" })));
 }
@@ -150,11 +151,11 @@ function readFit(): Fit | null {
   try { const value = JSON.parse(localStorage.getItem(FIT_KEY) || "null"); return value && Number.isFinite(value.chest) && Number.isFinite(value.length) ? value : null; } catch { return null; }
 }
 function sizeRows(): SizeRow[] {
-  return [...document.querySelectorAll<HTMLTableRowElement>(".size-table-wrap tbody tr")].map((row) => ({ size: row.querySelector("th")?.textContent?.trim() ?? "", chest: Number(row.cells[1]?.textContent), length: Number(row.cells[2]?.textContent) })).filter((row) => row.size && Number.isFinite(row.chest) && Number.isFinite(row.length));
+  return [...queryAll<HTMLTableRowElement>(document, ".size-table-wrap tbody tr")].map((row) => ({ size: query(row, "th")?.textContent?.trim() ?? "", chest: Number(row.cells[1]?.textContent), length: Number(row.cells[2]?.textContent) })).filter((row) => row.size && Number.isFinite(row.chest) && Number.isFinite(row.length));
 }
 function initFit() {
-  const open = document.querySelector<HTMLButtonElement>("[data-fit-open]");
-  const form = document.querySelector<HTMLFormElement>("[data-cart-form]");
+  const open = query<HTMLButtonElement>(document, "[data-fit-open]");
+  const form = query<HTMLFormElement>(document, "[data-cart-form]");
   const rows = sizeRows();
   if (!open || !form || !rows.length) return;
   let dialog: HTMLDialogElement | null = null;
@@ -162,25 +163,25 @@ function initFit() {
     const fit = readFit();
     const pick = fit ? recommendSize(rows, fit) : null;
     open.textContent = pick ? `Your size: ${pick.size}` : "Find my size";
-    form.querySelectorAll<HTMLLabelElement>(".size-options label").forEach((label) => label.classList.toggle("is-recommended", Boolean(pick) && label.querySelector<HTMLInputElement>("input")?.dataset.size === pick!.size));
+    queryAll<HTMLLabelElement>(form, ".size-options label").forEach((label) => label.classList.toggle("is-recommended", Boolean(pick) && query<HTMLInputElement>(label, "input")?.dataset.size === pick!.size));
     return { fit, pick };
   };
   const build = () => {
     const element = document.createElement("dialog");
     element.className = "fit-dialog";
     element.setAttribute("aria-labelledby", "fit-title");
-    element.innerHTML = `<form method="dialog" class="fit-form"><div class="fit-head"><h2 id="fit-title">Find your size</h2><button type="button" class="bag-panel-close" aria-label="Close" data-fit-close>×</button></div><p>Lay a top that fits you well flat. Measure straight across the chest, an inch below the armholes, and from the top of the shoulder to the hem.</p><div class="fit-fields"><label>Chest width <span>inches</span><input name="chest" type="number" inputmode="decimal" min="12" max="40" step="0.25" required></label><label>Body length <span>inches</span><input name="length" type="number" inputmode="decimal" min="16" max="40" step="0.25" required></label></div><p class="fit-result" role="status" data-fit-result></p><div class="fit-actions"><button type="submit" class="button">Show my size <span aria-hidden="true">→</span></button><button type="button" class="button button-secondary" data-fit-select hidden></button><button type="button" class="text-button" data-fit-forget hidden>Forget my measurements</button></div><p class="fit-privacy">Saved only in this browser.</p></form>`;
+    element.append(query<HTMLTemplateElement>(document, "#fit-content")!.content.cloneNode(true));
     document.body.append(element);
-    const drawing = document.querySelector(".measure-diagram")?.cloneNode(true) as SVGElement | undefined;
+    const drawing = query(document, ".measure-diagram")?.cloneNode(true) as SVGElement | undefined;
     if (drawing) {
       drawing.removeAttribute("role"); drawing.removeAttribute("aria-labelledby"); drawing.setAttribute("aria-hidden", "true");
-      drawing.querySelectorAll("title, desc").forEach((node) => node.remove());
-      element.querySelector(".fit-form > p")?.before(drawing);
+      queryAll(drawing, "title, desc").forEach((node) => node.remove());
+      query(element, ".fit-form > p")?.before(drawing);
     }
-    const fitForm = element.querySelector<HTMLFormElement>("form")!;
-    const result = element.querySelector<HTMLElement>("[data-fit-result]")!;
-    const select = element.querySelector<HTMLButtonElement>("[data-fit-select]")!;
-    const forget = element.querySelector<HTMLButtonElement>("[data-fit-forget]")!;
+    const fitForm = query<HTMLFormElement>(element, "form")!;
+    const result = query<HTMLElement>(element, "[data-fit-result]")!;
+    const select = query<HTMLButtonElement>(element, "[data-fit-select]")!;
+    const forget = query<HTMLButtonElement>(element, "[data-fit-forget]")!;
     const show = () => {
       const { fit, pick } = refresh();
       result.textContent = fit && pick ? fitSummary(pick, fit) : "";
@@ -188,7 +189,7 @@ function initFit() {
       if (pick) select.textContent = `Select ${pick.size}`;
       if (fit) { (fitForm.elements.namedItem("chest") as HTMLInputElement).value = String(fit.chest); (fitForm.elements.namedItem("length") as HTMLInputElement).value = String(fit.length); }
     };
-    element.querySelector("[data-fit-close]")!.addEventListener("click", () => element.close());
+    query(element, "[data-fit-close]")!.addEventListener("click", () => element.close());
     element.addEventListener("click", (event) => { if (event.target === element) element.close(); });
     fitForm.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -200,7 +201,7 @@ function initFit() {
     });
     select.addEventListener("click", () => {
       const { pick } = refresh();
-      const input = pick && form.querySelector<HTMLInputElement>(`[data-cart-variant][data-size="${pick.size}"]`);
+      const input = pick && query<HTMLInputElement>(form, `[data-cart-variant][data-size="${pick.size}"]`);
       if (input) { input.checked = true; input.dispatchEvent(new Event("change", { bubbles: true })); }
       element.close();
       input?.focus();
@@ -215,7 +216,7 @@ function initFit() {
 
 // Save for later: kept in this browser, and in the account when signed in.
 function initSave() {
-  const button = document.querySelector<HTMLButtonElement>("[data-save]");
+  const button = query<HTMLButtonElement>(document, "[data-save]");
   if (!button) return;
   const slug = button.dataset.save!;
   const show = () => button.setAttribute("aria-pressed", String(readSaved().includes(slug)));
@@ -225,7 +226,7 @@ function initSave() {
     const saving = button.getAttribute("aria-pressed") !== "true";
     writeSaved(saving ? [slug, ...readSaved().filter((entry) => entry !== slug)] : readSaved().filter((entry) => entry !== slug));
     show();
-    const status = document.querySelector("[data-cart-add-status]");
+    const status = query(document, "[data-cart-add-status]");
     if (status) status.innerHTML = saving ? 'Saved. <a href="/account/#saved">See your saved pieces</a>' : "Removed from your saved pieces.";
   });
 }
@@ -233,14 +234,14 @@ function initSave() {
 // Approved reviews, if there are any. None are shown otherwise.
 type Review = { rating: number; body: string; name: string | null; date: string };
 async function initReviews() {
-  const section = document.querySelector<HTMLElement>("[data-reviews]");
+  const section = query<HTMLElement>(document, "[data-reviews]");
   if (!section) return;
   try {
     const response = await fetch(`/api/reviews?product=${encodeURIComponent(section.dataset.reviews!)}`, { headers: { accept: "application/json" } });
     const data = response.ok ? await response.json() as { count: number; average: number | null; reviews: Review[] } : null;
     if (!data?.count) return;
-    section.querySelector("[data-review-summary]")!.textContent = `${data.average} out of 5 · ${data.count} ${data.count === 1 ? "review" : "reviews"}`;
-    section.querySelector("[data-review-list]")!.replaceChildren(...data.reviews.map((review) => {
+    query(section, "[data-review-summary]")!.textContent = `${data.average} out of 5 · ${data.count} ${data.count === 1 ? "review" : "reviews"}`;
+    query(section, "[data-review-list]")!.replaceChildren(...data.reviews.map((review) => {
       const item = document.createElement("li");
       const stars = Object.assign(document.createElement("p"), { className: "review-stars", textContent: "★".repeat(review.rating) + "☆".repeat(5 - review.rating) });
       stars.setAttribute("aria-label", `${review.rating} out of 5`);
@@ -253,14 +254,14 @@ async function initReviews() {
 
 // A drop not yet released: buying waits for early access (signed in) or the release.
 async function initDrop() {
-  const note = document.querySelector<HTMLElement>("[data-drop]");
+  const note = query<HTMLElement>(document, "[data-drop]");
   if (!note) return;
   const now = Date.now();
   if (now >= Date.parse(note.dataset.release!)) { note.hidden = true; return; }
   const early = now >= Date.parse(note.dataset.early!);
   const signedIn = early && await fetch("/api/account/me").then((response) => response.ok ? response.json() : {}).then((data) => Boolean((data as { signedIn?: boolean }).signedIn)).catch(() => false);
   if (signedIn) { note.textContent = "Early access is open for your account."; return; }
-  document.querySelectorAll<HTMLButtonElement>(".add-to-bag, .buy-now").forEach((button) => { button.disabled = true; });
+  queryAll<HTMLButtonElement>(document, ".add-to-bag, .buy-now").forEach((button) => { button.disabled = true; });
   note.append(" ", Object.assign(document.createElement("a"), { href: "/account/", className: "text-link", textContent: early ? "Sign in for early access" : "Create an account for early access" }));
 }
 

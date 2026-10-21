@@ -2,10 +2,10 @@ export const documents = [
   {
     "slug": "updates",
     "metaTitle": "Collection news",
-    "eyebrow": "The next chapter",
-    "title": "Stay close.",
+    "eyebrow": "New pieces",
+    "title": "Find out what’s new.",
     "description": "Get After Hours Agenda's new pieces and collection news by email, or follow along on Instagram. Free domestic shipping on everything in the shop.",
-    "lead": "New pieces, the occasional note, and what comes next.",
+    "lead": "New prints, colors and pieces by email.",
     "signup": true,
     "sections": [
       [
@@ -21,7 +21,7 @@ export const documents = [
         "Sign up above to hear about new pieces and drops. We only use your address to send After Hours Agenda news, never sell or share it, and remove it whenever you ask. For a product question, write to info@afterhoursagenda.com."
       ]
     ],
-    "action": "Follow on Instagram ↗",
+    "action": "Follow on Instagram ",
     "href": "https://www.instagram.com/afterhoursagenda"
   },
   {
@@ -57,7 +57,7 @@ export const documents = [
         "Orders placed before this release retain the shipping terms shown at the time of purchase."
       ]
     ],
-    "action": "Get order support ↗",
+    "action": "Get order support ",
     "href": "/contact/?topic=order"
   },
   {
@@ -85,7 +85,7 @@ export const documents = [
         "Previous purchases retain the terms shown when the order was placed."
       ]
     ],
-    "action": "Ask about a return ↗",
+    "action": "Ask about a return ",
     "href": "/contact/?topic=returns"
   },
   {
@@ -109,7 +109,7 @@ export const documents = [
         "Order links show status and items only: never names, addresses or payment details. Do not send card numbers, passwords or security codes. The contact page prepares an email for you to review."
       ]
     ],
-    "action": "Prepare an order question ↗",
+    "action": "Prepare an order question ",
     "href": "/contact/?topic=order"
   },
   {
@@ -137,7 +137,7 @@ export const documents = [
         "For an older product, use its original size chart. Email the item name if you need help finding it."
       ]
     ],
-    "action": "Ask about fit ↗",
+    "action": "Ask about fit ",
     "href": "/contact/?topic=product"
   },
   {
@@ -161,7 +161,7 @@ export const documents = [
         "Send support the product name and a description of the care question. A clear photo of the care label can help."
       ]
     ],
-    "action": "Ask a care question ↗",
+    "action": "Ask a care question ",
     "href": "/contact/?topic=product"
   },
   {
@@ -205,7 +205,7 @@ export const documents = [
         "For a question, access or deletion request, email info@afterhoursagenda.com. Some transaction records may need to be retained for accounting, fulfillment, dispute handling or legal obligations. External social sites, Square and carriers have their own privacy practices."
       ]
     ],
-    "action": "Contact about privacy ↗",
+    "action": "Contact about privacy ",
     "href": "/contact/?topic=general"
   },
   {
@@ -237,7 +237,7 @@ export const documents = [
         "After Hours Agenda names, marks, graphics and site content belong to their respective rights holders. Campaign mockups and archive images are labeled. Do not misuse the site, attempt unauthorized access or submit fraudulent information. Questions go to info@afterhoursagenda.com."
       ]
     ],
-    "action": "Contact support ↗",
+    "action": "Contact support ",
     "href": "/contact/"
   },
   {
@@ -246,7 +246,7 @@ export const documents = [
     "eyebrow": "Access matters",
     "title": "Room for everyone.",
     "description": "Accessibility information and a direct support path for the After Hours Agenda website. Report a barrier with the page, device and assistive technology involved.",
-    "lead": "You should be able to read the story and reach a person.",
+    "lead": "Browse the clothing, choose your size and check out with confidence.",
     "sections": [
       [
         "How this site is built",
@@ -261,7 +261,7 @@ export const documents = [
         "We check the site with tools and a keyboard. Those checks cannot cover every way people use the web. If you get stuck, email us. We can help with the task and look into the problem."
       ]
     ],
-    "action": "Report an access issue ↗",
+    "action": "Report an access issue ",
     "href": "/contact/?topic=accessibility"
   }
 ] as const;

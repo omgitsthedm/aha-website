@@ -1,0 +1,546 @@
+{
+  "mighty-micks-ss3000-navy": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/01-01-1024.webp",
+        "srcset": "/images/editorial/fw26/01-01-320.webp 320w, /images/editorial/fw26/01-01-480.webp 480w, /images/editorial/fw26/01-01-680.webp 680w, /images/editorial/fw26/01-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/01-01-1024.webp",
+        "alt": "Navy Mighty Mick’s Crewneck, front hero, in a rec gym. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "mighty-micks-ss3000-navy"
+      },
+      {
+        "src": "/images/editorial/fw26/01-03-1024.webp",
+        "srcset": "/images/editorial/fw26/01-03-320.webp 320w, /images/editorial/fw26/01-03-480.webp 480w, /images/editorial/fw26/01-03-680.webp 680w, /images/editorial/fw26/01-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/01-03-1024.webp",
+        "alt": "Navy Mighty Mick’s Crewneck, longer lens context, in a rec gym. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "mighty-micks-ss3000-navy"
+      }
+    ],
+    "setting": "recreation gym"
+  },
+  "nonna-s-sunday-supper-society-c1717-ivory": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/02-01-1024.webp",
+        "srcset": "/images/editorial/fw26/02-01-320.webp 320w, /images/editorial/fw26/02-01-480.webp 480w, /images/editorial/fw26/02-01-680.webp 680w, /images/editorial/fw26/02-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/02-01-1024.webp",
+        "alt": "Ivory Nonna’s Sunday Supper Society Tee, front hero, in a laundromat. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "nonna-s-sunday-supper-society-c1717-ivory"
+      },
+      {
+        "src": "/images/editorial/fw26/02-02-1024.webp",
+        "srcset": "/images/editorial/fw26/02-02-320.webp 320w, /images/editorial/fw26/02-02-480.webp 480w, /images/editorial/fw26/02-02-680.webp 680w, /images/editorial/fw26/02-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/02-02-1024.webp",
+        "alt": "Ivory Nonna’s Sunday Supper Society Tee, elevated angle, in a laundromat. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "nonna-s-sunday-supper-society-c1717-ivory"
+      },
+      {
+        "src": "/images/editorial/fw26/02-03-1024.webp",
+        "srcset": "/images/editorial/fw26/02-03-320.webp 320w, /images/editorial/fw26/02-03-480.webp 480w, /images/editorial/fw26/02-03-680.webp 680w, /images/editorial/fw26/02-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/02-03-1024.webp",
+        "alt": "Ivory Nonna’s Sunday Supper Society Tee, longer lens context, in a laundromat. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "nonna-s-sunday-supper-society-c1717-ivory"
+      }
+    ],
+    "setting": "laundromat"
+  },
+  "fashion-kills-3023cl-black": {
+    "style": "elevated",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/03-01-1024.webp",
+        "srcset": "/images/editorial/fw26/03-01-320.webp 320w, /images/editorial/fw26/03-01-480.webp 480w, /images/editorial/fw26/03-01-680.webp 680w, /images/editorial/fw26/03-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/03-01-1024.webp",
+        "alt": "Black Fashion Kills Boxy Tee, front hero, in a restaurant doorway. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "fashion-kills-3023cl-black"
+      },
+      {
+        "src": "/images/editorial/fw26/03-02-1024.webp",
+        "srcset": "/images/editorial/fw26/03-02-320.webp 320w, /images/editorial/fw26/03-02-480.webp 480w, /images/editorial/fw26/03-02-680.webp 680w, /images/editorial/fw26/03-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/03-02-1024.webp",
+        "alt": "Black Fashion Kills Boxy Tee, elevated angle, in a restaurant doorway. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "fashion-kills-3023cl-black"
+      },
+      {
+        "src": "/images/editorial/fw26/03-03-1024.webp",
+        "srcset": "/images/editorial/fw26/03-03-320.webp 320w, /images/editorial/fw26/03-03-480.webp 480w, /images/editorial/fw26/03-03-680.webp 680w, /images/editorial/fw26/03-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/03-03-1024.webp",
+        "alt": "Black Fashion Kills Boxy Tee, longer lens context, in a restaurant doorway. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "fashion-kills-3023cl-black"
+      }
+    ],
+    "setting": "restaurant doorway"
+  },
+  "resist-rebel-6014-midnight": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/04-01-1024.webp",
+        "srcset": "/images/editorial/fw26/04-01-320.webp 320w, /images/editorial/fw26/04-01-480.webp 480w, /images/editorial/fw26/04-01-680.webp 680w, /images/editorial/fw26/04-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/04-01-1024.webp",
+        "alt": "Midnight Resist Rebel Long Sleeve, front hero, in a elevated platform. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "resist-rebel-6014-midnight"
+      },
+      {
+        "src": "/images/editorial/fw26/04-03-1024.webp",
+        "srcset": "/images/editorial/fw26/04-03-320.webp 320w, /images/editorial/fw26/04-03-480.webp 480w, /images/editorial/fw26/04-03-680.webp 680w, /images/editorial/fw26/04-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/04-03-1024.webp",
+        "alt": "Midnight Resist Rebel Long Sleeve, longer lens context, in a elevated platform. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "resist-rebel-6014-midnight"
+      }
+    ],
+    "setting": "elevated platform"
+  },
+  "camo-sheep-ind4000-forest-camo": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/05-01-1024.webp",
+        "srcset": "/images/editorial/fw26/05-01-320.webp 320w, /images/editorial/fw26/05-01-480.webp 480w, /images/editorial/fw26/05-01-680.webp 680w, /images/editorial/fw26/05-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/05-01-1024.webp",
+        "alt": "Forest Camo Camo Sheep Hoodie, front hero, in a corner store. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1238,
+        "role": "lifestyle-hero",
+        "productSlug": "camo-sheep-ind4000-forest-camo"
+      },
+      {
+        "src": "/images/editorial/fw26/05-02-1024.webp",
+        "srcset": "/images/editorial/fw26/05-02-320.webp 320w, /images/editorial/fw26/05-02-480.webp 480w, /images/editorial/fw26/05-02-680.webp 680w, /images/editorial/fw26/05-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/05-02-1024.webp",
+        "alt": "Forest Camo Camo Sheep Hoodie, elevated angle, in a corner store. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1238,
+        "role": "lifestyle-hero",
+        "productSlug": "camo-sheep-ind4000-forest-camo"
+      }
+    ],
+    "setting": "corner store"
+  },
+  "for-the-record-ss4500-black": {
+    "style": "fashion",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/06-01-1024.webp",
+        "srcset": "/images/editorial/fw26/06-01-320.webp 320w, /images/editorial/fw26/06-01-480.webp 480w, /images/editorial/fw26/06-01-680.webp 680w, /images/editorial/fw26/06-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/06-01-1024.webp",
+        "alt": "Black For the Record Hoodie, front hero, in a music venue foyer. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "for-the-record-ss4500-black"
+      },
+      {
+        "src": "/images/editorial/fw26/06-04-1024.webp",
+        "srcset": "/images/editorial/fw26/06-04-320.webp 320w, /images/editorial/fw26/06-04-480.webp 480w, /images/editorial/fw26/06-04-680.webp 680w, /images/editorial/fw26/06-04-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/06-04-1024.webp",
+        "alt": "Black For the Record Hoodie, back print, in a music venue foyer. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "for-the-record-ss4500-black"
+      }
+    ],
+    "setting": "music venue foyer"
+  },
+  "insomniac-ss3000-black": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/07-01-1024.webp",
+        "srcset": "/images/editorial/fw26/07-01-320.webp 320w, /images/editorial/fw26/07-01-480.webp 480w, /images/editorial/fw26/07-01-680.webp 680w, /images/editorial/fw26/07-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/07-01-1024.webp",
+        "alt": "Black Insomniac Crewneck, front hero, in a apartment kitchen. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-ss3000-black"
+      },
+      {
+        "src": "/images/editorial/fw26/07-04-1024.webp",
+        "srcset": "/images/editorial/fw26/07-04-320.webp 320w, /images/editorial/fw26/07-04-480.webp 480w, /images/editorial/fw26/07-04-680.webp 680w, /images/editorial/fw26/07-04-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/07-04-1024.webp",
+        "alt": "Black Insomniac Crewneck, back print, in a apartment kitchen. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-ss3000-black"
+      }
+    ],
+    "setting": "apartment kitchen"
+  },
+  "insomniac-ss4500-black": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/09-03-1024.webp",
+        "srcset": "/images/editorial/fw26/09-03-320.webp 320w, /images/editorial/fw26/09-03-480.webp 480w, /images/editorial/fw26/09-03-680.webp 680w, /images/editorial/fw26/09-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/09-03-1024.webp",
+        "alt": "Black Insomniac Hoodie, longer lens context, in a corner store entrance. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-ss4500-black"
+      }
+    ],
+    "setting": "corner store entrance"
+  },
+  "insomniac-next-level-3601-black": {
+    "style": "elevated",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/11-04-1024.webp",
+        "srcset": "/images/editorial/fw26/11-04-320.webp 320w, /images/editorial/fw26/11-04-480.webp 480w, /images/editorial/fw26/11-04-680.webp 680w, /images/editorial/fw26/11-04-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/11-04-1024.webp",
+        "alt": "Black Insomniac Long Sleeve, back print, in a pool hall. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-next-level-3601-black"
+      }
+    ],
+    "setting": "pool hall"
+  },
+  "insomniac-comfort-colors-4410-grey": {
+    "style": "elevated",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/14-02-1024.webp",
+        "srcset": "/images/editorial/fw26/14-02-320.webp 320w, /images/editorial/fw26/14-02-480.webp 480w, /images/editorial/fw26/14-02-680.webp 680w, /images/editorial/fw26/14-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/14-02-1024.webp",
+        "alt": "Grey Insomniac Pocket Long Sleeve, elevated angle, in a bakery. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "insomniac-comfort-colors-4410-grey"
+      }
+    ],
+    "setting": "bakery"
+  },
+  "and-all-that-jazz-3023cl-butter": {
+    "style": "fashion",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/16-01-1024.webp",
+        "srcset": "/images/editorial/fw26/16-01-320.webp 320w, /images/editorial/fw26/16-01-480.webp 480w, /images/editorial/fw26/16-01-680.webp 680w, /images/editorial/fw26/16-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/16-01-1024.webp",
+        "alt": "Butter And All That Jazz Boxy Tee, front hero, in a gallery. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1434,
+        "role": "lifestyle-hero",
+        "productSlug": "and-all-that-jazz-3023cl-butter"
+      },
+      {
+        "src": "/images/editorial/fw26/16-03-1024.webp",
+        "srcset": "/images/editorial/fw26/16-03-320.webp 320w, /images/editorial/fw26/16-03-480.webp 480w, /images/editorial/fw26/16-03-680.webp 680w, /images/editorial/fw26/16-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/16-03-1024.webp",
+        "alt": "Butter And All That Jazz Boxy Tee, longer lens context, in a gallery. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "and-all-that-jazz-3023cl-butter"
+      }
+    ],
+    "setting": "gallery"
+  },
+  "camo-sheep-ind4000-snow-camo": {
+    "style": "fashion",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/19-01-1024.webp",
+        "srcset": "/images/editorial/fw26/19-01-320.webp 320w, /images/editorial/fw26/19-01-480.webp 480w, /images/editorial/fw26/19-01-680.webp 680w, /images/editorial/fw26/19-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/19-01-1024.webp",
+        "alt": "Snow Camo Camo Sheep Hoodie, front hero, in a ferry deck. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "camo-sheep-ind4000-snow-camo"
+      },
+      {
+        "src": "/images/editorial/fw26/19-02-1024.webp",
+        "srcset": "/images/editorial/fw26/19-02-320.webp 320w, /images/editorial/fw26/19-02-480.webp 480w, /images/editorial/fw26/19-02-680.webp 680w, /images/editorial/fw26/19-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/19-02-1024.webp",
+        "alt": "Snow Camo Camo Sheep Hoodie, elevated angle, in a ferry deck. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1536,
+        "role": "lifestyle-hero",
+        "productSlug": "camo-sheep-ind4000-snow-camo"
+      }
+    ],
+    "setting": "ferry deck"
+  },
+  "yikes-cropped-hoodie": {
+    "style": "elevated",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/29-01-1024.webp",
+        "srcset": "/images/editorial/fw26/29-01-320.webp 320w, /images/editorial/fw26/29-01-480.webp 480w, /images/editorial/fw26/29-01-680.webp 680w, /images/editorial/fw26/29-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/29-01-1024.webp",
+        "alt": "Bone Yikes! Cropped Hoodie, front hero, in a pizzeria. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "yikes-cropped-hoodie"
+      },
+      {
+        "src": "/images/editorial/fw26/29-02-1024.webp",
+        "srcset": "/images/editorial/fw26/29-02-320.webp 320w, /images/editorial/fw26/29-02-480.webp 480w, /images/editorial/fw26/29-02-680.webp 680w, /images/editorial/fw26/29-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/29-02-1024.webp",
+        "alt": "Bone Yikes! Cropped Hoodie, elevated angle, in a pizzeria. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "yikes-cropped-hoodie"
+      },
+      {
+        "src": "/images/editorial/fw26/29-03-1024.webp",
+        "srcset": "/images/editorial/fw26/29-03-320.webp 320w, /images/editorial/fw26/29-03-480.webp 480w, /images/editorial/fw26/29-03-680.webp 680w, /images/editorial/fw26/29-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/29-03-1024.webp",
+        "alt": "Bone Yikes! Cropped Hoodie, longer lens context, in a pizzeria. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 683,
+        "role": "lifestyle-hero",
+        "productSlug": "yikes-cropped-hoodie"
+      }
+    ],
+    "setting": "pizzeria"
+  },
+  "and-all-that-jazz-ss3000-light-pink": {
+    "style": "elevated",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/30-01-1024.webp",
+        "srcset": "/images/editorial/fw26/30-01-320.webp 320w, /images/editorial/fw26/30-01-480.webp 480w, /images/editorial/fw26/30-01-680.webp 680w, /images/editorial/fw26/30-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/30-01-1024.webp",
+        "alt": "Light Pink And All That Jazz Crewneck, front close, in a theater entrance. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
+      },
+      {
+        "src": "/images/editorial/fw26/30-02-1024.webp",
+        "srcset": "/images/editorial/fw26/30-02-320.webp 320w, /images/editorial/fw26/30-02-480.webp 480w, /images/editorial/fw26/30-02-680.webp 680w, /images/editorial/fw26/30-02-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/30-02-1024.webp",
+        "alt": "Light Pink And All That Jazz Crewneck, elevated diagonal, in a theater entrance. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
+      },
+      {
+        "src": "/images/editorial/fw26/30-03-1024.webp",
+        "srcset": "/images/editorial/fw26/30-03-320.webp 320w, /images/editorial/fw26/30-03-480.webp 480w, /images/editorial/fw26/30-03-680.webp 680w, /images/editorial/fw26/30-03-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/30-03-1024.webp",
+        "alt": "Light Pink And All That Jazz Crewneck, low three quarter, in a theater entrance. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
+      },
+      {
+        "src": "/images/editorial/fw26/30-04-1024.webp",
+        "srcset": "/images/editorial/fw26/30-04-320.webp 320w, /images/editorial/fw26/30-04-480.webp 480w, /images/editorial/fw26/30-04-680.webp 680w, /images/editorial/fw26/30-04-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/30-04-1024.webp",
+        "alt": "Light Pink And All That Jazz Crewneck, longer lens, in a theater entrance. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "and-all-that-jazz-ss3000-light-pink"
+      }
+    ],
+    "setting": "theater entrance"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-black": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/31-01-1024.webp",
+        "srcset": "/images/editorial/fw26/31-01-320.webp 320w, /images/editorial/fw26/31-01-480.webp 480w, /images/editorial/fw26/31-01-680.webp 680w, /images/editorial/fw26/31-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/31-01-1024.webp",
+        "alt": "Black After Hours Agenda Heritage Beanie, cuff hero, in a subway entrance. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1282,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-black"
+      }
+    ],
+    "setting": "subway entrance"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-blaze-orange": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/32-01-1024.webp",
+        "srcset": "/images/editorial/fw26/32-01-320.webp 320w, /images/editorial/fw26/32-01-480.webp 480w, /images/editorial/fw26/32-01-680.webp 680w, /images/editorial/fw26/32-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/32-01-1024.webp",
+        "alt": "Blaze Orange After Hours Agenda Heritage Beanie, cuff hero, in a workshop doorway. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-blaze-orange"
+      }
+    ],
+    "setting": "workshop doorway"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-camel": {
+    "style": "elevated",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/33-01-1024.webp",
+        "srcset": "/images/editorial/fw26/33-01-320.webp 320w, /images/editorial/fw26/33-01-480.webp 480w, /images/editorial/fw26/33-01-680.webp 680w, /images/editorial/fw26/33-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/33-01-1024.webp",
+        "alt": "Camel After Hours Agenda Heritage Beanie, cuff hero, in a flower stand. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-camel"
+      }
+    ],
+    "setting": "flower stand"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-forest-green": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/36-01-1024.webp",
+        "srcset": "/images/editorial/fw26/36-01-320.webp 320w, /images/editorial/fw26/36-01-480.webp 480w, /images/editorial/fw26/36-01-680.webp 680w, /images/editorial/fw26/36-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/36-01-1024.webp",
+        "alt": "Forest Green After Hours Agenda Heritage Beanie, cuff hero, in a laundromat. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-forest-green"
+      }
+    ],
+    "setting": "laundromat"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-fuchsia": {
+    "style": "fashion",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/37-01-1024.webp",
+        "srcset": "/images/editorial/fw26/37-01-320.webp 320w, /images/editorial/fw26/37-01-480.webp 480w, /images/editorial/fw26/37-01-680.webp 680w, /images/editorial/fw26/37-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/37-01-1024.webp",
+        "alt": "Fuchsia After Hours Agenda Heritage Beanie, cuff hero, in a karaoke hallway. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1282,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-fuchsia"
+      }
+    ],
+    "setting": "karaoke hallway"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-gold": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/38-01-1024.webp",
+        "srcset": "/images/editorial/fw26/38-01-320.webp 320w, /images/editorial/fw26/38-01-480.webp 480w, /images/editorial/fw26/38-01-680.webp 680w, /images/editorial/fw26/38-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/38-01-1024.webp",
+        "alt": "Gold After Hours Agenda Heritage Beanie, cuff hero, in a grocery. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1282,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-gold"
+      }
+    ],
+    "setting": "grocery"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-navy": {
+    "style": "elevated",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/41-01-1024.webp",
+        "srcset": "/images/editorial/fw26/41-01-320.webp 320w, /images/editorial/fw26/41-01-480.webp 480w, /images/editorial/fw26/41-01-680.webp 680w, /images/editorial/fw26/41-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/41-01-1024.webp",
+        "alt": "Navy After Hours Agenda Heritage Beanie, cuff hero, in a bookshop doorway. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1282,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-navy"
+      }
+    ],
+    "setting": "bookshop doorway"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-pink": {
+    "style": "fashion",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/42-01-1024.webp",
+        "srcset": "/images/editorial/fw26/42-01-320.webp 320w, /images/editorial/fw26/42-01-480.webp 480w, /images/editorial/fw26/42-01-680.webp 680w, /images/editorial/fw26/42-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/42-01-1024.webp",
+        "alt": "Pink After Hours Agenda Heritage Beanie, cuff hero, in a gallery doorway. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-pink"
+      }
+    ],
+    "setting": "gallery doorway"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-royal-blue": {
+    "style": "everyday",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/44-01-1024.webp",
+        "srcset": "/images/editorial/fw26/44-01-320.webp 320w, /images/editorial/fw26/44-01-480.webp 480w, /images/editorial/fw26/44-01-680.webp 680w, /images/editorial/fw26/44-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/44-01-1024.webp",
+        "alt": "Royal Blue After Hours Agenda Heritage Beanie, cuff hero, in a evening walk. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1282,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-royal-blue"
+      }
+    ],
+    "setting": "evening walk"
+  },
+  "after-hours-agenda-heritage-beanie-sp12-white": {
+    "style": "elevated",
+    "photos": [
+      {
+        "src": "/images/editorial/fw26/45-01-1024.webp",
+        "srcset": "/images/editorial/fw26/45-01-320.webp 320w, /images/editorial/fw26/45-01-480.webp 480w, /images/editorial/fw26/45-01-680.webp 680w, /images/editorial/fw26/45-01-1024.webp 1024w",
+        "feedImage": "/images/editorial/fw26/45-01-1024.webp",
+        "alt": "White After Hours Agenda Heritage Beanie, cuff hero, in a ferry waiting area. AI-generated campaign photograph.",
+        "width": 1024,
+        "height": 1280,
+        "role": "lifestyle-hero",
+        "productSlug": "after-hours-agenda-heritage-beanie-sp12-white"
+      }
+    ],
+    "setting": "ferry waiting area"
+  }
+}

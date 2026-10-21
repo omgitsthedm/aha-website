@@ -8,11 +8,11 @@ import { answers } from "../data/site";
   description="Answers about sizing, made-to-order garments, free domestic shipping, returns and existing After Hours Agenda orders."
 >
   <header class="page-head shell">
-    <p class="label">A little clarity</p>
+    <p class="label">Here to help</p>
     <h1>
-      QUESTIONS,
+      A LITTLE
       <br />
-      <span class="accent">ANSWERED.</span>
+      <span class="accent">CLARITY.</span>
     </h1>
     <p class="lede">
       Find the measurements, shipping details and order help you need.
@@ -27,7 +27,7 @@ import { answers } from "../data/site";
             <span aria-hidden="true">+</span>
           </summary>
           <p>{item.a}</p>
-          <p><a href={item.href}>{item.label} {item.href.startsWith("http") ? "↗" : "→"}</a></p>
+          <p><a href={item.href}>{item.label} {item.href.startsWith("http") ? "" : ""}</a></p>
         </details>
       ))}
     </div>

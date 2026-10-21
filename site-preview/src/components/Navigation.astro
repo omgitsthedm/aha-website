@@ -1,0 +1,40 @@
+---
+import { brand } from '../data/site';
+import products from '../data/products.json';
+import { garmentGroup } from '../../server/catalog/garments.mjs';
+import { onSale } from '../../server/catalog/off-sale.mjs';
+const { path = '/' } = Astro.props;
+const categories = [['all', 'Shop it all'], ['tees', 'Tees'], ['hoodies', 'Hoodies'], ['crewnecks', 'Crewnecks'], ['long-sleeves', 'Long sleeves'], ['beanies', 'Beanies']];
+const active = onSale(products) as typeof products;
+const counts = new Map(categories.map(([key]) => [key, active.filter(p => key === 'all' || garmentGroup(p.typeLabel) === key).length]));
+---
+<div class="site-header-bar" data-header-bar>
+  <div class="benefit-bar"><a href="/shipping/">Free U.S. shipping</a><span>Printed to order. Made to keep.</span><a href="/size-guide/">Size &amp; fit help</a></div>
+  <header class="site-header shell">
+    <a class="identity" href="/" aria-label="After Hours Agenda home"><img src="/brand/sheep.svg" width="46" height="36" alt="" /><span>AFTER HOURS<br />AGENDA</span></a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <button class="nav-shop" type="button" data-open-menu aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">Shop <span aria-hidden="true">+</span></button>
+      <a href="/lookbook/" aria-current={path === '/lookbook/' ? 'page' : undefined}>Lookbook</a>
+      <a href="/about/" aria-current={path === '/about/' ? 'page' : undefined}>The story</a>
+      <a href="/faq/" aria-current={path === '/faq/' ? 'page' : undefined}>Here to help</a>
+    </nav>
+    <div class="header-tools">
+      <a class="header-account" href="/account/" aria-current={path === '/account/' ? 'page' : undefined}>Account</a>
+      <a class="header-cart" href="/checkout/" data-cart-link aria-label="Bag, 0 items">Bag <span data-cart-count aria-hidden="true">0</span></a>
+      <button class="menu-button" type="button" data-open-menu aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">Menu <span aria-hidden="true">+</span></button>
+    </div>
+    <noscript><style>.site-header .menu-button,.nav-shop{display:none}</style><details class="no-script-nav"><summary>Menu</summary><nav aria-label="Browse"><a href="/shop/">Shop it all</a><a href="/lookbook/">Lookbook</a><a href="/faq/">Help</a><a href="/account/">Account</a></nav></details></noscript>
+    <span class="reading-progress" aria-hidden="true"></span>
+  </header>
+</div>
+<dialog id="site-menu" class="navigation-dialog" aria-labelledby="menu-title">
+  <div class="menu-top"><h2 id="menu-title">Find your fit.</h2><button type="button" class="menu-close" data-close-menu autofocus>Close <span aria-hidden="true">×</span></button></div>
+  <form class="menu-search" role="search" action="/shop/"><label for="piece-search">Find a piece</label><input id="piece-search" name="q" type="search" autocomplete="off" placeholder="Try a tee, hoodie or design" aria-controls="menu-results" /><p id="menu-result-status" role="status" aria-live="polite"></p></form>
+  <div id="menu-results" class="menu-results" hidden>{active.map(piece => <a href={`/shop/${piece.slug}/`} data-menu-piece={piece.slug} data-query={`${piece.title} ${piece.color} ${piece.typeLabel}`.toLowerCase()} hidden><img data-src={piece.gallery[0]!.srcset.split(',')[0]!.trim().split(/\s+/)[0]} alt="" width="72" height="90" /><span><strong>{piece.title}</strong><small>{piece.color} · ${piece.price}</small></span></a>)}</div>
+  <div id="menu-browse"><nav class="menu-garments" aria-label="Shop by garment">{categories.map(([key, label]) => <a href={key === 'all' ? '/shop/' : `/shop/?type=${key}`}>{label}<span>{counts.get(key)}</span></a>)}</nav>
+    <a class="menu-feature" href="/shop/yikes-cropped-hoodie/"><span class="menu-feature-mark" aria-hidden="true"><img src="/brand/sheep.svg" width="70" height="55" alt="" loading="lazy" /></span><span><strong>A shorter silhouette.</strong><span>Cropped fleece in Bone · $55</span></span></a>
+  </div>
+  <nav class="menu-help" aria-label="More to explore"><a href="/lookbook/">Lookbook</a><a href="/size-guide/">Size &amp; fit</a><a href="/shipping/">Shipping</a><a href="/returns/">Returns</a><a href="/account/">Your account</a><a href="/contact/">Contact</a><a href="/about/">Our story</a><a href={brand.giftCards}>Gift cards</a></nav>
+  <p class="menu-shipping">Free U.S. shipping on every order.</p>
+</dialog>
+<script src="../scripts/navigation.ts"></script>

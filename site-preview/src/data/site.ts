@@ -10,7 +10,7 @@ export const brand = {
   instagram: "https://www.instagram.com/afterhoursagenda",
   facebook: "https://www.facebook.com/afterhoursagenda/",
   verified: "2026-10-09",
-  line: "For the dreamers and the doers.",
+  line: "Graphic tees, fleece and ribbed knitwear.",
   // Square's own eGift card shop for this account: Square takes payment, emails
   // the card and owns the card terms. Cards are redeemed at checkout here.
   giftCards: "https://app.squareup.com/gift/1K2RDK7ZPFZXW/order",
@@ -45,7 +45,7 @@ export const answers = [
   },
   {
     q: "What is After Hours Agenda?",
-    a: "A clothing brand for the dreamers and the doers, since 2011.",
+    a: "Independent graphic clothing, established in 2011.",
     href: "/about/",
     label: "Read the story",
   },
@@ -90,7 +90,7 @@ export const gallery = [
   {
     image: "2012-the-after-hours-agenda-tee",
     alt: "The first After Hours Agenda wordmark tee from the 2012 brand archive.",
-    caption: "Where the name began.",
+    caption: "The original wordmark tee.",
     note: "Brand archive · 2012",
     kind: "portrait",
   },

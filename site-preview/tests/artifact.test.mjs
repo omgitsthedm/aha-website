@@ -106,7 +106,7 @@ test("sitemap, crawler policy and summary match the release mode", async () => {
 test("the manifesto lives in The story and its old address redirects there", async () => {
   const about = await readFile(new URL("about/index.html", root), "utf8");
   assert.match(about, /id="manifesto"/);
-  for (const tenet of ["Work hard. Love hard.", "Celebrate.", "Be kind.", "Find your people."])
+  for (const tenet of ["Wear it your way.", "Check the fit.", "Look closer.", "Keep it in rotation."])
     assert.ok(about.includes(`<h3>${tenet}</h3>`), tenet);
   await assert.rejects(stat(new URL("manifesto/index.html", root)));
   const redirects = await readFile(new URL("_redirects", root), "utf8");

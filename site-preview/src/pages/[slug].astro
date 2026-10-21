@@ -2,6 +2,9 @@
 import Site from "../layouts/Site.astro";
 import { documents } from "../data/documents";
 import EmailSignup from "../components/EmailSignup.astro";
+import ProductImage from "../components/ProductImage.astro";
+import products from "../data/products.json";
+import { photosFor } from "../data/photography";
 export function getStaticPaths() {
   return documents.map((document) => ({
     params: { slug: document.slug },
@@ -9,6 +12,8 @@ export function getStaticPaths() {
   }));
 }
 const { document } = Astro.props;
+const visual = ['updates', 'shipping', 'returns', 'track-order', 'size-guide', 'care'].includes(document.slug);
+const piece = products.find(product => product.slug === 'yikes-cropped-hoodie')!;
 ---
 
 <Site title={document.metaTitle} description={document.description}>
@@ -18,7 +23,7 @@ const { document } = Astro.props;
     <p class="lede">{document.lead}</p>
     {"signup" in document && document.signup && <div class="signup-panel"><EmailSignup source={document.slug} label="Get new drops by email" /></div>}
   </header>
-  <article class="reading shell">
+  <div class:list={["shell", { "support-layout": visual }]}><article class:list={["reading", { "shell": !visual }]}>
     {document.sections.map(([title, body]) => (
       <section>
         <h2>{title}</h2>
@@ -30,8 +35,8 @@ const { document } = Astro.props;
         {document.action}
       </a>
       <a class="text-link" href="/faq/">
-        Common questions →
+        Common questions
       </a>
     </div>
-  </article>
+  </article>{visual && <aside class="support-photo"><figure><a href={`/shop/${piece.slug}/`}><ProductImage image={photosFor(piece)[0]!} sizes="(max-width:760px) 100vw, 35vw" /></a><figcaption>{piece.title} · {piece.color} · AI-generated campaign</figcaption></figure><nav class="support-links" aria-label="Shopping help"><a href="/shop/">Shop it all</a><a href="/size-guide/">Size &amp; fit</a><a href="/shipping/">Shipping</a><a href="/returns/">Returns</a><a href="/contact/">Contact</a></nav></aside>}</div>
 </Site>

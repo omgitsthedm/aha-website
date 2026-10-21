@@ -1,5 +1,6 @@
 ---
 import placeholders from '../data/placeholders.json';
+import avif from '../data/avif.json';
 interface Props {
   image: {src:string; srcset:string; alt:string; width:number; height:number};
   priority?: boolean;
@@ -11,5 +12,6 @@ const {image,priority=false,sizes='(max-width: 760px) 100vw, 50vw',name}=Astro.p
 // Campaign photos paint their own two-tone placeholder while loading (tools/images/placeholders.mjs).
 const tone = (placeholders as Record<string, string[]>)[image.src];
 const style = [tone && `background:linear-gradient(${tone[0]},${tone[1]})`, name && `view-transition-name:${name}`].filter(Boolean).join(';') || undefined;
+const avifSrcset = (avif as Record<string, string>)[image.src];
 ---
-<img src={image.src} srcset={image.srcset} sizes={sizes} alt={image.alt} width={image.width} height={image.height} loading={priority?'eager':'lazy'} fetchpriority={priority?'high':'low'} decoding={priority?'sync':'async'} style={style} />
+<picture>{avifSrcset && <source type="image/avif" srcset={avifSrcset} sizes={sizes} />}<img src={image.src} srcset={image.srcset} sizes={sizes} alt={image.alt} width={image.width} height={image.height} loading={priority?'eager':'lazy'} fetchpriority={priority?'high':'low'} decoding={priority?'sync':'async'} style={style} /></picture>

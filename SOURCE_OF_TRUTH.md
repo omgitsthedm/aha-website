@@ -1,6 +1,13 @@
 # After Hours Agenda source of truth
 
-## Verified current state — October 18, 2026
+## Website contract — October 20, 2026
+
+- The active Astro storefront and exact Netlify identity below remain authoritative. The approved website direction is Paper, Ink and Rose with photography-led layouts, the headline “GET COMFORTABLE MAKING AN IMPRESSION.” and “Shop it all”. `docs/AHA-DESIGN-SYSTEM.md` and the copy/iconography rules in `AGENTS.md` carry the current contract.
+- The committed catalog source contains 46 on-sale garment/color products and 222 on-sale size variants; one retired product remains hidden for account history and restore controls. This is source inventory, not a fresh claim about channel approvals.
+- Current campaign photographs are registered in `site-preview/src/data/photography.json`. They replace editorial views only; garment-only galleries and provider/checkout data remain intact. Supplied AI metadata is retained in responsive WebP/AVIF display exports.
+- Verify deployment from the exact site's current published deploy, GitHub `main` and `/release.json`. Older snapshots below are dated evidence and do not establish current channel or purchase status.
+
+## Historical verification snapshot — October 18, 2026
 
 - Production is sourced from `omgitsthedm/aha-website` `main`. Read `/release.json` and the exact site's published deploy for its current commit and artifact digest rather than relying on a commit copied into a document.
 - The exact production Netlify site is `275b4115-16bf-42fb-9b36-6bce9bb93608`, primary host `https://afterhoursagenda.com`. The active application is `site-preview/` (Astro); the root Next.js application is preserved historical source.
