@@ -216,6 +216,8 @@ test("the lookbook has apparel shoots without location tags or knitwear, with ev
   await expect(sets.locator("h2")).toHaveText(names);
   await expect(sets.locator('.section-header .label')).toHaveCount(0);
   await expect(sets.locator('[data-product-set^="after-hours-agenda-heritage-beanie-"]')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'From the beginning.' })).toHaveCount(0);
+  await expect(page.locator('.gallery')).toHaveCount(0);
   for (const set of await sets.all()) {
     await expect(set.locator("figure")).toHaveCount(3);
     await expect(set.locator(".look-chip")).toHaveCount(3);
@@ -400,14 +402,16 @@ test.describe("campaign motion", () => {
     await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(false);
   });
 
-  test("the full-screen phone lookbook gets the film cut for its crop", async ({ page }) => {
+  test("the phone lookbook stays photography only even when motion is allowed", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
+    const media: string[] = [];
+    page.on('request', request => { if (/\.(mp4|webm)(\?|$)/.test(request.url())) media.push(request.url()); });
     await page.goto("/lookbook/");
-    const frame = page.locator(".campaign-set .motion-frame[data-motion]").first();
-    await frame.scrollIntoViewIfNeeded();
-    await expect(frame.locator("video")).toHaveCount(1, { timeout: 15_000 });
-    expect(await frame.getAttribute("data-motion-small")).toMatch(/-600t\.mp4$/);
-    await expect(frame.locator("video")).toHaveAttribute("src", (await frame.getAttribute("data-motion-small"))!, { timeout: 15_000 });
+    await page.locator('.campaign-set picture').first().scrollIntoViewIfNeeded();
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('.campaign-set img').first()).toBeVisible();
+    await expect(page.locator('video, [data-motion], .motion-note')).toHaveCount(0);
+    expect(media).toEqual([]);
   });
 
   test("phones get the lighter film", async ({ page }) => {
