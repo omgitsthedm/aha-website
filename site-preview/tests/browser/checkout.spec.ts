@@ -131,12 +131,18 @@ test("checkout: a failed privacy withdrawal is retried after navigation", async 
   await page.getByRole("button", { name: "Confirm total" }).click();
   await expect.poll(() => page.evaluate(() => localStorage.getItem("aha-checkout-marketing-receipts-v1"))).not.toBeNull();
   await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
+  // A saved choice reloads the page after giving the withdrawal 250 ms; a goto
+  // issued during that reload is aborted, so wait for it like the test below.
+  const reload = page.waitForNavigation({ waitUntil: "domcontentloaded" });
   await page.getByRole("button", { name: "Analytics only", exact: true }).click();
-  await expect.poll(() => privacyBodies.length).toBe(1);
-  // The failed same-origin withdrawal leaves a receipt locally; a later page
-  // load, rather than a timer retry, must submit that receipt once.
-  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await reload;
+  // The failed same-origin withdrawal leaves a receipt locally; the next page
+  // load, rather than a timer retry, submits that receipt once, and a further
+  // load does not submit it again.
   await expect.poll(() => privacyBodies.length).toBe(2);
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await page.waitForLoadState("networkidle");
+  expect(privacyBodies.length).toBe(2);
   expect(privacyBodies).toEqual([
     { checkouts: [{ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token" }], analytics: true, marketing: false, gpc: false },
     { checkouts: [{ checkoutId: "checkout_test_1", checkoutToken: "safe-checkout-token" }], analytics: true, marketing: false, gpc: false },
