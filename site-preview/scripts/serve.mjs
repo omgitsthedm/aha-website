@@ -27,6 +27,7 @@ const mime = {
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".webp": "image/webp",
+  ".avif": "image/avif",
   ".woff2": "font/woff2",
   ".json": "application/json",
   ".webmanifest": "application/manifest+json",

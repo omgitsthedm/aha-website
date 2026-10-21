@@ -1,3 +1,4 @@
+import { query, queryAll } from "./dom";
 import { recoverSelection, type SelectionVariant } from "./selection";
 import { catalogState, hideRetiredCards } from "./catalog-state";
 import offSale from "../data/off-sale.json";
@@ -61,7 +62,7 @@ function safeRead(): unknown[] {
   } catch { return []; }
 }
 function catalogueFrom(root: ParentNode = document): CatalogLine[] {
-  return [...root.querySelectorAll<HTMLElement>("[data-cart-catalog]")].flatMap((node) => {
+  return [...queryAll<HTMLElement>(root, "[data-cart-catalog]")].flatMap((node) => {
     const id = node.dataset.id || "";
     const sku = node.dataset.sku || "";
     const size = node.dataset.size || "";
@@ -149,28 +150,28 @@ function emitVerifiedPurchase(orderId: string | undefined, summary: PurchaseSumm
 
 function updateCartLinks(lines: CartLine[]) {
   const itemCount = count(lines);
-  document.querySelectorAll<HTMLElement>("[data-cart-count]").forEach((node) => node.textContent = String(itemCount));
-  document.querySelectorAll<HTMLAnchorElement>("[data-cart-link]").forEach((node) => {
+  queryAll<HTMLElement>(document, "[data-cart-count]").forEach((node) => node.textContent = String(itemCount));
+  queryAll<HTMLAnchorElement>(document, "[data-cart-link]").forEach((node) => {
     node.setAttribute("aria-label", `Bag, ${itemCount} ${itemCount === 1 ? "item" : "items"}`);
   });
 }
 function activeCatalogue(): CatalogLine[] { return catalogueFrom(document); }
 
 function bumpCount() {
-  document.querySelectorAll<HTMLElement>("[data-cart-count]").forEach((node) => { node.classList.remove("is-bumped"); void node.offsetWidth; node.classList.add("is-bumped"); });
+  queryAll<HTMLElement>(document, "[data-cart-count]").forEach((node) => { node.classList.remove("is-bumped"); void node.offsetWidth; node.classList.add("is-bumped"); });
 }
 
 function initAddForms() {
-  document.querySelectorAll<HTMLFormElement>("[data-cart-form]").forEach((form) => {
-    const status = form.querySelector<HTMLElement>("[data-cart-add-status]");
+  queryAll<HTMLFormElement>(document, "[data-cart-form]").forEach((form) => {
+    const status = query<HTMLElement>(form, "[data-cart-add-status]");
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       const buyNow = (event as SubmitEvent).submitter?.hasAttribute("data-buy-now") ?? false;
-      const selected = form.querySelector<HTMLInputElement>("[data-cart-variant]:checked");
-      const quantity = Number(form.querySelector<HTMLInputElement>("[data-cart-quantity]")?.value);
+      const selected = query<HTMLInputElement>(form, "[data-cart-variant]:checked");
+      const quantity = Number(query<HTMLInputElement>(form, "[data-cart-quantity]")?.value);
       if (!selected) {
         if (status) status.textContent = "Choose a size before adding this piece.";
-        form.querySelector<HTMLElement>("[data-cart-variant]")?.focus();
+        query<HTMLElement>(form, "[data-cart-variant]")?.focus();
         return;
       }
       if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY) {
@@ -232,20 +233,20 @@ function squareContact(address: ReturnType<typeof shippingAddress>) {
 function cartFingerprint(lines: CartLine[], form: HTMLFormElement) {
   return JSON.stringify({ lines: lines.map(({ variationId, quantity }) => [variationId, quantity]), address: shippingAddress(form) });
 }
-function setText(root: ParentNode, selector: string, value: string) { const node = root.querySelector<HTMLElement>(selector); if (node) node.textContent = value; }
-function disable(root: ParentNode, selector: string, value: boolean) { root.querySelectorAll<HTMLButtonElement>(selector).forEach((node) => node.disabled = value); }
+function setText(root: ParentNode, selector: string, value: string) { const node = query<HTMLElement>(root, selector); if (node) node.textContent = value; }
+function disable(root: ParentNode, selector: string, value: boolean) { queryAll<HTMLButtonElement>(root, selector).forEach((node) => node.disabled = value); }
 
 function initCheckout() {
-  const page = document.querySelector<HTMLElement>("[data-checkout-page]");
+  const page = query<HTMLElement>(document, "[data-checkout-page]");
   if (!page) return;
   const catalogue = catalogueFrom(page);
-  const form = page.querySelector<HTMLFormElement>("[data-checkout-form]");
-  const cartLines = page.querySelector<HTMLElement>("[data-cart-lines]");
-  const empty = page.querySelector<HTMLElement>("[data-cart-empty]");
-  const checkout = page.querySelector<HTMLElement>("[data-checkout-panel]");
-  const message = page.querySelector<HTMLElement>("[data-checkout-message]");
-  const summary = page.querySelector<HTMLElement>("[data-checkout-summary]");
-  const checkPaymentStatus = page.querySelector<HTMLButtonElement>("[data-check-payment-status]");
+  const form = query<HTMLFormElement>(page, "[data-checkout-form]");
+  const cartLines = query<HTMLElement>(page, "[data-cart-lines]");
+  const empty = query<HTMLElement>(page, "[data-cart-empty]");
+  const checkout = query<HTMLElement>(page, "[data-checkout-panel]");
+  const message = query<HTMLElement>(page, "[data-checkout-message]");
+  const summary = query<HTMLElement>(page, "[data-checkout-summary]");
+  const checkPaymentStatus = query<HTMLButtonElement>(page, "[data-check-payment-status]");
   if (!form || !cartLines || !empty || !checkout || !message || !summary) return;
   let lines = readCart(catalogue);
   const recovered = recoverSelection(location.search, catalogue);
@@ -275,29 +276,29 @@ function initCheckout() {
   const clearQuote = () => {
     quote = null; quotedFingerprint = ""; void card?.destroy?.(); card = null;
     walletMethods.forEach((method) => void method.destroy?.()); walletMethods = [];
-    page.querySelector<HTMLButtonElement>("[data-apple-pay]")!.onclick = null;
-    page.querySelector<HTMLElement>("#aha-google-pay")!.onclick = null;
+    query<HTMLButtonElement>(page, "[data-apple-pay]")!.onclick = null;
+    query<HTMLElement>(page, "#aha-google-pay")!.onclick = null;
     clearCashAppResume();
-    page.querySelector<HTMLElement>("#aha-afterpay")!.onclick = null;
+    query<HTMLElement>(page, "#aha-afterpay")!.onclick = null;
     setCheckoutLocked(false);
     window.clearTimeout(pollTimer);
     summary.hidden = true;
     if (checkPaymentStatus) { checkPaymentStatus.hidden = true; checkPaymentStatus.disabled = false; checkPaymentStatus.onclick = null; }
     disable(page, "[data-quote]", false);
     disable(page, "[data-pay-card]", true);
-    const wallets = page.querySelector<HTMLElement>("[data-wallets]")!;
+    const wallets = query<HTMLElement>(page, "[data-wallets]")!;
     wallets.hidden = true;
     wallets.style.pointerEvents = "";
     wallets.removeAttribute("aria-busy");
-    page.querySelector<HTMLElement>("#aha-card")!.replaceChildren();
-    page.querySelector<HTMLElement>("#aha-gift-card")?.replaceChildren();
-    const giftCardBox = page.querySelector<HTMLDetailsElement>("[data-gift-card]");
+    query<HTMLElement>(page, "#aha-card")!.replaceChildren();
+    query<HTMLElement>(page, "#aha-gift-card")?.replaceChildren();
+    const giftCardBox = query<HTMLDetailsElement>(page, "[data-gift-card]");
     if (giftCardBox) { giftCardBox.hidden = true; giftCardBox.open = false; }
     disable(page, "[data-pay-gift-card]", true);
     giftCard = null;
     paidWithGiftCard = false;
-    ["#aha-google-pay", "#aha-afterpay", "#aha-cash-app"].forEach((selector) => page.querySelector<HTMLElement>(selector)?.replaceChildren());
-    page.querySelector<HTMLButtonElement>("[data-apple-pay]")!.hidden = true;
+    ["#aha-google-pay", "#aha-afterpay", "#aha-cash-app"].forEach((selector) => query<HTMLElement>(page, selector)?.replaceChildren());
+    query<HTMLButtonElement>(page, "[data-apple-pay]")!.hidden = true;
     setText(page, "[data-card-status]", "Confirm your address to load secure payment options.");
   };
   const render = () => {
@@ -309,13 +310,13 @@ function initCheckout() {
       const article = document.createElement("article");
       article.className = "bag-line";
       article.innerHTML = `<img src="${line.image}" alt="${line.imageAlt}"><div><p class="label">${line.size} · ${line.color}</p><h2>${line.title}</h2><p>${displayAmount(line.priceCents)} each</p><label>Quantity <select data-cart-quantity aria-label="${line.title}, ${line.size}, quantity"></select></label><button type="button" class="text-button" data-cart-remove>Remove</button></div><p class="bag-line-total">${displayAmount(line.priceCents * line.quantity)}</p>`;
-      const select = article.querySelector<HTMLSelectElement>("[data-cart-quantity]")!;
+      const select = query<HTMLSelectElement>(article, "[data-cart-quantity]")!;
       for (let amount = 1; amount <= MAX_QUANTITY; amount += 1) { const option = new Option(String(amount), String(amount), false, amount === line.quantity); select.add(option); }
       select.addEventListener("change", () => {
         lines = lines.map((current) => current.variationId === line.variationId ? { ...current, quantity: Number(select.value) } : current);
         writeCart(lines); clearQuote(); render();
       });
-      article.querySelector<HTMLButtonElement>("[data-cart-remove]")!.addEventListener("click", () => {
+      query<HTMLButtonElement>(article, "[data-cart-remove]")!.addEventListener("click", () => {
         lines = lines.filter((current) => current.variationId !== line.variationId);
         writeCart(lines); clearQuote(); render();
       });
@@ -379,7 +380,7 @@ function initCheckout() {
   };
   const setPaymentControlsBusy = (busy: boolean) => {
     disable(page, "[data-pay-card], [data-pay-gift-card], [data-apple-pay], #aha-google-pay button, #aha-afterpay button, #aha-cash-app button", busy);
-    const wallets = page.querySelector<HTMLElement>("[data-wallets]");
+    const wallets = query<HTMLElement>(page, "[data-wallets]");
     if (wallets) {
       wallets.style.pointerEvents = busy ? "none" : "";
       wallets.toggleAttribute("aria-busy", busy);
@@ -413,9 +414,9 @@ function initCheckout() {
     lines = []; writeCart([]); render(); clearQuote();
     checkout.hidden = true;
     empty.hidden = true;
-    page.querySelector<HTMLElement>("[data-cart-subtotal]")!.hidden = true;
-    const heading = page.querySelector<HTMLElement>(".checkout-heading h1");
-    const lede = page.querySelector<HTMLElement>(".checkout-heading .lede");
+    query<HTMLElement>(page, "[data-cart-subtotal]")!.hidden = true;
+    const heading = query<HTMLElement>(page, ".checkout-heading h1");
+    const lede = query<HTMLElement>(page, ".checkout-heading .lede");
     if (heading) heading.textContent = "ORDER CONFIRMED.";
     if (lede) lede.textContent = "Thank you. Your payment is complete.";
     message.textContent = `Payment confirmed${orderId ? ` · order ${orderId}` : ""}. Keep this order number; tracking is added to the order when it ships.`;
@@ -485,7 +486,7 @@ function initCheckout() {
   };
   const attachWallets = async () => {
     const request = paymentRequest();
-    const wallets = page.querySelector<HTMLElement>("[data-wallets]")!;
+    const wallets = query<HTMLElement>(page, "[data-wallets]")!;
     const activeQuote = quote;
     if (!request || !config || !payments || !activeQuote) return;
     wallets.hidden = true;
@@ -504,8 +505,8 @@ function initCheckout() {
       }
     };
     let any = false;
-    any = await setup(config.methods.applePay, payments.applePay?.bind(payments), "#aha-apple-pay", (method) => { const button = page.querySelector<HTMLButtonElement>("[data-apple-pay]"); if (button) { button.hidden = false; button.onclick = async () => { if (unresolvedPayment) return; const result = await method.tokenize(); if (result.status === "OK" && result.token) void submitToken(result.token); }; } }) || any;
-    any = await setup(config.methods.googlePay, payments.googlePay?.bind(payments), "#aha-google-pay", (method) => { const target = page.querySelector<HTMLElement>("#aha-google-pay"); if (target) target.onclick = async () => { if (unresolvedPayment) return; const result = await method.tokenize(); if (result.status === "OK" && result.token) void submitToken(result.token); }; }) || any;
+    any = await setup(config.methods.applePay, payments.applePay?.bind(payments), "#aha-apple-pay", (method) => { const button = query<HTMLButtonElement>(page, "[data-apple-pay]"); if (button) { button.hidden = false; button.onclick = async () => { if (unresolvedPayment) return; const result = await method.tokenize(); if (result.status === "OK" && result.token) void submitToken(result.token); }; } }) || any;
+    any = await setup(config.methods.googlePay, payments.googlePay?.bind(payments), "#aha-google-pay", (method) => { const target = query<HTMLElement>(page, "#aha-google-pay"); if (target) target.onclick = async () => { if (unresolvedPayment) return; const result = await method.tokenize(); if (result.status === "OK" && result.token) void submitToken(result.token); }; }) || any;
     const afterpayEligible = activeQuote.totalAmount >= 1000 && activeQuote.totalAmount <= 200000;
     const afterpayRequest = afterpayPaymentRequest();
     if (config.methods.afterpay && afterpayEligible && afterpayRequest && payments.afterpayClearpay) {
@@ -514,7 +515,7 @@ function initCheckout() {
         method = await payments.afterpayClearpay.call(payments, afterpayRequest);
         await method.attach?.("#aha-afterpay", { buttonSizeMode: "fill" });
         walletMethods.push(method);
-        const target = page.querySelector<HTMLElement>("#aha-afterpay");
+        const target = query<HTMLElement>(page, "#aha-afterpay");
         if (target) target.onclick = async () => { if (unresolvedPayment) return; const result = await method!.tokenize(); if (result.status === "OK" && result.token) void submitToken(result.token); };
         any = true;
       } catch { void method?.destroy?.(); }
@@ -538,7 +539,7 @@ function initCheckout() {
       try {
         giftCard = await payments.giftCard();
         await giftCard.attach?.("#aha-gift-card");
-        page.querySelector<HTMLElement>("[data-gift-card]")!.hidden = false;
+        query<HTMLElement>(page, "[data-gift-card]")!.hidden = false;
         disable(page, "[data-pay-gift-card]", false);
       } catch { giftCard = null; /* The account or browser can't take gift cards here; cards still work. */ }
     }
@@ -575,7 +576,7 @@ function initCheckout() {
     if (!lines.length) { showError("Your bag is empty."); return; }
     const address = shippingAddress(form);
     if (!validAddress(address)) { showError("Complete your contact and shipping details to see the final total."); return; }
-    const quoteButton = form.querySelector<HTMLButtonElement>("[data-quote]"); if (quoteButton) quoteButton.disabled = true;
+    const quoteButton = query<HTMLButtonElement>(form, "[data-quote]"); if (quoteButton) quoteButton.disabled = true;
     showMessage("Confirming your total…");
     const requestedFingerprint = cartFingerprint(lines, form);
     try {
@@ -605,13 +606,13 @@ function initCheckout() {
     }
     finally { if (quoteButton) quoteButton.disabled = false; }
   });
-  page.querySelector<HTMLButtonElement>("[data-pay-gift-card]")?.addEventListener("click", async () => {
+  query<HTMLButtonElement>(page, "[data-pay-gift-card]")?.addEventListener("click", async () => {
     if (!giftCard || !quote || unresolvedPayment) return;
     const result = await giftCard.tokenize();
     if (result.status === "OK" && result.token) { paidWithGiftCard = true; void submitToken(result.token); }
     else showError("Check the gift card number and try again.");
   });
-  page.querySelector<HTMLButtonElement>("[data-pay-card]")?.addEventListener("click", async () => {
+  query<HTMLButtonElement>(page, "[data-pay-card]")?.addEventListener("click", async () => {
     if (!card || !quote) return;
     paidWithGiftCard = false;
     const address = shippingAddress(form);
@@ -639,12 +640,12 @@ function initCheckout() {
 async function syncCatalogue() {
   const known = new Set(catalogueFrom(document).map((line) => line.id));
   const stored = safeRead().map((line) => (line && typeof line === "object" ? (line as { variationId?: unknown }).variationId : null)).filter((id): id is string => typeof id === "string");
-  const needed = stored.length > 0 || Boolean(document.querySelector("[data-cart-form], [data-checkout-page]")) || new URLSearchParams(location.search).has("products");
+  const needed = stored.length > 0 || Boolean(query(document, "[data-cart-form], [data-checkout-page]")) || new URLSearchParams(location.search).has("products");
   if (!needed) return;
   const state = await catalogState();
   const removed = new Set(state.retiredVariations);
-  document.querySelectorAll<HTMLElement>("[data-cart-catalog]").forEach((node) => { if (removed.has(node.dataset.id ?? "")) node.remove(); });
-  const host = document.querySelector<HTMLElement>("[data-checkout-page]") ?? document.body;
+  queryAll<HTMLElement>(document, "[data-cart-catalog]").forEach((node) => { if (removed.has(node.dataset.id ?? "")) node.remove(); });
+  const host = query<HTMLElement>(document, "[data-checkout-page]") ?? document.body;
   for (const line of state.cartLines) {
     if (typeof line.id !== "string" || known.has(line.id) || removed.has(line.id)) continue;
     const template = document.createElement("template");
@@ -653,7 +654,7 @@ async function syncCatalogue() {
     host.append(template);
   }
   const slug = /^\/shop\/([a-z0-9-]+)\/$/.exec(location.pathname)?.[1];
-  const form = document.querySelector<HTMLElement>("[data-cart-form]");
+  const form = query<HTMLElement>(document, "[data-cart-form]");
   // A piece off sale at build time stays unbuyable unless the server confirms it was restored.
   const builtOffSale = Boolean(slug && offSale.products.includes(slug));
   if (slug && form && (state.retired.includes(slug) || (builtOffSale && !state.known))) {
@@ -663,7 +664,7 @@ async function syncCatalogue() {
     note.textContent = "This piece is no longer available.";
     form.replaceWith(note);
     // No delivery estimate, Save button or quick-add bar for a piece that can't be bought.
-    document.querySelectorAll("[data-arrival], [data-save], [data-drop]").forEach((element) => element.remove());
+    queryAll(document, "[data-arrival], [data-save], [data-drop]").forEach((element) => element.remove());
   }
   hideRetiredCards(state.retired, state.known);
 }
@@ -677,15 +678,15 @@ const JSON_POST = { method: "POST", headers: { "Content-Type": "application/json
 // server prices it (estimate), then quotes and charges through the same checkout
 // session as the bag. The bag itself is left alone.
 function initExpress() {
-  const box = document.querySelector<HTMLElement>("[data-express]");
+  const box = query<HTMLElement>(document, "[data-express]");
   const form = box?.closest<HTMLFormElement>("[data-cart-form]");
   // A piece off sale has no form by now (syncCatalogue replaced it, and keeps it for
   // a piece restored in the admin). Drops not yet open to everyone are skipped; the
   // server refuses both anyway.
-  if (!box || !form || document.querySelector("[data-drop]")) return;
-  const status = box.querySelector<HTMLElement>("[data-express-status]")!;
-  const apple = box.querySelector<HTMLButtonElement>("[data-express-apple]")!;
-  const google = box.querySelector<HTMLElement>("[data-express-google]")!;
+  if (!box || !form || query(document, "[data-drop]")) return;
+  const status = query<HTMLElement>(box, "[data-express-status]")!;
+  const apple = query<HTMLButtonElement>(box, "[data-express-apple]")!;
+  const google = query<HTMLElement>(box, "[data-express-google]")!;
   let request: (SquarePaymentRequest & { update?: (value: unknown) => boolean }) | null = null;
   let starting: Promise<void> | null = null;
   let shown = 0; // the total the wallet sheet last showed for an address, in cents
@@ -693,8 +694,8 @@ function initExpress() {
   let done = false;
   const say = (text: string, charged = false) => { status.textContent = charged ? text : `${text} Nothing was charged.`; };
   const choice = () => {
-    const id = form.querySelector<HTMLInputElement>("[data-cart-variant]:checked")?.value;
-    const quantity = Number(form.querySelector<HTMLInputElement>("[data-cart-quantity]")?.value);
+    const id = query<HTMLInputElement>(form, "[data-cart-variant]:checked")?.value;
+    const quantity = Number(query<HTMLInputElement>(form, "[data-cart-quantity]")?.value);
     const item = activeCatalogue().find((entry) => entry.id === id);
     return item && quantity >= 1 && quantity <= MAX_QUANTITY ? { item, quantity: Math.floor(quantity) } : null;
   };
@@ -806,7 +807,7 @@ async function init() {
   initAddForms();
   // Product-page extras (photo viewer, quick-add bar, bag card) load only where
   // there is something to buy, so the checkout page parses less script.
-  const extras = document.querySelector("[data-cart-form]") ? import("./product-extras") : null;
+  const extras = query(document, "[data-cart-form]") ? import("./product-extras") : null;
   void extras?.then((module) => module.initProductExtras());
   await syncCatalogue();
   // The quick-add bar waits until a removed product's form has been replaced.

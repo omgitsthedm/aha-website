@@ -1,0 +1,605 @@
+{
+  "/": {
+    "src": "/brand/share-fw26-20261020/home-6f2afeb2bba3.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "GET COMFORTABLE MAKING AN IMPRESSION. — Graphic tees, soft fleece and ribbed knitwear.",
+    "sources": [
+      "/images/editorial/fw26/02-01-1024.webp",
+      "/images/white-2026-10/yikes-cropped-hoodie/front.jpg",
+      "/images/editorial/fw26/03-01-1024.webp"
+    ]
+  },
+  "/shop/": {
+    "src": "/brand/share-fw26-20261020/shop-92aaabef2023.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "YOUR NEXT FAVORITE. — Graphic tees, soft fleece and ribbed knitwear.",
+    "sources": [
+      "/images/white-2026-10/nonna-s-sunday-supper-society-c1717-ivory/front.jpg",
+      "/images/white-2026-10/mighty-micks-ss3000-navy/front.jpg",
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-black/front.jpg"
+    ]
+  },
+  "/lookbook/": {
+    "src": "/brand/share-fw26-20261020/lookbook-78556d895286.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "OUT & ABOUT IT. — Fall / Winter 2026 · AI-generated campaign photography",
+    "sources": [
+      "/images/editorial/fw26/02-01-1024.webp",
+      "/images/editorial/fw26/29-01-1024.webp",
+      "/images/editorial/fw26/01-01-1024.webp"
+    ]
+  },
+  "/about/": {
+    "src": "/brand/share-fw26-20261020/story-742091f74781.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "STARTED WITH A T-SHIRT. — Independent clothing · Established 2011",
+    "sources": [
+      "/images/editorial/fw26/02-02-1024.webp",
+      "/images/white-2026-10/nonna-s-sunday-supper-society-c1717-ivory/front.jpg"
+    ]
+  },
+  "/shop/yikes-crewneck/": {
+    "src": "/brand/share-fw26-20261020/yikes-crewneck-fd8f8ff1dade.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Yikes! Crewneck — Bone · Crewneck · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/yikes-crewneck/front.jpg",
+      "/images/yikes/yikes-crewneck/campaign-1.jpg"
+    ]
+  },
+  "/shop/yikes-cropped-hoodie/": {
+    "src": "/brand/share-fw26-20261020/yikes-cropped-hoodie-35812b96456d.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Yikes! Cropped Hoodie — Bone · Cropped hoodie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/yikes-cropped-hoodie/front.jpg",
+      "/images/editorial/fw26/29-01-1024.webp"
+    ]
+  },
+  "/shop/insomniac-ss4500-black/": {
+    "src": "/brand/share-fw26-20261020/insomniac-ss4500-black-6b21f2ab40f2.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Insomniac Hoodie — Black · Hoodie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/insomniac-ss4500-black/back.jpg",
+      "/images/editorial/fw26/09-03-1024.webp"
+    ]
+  },
+  "/shop/insomniac-ss4500-grey-heather/": {
+    "src": "/brand/share-fw26-20261020/insomniac-ss4500-grey-heather-e6a6c52206fd.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Insomniac Hoodie — Grey Heather · Hoodie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/insomniac-ss4500-grey-heather/back.jpg",
+      "/images/insomniac/insomniac-ss4500-grey-heather/campaign-1.jpg"
+    ]
+  },
+  "/shop/insomniac-ss3000-black/": {
+    "src": "/brand/share-fw26-20261020/insomniac-ss3000-black-8f27255f5e77.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Insomniac Crewneck — Black · Crewneck · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/insomniac-ss3000-black/back.jpg",
+      "/images/editorial/fw26/07-01-1024.webp"
+    ]
+  },
+  "/shop/insomniac-ss3000-heather-grey/": {
+    "src": "/brand/share-fw26-20261020/insomniac-ss3000-heather-grey-c4df43cd84d5.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Insomniac Crewneck — Heather Grey · Crewneck · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/insomniac-ss3000-heather-grey/back.jpg",
+      "/images/insomniac/insomniac-ss3000-heather-grey/campaign-1.jpg"
+    ]
+  },
+  "/shop/insomniac-next-level-3601-black/": {
+    "src": "/brand/share-fw26-20261020/insomniac-next-level-3601-black-f004a0ef69b0.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Insomniac Long Sleeve — Black · Long sleeve · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/insomniac-next-level-3601-black/back.jpg",
+      "/images/editorial/fw26/11-04-1024.webp"
+    ]
+  },
+  "/shop/insomniac-next-level-3601-heather-grey/": {
+    "src": "/brand/share-fw26-20261020/insomniac-next-level-3601-heather-grey-f93f1530c176.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Insomniac Long Sleeve — Heather Grey · Long sleeve · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/insomniac-next-level-3601-heather-grey/back.jpg",
+      "/images/insomniac/insomniac-next-level-3601-heather-grey/campaign-1.jpg"
+    ]
+  },
+  "/shop/insomniac-comfort-colors-4410-black/": {
+    "src": "/brand/share-fw26-20261020/insomniac-comfort-colors-4410-black-2bda8607afe5.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Insomniac Pocket Long Sleeve — Black · Pocket long sleeve · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/insomniac-comfort-colors-4410-black/back.jpg",
+      "/images/insomniac/insomniac-comfort-colors-4410-black/campaign-1.jpg"
+    ]
+  },
+  "/shop/insomniac-comfort-colors-4410-grey/": {
+    "src": "/brand/share-fw26-20261020/insomniac-comfort-colors-4410-grey-fe01b7b33fa5.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Insomniac Pocket Long Sleeve — Grey · Pocket long sleeve · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/insomniac-comfort-colors-4410-grey/back.jpg",
+      "/images/editorial/fw26/14-02-1024.webp"
+    ]
+  },
+  "/shop/the-city-ss4500-black/": {
+    "src": "/brand/share-fw26-20261020/the-city-ss4500-black-a6c72b120e24.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "The City Hoodie — Black · Hoodie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/the-city-ss4500-black/back.jpg",
+      "/images/the-city/the-city-ss4500-black/campaign-1.jpg"
+    ]
+  },
+  "/shop/the-city-ss3000-black/": {
+    "src": "/brand/share-fw26-20261020/the-city-ss3000-black-cc06c48d0ce5.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "The City Crewneck — Black · Crewneck · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/the-city-ss3000-black/back.jpg",
+      "/images/the-city/the-city-ss3000-black/campaign-1.jpg"
+    ]
+  },
+  "/shop/the-city-next-level-3601-black/": {
+    "src": "/brand/share-fw26-20261020/the-city-next-level-3601-black-1db41e858c2e.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "The City Long Sleeve — Black · Long Sleeve · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/the-city-next-level-3601-black/back.jpg",
+      "/images/the-city/the-city-next-level-3601-black/campaign-1.jpg"
+    ]
+  },
+  "/shop/mighty-micks-ss3000-navy/": {
+    "src": "/brand/share-fw26-20261020/mighty-micks-ss3000-navy-b007b1acd35e.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Mighty Mick’s Crewneck — Navy · Crewneck · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/mighty-micks-ss3000-navy/front.jpg",
+      "/images/editorial/fw26/01-01-1024.webp"
+    ]
+  },
+  "/shop/mighty-micks-ss3000-dark-green/": {
+    "src": "/brand/share-fw26-20261020/mighty-micks-ss3000-dark-green-b4124936f815.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Mighty Mick’s Crewneck — Dark Green · Crewneck · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/mighty-micks-ss3000-dark-green/front.jpg",
+      "/images/mighty-micks/mighty-micks-ss3000-dark-green/campaign-hero-standing.jpg"
+    ]
+  },
+  "/shop/camo-sheep-ind4000-forest-camo/": {
+    "src": "/brand/share-fw26-20261020/camo-sheep-ind4000-forest-camo-a8781e16fc18.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Camo Sheep Hoodie — Forest Camo · Hoodie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/camo-sheep-ind4000-forest-camo/front.jpg",
+      "/images/editorial/fw26/05-01-1024.webp"
+    ]
+  },
+  "/shop/camo-sheep-ind4000-snow-camo/": {
+    "src": "/brand/share-fw26-20261020/camo-sheep-ind4000-snow-camo-d1726d7ec354.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Camo Sheep Hoodie — Snow Camo · Hoodie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/camo-sheep-ind4000-snow-camo/front.jpg",
+      "/images/editorial/fw26/19-01-1024.webp"
+    ]
+  },
+  "/shop/and-all-that-jazz-3023cl-butter/": {
+    "src": "/brand/share-fw26-20261020/and-all-that-jazz-3023cl-butter-ce940e46e75c.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "And All That Jazz Boxy Tee — Butter · Boxy tee · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/and-all-that-jazz-3023cl-butter/front.jpg",
+      "/images/editorial/fw26/16-01-1024.webp"
+    ]
+  },
+  "/shop/and-all-that-jazz-c1717-blossom/": {
+    "src": "/brand/share-fw26-20261020/and-all-that-jazz-c1717-blossom-2925361f9157.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "And All That Jazz T-Shirt — Blossom · T-shirt",
+    "sources": [
+      "/images/white-2026-10/and-all-that-jazz-c1717-blossom/front.jpg",
+      "/images/white-2026-10/and-all-that-jazz-c1717-blossom/folded.jpg"
+    ]
+  },
+  "/shop/and-all-that-jazz-c1717-mustard/": {
+    "src": "/brand/share-fw26-20261020/and-all-that-jazz-c1717-mustard-90b9bd835aa8.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "And All That Jazz Tee — Mustard · T-shirt",
+    "sources": [
+      "/images/white-2026-10/and-all-that-jazz-c1717-mustard/front.jpg",
+      "/images/white-2026-10/and-all-that-jazz-c1717-mustard/folded.jpg"
+    ]
+  },
+  "/shop/and-all-that-jazz-ss3000-black/": {
+    "src": "/brand/share-fw26-20261020/and-all-that-jazz-ss3000-black-c2a65009844b.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "And All That Jazz Crewneck — Black · Crewneck",
+    "sources": [
+      "/images/white-2026-10/and-all-that-jazz-ss3000-black/front.jpg",
+      "/images/white-2026-10/and-all-that-jazz-ss3000-black/folded.jpg"
+    ]
+  },
+  "/shop/and-all-that-jazz-ss3000-light-pink/": {
+    "src": "/brand/share-fw26-20261020/and-all-that-jazz-ss3000-light-pink-e0fc5095eda7.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "And All That Jazz Crewneck — Light Pink · Crewneck · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/and-all-that-jazz-ss3000-light-pink/front.jpg",
+      "/images/editorial/fw26/30-01-1024.webp"
+    ]
+  },
+  "/shop/fashion-kills-3023cl-black/": {
+    "src": "/brand/share-fw26-20261020/fashion-kills-3023cl-black-d8f10da2b2d4.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Fashion Kills Boxy Tee — Black · Boxy tee · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/fashion-kills-3023cl-black/front.jpg",
+      "/images/editorial/fw26/03-01-1024.webp"
+    ]
+  },
+  "/shop/fashion-kills-ss3000-black/": {
+    "src": "/brand/share-fw26-20261020/fashion-kills-ss3000-black-7e3a8396b7ee.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Fashion Kills Crewneck — Black · Crewneck · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/fashion-kills-ss3000-black/front.jpg",
+      "/images/fashion-kills/fashion-kills-ss3000-black/campaign-hero.jpg"
+    ]
+  },
+  "/shop/for-the-record-ss4500-black/": {
+    "src": "/brand/share-fw26-20261020/for-the-record-ss4500-black-aff9a5626f7a.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "For the Record Hoodie — Black · Hoodie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/for-the-record-ss4500-black/back.jpg",
+      "/images/editorial/fw26/06-01-1024.webp"
+    ]
+  },
+  "/shop/nonna-s-sunday-supper-society-c1717-ivory/": {
+    "src": "/brand/share-fw26-20261020/nonna-s-sunday-supper-society-c1717-ivory-f1d13f9a35e6.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Nonna’s Sunday Supper Society Tee — Ivory · T-shirt · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/nonna-s-sunday-supper-society-c1717-ivory/front.jpg",
+      "/images/editorial/fw26/02-01-1024.webp"
+    ]
+  },
+  "/shop/nonna-s-sunday-supper-society-ss3000-bone/": {
+    "src": "/brand/share-fw26-20261020/nonna-s-sunday-supper-society-ss3000-bone-1396a7e2db90.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Nonna’s Sunday Supper Society Crewneck — Bone · Crewneck · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/nonna-s-sunday-supper-society-ss3000-bone/front.jpg",
+      "/images/nonnas-sunday-supper-society/nonna-s-sunday-supper-society-ss3000-bone/campaign-hero.jpg"
+    ]
+  },
+  "/shop/resist-rebel-6014-midnight/": {
+    "src": "/brand/share-fw26-20261020/resist-rebel-6014-midnight-e751326b60cb.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Resist Rebel Long Sleeve — Midnight · Long sleeve · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/resist-rebel-6014-midnight/front.jpg",
+      "/images/editorial/fw26/04-01-1024.webp"
+    ]
+  },
+  "/shop/resist-rebel-c1717-true-navy/": {
+    "src": "/brand/share-fw26-20261020/resist-rebel-c1717-true-navy-4947c4789210.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Resist Rebel Tee — True Navy · T-shirt · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/resist-rebel-c1717-true-navy/front.jpg",
+      "/images/resist-rebel/resist-rebel-c1717-true-navy/campaign-hero.jpg"
+    ]
+  },
+  "/shop/resist-rebel-ss3000-navy/": {
+    "src": "/brand/share-fw26-20261020/resist-rebel-ss3000-navy-a42cdded6414.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Resist Rebel Crewneck — Navy · Crewneck",
+    "sources": [
+      "/images/white-2026-10/resist-rebel-ss3000-navy/front.jpg",
+      "/images/white-2026-10/resist-rebel-ss3000-navy/folded.jpg"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-black/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-black-c99b2e105ae9.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Black · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-black/front.jpg",
+      "/images/editorial/fw26/31-01-1024.webp"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-blaze-orange/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-blaze-orange-8d5d6b6c5c22.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Blaze Orange · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-blaze-orange/front.jpg",
+      "/images/editorial/fw26/32-01-1024.webp"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-camel/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-camel-6920c0c810e7.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Camel · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/front.jpg",
+      "/images/editorial/fw26/33-01-1024.webp"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-cardinal/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-cardinal-b89967e67c55.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Cardinal · Beanie",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/front.jpg",
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-cardinal/folded.jpg"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey-e93cead65265.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Dark Heather Grey · Beanie",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/front.jpg",
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-dark-heather-grey/folded.jpg"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-forest-green/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-forest-green-dafbc053f694.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Forest Green · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/front.jpg",
+      "/images/editorial/fw26/36-01-1024.webp"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-fuchsia/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-fuchsia-b7e1f4f90c21.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Fuchsia · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-fuchsia/front.jpg",
+      "/images/editorial/fw26/37-01-1024.webp"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-gold/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-gold-d0bd6c4ac364.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Gold · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/front.jpg",
+      "/images/editorial/fw26/38-01-1024.webp"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-heather-grey/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-heather-grey-f291b85a87ea.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Heather Grey · Beanie",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/front.jpg",
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-heather-grey/folded.jpg"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-kelly-green/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-kelly-green-4d3d4b454624.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Kelly Green · Beanie",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/front.jpg",
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-kelly-green/folded.jpg"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-navy/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-navy-a89b518bd99f.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Navy · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/front.jpg",
+      "/images/editorial/fw26/41-01-1024.webp"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-pink/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-pink-17b3d979c7fe.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Pink · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-pink/front.jpg",
+      "/images/editorial/fw26/42-01-1024.webp"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-red/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-red-4415233eeca7.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Red · Beanie",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/front.jpg",
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded.jpg"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-royal-blue/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-royal-blue-93e36ac30c8d.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — Royal Blue · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-royal-blue/front.jpg",
+      "/images/editorial/fw26/44-01-1024.webp"
+    ]
+  },
+  "/shop/after-hours-agenda-heritage-beanie-sp12-white/": {
+    "src": "/brand/share-fw26-20261020/after-hours-agenda-heritage-beanie-sp12-white-7f0d45653be3.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "After Hours Agenda Heritage Beanie — White · Beanie · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-white/front.jpg",
+      "/images/editorial/fw26/45-01-1024.webp"
+    ]
+  },
+  "/shop/camo-sheep/": {
+    "src": "/brand/share-fw26-20261020/design-camo-sheep-a97077babd26.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Camo Sheep — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/camo-sheep-ind4000-forest-camo/front.jpg",
+      "/images/editorial/fw26/05-01-1024.webp"
+    ]
+  },
+  "/shop/black-sheep-knitwear/": {
+    "src": "/brand/share-fw26-20261020/design-black-sheep-knitwear-838d2d28d61d.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Black Sheep Knitwear — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-black/front.jpg",
+      "/images/editorial/fw26/31-01-1024.webp"
+    ]
+  },
+  "/shop/and-all-that-jazz/": {
+    "src": "/brand/share-fw26-20261020/design-and-all-that-jazz-afa563880fec.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "And All That Jazz — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/and-all-that-jazz-3023cl-butter/front.jpg",
+      "/images/editorial/fw26/16-01-1024.webp"
+    ]
+  },
+  "/shop/for-the-record/": {
+    "src": "/brand/share-fw26-20261020/design-for-the-record-529ba3646df3.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "For the Record — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/for-the-record-ss4500-black/back.jpg",
+      "/images/editorial/fw26/06-01-1024.webp"
+    ]
+  },
+  "/shop/resist-rebel/": {
+    "src": "/brand/share-fw26-20261020/design-resist-rebel-25f97266a803.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Resist Rebel — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/resist-rebel-6014-midnight/front.jpg",
+      "/images/editorial/fw26/04-01-1024.webp"
+    ]
+  },
+  "/shop/nonnas-sunday-supper-society/": {
+    "src": "/brand/share-fw26-20261020/design-nonnas-sunday-supper-society-f46c7f8be62f.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Nonna’s Sunday Supper Society — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/nonna-s-sunday-supper-society-c1717-ivory/front.jpg",
+      "/images/editorial/fw26/02-01-1024.webp"
+    ]
+  },
+  "/shop/fashion-kills/": {
+    "src": "/brand/share-fw26-20261020/design-fashion-kills-6fb165412016.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Fashion Kills — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/fashion-kills-3023cl-black/front.jpg",
+      "/images/editorial/fw26/03-01-1024.webp"
+    ]
+  },
+  "/shop/mighty-micks/": {
+    "src": "/brand/share-fw26-20261020/design-mighty-micks-0ff87188156b.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Mighty Mick’s — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/mighty-micks-ss3000-navy/front.jpg",
+      "/images/editorial/fw26/01-01-1024.webp"
+    ]
+  },
+  "/shop/the-city/": {
+    "src": "/brand/share-fw26-20261020/design-the-city-1eb932f71b80.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "The City — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/the-city-ss4500-black/back.jpg",
+      "/images/the-city/the-city-ss4500-black/campaign-1.jpg"
+    ]
+  },
+  "/shop/insomniac/": {
+    "src": "/brand/share-fw26-20261020/design-insomniac-4dc2435ed494.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Insomniac — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/insomniac-ss4500-black/back.jpg",
+      "/images/editorial/fw26/09-03-1024.webp"
+    ]
+  },
+  "/shop/yikes/": {
+    "src": "/brand/share-fw26-20261020/design-yikes-8486f72e5e82.jpg",
+    "width": 1200,
+    "height": 630,
+    "alt": "Yikes! — Fall / Winter 2026 · AI-generated campaign photograph",
+    "sources": [
+      "/images/white-2026-10/yikes-crewneck/front.jpg",
+      "/images/yikes/yikes-crewneck/campaign-1.jpg"
+    ]
+  }
+}

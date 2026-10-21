@@ -53,36 +53,36 @@
     "collection": "Black Sheep Knitwear",
     "gallery": [
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-front-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-front-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-front-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-front-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-front.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/front-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/front-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/front-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/front-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/front.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Front cuff of the Navy AHA Heritage Beanie with direct sheep-logo embroidery.",
         "role": "front"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-back-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-back-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-back-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-back-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-back.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/back-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/back-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/back-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/back-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/back.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Plain reverse of the Navy adjustable-cuff knit beanie.",
         "role": "back"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-print-detail-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-print-detail-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-print-detail-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-print-detail-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-print-detail.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/print-detail-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/print-detail-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/print-detail-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/print-detail-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/print-detail.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Close view of the embroidered sheep and custom lettering on the Navy cuff.",
         "role": "print-detail"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-folded-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-folded-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-folded-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-folded-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-navy/garment-folded.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-navy/folded.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Navy AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",

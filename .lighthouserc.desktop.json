@@ -2,7 +2,9 @@
   "ci": {
     "collect": {
       "settings": {
-        "onlyCategories": ["performance"],
+        "onlyCategories": [
+          "performance"
+        ],
         "preset": "desktop",
         "throttlingMethod": "simulate",
         "blockedUrlPatterns": [
@@ -11,16 +13,36 @@
           "*://www.facebook.com/tr*",
           "*://us.i.posthog.com/*",
           "*://eu.i.posthog.com/*"
-        ]
+        ],
+        "chromeFlags": "--host-resolver-rules=\"MAP www.facebook.com ~NOTFOUND, MAP *.google-analytics.com ~NOTFOUND, MAP www.google.com ~NOTFOUND, MAP us.i.posthog.com ~NOTFOUND, MAP eu.i.posthog.com ~NOTFOUND\""
       }
     },
     "assert": {
       "includePassedAssertions": true,
       "assertions": {
-        "largest-contentful-paint": ["error", { "maxNumericValue": 2500, "aggregationMethod": "median" }],
-        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1, "aggregationMethod": "median" }],
-        "total-blocking-time": ["error", { "maxNumericValue": 200, "aggregationMethod": "median" }]
+        "largest-contentful-paint": [
+          "error",
+          {
+            "maxNumericValue": 2500,
+            "aggregationMethod": "median"
+          }
+        ],
+        "cumulative-layout-shift": [
+          "error",
+          {
+            "maxNumericValue": 0.1,
+            "aggregationMethod": "median"
+          }
+        ],
+        "total-blocking-time": [
+          "error",
+          {
+            "maxNumericValue": 200,
+            "aggregationMethod": "median"
+          }
+        ]
       }
     }
-  }
+  },
+  "_analytics_safety": "DNS blocks collection hosts across worker contexts while SDK hosts still load; URL interception alone does not cover Partytown worker requests."
 }

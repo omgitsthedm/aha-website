@@ -28,7 +28,8 @@
           "downloadThroughputKbps": 1638.4,
           "uploadThroughputKbps": 750,
           "cpuSlowdownMultiplier": 4
-        }
+        },
+        "chromeFlags": "--host-resolver-rules=\"MAP www.facebook.com ~NOTFOUND, MAP *.google-analytics.com ~NOTFOUND, MAP www.google.com ~NOTFOUND, MAP us.i.posthog.com ~NOTFOUND, MAP eu.i.posthog.com ~NOTFOUND\""
       }
     },
     "assert": {
@@ -58,5 +59,6 @@
       }
     }
   },
-  "_note": "October 9, 2026: restored the 2500 ms mobile LCP budget for the reviewed static AHA website. CI measurements run on the exact local production build; hosted before/after evidence remains in AUDIT-REPORT.md."
+  "_note": "October 9, 2026: restored the 2500 ms mobile LCP budget for the reviewed static AHA website. CI measurements run on the exact local production build; hosted before/after evidence remains in AUDIT-REPORT.md.",
+  "_analytics_safety": "DNS blocks collection hosts across worker contexts while SDK hosts still load; URL interception alone does not cover Partytown worker requests."
 }

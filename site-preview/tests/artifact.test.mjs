@@ -43,10 +43,14 @@ test("every route has unique metadata, entity data and correct indexing mode", a
       await stat(new URL(match[1].slice(1), root));
     assert.ok(
       !/squarecdn|data-netlify|Little Fight NYC|hello@littlefightnyc|Small crew|Heavy pull/.test(
-        html,
+        // The owner explicitly requested this credit; the client identity stays AHA.
+        html.replace(/<a class="creator-credit" href="https:\/\/littlefightnyc\.com\/">[\s\S]*?<\/a>/g, ''),
       ),
       route,
     );
+    assert.equal((html.match(/class="creator-credit"/g) || []).length, 1, route);
+    assert.match(html, /created by <strong>Little Fight NYC<\/strong>/, route);
+    assert.match(html, /src="\/brand\/little-fight-nyc-tugboat-orange.svg"/, route);
     assert.ok(!/<script[^>]+src="https:\/\/(?:www\.googletagmanager|connect\.facebook)/.test(html),'Tracking scripts must load dynamically so saved choices and Global Privacy Control govern them');
     assert.ok(html.includes(`data-tracking-enabled="${production}"`),route);
   }
@@ -106,7 +110,7 @@ test("sitemap, crawler policy and summary match the release mode", async () => {
 test("the manifesto lives in The story and its old address redirects there", async () => {
   const about = await readFile(new URL("about/index.html", root), "utf8");
   assert.match(about, /id="manifesto"/);
-  for (const tenet of ["Work hard. Love hard.", "Celebrate.", "Be kind.", "Find your people."])
+  for (const tenet of ["Wear it your way.", "Check the fit.", "Look closer.", "Keep it in rotation."])
     assert.ok(about.includes(`<h3>${tenet}</h3>`), tenet);
   await assert.rejects(stat(new URL("manifesto/index.html", root)));
   const redirects = await readFile(new URL("_redirects", root), "utf8");

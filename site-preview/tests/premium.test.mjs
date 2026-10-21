@@ -18,9 +18,9 @@ test("every campaign and editorial photo has a two-tone placeholder; garment sho
 
 test("the browser bar matches the page and prerendering is limited to product pages", async () => {
   const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
-  assert.match(html, /<meta name="theme-color" content="#fafafa">/);
+  assert.match(html, /<meta name="theme-color" content="#FF6B6B">/);
   const manifest = JSON.parse(await readFile(new URL("../dist/manifest.webmanifest", import.meta.url), "utf8"));
-  assert.equal(manifest.theme_color, "#fafafa");
+  assert.equal(manifest.theme_color, "#ff6b6b");
   const rules = JSON.parse(html.match(/<script type="speculationrules">([\s\S]*?)<\/script>/)[1]);
   assert.deepEqual(rules.prerender[0].where.and[0], { href_matches: "/shop/*" });
   assert.deepEqual(rules.prefetch[0].where.and[1].not.href_matches, ["/shop/*", "/admin/*", "/api/*", "/checkout/*"]);

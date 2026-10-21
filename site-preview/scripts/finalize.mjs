@@ -67,7 +67,7 @@ await writeFile(
 );
 await writeFile(
   new URL("llms.txt", dist),
-  `# After Hours Agenda\n\n> A clothing brand for the dreamers and the doers.\n\n${approved ? "Official clothing storefront. Current garments, colors, sizes and prices are listed below." : "This is a review preview, not a production replacement. The official website is https://afterhoursagenda.com."}\n\n## Current status\n\n${productSummary} Free domestic shipping. Production usually takes about a week before shipping. Add selected sizes and quantities to one cart. Secure payment is processed by Square within the AHA checkout. Eligible payment methods appear at payment, including Afterpay installments subject to eligibility. Lifestyle campaign mockups are separate from the four garment images on each product page. Archive pieces are not for sale. Existing orders remain supported under the terms that applied when purchased.\n\n## Identity and contact\n\nAfter Hours Agenda is David Marsh's clothing brand from Phoenix, Arizona, established in 2011. Its original Prologue dates to January 2012. Pieces are printed to order in the United States, and each product page names the garment it's printed on. Kindness, community and celebrating the life you are building are its stated values. Contact: info@afterhoursagenda.com. Official Instagram: https://www.instagram.com/afterhoursagenda. Updated ${builtOnWords}.\n\n## Pages\n${routes.map((path) => `- [${path === "/" ? "Home" : path.split("/").filter(Boolean).at(-1)}](${origin}${path})`).join("\n")}\n\n## Contact behavior\n\nThe form prepares a local email draft. It does not submit data, subscribe the visitor, query orders, take payment or send a message. Visitors decide whether to send through their email app. Never send card details or passwords.\n`,
+  `# After Hours Agenda\n\n> Graphic tees, soft fleece and ribbed knitwear.\n\n${approved ? "Official clothing storefront. Current garments, colors, sizes and prices are listed below." : "This is a review preview, not a production replacement. The official website is https://afterhoursagenda.com."}\n\n## Current status\n\n${productSummary} Free domestic shipping. Production usually takes about a week before shipping. Add selected sizes and quantities to one cart. Secure payment is processed by Square within the AHA checkout. Eligible payment methods appear at payment, including Afterpay installments subject to eligibility. Lifestyle campaign mockups are separate from the four garment images on each product page. Archive pieces are not for sale. Existing orders remain supported under the terms that applied when purchased.\n\n## Identity and contact\n\nAfter Hours Agenda is David Marsh's clothing brand from Phoenix, Arizona, established in 2011. Its original Prologue dates to January 2012. Pieces are printed to order in the United States, and each product page names the garment it's printed on. Kindness, community and celebrating the life you are building are its stated values. Contact: info@afterhoursagenda.com. Official Instagram: https://www.instagram.com/afterhoursagenda. Updated ${builtOnWords}.\n\n## Pages\n${routes.map((path) => `- [${path === "/" ? "Home" : path.split("/").filter(Boolean).at(-1)}](${origin}${path})`).join("\n")}\n\n## Contact behavior\n\nThe form prepares a local email draft. It does not submit data, subscribe the visitor, query orders, take payment or send a message. Visitors decide whether to send through their email app. Never send card details or passwords.\n`,
 );
 await writeFile(
   new URL("manifest.webmanifest", dist),
@@ -77,7 +77,7 @@ await writeFile(
     start_url: "/",
     display: "browser",
     background_color: "#fafafa",
-    theme_color: "#fafafa",
+    theme_color: "#ff6b6b",
     icons: [
       {
         src: "/brand/android-chrome-192x192.png",
@@ -92,6 +92,7 @@ await writeFile(
     ],
   }),
 );
+
 const commit = execFileSync("git", ["rev-parse", "HEAD"], {
   encoding: "utf8",
 }).trim();

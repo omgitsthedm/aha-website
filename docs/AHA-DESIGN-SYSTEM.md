@@ -1,81 +1,45 @@
-# After Hours Agenda Design System
+# After Hours Agenda website design system
 
-Status: controlling visual system  
-Adopted: July 12, 2026  
-Source brief: `/Users/davidmarsh/Downloads/design-2.md` (`Origami Geométrico`, alpha)
+Current direction: October 20, 2026, approved photography-first storefront. These website decisions supersede the older origami layout and brand-name copy themes. Keep payment-provider branding and functional commerce contracts intact.
 
-This document adapts the supplied Origami Geométrico direction to a production DTC storefront. It controls every customer-facing page, commerce surface, state, and transactional email unless a platform requirement—such as Square wallet branding—must remain standard.
+## Palette and identity
 
-## Principles
+- Paper `#FAFAFA`: page ground and light surfaces.
+- Ink `#1A1A1A`: primary type, dark panels and primary action on Rose.
+- Rose `#FF6B6B`: benefit strip, homepage statement panel and action fills, with Ink labels.
+- Accessible Rose `#CE3D56`: text and focus on Paper. Never use light Rose as small text on Paper.
+- Neutral grey is for supporting text, controls and hairline frames. No pink page grounds or new accent palette.
+- Use the official black sheep and wordmark. Never invent replacement branding or a generic icon library.
+- No decorative link/button arrows, including Unicode arrows. Use descriptive text and verified custom assets when appropriate.
 
-- Folded, angular, precise, and contemporary.
-- Geometry communicates structure; it is not decorative noise.
-- Square corners only. No pills, glass cards, soft SaaS panels, or generic three-feature layouts.
-- Commerce clarity, accessibility, and performance override visual novelty.
-- Only transform and opacity animate. Motion remains subtle and respects reduced-motion preferences.
+## Type and layout
 
-## Color tokens
+Poppins 400/700/900, with JetBrains Mono for compact metadata. Body and form inputs are at least 16px; metadata is at least 12px. Display headlines are uppercase and heavy; product names remain readable mixed case. Use Paper, hairlines, square edges, strong photography and generous space. Avoid decorative folds, unrelated panels and generic feature cards.
 
-| Role | Value | Ships as |
-|---|---|---|
-| Paper White | `#FAFAFA` | ground |
-| Sunken Paper | `#F1F1F1` | tinted panels |
-| Ink Black | `#1A1A1A` | primary text |
-| Steel Grey | `#4A4A4A` | supporting text |
-| Fold Shadow | `#B0B0B0` | decorative hairlines only |
-| Control Border | `#8A8A8A` | the edge of an interactive control |
-| Accent Coral | `#FF6B6B` | rose **fill**, ink label on top |
-| Action Rose | `#CE3D56` | rose **text** and focus, on paper |
-| Action Rose (sunken) | `#B8304A` | rose text on `#F1F1F1` or darker |
-| Sky Fold | `#87CEEB` | fold plane |
-| Sage Paper | `#A8D5BA` | fold plane |
-| Warm Crease | `#F0C987` | fold plane |
+The shared header is stable and sticky. Desktop uses Shop, Lookbook, The story and Here to help. Phone and tablet use Menu with the same categories, search and help paths. The native modal has a visible Close control, focus containment, Escape dismissal and focus restoration. Keep the Bag reachable.
 
-Paper White is the storefront ground. Ink Black is primary text. Sky, sage, and warm crease are supporting paper-fold planes, never competing CTAs and never status colors — sage and warm crease previously served as success and warning and measured ~1.5:1 on paper. Large black refracted backgrounds are not part of the storefront system.
+## Homepage and imagery
 
-The rose is two values, and using the wrong one is the most common way to fail an audit here. **Accent Coral `#FF6B6B` is a surface, never a text color** — 2.5:1 on paper. Rose type, links, labels and focus rings use Action Rose `#CE3D56` (4.55:1), and drop to `#B8304A` on any tinted ground, because `#CE3D56` falls to 4.20:1 on `#F1F1F1`. Where a control's border is its only visual identification, that border is Control Border `#8A8A8A` (3.31:1) rather than Fold Shadow, which WCAG 1.4.11 only exempts for decoration.
+The approved headline is **GET COMFORTABLE MAKING AN IMPRESSION.** The primary CTA is **Shop it all**. Its three-panel composition uses two garment-led photographs around Rose type. On phone and tablet the photographs lead, followed by the same headline and action.
 
-Exact values, Tailwind names and the change procedure live in `docs/design-tokens.md`.
+Keep `src/data/photography.json` for the approved editorial shoot. Editorial overrides never replace the product's four garment-only gallery images, Square identifiers, variants, price or approved print art. Match every photograph's link and caption to the garment pictured. Disclose AI-generated campaign imagery and identify archive material. Use AVIF with WebP fallback, explicit dimensions, responsive sizes, priority for the lead photo and native lazy loading below the fold.
 
-## Type
+All garment-only views share a white studio background. Use the supplied garment pixels and conventional masking for background cleanup, with originals retained and every view inspected. Keep actual fabric texture in close-ups, preserve fine garment edges and supplied source metadata, and use versioned URLs with accurate responsive widths. The image composer defaults to white for future mockups.
 
-- Display and body: Poppins. Metadata and technical values: JetBrains Mono.
-- **Only weights 400 and 700 are loaded.** Anything between them is a synthesised face, not a downloaded one.
-- Sizes come from the named scale in `docs/design-tokens.md` — `display-hero`, `display-section`, `display-sub`, body, `label`, `eyebrow` — not from fresh `clamp()` expressions.
-- Body: 1rem / 1.6 with a maximum readable width of 72 characters.
-- Form controls never render below 16px; iOS zooms the viewport if they do.
+## Motion and access
 
-## Layout
+Animate headline, captions and frame details once on entry. The garment photographs remain sharp and visible. Animate only transform/opacity. Modal exits are faster than entrances; repeated input interrupts safely. Respect reduced motion, native scrolling, safe areas, 44px controls, visible keyboard focus and WCAG AA contrast. No scroll hijacking.
 
-- CSS Grid first.
-- Content width: 1280px with 1.5rem desktop gutters and 1rem mobile gutters.
-- Base spacing unit: 8px.
-- Multi-column layouts collapse below 768px.
-- Product and content sections use asymmetric or zig-zag composition; equal feature-card rows are prohibited.
-- Z-index contract: base 0, sticky navigation 100, overlay 200, modal 300, toast/skip link 500.
+## Customer language
 
-## Surfaces and components
+Write about clothing: graphic, fabric, cut, construction, fit, styling and useful purchase information. The full brand name is identification only. Never turn “After Hours” or “Agenda” into a creative hook, metaphor, nightlife theme, schedule or calendar reference. Approved artwork and product names remain exact. No invented reviews, urgency, bestseller claims or unverified quality promises.
 
-- `fold-surface`: faceted panel with a clipped upper corner, crease planes, one-pixel stroke, and restrained depth.
-- `crease-rule`: section/header line with a quiet diagonal fold pattern.
-- Primary action: coral fill, sharp clipped corner, 200–300ms lift on hover, 1px tactile press.
-- Secondary action: sharp outlined control with a light background response.
-- Inputs: label above, square border, coral 2–3px focus indicator, error text below.
-- Skeletons mirror final geometry; never use circular spinners.
-- Empty and error states include an explanation and a recovery action.
+## Shopping and supporting pages
 
-## Motion
+The shop starts with **YOUR NEXT FAVORITE.** Use one clear grid, garment filters and search. Design landing pages show the design's campaign and actual garment choices. Product pages show the four garment images, explicit sizing, fit/fabric, shipping, returns and care. The phone carousel and quick-add bar keep the next step in reach. Preserve static/runtime product-page parity.
 
-- Default entry: opacity plus 16px translate-Y over 420ms ease-out.
-- Stagger lists by 80ms.
-- Hover: 200ms color/shadow adjustment.
-- Page transition: opacity only, 200ms.
-- **Every overlay that animates in animates out, and leaves faster than it arrived** — roughly 150ms out against 220–360ms in, on an accelerating curve. A drawer that slid in from the right leaves to the right; it does not blink out. Exit classes are defined outside the reduced-motion guard so an `animationend` unmount cannot hang, and are always paired with a timeout fallback: a stuck overlay blocks checkout.
-- Never globally smooth-scroll commerce pages; it can interfere with touch targeting.
+The Lookbook headline is **Out & About It.** It carries one varied set per design family. The story keeps the factual 2011 origin and 2012 archive alongside current clothing. Help is concise and links to the page owning each topic. Policy terms stay complete. Home, Updates and the footer retain the existing one-form-per-page sign-up rule. Bag, account and order screens share the same typography and controls without extra marketing distractions.
 
-## Content and accessibility
+## Validation
 
-- No emoji, fake urgency, scarcity, fabricated reviews, or AI-writing clichés.
-- Controls remain at least 44px.
-- WCAG 2.2 AA contrast and visible focus are mandatory.
-- Product selection, bag, checkout, support, order tracking, email, loading, empty, error, and success states use the same system.
+Use the active `site-preview/` checks on Node 24.21.0: lint, types, build, unit/artifact tests and the real-Chrome browser suite with external writes blocked. Keep the 65 KB public JavaScript budget. Review phone, tablet, desktop, landscape, narrow reflow, reduced motion and keyboard behavior. Never manufacture a payment, customer, message or analytics event as proof. Publish only through the authorized exact AHA Netlify property, then verify source, release receipt and live browser output.

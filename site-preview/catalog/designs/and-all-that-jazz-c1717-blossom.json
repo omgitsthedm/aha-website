@@ -54,36 +54,36 @@
     "collection": "And All That Jazz",
     "gallery": [
       {
-        "src": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-front-1060.webp",
-        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-front-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-front-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-front-1060.webp 1060w",
-        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-front.jpg",
+        "src": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/front-1060.webp",
+        "srcset": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/front-400.webp 400w, /images/white-2026-10/and-all-that-jazz-c1717-blossom/front-800.webp 800w, /images/white-2026-10/and-all-that-jazz-c1717-blossom/front-1060.webp 1060w",
+        "feedImage": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/front.jpg",
         "width": 1060,
         "height": 1484,
         "alt": "Front of the Blossom And All That Jazz T-Shirt.",
         "role": "front"
       },
       {
-        "src": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-back-1122.webp",
-        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-back-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-back-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-back-1122.webp 1122w",
-        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-back.jpg",
+        "src": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/back-1122.webp",
+        "srcset": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/back-400.webp 400w, /images/white-2026-10/and-all-that-jazz-c1717-blossom/back-800.webp 800w, /images/white-2026-10/and-all-that-jazz-c1717-blossom/back-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/back.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Plain back of the Blossom And All That Jazz T-Shirt.",
         "role": "back"
       },
       {
-        "src": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-print-detail-1122.webp",
-        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-print-detail-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-print-detail-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-print-detail-1122.webp 1122w",
-        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-print-detail.jpg",
+        "src": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/print-detail-1122.webp",
+        "srcset": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/print-detail-400.webp 400w, /images/white-2026-10/and-all-that-jazz-c1717-blossom/print-detail-800.webp 800w, /images/white-2026-10/and-all-that-jazz-c1717-blossom/print-detail-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/print-detail.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Close view of the front print on the Blossom And All That Jazz T-Shirt.",
         "role": "print-detail"
       },
       {
-        "src": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-folded-1122.webp",
-        "srcset": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-folded-400.webp 400w, /images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-folded-800.webp 800w, /images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-folded-1122.webp 1122w",
-        "feedImage": "/images/and-all-that-jazz/and-all-that-jazz-c1717-blossom/garment-folded.jpg",
+        "src": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/folded-1122.webp",
+        "srcset": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/folded-400.webp 400w, /images/white-2026-10/and-all-that-jazz-c1717-blossom/folded-800.webp 800w, /images/white-2026-10/and-all-that-jazz-c1717-blossom/folded-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/and-all-that-jazz-c1717-blossom/folded.jpg",
         "width": 1122,
         "height": 1122,
         "alt": "Blossom And All That Jazz T-Shirt casually folded, with the AHA private neck label visible.",

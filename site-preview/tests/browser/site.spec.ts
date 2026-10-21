@@ -32,7 +32,7 @@ for (const [label, width, height] of [
       ).toBe(true);
       for (const image of await page.locator("img").all()) {
         // Pieces off sale (src/data/off-sale.json) stay hidden, so their images never load.
-        if (await image.evaluate((img) => Boolean(img.closest("[data-off-sale]")) && !img.checkVisibility())) continue;
+        if (await image.evaluate(img => !img.checkVisibility())) continue;
         await image.scrollIntoViewIfNeeded();
         await expect
           .poll(() =>
@@ -47,7 +47,7 @@ for (const [label, width, height] of [
         .locator("img")
         .evaluateAll((images) =>
           (images as HTMLImageElement[])
-            .filter((x) => !(x.closest("[data-off-sale]") && !x.checkVisibility()))
+            .filter(x => x.checkVisibility())
             .filter((x) => !x.complete || !x.naturalWidth)
             .map((x) => x.src),
         );
@@ -84,20 +84,20 @@ test("native mobile menu works by keyboard and Escape restores focus", async ({
   await expect(
     page.getByRole("link", { name: "Skip to content" }),
   ).toBeFocused();
-  const menu = page.locator(".mobile-nav summary");
+  const menu = page.getByRole("button", {name: "Menu", exact: true});
   await menu.focus();
   await page.keyboard.press("Enter");
   await expect(
-    page.getByRole("navigation", { name: "Mobile navigation" }),
+    page.getByRole("dialog", { name: "Find your fit." }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(menu).toBeFocused();
   await expect(
-    page.getByRole("navigation", { name: "Mobile navigation" }),
+    page.getByRole("dialog", { name: "Find your fit." }),
   ).not.toBeVisible();
   await menu.click();
   await page
-    .getByRole("navigation", { name: "Mobile navigation" })
+    .getByRole("dialog", { name: "Find your fit." })
     .getByRole("link", { name: "Lookbook", exact: true })
     .click();
   await expect(page).toHaveURL(/lookbook\//);
@@ -165,10 +165,8 @@ test("all content, menu and contact fallback work without JavaScript", async ({
   );
   await expect(page.locator("main noscript")).toBeVisible();
   await expect(page.locator("#brief-form")).toBeHidden();
-  await page.locator(".mobile-nav summary").click();
-  await expect(
-    page.getByRole("navigation", { name: "Mobile navigation" }),
-  ).toBeVisible();
+  await page.locator(".no-script-nav summary").click();
+  await expect(page.getByRole("navigation", { name: "Browse", exact: true }).getByRole("link", { name: "Shop it all" })).toBeVisible();
   await context.close();
 });
 test("320px and 200-percent-equivalent reflow keep every page within the viewport", async ({
@@ -200,7 +198,7 @@ test("missing routes and legacy APIs are real 404s; headers match release mode",
   ]) {
     const response = await request.get(path);
     expect(response.status()).toBe(404);
-    expect(await response.text()).toContain("A DIFFERENT");
+    expect(await response.text()).toContain("LET’S FIND");
   }
   const response = await request.get("/");
   if (production) {

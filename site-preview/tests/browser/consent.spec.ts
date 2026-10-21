@@ -226,7 +226,7 @@ test('an email sign-up reports a lead with its page and never the address', asyn
   await page.route('**/api/updates/subscribe',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({ok:true})}));
   await page.goto('/updates/');
   await page.getByLabel('Get new drops by email').fill('lead@example.com');
-  await page.getByRole('button',{name:'Sign me up'}).click();
+  await page.getByRole('button',{name:'Sign up'}).click();
   await expect(page.locator('[data-signup-status]')).toContainText("You're on the list");
   const queue = await page.evaluate(()=>window.__ahaTrackingEvents);
   expect(queue?.ga).toContainEqual(['event','generate_lead',{lead_source:'updates'}]);

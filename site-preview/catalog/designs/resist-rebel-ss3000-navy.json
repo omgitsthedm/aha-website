@@ -117,36 +117,36 @@
     "collection": "Resist Rebel",
     "gallery": [
       {
-        "src": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-front-1122.webp",
-        "srcset": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-front-400.webp 400w, /images/resist-rebel/resist-rebel-ss3000-navy/garment-front-800.webp 800w, /images/resist-rebel/resist-rebel-ss3000-navy/garment-front-1122.webp 1122w",
-        "feedImage": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-front.jpg",
+        "src": "/images/white-2026-10/resist-rebel-ss3000-navy/front-1122.webp",
+        "srcset": "/images/white-2026-10/resist-rebel-ss3000-navy/front-400.webp 400w, /images/white-2026-10/resist-rebel-ss3000-navy/front-800.webp 800w, /images/white-2026-10/resist-rebel-ss3000-navy/front-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/resist-rebel-ss3000-navy/front.jpg",
         "width": 1122,
         "height": 748,
         "alt": "Front of the Navy Resist Rebel Crewneck.",
         "role": "front"
       },
       {
-        "src": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-back-1122.webp",
-        "srcset": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-back-400.webp 400w, /images/resist-rebel/resist-rebel-ss3000-navy/garment-back-800.webp 800w, /images/resist-rebel/resist-rebel-ss3000-navy/garment-back-1122.webp 1122w",
-        "feedImage": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-back.jpg",
+        "src": "/images/white-2026-10/resist-rebel-ss3000-navy/back-1122.webp",
+        "srcset": "/images/white-2026-10/resist-rebel-ss3000-navy/back-400.webp 400w, /images/white-2026-10/resist-rebel-ss3000-navy/back-800.webp 800w, /images/white-2026-10/resist-rebel-ss3000-navy/back-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/resist-rebel-ss3000-navy/back.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Plain back of the Navy Resist Rebel Crewneck.",
         "role": "back"
       },
       {
-        "src": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-print-detail-1122.webp",
-        "srcset": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-print-detail-400.webp 400w, /images/resist-rebel/resist-rebel-ss3000-navy/garment-print-detail-800.webp 800w, /images/resist-rebel/resist-rebel-ss3000-navy/garment-print-detail-1122.webp 1122w",
-        "feedImage": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-print-detail.jpg",
+        "src": "/images/white-2026-10/resist-rebel-ss3000-navy/print-detail-1122.webp",
+        "srcset": "/images/white-2026-10/resist-rebel-ss3000-navy/print-detail-400.webp 400w, /images/white-2026-10/resist-rebel-ss3000-navy/print-detail-800.webp 800w, /images/white-2026-10/resist-rebel-ss3000-navy/print-detail-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/resist-rebel-ss3000-navy/print-detail.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Close view of the front print on the Navy Resist Rebel Crewneck.",
         "role": "print-detail"
       },
       {
-        "src": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-folded-1122.webp",
-        "srcset": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-folded-400.webp 400w, /images/resist-rebel/resist-rebel-ss3000-navy/garment-folded-800.webp 800w, /images/resist-rebel/resist-rebel-ss3000-navy/garment-folded-1122.webp 1122w",
-        "feedImage": "/images/resist-rebel/resist-rebel-ss3000-navy/garment-folded.jpg",
+        "src": "/images/white-2026-10/resist-rebel-ss3000-navy/folded-1122.webp",
+        "srcset": "/images/white-2026-10/resist-rebel-ss3000-navy/folded-400.webp 400w, /images/white-2026-10/resist-rebel-ss3000-navy/folded-800.webp 800w, /images/white-2026-10/resist-rebel-ss3000-navy/folded-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/resist-rebel-ss3000-navy/folded.jpg",
         "width": 1122,
         "height": 1122,
         "alt": "Navy Resist Rebel Crewneck casually folded, with the AHA private neck label visible.",

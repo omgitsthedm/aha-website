@@ -59,7 +59,7 @@ function luminance(data, channels, i) {
  *  - widthInches / topInches: placement as specified to Apliiq
  * Returns { png, crop, printBox, inkMask } for QA and export.
  */
-export async function compose({ blank, view = "front", color, art, widthInches, topInches = 3, centerOffsetInches = 0, background = "#f4f2ee" }) {
+export async function compose({ blank, view = "front", color, art, widthInches, topInches = 3, centerOffsetInches = 0, background = "#ffffff" }) {
   const base = BASES[blank]?.[view];
   if (!base) throw new Error(`No ${view} base photo for ${blank}. Add one to tools/images/bases.json.`);
   const photo = await raw(path.join(HERE, base.file));
@@ -112,7 +112,7 @@ export async function compose({ blank, view = "front", color, art, widthInches, 
 }
 
 /** Product-page frame (4:5), garment centered on paper white. */
-export async function frame(png, crop, { width = 1122, background = "#f4f2ee" } = {}) {
+export async function frame(png, crop, { width = 1122, background = "#ffffff" } = {}) {
   const height = Math.round(width * 1.25);
   const garment = await sharp(png).extract(crop).resize({ width: Math.round(width * 0.9), height: Math.round(height * 0.9), fit: "inside" }).toBuffer();
   return sharp({ create: { width, height, channels: 3, background } }).composite([{ input: garment, gravity: "center" }]).jpeg({ quality: 90 }).toBuffer();

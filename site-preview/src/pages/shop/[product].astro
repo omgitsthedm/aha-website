@@ -30,7 +30,7 @@ const productSchema={
 };
 ---
 <Site title={`${product.title} — ${product.color}`} description={product.description} image={gallery[0]!.feedImage} imageAlt={gallery[0]!.alt} imageWidth={gallery[0]!.width} imageHeight={gallery[0]!.height} noindex={offSale} preloadImage={{src:gallery[0]!.src,srcset:gallery[0]!.srcset,sizes:'(max-width: 760px) 100vw, 55vw'}}>
- <div class="shell product-breadcrumb"><a href="/shop/">← All pieces</a><span>Fall / Winter 2026</span></div>
+ <div class="shell product-breadcrumb"><a href="/shop/"> All pieces</a><span>Fall / Winter 2026</span></div>
  <section class="shell product-layout" data-product-id={product.squareItemId} data-product-name={product.title} data-product-color={product.color} data-product-price={product.price}>
   <div class="product-visuals">
    <div class="product-gallery" role="region" tabindex="0" aria-label={`${product.title} garment views; scroll to see all four`}>
@@ -53,12 +53,12 @@ const productSchema={
     </div>
     <label class="quantity-field">Quantity <input data-cart-quantity name="quantity" type="number" min="1" max="10" step="1" value="1" inputmode="numeric" /></label>
     <button type="submit" class="button add-to-bag">Add to bag <span aria-hidden="true">+</span></button>
-    <button type="submit" class="button button-secondary buy-now" data-buy-now>Buy now <span aria-hidden="true">→</span></button>
+    <button type="submit" class="button button-secondary buy-now" data-buy-now>Buy now </button>
     <button type="button" class="text-button save-piece" data-save={product.slug} aria-pressed="false" hidden>Save for later</button>
     <p class="cart-add-status" data-cart-add-status aria-live="polite"></p>
     <div class="express-pay" data-express hidden><p class="label">Or pay now</p><button type="button" class="apple-pay-button" data-express-apple aria-label="Buy with Apple Pay" hidden><span aria-hidden="true"> Pay</span></button><div id="aha-express-google" data-express-google></div><p class="checkout-note" data-express-status aria-live="polite"></p></div>
    </form>
-   <a class="text-link size-link" href="#size-guide">Check measurements ↓</a>
+   <a class="text-link size-link" href="#size-guide">Check measurements </a>
    <p class="checkout-note">Free domestic shipping. Final tax and payment options are shown securely at checkout.</p>
    <details open><summary>Fit &amp; fabric</summary><ul class="product-facts"><li>{product.fit}.</li>{product.typeLabel !== "Beanie" && <li>{product.weightOz} oz {product.fabricType}.</li>}<li>{product.composition}.</li>{product.constructionDetails.map((detail) => <li>{detail}</li>)}{product.blank && <li>Blank: {product.blank}.</li>}<li>{product.typeLabel === "Beanie" ? "Embroidered" : "Printed"} to order in the United States{product.printMethod ? `, ${product.printMethod}` : ""}.</li></ul></details>
    <details><summary>Shipping &amp; returns</summary><p>Made to order. Production usually takes about a week; shipping time varies by destination. Domestic shipping is free.</p><p>Request a return within 30 days of delivery for an unworn, unwashed item. Contact us before sending anything back.</p><p><a href="/shipping/">Shipping details</a> · <a href="/returns/">Return policy</a></p></details>
@@ -67,7 +67,7 @@ const productSchema={
  </section>
  <Fragment set:html={measurementGuide(product)} />
  <section class="shell section reviews" id="reviews" aria-labelledby="reviews-title" data-reviews={product.slug} hidden><p class="label">From people who bought it</p><h2 id="reviews-title">Reviews.</h2><p class="reviews-summary" data-review-summary></p><ul class="review-list" data-review-list></ul></section>
- <section class="section shell"><div class="section-header"><h2>More pieces.</h2><a href="/shop/" class="text-link">Shop all →</a></div><div class="product-grid related-products">{relatedProducts.map(p=><ProductCard product={p}/>)}</div></section>
+ <section class="section shell"><div class="section-header"><h2>More pieces.</h2><a href="/shop/" class="text-link">Shop all </a></div><div class="product-grid related-products">{relatedProducts.map(p=><ProductCard product={p}/>)}</div></section>
  {products.flatMap(entry=>entry.variants.map(variant=><template data-cart-catalog data-id={variant.id} data-sku={variant.sku} data-size={variant.size} data-slug={entry.slug} data-title={`${entry.title} — ${entry.color}`} data-color={entry.color} data-price-cents={entry.price*100} data-image={entry.gallery[0]!.src} data-image-alt={entry.gallery[0]!.alt}></template>))}
  <script type="application/ld+json" set:html={JSON.stringify(productSchema).replace(/</g,'\\u003c')}/>
  <script>

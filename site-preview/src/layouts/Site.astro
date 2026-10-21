@@ -1,6 +1,10 @@
 ---
-import "../styles/site.css";
-import { answers, brand, navigation } from "../data/site";
+import "../styles/storefront.css";
+import ProductTools from "../components/ProductTools.astro";
+import Navigation from "../components/Navigation.astro";
+import avif from "../data/avif.json";
+import socialCards from "../data/social-cards.json";
+import { answers, brand } from "../data/site";
 import Consent from '../components/Consent.astro';
 import EmailSignup from '../components/EmailSignup.astro';
 interface Props {
@@ -14,11 +18,16 @@ interface Props {
   imageHeight?: number;
   preloadImage?: { src: string; srcset: string; sizes: string };
 }
-const { title, description, path = Astro.url.pathname, noindex = false, image, imageAlt, imageWidth=1200, imageHeight=630, preloadImage } = Astro.props;
+const { title, description, path = Astro.url.pathname, noindex = false, image, imageAlt, imageWidth=1200, imageHeight=660, preloadImage } = Astro.props;
 const origin = Astro.site!.origin;
 const canonical = new URL(path, origin).href;
 const isPreview = import.meta.env.AHA_PRODUCTION_BUILD !== "approved";
-const shareImage=image?new URL(image,origin).href:`${origin}/brand/${isPreview?'og-image.png':'og-image-production.png'}`;
+const card = (socialCards as Record<string, {src: string; alt: string; width: number; height: number}>)[path];
+const fallbackCard = socialCards['/'];
+const shareImage = new URL(card?.src ?? image ?? fallbackCard.src, origin).href;
+const shareAlt = card?.alt ?? imageAlt ?? fallbackCard.alt;
+const shareWidth = card?.width ?? (image ? imageWidth : fallbackCard.width);
+const shareHeight = card?.height ?? (image ? imageHeight : fallbackCard.height);
 // One sign-up form per page: Home and Updates have their own, and the bag and order
 // pages stay clear. Every product page shares this footer (the live renderer reuses
 // it), so the form reports the section of the site, not the exact page.
@@ -102,9 +111,10 @@ const schema = {
       }
     />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#fafafa" />
+    <meta name="theme-color" content="#FF6B6B" />
+    <meta name="color-scheme" content="light" />
     {['poppins-latin-400', 'poppins-latin-700', 'poppins-latin-900', 'jetbrains-mono-400'].map(font => <link rel="preload" href={`/fonts/${font}.woff2`} as="font" type="font/woff2" crossorigin="anonymous" />)}
-    {preloadImage && <link rel="preload" as="image" href={preloadImage.src} imagesrcset={preloadImage.srcset} imagesizes={preloadImage.sizes} fetchpriority="high" />}
+    {preloadImage && <link rel="preload" as="image" href={(avif as Record<string, string>)[preloadImage.src] ? preloadImage.src.replace(/\.webp$/, ".avif") : preloadImage.src} type={(avif as Record<string, string>)[preloadImage.src] ? "image/avif" : undefined} imagesrcset={(avif as Record<string, string>)[preloadImage.src] ?? preloadImage.srcset} imagesizes={preloadImage.sizes} fetchpriority="high" />}
     <meta name="facebook-domain-verification" content="83wsdo81kg6b428satufegpkljq0w6" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={brand.name} />
@@ -115,15 +125,17 @@ const schema = {
       property="og:image"
       content={shareImage}
     />
-    <meta property="og:image:width" content={String(imageWidth)} />
-    <meta property="og:image:height" content={String(imageHeight)} />
+    <meta property="og:image:type" content={shareImage.endsWith('.webp') ? 'image/webp' : 'image/jpeg'} />
+    <meta property="og:image:width" content={String(shareWidth)} />
+    <meta property="og:image:height" content={String(shareHeight)} />
     <meta
       property="og:image:alt"
-      content={imageAlt || 'After Hours Agenda. For the dreamers and the doers. The original black-sheep mark on paper white and rose.'}
+      content={shareAlt}
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${title} | After Hours Agenda`} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image:alt" content={shareAlt} />
     <meta
       name="twitter:image"
       content={shareImage}
@@ -154,62 +166,13 @@ const schema = {
         <span>For review · Fall / Winter 2026</span>
       </div>
     )}
-    <div class="site-header-bar" data-header-bar>
-    <header class="site-header shell">
-      <a class="identity" href="/" aria-label="After Hours Agenda home">
-        <img src="/brand/sheep.svg" width="46" height="36" alt="" />
-        <span>
-          AFTER HOURS
-          <br />
-          AGENDA
-        </span>
-      </a>
-      <nav class="desktop-nav" aria-label="Main navigation">
-        {navigation.map((link) => (
-          <a
-            href={link.href}
-            aria-current={path === link.href ? "page" : undefined}
-          >
-            {link.label}
-          </a>
-        ))}
-      </nav>
-      <div class="header-tools">
-        <a class="header-account" href="/account/" aria-current={path === "/account/" ? "page" : undefined}>Account</a>
-        <a class="header-cart" href="/checkout/" data-cart-link aria-label="Bag, 0 items">
-          Bag <span data-cart-count aria-hidden="true">0</span>
-        </a>
-      </div>
-      <details class="mobile-nav">
-        <summary>
-          Menu <span aria-hidden="true">+</span>
-        </summary>
-        <nav aria-label="Mobile navigation">
-          {navigation.map((link) => (
-            <a
-              href={link.href}
-              aria-current={path === link.href ? "page" : undefined}
-            >
-              {link.label}
-            </a>
-          ))}
-          <a href="/checkout/" data-cart-link aria-label="Bag, 0 items">Bag <span data-cart-count aria-hidden="true">0</span></a>
-          <a href="/account/">Your account</a>
-          <a href="/updates/">Stay close ↗</a>
-        </nav>
-      </details>
-    </header>
-    </div>
+    <Navigation path={path} />
     <main id="main" tabindex="-1">
       <slot />
     </main>
     <footer class="site-footer shell">
       <div class="footer-top">
-        <p class="footer-tagline">
-          For the dreamers
-          <br />
-          <span class="accent">and the doers.</span>
-        </p>
+        <p class="footer-tagline">Graphic tees, fleece<br />and ribbed knitwear.</p>
         <a class="identity" href="/" aria-label="After Hours Agenda home">
           <img src="/brand/sheep.svg" width="46" height="36" alt="" />
           <span>
@@ -230,8 +193,8 @@ const schema = {
           <a href="/about/">The story</a>
           <a href="/lookbook/">Lookbook</a>
           <a href="/updates/">Updates</a>
-          <a href="/shop/">Shop the collection</a>
-          <a href={brand.giftCards}>Gift cards ↗</a>
+          <a href="/shop/">Shop it all</a>
+          <a href={brand.giftCards}>Gift cards </a>
         </nav>
         <nav aria-label="Support">
           <span class="label">Here to help</span>
@@ -246,13 +209,13 @@ const schema = {
         <div>
           <p class="label">A real conversation</p>
           <a class="footer-email" href={`mailto:${brand.email}`}>
-            {brand.email} ↗
+            {brand.email}
           </a>
           <p>
             Questions about fit, shipping or an order? We’re here to help.
           </p>
-          <a href={brand.instagram}>Instagram ↗</a>
-          <a href={brand.facebook}>Facebook ↗</a>
+          <a href={brand.instagram}>Instagram </a>
+          <a href={brand.facebook}>Facebook </a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -263,42 +226,15 @@ const schema = {
           <a href="/accessibility/">Accessibility</a>
           <button type="button" class="privacy-button" data-privacy-settings>Privacy choices</button>
         </nav>
+        <a class="creator-credit" href="https://littlefightnyc.com/">
+          <img src="/brand/little-fight-nyc-tugboat-orange.svg" width="27" height="18" alt="" loading="lazy" />
+          <span>created by <strong>Little Fight NYC</strong></span>
+        </a>
       </div>
     </footer>
+    {path.startsWith("/shop/") && path !== "/shop/" && <ProductTools />}
     <Consent />
     <script src="../scripts/cart-count.ts"></script>
-    <script>
-      const menu = document.querySelector<HTMLDetailsElement>(".mobile-nav");
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && menu?.open) {
-          menu.open = false;
-          menu.querySelector("summary")?.focus();
-        }
-      });
-      document.addEventListener("click", (event) => {
-        if (
-          menu?.open &&
-          event.target instanceof Node &&
-          !menu.contains(event.target)
-        )
-          menu.open = false;
-      });
-      // The header tucks away while scrolling down and returns on scroll up or
-      // keyboard focus. Sticky product details and checkout follow it (--header-offset).
-      const header = document.querySelector<HTMLElement>("[data-header-bar]");
-      let lastY = scrollY;
-      const tuck = (tucked: boolean) => {
-        if (!header || header.classList.contains("is-tucked") === tucked) return;
-        header.classList.toggle("is-tucked", tucked);
-        document.documentElement.style.setProperty("--header-offset", tucked ? "0px" : `${header.offsetHeight}px`);
-      };
-      addEventListener("scroll", () => {
-        const y = scrollY;
-        if (Math.abs(y - lastY) < 8) return;
-        tuck(y > lastY && y > 200 && !menu?.open);
-        lastY = y;
-      }, { passive: true });
-      header?.addEventListener("focusin", () => tuck(false));
-    </script>
+
   </body>
 </html>
