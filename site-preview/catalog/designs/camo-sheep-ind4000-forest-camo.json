@@ -138,36 +138,36 @@
     "campaignSetting": "Brick patio at dusk",
     "gallery": [
       {
-        "src": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-front-1122.webp",
-        "srcset": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-front-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-front-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-front-1122.webp 1122w",
-        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-front.jpg",
+        "src": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/front-1122.webp",
+        "srcset": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/front-400.webp 400w, /images/white-2026-10/camo-sheep-ind4000-forest-camo/front-800.webp 800w, /images/white-2026-10/camo-sheep-ind4000-forest-camo/front-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/front.jpg",
         "width": 1122,
         "height": 1039,
         "alt": "Front of the Forest Camo Camo Sheep Hoodie.",
         "role": "front"
       },
       {
-        "src": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-back-1122.webp",
-        "srcset": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-back-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-back-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-back-1122.webp 1122w",
-        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-back.jpg",
+        "src": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/back-1122.webp",
+        "srcset": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/back-400.webp 400w, /images/white-2026-10/camo-sheep-ind4000-forest-camo/back-800.webp 800w, /images/white-2026-10/camo-sheep-ind4000-forest-camo/back-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/back.jpg",
         "width": 1122,
         "height": 1039,
         "alt": "Plain back of the Forest Camo Camo Sheep Hoodie.",
         "role": "back"
       },
       {
-        "src": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-print-detail-1122.webp",
-        "srcset": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-print-detail-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-print-detail-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-print-detail-1122.webp 1122w",
-        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-print-detail.jpg",
+        "src": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/print-detail-1122.webp",
+        "srcset": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/print-detail-400.webp 400w, /images/white-2026-10/camo-sheep-ind4000-forest-camo/print-detail-800.webp 800w, /images/white-2026-10/camo-sheep-ind4000-forest-camo/print-detail-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/print-detail.jpg",
         "width": 1122,
         "height": 1039,
         "alt": "Close view of the Camo Sheep Hoodie print on Forest Camo fleece.",
         "role": "print-detail"
       },
       {
-        "src": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-folded-1122.webp",
-        "srcset": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-folded-400.webp 400w, /images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-folded-800.webp 800w, /images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-folded-1122.webp 1122w",
-        "feedImage": "/images/camo-sheep/camo-sheep-ind4000-forest-camo/garment-folded.jpg",
+        "src": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/folded-1122.webp",
+        "srcset": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/folded-400.webp 400w, /images/white-2026-10/camo-sheep-ind4000-forest-camo/folded-800.webp 800w, /images/white-2026-10/camo-sheep-ind4000-forest-camo/folded-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/camo-sheep-ind4000-forest-camo/folded.jpg",
         "width": 1122,
         "height": 1039,
         "alt": "Forest Camo Camo Sheep Hoodie casually folded.",

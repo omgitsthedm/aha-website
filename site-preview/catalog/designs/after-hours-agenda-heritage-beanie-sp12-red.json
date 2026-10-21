@@ -53,36 +53,36 @@
     "collection": "Black Sheep Knitwear",
     "gallery": [
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-front-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-front-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-front-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-front-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-front.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/front-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/front-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/front-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/front-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/front.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Front cuff of the Red AHA Heritage Beanie with direct sheep-logo embroidery.",
         "role": "front"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-back-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-back-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-back-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-back-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-back.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/back-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/back-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/back-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/back-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/back.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Plain reverse of the Red adjustable-cuff knit beanie.",
         "role": "back"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-print-detail-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-print-detail-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-print-detail-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-print-detail-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-print-detail.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/print-detail-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/print-detail-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/print-detail-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/print-detail-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/print-detail.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Close view of the embroidered sheep and custom lettering on the Red cuff.",
         "role": "print-detail"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-folded-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-folded-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-folded-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-folded-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-red/garment-folded.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-red/folded.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Red AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",

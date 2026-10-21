@@ -31,11 +31,11 @@ const leadCampaignImage = sets[0]?.looks[0]?.shot;
 ---
 
 <Site
-  title="The lookbook"
+  title="Out & About It."
   description="Explore the Fall / Winter 2026 campaign, styling ideas for graphic tees, fleece and knitwear, and the original After Hours Agenda brand archive."
   preloadImage={leadCampaignImage ? { src: leadCampaignImage.src, srcset: leadCampaignImage.srcset, sizes: "(max-width: 760px) calc(100vw - 40px), 30vw" } : undefined}
 >
-  <header class="page-head shell editorial-head"><div><p class="label">The lookbook · Fall / Winter 2026</p><h1>OUT <span class="accent">&amp; ABOUT.</span></h1><p class="lede">Everyday plans. A little dressing up. Tap a photograph to find the piece.</p></div><p class="status-copy">Campaign imagery is AI-generated. Films pair licensed city footage with AI-generated garment shots. Product pages show garment views and measurements.</p></header>
+  <header class="page-head shell editorial-head"><div><p class="label">The lookbook · Fall / Winter 2026</p><h1>OUT <span class="accent">&amp; ABOUT IT.</span></h1><p class="lede">Everyday plans. A little dressing up. Tap a photograph to find the piece.</p></div><p class="status-copy">Campaign imagery is AI-generated. Films pair licensed city footage with AI-generated garment shots. Product pages show garment views and measurements.</p></header>
   {sets.map((set, setIndex) => (
     <section class="shell campaign-set lookbook-set" data-look-set aria-labelledby={`look-${set.slug}`} hidden={allOffSale(set.looks.map(({ product }) => product))}>
       <div class="section-header">

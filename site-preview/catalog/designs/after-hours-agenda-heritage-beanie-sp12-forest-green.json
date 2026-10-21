@@ -53,36 +53,36 @@
     "collection": "Black Sheep Knitwear",
     "gallery": [
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-front-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-front-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-front-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-front-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-front.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/front-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/front-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/front-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/front-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/front.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Front cuff of the Forest Green AHA Heritage Beanie with direct sheep-logo embroidery.",
         "role": "front"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-back-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-back-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-back-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-back-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-back.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/back-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/back-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/back-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/back-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/back.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Plain reverse of the Forest Green adjustable-cuff knit beanie.",
         "role": "back"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-print-detail-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-print-detail-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-print-detail-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-print-detail-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-print-detail.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/print-detail-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/print-detail-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/print-detail-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/print-detail-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/print-detail.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Close view of the embroidered sheep and custom lettering on the Forest Green cuff.",
         "role": "print-detail"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-folded-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-folded-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-folded-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-folded-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-forest-green/garment-folded.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-forest-green/folded.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Forest Green AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",

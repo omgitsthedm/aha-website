@@ -19,6 +19,8 @@ Owner instruction, October 20, 2026: **NO REFERENCE TO “AFTER HOURS” OR “A
 
 The owner approved the photography-first website: Paper #FAFAFA, Ink #1A1A1A and Rose #FF6B6B, with accessible Rose text #CE3D56. No pink UI grounds. Preserve Poppins, JetBrains Mono, the official sheep and hairline frames. The homepage headline is “GET COMFORTABLE MAKING AN IMPRESSION.” and its primary CTA is “Shop it all”. No decorative arrows, Unicode arrows or generic arrow icons in customer-facing UI. Use clear text and verified custom assets. Editorial photography is separate from garment-only shopping galleries; never alter approved print artwork. Treat older origami and brand-name wordplay directions as superseded by these explicit owner decisions.
 
+The lookbook headline is “Out & About It.” Product mockups use one white studio background, not a mix of grey, cream and white. The owner authorized conventional background masking on October 20: preserve the supplied garment and print pixels, retain originals, inspect every view and check difficult edges before publishing. Fabric-filled close-ups keep their actual fabric color and texture. Version replacement image URLs so returning customers do not keep cached older backgrounds.
+
 ## Source, application, and release
 
 - Work in the current isolated task checkout only when assigned. The primary working clone is `/Users/davidmarsh/Code/LiFi NYC/Clients/After Hours Agenda/aha-website`; the registered push checkout is `/Users/davidmarsh/Desktop/LiFi NYC/Clients/After Hours Agenda/Website`. Preserve its branch and use it only for the guarded fetch-and-push path when a separately authorized release requires it.

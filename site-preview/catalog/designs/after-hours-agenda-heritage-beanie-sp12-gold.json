@@ -53,36 +53,36 @@
     "collection": "Black Sheep Knitwear",
     "gallery": [
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-front-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-front-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-front-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-front-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-front.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/front-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/front-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/front-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/front-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/front.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Front cuff of the Gold AHA Heritage Beanie with direct sheep-logo embroidery.",
         "role": "front"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-back-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-back-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-back-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-back-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-back.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/back-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/back-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/back-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/back-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/back.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Plain reverse of the Gold adjustable-cuff knit beanie.",
         "role": "back"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-print-detail-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-print-detail-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-print-detail-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-print-detail-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-print-detail.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/print-detail-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/print-detail-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/print-detail-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/print-detail-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/print-detail.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Close view of the embroidered sheep and custom lettering on the Gold cuff.",
         "role": "print-detail"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-folded-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-folded-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-folded-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-folded-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-gold/garment-folded.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-gold/folded.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Gold AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",

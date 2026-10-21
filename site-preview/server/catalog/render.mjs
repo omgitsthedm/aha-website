@@ -8,6 +8,7 @@ import { garmentGroup, hoverView, measurementGuide, otherColors, swatchFor } fro
 import { dropFor, dropNote, dropStage } from "./drops.mjs";
 import { isOffSale } from "./off-sale.mjs";
 import { RETURN_POLICY, SHIPPING_DETAILS } from "./offer-terms.mjs";
+import avifSources from "../../src/data/avif.json" with { type: "json" };
 
 const ESCAPABLE = /[&<>'"]/g;
 const ENTITIES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" };
@@ -20,7 +21,8 @@ const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 const GALLERY_LABELS = { front: "Front", back: "Back", "print-detail": "Print detail", folded: "Folded" };
 
 function image(shot, { priority = false, sizes, name }) {
-  return `<picture><img src="${attr(shot.src)}" srcset="${attr(shot.srcset)}" sizes="${attr(sizes)}" alt="${attr(shot.alt)}" width="${attr(shot.width)}" height="${attr(shot.height)}" loading="${priority ? "eager" : "lazy"}" fetchpriority="${priority ? "high" : "low"}" decoding="${priority ? "sync" : "async"}"${name ? ` style="${attr(`view-transition-name:${name}`)}"` : ""}></picture>`;
+  const avif = avifSources[shot.src];
+  return `<picture>${avif ? `<source type="image/avif" srcset="${attr(avif)}" sizes="${attr(sizes)}">` : ""}<img src="${attr(shot.src)}" srcset="${attr(shot.srcset)}" sizes="${attr(sizes)}" alt="${attr(shot.alt)}" width="${attr(shot.width)}" height="${attr(shot.height)}" loading="${priority ? "eager" : "lazy"}" fetchpriority="${priority ? "high" : "low"}" decoding="${priority ? "sync" : "async"}"${name ? ` style="${attr(`view-transition-name:${name}`)}"` : ""}></picture>`;
 }
 
 export function productCard(product) {
@@ -108,12 +110,13 @@ export function renderLivePage(shellHtml, product, products) {
   const title = `${product.title} — ${product.color}`;
   const canonical = `${origin}/shop/${product.slug}/`;
   const cover = product.gallery[0];
+  const avifCover = avifSources[cover.src];
   let head = shell.html.slice(0, shell.mainStart);
   const tail = shell.html.slice(shell.mainEnd);
   head = replaceOnce(head, /<title>[^<]*<\/title>/, `<title>${text(title)} | After Hours Agenda</title>`, "title");
   head = replaceOnce(head, /<meta name="description" content="[^"]*">/, `<meta name="description" content="${attr(product.description)}">`, "description");
   head = replaceOnce(head, /<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${attr(canonical)}">`, "canonical");
-  head = replaceOnce(head, /<link rel="preload" as="image"[^>]*>/, `<link rel="preload" as="image" href="${attr(cover.src)}" imagesrcset="${attr(cover.srcset)}" imagesizes="(max-width: 760px) 100vw, 55vw" fetchpriority="high">`, "primary image preload");
+  head = replaceOnce(head, /<link rel="preload" as="image"[^>]*>/, `<link rel="preload" as="image" href="${attr(avifCover ? cover.src.replace(/\.webp$/, ".avif") : cover.src)}"${avifCover ? ' type="image/avif"' : ""} imagesrcset="${attr(avifCover || cover.srcset)}" imagesizes="(max-width: 760px) 100vw, 55vw" fetchpriority="high">`, "primary image preload");
   // Off-sale pages are noindex in the build (src/pages/shop/[product].astro). The shell is
   // always an on-sale page, so its robots tag is already right for everything else.
   if (isOffSale(product.slug)) head = replaceOnce(head, /<meta name="robots" content="[^"]*">/, `<meta name="robots" content="noindex, noarchive">`, "robots");

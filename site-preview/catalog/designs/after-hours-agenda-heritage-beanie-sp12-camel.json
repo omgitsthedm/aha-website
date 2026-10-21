@@ -53,36 +53,36 @@
     "collection": "Black Sheep Knitwear",
     "gallery": [
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-front-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-front-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-front-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-front-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-front.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/front-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/front-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/front-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/front-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/front.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Front cuff of the Camel AHA Heritage Beanie with direct sheep-logo embroidery.",
         "role": "front"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-back-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-back-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-back-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-back-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-back.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/back-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/back-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/back-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/back-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/back.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Plain reverse of the Camel adjustable-cuff knit beanie.",
         "role": "back"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-print-detail-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-print-detail-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-print-detail-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-print-detail-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-print-detail.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/print-detail-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/print-detail-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/print-detail-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/print-detail-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/print-detail.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Close view of the embroidered sheep and custom lettering on the Camel cuff.",
         "role": "print-detail"
       },
       {
-        "src": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-folded-1122.webp",
-        "srcset": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-folded-400.webp 400w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-folded-800.webp 800w, /images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-folded-1122.webp 1122w",
-        "feedImage": "/images/black-sheep-knitwear/after-hours-agenda-heritage-beanie-sp12-camel/garment-folded.jpg",
+        "src": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-1122.webp",
+        "srcset": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-400.webp 400w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-800.webp 800w, /images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded-1122.webp 1122w",
+        "feedImage": "/images/white-2026-10/after-hours-agenda-heritage-beanie-sp12-camel/folded.jpg",
         "width": 1122,
         "height": 1403,
         "alt": "Camel AHA Heritage Beanie loosely folded to show its current AHA private label inside the seam.",
