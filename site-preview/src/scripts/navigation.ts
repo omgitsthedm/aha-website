@@ -42,7 +42,7 @@ dialog.addEventListener('keydown', event => {
   if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
   else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
 });
-input.addEventListener('input', async () => {
+['input', 'search'].forEach(event => input.addEventListener(event, async () => {
   const current = ++request, term = input.value.trim().toLowerCase();
   results.hidden = !term; browse.hidden = Boolean(term);
   if (!term) { status.textContent = ''; return; }
@@ -58,5 +58,5 @@ input.addEventListener('input', async () => {
     if (!link.hidden) { count++; const image = query(link, 'img')!; image.src = image.dataset.src!; }
   });
   status.textContent = count ? `${count} ${count === 1 ? 'piece' : 'pieces'} found` : 'No pieces found. Try a garment, color or design name.';
-});
+}));
 query(document, '.menu-search')?.addEventListener('submit', event => { if (!input.value.trim()) event.preventDefault(); });

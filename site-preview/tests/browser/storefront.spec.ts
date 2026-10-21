@@ -63,6 +63,10 @@ test("menu categories and search reach the matching garments on a phone", async 
   await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).fill('Yikes');
   await expect(menu.locator('#menu-result-status')).toHaveText('2 pieces found');
   await expect(menu.locator('#menu-results a:visible')).toHaveCount(2);
+  await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).press('Escape');
+  await expect(menu.getByRole('searchbox', { name: 'Find a piece', exact: true })).toHaveValue('');
+  await expect(menu.locator('#menu-browse')).toBeVisible();
+  await expect(menu.locator('#menu-results')).toBeHidden();
   await menu.getByRole('searchbox', { name: 'Find a piece', exact: true }).fill('');
   await menu.getByRole('link', { name: /^Tees/ }).click();
   await expect(page).toHaveURL(/type=tees/);
