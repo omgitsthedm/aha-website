@@ -1,10 +1,10 @@
 ---
 import { brand } from '../data/site';
 import products from '../data/products.json';
-import { garmentGroup } from '../../server/catalog/garments.mjs';
+import { GARMENT_GROUPS, garmentGroup } from '../../server/catalog/garments.mjs';
 import { onSale } from '../../server/catalog/off-sale.mjs';
 const { path = '/' } = Astro.props;
-const categories = [['all', 'Shop it all'], ['tees', 'Tees'], ['hoodies', 'Hoodies'], ['crewnecks', 'Crewnecks'], ['long-sleeves', 'Long sleeves'], ['beanies', 'Beanies']];
+const categories = [['all', 'Shop it all'], ...GARMENT_GROUPS.map(({ key, label }) => [key, label])];
 const active = onSale(products) as typeof products;
 const counts = new Map(categories.map(([key]) => [key, active.filter(p => key === 'all' || garmentGroup(p.typeLabel) === key).length]));
 ---

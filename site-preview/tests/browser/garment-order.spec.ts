@@ -20,3 +20,17 @@ test('garment order survives live publication, removal, filters and phone layout
   await expect(page.locator('[data-shop-status]')).toHaveText('7 pieces');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
+test('the phone menu includes every garment style and links to the cropped hoodie', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/shop/');
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
+  const nav = page.getByRole('navigation', { name: 'Shop by garment' });
+  const crop = nav.getByRole('link', { name: /^Cropped hoodies/ });
+  await expect(crop.locator('span')).toHaveText('1');
+  const counts = await nav.locator('a span').allTextContents();
+  expect(counts.slice(1).reduce((sum, count) => sum + Number(count), 0)).toBe(Number(counts[0]));
+  await crop.click();
+  await expect(page).toHaveURL(/\/shop\/\?type=cropped-hoodies$/);
+  await expect(page.locator('article.product-card:visible')).toHaveCount(1);
+});
