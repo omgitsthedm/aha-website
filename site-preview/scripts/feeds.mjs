@@ -25,7 +25,8 @@ export function feedXml(list,origin,channel='google'){
    `<g:structured_description>${tag('digital_source_type','trained_algorithmic_media')}${tag('content',product.description)}</g:structured_description>`,
    tag('link',link),tag('image_link',origin+product.gallery[0].feedImage),
    ...product.gallery.slice(1).map(image=>tag('additional_image_link',origin+image.feedImage)),
-   tag('availability','in_stock'),tag('condition','new'),tag('price',`${product.price.toFixed(2)} USD`),tag('brand','After Hours Agenda'),tag('identifier_exists','no'),
+   // Meta: owner-authorized made-to-order Shop allocation, refreshed by scheduled feed; not physical inventory or a perpetual-stock guarantee.
+   tag('availability',channel==='meta'?'in stock':'in_stock'),...(channel==='meta'?[tag('quantity_to_sell_on_facebook','10')]:[]),tag('condition','new'),tag('price',`${product.price.toFixed(2)} USD`),tag('brand','After Hours Agenda'),tag('identifier_exists','no'),
    tag('google_product_category',googleProductCategory),tag('product_type',productType),
    tag('color',product.color),tag('size',variant.size),tag('size_system','US'),tag('size_type','regular'),tag('gender',product.gender),tag('age_group','adult'),tag('material',product.composition),tag('custom_label_0','FW26'),
    `<g:shipping>${tag('country','US')}${tag('service','Standard')}${tag('price','0.00 USD')}</g:shipping>`

@@ -71,6 +71,10 @@ test('Google and Meta feeds enumerate each approved variant with garment imagery
   assert.equal((xml.match(/<g:additional_image_link>/g)||[]).length,variants.length*3);
   assert.equal((xml.match(/<g:structured_description>/g)||[]).length,variants.length);
   assert.ok(!xml.includes('campaign-'));assert.ok(!xml.includes('<g:gtin>'));
+  assert.equal((xml.match(/<g:availability>in_stock<\/g:availability>/g)||[]).length,name==='google.xml'?variants.length:0);
+  assert.equal((xml.match(/<g:availability>in stock<\/g:availability>/g)||[]).length,name==='meta.xml'?variants.length:0);
+  assert.equal((xml.match(/<g:quantity_to_sell_on_facebook>10<\/g:quantity_to_sell_on_facebook>/g)||[]).length,name==='meta.xml'?variants.length:0);
+  assert.ok(!xml.includes('<g:inventory>'));
   assert.equal((xml.match(/<g:price>0\.00 USD<\/g:price>/g)||[]).length,variants.length);
  }
 });
