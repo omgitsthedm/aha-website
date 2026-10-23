@@ -325,6 +325,19 @@ test("every product offer states delivery time and the 30-day free-return policy
   assert.equal(offer.hasMerchantReturnPolicy.returnFees, "https://schema.org/FreeReturn");
   assert.deepEqual([offer.shippingDetails.deliveryTime.handlingTime.minValue, offer.shippingDetails.deliveryTime.transitTime.maxValue], [5, 6]);
 });
+test("each merchant-listing variant includes the visible product description", async () => {
+  const products = JSON.parse(await readFile(new URL("../src/data/products.json", import.meta.url), "utf8"));
+  for (const product of products) {
+    const page = await readFile(new URL(`shop/${product.slug}/index.html`, root), "utf8");
+    const schema = [...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+      .map((match) => JSON.parse(match[1])).find((entry) => entry["@type"] === "ProductGroup");
+    assert.ok(product.description.trim(), `${product.slug}: description must not be empty`);
+    assert.equal(schema.hasVariant.length, product.variants.length, product.slug);
+    for (const variant of schema.hasVariant) {
+      assert.equal(variant.description, product.description, `${product.slug}: ${variant.size}`);
+    }
+  }
+});
 test("every product page names its blank and says where it's printed", async () => {
   const all = JSON.parse(await readFile(new URL("../src/data/products.json", import.meta.url), "utf8"));
   for (const product of all) assert.ok(product.blank, `${product.slug} has no blank`);

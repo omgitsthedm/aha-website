@@ -24,7 +24,7 @@ const productSchema={
  '@context':'https://schema.org','@type':'ProductGroup',name:`${product.title} — ${product.color}`,description:product.description,
  productGroupID:product.squareItemId,brand:{'@type':'Brand',name:'After Hours Agenda'},color:product.color,material:product.composition,
  image:gallery.map(i=>new URL(i.feedImage,origin).href),variesBy:['https://schema.org/size'],
- hasVariant:product.variants.map(v=>({'@type':'Product',name:`${product.title} — ${product.color} — ${v.size}`,sku:v.sku,size:v.size,color:product.color,image:new URL(gallery[0]!.feedImage,origin).href,
+ hasVariant:product.variants.map(v=>({'@type':'Product',name:`${product.title} — ${product.color} — ${v.size}`,description:product.description,sku:v.sku,size:v.size,color:product.color,image:new URL(gallery[0]!.feedImage,origin).href,
  offers:{'@type':'Offer',url:`${origin}/shop/${product.slug}/?size=${encodeURIComponent(v.size)}`,price:product.price,priceCurrency:'USD',availability:offSale?'https://schema.org/Discontinued':'https://schema.org/InStock',itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:'After Hours Agenda'},shippingDetails:SHIPPING_DETAILS,hasMerchantReturnPolicy:RETURN_POLICY}}))
 };
 ---

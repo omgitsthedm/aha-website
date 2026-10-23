@@ -43,7 +43,7 @@ function productSchema(product, gallery, origin) {
     productGroupID: product.squareItemId, brand: { "@type": "Brand", name: "After Hours Agenda" }, color: product.color, material: product.composition,
     image: gallery.map((shot) => new URL(shot.feedImage, origin).href), variesBy: ["https://schema.org/size"],
     hasVariant: product.variants.map((variant) => ({
-      "@type": "Product", name: `${product.title} — ${product.color} — ${variant.size}`, sku: variant.sku, size: variant.size, color: product.color, image: new URL(gallery[0].feedImage, origin).href,
+      "@type": "Product", name: `${product.title} — ${product.color} — ${variant.size}`, description: product.description, sku: variant.sku, size: variant.size, color: product.color, image: new URL(gallery[0].feedImage, origin).href,
       offers: { "@type": "Offer", url: `${origin}/shop/${product.slug}/?size=${encodeURIComponent(variant.size)}`, price: product.price, priceCurrency: "USD", availability: isOffSale(product.slug) ? "https://schema.org/Discontinued" : "https://schema.org/InStock", itemCondition: "https://schema.org/NewCondition", seller: { "@type": "Organization", name: "After Hours Agenda" }, shippingDetails: SHIPPING_DETAILS, hasMerchantReturnPolicy: RETURN_POLICY },
     })),
   };
