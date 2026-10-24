@@ -179,9 +179,15 @@ import { brand, topics } from "../data/site";
         return null;
       }
     }
-    let challengePromise = requestChallenge();
+    let challengePromise: Promise<SupportChallenge | null> | null = null;
+    function beginChallenge() {
+      challengePromise ??= requestChallenge();
+      return challengePromise;
+    }
+    form.addEventListener("focusin", beginChallenge, { once: true });
+    form.addEventListener("input", beginChallenge, { once: true });
     async function challengeForSubmit() {
-      let challenge = await challengePromise;
+      let challenge = await beginChallenge();
       if (!challenge || Date.parse(challenge.expiresAt) <= Date.now()) {
         challengePromise = requestChallenge();
         challenge = await challengePromise;

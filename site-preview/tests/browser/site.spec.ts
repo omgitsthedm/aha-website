@@ -120,6 +120,7 @@ test("contact preserves a failed request and confirms only an accepted submissio
   });
   await page.goto("/contact/?topic=order");
   await expect(page.locator("#topic")).toHaveValue("order");
+  expect(challenges).toHaveLength(0);
   await page.getByRole("button", {name:"Send message"}).click();
   await expect(page.locator("#name")).toBeFocused();
   expect(requests).toHaveLength(0);
