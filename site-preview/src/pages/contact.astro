@@ -165,6 +165,38 @@ import { brand, topics } from "../data/site";
       topic.value = requested;
     const requestId = crypto.randomUUID();
     let sending = false;
+    type SupportChallenge = { token: string; earliestSubmitAt: string; expiresAt: string };
+    async function requestChallenge(): Promise<SupportChallenge | null> {
+      try {
+        const response = await fetch("/api/support/challenge", {
+          headers: { accept: "application/json", "x-aha-support": "1" },
+          signal: AbortSignal.timeout(10_000),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || typeof data.token !== "string") return null;
+        return data;
+      } catch {
+        return null;
+      }
+    }
+    let challengePromise: Promise<SupportChallenge | null> | null = null;
+    function beginChallenge() {
+      challengePromise ??= requestChallenge();
+      return challengePromise;
+    }
+    form.addEventListener("focusin", beginChallenge, { once: true });
+    form.addEventListener("input", beginChallenge, { once: true });
+    async function challengeForSubmit() {
+      let challenge = await beginChallenge();
+      if (!challenge || Date.parse(challenge.expiresAt) <= Date.now()) {
+        challengePromise = requestChallenge();
+        challenge = await challengePromise;
+      }
+      if (!challenge) throw new Error("We couldn’t prepare the form. Try again or email us directly.");
+      const wait = Date.parse(challenge.earliestSubmitAt) - Date.now();
+      if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
+      return challenge.token;
+    }
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       if (sending) return;
@@ -191,9 +223,10 @@ import { brand, topics } from "../data/site";
       button.disabled = true;
       button.textContent = "Sending…";
       try {
+        const challenge = await challengeForSubmit();
         const response = await fetch("/api/support", {
           method: "POST", headers: { "content-type": "application/json", "x-aha-support": "1" },
-          body: JSON.stringify({ ...values, requestId }), signal: AbortSignal.timeout(15_000),
+          body: JSON.stringify({ ...values, requestId, challenge }), signal: AbortSignal.timeout(15_000),
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok || data.ok !== true) throw new Error(data.error || "We couldn’t confirm receipt. Your message is still here. Try again or email us directly.");
@@ -201,6 +234,7 @@ import { brand, topics } from "../data/site";
         result.hidden = false;
         document.getElementById("result-title")!.focus();
       } catch (error) {
+        challengePromise = requestChallenge();
         status.textContent = error instanceof Error && error.name !== "TimeoutError" ? error.message : "We couldn’t confirm receipt. Your message is still here. Try again or email us directly.";
         let fallback = form.querySelector<HTMLAnchorElement>("[data-support-fallback]");
         if (!fallback) {

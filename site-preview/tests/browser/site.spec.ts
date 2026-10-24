@@ -105,12 +105,22 @@ test("native mobile menu works by keyboard and Escape restores focus", async ({
 test("contact preserves a failed request and confirms only an accepted submission", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("aha-cookie-choices-v1", JSON.stringify({analytics:false,marketing:false,at:Date.now()})));
   const requests: unknown[] = [];
+  const challenges: unknown[] = [];
+  await page.route("**/api/support/challenge", async route => {
+    challenges.push(route.request());
+    await route.fulfill({ json: {
+      token: `local-challenge-${challenges.length}`,
+      earliestSubmitAt: new Date(Date.now() - 1_000).toISOString(),
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    } });
+  });
   await page.route("**/api/support", async route => {
     requests.push(route.request().postDataJSON());
     await route.fulfill({ status: requests.length === 1 ? 503 : 200, json: requests.length === 1 ? {error:"We couldn’t confirm receipt. Your message is still here."} : {ok:true} });
   });
   await page.goto("/contact/?topic=order");
   await expect(page.locator("#topic")).toHaveValue("order");
+  expect(challenges).toHaveLength(0);
   await page.getByRole("button", {name:"Send message"}).click();
   await expect(page.locator("#name")).toBeFocused();
   expect(requests).toHaveLength(0);
@@ -129,6 +139,9 @@ test("contact preserves a failed request and confirms only an accepted submissio
   await expect(page.locator("#brief-form")).toBeHidden();
   expect(requests).toHaveLength(2);
   expect((requests[0] as {requestId:string}).requestId).toBe((requests[1] as {requestId:string}).requestId);
+  expect((requests[0] as {challenge:string}).challenge).toBe("local-challenge-1");
+  expect((requests[1] as {challenge:string}).challenge).toBe("local-challenge-2");
+  expect(challenges).toHaveLength(2);
 });
 test("all content, menu and contact fallback work without JavaScript", async ({
   browser,
