@@ -107,3 +107,42 @@ test("support never confirms delivery if sender is unavailable or lacks an ackno
   const silent = await handleSupport(request(await securedInput(deps)), { ...deps, gateway: { send: async () => ({}) } });
   assert.equal(silent.status, 503);
 });
+
+test("valid challenges cannot deliver the repeated random-text spam pattern", async () => {
+  // Synthetic variants of the observed pattern; no sender addresses or private
+  // mailbox contents are kept in the public repository.
+  for (const fields of [
+    { name: "qAzWsXeDcRfVtGbY", message: "pOlIkUjYhTgRfEdWsQaZ", reference: "mNbVcXzAsDfGhJkL" },
+    { name: "qAzWsXeDcRfVtGbY", message: "pOlIkUjYhTgRfEdWsQaZ", reference: "" },
+    { name: "Test Buyer", message: "pOlIkUjYhTgRfEdWsQaZ", reference: "mNbVcXzAsDfGhJkL" },
+  ]) {
+    const deps = fixture();
+    const values = await securedInput(deps, { ...input, topic: "order", ...fields });
+    const queriesBefore = deps.queried.length;
+    const response = await handleSupport(request(values), deps);
+    assert.equal(response.status, 422);
+    const result = await response.json();
+    assert.equal(result.ok, undefined);
+    assert.match(result.error, /short sentence/);
+    assert.equal(deps.sent.length, 0);
+    assert.equal(deps.queried.length, queriesBefore, "rejected content reaches neither database claims nor the mail gateway");
+  }
+});
+
+test("support preserves legitimate short, international and order-reference-only context", async () => {
+  for (const fields of [
+    { name: "McKenzie MacDonald", message: "Where is my order?", reference: "qAzWsXeDcRfVtGbY" },
+    { name: "MaryAnnMcDonald", message: "Please help with my order.", reference: "mNbVcXzAsDfGhJkL" },
+    { name: "Test Buyer", message: "Unsubscribe", reference: "" },
+    { name: "山田太郎", message: "注文した商品の配送状況を教えてください。", reference: "" },
+    { name: "ชลธิชา", message: "ต้องการสอบถามสถานะการจัดส่งสินค้าของฉัน", reference: "" },
+    { name: "Test Buyer", message: "SCREEN READER DOES NOT ANNOUNCE THE SIZE.", reference: "" },
+    { name: "qAzWsXeDcRfVtGbY", message: "Please help me find my order confirmation.", reference: "" },
+    { name: "Test Buyer", message: "pOlIkUjYhTgRfEdWsQaZ", reference: "" },
+  ]) {
+    const deps = fixture();
+    const values = await securedInput(deps, { ...input, ...fields });
+    assert.equal((await handleSupport(request(values), deps)).status, 200, JSON.stringify(fields));
+    assert.equal(deps.sent.length, 1);
+  }
+});

@@ -81,6 +81,39 @@ export function createNetlifyRepository(db) {
     async getOrder(squareOrderId) {
       return one(db.sql`SELECT * FROM aha_fulfillment_orders WHERE square_order_id = ${squareOrderId} LIMIT 1`);
     },
+    async canIgnoreFailedPosReceipt({ squareOrderId, squarePaymentId }) {
+      // One read-only snapshot: checkout/provider evidence or any active monitor
+      // record wins over the POS exception. Unknown/NULL evidence fails closed.
+      const rows = await db.sql`
+        SELECT NOT EXISTS (
+          SELECT 1 FROM aha_checkout_sessions
+          WHERE square_order_id = ${squareOrderId} OR square_payment_id = ${squarePaymentId}
+        ) AND NOT EXISTS (
+          SELECT 1 FROM aha_fulfillment_events WHERE square_order_id = ${squareOrderId}
+        ) AND NOT EXISTS (
+          SELECT 1 FROM aha_fulfillment_orders f
+          WHERE (f.square_order_id = ${squareOrderId} OR f.square_payment_id = ${squarePaymentId})
+            AND (
+              f.square_order_id = ${squareOrderId} AND f.square_payment_id = ${squarePaymentId}
+              AND f.state = 'ignored' AND f.last_error_code IS NULL
+              AND f.provider_status = 'non_shipping_receipt'
+              AND f.apliiq_order_id IS NULL AND f.square_fulfillment_uid IS NULL
+              AND f.payment_created_at IS NULL AND f.customer_email IS NULL
+              AND f.attempt_count = 0 AND f.claimed_at IS NULL
+              AND f.submitted_items = '[]'::jsonb AND f.apliiq_payload = '{}'::jsonb
+              AND f.payload_sha256 IS NULL AND f.tracking = '[]'::jsonb
+              AND f.shipped_line_quantities = '{}'::jsonb
+              AND EXISTS (
+                SELECT 1 FROM aha_admin_audit a
+                WHERE a.target = f.square_order_id AND a.action = 'fulfillment.monitor_repaired'
+                  AND a.detail_json->>'reason' = 'verified_failed_non_shipping_receipt'
+                  AND a.detail_json->>'toState' = 'ignored'
+              )
+            ) IS NOT TRUE
+        ) AS can_ignore
+      `;
+      return rows[0]?.can_ignore === true;
+    },
     async listQueued() {
       return (await db.sql`SELECT * FROM aha_fulfillment_orders WHERE state = 'queued' ORDER BY created_at ASC LIMIT 8`).map(normalizeRow);
     },

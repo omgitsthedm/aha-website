@@ -166,6 +166,29 @@ function isCompletedCustomReceipt(payment, order, locationId) {
     && order.line_items.every((line) => !line.catalog_object_id);
 }
 
+// Ignore only positively identified, failed card-present POS attempts on a
+// canceled custom-amount receipt. Missing source data is not proof of POS.
+// Storefront references, catalog lines and any fulfillment remain reviewable.
+function isFailedCustomPosReceipt(payment, order, paymentId, locationId) {
+  const absent = (value) => value === undefined || value === null || value === "";
+  const nonempty = (value) => typeof value === "string" && value.trim().length > 0;
+  return payment?.status === "FAILED" && order?.state === "CANCELED"
+    && nonempty(paymentId) && payment.id === paymentId && nonempty(order.id) && payment.order_id === order.id
+    && nonempty(locationId) && payment.location_id === locationId && order.location_id === locationId
+    && ["SQUARE_POS", "RETAIL"].includes(payment.application_details?.square_product)
+    && payment.source_type === "CARD" && ["CONTACTLESS", "EMV", "SWIPED"].includes(payment.card_details?.entry_method)
+    && payment.amount_money?.currency === "USD" && order.total_money?.currency === "USD"
+    && Number.isSafeInteger(payment.amount_money?.amount) && payment.amount_money.amount > 0
+    && payment.amount_money.amount === order.total_money.amount
+    && absent(payment.reference_id) && absent(order.reference_id)
+    && (order.fulfillments === undefined || (Array.isArray(order.fulfillments) && order.fulfillments.length === 0))
+    && Array.isArray(order.line_items) && order.line_items.length > 0
+    && order.line_items.every((line) => line && typeof line === "object" && !Array.isArray(line)
+      && absent(line.catalog_object_id) && nonempty(line.uid)
+      && typeof line.quantity === "string" && /^\d+$/.test(line.quantity)
+      && Number.isSafeInteger(Number(line.quantity)) && Number(line.quantity) > 0);
+}
+
 // GET /Order is the documented source for the store-system ID, Apliiq ID,
 // status and shipment notices. Use one uniquely matched record for all four;
 // never join it to an unverified first row from a second response.
@@ -271,6 +294,12 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     if (isCompletedCustomReceipt(payment, order, config.locationId)) {
       const existing = await repository.getOrder(order.id);
       if (!existing || existing.state === "ignored") return { outcome: "ignored", code: "non_shipping_receipt" };
+    }
+    if (isFailedCustomPosReceipt(payment, order, paymentId, config.locationId)
+      && await repository.canIgnoreFailedPosReceipt({ squareOrderId: order.id, squarePaymentId: payment.id })) {
+      // The signed event is still marked processed by processSquareEvent.
+      // Do not create a hold or alter an existing audited ignored record.
+      return { outcome: "ignored", code: "non_shipping_receipt" };
     }
     let validated;
     try {
