@@ -2,6 +2,7 @@
 // the confirmation and shipment emails, and a customer-safe view of the order's
 // progress from the fulfillment table. It never returns names, emails or addresses.
 import { createHmac, hkdfSync, timingSafeEqual } from "node:crypto";
+import { AHA_FULFILLMENT_CATALOG } from "../fulfillment/catalog.mjs";
 import { SITE_ORIGIN } from "../platform/client.mjs";
 
 // AHA_ORDER_LINK_SECRET if set; otherwise a key derived (HKDF, separate purpose)
@@ -44,7 +45,7 @@ export function stageFor(row) {
 }
 
 export function customerView(orderId, row) {
-  const items = json(row?.submitted_items, []).map((item) => ({ title: String(item?.title ?? "Your piece"), size: item?.size ? String(item.size) : null, quantity: Number(item?.quantity ?? 1) }));
+  const items = json(row?.submitted_items, []).map((item) => ({ title: String(item?.title ?? AHA_FULFILLMENT_CATALOG[item?.variationId]?.title ?? "Your piece"), size: item?.size ? String(item.size) : null, quantity: Number(item?.quantity ?? 1) }));
   const tracking = json(row?.tracking, []).filter((entry) => entry && (entry.number || entry.url)).map((entry) => ({ carrier: entry.carrier ? String(entry.carrier) : null, number: entry.number ? String(entry.number) : null, url: typeof entry.url === "string" && /^https:\/\//.test(entry.url) ? entry.url : null }));
   const paidAt = row?.payment_created_at ?? row?.created_at ?? null;
   return {
@@ -65,6 +66,10 @@ export async function handleOrderStatus(request, { db, env }) {
   const orderId = url.searchParams.get("o") ?? "";
   // A wrong link and an unknown order look the same.
   if (!verifyOrderToken(orderId, url.searchParams.get("k"), env)) return reply({ error: "We couldn't find that order. Use the link in your order email." }, 404);
-  const [row] = await db.sql`SELECT state, apliiq_order_id, apliiq_payload, submitted_items, tracking, payment_created_at, created_at FROM aha_fulfillment_orders WHERE square_order_id = ${orderId}`;
+  let [row] = await db.sql`SELECT state, apliiq_order_id, apliiq_payload, submitted_items, tracking, payment_created_at, created_at FROM aha_fulfillment_orders WHERE square_order_id = ${orderId}`;
+  if (!row) {
+    const [paid] = await db.sql`SELECT cart_json, updated_at FROM aha_checkout_sessions WHERE square_order_id = ${orderId} AND state = 'completed' LIMIT 1`;
+    if (paid) row = { state: "paid", payment_created_at: paid.updated_at, submitted_items: json(paid.cart_json, []).map((item) => ({ title: item.title ?? AHA_FULFILLMENT_CATALOG[item.variationId]?.title ?? "Your piece", size: item.size, quantity: item.quantity })) };
+  }
   return reply(customerView(orderId, row));
 }

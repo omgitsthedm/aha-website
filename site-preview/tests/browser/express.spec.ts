@@ -14,7 +14,7 @@ async function mockSquare(page: Page) {
     const state = window as Wallet;
     state.__updates = [];
     window.Square = { payments: () => ({
-      card: async () => ({ tokenize: async () => ({ status: "OK" }) }),
+      card: async () => ({ tokenize: async () => ({ status: "OK", token: "opaque-card-token" }) }),
       paymentRequest: (request: unknown) => {
         state.__request = request as Wallet["__request"];
         return { addEventListener: (name: string, listener: (contact: unknown) => Promise<unknown>) => { if (name === "shippingcontactchanged") state.__address = listener; }, update: (value: unknown) => { state.__updates!.push(value); return true; } };
@@ -121,7 +121,7 @@ test("a wallet payment still being confirmed survives a reload and is never paid
   await page.evaluate(() => (window as Wallet).__address!({ city: "Phoenix", state: "AZ", postalCode: "85004", countryCode: "US" }));
   await page.getByRole("button", { name: "Buy with GPay" }).click();
   await expect.poll(() => calls.pay!.length).toBe(1);
-  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("aha-pending-express-v1") || "null"));
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("aha-pending-payment-v1") || "null"));
   expect(saved).toMatchObject({ checkoutId: "checkout_express_1", checkoutToken: "safe-checkout-token", idempotencyKey: calls.pay![0]!.idempotencyKey });
   // Reloaded while Square confirms: no wallet is offered, the attempt is followed.
   await page.reload();
@@ -130,7 +130,7 @@ test("a wallet payment still being confirmed survives a reload and is never paid
   await expect(page.getByRole("button", { name: "Buy with GPay" })).toHaveCount(0);
   state = "completed";
   await expect(page.locator("[data-express-status]")).toContainText("Payment confirmed · order AHA-1001", { timeout: 10_000 });
-  expect(await page.evaluate(() => localStorage.getItem("aha-pending-express-v1"))).toBeNull();
+  expect(await page.evaluate(() => localStorage.getItem("aha-pending-payment-v1"))).toBeNull();
   expect(calls.pay).toHaveLength(1);
   expect(calls.quote).toHaveLength(1);
 });
@@ -158,3 +158,102 @@ test("bag wallets price the saved bag before a card form is completed", async ({
   expect(calls.quote![0]).toMatchObject({ items: [{ variationId: crewM, quantity: 1 }] });
   expect(calls.pay![0]).toMatchObject({ checkoutId: "checkout_express_1", checkoutToken: "safe-checkout-token", sourceId: "opaque-wallet-token" });
 });
+
+
+test("bag express success clears the purchased bag and closes ordinary checkout", async ({ page }) => {
+  await mockSquare(page);
+  const calls = await routes(page);
+  await page.goto(`/checkout/?products=${crewM}%3A1`);
+  await expect(page.getByRole("button", { name: "Buy with GPay" })).toBeVisible();
+  await page.evaluate(() => (window as Wallet).__address!({ state: "AZ", city: "Phoenix", postalCode: "85004", countryCode: "US" }));
+  await page.getByRole("button", { name: "Buy with GPay" }).click();
+  await expect(page.getByRole("heading", { name: "ORDER CONFIRMED." })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Pay securely" })).toBeHidden();
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("aha-cart-v2") || "[]"))).toEqual([]);
+  expect(calls.pay).toHaveLength(1);
+});
+
+test("pending bag wallet payment locks card and quote before and after reload", async ({ page }) => {
+  await mockSquare(page);
+  const calls = await routes(page);
+  let submitted = 0;
+  await page.route("**/api/checkout/pay", (route) => { submitted++; return route.fulfill({ status: 202, json: { state: "pending" } }); });
+  await page.route("**/api/checkout/status?**", (route) => route.fulfill({ json: { state: "pending" } }));
+  await page.goto(`/checkout/?products=${crewM}%3A1`);
+  await expect(page.getByRole("button", { name: "Buy with GPay" })).toBeVisible();
+  await page.evaluate(() => (window as Wallet).__address!({ state: "AZ", city: "Phoenix", postalCode: "85004", countryCode: "US" }));
+  await page.getByRole("button", { name: "Buy with GPay" }).click();
+  await expect(page.locator("[data-checkout-form]")).toHaveAttribute("inert", "");
+  await expect(page.locator("[data-pay-card]")).toBeDisabled();
+  await expect(page.locator("[data-quote]")).toBeDisabled();
+  await expect.poll(() => submitted).toBe(1); expect(calls.quote).toHaveLength(1);
+  await page.reload();
+  await expect(page.locator("[data-checkout-form]")).toHaveAttribute("inert", "");
+  await expect(page.locator("[data-pay-card]")).toBeDisabled();
+  await expect(page.locator("[data-quote]")).toBeDisabled();
+  expect(submitted).toBe(1); expect(calls.quote).toHaveLength(1);
+});
+
+
+test("a wallet payment in another tab locks a prepared card checkout", async ({ page, context }) => {
+  await mockSquare(page); const first = await routes(page);
+  await page.goto(`/checkout/?products=${crewM}%3A1`);
+  for (const [label, value] of [["First name", "Avery"], ["Last name", "Tester"], ["Email", "avery@example.com"], ["Address", "1 N Central Ave"], ["City", "Phoenix"], ["State / province", "AZ"], ["Postal code", "85004"]]) await page.getByLabel(label!).fill(value!);
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
+  const other = await context.newPage(); await mockSquare(other); await routes(other);
+  await other.route("**/api/checkout/pay", (route) => route.fulfill({ status: 202, json: { state: "pending" } }));
+  await other.route("**/api/checkout/status?**", (route) => route.fulfill({ json: { state: "pending" } }));
+  await other.goto("/shop/yikes-crewneck/");
+  await other.getByRole("radio", { name: "M", exact: true }).check();
+  await expect(other.getByRole("button", { name: "Buy with GPay" })).toBeVisible();
+  await other.evaluate(() => (window as Wallet).__address!({ state: "AZ", city: "Phoenix", postalCode: "85004", countryCode: "US" }));
+  await other.getByRole("button", { name: "Buy with GPay" }).click();
+  await expect(page.getByRole("button", { name: "Pay securely" })).toBeDisabled();
+  await expect(page.locator("[data-checkout-form]")).toHaveAttribute("inert", "");
+  expect(first.pay).toHaveLength(0);
+});
+
+for (const recoveryPage of ["product", "checkout"] as const) {
+  for (const oldState of ["completed", "failed"] as const) {
+    test(`a delayed ${oldState} ${recoveryPage} response cannot clear a newer bag payment`, async ({ page, context }) => {
+      await mockSquare(page); await routes(page);
+      await page.goto("/");
+      await page.evaluate(() => {
+        localStorage.setItem("aha-pending-payment-v1", JSON.stringify({ checkoutId: "older_product", checkoutToken: "old-token", idempotencyKey: "old-idempotency-key", createdAt: Date.now(), scope: "product", summary: { currency: "USD", subtotalAmount: 5200, shippingAmount: 0, taxAmount: 421, totalAmount: 5621, items: [] } }));
+        localStorage.setItem("aha-payment-revision-v1", "older_product");
+      });
+      let releaseOld!: () => void;
+      let oldRequested = false;
+      const delayed = new Promise<void>((resolve) => { releaseOld = resolve; });
+      await page.route("**/api/checkout/status?**", async (route) => {
+        oldRequested = true; await delayed;
+        await route.fulfill({ json: { state: oldState, orderId: "OLDER-ORDER" } });
+      });
+      await page.goto(recoveryPage === "product" ? "/shop/yikes-crewneck/" : "/checkout/");
+      await expect.poll(() => oldRequested).toBe(true);
+
+      // Another tab settles that product purchase, then starts a distinct bag purchase.
+      const active = await context.newPage(); await mockSquare(active); const calls = await routes(active);
+      await active.route("**/api/checkout/quote", (route) => route.fulfill({ json: { ...quote, checkoutId: "newer_bag" } }));
+      await active.route("**/api/checkout/pay", (route) => { calls.pay!.push(route.request().postDataJSON()); return route.fulfill({ status: 202, json: { state: "pending" } }); });
+      await active.route("**/api/checkout/status?**", (route) => route.fulfill({ json: new URL(route.request().url()).searchParams.get("checkoutId") === "older_product" ? { state: "completed", orderId: "OLDER-ORDER" } : { state: "pending" } }));
+      await active.goto(`/checkout/?products=${crewM}%3A1`);
+      await expect(active.locator("[data-checkout-message]")).toContainText("Your previous payment is confirmed");
+      await expect(active.getByRole("button", { name: "Buy with GPay" })).toBeVisible();
+      await active.evaluate(() => (window as Wallet).__address!({ state: "AZ", city: "Phoenix", postalCode: "85004", countryCode: "US" }));
+      await active.getByRole("button", { name: "Buy with GPay" }).click();
+      await expect.poll(() => calls.pay!.length).toBe(1);
+      const response = page.waitForResponse("**/api/checkout/status?**");
+      releaseOld(); await response;
+      // Let the delayed continuation acquire and release its browser-wide lock.
+      await page.waitForTimeout(300);
+      expect(await active.evaluate(() => JSON.parse(localStorage.getItem("aha-pending-payment-v1") || "null")?.checkoutId)).toBe("newer_bag");
+      await expect(active.locator("[data-checkout-form]")).toHaveAttribute("inert", "");
+      await expect(active.locator("[data-pay-card]")).toBeDisabled();
+      await active.reload();
+      await expect(active.locator("[data-checkout-form]")).toHaveAttribute("inert", "");
+      expect(calls.pay).toHaveLength(1);
+    });
+  }
+}

@@ -6,6 +6,8 @@ import { jsonBody, noStore } from "../../server/checkout/http.mjs";
 import { afterResponse, checkoutProperties, createPostHogCapture, posthogConfig } from "../../server/analytics/posthog.mjs";
 import { createMarketingRuntime } from "../../server/analytics/marketing-runtime.mjs";
 import { posthogPurchaseAllowed } from "../../server/analytics/marketing.mjs";
+import { createNotificationRuntime } from "../../server/notifications/runtime.mjs";
+import { dispatchAfterResponse } from "../../server/notifications/dispatch-after.mjs";
 
 async function capturePurchase(runtime, checkoutId) {
   const capture = createPostHogCapture(posthogConfig(Netlify.env));
@@ -22,6 +24,10 @@ export default async function checkoutPay(request, context) {
     const runtime = createCheckoutRuntime({ database: getDatabase(), env: Netlify.env });
     if (!checkoutReady(runtime.config)) return errorResponse(new CheckoutError("checkout_unavailable", 503));
     const result = await runtime.service.pay(body ?? {});
+    if (result.state === "completed") {
+      const notifications = createNotificationRuntime({ database: getDatabase(), env: Netlify.env });
+      await dispatchAfterResponse({ service: { dispatch: async () => { await notifications.confirmations.queueCheckout(result.checkoutId); return notifications.service.dispatch(2); } } }, context);
+    }
     // A server-confirmed purchase is attributed to the visitor's replay session; it never affects payment.
     if (!result.trackingSuppressed && result.state === "completed" && typeof result.checkoutId === "string") await afterResponse(context, capturePurchase(runtime, result.checkoutId));
     // The provider outbox uses the same confirmed Square order id as the

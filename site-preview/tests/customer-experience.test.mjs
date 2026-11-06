@@ -72,6 +72,7 @@ test("the order view shows progress, items and tracking, never customer details"
   const pg = new PGlite();
   t.after(() => pg.close());
   await pg.exec(await readFile(new URL("../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql", import.meta.url), "utf8"));
+  await pg.exec(await readFile(new URL("../netlify/database/migrations/20261015160000_custom_checkout/migration.sql", import.meta.url), "utf8"));
   const db = { sql: async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows };
   await pg.query(`INSERT INTO aha_fulfillment_orders (square_order_id, square_payment_id, state, submitted_items, tracking, payment_created_at, apliiq_order_id) VALUES ('ORDER123456', 'PAY1', 'shipped', $1::jsonb, $2::jsonb, '2026-10-16T18:00:00Z', 'APQ-1')`, [JSON.stringify([{ title: "The City Hoodie", size: "M", quantity: 1, sku: "APQ-1" }]), JSON.stringify([{ carrier: "USPS", number: "9400", url: "https://tools.usps.com/go/TrackConfirmAction?tLabels=9400" }])]);
   const url = new URL(orderStatusUrl("ORDER123456", env()));
@@ -84,6 +85,13 @@ test("the order view shows progress, items and tracking, never customer details"
   assert.equal((await handleOrderStatus(new Request(url), { db, env: env() })).status, 404);
   const unknown = new URL(orderStatusUrl("ORDER999999", env()));
   assert.equal((await (await handleOrderStatus(new Request(unknown), { db, env: env() })).json()).stage, "paid", "a valid link before the order is recorded shows Paid");
+  await pg.query(`INSERT INTO aha_checkout_sessions (checkout_id,token_sha256,state,currency,cart_json,shipping_address_json,order_payload_json,subtotal_cents,shipping_cents,tax_cents,total_cents,order_idempotency_key,expires_at,square_order_id,square_payment_id)
+    VALUES ('paid-only','hash','completed','USD','[{"variationId":"464AETWT7Q2JEAPKDDJ6KLJQ","size":"XL","quantity":1}]','{"email":"private@example.com"}','{}',5800,0,470,6270,'unique',now(),'ORDER999999','PAY-PAID')`);
+  const awaiting = await (await handleOrderStatus(new Request(unknown), { db, env: env() })).json();
+  assert.equal(awaiting.stage, "paid");
+  assert.equal(awaiting.items[0].title, "Insomniac Hoodie — Black");
+  assert.equal(awaiting.items[0].size, "XL");
+  assert.doesNotMatch(JSON.stringify(awaiting), /private@example.com/);
   assert.equal(stageFor({ state: "queued" }), "paid");
   assert.equal(stageFor({ state: "submitted_accepted", apliiq_order_id: "A" }), "production");
   assert.equal(stageFor({ state: "attention" }), "review");

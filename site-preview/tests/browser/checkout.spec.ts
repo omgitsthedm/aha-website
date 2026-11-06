@@ -30,6 +30,7 @@ async function mockSquare(page: import("@playwright/test").Page, cashApp = false
     state.__ahaCashReferences = [];
     window.Square = { payments: () => ({
       card: async () => ({ attach: async () => {}, tokenize: async () => ({ status: "OK", token: "opaque-square-token" }) }),
+      applePay: async () => ({ attach: async () => {}, tokenize: async () => ({ status: "OK", token: "opaque-apple-token" }) }),
       giftCard: async () => ({ attach: async () => {}, tokenize: async () => ({ status: "OK", token: "opaque-gift-card-token" }) }),
       paymentRequest: (request: unknown) => {
         if (!state.__ahaPaymentRequest) state.__ahaPaymentRequest = request;
@@ -64,7 +65,7 @@ test("checkout: server quote then card payment never sends client money", async 
     };
   });
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect(page.locator("[data-quote-total]")).toHaveText("$56.21");
   await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
   expect(await page.evaluate(() => (window as Window & { __ahaPaymentRequest?: unknown }).__ahaPaymentRequest)).toMatchObject({
@@ -92,6 +93,31 @@ test("checkout: server quote then card payment never sends client money", async 
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain("opaque-square-token");
 });
 
+test("checkout: a supplier pause explains availability without blaming the address", async ({ page }) => {
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ errorCode: "checkout_paused" }) }));
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
+  await expect(page.locator("[data-checkout-message]")).toContainText("Checkout is temporarily unavailable");
+  await expect(page.locator("[data-checkout-message]")).not.toContainText("confirm this address");
+  await expect(page.getByLabel("Address", { exact: true })).toHaveValue("1 N Central Ave");
+});
+
+test("checkout: a pause after quoting releases the unpaid attempt and preserves the bag", async ({ page }) => {
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true } }) }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }));
+  await page.route("**/api/checkout/pay", (route) => route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ errorCode: "checkout_paused" }) }));
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
+  await page.getByRole("button", { name: "Pay securely", exact: true }).click();
+  await expect(page.locator("[data-payment-error]")).toContainText("No payment was taken");
+  expect(await page.evaluate(() => localStorage.getItem("aha-pending-payment-v1"))).toBeNull();
+  await expect(page.getByLabel("Address", { exact: true })).toHaveValue("1 N Central Ave");
+  await expect(page.getByRole("button", { name: "Confirm total again", exact: true })).toBeVisible();
+});
+
 test("checkout: privacy choices retain and narrow the quoted server context across later choices", async ({ page }) => {
   const privacyBodies: Record<string, unknown>[] = [];
   await mockSquare(page);
@@ -103,7 +129,7 @@ test("checkout: privacy choices retain and narrow the quoted server context acro
   });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect.poll(() => page.evaluate(() => localStorage.getItem("aha-checkout-marketing-receipts-v1"))).not.toBeNull();
   await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
   await page.getByRole("button", { name: "Analytics only", exact: true }).click();
@@ -128,7 +154,7 @@ test("checkout: a failed privacy withdrawal is retried after navigation", async 
   });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect.poll(() => page.evaluate(() => localStorage.getItem("aha-checkout-marketing-receipts-v1"))).not.toBeNull();
   await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
   // A saved choice reloads the page after giving the withdrawal 250 ms; a goto
@@ -157,7 +183,7 @@ test("checkout: rejects tampered or future saved attribution", async ({ page }) 
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await page.evaluate(() => localStorage.setItem("aha-marketing-attribution-v1", JSON.stringify({ utm: { utm_source: "private@example.com" }, gclid: "unsafe@email", landingPath: "/checkout/?token=private", capturedAt: "2999-01-01T00:00:00.000Z" })));
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect.poll(() => quoteBodies.length).toBe(1);
   expect((quoteBodies[0]!.marketing as { marketing: { attribution?: unknown } }).marketing.attribution).toBeUndefined();
 });
@@ -170,7 +196,7 @@ test("checkout: keeps only allowed campaign values and drops them after a market
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1&utm_source=google&utm_campaign=fall-2026&gclid=google-click_1&fbclid=meta-click_1&email=private%40example.com&token=do-not-keep");
   await page.evaluate(() => { document.cookie = "_fbp=fb.1.123.abc_1; path=/"; document.cookie = "_fbc=fb.1.123.meta_1; path=/"; });
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect.poll(() => quoteBodies.length).toBe(1);
   const first = quoteBodies[0]!.marketing as { marketing: { attribution?: Record<string, unknown>; meta?: Record<string, unknown> } };
   expect(first.marketing.attribution).toMatchObject({ utm: { utm_source: "google", utm_campaign: "fall-2026" }, gclid: "google-click_1", fbclid: "meta-click_1", landingPath: "/checkout/" });
@@ -188,7 +214,7 @@ test("checkout: keeps only allowed campaign values and drops them after a market
   await page.getByLabel("City").fill("Phoenix");
   await page.getByLabel("State / province").fill("AZ");
   await page.getByLabel("Postal code").fill("85004");
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect.poll(() => quoteBodies.length).toBe(2);
   expect((quoteBodies[1]!.marketing as { marketing: unknown }).marketing).toEqual({ consent: false, gpc: false });
   expect(await page.evaluate(() => localStorage.getItem("aha-marketing-attribution-v1"))).toBeNull();
@@ -197,14 +223,14 @@ test("checkout: keeps only allowed campaign values and drops them after a market
 test("checkout: payment uses the latest privacy choice even when a prior quote allowed marketing", async ({ page }) => {
   const paymentBodies: Record<string, unknown>[] = [];
   const quoteBodies: Record<string, unknown>[] = [];
-  await page.addInitScript(() => Object.defineProperty(Storage.prototype, "setItem", { configurable: true, value: () => { throw new DOMException("Storage blocked"); } }));
+  await page.addInitScript(() => { const nativeSet = Storage.prototype.setItem; Object.defineProperty(Storage.prototype, "setItem", { configurable: true, value: function(key: string, value: string) { if (key.includes("marketing") || key === "aha-cookie-choices-v1" || key === "aha-checkout-receipt-probe") throw new DOMException("Attribution storage blocked"); nativeSet.call(this, key, value); } }); });
   await mockSquare(page);
   await page.route("**/api/checkout/config", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } }) }));
   await page.route("**/api/checkout/quote", async (route) => { quoteBodies.push(route.request().postDataJSON() as Record<string, unknown>); await route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }); });
   await page.route("**/api/checkout/pay", async (route) => { paymentBodies.push(route.request().postDataJSON() as Record<string, unknown>); await route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "completed", orderId: "AHA-consent-1002" }) }); });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1&utm_source=google&gclid=google-click_2");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect.poll(() => quoteBodies.length).toBe(1);
   expect(quoteBodies[0]!.marketing).toEqual({ analytics: { consent: false }, marketing: { consent: false, gpc: false } });
   await page.getByRole("button", { name: "Privacy choices", exact: true }).click();
@@ -225,7 +251,7 @@ test("checkout: ambiguous payment is recovered through status without a second c
   await page.route("**/api/checkout/status**", (route) => { statuses += 1; return route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "completed", orderId: "AHA-1002" }) }); });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await page.getByRole("button", { name: "Pay securely" }).click();
   await expect(page.locator("[data-checkout-message]")).toContainText("Payment confirmed · order AHA-1002");
   expect(pays).toBe(1);
@@ -243,7 +269,7 @@ test("checkout: an ambiguous service response is reconciled before checkout unlo
   await page.route("**/api/checkout/status**", (route) => { statuses += 1; return route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "completed", orderId: "AHA-1003" }) }); });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await page.getByRole("button", { name: "Pay securely" }).click();
   await expect(page.locator("[data-checkout-message]")).toContainText("Payment confirmed · order AHA-1003");
   expect(pays).toBe(1);
@@ -259,7 +285,7 @@ test("checkout: an unprovable payment outcome stays locked and only rechecks on 
   await page.route("**/api/checkout/status**", (route) => { statuses += 1; return route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "attention", error: "payment_outcome_unknown", orderId: "AHA-hold-1004" }) }); });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await page.getByRole("button", { name: "Pay securely" }).click();
   await expect(page.locator("[data-checkout-message]")).toContainText("Order reference: AHA-hold-1004");
   await expect(page.getByRole("button", { name: "Check payment status" })).toBeVisible();
@@ -276,7 +302,7 @@ test("checkout: Afterpay keeps its delivery contact bound to the server quote", 
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
   await page.getByLabel("State / province").fill("New York");
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
   expect(await page.evaluate(() => {
     const state = window as Window & { __ahaAfterpayRequest?: { options?: { requestShippingContact?: boolean; shippingContact?: unknown; total?: unknown } }; __ahaAfterpayAddressListener?: (contact: unknown) => unknown };
@@ -298,7 +324,7 @@ test("checkout: Cash App return restores only the matching unexpired quote and r
   await page.route("**/api/checkout/quote", (route) => { quotes += 1; return route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }); });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
   const before = await page.evaluate(() => ({ resume: sessionStorage.getItem("aha-cash-app-resume-v1"), references: (window as Window & { __ahaCashReferences?: string[] }).__ahaCashReferences }));
   expect(before.references).toHaveLength(1);
@@ -320,7 +346,7 @@ test("checkout: expired or bag-mismatched Cash App resume is discarded without r
   await page.route("**/api/checkout/quote", (route) => { quotes += 1; return route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }); });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
   await page.evaluate(() => { const key = "aha-cash-app-resume-v1"; const saved = JSON.parse(sessionStorage.getItem(key)!); saved.quote.expiresAt = "2000-01-01T00:00:00.000Z"; sessionStorage.setItem(key, JSON.stringify(saved)); });
   await page.reload();
@@ -337,7 +363,7 @@ test("checkout: a bag-mismatched Cash App resume is discarded without re-quoting
   await page.route("**/api/checkout/quote", (route) => { quotes += 1; return route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }); });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
   await page.evaluate(() => localStorage.setItem("aha-cart-v2", JSON.stringify([{ variationId: "R5UCZCGSJMR3Z4HJDVOD3ZIK", quantity: 2 }])));
   await page.reload();
@@ -359,11 +385,11 @@ test("checkout: a gift card pays the whole server total, and a short balance say
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await expect(page.locator("[data-gift-card]")).toBeHidden();
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await page.locator("[data-gift-card] summary").click();
   await page.getByRole("button", { name: "Pay with gift card" }).click();
   await expect(page.locator("[data-checkout-message]")).toContainText("That gift card couldn’t pay the full total.");
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await page.locator("[data-gift-card] summary").click();
   await page.getByRole("button", { name: "Pay with gift card" }).click();
   await expect(page.locator("[data-checkout-message]")).toContainText("Payment confirmed · order AHA-1002");
@@ -377,7 +403,7 @@ test("checkout: the gift card option stays hidden when turned off", async ({ pag
   await page.route("**/api/checkout/quote", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(quote) }));
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   await fillAddress(page);
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
   await expect(page.locator("[data-gift-card]")).toBeHidden();
 });
@@ -388,7 +414,7 @@ test("checkout: flags the first missing delivery field and requires French fulfi
   await page.route("**/api/checkout/config", (route) => route.fulfill({ json: { appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: false, applePay: false, googlePay: false, afterpay: false, cashAppPay: false } } }));
   await page.route("**/api/checkout/quote", async (route) => { quoteBodies.push(route.request().postDataJSON() as Record<string, unknown>); await route.fulfill({ json: quote }); });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect(page.locator("[data-checkout-errors]")).toContainText("First name");
   await expect(page.getByLabel("First name")).toBeFocused();
   await page.getByLabel("First name").fill("Avery");
@@ -397,14 +423,62 @@ test("checkout: flags the first missing delivery field and requires French fulfi
   await page.getByLabel("Address").fill("10 Rue de Rivoli");
   await page.getByLabel("City").fill("Paris");
   await page.getByLabel("Country").selectOption("FR");
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect(page.locator("[data-checkout-errors]")).toContainText("State, province or region, Postal code");
   await expect(page.getByLabel("State / province")).toBeFocused();
   expect(quoteBodies).toHaveLength(0);
   await page.getByLabel("State / province").fill("Île-de-France");
   await page.getByLabel("Postal code").fill("75001");
-  await page.getByRole("button", { name: "Confirm total" }).click();
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
   await expect.poll(() => quoteBodies.length).toBe(1);
   expect((quoteBodies[0]!.shippingAddress as Record<string, unknown>).region).toBe("Île-de-France");
   expect((quoteBodies[0]!.shippingAddress as Record<string, unknown>).postalCode).toBe("75001");
+});
+
+
+test("mobile decline is visible, preserves address and bag, and restores Apple Pay on retry", async ({ page }, testInfo) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await mockSquare(page);
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ json: { appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true, applePay: true, googlePay: false, afterpay: false, cashAppPay: false } } }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ json: quote }));
+  await page.route("**/api/checkout/pay", (route) => route.fulfill({ status: 402, json: { errorCode: "payment_cvv_failed" } }));
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
+  await page.getByRole("button", { name: "Pay securely" }).click();
+  const error = page.locator("[data-payment-error]");
+  await expect(error).toContainText("security code wasn’t accepted");
+  await expect(error).toBeFocused();
+  await expect(error).toBeInViewport();
+  await page.screenshot({ path: testInfo.outputPath("mobile-decline.png") });
+  await expect(page.getByLabel("Email", { exact: true })).toHaveValue("avery@example.com");
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("aha-cart-v2") || "[]"))).toHaveLength(1);
+  await page.getByRole("button", { name: "Confirm total again", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Pay with Apple Pay", exact: true })).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Pay securely" })).toBeEnabled();
+});
+
+
+test("blocked browser storage prevents an unrecoverable charge", async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(Storage.prototype, "setItem", { value: () => { throw new DOMException("Storage blocked"); } }));
+  await mockSquare(page);
+  let payments = 0;
+  await page.route("**/api/checkout/config", (route) => route.fulfill({ json: { appId: "public-app", locationId: "location", countryCode: "US", currencyCode: "USD", methods: { card: true } } }));
+  await page.route("**/api/checkout/quote", (route) => route.fulfill({ json: quote }));
+  await page.route("**/api/checkout/pay", (route) => { payments++; return route.fulfill({ json: { state: "completed" } }); });
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await fillAddress(page);
+  await page.getByRole("button", { name: "Confirm total", exact: true }).click();
+  await page.getByRole("button", { name: "Pay securely" }).click();
+  await expect(page.locator("[data-payment-error]")).toContainText("storage is unavailable");
+  expect(payments).toBe(0);
+});
+
+test("legacy unresolved wallet attempts do not expire into permission to pay", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("aha-pending-express-v1", JSON.stringify({ checkoutId: "legacy-wallet", checkoutToken: "legacy-token", idempotencyKey: "legacy-key", createdAt: Date.now() - 3 * 86400000 })));
+  await page.route("**/api/checkout/status?**", (route) => route.fulfill({ json: { state: "attention", orderId: "legacy-order" } }));
+  await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
+  await expect(page.locator("[data-checkout-message]")).toContainText("Please do not try again yet");
+  await expect(page.locator("[data-checkout-form]")).toHaveAttribute("inert", "");
+  await expect(page.locator("[data-pay-card]")).toBeDisabled();
 });

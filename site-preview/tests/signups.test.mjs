@@ -105,7 +105,7 @@ test("the admin email list needs a session, removes by id and keeps addresses ou
 test("before the sign-up migration is applied, the admin overview, list and digest still work", async (t) => {
   const pg = new PGlite();
   t.after(() => pg.close());
-  for (const name of ["20261015045000_yikes_fulfillment", "20261016110000_product_drafts", "20261016120000_admin", "20261016130000_owner_reports"]) await pg.exec(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
+  for (const name of ["20261015045000_yikes_fulfillment", "20261015160000_custom_checkout", "20261016110000_product_drafts", "20261016120000_admin", "20261016130000_owner_reports"]) await pg.exec(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
   const db = { sql: async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows };
   const { listSignups, signupCounts } = await import("../server/updates/signups.mjs");
   assert.deepEqual(await signupCounts(db), { total: 0, last7Days: 0 });

@@ -4,6 +4,8 @@ import { CheckoutError, errorResponse } from "../../server/checkout/errors.mjs";
 import { noStore } from "../../server/checkout/http.mjs";
 import { afterResponse } from "../../server/analytics/posthog.mjs";
 import { createMarketingRuntime } from "../../server/analytics/marketing-runtime.mjs";
+import { createNotificationRuntime } from "../../server/notifications/runtime.mjs";
+import { dispatchAfterResponse } from "../../server/notifications/dispatch-after.mjs";
 
 export default async function checkoutStatus(request, context) {
   if (!requireProductionRequest(request, context) || request.method !== "GET") return new Response(null, { status: 404 });
@@ -13,6 +15,8 @@ export default async function checkoutStatus(request, context) {
     const url = new URL(request.url);
     const result = await runtime.service.status({ checkoutId: url.searchParams.get("checkoutId"), checkoutToken: url.searchParams.get("checkoutToken") });
     if (result.state === "completed" && typeof result.checkoutId === "string") {
+      const notifications = createNotificationRuntime({ database: getDatabase(), env: Netlify.env });
+      await dispatchAfterResponse({ service: { dispatch: async () => { await notifications.confirmations.queueCheckout(result.checkoutId); return notifications.service.dispatch(2); } } }, context);
       const marketing = createMarketingRuntime({ database: getDatabase(), env: Netlify.env });
       await afterResponse(context, marketing.queueCheckout(result.checkoutId).then(() => marketing.service.dispatch(2)));
     }
