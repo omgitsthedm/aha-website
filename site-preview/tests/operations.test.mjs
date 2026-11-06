@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
-import { compareFeed, compareSquareCatalog, parseFeed } from "../server/operations/report.mjs";
+import { compareFeed, compareSquareCatalog, parseFeed, pipelineProblems } from "../server/operations/report.mjs";
 import { latestReports, reportKey, runOwnerReport } from "../server/operations/runtime.mjs";
 import operationsHealth, { config as healthSchedule } from "../netlify/functions/operations-health.mjs";
 import weeklyDigestFunction, { config as digestSchedule } from "../netlify/functions/weekly-digest.mjs";
@@ -139,4 +139,15 @@ test("owner reports run only on the exact production site, on their schedules", 
     assert.equal(await weeklyDigestFunction(new Request("https://example.com"), { site: { id: "275b4115-16bf-42fb-9b36-6bce9bb93608" }, deploy: { context: "deploy-preview" } }), undefined);
   } finally { delete globalThis.Netlify; }
   assert.equal(reportKey("weekly_digest", new Date("2026-10-19T13:30:00Z")), "digest:2026-10-19");
+});
+
+
+test("paid orders missing both provider handoff and email cannot look healthy", async (t) => {
+  const { db, pg } = await database(t);
+  await pg.query(`INSERT INTO aha_checkout_sessions (checkout_id, token_sha256, state, currency, cart_json, shipping_address_json, order_payload_json, subtotal_cents, shipping_cents, tax_cents, total_cents, order_idempotency_key, expires_at, square_order_id, square_payment_id, updated_at)
+    VALUES ('missing', 'hash', 'completed', 'USD', '[]', '{}', '{}', 5800, 0, 470, 6270, 'unique', now(), 'paid-order', 'paid-payment', now() - interval '1 hour')`);
+  const problems = await pipelineProblems(db);
+  assert.equal(problems.length, 2);
+  assert.match(problems.join(" "), /missing from fulfillment/);
+  assert.match(problems.join(" "), /confirmation email was not queued/);
 });

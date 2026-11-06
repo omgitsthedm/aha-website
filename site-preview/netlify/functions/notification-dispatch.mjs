@@ -10,6 +10,7 @@ export default async function notificationDispatch(_request, context) {
   const runtime = createNotificationRuntime({ database, env: Netlify.env });
   // Bag reminders and review requests that are due (server/notifications/customer-emails.mjs).
   if (runtime.config.enabled) {
+    try { await runtime.confirmations.recoverMissing(); } catch { console.error(JSON.stringify({ event: "order_confirmation_recovery_failed" })); }
     try {
       const { products } = await currentCatalog();
       await queueCustomerEmails({ db: database, service: runtime.service, products, env: Netlify.env });

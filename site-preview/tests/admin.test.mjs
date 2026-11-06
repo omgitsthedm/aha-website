@@ -5,7 +5,7 @@ import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { handleAdmin } from "../server/admin/api.mjs";
 import { SESSION_COOKIE } from "../server/admin/auth.mjs";
-import { orderFlags } from "../server/admin/orders.mjs";
+import { orderFlags, listOrders, overview } from "../server/admin/orders.mjs";
 import { createDraftFromApliiq } from "../server/catalog/drafts.mjs";
 
 const ORIGIN = "https://afterhoursagenda.com";
@@ -119,4 +119,16 @@ test("admin Products lists every product on sale, built or published live", asyn
 test("the catalog route needs a signed-in session", async (t) => {
   const { sql } = await isolated(t);
   assert.equal((await call({ sql }, "catalog")).status, 401);
+});
+
+
+test("a paid checkout with no fulfillment record is visible and flagged in admin", async (t) => {
+  const db = await isolated(t);
+  await db.sql`INSERT INTO aha_checkout_sessions (checkout_id,token_sha256,state,currency,cart_json,shipping_address_json,order_payload_json,subtotal_cents,shipping_cents,tax_cents,total_cents,order_idempotency_key,expires_at,square_order_id,square_payment_id)
+    VALUES ('paid-only','hash','completed','USD','[{"variationId":"464AETWT7Q2JEAPKDDJ6KLJQ","size":"XL","quantity":1}]','{}','{}',5800,0,470,6270,'unique',now(),'PAID-ORDER','PAY-PAID')`;
+  const [order] = await listOrders(db);
+  assert.equal(order.squareOrderId, "PAID-ORDER");
+  assert.equal(order.items[0].title, "Insomniac Hoodie — Black");
+  assert.equal(order.flags[0].code, "fulfillment_missing");
+  assert.equal((await overview(db)).ordersNeedingAttention, 1);
 });

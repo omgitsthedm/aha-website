@@ -13,7 +13,7 @@ function shell({ eyebrow, heading, message, orderNumber, details, total, statusU
 }
 
 export function renderOrderConfirmation(payload) {
-  return shell({ eyebrow: "Payment complete", heading: "Your order is in.", message: "Your payment is confirmed. We’re preparing your made-to-order piece and will write again when tracking is available.", orderNumber: payload.orderNumber, details: items(payload.items), total: money(payload.totalAmount, payload.currency), statusUrl: payload.statusUrl });
+  return shell({ eyebrow: "Payment complete", heading: "Your order is in.", message: "Your payment is confirmed. Follow your order’s progress using the link below. We’ll email you again when tracking is available.", orderNumber: payload.orderNumber, details: items(payload.items), total: money(payload.totalAmount, payload.currency), statusUrl: payload.statusUrl });
 }
 export function renderShipment(payload) {
   const tracking = payload.trackingUrl ? `Tracking: ${payload.trackingUrl}` : `${payload.carrier || "Carrier"} tracking number: ${payload.trackingNumber}`;

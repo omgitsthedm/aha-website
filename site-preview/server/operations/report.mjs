@@ -52,6 +52,30 @@ export function compareFeed(catalog, xml, name) {
 
 const CANCEL_CODES = new Set(["payment_refunded", "order_cancelled", "payment_terminal"]);
 
+export async function pipelineProblems(db) {
+  const rows = await db.sql`
+    SELECT c.square_order_id,
+      f.square_order_id IS NULL AS missing_fulfillment,
+      n.id IS NULL AS missing_receipt,
+      (n.id IS NOT NULL AND n.state <> 'sent') AS receipt_not_sent
+    FROM aha_checkout_sessions c
+    LEFT JOIN aha_fulfillment_orders f ON f.square_order_id = c.square_order_id
+    LEFT JOIN aha_order_notifications n ON n.dedupe_key = c.square_order_id || ':order_confirmed'
+    WHERE c.state = 'completed' AND c.square_order_id IS NOT NULL
+      AND c.updated_at < now() - interval '30 minutes'
+      AND (f.square_order_id IS NULL OR n.id IS NULL OR n.state <> 'sent')
+    ORDER BY c.created_at ASC LIMIT 200`;
+  const problems = [];
+  for (const row of rows) {
+    if (row.missing_fulfillment) problems.push(`Paid order ${row.square_order_id}: missing from fulfillment. Check the supplier hold and signed Square event before submitting; do not charge again.`);
+    if (row.missing_receipt) problems.push(`Paid order ${row.square_order_id}: confirmation email was not queued. Recover the receipt from the completed checkout.`);
+    else if (row.receipt_not_sent) problems.push(`Paid order ${row.square_order_id}: confirmation email has not been sent. Check the notification outbox.`);
+  }
+  const [pending] = await db.sql`SELECT count(*)::int AS total FROM aha_checkout_sessions WHERE state IN ('processing', 'unknown') AND payment_submission_started_at < now() - interval '30 minutes'`;
+  if (pending?.total) problems.push(`Payments: ${pending.total} attempt(s) still need Square reconciliation. Do not retry a charge until its outcome is known.`);
+  return problems;
+}
+
 /** Orders a person must look at, in plain words. */
 export async function orderProblems(db, now = Date.now()) {
   const rows = await db.sql`
@@ -99,6 +123,7 @@ export async function runDailyHealth({ db, square, fetchText, siteUrl, catalog, 
     attempt("Google feed", async () => compareFeed(saleCatalog, await fetchText(`${siteUrl}/feeds/google.xml`), "Google")),
     attempt("Meta feed", async () => compareFeed(saleCatalog, await fetchText(`${siteUrl}/feeds/meta.xml`), "Meta")),
     attempt("orders", () => orderProblems(db, now().getTime())),
+    attempt("paid-order handoff", () => pipelineProblems(db)),
     attempt("email and publishing", () => backgroundProblems(db)),
     attempt("email sign-ups", () => signupProblems(db)),
   ]);
@@ -124,7 +149,7 @@ export async function weeklyDigest(db, { now = () => new Date() } = {}) {
   }
   const carts = await abandonedCartStats(db.sql);
   const signups = await signupCounts(db);
-  const problems = [...await orderProblems(db, now().getTime()), ...await backgroundProblems(db)];
+  const problems = [...await orderProblems(db, now().getTime()), ...await pipelineProblems(db), ...await backgroundProblems(db)];
   const to = now();
   return {
     from: new Date(to.getTime() - 7 * 86_400_000).toISOString(),

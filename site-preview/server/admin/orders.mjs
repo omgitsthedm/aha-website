@@ -2,6 +2,8 @@
 // with plain-language flags for anything that needs a person. Only a first
 // name and city are shown; no email or street address leaves the database.
 
+import { AHA_FULFILLMENT_CATALOG } from "../fulfillment/catalog.mjs";
+
 const ATTENTION_STATES = new Set(["held", "attention", "uncertain"]);
 const SHIPPED_STATES = new Set(["shipped"]);
 const STUCK_HOURS = 48;
@@ -10,6 +12,7 @@ const json = (value) => (typeof value === "string" ? JSON.parse(value) : value ?
 
 export function orderFlags(order, now = Date.now()) {
   if (order.state === "ignored") return [];
+  if (order.last_error_code === "fulfillment_missing") return [{ code: "fulfillment_missing", message: "Payment is complete but fulfillment has no order. Check the supplier hold and Square event; do not charge again." }];
   const flags = [];
   const ageHours = (now - new Date(order.created_at).getTime()) / 3_600_000;
   if (ATTENTION_STATES.has(order.state)) flags.push({ code: order.state, message: order.state === "uncertain" ? "Apliiq didn't confirm this order. Check the Apliiq dashboard before anything else; never resubmit blindly." : "Held for review. Open the order in Square and Apliiq." });
@@ -21,14 +24,17 @@ export function orderFlags(order, now = Date.now()) {
 
 export async function listOrders(db, { limit = 100 } = {}) {
   const rows = await db.sql`
-    SELECT o.square_order_id, o.state, o.provider_status, o.apliiq_order_id, o.submitted_items, o.tracking, o.last_error_code,
-           o.created_at, o.updated_at,
+    SELECT COALESCE(o.square_order_id, s.square_order_id) AS square_order_id,
+           COALESCE(o.state, 'attention') AS state, o.provider_status, o.apliiq_order_id,
+           COALESCE(o.submitted_items, s.cart_json) AS submitted_items, o.tracking,
+           CASE WHEN o.square_order_id IS NULL THEN 'fulfillment_missing' ELSE o.last_error_code END AS last_error_code,
+           COALESCE(o.created_at, s.created_at) AS created_at, COALESCE(o.updated_at, s.updated_at) AS updated_at,
            s.total_cents, s.shipping_address_json->>'firstName' AS first_name, s.shipping_address_json->>'city' AS city,
            s.shipping_address_json->>'region' AS region
     FROM aha_fulfillment_orders o
-    LEFT JOIN aha_checkout_sessions s ON s.square_order_id = o.square_order_id
-    WHERE o.state <> 'ignored'
-    ORDER BY o.created_at DESC
+    FULL JOIN aha_checkout_sessions s ON s.square_order_id = o.square_order_id
+    WHERE o.state <> 'ignored' OR (o.square_order_id IS NULL AND s.state = 'completed' AND s.square_order_id IS NOT NULL)
+    ORDER BY COALESCE(o.created_at, s.created_at) DESC
     LIMIT ${Math.min(Math.max(Number(limit) || 100, 1), 500)}`;
   const now = Date.now();
   return rows.map((row) => ({
@@ -38,7 +44,7 @@ export async function listOrders(db, { limit = 100 } = {}) {
     apliiqOrderId: row.apliiq_order_id ?? null,
     customer: [row.first_name, [row.city, row.region].filter(Boolean).join(", ")].filter(Boolean).join(" · ") || null,
     totalCents: row.total_cents === null || row.total_cents === undefined ? null : Number(row.total_cents),
-    items: (json(row.submitted_items) ?? []).map((item) => ({ title: item.title ?? item.product ?? item.sku, size: item.size ?? null, quantity: Number(item.quantity ?? 1) })),
+    items: (json(row.submitted_items) ?? []).map((item) => ({ title: item.title ?? AHA_FULFILLMENT_CATALOG[item.variationId]?.title ?? item.product ?? item.sku, size: item.size ?? null, quantity: Number(item.quantity ?? 1) })),
     tracking: (json(row.tracking) ?? []).map((entry) => ({ carrier: entry.carrier ?? null, number: entry.trackingNumber ?? entry.number ?? null, url: entry.trackingUrl ?? entry.url ?? null })),
     createdAt: new Date(row.created_at).toISOString(),
     flags: orderFlags(row, now),
@@ -51,11 +57,17 @@ export async function overview(db) {
            count(*) FILTER (WHERE created_at > now() - interval '7 days') AS week,
            count(*) FILTER (WHERE state IN ('held', 'attention', 'uncertain') OR (state <> 'shipped' AND created_at < now() - interval '48 hours')) AS attention
     FROM aha_fulfillment_orders WHERE state <> 'ignored'`;
+  const [missing] = await db.sql`
+    SELECT count(*) FILTER (WHERE c.created_at > now() - interval '1 day') AS today,
+           count(*) FILTER (WHERE c.created_at > now() - interval '7 days') AS week, count(*) AS attention
+    FROM aha_checkout_sessions c
+    WHERE c.state = 'completed' AND c.square_order_id IS NOT NULL
+      AND NOT EXISTS (SELECT 1 FROM aha_fulfillment_orders f WHERE f.square_order_id = c.square_order_id)`;
   const [drafts] = await db.sql`SELECT count(*) FILTER (WHERE status = 'draft') AS waiting, count(*) FILTER (WHERE status = 'approved') AS approved FROM aha_product_drafts`;
   return {
-    ordersToday: Number(orders?.today ?? 0),
-    ordersThisWeek: Number(orders?.week ?? 0),
-    ordersNeedingAttention: Number(orders?.attention ?? 0),
+    ordersToday: Number(orders?.today ?? 0) + Number(missing?.today ?? 0),
+    ordersThisWeek: Number(orders?.week ?? 0) + Number(missing?.week ?? 0),
+    ordersNeedingAttention: Number(orders?.attention ?? 0) + Number(missing?.attention ?? 0),
     draftsWaiting: Number(drafts?.waiting ?? 0),
     draftsApproved: Number(drafts?.approved ?? 0),
   };

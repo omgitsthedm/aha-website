@@ -261,3 +261,14 @@ test("reviews: the owner approves in the admin, the product page shows them, and
   assert.equal((await publicReviews(db, crew.slug)).count, 0);
   assert.equal((await handleReviews(new Request(`${ORIGIN}/api/reviews?product=Not%20a%20slug`), { db, env, catalog })).status, 404);
 });
+
+
+test("a paid order can join an account before the supplier handoff", async (t) => {
+  const db = await isolated(t); const session = await customer(db);
+  await db.sql`INSERT INTO aha_checkout_sessions (checkout_id,token_sha256,state,currency,cart_json,shipping_address_json,order_payload_json,subtotal_cents,shipping_cents,tax_cents,total_cents,order_idempotency_key,expires_at,square_order_id,square_payment_id)
+    VALUES ('paid-only','hash','completed','USD','[{"variationId":"464AETWT7Q2JEAPKDDJ6KLJQ","size":"XL","quantity":1}]','{}','{}',5800,0,470,6270,'unique',now(),'ORDERPAIDONLY','PAY-PAID')`;
+  assert.equal((await account(db, "orders", { method: "POST", session, body: { o: "ORDERPAIDONLY", k: token("ORDERPAIDONLY") } })).status, 200);
+  const [listed] = (await account(db, "me", { session })).body.orders;
+  assert.equal(listed.stage, "paid");
+  assert.equal(listed.items[0].title, "Insomniac Hoodie — Black");
+});

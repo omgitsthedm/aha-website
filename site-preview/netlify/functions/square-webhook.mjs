@@ -36,6 +36,9 @@ export default async function squareWebhook(request, context) {
     // before any Square/Apliiq outbound call. A later scheduled run can drain
     // an event whose provider retry budget expires during an outage.
     await runtime.repository.ingestSquareEvent({ eventId, paymentId, eventCreatedAt: event.created_at ?? null });
+    // Queue durably before acknowledging, including while Apliiq is paused.
+    // Failure returns 503 for a signed-event retry; the shared outbox deduplicates.
+    await runtime.notifications.confirmations.queueSquarePayment(paymentId);
     const result = await runtime.service.processSquareEvent(eventId);
     // The signed event can complete a payment after a client connection drops.
     // Re-read only the matching completed checkout before queuing tracking.

@@ -1,6 +1,6 @@
 import { randomBytes, createHash, randomUUID } from "node:crypto";
 import { buildSquareOrder, CURRENCY, normalizeAddress, normalizeDestination, normalizeItems } from "./catalog.mjs";
-import { CheckoutError } from "./errors.mjs";
+import { CheckoutError, paymentFailure } from "./errors.mjs";
 import { normalizeAnalyticsIds } from "../analytics/posthog.mjs";
 import { narrowMarketingContext, normalizeMarketingContext, restrictMarketingContext } from "../analytics/marketing.mjs";
 
@@ -24,6 +24,7 @@ export function createCheckoutService({ repository, square, config, catalog, eli
   if (!config.locationId) throw new Error("checkout location is not configured");
   // Square prices the order; the quote and the wallet estimate share this exactly.
   async function price(items, address, referenceId) {
+    if (config.acceptingOrders === false) throw new CheckoutError("checkout_paused", 503);
     const orderPayload = buildSquareOrder({ items, address, locationId: config.locationId, referenceId });
     let priced;
     try { priced = await square.calculateOrder(orderPayload); } catch { throw new CheckoutError("checkout_unavailable", 503); }
@@ -137,6 +138,7 @@ export function createCheckoutService({ repository, square, config, catalog, eli
     if (restricted) existing = restricted;
     if (existing.state === "completed") return { state: "completed", checkoutId, orderId: existing.square_order_id, paymentId: existing.square_payment_id, receiptUrl: safeReceiptUrl(existing.square_receipt_url), ...trackingResult };
     if (existing.state === "unknown" || existing.state === "processing") return { state: "pending", checkoutId };
+    if (config.acceptingOrders === false) throw new CheckoutError("checkout_paused", 503);
     if (new Date(existing.expires_at).getTime() <= now()) throw new CheckoutError("quote_expired", 409);
     const session = await repository.claim({ checkoutId, tokenHash: sha256(checkoutToken), clientIdempotencyKey: idempotencyKey });
     if (!session) {
@@ -163,7 +165,8 @@ export function createCheckoutService({ repository, square, config, catalog, eli
       return { state: "completed", checkoutId, orderId, paymentId: payment.id, receiptUrl, ...trackingResult };
     } catch (error) {
       if (!orderId) { await repository.releaseClaim({ checkoutId, code: "order_unavailable" }); throw new CheckoutError("checkout_unavailable", 503); }
-      if (error?.status >= 400 && error?.status < 500) { await repository.fail({ checkoutId, code: "payment_failed" }); throw new CheckoutError("payment_failed", 402); }
+      const failure = paymentFailure(error);
+      if (failure) { await repository.fail({ checkoutId, code: failure.code }); throw new CheckoutError(failure.code, failure.status); }
       await repository.unknown({ checkoutId, code: "payment_outcome_unknown", orderId });
       return { state: "pending", checkoutId };
     }

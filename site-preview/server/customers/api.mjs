@@ -45,8 +45,9 @@ async function replaceSaved(db, customerId, slugs) {
 
 async function ordersFor(db, env, customerId) {
   const rows = await db.sql`
-    SELECT o.square_order_id, f.state, f.apliiq_order_id, f.apliiq_payload, f.submitted_items, f.tracking, f.payment_created_at, f.created_at
+    SELECT o.square_order_id, COALESCE(f.state, CASE WHEN c.state = 'completed' THEN 'paid' END) AS state, f.apliiq_order_id, f.apliiq_payload, COALESCE(f.submitted_items, c.cart_json) AS submitted_items, f.tracking, COALESCE(f.payment_created_at, c.updated_at) AS payment_created_at, f.created_at
     FROM aha_customer_orders o LEFT JOIN aha_fulfillment_orders f ON f.square_order_id = o.square_order_id
+    LEFT JOIN aha_checkout_sessions c ON c.square_order_id = o.square_order_id AND c.state = 'completed'
     WHERE o.customer_id = ${customerId} ORDER BY o.linked_at DESC LIMIT 50`;
   return rows.map((row) => {
     const link = orderStatusUrl(row.square_order_id, env);
@@ -101,7 +102,8 @@ export async function handleAccount(request, { db, env, context, catalog = curre
     if (route === "orders" && method === "POST") {
       const input = await body(request);
       if (!verifyOrderToken(input.o, input.k, env)) return reply({ error: "We couldn't find that order. Use the link in your order email." }, 404);
-      const [order] = await db.sql`SELECT square_order_id FROM aha_fulfillment_orders WHERE square_order_id = ${input.o}`;
+      const [order] = await db.sql`SELECT square_order_id FROM aha_fulfillment_orders WHERE square_order_id = ${input.o}
+        UNION SELECT square_order_id FROM aha_checkout_sessions WHERE square_order_id = ${input.o} AND state = 'completed' LIMIT 1`;
       if (!order) return reply({ error: "We couldn't find that order. Use the link in your order email." }, 404);
       const [linked] = await db.sql`INSERT INTO aha_customer_orders (square_order_id, customer_id) VALUES (${input.o}, ${customerId}) ON CONFLICT (square_order_id) DO NOTHING RETURNING customer_id`;
       if (!linked) {

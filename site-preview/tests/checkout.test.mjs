@@ -49,6 +49,37 @@ function fakeSquare() {
 function address(overrides = {}) { return { firstName: "Ada", lastName: "Lovelace", addressLine1: "1 Main Street", city: "Peoria", region: "AZ", postalCode: "85345", country: "US", email: "ada@example.com", ...overrides }; }
 function service() { const repository = fakeRepo(); const square = fakeSquare(); let number = 0; return { repository, square, service: createCheckoutService({ repository, square, config, now: fixedNow, createId: () => `checkout-${++number}` }) }; }
 
+test("pausing fulfillment prevents new quotes and charges but preserves payment recovery", async () => {
+  const repository = fakeRepo(); const square = fakeSquare();
+  const config = { locationId: "TEST_LOCATION", acceptingOrders: true };
+  const checkout = createCheckoutService({ repository, square, config, now: fixedNow });
+  const quote = await checkout.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address() });
+  config.acceptingOrders = false;
+  const payment = { checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: "cnon:test-only", idempotencyKey: "paused-checkout-test-0001" };
+  await assert.rejects(checkout.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address() }), { code: "checkout_paused" });
+  await assert.rejects(checkout.pay(payment), { code: "checkout_paused" });
+  assert.equal(square.calls.createOrder.length, 0); assert.equal(square.calls.createPayment.length, 0);
+  assert.equal((await checkout.status(payment)).state, "failed", "an unsubmitted recovery closes safely without a charge");
+  const row = repository.rows.get(quote.checkoutId); row.state = "unknown";
+  assert.equal((await checkout.pay(payment)).state, "pending");
+  row.state = "completed"; row.square_order_id = "already-paid-order"; row.square_payment_id = "already-paid";
+  assert.equal((await checkout.pay(payment)).orderId, "already-paid-order");
+  assert.equal(square.calls.createPayment.length, 0);
+});
+
+test("production checkout requires configured active fulfillment for new sales", async () => {
+  const { checkoutConfig, checkoutReady } = await import("../server/checkout/runtime.mjs");
+  const values = { AHA_CHECKOUT_ENABLED: "true", AHA_SQUARE_ACCESS_TOKEN: "test-only", AHA_SQUARE_APPLICATION_ID: "app", AHA_SQUARE_LOCATION_ID: "location", AHA_FULFILLMENT_ENABLED: "true", AHA_FULFILLMENT_START_AT: "2026-10-15T00:00:00Z", AHA_APLIIQ_API_KEY: "test-only", AHA_APLIIQ_SHARED_SECRET: "test-only" };
+  const env = { get: (key) => values[key] };
+  assert.equal(checkoutConfig(env).acceptingOrders, true);
+  for (const key of ["AHA_FULFILLMENT_ENABLED", "AHA_FULFILLMENT_START_AT", "AHA_APLIIQ_API_KEY", "AHA_APLIIQ_SHARED_SECRET"]) {
+    const old = values[key]; delete values[key];
+    assert.equal(checkoutConfig(env).acceptingOrders, false, key);
+    assert.equal(checkoutReady(checkoutConfig(env)), true, "existing payment status remains available");
+    values[key] = old;
+  }
+});
+
 test("quotes the exact current Yikes variants with owner-approved Arizona tax and no catalog auto-tax", async () => {
   const ctx = service();
   const quote = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }, { variationId: hoodieL, quantity: 1 }], shippingAddress: address() });
@@ -248,4 +279,25 @@ test("a wallet estimate refuses what the quote refuses", async () => {
   const offSale = createCheckoutService({ repository: fakeRepo(), square: fakeSquare(), config, catalog: {} });
   await assert.rejects(offSale.estimate({ items: [{ variationId: crewM, quantity: 1 }], destination: { country: "US", region: "AZ", postalCode: "85345" } }), (error) => error.code === "invalid_cart");
   assert.equal(ctx.square.calls.calculate.length, 0);
+});
+
+for (const [status, upstream, expected] of [[400, "CVV_FAILURE", "payment_cvv_failed"], [400, "ADDRESS_VERIFICATION_FAILURE", "payment_address_failed"], [400, "CARD_TOKEN_EXPIRED", "payment_token_expired"], [401, "UNAUTHORIZED", "payment_service_unavailable"], [429, "RATE_LIMITED", "payment_service_unavailable"]]) {
+  test(`safe processor reason ${upstream} survives without private details`, async () => {
+    const ctx = service();
+    ctx.square.createPayment = async () => { throw Object.assign(new Error("private processor payload"), { status, details: { errors: [{ code: "GENERIC_DECLINE" }, { code: upstream }] } }); };
+    // Infrastructure responses are never categorized as a card decline.
+    if (status !== 400) ctx.square.createPayment = async () => { throw Object.assign(new Error("private"), { status, details: { errors: [{ code: upstream }] } }); };
+    const q = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address() });
+    await assert.rejects(ctx.service.pay({ ...q, sourceId: "test-opaque-token", idempotencyKey: "unique-safe-test-key" }), (error) => error.code === expected && !error.message.includes("private"));
+    assert.equal((await ctx.service.status(q)).error, expected);
+    assert.equal((await ctx.service.status(q)).state, "failed");
+  });
+}
+
+test("unfamiliar 4xx cannot authorize a second charge", async () => {
+  const ctx = service();
+  ctx.square.createPayment = async () => { throw Object.assign(new Error("unknown response"), { status: 409, details: { errors: [{ code: "UNRECOGNIZED" }] } }); };
+  const q = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address() });
+  assert.equal((await ctx.service.pay({ ...q, sourceId: "test-opaque-token", idempotencyKey: "unique-safe-test-key" })).state, "pending");
+  assert.equal((await ctx.service.status(q)).state, "pending");
 });

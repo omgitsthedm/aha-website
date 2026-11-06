@@ -10,6 +10,11 @@ function enabled(value) { return value === "true"; }
 export function checkoutConfig(env) {
   return {
     enabled: enabled(env.get("AHA_CHECKOUT_ENABLED")),
+    // A paused or unconfigured supplier must not silently accumulate paid orders.
+    // Recovery/status still uses checkoutReady, independently of this new-sale gate.
+    acceptingOrders: enabled(env.get("AHA_FULFILLMENT_ENABLED"))
+      && Boolean(env.get("AHA_APLIIQ_API_KEY") && env.get("AHA_APLIIQ_SHARED_SECRET"))
+      && Number.isFinite(Date.parse(env.get("AHA_FULFILLMENT_START_AT") ?? "")),
     accessToken: env.get("AHA_SQUARE_ACCESS_TOKEN"),
     applicationId: env.get("AHA_SQUARE_APPLICATION_ID"),
     locationId: env.get("AHA_SQUARE_LOCATION_ID"),
