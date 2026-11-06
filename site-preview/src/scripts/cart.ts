@@ -134,13 +134,22 @@ export async function claimPending(value: PendingPayment, expectedRevision: stri
   try { return navigator.locks ? await navigator.locks.request("aha-payment", claim) : claim(); }
   catch { return false; }
 }
-export function clearPending(_key?: string) {
-  const current = readPending();
-  volatilePending = null;
-  for (const key of [PENDING_PAYMENT_KEY, EXPRESS_PENDING_KEY]) {
-    try { if (JSON.parse(localStorage.getItem(key) || "null")?.checkoutId === current?.checkoutId) localStorage.removeItem(key); } catch { /* Keep unrelated attempts. */ }
-  }
-  document.dispatchEvent(new Event("aha:payment-pending"));
+export async function clearPending(checkoutId: string) {
+  const clear = () => {
+    const current = readPending();
+    // A delayed response from another tab may describe an older payment.
+    // Serialize settlement with claims, and never clear or unlock its successor.
+    if (current && current.checkoutId !== checkoutId) return false;
+    if (!current && paymentRevision() && paymentRevision() !== checkoutId) return false;
+    if (volatilePending?.checkoutId === checkoutId) volatilePending = null;
+    for (const key of [PENDING_PAYMENT_KEY, EXPRESS_PENDING_KEY]) {
+      if (JSON.parse(localStorage.getItem(key) || "null")?.checkoutId === checkoutId) localStorage.removeItem(key);
+    }
+    document.dispatchEvent(new Event("aha:payment-pending"));
+    return true;
+  };
+  try { return navigator.locks ? await navigator.locks.request("aha-payment", clear) : clear(); }
+  catch { return false; }
 }
 window.addEventListener("storage", (event) => {
   if (event.key === PENDING_PAYMENT_KEY || event.key === EXPRESS_PENDING_KEY) volatilePending = null;
@@ -391,10 +400,12 @@ function initExpress() {
       total: line("After Hours Agenda", estimate?.totalAmount ?? subtotal, !estimate),
     };
   };
-  const confirmed = (result: PayResult, summary: PurchaseSummary, scope: "bag" | "product" = bag ? "bag" : "product") => {
+  const confirmed = (result: PayResult, attempt: PendingPayment) => {
+    const summary = attempt.summary!;
+    const scope = attempt.scope;
     done = true;
     if (scope === "bag") {
-      if (query(document, "[data-checkout-page]")) document.dispatchEvent(new CustomEvent("aha:express-completed", { detail: { ...result, summary, scope } }));
+      if (query(document, "[data-checkout-page]")) document.dispatchEvent(new CustomEvent("aha:express-completed", { detail: { ...result, attempt } }));
       else writeCart([]);
     }
     emitVerifiedPurchase(result.orderId, summary);
@@ -406,8 +417,10 @@ function initExpress() {
   // A payment Square hasn't confirmed yet: follow it here, never pay again.
   const follow = async (attempt: PendingPayment, tries = 0): Promise<void> => {
     const { data } = await paymentStatus(attempt).catch(() => ({ data: null }));
-    if (data?.state === "completed" || data?.state === "failed" || data?.state === "quoted") clearPending(EXPRESS_PENDING_KEY);
-    if (data?.state === "completed") return confirmed(data, attempt.summary!, attempt.scope);
+    if (data?.state === "completed" || data?.state === "failed" || data?.state === "quoted") {
+      if (!(await clearPending(attempt.checkoutId))) return;
+    }
+    if (data?.state === "completed") return confirmed(data, attempt);
     if (data?.state === "failed" || data?.state === "quoted") { done = false; changed(); return say("The payment didn’t go through."); }
     if (data?.state === "attention" || tries > 60) return say("Still confirming this payment. Please don’t pay again; write to info@afterhoursagenda.com.", true);
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -439,8 +452,8 @@ function initExpress() {
       if (!(await claimPending(attempt, revision))) return say(readPending() ? "A previous payment is being checked. Please do not pay again." : "Checkout changed or browser storage is unavailable. Refresh this page before trying again.", Boolean(readPending()));
       let paid: { response: Response; data: PayResult | null };
       try { paid = await payCheckout(attempt, result.token, await checkoutMarketingEnvelope()); } catch { return follow(attempt); }
-      if (paid.response.ok && paid.data?.state === "completed") { clearPending(EXPRESS_PENDING_KEY); return confirmed(paid.data, summary); }
-      if (paid.response.status === 402 || ["payment_service_unavailable", "checkout_paused"].includes(paid.data?.errorCode || "") || (paid.response.status === 409 && ["quote_expired", "quote_stale"].includes(paid.data?.errorCode || ""))) { clearPending(EXPRESS_PENDING_KEY); return say(paid.response.status === 409 ? "That total expired; tap to pay again." : paymentFailureMessage(paid.data?.errorCode)); }
+      if (paid.response.ok && paid.data?.state === "completed") { if (await clearPending(attempt.checkoutId)) confirmed(paid.data, attempt); return; }
+      if (paid.response.status === 402 || ["payment_service_unavailable", "checkout_paused"].includes(paid.data?.errorCode || "") || (paid.response.status === 409 && ["quote_expired", "quote_stale"].includes(paid.data?.errorCode || ""))) { if (await clearPending(attempt.checkoutId)) say(paid.response.status === 409 ? "That total expired; tap to pay again." : paymentFailureMessage(paid.data?.errorCode)); return; }
       return follow(attempt);
     } catch { say("Wallet payment isn’t available; use Add to bag."); }
     finally { busy = false; }

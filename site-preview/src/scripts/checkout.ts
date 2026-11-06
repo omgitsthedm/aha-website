@@ -4,7 +4,7 @@ import { query, queryAll } from "./dom";
 import { recoverSelection } from "./selection";
 import { checkoutMarketingEnvelope } from "./attribution";
 import { CASH_APP_RESUME_KEY, MAX_QUANTITY, catalogueFrom, normalize, readCart, writeCart, displayAmount, freshKey, readPending, claimPending, paymentRevision, paymentFailureMessage, clearPending, readCashAppResume, writeCashAppResume, clearCashAppResume, loadSquare, emitVerifiedPurchase, updateCartLinks, activeCatalogue, requestJson, fieldValue, shippingAddress, validAddress, addressRequirements, squareContact, cartFingerprint, purchaseSummary, quoteCheckout, paymentStatus, payCheckout, emitQuoted, setText, disable } from "./cart";
-import type { CartLine, CheckoutConfig, Quote, SquareMethod, SquarePayments, PurchaseSummary } from "./cart";
+import type { CartLine, CheckoutConfig, Quote, SquareMethod, SquarePayments, PurchaseSummary, PendingPayment } from "./cart";
 
 export function initCheckout() {
   const page = query<HTMLElement>(document, "[data-checkout-page]");
@@ -252,9 +252,11 @@ export function initCheckout() {
   const quoteSummary = (): PurchaseSummary | null => {
     return quote ? purchaseSummary(quote, lines) : null;
   };
-  const finishPayment = (orderId?: string, receiptUrl?: string, completedSummary?: PurchaseSummary, scope = unresolvedPayment?.scope ?? "bag") => {
-    const summary = completedSummary || unresolvedPayment?.summary || quoteSummary();
-    clearPending(); unresolvedPayment = null;
+  const finishPayment = async (attempt: PendingPayment, orderId?: string, receiptUrl?: string) => {
+    const summary = attempt.summary || quoteSummary();
+    const scope = attempt.scope ?? "bag";
+    if (!(await clearPending(attempt.checkoutId))) return;
+    unresolvedPayment = readPending();
     emitVerifiedPurchase(orderId, summary);
     if (scope === "product") {
       clearQuote(); render(); showMessage(`Your previous payment is confirmed${orderId ? ` · order ${orderId}` : ""}. Your bag is unchanged.`); return;
@@ -278,7 +280,7 @@ export function initCheckout() {
     try {
       const { response, data } = await paymentStatus(saved);
       if (!response.ok || !data) throw new Error();
-      if (data.state === "completed") { finishPayment(data.orderId, data.receiptUrl, saved.summary, saved.scope); return; }
+      if (data.state === "completed") { await finishPayment(saved, data.orderId, data.receiptUrl); return; }
       if (data.state === "attention") {
         const reference = typeof data.orderId === "string" && data.orderId ? ` Order reference: ${data.orderId}.` : "";
         showMessage(`We’re confirming this payment with Square. Please do not try again yet.${reference}`);
@@ -293,7 +295,7 @@ export function initCheckout() {
         message.append(" ", support);
         return;
       }
-      if (data.state === "failed" || data.state === "quoted") { clearPending(); unresolvedPayment = null; paymentKey = freshKey(); clearQuote(); showError(data.state === "quoted" ? "Your payment details need to be entered again. Confirm a fresh total to continue." : `${paymentFailureMessage(data.error)} Your bag is saved. Confirm a fresh total to continue.`); return; }
+      if (data.state === "failed" || data.state === "quoted") { if (!(await clearPending(saved.checkoutId))) return; unresolvedPayment = readPending(); paymentKey = freshKey(); clearQuote(); showError(data.state === "quoted" ? "Your payment details need to be entered again. Confirm a fresh total to continue." : `${paymentFailureMessage(data.error)} Your bag is saved. Confirm a fresh total to continue.`); return; }
       if (manual) { if (checkPaymentStatus) checkPaymentStatus.disabled = false; showMessage("The payment is still being confirmed. Please wait, then check status again."); return; }
       pollTimer = window.setTimeout(() => void poll(saved), 1500);
     } catch { pollTimer = window.setTimeout(() => void poll(saved), 2000); }
@@ -306,29 +308,30 @@ export function initCheckout() {
     const marketing = await checkoutMarketingEnvelope();
     if (!quote || quotedFingerprint !== cartFingerprint(lines, form)) { showError("Your bag or address changed. Confirm the updated total before paying."); clearQuote(); return; }
     clearCashAppResume();
-    unresolvedPayment = { checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, idempotencyKey: paymentKey, createdAt: Date.now(), summary, scope: "bag" };
-    if (!(await claimPending(unresolvedPayment, quotedRevision))) { unresolvedPayment = readPending(); showError(unresolvedPayment ? "A previous payment is being checked. Please do not pay again." : "Checkout changed or browser storage is unavailable. Refresh this page before trying again."); return; }
+    const attempt: PendingPayment = { checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, idempotencyKey: paymentKey, createdAt: Date.now(), summary, scope: "bag" };
+    if (!(await claimPending(attempt, quotedRevision))) { unresolvedPayment = readPending(); showError(unresolvedPayment ? "A previous payment is being checked. Please do not pay again." : "Checkout changed or browser storage is unavailable. Refresh this page before trying again."); return; }
+    unresolvedPayment = attempt;
     setCheckoutLocked(true); setPaymentControlsBusy(true); showMessage("Confirming your payment… Please keep this page open.");
     let response: Response;
     let data: { state?: string; orderId?: string; receiptUrl?: string; errorCode?: string } | null;
     try {
-      ({ response, data } = await payCheckout(unresolvedPayment, sourceId, marketing));
+      ({ response, data } = await payCheckout(attempt, sourceId, marketing));
     } catch {
       showMessage("Payment confirmation is taking longer than usual. We’re checking it safely now—please keep this page open.");
-      void poll();
+      void poll(attempt);
       return;
     }
-    if (response.ok && data?.state === "completed") { finishPayment(data.orderId, data.receiptUrl); return; }
-    if (response.status === 202 && data?.state === "pending") { showMessage("Payment is processing. We’re confirming it safely now."); void poll(); return; }
+    if (response.ok && data?.state === "completed") { await finishPayment(attempt, data.orderId, data.receiptUrl); return; }
+    if (response.status === 202 && data?.state === "pending") { showMessage("Payment is processing. We’re confirming it safely now."); void poll(attempt); return; }
     if (response.status === 402 || ["payment_service_unavailable", "checkout_paused"].includes(data?.errorCode || "")) {
       const viaGiftCard = paidWithGiftCard;
-      clearPending(); unresolvedPayment = null; paymentKey = freshKey(); clearQuote();
+      if (!(await clearPending(attempt.checkoutId))) return; unresolvedPayment = readPending(); paymentKey = freshKey(); clearQuote();
       showError(data?.errorCode === "checkout_paused" ? paymentFailureMessage(data.errorCode) : viaGiftCard ? "That gift card couldn’t pay the full total. Confirm a fresh total, then pay with a card or another method." : `${paymentFailureMessage(data?.errorCode)} Your bag is saved. Confirm a fresh total to continue.`);
       return;
     }
-    if (response.status === 409 && (data?.errorCode === "quote_expired" || data?.errorCode === "quote_stale")) { clearPending(); unresolvedPayment = null; clearQuote(); showError("That total expired. Confirm your details again for a fresh total."); return; }
+    if (response.status === 409 && (data?.errorCode === "quote_expired" || data?.errorCode === "quote_stale")) { if (!(await clearPending(attempt.checkoutId))) return; unresolvedPayment = readPending(); clearQuote(); showError("That total expired. Confirm your details again for a fresh total."); return; }
     showMessage("Payment confirmation is taking longer than usual. We’re checking it safely now—please keep this page open.");
-    void poll();
+    void poll(attempt);
   };
   const attachWallets = async () => {
     const request = paymentRequest();
@@ -505,8 +508,8 @@ export function initCheckout() {
   document.addEventListener("aha:payment-pending", syncPaymentLock);
   window.addEventListener("storage", syncPaymentLock);
   document.addEventListener("aha:express-completed", (event) => {
-    const result = (event as CustomEvent<{ orderId?: string; receiptUrl?: string; summary?: PurchaseSummary }>).detail;
-    finishPayment(result.orderId, result.receiptUrl, result.summary, "bag");
+    const result = (event as CustomEvent<{ orderId?: string; receiptUrl?: string; attempt: PendingPayment }>).detail;
+    void finishPayment(result.attempt, result.orderId, result.receiptUrl);
   });
   render();
   if (unresolvedPayment) {
