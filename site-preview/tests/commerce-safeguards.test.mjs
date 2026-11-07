@@ -107,6 +107,21 @@ test("successful and failed workers have separate timestamps; stale starts canno
   await pg.exec("UPDATE aha_commerce_workers SET last_succeeded_at = now() - interval '2 hours', last_started_at = now(), last_failed_at = NULL");
   assert.deepEqual(codes(await commerceHealth({ db, env })), ["fulfillment_worker_stale", "notifications_worker_stale"]);
 });
+test("shipping mail awaiting retry or attention is detected without a provider message ID", async (t) => {
+  const { db, pg } = await database(t);
+  await pg.exec("INSERT INTO aha_order_notifications (dedupe_key, kind, recipient, payload_json, state, created_at) VALUES ('ship:order_shipped:1', 'order_shipped', 'private@example.com', '{}', 'pending', now() - interval '1 hour')");
+  assert.deepEqual(codes(await commerceHealth({ db, env })), ["shipping_email_unsent"]);
+  await pg.exec("UPDATE aha_order_notifications SET state = 'attention', created_at = now()");
+  assert.deepEqual(codes(await commerceHealth({ db, env })), ["shipping_email_unsent"]);
+  await pg.exec("UPDATE aha_order_notifications SET state = 'pending'");
+  assert.deepEqual(codes(await commerceHealth({ db, env })), []);
+});
+test("new shipments with no notification are detected without flagging older untracked shipments", async (t) => {
+  const { db, pg } = await database(t);
+  await pg.exec("UPDATE aha_commerce_monitor SET created_at = now() - interval '2 hours'; INSERT INTO aha_fulfillment_orders (square_order_id, state, updated_at) VALUES ('ship', 'shipped', now() - interval '1 hour'), ('old', 'shipped', now() - interval '1 day')");
+  const report = await commerceHealth({ db, env, checkMonitor: false });
+  assert.deepEqual(report.problems, [{ code: "shipping_email_missing", count: 1 }]);
+});
 test("stopped commerce monitor is visible to the independent health endpoint", async (t) => {
   const { db, pg } = await database(t);
   await pg.exec("UPDATE aha_commerce_monitor SET created_at = now() - interval '1 hour'");

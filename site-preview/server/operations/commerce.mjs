@@ -22,6 +22,18 @@ export async function commerceHealth({ db, env, now = () => new Date(), checkMon
     LEFT JOIN aha_order_notifications n ON n.dedupe_key = c.square_order_id || ':order_confirmed'
     WHERE c.state = 'completed' AND c.square_order_id IS NOT NULL`;
   for (const [code, count] of Object.entries(counts ?? {})) if (Number(count)) problems.push(problem(code, count));
+  // Shipping mail can fail before Resend returns a message ID. A worker that
+  // safely defers it still succeeds, so inspect the outbox independently.
+  const [shipping] = await db.sql`SELECT count(*)::int AS count FROM aha_order_notifications
+    WHERE kind = 'order_shipped' AND state <> 'sent'
+      AND (state = 'attention' OR created_at < now() - interval '15 minutes')`;
+  if (shipping?.count) problems.push(problem("shipping_email_unsent", shipping.count));
+  const [missingShipping] = await db.sql`SELECT count(*)::int AS count FROM aha_fulfillment_orders f
+    WHERE f.state IN ('shipped', 'shipped_partial', 'ready_to_ship')
+      AND f.updated_at >= ${new Date(start.created_at).toISOString()} AND f.updated_at < now() - interval '15 minutes'
+      AND NOT EXISTS (SELECT 1 FROM aha_order_notifications n WHERE n.kind = 'order_shipped'
+        AND n.dedupe_key LIKE f.square_order_id || ':order_shipped:%')`;
+  if (missingShipping?.count) problems.push(problem("shipping_email_missing", missingShipping.count));
   const hold = Number(env.get("AHA_FULFILLMENT_HOLD_MINUTES") ?? 60);
   const grace = Math.min(1_440, Math.max(0, Number.isFinite(hold) ? hold : 60)) + 90;
   const [stalled] = await db.sql`
