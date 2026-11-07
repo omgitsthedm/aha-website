@@ -26,6 +26,10 @@ export function createSquareGateway({ accessToken, fetchImpl = fetch }) {
     return data;
   }
   return {
+    listDisputes: (query, options = {}) => request(`/disputes?${new URLSearchParams(query)}`, {}, options.timeoutMs),
+    listPayments: (query, options = {}) => request(`/payments?${new URLSearchParams(query)}`, {}, options.timeoutMs),
+    getRefund: async (id, options = {}) => (await request(`/refunds/${encodeURIComponent(id)}`, {}, options.timeoutMs)).refund,
+    getDispute: async (id, options = {}) => (await request(`/disputes/${encodeURIComponent(id)}`, {}, options.timeoutMs)).dispute,
     getPayment: async (id, options = {}) => (await request(`/payments/${encodeURIComponent(id)}`, {}, options.timeoutMs)).payment,
     getOrder: async (id, options = {}) => (await request(`/orders/${encodeURIComponent(id)}`, {}, options.timeoutMs)).order,
     // Archive or restore a catalog item (reversible; variations and history are kept).

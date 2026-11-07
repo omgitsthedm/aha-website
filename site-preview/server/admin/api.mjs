@@ -1,3 +1,6 @@
+import { orderAction, dispatchOrderMail } from "./order-actions.mjs";
+import { listSupportCases } from "../support/cases.mjs";
+import { dispatchAfterResponse } from "../notifications/dispatch-after.mjs";
 // Router for /api/admin/*. Every route except sign-in requires a session; every
 // state change requires the admin header and same-origin request (CSRF), and is
 // written to the audit log.
@@ -136,6 +139,22 @@ export async function handleAdmin(request, { db, env, context, live = createLive
     if (route === "auth/logout" && method === "POST") { await auth.endSession(request); return reply({ ok: true }, 200, { "set-cookie": clearedCookie() }); }
     if (route === "me" && method === "GET") return reply({ email: user.email });
     if (route === "overview" && method === "GET") return reply({ ...await overview(db), signups: await signupCounts(db), reviewsWaiting: await pendingReviewCount(db), reports: await latestReports(db) });
+    const commerceAction = /^orders\/([A-Za-z0-9_-]{8,64})\/(receipt|reconcile|release)$/.exec(route);
+    if (commerceAction && method === "POST") {
+      const result = await orderAction({ db, env, user, orderId: commerceAction[1], action: commerceAction[2], input: await body(request) });
+      if (commerceAction[2] === "receipt") await dispatchAfterResponse({ service: { dispatch: () => dispatchOrderMail(db, env) } }, context);
+      return reply(result);
+    }
+    if (route === "support" && method === "GET") return reply({ cases: await listSupportCases(db) });
+    const supportAction = /^support\/([a-f0-9-]{36})$/.exec(route);
+    if (supportAction && method === "POST") {
+      const input = await body(request);
+      if (!["open", "waiting", "resolved"].includes(input.state)) return reply({ error: "Invalid case state." }, 422);
+      const [updated] = await db.sql`WITH changed AS (UPDATE aha_support_cases SET state=${input.state},updated_at=now() WHERE id=${supportAction[1]} RETURNING id),
+        audit AS (INSERT INTO aha_admin_audit(user_id,action,target,detail_json) SELECT ${user.id},${`support.${input.state}`},id,'{}'::jsonb FROM changed) SELECT id FROM changed`;
+      if (!updated) return reply({ error: "Case not found." }, 404);
+      return reply({ ok: true });
+    }
     if (route === "orders" && method === "GET") return reply({ orders: await listOrders(db) });
     if (route === "catalog" && method === "GET") return reply(await catalogSummary(live.catalog));
     // Email list: addresses from the storefront sign-up form. Removal is by row id,

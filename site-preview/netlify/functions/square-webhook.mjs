@@ -1,3 +1,4 @@
+import { ingestCommerceEvent } from "../../server/operations/recovery.mjs";
 import { getDatabase } from "@netlify/database";
 import { sha256, verifySquareSignature } from "../../server/fulfillment/crypto.mjs";
 import { createRuntime, environmentConfig, AHA_HOST, requireProductionRequest } from "../../server/fulfillment/runtime.mjs";
@@ -26,26 +27,35 @@ export default async function squareWebhook(request, context) {
   try { event = JSON.parse(rawBody); } catch { return json({ accepted: false }, 400); }
   if (!config.merchantId) return json({ accepted: false }, 503);
   if (event.merchant_id !== config.merchantId) return json({ accepted: false }, 403);
+  if (/^(refund|dispute)\./.test(event.type)) {
+    const kind = event.type.split(".")[0];
+    const resourceId = event.data?.object?.[kind]?.id ?? event.data?.id;
+    if (typeof resourceId !== "string" || typeof event.event_id !== "string") return json({ accepted: false }, 400);
+    try { await ingestCommerceEvent(getDatabase(), { eventId: event.event_id, kind, resourceId }); return json({ accepted: true }, 202); }
+    catch { return json({ accepted: false }, 503); }
+  }
   if (!["payment.created", "payment.updated"].includes(event.type)) return json({ accepted: true, ignored: true }, 202);
   const paymentId = event.data?.object?.payment?.id;
   const eventId = event.event_id;
   if (typeof paymentId !== "string" || !paymentId || typeof eventId !== "string" || !eventId) return json({ accepted: false }, 400);
   try {
-    const runtime = createRuntime({ database: getDatabase(), env: Netlify.env, catalog: (await currentCatalog()).allowList });
+    const runtime = createRuntime({ database: getDatabase(), env: Netlify.env });
     // This durable inbox is written after signature+merchant validation and
     // before any Square/Apliiq outbound call. A later scheduled run can drain
     // an event whose provider retry budget expires during an outage.
     await runtime.repository.ingestSquareEvent({ eventId, paymentId, eventCreatedAt: event.created_at ?? null });
-    // Queue durably before acknowledging, including while Apliiq is paused.
-    // Failure returns 503 for a signed-event retry; the shared outbox deduplicates.
-    await runtime.notifications.confirmations.queueSquarePayment(paymentId);
-    const result = await runtime.service.processSquareEvent(eventId);
-    // The signed event can complete a payment after a client connection drops.
-    // Re-read only the matching completed checkout before queuing tracking.
-    const marketing = createMarketingRuntime({ database: getDatabase(), env: Netlify.env });
-    await dispatchAfterResponse({ service: { dispatch: () => marketing.queueSquarePayment(paymentId).then(() => marketing.service.dispatch(2)) } }, context);
-    if (result.outcome !== "duplicate") await dispatchAfterResponse(runtime.notifications, context);
-    return json({ accepted: true, outcome: result.outcome }, 202);
+    await ingestCommerceEvent(getDatabase(), { eventId, kind: "payment", resourceId: paymentId });
+    // The saved inbox is the obligation. Acknowledge before provider reads;
+    // after-response work is an optimization, scheduled draining is recovery.
+    await dispatchAfterResponse({ service: { dispatch: async () => {
+      const current = createRuntime({ database: getDatabase(), env: Netlify.env, catalog: (await currentCatalog()).allowList });
+      await current.service.processSquareEvent(eventId);
+      await runtime.notifications.service.dispatch(2);
+      const marketing = createMarketingRuntime({ database: getDatabase(), env: Netlify.env });
+      await marketing.queueSquarePayment(paymentId);
+      await marketing.service.dispatch(2);
+    } } }, context);
+    return json({ accepted: true, outcome: "queued" }, 202);
   } catch {
     // Return retryable failure without order or customer data. Square can send
     // the same event again; durable order state prevents duplicate supplier POSTs.

@@ -303,7 +303,7 @@ export function squareContact(address: ReturnType<typeof shippingAddress>) {
 export function cartFingerprint(lines: CartLine[], form: HTMLFormElement) {
   return JSON.stringify({ lines: lines.map(({ variationId, quantity }) => [variationId, quantity]), address: shippingAddress(form) });
 }
-type PayResult = { state?: string; orderId?: string; receiptUrl?: string; errorCode?: string; error?: string };
+type PayResult = { orderNumber?: string; statusUrl?: string; receiptEmail?: string; state?: string; orderId?: string; receiptUrl?: string; errorCode?: string; error?: string };
 export const checkoutItems = (lines: CartLine[]) => lines.map(({ variationId, quantity }) => ({ variationId, quantity }));
 export const purchaseSummary = (quote: Quote, lines: CartLine[]): PurchaseSummary => {
   const titles = new Map(lines.map((line) => [line.variationId, line.title]));
@@ -411,7 +411,8 @@ function initExpress() {
     emitVerifiedPurchase(result.orderId, summary);
     apple.hidden = true;
     google.replaceChildren();
-    say(`Payment confirmed${result.orderId ? ` · order ${result.orderId}` : ""}.`, true);
+    say(`Payment confirmed${result.orderNumber || result.orderId ? ` · order ${result.orderNumber || result.orderId}` : ""}.${result.receiptEmail ? ` Your receipt is addressed to ${result.receiptEmail}.` : ""}`, true);
+    if (result.statusUrl) { const link = document.createElement("a"); link.href = result.statusUrl; link.textContent = " View your order and tracking."; status.append(link); }
     if (result.receiptUrl) { const link = document.createElement("a"); link.href = result.receiptUrl; link.textContent = " View receipt."; status.append(link); }
   };
   // A payment Square hasn't confirmed yet: follow it here, never pay again.

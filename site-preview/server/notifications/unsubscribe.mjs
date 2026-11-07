@@ -12,11 +12,11 @@ const HEADERS = { "cache-control": "no-store", "x-robots-tag": "noindex", "refer
 export const emailHash = (email) => createHash("sha256").update(String(email).trim().toLowerCase()).digest("hex");
 
 // Same base secret as order links, separate purpose.
-function key(env) {
-  const base = env.get("AHA_ORDER_LINK_SECRET") || env.get("AHA_SQUARE_WEBHOOK_SIGNATURE_KEY");
+function deriveKey(base) {
   if (typeof base !== "string" || base.length < 16) return null;
   return Buffer.from(hkdfSync("sha256", base, "aha-email-unsubscribe", "unsubscribe-v1", 32));
 }
+const key=env=>deriveKey(env.get("AHA_ORDER_LINK_SECRET") || env.get("AHA_SQUARE_WEBHOOK_SIGNATURE_KEY"));
 const sign = (id, secret) => createHmac("sha256", secret).update(String(id)).digest("base64url").slice(0, 32);
 
 /** The page link (shown in the email) and the one-click link (List-Unsubscribe) for a notification row. */
@@ -30,9 +30,10 @@ export function unsubscribeLinks(id, env, origin = SITE_ORIGIN) {
 export function verifyUnsubscribe(id, token, env) {
   const secret = key(env);
   if (!secret || !/^\d{1,18}$/.test(String(id ?? "")) || typeof token !== "string") return false;
-  const expected = Buffer.from(sign(id, secret));
-  const given = Buffer.from(token);
-  return given.length === expected.length && timingSafeEqual(given, expected);
+  let previous=[];try {previous=JSON.parse(env.get("AHA_ORDER_LINK_PREVIOUS_SECRETS") || "[]");}catch { /* Invalid key history fails closed. */ }
+  const keys=[secret,deriveKey(env.get("AHA_SQUARE_WEBHOOK_SIGNATURE_KEY")),...(Array.isArray(previous)?previous.slice(0,3).map(deriveKey):[])].filter(Boolean);
+  const given=Buffer.from(token);
+  return keys.some(candidate=>{const expected=Buffer.from(sign(id,candidate));return given.length===expected.length && timingSafeEqual(given,expected);});
 }
 
 export async function isSuppressed(db, email) {

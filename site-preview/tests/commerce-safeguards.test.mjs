@@ -1,3 +1,4 @@
+import { reliabilitySchema } from "./helpers/reliability-schema.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { randomBytes } from "node:crypto";
@@ -26,6 +27,7 @@ function signed(payload, { id = "msg-1", date = new Date(), changedBody } = {}) 
 async function database(t) {
   const pg = new PGlite(); t.after(() => pg.close());
   for (const migration of MIGRATIONS) await pg.exec(await readFile(new URL(`../netlify/database/migrations/${migration}/migration.sql`, import.meta.url), "utf8"));
+  await reliabilitySchema(pg);
   const sql = async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows;
   return { pg, db: { sql } };
 }
@@ -105,7 +107,7 @@ test("successful and failed workers have separate timestamps; stale starts canno
   await assert.rejects(trackWorker(db, "fulfillment", async () => { throw new Error("failure"); }));
   assert.deepEqual(codes(await commerceHealth({ db, env })), ["fulfillment_worker_failed"]);
   await pg.exec("UPDATE aha_commerce_workers SET last_succeeded_at = now() - interval '2 hours', last_started_at = now(), last_failed_at = NULL");
-  assert.deepEqual(codes(await commerceHealth({ db, env })), ["fulfillment_worker_stale", "notifications_worker_stale"]);
+  assert.deepEqual(codes(await commerceHealth({ db, env })), ["fulfillment_worker_stale", "notifications_worker_stale", "square-recovery_worker_stale"]);
 });
 test("shipping mail awaiting retry or attention is detected without a provider message ID", async (t) => {
   const { db, pg } = await database(t);

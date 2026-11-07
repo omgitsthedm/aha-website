@@ -2,7 +2,7 @@ import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 
 type Json = Record<string, unknown>;
 type Draft = { id: string; status: string; design_slug: string | null; approved_by: string | null; error: string | null; updated_at: string; payload_json: { name?: string; title?: string; color?: string; priceCents?: number; description?: string | null; storeDescription?: string; imageUrls?: string[]; sizes?: string[]; apliiqDesignId?: number; variants?: Array<{ size: string; sku: string; supplierPriceCents: number }> } };
-type Order = { squareOrderId: string; state: string; apliiqOrderId: string | null; customer: string | null; totalCents: number | null; items: Array<{ title: string; size: string | null; quantity: number }>; tracking: Array<{ carrier: string | null; number: string | null; url: string | null }>; createdAt: string; flags: Array<{ code: string; message: string }> };
+type Order = { orderNumber?: string; squareOrderId: string; state: string; apliiqOrderId: string | null; customer: string | null; totalCents: number | null; items: Array<{ title: string; size: string | null; quantity: number }>; tracking: Array<{ carrier: string | null; number: string | null; url: string | null }>; createdAt: string; flags: Array<{ code: string; message: string }> };
 
 const page = document.body.dataset.adminPage;
 const status = document.querySelector<HTMLElement>("[data-admin-status]");
@@ -114,19 +114,47 @@ async function renderOverview() {
   document.querySelector("[data-admin-whoami]")!.textContent = `Signed in as ${me.email}`;
 }
 
+async function renderSupportCases() {
+  const box = document.querySelector("[data-admin-support]"); if (!box) return;
+  const { cases } = await api<{cases:Array<{id:string;topic:string;customer_email:string;message_text:string;order_reference?:string;state:string}>}>("support");
+  box.replaceChildren(...cases.map(entry => {
+    const controls = el("div", {className:"admin-actions"});
+    for (const state of ["waiting", "resolved"]) {
+      const button = el("button", {type:"button",className:"admin-secondary",textContent:`Mark ${state}`});
+      button.addEventListener("click", async () => { button.disabled=true;try {await post(`support/${entry.id}`,{state});await renderSupportCases();}catch(error){say((error as Error).message);button.disabled=false;} });
+      controls.append(button);
+    }
+    return el("article", {className:"admin-row"},el("h3",{textContent:entry.topic}),el("p",{className:"admin-meta",textContent:`Case ${entry.id} · ${entry.state}`}),el("p",{className:"admin-meta"},el("a",{href:`mailto:${entry.customer_email}`,textContent:entry.customer_email}),...(entry.order_reference?[el("span",{textContent:`Order ${entry.order_reference}`} )]:[])),el("pre",{textContent:entry.message_text,style:"white-space:pre-wrap;overflow-wrap:anywhere;font:inherit"}),controls);
+  }));
+  if (!cases.length) box.append(el("p",{className:"admin-meta",textContent:"No open support cases."}));
+}
 let orderFilter = "all";
 async function renderOrders() {
   const { orders } = await api<{ orders: Order[] }>("orders");
+  await renderSupportCases();
   const list = document.querySelector("[data-admin-orders]")!;
   const shown = orderFilter === "attention" ? orders.filter((order) => order.flags.length) : orders;
   if (!shown.length) { list.replaceChildren(el("p", { className: "admin-empty", textContent: orderFilter === "attention" ? "Nothing needs attention." : "No paid orders yet." })); return; }
   list.replaceChildren(...shown.map((order) => {
     const shipped = order.state === "shipped";
     const header = el("header", {}, el("h3", { textContent: order.items.map((item) => `${item.quantity} × ${item.title}${item.size ? ` (${item.size})` : ""}`).join(", ") || "Order" }), el("span", { className: `admin-pill ${shipped ? "is-good" : order.flags.length ? "is-alert" : ""}`, textContent: order.state.replace(/_/g, " ") }));
-    const meta = el("p", { className: "admin-meta" }, el("span", { textContent: when.format(new Date(order.createdAt)) }), el("span", { textContent: order.customer ?? "" }), el("span", { textContent: order.totalCents === null ? "" : money.format(order.totalCents / 100) }), el("span", { textContent: `Square ${order.squareOrderId}` }), el("span", { textContent: order.apliiqOrderId ? `Apliiq ${order.apliiqOrderId}` : "Not yet in Apliiq" }));
+    const meta = el("p", { className: "admin-meta" }, el("span", { textContent: when.format(new Date(order.createdAt)) }), el("span", { textContent: order.customer ?? "" }), el("span", { textContent: order.totalCents === null ? "" : money.format(order.totalCents / 100) }), el("span", { textContent: `Order ${order.orderNumber || order.squareOrderId}` }), el("span", { textContent: order.apliiqOrderId ? `Apliiq ${order.apliiqOrderId}` : "Not yet in Apliiq" }));
     const tracking = order.tracking.map((entry) => entry.url ? el("a", { href: entry.url, target: "_blank", rel: "noopener noreferrer", textContent: `${entry.carrier ?? "Tracking"} ${entry.number ?? ""}` }) : el("span", { textContent: `${entry.carrier ?? ""} ${entry.number ?? ""}` }));
     const flags = order.flags.map((flag) => el("p", { className: "admin-flag", textContent: flag.message }));
-    return el("article", { className: "admin-row" }, header, meta, ...(tracking.length ? [el("p", { className: "admin-meta" }, ...tracking)] : []), ...flags);
+    const controls = el("div", { className: "admin-actions" });
+    for (const [action, label] of [["reconcile", "Refresh provider status"], ["receipt", "Resend receipt"], ["release", "Review hold for release"]]) {
+      const button = el("button", { type: "button", className: "admin-secondary", textContent: label });
+      button.addEventListener("click", async () => {
+        const reason = prompt(`Record why you are requesting: ${label}`); if (!reason) return;
+        const email = action === "receipt" ? prompt("Customer-verified receipt address:") : null;
+        if (action === "receipt" && (!email || !confirm(`The customer verified ${email}. Send a receipt and use this address for future order updates?`))) return;
+        button.disabled = true;
+        try { const result = await post<{message:string}>(`orders/${order.squareOrderId}/${action}`, {requestId:crypto.randomUUID(),reason,email,customerVerified:action === "receipt"}); say(result.message); await renderOrders(); }
+        catch(error) { say((error as Error).message); } finally { button.disabled = false; }
+      });
+      controls.append(button);
+    }
+    return el("article", { className: "admin-row" }, header, meta, controls, ...(tracking.length ? [el("p", { className: "admin-meta" }, ...tracking)] : []), ...flags);
   }));
 }
 

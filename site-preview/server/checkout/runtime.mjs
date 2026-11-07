@@ -1,3 +1,4 @@
+import { orderStatusUrl } from "../orders/status.mjs";
 import { createCheckoutRepository } from "./repository.mjs";
 import { createCheckoutService } from "./service.mjs";
 import { createSquareCheckoutGateway } from "./square.mjs";
@@ -28,8 +29,8 @@ export function checkoutConfig(env) {
     },
   };
 }
-export function checkoutReady(config) {
-  return Boolean(config.enabled && config.accessToken && config.applicationId && config.locationId);
+export function checkoutReady(config, { recovery = false } = {}) {
+  return Boolean((recovery || config.enabled) && config.accessToken && config.applicationId && config.locationId);
 }
 export function allowedOrigin(request) {
   const origin = request.headers.get("origin");
@@ -40,5 +41,5 @@ export function createCheckoutRuntime({ database, env, catalog }) {
   const repository = createCheckoutRepository(database);
   const unavailable = async () => { throw new Error("square unavailable"); };
   const square = config.accessToken ? createSquareCheckoutGateway({ accessToken: config.accessToken }) : { calculateOrder: unavailable, createOrder: unavailable, createPayment: unavailable, getOrder: unavailable, getPayment: unavailable };
-  return { config, repository, service: createCheckoutService({ repository, square, config, catalog, eligibleProviders: eligibleProviders(env) }) };
+  return { config, repository, service: createCheckoutService({ repository, square, config, catalog, orderLink: (orderId) => orderStatusUrl(orderId, env), eligibleProviders: eligibleProviders(env) }) };
 }

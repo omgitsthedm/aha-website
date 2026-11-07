@@ -1,3 +1,4 @@
+import { reliabilitySchema } from "./helpers/reliability-schema.mjs";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
@@ -17,6 +18,7 @@ const migrations = [
 async function isolated(t) {
   const database = new PGlite(); t.after(() => database.close());
   for (const name of migrations) await database.exec(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
+  await reliabilitySchema(database);
   const sql = async (strings, ...parameters) => (await database.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows;
   return { sql };
 }
@@ -96,13 +98,13 @@ test("orders show first name and city only, with plain-language flags", async (t
   const result = await call(db, "orders", { cookie });
   assert.equal(result.status, 200);
   const [order] = result.body.orders;
-  assert.deepEqual(order.flags.map((flag) => flag.code), ["uncertain", "stuck"]);
+  assert.deepEqual(order.flags.map((flag) => flag.code), ["uncertain"]);
   assert.doesNotMatch(JSON.stringify(result.body), /jane@example\.com/);
 });
 
 test("order flags stay quiet for a fresh shipped order", () => {
   assert.deepEqual(orderFlags({ state: "shipped", created_at: new Date().toISOString() }), []);
-  assert.deepEqual(orderFlags({ state: "submitted_processed", created_at: new Date(Date.now() - 50 * 3_600_000).toISOString() }).map((flag) => flag.code), ["stuck"]);
+  assert.deepEqual(orderFlags({ state: "submitted_processed", created_at: new Date(Date.now() - 20 * 86_400_000).toISOString() }).map((flag) => flag.code), ["stuck"]);
 });
 
 test("admin Products lists every product on sale, built or published live", async () => {

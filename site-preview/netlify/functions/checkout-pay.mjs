@@ -1,3 +1,4 @@
+import { permitPaymentAttempt } from "../../server/checkout/abuse.mjs";
 import { getDatabase } from "@netlify/database";
 import { allowedOrigin, checkoutReady, createCheckoutRuntime, requireProductionRequest } from "../../server/checkout/runtime.mjs";
 import { publicCheckoutResult } from "../../server/checkout/service.mjs";
@@ -23,6 +24,7 @@ export default async function checkoutPay(request, context) {
     const body = await jsonBody(request);
     const runtime = createCheckoutRuntime({ database: getDatabase(), env: Netlify.env });
     if (!checkoutReady(runtime.config)) return errorResponse(new CheckoutError("checkout_unavailable", 503));
+    if (!await permitPaymentAttempt(getDatabase(), context?.ip ?? "unknown")) return noStore({error:"Too many payment attempts. Wait a few minutes before trying again. Your existing payment status remains available.",errorCode:"rate_limited"},429);
     const result = await runtime.service.pay(body ?? {});
     if (result.state === "completed") {
       const notifications = createNotificationRuntime({ database: getDatabase(), env: Netlify.env });

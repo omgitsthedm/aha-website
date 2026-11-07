@@ -1,3 +1,4 @@
+import { reliabilitySchema } from "./helpers/reliability-schema.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -18,6 +19,7 @@ test("repair preserves provider identity, attempts and payloads, audits once, an
   const pg = new PGlite();
   t.after(() => pg.close());
   for (const name of BASE) await pg.exec(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
+  await reliabilitySchema(pg);
   const db = { sql: async (strings, ...values) => (await pg.query(strings.reduce((text, part, i) => text + (i ? `$${i}` : "") + part, ""), values)).rows };
   const repo = createNetlifyRepository(db);
   const seed = async (id, overrides = {}) => {

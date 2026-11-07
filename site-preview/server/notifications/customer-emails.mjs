@@ -50,7 +50,9 @@ export async function reviewRequestCandidates(db, limit = 20) {
     FROM aha_order_notifications n
     JOIN aha_fulfillment_orders f ON f.square_order_id = split_part(n.dedupe_key, ':', 1)
     CROSS JOIN program
-    WHERE n.kind = 'order_shipped' AND n.state = 'sent'
+    WHERE n.kind = 'order_shipped' AND n.state = 'sent' AND n.provider_message_id IS NOT NULL
+      AND f.state='shipped' AND f.last_error_code IS NULL
+      AND NOT EXISTS (SELECT 1 FROM aha_order_financials m WHERE m.square_order_id=f.square_order_id AND (m.refund_state <> 'none' OR m.cancellation_state <> 'none' OR m.dispute_state <> 'none'))
       AND n.sent_at > program.started_at
       AND n.sent_at < now() - make_interval(days => ${REVIEW_REQUEST_DELAY_DAYS})
       AND f.customer_email ~ '^[^[:space:]@]+@[^[:space:]@]+\\.[^[:space:]@]+$'
@@ -91,7 +93,9 @@ export async function stillDue(db, row) {
   }
   if (row?.kind === "review_request") {
     const [reviewed] = await db.sql`SELECT 1 AS found FROM aha_reviews WHERE square_order_id = ${subject} LIMIT 1`;
-    return !reviewed;
+    const [ready] = await db.sql`SELECT 1 AS found FROM aha_fulfillment_orders f WHERE f.square_order_id=${subject} AND f.state='shipped' AND f.last_error_code IS NULL
+      AND NOT EXISTS(SELECT 1 FROM aha_order_financials m WHERE m.square_order_id=f.square_order_id AND (m.refund_state<>'none' OR m.dispute_state<>'none' OR m.cancellation_state<>'none'))`;
+    return !reviewed && Boolean(ready);
   }
   return true;
 }

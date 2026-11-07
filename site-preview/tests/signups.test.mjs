@@ -1,3 +1,4 @@
+import { reliabilitySchema } from "./helpers/reliability-schema.mjs";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
@@ -15,6 +16,7 @@ async function database(t) {
   const pg = new PGlite();
   t.after(() => pg.close());
   for (const name of ["20261016120000_admin", MIGRATION]) await pg.exec(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
+  await reliabilitySchema(pg);
   const sql = async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows;
   return { pg, db: { sql } };
 }
@@ -106,6 +108,7 @@ test("before the sign-up migration is applied, the admin overview, list and dige
   const pg = new PGlite();
   t.after(() => pg.close());
   for (const name of ["20261015045000_yikes_fulfillment", "20261015160000_custom_checkout", "20261016110000_product_drafts", "20261016120000_admin", "20261016130000_owner_reports"]) await pg.exec(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
+  await reliabilitySchema(pg);
   const db = { sql: async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows };
   const { listSignups, signupCounts } = await import("../server/updates/signups.mjs");
   assert.deepEqual(await signupCounts(db), { total: 0, last7Days: 0 });

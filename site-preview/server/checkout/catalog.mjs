@@ -18,7 +18,7 @@ export function normalizeItems(items, catalog = AHA_FULFILLMENT_CATALOG) {
     const product = catalog[item.variationId];
     if (!product) throw new CheckoutError("invalid_cart", 422);
     seen.add(item.variationId);
-    return Object.freeze({ variationId: item.variationId, quantity: item.quantity, unitAmount: product.priceCents, totalAmount: product.priceCents * item.quantity, size: product.size, product: product.product });
+    return Object.freeze({ variationId: item.variationId, quantity: item.quantity, unitAmount: product.priceCents, totalAmount: product.priceCents * item.quantity, size: product.size, product: product.product, sku: product.sku, title: product.title ?? ({ crewneck: "Yikes Crewneck", cropped_hoodie: "Yikes Cropped Hoodie" }[product.product]) });
   });
 }
 

@@ -43,3 +43,8 @@
 - Google Ads account `9271187939` ("Square Google Ads - After Hours Agenda") showed **Active** with no campaigns when checked on October 19, 2026. The GA4-to-Ads link is **completed** (linked October 18, personalized advertising disabled). No ads or spending were started. The one open Ads security suggestion ("Review your allowed email domains") is optional and left to the owner.
 - The ChatGPT merchant application was submitted on October 19, 2026 with the owner's approval; OpenAI acknowledged it and puts applicants on a waitlist. When it's approved, the owner adds the four `OPENAI_SFTP_*` GitHub secrets.
 - Private label `SB-3-161622` is Apliiq's on-demand satin label ("$2.5 available on demand … no minimums", per Apliiq's product page): it's printed per order. The API's "0 remaining" is the prepaid-batch count and doesn't block orders.
+
+
+## November 7 commerce reliability candidate
+
+Owner authorized the complete reliability plan and production release. The active change extends checkout recovery, durable provider events, financial reconciliation, protected owner actions, support cases, truthful shipment states and independent outage alerts. Operational details and the isolated restore evidence are recorded in `docs/commerce-operations.md`. Local checks and a merged branch alone do not establish deployment; closeout must verify the exact site's current published commit, release artifact, migration and scheduled workers. Real paid checkout remains the owner's action after the release.

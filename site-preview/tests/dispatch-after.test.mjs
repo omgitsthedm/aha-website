@@ -27,13 +27,13 @@ test("a failed email dispatch never fails the webhook", async () => {
   assert.equal(syncThrow, null);
 });
 
-test("fulfillment keeps its hourly cadence while receipt recovery runs every fifteen minutes", () => {
-  for (const [name, schedule] of [["fulfillment-reconcile", 'schedule: "0 * * * *"'], ["notification-dispatch", 'schedule: "0,15,30,45 * * * *"']]) {
+test("fulfillment and receipt recovery use bounded staggered quarter-hour drains", () => {
+  for (const [name, schedule] of [["fulfillment-reconcile", 'schedule: "4,19,34,49 * * * *"'], ["notification-dispatch", 'schedule: "0,15,30,45 * * * *"']]) {
     const source = readFileSync(new URL(`../netlify/functions/${name}.mjs`, import.meta.url), "utf8");
     assert.ok(source.includes(schedule), `${name} must keep its agreed recovery cadence`);
   }
   for (const name of ["square-webhook", "apliiq-fulfillment-webhook"]) {
     const source = readFileSync(new URL(`../netlify/functions/${name}.mjs`, import.meta.url), "utf8");
-    assert.match(source, /dispatchAfterResponse\(runtime\.notifications, context\)/, `${name} must send emails immediately`);
+    assert.match(source, /dispatchAfterResponse\(/, `${name} must schedule immediate after-response work`);
   }
 });

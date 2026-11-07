@@ -111,7 +111,7 @@ test("creates a Square order and matching payment once, binding amount, order an
   const ctx = service();
   const quote = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }, { variationId: hoodieL, quantity: 1 }], shippingAddress: address() });
   const result = await ctx.service.pay({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: "cnon:card-nonce-ok", idempotencyKey: "client-idempotency-key-0001" });
-  assert.deepEqual(result, { state: "completed", checkoutId: quote.checkoutId, orderId: "order-1", paymentId: "payment-1", receiptUrl: "https://squareup.com/receipt/test" });
+  assert.deepEqual(result, { state: "completed", checkoutId: quote.checkoutId, orderId: "order-1", paymentId: "payment-1", receiptUrl: "https://squareup.com/receipt/test", orderNumber: "AHA-checkout-1", receiptEmail: "ada@example.com", statusUrl: null });
   assert.equal(ctx.square.calls.createOrder.length, 1); assert.equal(ctx.square.calls.createPayment.length, 1);
   const payment = ctx.square.calls.createPayment[0];
   assert.deepEqual(payment.amount_money, { amount: 11_567, currency: "USD" }); assert.equal(payment.order_id, "order-1"); assert.equal(payment.location_id, config.locationId); assert.equal(payment.buyer_email_address, "ada@example.com");
@@ -183,7 +183,7 @@ test("status recovers a completed payment without ever replaying the source toke
   ctx.square.getOrder = async () => ({ tenders: [{ payment_id: "payment-recovered" }] });
   ctx.square.getPayment = async (paymentId) => ({ id: paymentId, status: "COMPLETED", order_id: "order-1", location_id: config.locationId, amount_money: { amount: 5200, currency: "USD" }, receipt_url: "https://squareup.com/receipt/recovered" });
   const outcome = await ctx.service.status({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken });
-  assert.deepEqual(outcome, { state: "completed", checkoutId: quote.checkoutId, orderId: "order-1", paymentId: "payment-recovered", receiptUrl: "https://squareup.com/receipt/recovered", error: undefined });
+  assert.deepEqual(outcome, { state: "completed", checkoutId: quote.checkoutId, orderId: "order-1", paymentId: "payment-recovered", receiptUrl: "https://squareup.com/receipt/recovered", orderNumber: "AHA-checkout-1", receiptEmail: "ada@example.com", statusUrl: null, error: undefined });
   assert.equal(ctx.square.calls.createPayment.length, 0);
 });
 

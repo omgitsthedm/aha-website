@@ -63,13 +63,19 @@ function fulfillmentTitle(item) {
   return requiredString(item.title || legacy[item.product], "catalog_title_missing");
 }
 
-function validateKnownLines(order, catalog) {
+function validateKnownLines(order, catalog, purchasedItems) {
+  const snapshot = Array.isArray(purchasedItems) && purchasedItems.length ? purchasedItems : null;
+  if (snapshot && snapshot.length !== order.line_items?.length) throw new FulfillmentHold("purchased_lines_mismatch");
   if (!Array.isArray(order.line_items) || order.line_items.length === 0) throw new FulfillmentHold("order_lines_missing");
   return order.line_items.map((line, index) => {
     const variationId = requiredString(line.catalog_object_id, "unknown_variation");
-    const mapped = catalog[variationId];
+    const purchased = snapshot?.find((item) => item.variationId === variationId);
+    if (snapshot && !purchased) throw new FulfillmentHold("purchased_lines_mismatch");
+    const mapped = purchased ? { ...catalog[variationId], ...purchased, priceCents: purchased.priceCents ?? purchased.unitAmount } : catalog[variationId];
     if (!mapped) throw new FulfillmentHold("unknown_variation");
     const quantity = positiveQuantity(line.quantity, "line_quantity_invalid");
+    if (purchased && quantity !== purchased.quantity) throw new FulfillmentHold("purchased_quantity_mismatch");
+    requiredString(mapped.sku, "catalog_sku_missing");
     if (money(line.base_price_money, "line_price_invalid") !== mapped.priceCents) throw new FulfillmentHold("line_price_mismatch");
     return {
       squareLineUid: requiredString(line.uid, "line_uid_missing"),
@@ -89,7 +95,7 @@ function validateKnownLines(order, catalog) {
  * Turn fresh Square API objects into an immutable, allow-listed submission.
  * This rejects every order shape we do not explicitly support.
  */
-export function validatePaidSquareOrder({ payment, order, locationId, startAt, catalog = AHA_FULFILLMENT_CATALOG }) {
+export function validatePaidSquareOrder({ payment, order, locationId, startAt, catalog = AHA_FULFILLMENT_CATALOG, purchasedItems }) {
   const activation = parseActivation(startAt);
   if (payment.status !== "COMPLETED") throw new FulfillmentHold("payment_not_completed");
   if (payment.location_id !== locationId || order.location_id !== locationId) throw new FulfillmentHold("location_mismatch");
@@ -106,7 +112,7 @@ export function validatePaidSquareOrder({ payment, order, locationId, startAt, c
   }
   const fulfillment = fulfillments[0];
   if (!["PROPOSED", "RESERVED"].includes(fulfillment.state)) throw new FulfillmentHold("fulfillment_not_open");
-  const items = validateKnownLines(order, catalog);
+  const items = validateKnownLines(order, catalog, purchasedItems);
   const address = shippingAddress(fulfillment.shipment_details);
   const paymentEmail = typeof payment.buyer_email_address === "string" ? payment.buyer_email_address.trim() : "";
   const recipientEmail = typeof fulfillment.shipment_details?.recipient?.email_address === "string" ? fulfillment.shipment_details.recipient.email_address.trim() : "";
@@ -212,7 +218,7 @@ function acceptedReason(response) {
   return "apliiq_accepted";
 }
 
-export function createFulfillmentService({ repository, square, apliiq, notifications = { enqueueConfirmation: async () => null, enqueueShipment: async () => null }, config, catalog = AHA_FULFILLMENT_CATALOG, now = () => new Date() }) {
+export function createFulfillmentService({ repository, square, apliiq, confirmPayment = async () => {}, notifications = { enqueueConfirmation: async () => null, enqueueShipment: async () => null }, config, catalog = AHA_FULFILLMENT_CATALOG, now = () => new Date() }) {
   const deadlineRemaining = (deadline) => Math.max(0, Math.min(8_000, deadline - Date.now()));
   // Cancellation window: a paid order is recorded and confirmed at once, but it
   // reaches Apliiq only after this many minutes, when the scheduled run re-reads
@@ -285,9 +291,10 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
   }
 
   async function processSquarePayment(paymentId, deadline) {
-    if (config.enabled !== "true") return { outcome: "disabled", retryable: true };
     if (deadline && deadlineRemaining(deadline) < 2_000) return { outcome: "deferred", retryable: true };
     const payment = await square.getPayment(paymentId, { timeoutMs: deadline ? deadlineRemaining(deadline) : 8_000 });
+    await confirmPayment(paymentId, payment);
+    if (config.enabled !== "true") return { outcome: "disabled", retryable: true };
     if (!payment?.order_id) return { outcome: "ignored", code: "payment_order_missing" };
     if (deadline && deadlineRemaining(deadline) < 1_000) return { outcome: "deferred", retryable: true };
     const order = await square.getOrder(payment.order_id, { timeoutMs: deadline ? deadlineRemaining(deadline) : 8_000 });
@@ -301,9 +308,11 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
       // Do not create a hold or alter an existing audited ignored record.
       return { outcome: "ignored", code: "non_shipping_receipt" };
     }
+    const existing = await repository.getOrder(order.id);
+    if (existing?.state === "shipped" && payment.status === "COMPLETED" && !(payment.refunded_money?.amount > 0) && !payment.refund_ids?.length && !["CANCELED", "CANCELLED"].includes(order.state)) return {outcome:"already_known",state:"shipped"};
     let validated;
     try {
-      validated = validatePaidSquareOrder({ payment, order, locationId: config.locationId, startAt: config.startAt, catalog });
+      validated = validatePaidSquareOrder({ payment, order, locationId: config.locationId, startAt: config.startAt, catalog, purchasedItems: await repository.getPurchasedItems?.(order.id) });
     } catch (error) {
       // A created/authorized payment is expected to arrive before its
       // completed update. It is neither an error nor a durable hold.
@@ -318,7 +327,6 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
   }
 
   async function processSquareEvent(eventId, deadline) {
-    if (config.enabled !== "true") return { outcome: "disabled", retryable: true };
     const event = await repository.claimSquareEvent(eventId);
     if (!event) return { outcome: "duplicate" };
     try {
@@ -356,7 +364,6 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
   }
 
   async function runScheduled() {
-    if (config.enabled !== "true") return { queued: 0, reconciled: 0 };
     // Netlify schedules have a hard 30-second cap. Leave a cushion for the
     // platform response and never claim a new row once this bounded run is low.
     const deadline = Date.now() + 24_000;
@@ -372,6 +379,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     // Queued records originate in a webhook, but they are re-read and
     // revalidated before the first provider POST. No historic Square search is
     // performed, and a changed/refunded order is held instead of submitted.
+    if (config.enabled !== "true") return { inbound: inboundProcessed, queued: 0, reconciled: 0 };
     const queued = await repository.listQueued();
     let claimed = 0;
     for (const record of queued) {
@@ -381,7 +389,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
         const payment = await square.getPayment(record.square_payment_id, { timeoutMs: deadlineRemaining(deadline) });
         if (deadlineRemaining(deadline) < 1_000) break;
         const order = await square.getOrder(payment.order_id, { timeoutMs: deadlineRemaining(deadline) });
-        const fresh = validatePaidSquareOrder({ payment, order, locationId: config.locationId, startAt: config.startAt, catalog });
+        const fresh = validatePaidSquareOrder({ payment, order, locationId: config.locationId, startAt: config.startAt, catalog, purchasedItems: record.submitted_items });
         if (sha256(JSON.stringify(fresh.apliiqPayload)) !== record.payload_sha256) {
           await repository.setProviderState({ squareOrderId: record.square_order_id, providerStatus: "changed", state: "held", lastErrorCode: "payload_changed" });
           continue;
@@ -392,8 +400,11 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
         claimed += 1;
         await submitClaimed({ record: acquired, payload: fresh.apliiqPayload, deadline });
       } catch (error) {
-        const code = error instanceof FulfillmentHold ? error.code : "square_revalidation_failed";
-        await repository.setProviderState({ squareOrderId: record.square_order_id, providerStatus: "held", state: "held", lastErrorCode: code });
+        if (error instanceof FulfillmentHold) {
+          await repository.setProviderState({ squareOrderId: record.square_order_id, providerStatus: "held", state: "held", lastErrorCode: error.code });
+        } else if (repository.deferRevalidation) {
+          await repository.deferRevalidation(record.square_order_id);
+        } // A transport failure cannot permanently hold an otherwise valid paid order.
       }
     }
     const uncertain = await repository.listUncertain();
@@ -415,14 +426,20 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
     return { inbound: inboundProcessed, queued: claimed, reconciled };
   }
 
+  function shipmentEvidence(notice, providerState, callbackStatus) {
+    const text=String(notice.Helptext ?? '');
+    if (/\b(not|unshipped|pending|awaiting|label created)\b/i.test(text)) return false;
+    return ['shipped','success'].includes(String(providerState ?? '').trim().toLowerCase())
+      || ['shipped','success'].includes(String(callbackStatus ?? '').trim().toLowerCase())
+      || /\b(shipped|success)\b/i.test(text);
+  }
+
   function shippedQuantities(providerOrder, expectedItems, callbackStatus) {
     const quantities = {};
     const seenShipmentLine = new Set();
-    const providerShipped = ["shipped", "success"].includes(String(providerOrder?.Status ?? "").trim().toLowerCase());
-    const callbackShipped = ["shipped", "success"].includes(String(callbackStatus ?? "").trim().toLowerCase());
     for (const notice of providerOrder?.SN ?? []) {
       if (typeof notice?.TrackingNumber !== "string" || !notice.TrackingNumber.trim()) continue;
-      if (!providerShipped && !callbackShipped && !/shipped|success/i.test(String(notice.Helptext ?? ""))) continue;
+      if (!shipmentEvidence(notice,providerOrder?.Status,callbackStatus)) continue;
       for (const item of notice?.Items ?? []) {
         const sku = item.SKU ?? item.sku;
         const quantity = Number(item.Quantity ?? item.quantity);
@@ -446,26 +463,52 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
       await repository.setProviderState({ squareOrderId, providerStatus: providerState, state: "attention" });
       return { outcome: "attention" };
     }
+    const expectedValue = providerOrder.ExpectedShipDate ?? providerOrder.ExpectedDate;
+    const expectedDate = expectedValue ? new Date(expectedValue) : null;
+    if(expectedDate && typeof expectedValue==='string' && /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(expectedValue)) expectedDate.setUTCHours(23,59,59,999);
+    await repository.saveProviderObservation?.(squareOrderId, expectedDate && Number.isFinite(expectedDate.getTime()) ? expectedDate.toISOString() : null, {
+      garment: providerOrder.AwaitingGarment === true, artwork: providerOrder.AwaitingArtwork === true, supplies: providerOrder.AwaitingSupplies === true,
+    });
     const items = record.submitted_items;
     const quantities = shippedQuantities(providerOrder, items, callbackStatus);
     const expectedBySku = items.reduce((sum, item) => ({ ...sum, [item.sku]: (sum[item.sku] ?? 0) + item.quantity }), {});
     const complete = Object.keys(expectedBySku).length > 0 && Object.entries(expectedBySku).every(([sku, quantity]) => (quantities[sku] ?? 0) >= quantity);
-    const notices = (providerOrder?.SN ?? []).filter((notice) => typeof notice?.TrackingNumber === "string" && notice.TrackingNumber.trim());
+    const notices = (providerOrder?.SN ?? []).filter((notice) => typeof notice?.TrackingNumber === "string" && notice.TrackingNumber.trim()
+      && shipmentEvidence(notice,providerState,callbackStatus)
+      && (notice.Items ?? []).some((item) => Number(item.Quantity ?? item.quantity)>0 && items.some((expected) => expected.sku === (item.SKU ?? item.sku))));
     if (!notices.length) {
       if (["submitting", "uncertain", "submitted_processed", "submitted_accepted", "submitted_reconciled"].includes(record.state)) {
         await repository.setProviderState({ squareOrderId, providerStatus: providerState || "unknown", state: "submitted_reconciled" });
       }
       return { outcome: "pending" };
     }
-    const latest = notices.at(-1);
+    // Verify payment before notifying any parcel. A refund/cancellation must be
+    // visible to the owner before a new shipment email implies normal progress.
+    const financial = await repository.getFinancialState?.(squareOrderId);
+    if (financial && (financial.dispute_state === "open" || financial.refund_state !== "none" || financial.cancellation_state !== "none")) return {outcome:"attention"};
+    const shipmentOrder = await square.getOrder(squareOrderId, {timeoutMs: deadline ? deadlineRemaining(deadline) : 8000});
+    if (["CANCELED", "CANCELLED"].includes(shipmentOrder.state)) {
+      await repository.setProviderState({squareOrderId,providerStatus:providerState,state:"attention",lastErrorCode:"order_cancelled"});
+      return {outcome:"attention"};
+    }
+    const shipmentPayment = await square.getPayment(record.square_payment_id, {timeoutMs: deadline ? deadlineRemaining(deadline) : 8000});
+    if (shipmentPayment.status !== "COMPLETED" || shipmentPayment.refunded_money?.amount > 0 || shipmentPayment.refund_ids?.length) {
+      await repository.setProviderState({squareOrderId,providerStatus:providerState,state:"attention",lastErrorCode:"shipment_payment_review"});
+      return {outcome:"attention"};
+    }
+    let finalTracking;
+    for (const latest of notices) {
     const trackingNumber = typeof latest.TrackingNumber === "string" ? latest.TrackingNumber : null;
     const carrier = typeof latest.Carrier === "string" && !latest.Carrier.startsWith("http") ? latest.Carrier : (typeof latest.Service === "string" ? latest.Service : null);
     const trackingUrl = typeof latest.Carrier === "string" && latest.Carrier.startsWith("https://")
       ? `${latest.Carrier}${encodeURIComponent(trackingNumber)}` : null;
     const priorTracking = Array.isArray(record.tracking) ? record.tracking.find((entry) => entry?.trackingNumber === trackingNumber && entry?.shippedAt) : null;
     const shippedAt = priorTracking?.shippedAt ?? now().toISOString();
-    await repository.recordShipment({ squareOrderId, quantities, tracking: { carrier, trackingNumber, trackingUrl, shippedAt }, complete });
+    finalTracking = { carrier, trackingNumber, trackingUrl, shippedAt };
+    await repository.recordShipment({ squareOrderId, quantities, tracking: finalTracking, complete });
     await notifications.enqueueShipment({ recipient: record.customer_email, orderId: squareOrderId, orderNumber: record.apliiq_payload?.order_number || squareOrderId, carrier, trackingNumber, trackingUrl });
+    }
+    const {carrier,trackingNumber,trackingUrl,shippedAt} = finalTracking;
     if (!complete || !trackingNumber) return { outcome: "partial" };
     // Retrieve the latest order version immediately before the mutation. The
     // idempotency key makes a network retry safe; a version conflict remains
@@ -486,7 +529,7 @@ export function createFulfillmentService({ repository, square, apliiq, notificat
       const orderForValidation = currentFulfillment.state === "COMPLETED"
         ? { ...current, fulfillments: current.fulfillments.map((fulfillment) => fulfillment.uid === currentFulfillment.uid ? { ...fulfillment, state: "PROPOSED" } : fulfillment) }
         : current;
-      const fresh = validatePaidSquareOrder({ payment, order: orderForValidation, locationId: config.locationId, startAt: config.startAt, catalog });
+      const fresh = validatePaidSquareOrder({ payment, order: orderForValidation, locationId: config.locationId, startAt: config.startAt, catalog, purchasedItems: record.submitted_items });
       if (record.payload_sha256 && sha256(JSON.stringify(fresh.apliiqPayload)) !== record.payload_sha256) throw new FulfillmentHold("payload_changed");
     } catch (error) {
       const code = error instanceof FulfillmentHold ? error.code : "square_revalidation_failed";

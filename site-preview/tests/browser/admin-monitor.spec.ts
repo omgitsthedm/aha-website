@@ -26,3 +26,21 @@ for (const state of ["healthy", "attention", "stale"] as const) {
     await page.screenshot({ path: `test-results/admin-monitor-${state}.png`, fullPage: true });
   });
 }
+
+test('owner can review a support case and request a verified receipt on a phone',async({page,baseURL})=>{
+ await page.setViewportSize({width:390,height:844});const requests:Array<Record<string,unknown>>=[];
+ await page.route('**/*',route=>{
+  const url=new URL(route.request().url());if(url.origin!==new URL(baseURL!).origin)return route.abort();
+  if(url.pathname==='/api/admin/me')return route.fulfill({json:{email:'owner@example.com'}});
+  if(url.pathname==='/api/admin/support')return route.fulfill({json:{cases:[{id:'10000000-0000-4000-8000-000000000001',topic:'Receipt help',state:'open',customer_email:'verified@example.com',message_text:'I need my receipt.'}]}});
+  if(url.pathname==='/api/admin/orders')return route.fulfill({json:{orders:[{squareOrderId:'local-order-123',orderNumber:'AHA-local',state:'submitted_processed',apliiqOrderId:'local-supplier',customer:'Fixture customer',totalCents:5200,createdAt:new Date().toISOString(),items:[{title:'Fixture garment',quantity:1,size:'XL'}],tracking:[],flags:[]}]}});
+  if(url.pathname==='/api/admin/orders/local-order-123/receipt'){requests.push(route.request().postDataJSON());return route.fulfill({json:{message:'Receipt saved for delivery to the verified address.'}});}
+  return route.continue();
+ });
+ page.on('dialog',dialog=>dialog.accept(dialog.type()==='prompt'?(dialog.message().startsWith('Record')?'Customer requested receipt':'verified@example.com'):undefined));
+ await page.goto('/admin/orders/');await expect(page.getByText('I need my receipt.',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Resend receipt',exact:true}).click();
+ await expect.poll(()=>requests.length).toBe(1);expect(requests[0]).toMatchObject({email:'verified@example.com',customerVerified:true,reason:'Customer requested receipt'});
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await page.screenshot({path:'test-results/admin-orders-phone.png',fullPage:true});
+});

@@ -1,3 +1,4 @@
+import { reliabilitySchema } from "./helpers/reliability-schema.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -20,6 +21,7 @@ async function database(t) {
   const pg = new PGlite();
   t.after(() => pg.close());
   for (const name of MIGRATIONS) await pg.exec(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
+  await reliabilitySchema(pg);
   const sql = async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows;
   return { pg, db: { sql } };
 }
@@ -121,7 +123,7 @@ test("weekly digest always sends: orders, revenue, best sellers and drop-off", a
     now: () => new Date("2026-10-19T13:30:00Z"),
   });
   assert.deepEqual(result, { key: "digest:2026-10-19", ok: true, emailed: true });
-  assert.equal(sent[0].subject, "2 orders, $162.00 this week");
+  assert.equal(sent[0].subject, "2 orders, $162.00 gross receipts this week");
   assert.match(sent[0].text, /3 pieces sold\. Best: Pet It Be Crewneck \(2\), Yikes Crewneck \(1\)\./);
   assert.match(sent[0].text, /Checkouts started: 3\. Paid: 2 \(67%\)\. Abandoned: 1\./);
   assert.match(sent[0].text, /Email sign-ups: 1 new, 2 on the list\./);

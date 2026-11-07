@@ -22,7 +22,7 @@ Treat an unavailable storefront, broken checkout, duplicate charge or order, cus
 1. Square calculates the quote; the server checks the active product/variation allow list and order totals before payment.
 2. A durable checkout claim and stable payment idempotency key prevent simultaneous card/wallet submissions from creating separate charges. An uncertain outcome is reconciled with Square before any new charge is attempted.
 3. A completed Square payment queues its confirmation independently of fulfillment enablement. The durable notification outbox and Resend idempotency key prevent duplicate receipts. New mail dispatches immediately after the payment/webhook response; deferred mail and missing confirmations are recovered every 15 minutes.
-4. Paid orders enter the Apliiq queue. The configured cancellation hold remains 60 minutes. Hourly fulfillment reconciliation processes eligible orders and refreshes supplier/tracking status.
+4. Paid orders enter the Apliiq queue. The configured cancellation hold remains 60 minutes. Quarter-hour fulfillment reconciliation processes eligible orders and refreshes supplier/tracking status.
 5. Apliiq submission claims and uncertain outcomes are retained. A timeout or missing supplier order ID requires reconciliation, never a blind second create request.
 6. Signed Square and Apliiq callbacks update payment, fulfillment and shipping. Apliiq acceptance means **With the maker**, not confirmed physical printing.
 7. Signed Resend callbacks at `/api/webhooks/resend` record only event ID, message ID, event type and timestamps. Delivery, delay, bounce, suppression and complaint are distinct from API send acceptance. Delivered means the recipient mail server accepted the message, not that a person saw it in their Inbox.
@@ -54,7 +54,7 @@ The repository ruleset must give the owner a pull-request-only emergency bypass 
 - The independent **Commerce pipeline monitor** GitHub workflow is scheduled at minutes 11, 26, 41 and 56. It checks the public release identity, checkout page/configuration and authenticated aggregate health endpoint. Failed runs use GitHub Actions notifications; keep owner Actions failure notifications enabled. GitHub schedule delays remain possible.
 - The private `/api/commerce/health` endpoint reports counts and problem codes only. It cannot create orders, submit payments, alter fulfillment or send mail. It also detects stale local monitoring, so a broken Netlify scheduled job cannot report itself healthy indefinitely.
 - Paid orders without a confirmation/fulfillment record and uncertain payments are flagged after 15 minutes. Missing or unsent shipping notifications are checked separately, including outbox rows needing attention before a provider message ID exists. Missing delivery evidence is flagged after 30 minutes for receipts sent since monitoring began. Bounce/failure/suppression/complaint events are flagged when received.
-- Supplier acceptance is overdue after the cancellation hold plus 90 minutes. Normal hold time is not an error. Receipt and fulfillment workers become stale after 45 and 105 minutes respectively; Square events unprocessed for two hours also alert.
+- Supplier acceptance is overdue after the cancellation hold plus 90 minutes. Normal hold time is not an error. Receipt, fulfillment and Square recovery workers become stale after 45 minutes; Square events unprocessed for two hours also alert.
 - `/admin/` shows the most recent commerce check, problem counts, and stale/missing-monitor warnings. The existing daily health check still audits live routes, catalog/Square mappings and provider configuration; it is not replaced by the frequent aggregate check.
 - Run `node ops/commerce-readiness.mjs` with the dedicated monitor token in the process environment for a read-only current-production check. This no longer checks historical Printful variables or copies provider secrets out of Netlify.
 
@@ -76,21 +76,37 @@ Severity and response targets:
 
 For every incident, record onset time, affected surface, deploy/commit, observed evidence, containment, customer impact, provider impact, decision owner, rollback or forward-fix choice, validation, and closure time. Never paste credentials, tokens, customer personal data, or full provider payloads into GitHub or the report.
 
-## Rollback runbook
+## Recovery and backups
 
-1. Confirm the regression is associated with the current deploy and identify a previously successful, known-good production deploy by deploy ID and source commit.
-2. Check whether the release changed database schema, data behavior, provider configuration, environment variables, or webhook contracts. An application rollback does not reverse any of those effects.
-3. For a code-only compatible rollback, use the Netlify deploy detail page for the known-good successful deploy and choose **Publish Deploy**. Record the acting operator, incident, old/new deploy IDs, and time.
-4. Prevent an automatic Git deploy from immediately overwriting the rollback while the incident is active. Then verify the primary domain, exact Netlify site identity, representative routes, checkout entry without completing payment, and the read-only commerce rails.
-5. Restore normal Git-connected publishing only after the repaired `main` commit is validated and ready to roll forward.
+Prefer a reviewed forward fix. Netlify Database migrations run with deployment and are additive; publishing an old artifact can be incompatible with the current schema. Revert the affected application change in source, preserve applied migrations, run the same checks, and deploy the repaired commit to the exact site. Do not republish an older database-coupled deploy or run hosted migrations manually.
 
-Netlify Database restoration is a separate, destructive decision: publishing a previous application deploy does not restore the database. A database restore can discard legitimate orders or other writes made after the backup. Only a Team Owner may authorize it after reconciling affected order/payment/provider records and choosing a recovery point. Prefer a targeted forward repair when customer activity continued after the backup.
+A database restore is a separate destructive operation. Preserve post-backup payments, orders and provider IDs before choosing a recovery point; restoring application rows must never cause another payment or supplier POST. Do not restore over production as a diagnostic step.
 
-The runbook is documented and the atomic application rollback mechanism is available. A real production rollback and database-restore exercise must be recorded separately when performed; this document does not claim that exercise has occurred.
+The November 7 isolated drill restored 30 application tables and 218 rows from a consistent read-only snapshot, matched every table's content hash, and applied the additive reliability migration. Private evidence and backup reside outside Git in the shop audit's `commerce-private/restore-drill` folder with restricted permissions. Source PostgreSQL 17 schema was restored on local PostgreSQL 16 after removing only its unsupported `transaction_timeout` setting. This verifies application row recovery, not managed platform metadata, exact sequence positions, or a full point-in-time production restore. Identity counters must be reconciled before any restored database accepts new writes; retain the original database until the recovery is accepted.
+
+## Recovery controls and financial state
+
+- Every completed checkout creates its recovery obligation in the same database transaction. Purchased title, approved supplier SKU, quantity and price are frozen with the quote and used during fulfillment revalidation.
+- Verified Square webhooks commit inbox entries before provider calls. The separate Square recovery job polls updated payments with overlap and pagination, rotates existing purchases for refund/fee verification, and sweeps disputes, including resolved states. All reads have bounded timeouts; retries never create payments or refunds.
+- The owner order screen supports audited reconciliation, verified-address receipt correction/resend (three per order per day), and release of a safe pre-submission hold. It refuses an uncertain or previously attempted supplier submission. An unresolved in-flight receipt must be checked before a resend; superseded pending receipts no longer retry to the old address.
+- Support messages and their owner notification commit together. `/admin/orders/` retains open/waiting cases even when mail is down, with audited resolution.
+- Refund amount, pending/failed refunds, cancellations, dispute deadlines and processing fees are separate from checkout completion. Any affected production requires owner review; a Square refund does not cancel an Apliiq order. Do not automatically refund, accept a dispute or promise a replacement.
+- Partial shipments remain partial. Tracking requires positive shipped quantities for purchased SKUs. A label or supplier ID cannot hide a hold or imply completed shipping. Review requests require complete shipping and no refund, dispute or active error.
+- Supplier expected dates take precedence; otherwise use the approved seven-business-day production calendar. Supplier garment/artwork/supplies flags remain visible operational data. These estimates do not prove physical printing started.
+- Weekly accounting labels gross receipts, merchandise, shipping, collected tax, refunds, processing fees and net receipts separately. Unknown fees remain unknown, and supplier costs/bank payouts are not inferred.
+
+## Independent alerts, privacy and retention
+
+- `AHA_HEALTHCHECK_COMMERCE_URL` is a secret function variable for one Healthchecks.io check. The commerce monitor sends aggregate success/failure only. A 15-minute period plus 15-minute grace detects a stopped platform independently of Netlify/GitHub. Email alerts go to the AHA support inbox. A deliberate failure and recovery were tested before deployment; require a real scheduled heartbeat after release to establish activation.
+- The receipt monitor follows the newest verified resend while retaining older delivery evidence. A queued resend is not delivery proof; its outbox and delivery callback must succeed.
+- `AHA_ORDER_LINK_SECRET` signs new order links. Existing Square-derived order and unsubscribe links remain accepted. For subsequent dedicated-key rotation, retain the old secret in the bounded `AHA_ORDER_LINK_PREVIOUS_SECRETS` JSON list until existing links are intentionally retired; never print these values or commit them.
+- PostHog error capture respects analytics consent and Global Privacy Control. Only a fixed error category, first-party asset path and line number are sent; raw messages, exception stacks, rejected values, addresses, email and signed-link query strings are excluded. Capture is capped at three events per page.
+- Payment attempts have an atomic per-client hashed-IP limit; expired counters are discarded after one day. Support rate/challenge limits and signed/private route protections remain enabled.
+- Retention review: paid order, supplier, financial and delivery evidence is retained for support/reconciliation; this release does not invent an irreversible deletion policy. Exported customer backups are private, excluded from Git, and limited to recovery use. Use account deletion for account data, preserve legally required transaction evidence, and agree the accounting retention schedule before any broad purge. Never collect card data, source tokens or credentials in logs.
 
 ## Customer status and end-to-end proof
 
-Customers use `/track-order/` with the AHA order number and checkout email, or their authenticated account. Expose only the matching order's customer-facing items, status, total and shipment links. Keep payment success, supplier acceptance, physical production and shipping distinct.
+Customers receive the signed `/order/?o=…&k=…` link immediately at checkout and in their receipt, and can attach that order to their authenticated account. Expose only the matching order's customer-facing items, status, shipment links. Keep payment success, supplier acceptance, physical production and shipping distinct.
 
 A complete genuine-order check follows: one payment, one durable order, receipt accepted by the recipient server, one supplier order after the hold, truthful customer status, then tracking and shipping notification when the supplier ships. The customer performs the next real purchase; routine release verification does not create paid orders or synthetic production emails.
 

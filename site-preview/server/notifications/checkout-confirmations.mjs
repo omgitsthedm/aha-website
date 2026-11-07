@@ -14,7 +14,7 @@ export function createCheckoutConfirmations({ database, service, env, square }) 
     const cart = json(session.cart_json);
     if (!Array.isArray(cart) || !cart.length) return null;
     return service.enqueueConfirmation({
-      recipient: address?.email, orderId: session.square_order_id, orderNumber: session.square_order_id,
+      recipient: session.notification_email || address?.email, orderId: session.square_order_id, orderNumber: json(session.order_payload_json)?.reference_id || session.square_order_id,
       totalAmount: session.total_cents, currency: session.currency,
       items: cart.map((item) => ({ title: item.title ?? AHA_FULFILLMENT_CATALOG[item.variationId]?.title ?? String(item.product ?? "Your piece").replaceAll("_", " "), size: item.size, quantity: item.quantity })),
     });
@@ -23,9 +23,9 @@ export function createCheckoutConfirmations({ database, service, env, square }) 
     const [session] = await database.sql`SELECT * FROM aha_checkout_sessions WHERE checkout_id = ${checkoutId} AND state = 'completed' LIMIT 1`;
     return enqueue(session);
   }
-  async function queueSquarePayment(paymentId) {
+  async function queueSquarePayment(paymentId, verifiedPayment) {
     if (!config.accessToken || !config.locationId) return null;
-    const payment = await gateway.getPayment(paymentId);
+    const payment = verifiedPayment ?? await gateway.getPayment(paymentId);
     if (payment?.id !== paymentId || payment.status !== "COMPLETED" || payment.location_id !== config.locationId || !payment.order_id) return null;
     // Match an order we actually created, including amount and currency. Never
     // turn a POS/custom receipt or a failed/quoted attempt into a website order.
@@ -44,7 +44,7 @@ export function createCheckoutConfirmations({ database, service, env, square }) 
     const rows = await database.sql`
       SELECT c.checkout_id FROM aha_checkout_sessions c
       WHERE c.state = 'completed' AND c.square_payment_id IS NOT NULL AND c.square_order_id IS NOT NULL
-        AND NOT EXISTS (SELECT 1 FROM aha_order_notifications n WHERE n.dedupe_key = c.square_order_id || ':order_confirmed')
+        AND NOT EXISTS (SELECT 1 FROM aha_order_notifications n WHERE n.kind='order_confirmed' AND split_part(n.dedupe_key,':',1)=c.square_order_id)
       ORDER BY c.created_at ASC LIMIT 20`;
     for (const row of rows) await queueCheckout(row.checkout_id);
     return rows.length;

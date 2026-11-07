@@ -11,10 +11,8 @@ export default async function fulfillmentReconcile(_request, context) {
   await trackWorker(database, "fulfillment", async () => {
     const runtime = createRuntime({ database, env: Netlify.env, catalog: (await currentCatalog()).allowList });
     return runtime.service.runScheduled();
-  });
+  }, Netlify.env);
 }
 
-// Paid orders are submitted inline by the Square webhook. This hourly run is the
-// safety net for deferred, pending and uncertain records; running it every five
-// minutes kept Netlify Database awake around the clock.
-export const config = { schedule: "0 * * * *" };
+// A short, bounded drain covers missed callbacks, holds and supplier updates.
+export const config = { schedule: "4,19,34,49 * * * *" };
