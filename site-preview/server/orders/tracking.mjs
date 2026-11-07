@@ -31,18 +31,25 @@ export function quantitiesDelivered(expected,parcels) {
 const json=v=>typeof v==='string'?JSON.parse(v):v;
 export async function applyTracker(db,env,row,tracker) {
   const value=trackerObservation(tracker,row);
-  await db.sql`UPDATE aha_shipment_tracking SET tracker_id=${value.id},status=${value.status},provider_updated_at=${value.updated},
+  const changed=await db.sql`UPDATE aha_shipment_tracking SET tracker_id=${value.id},status=${value.status},provider_updated_at=${value.updated},
     delivered_at=${value.deliveredAt},checked_at=now(),next_attempt_at=now()+interval '1 hour',last_error_code=NULL
     WHERE square_order_id=${row.square_order_id} AND tracking_number=${row.tracking_number}
       AND (provider_updated_at IS NULL OR provider_updated_at<=${value.updated})
-      AND (status<>'delivered' OR ${value.status}='delivered')`;
-  const parcels=await db.sql`SELECT * FROM aha_shipment_tracking WHERE square_order_id=${row.square_order_id}`;
-  const [order]=await db.sql`SELECT submitted_items,state FROM aha_fulfillment_orders WHERE square_order_id=${row.square_order_id}`;
-  if(order?.state==='shipped' && quantitiesDelivered(json(order.submitted_items),parcels.map(p=>({...p,items:json(p.items)})))) {
-    const deliveredAt=new Date(Math.max(...parcels.filter(p=>p.delivered_at).map(p=>new Date(p.delivered_at).getTime()))).toISOString();
-    await db.sql`UPDATE aha_fulfillment_orders SET delivered_at=COALESCE(delivered_at,${deliveredAt}) WHERE square_order_id=${row.square_order_id}`;
-    await recordProgress(db,env,row.square_order_id,'delivered','carrier:easypost');
-  } else if(['failure','return_to_sender'].includes(value.status)) await recordProgress(db,env,row.square_order_id,'delivery_issue','carrier:easypost');
+      AND (status<>'delivered' OR ${value.status}='delivered') RETURNING tracking_number`;
+  await finalizeDelivery(db,env,row.square_order_id);
+  if(changed.length && ['failure','return_to_sender'].includes(value.status)) await recordProgress(db,env,row.square_order_id,'delivery_issue','carrier:easypost');
+}
+
+// Completion is independent of carrier polling. A crash after storing a scan,
+// or delayed Square fulfillment completion, must not strand a delivered order.
+export async function finalizeDelivery(db,env,orderId) {
+  const parcels=await db.sql`SELECT * FROM aha_shipment_tracking WHERE square_order_id=${orderId}`;
+  const [order]=await db.sql`SELECT submitted_items,state FROM aha_fulfillment_orders WHERE square_order_id=${orderId}`;
+  if(order?.state!=='shipped' || !quantitiesDelivered(json(order.submitted_items),parcels.map(p=>({...p,items:json(p.items)})))) return false;
+  const deliveredAt=new Date(Math.max(...parcels.filter(p=>p.delivered_at).map(p=>new Date(p.delivered_at).getTime()))).toISOString();
+  await db.sql`UPDATE aha_fulfillment_orders SET delivered_at=COALESCE(delivered_at,${deliveredAt}) WHERE square_order_id=${orderId} AND state='shipped'`;
+  await recordProgress(db,env,orderId,'delivered','carrier:easypost');
+  return true;
 }
 
 export async function runTracking({db,env,fetchImpl=fetch,now=()=>Date.now()}) {
@@ -54,6 +61,11 @@ export async function runTracking({db,env,fetchImpl=fetch,now=()=>Date.now()}) {
     WHERE f.state IN ('shipped','shipped_partial','ready_to_ship') AND jsonb_array_length(COALESCE(t->'items','[]'::jsonb))>0
       AND t->>'trackingNumber' IS NOT NULL
     ON CONFLICT(square_order_id,tracking_number) DO UPDATE SET items=EXCLUDED.items`;
+  const unfinished=await db.sql`SELECT f.square_order_id FROM aha_fulfillment_orders f WHERE f.state='shipped'
+    AND EXISTS(SELECT 1 FROM aha_shipment_tracking t WHERE t.square_order_id=f.square_order_id AND t.delivered_at IS NOT NULL)
+    AND NOT EXISTS(SELECT 1 FROM aha_order_milestones m WHERE m.square_order_id=f.square_order_id AND m.stage='delivered')
+    ORDER BY f.updated_at LIMIT 8`;
+  for(const order of unfinished) await finalizeDelivery(db,env,order.square_order_id);
   const key=env.get('AHA_EASYPOST_API_KEY');
   if(env.get('AHA_TRACKING_ENABLED')!=='true' || !key) return {configured:false,processed:0};
   const deadline=now()+20000;let processed=0;

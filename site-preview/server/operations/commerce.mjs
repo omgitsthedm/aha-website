@@ -55,8 +55,10 @@ export async function commerceHealth({ db, env, now = () => new Date(), checkMon
   if(cases?.count) problems.push(problem("support_cases_overdue",cases.count));
   const [supportMail] = await db.sql`SELECT count(*)::int AS count FROM aha_order_notifications WHERE kind='support_request' AND state<>'sent' AND created_at<now()-interval '15 minutes'`;
   if(supportMail?.count) problems.push(problem("support_notification_overdue",supportMail.count));
-  const [tracking]=await db.sql`SELECT count(*) FILTER(WHERE delivered_at IS NULL AND (last_error_code IS NOT NULL OR checked_at<now()-interval '3 hours' OR (checked_at IS NULL AND next_attempt_at<now()-interval '30 minutes')))::int AS pending FROM aha_shipment_tracking`;
-  if(tracking?.pending) problems.push(problem('carrier_tracking_needs_attention',tracking.pending));
+  if(env.get('AHA_TRACKING_ENABLED')==='true') {
+    const [tracking]=await db.sql`SELECT count(*) FILTER(WHERE delivered_at IS NULL AND (last_error_code IS NOT NULL OR checked_at<now()-interval '3 hours' OR (checked_at IS NULL AND next_attempt_at<now()-interval '30 minutes')))::int AS pending FROM aha_shipment_tracking`;
+    if(tracking?.pending) problems.push(problem('carrier_tracking_needs_attention',tracking.pending));
+  }
   const [progress]=await db.sql`SELECT count(*)::int AS count FROM aha_order_notifications WHERE kind='order_progress' AND state<>'sent' AND created_at<now()-interval '30 minutes'`;
   if(progress?.count) problems.push(problem('order_progress_email_unsent',progress.count));
   // Callback metadata may arrive before the outbox's send response. Join only

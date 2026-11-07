@@ -2,13 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
 import {PGlite} from '@electric-sql/pglite';
-import {recordProgress,supplierMilestone} from '../server/orders/lifecycle.mjs';
+import {recordProgress,supplierMilestone,progressStillDue} from '../server/orders/lifecycle.mjs';
 import {quantitiesDelivered,trackerObservation,applyTracker,runTracking} from '../server/orders/tracking.mjs';
 import {handleOrderRequest} from '../server/orders/requests.mjs';
 import {orderStatusUrl,stageFor} from '../server/orders/status.mjs';
 import {createNetlifyRepository} from '../server/fulfillment/repository.mjs';
 import {renderShipment,renderProgress} from '../server/notifications/templates.mjs';
-import {reviewRequestCandidates} from '../server/notifications/customer-emails.mjs';
+import {reviewRequestCandidates,stillDue} from '../server/notifications/customer-emails.mjs';
+import {createNotificationRepository} from '../server/notifications/repository.mjs';
+import {createNotificationService} from '../server/notifications/service.mjs';
 const env={get:key=>key==='AHA_ORDER_LINK_SECRET'?'local-test-only-secret-at-least-32':undefined};
 const id='JOURNEY_ORDER_001';
 async function fixture(t,state='submitted_reconciled') {
@@ -83,15 +85,20 @@ test('private customer cancellation persists once and prevents supplier submissi
   assert.equal((await db.sql`SELECT * FROM aha_support_cases`).length,1);
   assert.equal(await createNetlifyRepository(db).claimForSubmission(id),null);
 });
-test('review invitation waits for delivery instead of an old shipping email',async t=>{
+test('reviews preserve the free tracking schedule and wait for delivery when tracking is active',async t=>{
   const {db}=await fixture(t,'shipped');
   await db.sql`UPDATE aha_email_programs SET started_at=now()-interval '60 days'`;
   await db.sql`INSERT INTO aha_order_notifications(dedupe_key,kind,recipient,payload_json,state,provider_message_id,sent_at) VALUES(${id+':order_shipped:T'},'order_shipped','buyer@example.com','{}','sent','mail-test',now()-interval '30 days')`;
-  assert.equal((await reviewRequestCandidates(db)).length,0);
-  await db.sql`UPDATE aha_fulfillment_orders SET delivered_at=now()-interval '2 days' WHERE square_order_id=${id}`;
-  assert.equal((await reviewRequestCandidates(db)).length,0);
-  await db.sql`UPDATE aha_fulfillment_orders SET delivered_at=now()-interval '11 days' WHERE square_order_id=${id}`;
   assert.equal((await reviewRequestCandidates(db)).length,1);
+  assert.equal((await reviewRequestCandidates(db,20,true)).length,1); // Legacy parcel without item evidence.
+  await db.sql`INSERT INTO aha_shipment_tracking(square_order_id,tracking_number,carrier,items) VALUES(${id},'T','UPS','[{"sku":"SKU1","quantity":2}]')`;
+  assert.equal((await reviewRequestCandidates(db,20,true)).length,0);
+  assert.equal(await stillDue(db,{kind:'review_request',dedupe_key:id+':review_request'},true),false);
+  await db.sql`UPDATE aha_fulfillment_orders SET delivered_at=now()-interval '2 days' WHERE square_order_id=${id}`;
+  assert.equal((await reviewRequestCandidates(db,20,true)).length,0);
+  await db.sql`UPDATE aha_fulfillment_orders SET delivered_at=now()-interval '11 days' WHERE square_order_id=${id}`;
+  assert.equal((await reviewRequestCandidates(db,20,true)).length,1);
+  assert.equal(await stillDue(db,{kind:'review_request',dedupe_key:id+':review_request'},true),true);
   assert.equal(stageFor({state:'shipped',delivered_at:new Date()}),'delivered');
 });
 
@@ -105,4 +112,44 @@ test('carrier registration budget remains a hard ceiling and transport errors re
   assert.equal((await db.sql`SELECT registrations FROM aha_tracking_budgets`)[0].registrations,1);
   const rows=await db.sql`SELECT last_error_code FROM aha_shipment_tracking ORDER BY tracking_number`;
   assert.equal(rows[0].last_error_code,'tracking_http_503');assert.equal(rows[1].last_error_code,'tracking_registration_review');
+});
+
+test('stored delivery recovers after Square completion and after progress enqueue fails',async t=>{
+  const {db}=await fixture(t,'ready_to_ship');
+  await db.sql`INSERT INTO aha_shipment_tracking(square_order_id,tracking_number,carrier,items) VALUES(${id},'RECOVER','UPS','[{"sku":"SKU1","quantity":2}]')`;
+  const row={square_order_id:id,tracking_number:'RECOVER',carrier:'UPS'};
+  const tracker={id:'trk_recover',tracking_code:'RECOVER',carrier:'UPS',mode:'production',status:'delivered',updated_at:new Date().toISOString(),tracking_details:[{status:'delivered',datetime:new Date(Date.now()-60000).toISOString()}]};
+  await applyTracker(db,env,row,tracker);
+  assert.equal((await db.sql`SELECT delivered_at FROM aha_fulfillment_orders`)[0].delivered_at,null);
+  await db.sql`UPDATE aha_fulfillment_orders SET state='shipped' WHERE square_order_id=${id}`;
+  const interrupted={sql:async(parts,...values)=>{
+    if(parts.join('').includes('WITH candidate AS')) throw new Error('simulated enqueue interruption');
+    return db.sql(parts,...values);
+  }};
+  await assert.rejects(runTracking({db:interrupted,env}),/simulated enqueue interruption/);
+  assert.ok((await db.sql`SELECT delivered_at FROM aha_fulfillment_orders`)[0].delivered_at);
+  assert.equal((await db.sql`SELECT * FROM aha_order_notifications`).length,0);
+  await runTracking({db,env,fetchImpl:()=>{throw new Error('no paid call needed');}});
+  await runTracking({db,env});
+  assert.equal((await db.sql`SELECT * FROM aha_order_notifications WHERE kind='order_progress'`).length,1);
+});
+
+test('queued progress is skipped after financial changes and newer stages',async t=>{
+  const {db}=await fixture(t);
+  let sends=0;
+  const service=createNotificationService({repository:createNotificationRepository(db),gateway:{send:async()=>{sends++;return{id:'mail'};}},
+    config:{enabled:true,apiKey:'test',from:'test',replyTo:'test'},progressDue:row=>progressStillDue(db,row)});
+  await db.sql`INSERT INTO aha_order_financials(square_order_id,square_payment_id,payment_state) VALUES(${id},'P','COMPLETED')`;
+  for(const field of ['refund_state','cancellation_state','dispute_state']) {
+    await recordProgress(db,env,id,'creating');
+    if(field==='refund_state') await db.sql`UPDATE aha_order_financials SET refund_state='refunded'`;
+    if(field==='cancellation_state') await db.sql`UPDATE aha_order_financials SET cancellation_state='requested'`;
+    if(field==='dispute_state') await db.sql`UPDATE aha_order_financials SET dispute_state='open'`;
+    const result=await service.dispatch();assert.equal(result.sent,0);
+    assert.equal((await db.sql`SELECT last_error_code FROM aha_order_notifications`)[0].last_error_code,'progress_no_longer_due');
+    await db.sql`DELETE FROM aha_order_notifications`;await db.sql`DELETE FROM aha_order_milestones`;
+    await db.sql`UPDATE aha_order_financials SET refund_state='none',cancellation_state='none',dispute_state='none'`;
+  }
+  await recordProgress(db,env,id,'creating');await recordProgress(db,env,id,'ready');
+  await service.dispatch();assert.equal(sends,1);
 });

@@ -53,3 +53,19 @@ export async function observeSupplier(db, env, record, provider) {
   const stage = supplierMilestone(record, provider);
   if (stage) await recordProgress(db, env, record.square_order_id, stage);
 }
+
+// Recheck just before dispatch: financial changes and newer milestones can
+// invalidate a previously queued or retried transactional status message.
+export async function progressStillDue(db,row) {
+  const stage=row.payload_json?.stage;
+  const progress=PROGRESS[stage];
+  if(!progress) return false;
+  const orderId=String(row.dedupe_key).split(':')[0];
+  const [eligible]=await db.sql`SELECT 1 FROM aha_fulfillment_orders f WHERE f.square_order_id=${orderId} AND f.state<>'ignored'
+    AND NOT EXISTS(SELECT 1 FROM aha_order_financials m WHERE m.square_order_id=f.square_order_id
+      AND (m.refund_state<>'none' OR m.cancellation_state<>'none' OR m.dispute_state<>'none'))
+    AND (${progress.rank}=0 OR ${progress.rank}>=f.customer_progress_rank)
+    AND (${stage} NOT IN ('accepted','creating','ready','delayed') OR f.state NOT IN ('shipped','shipped_partial','ready_to_ship'))
+    AND (${stage}<>'delivery_issue' OR f.delivered_at IS NULL)`;
+  return Boolean(eligible);
+}
