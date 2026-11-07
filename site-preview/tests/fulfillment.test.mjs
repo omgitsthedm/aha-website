@@ -520,7 +520,7 @@ test("active fulfillment queues one plain confirmation and one tracking notifica
   assert.equal(calls[0].kind, "confirmed");
   assert.equal(calls[0].value.recipient, "ada@example.com");
   assert.equal((await service.receiveApliiqFulfillment({ providerOrderId: order.id, eventId: "email-event" })).outcome, "shipped");
-  assert.deepEqual(calls[1], { kind: "shipped", value: { recipient: "ada@example.com", orderId: order.id, orderNumber: order.reference_id, carrier: "UPS", trackingNumber: "1ZEMAIL", trackingUrl: null } });
+  assert.deepEqual(calls[1], { kind: "shipped", value: { recipient: "ada@example.com", orderId: order.id, orderNumber: order.reference_id, carrier: "UPS", trackingNumber: "1ZEMAIL", trackingUrl: null, items:[{sku:"APQ-6208401S7A1",title:"Yikes Crewneck",size:"M",quantity:1}], remainingItems:[] } });
 });
 
 test("a paid order inside the cancellation hold is confirmed at once but reaches Apliiq only after the hold", async () => {

@@ -55,6 +55,10 @@ export async function commerceHealth({ db, env, now = () => new Date(), checkMon
   if(cases?.count) problems.push(problem("support_cases_overdue",cases.count));
   const [supportMail] = await db.sql`SELECT count(*)::int AS count FROM aha_order_notifications WHERE kind='support_request' AND state<>'sent' AND created_at<now()-interval '15 minutes'`;
   if(supportMail?.count) problems.push(problem("support_notification_overdue",supportMail.count));
+  const [tracking]=await db.sql`SELECT count(*) FILTER(WHERE delivered_at IS NULL AND (last_error_code IS NOT NULL OR checked_at<now()-interval '3 hours' OR (checked_at IS NULL AND next_attempt_at<now()-interval '30 minutes')))::int AS pending FROM aha_shipment_tracking`;
+  if(tracking?.pending) problems.push(problem('carrier_tracking_needs_attention',tracking.pending));
+  const [progress]=await db.sql`SELECT count(*)::int AS count FROM aha_order_notifications WHERE kind='order_progress' AND state<>'sent' AND created_at<now()-interval '30 minutes'`;
+  if(progress?.count) problems.push(problem('order_progress_email_unsent',progress.count));
   // Callback metadata may arrive before the outbox's send response. Join only
   // on the returned provider ID, never an email address or unverified payload.
   const mail = await db.sql`
@@ -65,7 +69,7 @@ export async function commerceHealth({ db, env, now = () => new Date(), checkMon
         CASE event_type WHEN 'complained' THEN 7 WHEN 'bounced' THEN 6 WHEN 'failed' THEN 5 WHEN 'suppressed' THEN 4
           WHEN 'delivered' THEN 3 WHEN 'delivery_delayed' THEN 2 ELSE 1 END DESC LIMIT 1
     ) d ON true
-    WHERE n.kind IN ('order_confirmed', 'order_shipped') AND n.state = 'sent'
+    WHERE n.kind IN ('order_confirmed', 'order_shipped', 'order_progress') AND n.state = 'sent'
       AND (n.kind<>'order_confirmed' OR NOT EXISTS (SELECT 1 FROM aha_order_notifications newer
         WHERE newer.kind='order_confirmed' AND split_part(newer.dedupe_key,':',1)=split_part(n.dedupe_key,':',1)
           AND (newer.created_at,newer.id)>(n.created_at,n.id)))
@@ -77,7 +81,7 @@ export async function commerceHealth({ db, env, now = () => new Date(), checkMon
   if (missing.length) problems.push(problem("receipt_delivery_unconfirmed", missing.length));
 
   const workers = await db.sql`SELECT job, created_at, last_started_at, last_succeeded_at, last_failed_at FROM aha_commerce_workers`;
-  for (const job of ["fulfillment", "notifications", "square-recovery"]) {
+  for (const job of ["fulfillment", "notifications", "square-recovery", ...(env.get("AHA_TRACKING_ENABLED")==="true" ? ["shipment-tracking"] : [])]) {
     const row = workers.find((entry) => entry.job === job);
     const limit = 45;
     if (!row || now().getTime() - new Date(row.last_succeeded_at ?? row.created_at).getTime() > limit * MINUTE)

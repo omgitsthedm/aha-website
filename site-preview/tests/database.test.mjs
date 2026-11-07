@@ -1,3 +1,4 @@
+import { reliabilitySchema } from "./helpers/reliability-schema.mjs";
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
@@ -18,6 +19,7 @@ async function isolatedRepository(t) {
   t.after(() => database.close());
   await database.exec(await readFile(new URL('../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql', import.meta.url), 'utf8'));
   await database.exec(await readFile(new URL('../netlify/database/migrations/20261015170000_order_notifications/migration.sql', import.meta.url), 'utf8'));
+  await reliabilitySchema(database);
   // The production adapter returns rows from the same parameterized SQL.
   const sql = async (strings, ...parameters) => {
     const query = strings.reduce((text, part, index) => text + (index ? `$${index}` : '') + part, '');

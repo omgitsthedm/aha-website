@@ -49,7 +49,8 @@ export function createNetlifyRepository(db) {
       return one(db.sql`
         UPDATE aha_fulfillment_orders
         SET state = 'submitting', claimed_at = now(), attempt_count = attempt_count + 1, updated_at = now()
-        WHERE square_order_id = ${squareOrderId} AND state = 'queued'
+        WHERE square_order_id = ${squareOrderId} AND state = 'queued' AND customer_change_hold=false
+          AND NOT EXISTS(SELECT 1 FROM aha_support_cases WHERE order_reference=${squareOrderId} AND request_type IN ('cancel','address') AND state<>'resolved')
         RETURNING *
       `);
     },
@@ -136,7 +137,7 @@ export function createNetlifyRepository(db) {
         WHERE square_order_id = ${squareOrderId}`;
     },
     async listQueued() {
-      return (await db.sql`SELECT * FROM aha_fulfillment_orders WHERE state = 'queued' AND next_attempt_at <= now() ORDER BY next_attempt_at ASC, created_at ASC LIMIT 20`).map(normalizeRow);
+      return (await db.sql`SELECT * FROM aha_fulfillment_orders WHERE state = 'queued' AND customer_change_hold=false AND next_attempt_at <= now() ORDER BY next_attempt_at ASC, created_at ASC LIMIT 20`).map(normalizeRow);
     },
     async listUncertain() {
       return (await db.sql`

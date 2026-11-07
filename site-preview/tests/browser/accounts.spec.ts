@@ -103,7 +103,7 @@ test("the order page adds the order to the account and takes a review", async ({
   await expect(page.locator("[data-orders-list]")).toContainText("Order LOCAL-1 Shipped");
 
   await page.goto(link);
-  const form = page.locator(".review-form").first();
+  const form = page.locator("[data-review-forms] .review-form").first();
   await expect(form.getByRole("heading")).toContainText("Yikes!");
   await form.getByRole("button", { name: "Send review" }).click();
   await expect(form.locator(".review-status")).toHaveText("Choose a rating and write a few words.");
@@ -192,4 +192,25 @@ test("a backup passkey signs into the same account when the original device is u
   await page.getByRole("button", {name:"Sign in", exact:true}).click();
   await expect(page.getByText("You’re signed in on this device.")).toBeVisible();
   await expect(page.locator("[data-saved-card='yikes-crewneck']")).toBeVisible();
+});
+
+
+test("private order request survives interruption and saves through the real handler", async ({ page }) => {
+  await page.setViewportSize({width:390,height:844});
+  const link=orderStatusUrl(LOCAL_SHIPPED_ORDER,{get:(key:string)=>key==="AHA_ORDER_LINK_SECRET"?LOCAL_ORDER_SECRET:undefined},LOCAL)!;
+  await page.goto(link);
+  const form=page.locator('[data-order-request]');
+  await expect(form).toBeVisible();
+  await form.locator('select').selectOption('missing');
+  await form.locator('textarea').fill('The parcel has not arrived. Please check the carrier status.');
+  await page.route('**/api/orders/request',route=>route.abort('connectionfailed'));
+  await form.getByRole('button').click();
+  await expect(page.locator('[data-order-request-status]')).toContainText('Your message is still here');
+  await expect(form.locator('textarea')).not.toHaveValue('');
+  await page.unroute('**/api/orders/request');
+  await form.getByRole('button').click();
+  await expect(page.locator('[data-order-request-status]')).toContainText('Your request is saved for review');
+  await expect(form.locator('textarea')).toHaveValue('');
+  expect(await axe(page)).toEqual([]);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });

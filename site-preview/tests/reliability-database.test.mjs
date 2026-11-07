@@ -11,7 +11,7 @@ import {refreshFinancials,runSquareRecovery} from '../server/operations/recovery
 import {orderAction} from '../server/admin/order-actions.mjs';
 import {commerceHealth} from '../server/operations/commerce.mjs';
 import {permitPaymentAttempt} from '../server/checkout/abuse.mjs';
-const migrations=['20261015045000_yikes_fulfillment','20261015160000_custom_checkout','20261015170000_order_notifications','20261015180000_checkout_payment_recovery','20261016100000_checkout_analytics_link','20261016120000_admin','20261016130000_owner_reports','20261018120000_marketing_purchase_outbox','20261019120000_customer_emails','20261107020000_commerce_safeguards','20261107090000_commerce_reliability'];
+const migrations=['20261015045000_yikes_fulfillment','20261015160000_custom_checkout','20261015170000_order_notifications','20261015180000_checkout_payment_recovery','20261016100000_checkout_analytics_link','20261016120000_admin','20261016130000_owner_reports','20261018120000_marketing_purchase_outbox','20261019120000_customer_emails','20261107020000_commerce_safeguards','20261107090000_commerce_reliability','20261107120000_customer_journey'];
 async function isolated(t) {
  const database=new PGlite();t.after(()=>database.close());
  for(const name of migrations) {

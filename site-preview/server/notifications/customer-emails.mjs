@@ -5,7 +5,7 @@
 //   paid. Only when the shopper's marketing choice was on at checkout, nothing
 //   was bought since, no reminder went to that address in 30 days, and the
 //   address hasn't unsubscribed. Checkouts older than three days are left alone.
-// - Review request: one email per order, ten days after its shipping email.
+// - Review request: one email per order, ten days after confirmed delivery.
 //
 // Neither covers anything from before the program started (aha_email_programs),
 // and AHA_CUSTOMER_EMAILS_ENABLED=false turns both off.
@@ -51,10 +51,10 @@ export async function reviewRequestCandidates(db, limit = 20) {
     JOIN aha_fulfillment_orders f ON f.square_order_id = split_part(n.dedupe_key, ':', 1)
     CROSS JOIN program
     WHERE n.kind = 'order_shipped' AND n.state = 'sent' AND n.provider_message_id IS NOT NULL
-      AND f.state='shipped' AND f.last_error_code IS NULL
+      AND f.state='shipped' AND f.delivered_at IS NOT NULL AND f.last_error_code IS NULL
       AND NOT EXISTS (SELECT 1 FROM aha_order_financials m WHERE m.square_order_id=f.square_order_id AND (m.refund_state <> 'none' OR m.cancellation_state <> 'none' OR m.dispute_state <> 'none'))
       AND n.sent_at > program.started_at
-      AND n.sent_at < now() - make_interval(days => ${REVIEW_REQUEST_DELAY_DAYS})
+      AND f.delivered_at < now() - make_interval(days => ${REVIEW_REQUEST_DELAY_DAYS})
       AND f.customer_email ~ '^[^[:space:]@]+@[^[:space:]@]+\\.[^[:space:]@]+$'
       AND NOT EXISTS (SELECT 1 FROM aha_order_notifications r WHERE r.dedupe_key = f.square_order_id || ':review_request')
       AND NOT EXISTS (SELECT 1 FROM aha_reviews v WHERE v.square_order_id = f.square_order_id)
@@ -93,7 +93,7 @@ export async function stillDue(db, row) {
   }
   if (row?.kind === "review_request") {
     const [reviewed] = await db.sql`SELECT 1 AS found FROM aha_reviews WHERE square_order_id = ${subject} LIMIT 1`;
-    const [ready] = await db.sql`SELECT 1 AS found FROM aha_fulfillment_orders f WHERE f.square_order_id=${subject} AND f.state='shipped' AND f.last_error_code IS NULL
+    const [ready] = await db.sql`SELECT 1 AS found FROM aha_fulfillment_orders f WHERE f.square_order_id=${subject} AND f.state='shipped' AND f.delivered_at IS NOT NULL AND f.last_error_code IS NULL
       AND NOT EXISTS(SELECT 1 FROM aha_order_financials m WHERE m.square_order_id=f.square_order_id AND (m.refund_state<>'none' OR m.dispute_state<>'none' OR m.cancellation_state<>'none'))`;
     return !reviewed && Boolean(ready);
   }

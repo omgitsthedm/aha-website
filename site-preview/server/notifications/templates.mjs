@@ -1,3 +1,4 @@
+import { PROGRESS } from "../orders/lifecycle.mjs";
 import { POSTAL_ADDRESS } from "../platform/client.mjs";
 
 function escape(value) { return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
@@ -13,11 +14,11 @@ function shell({ eyebrow, heading, message, orderNumber, details, total, statusU
 }
 
 export function renderOrderConfirmation(payload) {
-  return shell({ eyebrow: "Payment complete", heading: "Your order is in.", message: "Your payment is confirmed. Follow your order’s progress using the link below. We’ll email you again when tracking is available.", orderNumber: payload.orderNumber, details: items(payload.items), total: money(payload.totalAmount, payload.currency), statusUrl: payload.statusUrl });
+  return shell({ eyebrow: "Payment complete", heading: "Your order is in.", message: "Your payment is confirmed. Follow your order’s progress using the link below. We’ll email you as your order progresses and when tracking is available.", orderNumber: payload.orderNumber, details: items(payload.items), total: money(payload.totalAmount, payload.currency), statusUrl: payload.statusUrl });
 }
 export function renderShipment(payload) {
   const tracking = payload.trackingUrl ? `Tracking: ${payload.trackingUrl}` : `${payload.carrier || "Carrier"} tracking number: ${payload.trackingNumber}`;
-  return shell({ eyebrow: "Shipment update", heading: "Your tracking is ready.", message: "Tracking is now available for your shipment. The carrier may need a little time before scans appear.", orderNumber: payload.orderNumber, details: tracking, statusUrl: payload.statusUrl });
+  return shell({ eyebrow: "Shipment update", heading: "Your tracking is ready.", message: "Tracking is now available for your shipment. The carrier may need a little time before scans appear.", orderNumber: payload.orderNumber, details: [payload.items?.length ? `In this parcel:\n${items(payload.items)}` : null, payload.remainingItems?.length ? `Still being prepared:\n${items(payload.remainingItems)}` : null, tracking].filter(Boolean).join("\n\n"), statusUrl: payload.statusUrl });
 }
 
 // Customer emails that aren't receipts: why it arrived, the store's postal
@@ -55,4 +56,10 @@ export function renderReviewRequest(payload, { unsubscribe } = {}) {
     reason: "You’re getting this because you ordered from afterhoursagenda.com. We only ask once per order.",
     unsubscribe,
   });
+}
+
+export function renderProgress(payload) {
+  const progress = PROGRESS[payload.stage];
+  if (!progress) throw new Error('invalid_progress_stage');
+  return shell({eyebrow:'Order update',heading:progress.heading,message:progress.message,orderNumber:payload.orderNumber,statusUrl:payload.statusUrl});
 }

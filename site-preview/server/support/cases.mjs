@@ -1,11 +1,15 @@
 import { createHash } from 'node:crypto';
 import { CLIENT } from '../platform/client.mjs';
-export async function saveSupportCase(db,{id,topic,email,text,reference}) {
+export async function saveSupportCase(db,{id,topic,email,text,reference,requestType=null}) {
   const digest=createHash('sha256').update(`${email}\n${topic}\n${text}`).digest('hex');
   const [row]=await db.sql`WITH saved AS (
-    INSERT INTO aha_support_cases(id,request_hash,topic,customer_email,message_text,order_reference)
-    VALUES(${id},${digest},${topic},${email},${text},${reference || null})
+    INSERT INTO aha_support_cases(id,request_hash,topic,customer_email,message_text,order_reference,request_type)
+    VALUES(${id},${digest},${topic},${email},${text},${reference || null},${requestType})
     ON CONFLICT(id) DO UPDATE SET id=EXCLUDED.id WHERE aha_support_cases.request_hash=EXCLUDED.request_hash RETURNING *
+  ), held AS (
+    UPDATE aha_fulfillment_orders SET customer_change_hold=true,state='held',last_error_code='customer_change_requested',updated_at=now()
+    WHERE square_order_id=${reference || null} AND state='queued' AND ${requestType} IN ('cancel','address')
+      AND EXISTS(SELECT 1 FROM saved)
   ), notification AS (
     INSERT INTO aha_order_notifications(dedupe_key,kind,recipient,payload_json)
     SELECT 'support:' || id,'support_request',${CLIENT.client.email},

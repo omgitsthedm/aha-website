@@ -54,7 +54,7 @@ export async function reviewsForOrder(db, env, products, link) {
   const rows = await db.sql`SELECT product_slug, rating, body, display_name, status FROM aha_reviews WHERE square_order_id = ${link.o}`;
   const existing = new Map(rows.map((review) => [review.product_slug, review]));
   return {
-    open: stageFor(row) === "shipped",
+    open: ["shipped","delivered"].includes(stageFor(row)),
     products: items.map((product) => {
       const review = existing.get(product.slug);
       return {
@@ -68,7 +68,7 @@ export async function reviewsForOrder(db, env, products, link) {
 /** Saves a review (or an edit, which goes back for approval). */
 export async function submitReview(db, env, products, input) {
   const row = await shippedOrder(db, env, input);
-  if (stageFor(row) !== "shipped") throw new ReviewError("You can review your pieces once your order has shipped.", 409);
+  if (!["shipped","delivered"].includes(stageFor(row))) throw new ReviewError("You can review your pieces once your order has shipped.", 409);
   const product = orderProducts(row, products).find((entry) => entry.slug === input?.product);
   if (!product) throw new ReviewError("That piece isn't in this order.", 404);
   const { rating, body, name } = cleanReview(input);

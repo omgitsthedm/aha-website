@@ -1,4 +1,4 @@
-import { renderCartReminder, renderOrderConfirmation, renderReviewRequest, renderShipment } from "./templates.mjs";
+import { renderCartReminder, renderOrderConfirmation, renderReviewRequest, renderShipment, renderProgress } from "./templates.mjs";
 
 // Emails that aren't receipts: they carry List-Unsubscribe headers, go out on
 // Resend's marketing stream, and are skipped for an address that unsubscribed.
@@ -13,9 +13,9 @@ export function createNotificationService({ repository, gateway, config, orderLi
     if (!validEmail(recipient)) return null;
     return repository.enqueue({ dedupeKey: `${orderId}:order_confirmed`, kind: "order_confirmed", recipient, payload: { orderNumber: clean(orderNumber, orderId), totalAmount, currency, items, statusUrl: orderLink(orderId) } });
   }
-  async function enqueueShipment({ recipient, orderId, orderNumber, carrier, trackingNumber, trackingUrl }) {
+  async function enqueueShipment({ recipient, orderId, orderNumber, carrier, trackingNumber, trackingUrl, items = [], remainingItems = [] }) {
     if (!validEmail(recipient) || !trackingNumber) return null;
-    return repository.enqueue({ dedupeKey: `${orderId}:order_shipped:${trackingNumber}`, kind: "order_shipped", recipient, payload: { orderNumber: clean(orderNumber, orderId), carrier, trackingNumber, trackingUrl, statusUrl: orderLink(orderId) } });
+    return repository.enqueue({ dedupeKey: `${orderId}:order_shipped:${trackingNumber}`, kind: "order_shipped", recipient, payload: { orderNumber: clean(orderNumber, orderId), carrier, trackingNumber, trackingUrl, items, remainingItems, statusUrl: orderLink(orderId) } });
   }
   async function enqueueCartReminder({ recipient, checkoutId, firstName, items, bagUrl }) {
     if (!enabled() || !validEmail(recipient) || !Array.isArray(items) || !items.length) return null;
@@ -36,6 +36,7 @@ export function createNotificationService({ repository, gateway, config, orderLi
       return { subject: `Website support: ${data.topic}`, text, html: `<pre style="white-space:pre-wrap">${escaped}</pre>`, replyTo: data.replyTo };
     }
     if (row.kind === "order_confirmed") return renderOrderConfirmation(row.payload_json);
+    if (row.kind === "order_progress") return renderProgress(row.payload_json);
     if (row.kind === "order_shipped") return renderShipment(row.payload_json);
     if (row.kind === "cart_reminder") return renderCartReminder(row.payload_json, { unsubscribe: links?.page });
     if (row.kind === "review_request") return renderReviewRequest(row.payload_json, { unsubscribe: links?.page });

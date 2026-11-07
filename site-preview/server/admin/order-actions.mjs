@@ -19,6 +19,8 @@ export async function orderAction({db,env,user,orderId,action,input}) {
   const paymentId=session?.square_payment_id || fulfillment?.square_payment_id;
   if(!paymentId) throw new AdminAuthError('No verified payment for this order.',409);
   if(action==='release') {
+    const [request]=await db.sql`SELECT id FROM aha_support_cases WHERE order_reference=${orderId} AND request_type IN ('cancel','address') AND state<>'resolved' LIMIT 1`;
+    if(request) throw new AdminAuthError('Resolve the customer change request before releasing production.',409);
     if(!fulfillment || !['held','attention'].includes(fulfillment.state) || fulfillment.apliiq_order_id || fulfillment.attempt_count !== 0 || !fulfillment.submitted_items?.length)
       throw new AdminAuthError('This order cannot be automatically released. Confirm any existing supplier order in Apliiq; uncertain submissions are never repeated.',409);
     const config=environmentConfig(env); const square=createSquareGateway({accessToken:env.get('AHA_SQUARE_ACCESS_TOKEN')});
@@ -31,7 +33,7 @@ export async function orderAction({db,env,user,orderId,action,input}) {
       if(error instanceof FulfillmentHold) throw new AdminAuthError(`Order remains held: ${error.code}.`,409); throw error;
     }
     if(hash(JSON.stringify(validated.apliiqPayload)) !== fulfillment.payload_sha256) throw new AdminAuthError('Purchased order details have changed. Resolve the mismatch before release.',409);
-    const [released]=await db.sql`WITH changed AS (UPDATE aha_fulfillment_orders SET state='queued',next_attempt_at=now(),last_error_code=NULL,updated_at=now()
+    const [released]=await db.sql`WITH changed AS (UPDATE aha_fulfillment_orders SET state='queued',customer_change_hold=false,next_attempt_at=now(),last_error_code=NULL,updated_at=now()
       WHERE square_order_id=${orderId} AND state IN ('held','attention') AND apliiq_order_id IS NULL AND attempt_count=0
       AND payload_sha256=${fulfillment.payload_sha256} RETURNING square_order_id),
       audit AS (INSERT INTO aha_admin_audit(user_id,action,target,detail_json)

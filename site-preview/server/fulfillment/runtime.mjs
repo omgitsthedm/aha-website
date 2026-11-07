@@ -1,3 +1,4 @@
+import { observeSupplier } from "../orders/lifecycle.mjs";
 import { createApliiqGateway } from "./apliiq.mjs";
 import { createNetlifyRepository } from "./repository.mjs";
 import { createFulfillmentService } from "./service.mjs";
@@ -45,6 +46,7 @@ export function createRuntime({ database, env, catalog }) {
         ? createApliiqGateway({ apiKey: apliiqApiKey, sharedSecret: config.apliiqSharedSecret })
         : { createOrder: unavailable("Apliiq"), getOrder: unavailable("Apliiq"), listOrders: unavailable("Apliiq") },
       notifications: notifications.service,
+      observeProvider: (record, provider) => observeSupplier(database, env, record, provider),
       confirmPayment: notifications.confirmations.queueSquarePayment,
       config,
       catalog,

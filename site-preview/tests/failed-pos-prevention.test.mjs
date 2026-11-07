@@ -41,7 +41,7 @@ async function setup(t) {
     notifications: { enqueueConfirmation: forbidden, enqueueShipment: forbidden },
     config: { enabled: "true", locationId: LOCATION, startAt: "2026-10-01T00:00:00Z" },
   });
-  const reset = () => pg.exec("TRUNCATE aha_fulfillment_orders, aha_fulfillment_square_events, aha_fulfillment_events, aha_checkout_sessions, aha_admin_audit");
+  const reset = () => pg.exec("TRUNCATE aha_order_milestones, aha_shipment_tracking, aha_fulfillment_orders, aha_fulfillment_square_events, aha_fulfillment_events, aha_checkout_sessions, aha_admin_audit");
   const seedIgnored = async () => {
     await pg.query("INSERT INTO aha_fulfillment_orders (square_order_id, square_payment_id, state, provider_status) VALUES ($1, $2, 'ignored', 'non_shipping_receipt')", [ORDER, PAYMENT]);
     await pg.query("INSERT INTO aha_admin_audit (action, target, detail_json) VALUES ('fulfillment.monitor_repaired', $1, $2)", [ORDER, JSON.stringify({ reason: "verified_failed_non_shipping_receipt", fromError: "payment_terminal", toState: "ignored" })]);
