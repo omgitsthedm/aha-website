@@ -34,10 +34,16 @@ const json = (value, fallback) => {
   return value;
 };
 
+// Fulfillment persists trackingNumber/trackingUrl. Older account fixtures and
+// historical records use number/url; expose one customer-facing shape for both.
+const trackingFor = (row) => json(row?.tracking, []).filter((entry) => entry && typeof entry === "object").map((entry) => ({
+  carrier: entry.carrier, number: entry.trackingNumber ?? entry.number, url: entry.trackingUrl ?? entry.url,
+}));
+
 /** Where the order is, in the customer's words. */
 export function stageFor(row) {
   if (!row) return "paid";
-  const tracking = json(row.tracking, []);
+  const tracking = trackingFor(row);
   if (row.state === "shipped" || tracking.some((entry) => entry?.number || entry?.url)) return "shipped";
   if (String(row.state).startsWith("submitted") || row.apliiq_order_id) return "production";
   if (["held", "attention", "uncertain"].includes(row.state)) return "review";
@@ -46,7 +52,7 @@ export function stageFor(row) {
 
 export function customerView(orderId, row) {
   const items = json(row?.submitted_items, []).map((item) => ({ title: String(item?.title ?? AHA_FULFILLMENT_CATALOG[item?.variationId]?.title ?? "Your piece"), size: item?.size ? String(item.size) : null, quantity: Number(item?.quantity ?? 1) }));
-  const tracking = json(row?.tracking, []).filter((entry) => entry && (entry.number || entry.url)).map((entry) => ({ carrier: entry.carrier ? String(entry.carrier) : null, number: entry.number ? String(entry.number) : null, url: typeof entry.url === "string" && /^https:\/\//.test(entry.url) ? entry.url : null }));
+  const tracking = trackingFor(row).filter((entry) => entry.number || entry.url).map((entry) => ({ carrier: entry.carrier ? String(entry.carrier) : null, number: entry.number ? String(entry.number) : null, url: typeof entry.url === "string" && /^https:\/\//.test(entry.url) ? entry.url : null }));
   const paidAt = row?.payment_created_at ?? row?.created_at ?? null;
   return {
     orderNumber: String(json(row?.apliiq_payload, {})?.order_number ?? orderId),

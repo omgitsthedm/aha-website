@@ -11,6 +11,7 @@ import { recommendationsFor } from "../server/catalog/recommendations.mjs";
 import { customerView, handleOrderStatus, orderStatusUrl, stageFor, verifyOrderToken } from "../server/orders/status.mjs";
 import orderStatusFunction, { config as orderStatusConfig } from "../netlify/functions/order-status.mjs";
 import { renderOrderConfirmation, renderShipment } from "../server/notifications/templates.mjs";
+import { createNetlifyRepository } from "../server/fulfillment/repository.mjs";
 
 const day = (value) => { const [y, m, d] = value.split("-").map(Number); return new Date(y, m - 1, d); };
 const iso = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -96,6 +97,23 @@ test("the order view shows progress, items and tracking, never customer details"
   assert.equal(stageFor({ state: "submitted_accepted", apliiq_order_id: "A" }), "production");
   assert.equal(stageFor({ state: "attention" }), "review");
   assert.equal(customerView("X", { submitted_items: [], tracking: [{ number: "1", url: "javascript:alert(1)" }] }).tracking[0].url, null, "only https tracking links");
+  assert.equal(customerView("X", { submitted_items: [], tracking: [{ trackingNumber: "1", trackingUrl: "javascript:alert(1)" }] }).tracking[0].url, null, "supplier fields keep the same link protection");
+});
+
+test("tracking written by fulfillment is visible through the customer's signed order link", async (t) => {
+  const pg = new PGlite();
+  t.after(() => pg.close());
+  await pg.exec(await readFile(new URL("../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql", import.meta.url), "utf8"));
+  const db = { sql: async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows };
+  await pg.query("INSERT INTO aha_fulfillment_orders (square_order_id, state, apliiq_order_id) VALUES ('SHIPMENT123', 'submitted_reconciled', 'APQ-123')");
+  const repository = createNetlifyRepository(db);
+  await repository.recordShipment({ squareOrderId: "SHIPMENT123", quantities: { "APQ-123": 1 }, complete: false,
+    tracking: { carrier: "USPS", trackingNumber: "9400", trackingUrl: "https://tools.usps.com/go/TrackConfirmAction?tLabels=9400", shippedAt: "2026-11-06T20:00:00Z" } });
+  const response = await handleOrderStatus(new Request(orderStatusUrl("SHIPMENT123", env())), { db, env: env() });
+  const view = await response.json();
+  assert.equal(view.stage, "shipped");
+  assert.deepEqual(view.tracking, [{ carrier: "USPS", number: "9400", url: "https://tools.usps.com/go/TrackConfirmAction?tLabels=9400" }]);
+  assert.equal("shippedAt" in view.tracking[0], false);
 });
 
 test("the order function answers only on the exact production site", async () => {

@@ -83,10 +83,13 @@ test("a passkey account saves pieces, signs out and back in, and deletes itself"
 });
 
 test("the order page adds the order to the account and takes a review", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await authenticator(page);
   const link = orderStatusUrl(LOCAL_SHIPPED_ORDER, { get: (key: string) => (key === "AHA_ORDER_LINK_SECRET" ? LOCAL_ORDER_SECRET : undefined) }, LOCAL)!;
   await page.goto(link);
   await expect(page.getByRole("heading", { name: "Order LOCAL-1" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Track with USPS" })).toHaveAttribute("href", "https://tools.usps.com/go/TrackConfirmAction?tLabels=9400100000000000000000");
+  await page.screenshot({ path: "test-results/customer-shipment-tracking.png", fullPage: true });
   await page.getByRole("button", { name: "Add to my account" }).click();
   await expect(page.locator("[data-order-keep-status]")).toContainText("Sign in first");
 
