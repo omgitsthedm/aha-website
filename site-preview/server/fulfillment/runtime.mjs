@@ -45,6 +45,7 @@ export function createRuntime({ database, env, catalog }) {
         ? createApliiqGateway({ apiKey: apliiqApiKey, sharedSecret: config.apliiqSharedSecret })
         : { createOrder: unavailable("Apliiq"), getOrder: unavailable("Apliiq"), listOrders: unavailable("Apliiq") },
       notifications: notifications.service,
+      confirmPayment: notifications.confirmations.queueSquarePayment,
       config,
       catalog,
     }),

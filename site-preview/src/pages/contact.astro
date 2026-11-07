@@ -230,6 +230,7 @@ import { brand, topics } from "../data/site";
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok || data.ok !== true) throw new Error(data.error || "We couldn’t confirm receipt. Your message is still here. Try again or email us directly.");
+        if (data.caseId) document.getElementById("result-title")!.textContent = `Your message is saved. Case ${data.caseId}.`;
         form.hidden = true;
         result.hidden = false;
         document.getElementById("result-title")!.focus();

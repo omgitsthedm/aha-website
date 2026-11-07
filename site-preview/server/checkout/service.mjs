@@ -20,8 +20,13 @@ function paymentOutcomeTimedOut(session, now) {
   return Number.isFinite(started) && started > 0 && started + PAYMENT_OUTCOME_GRACE_MS <= now;
 }
 
-export function createCheckoutService({ repository, square, config, catalog, eligibleProviders = [], now = () => Date.now(), createId = randomUUID }) {
+export function createCheckoutService({ repository, square, config, catalog, orderLink = () => null, eligibleProviders = [], now = () => Date.now(), createId = randomUUID }) {
   if (!config.locationId) throw new Error("checkout location is not configured");
+  const confirmation = (session) => session?.state !== "completed" ? {} : ({
+    orderNumber: session?.order_payload_json?.reference_id || session?.square_order_id,
+    statusUrl: orderLink(session?.square_order_id),
+    receiptEmail: session?.notification_email || session?.shipping_address_json?.email,
+  });
   // Square prices the order; the quote and the wallet estimate share this exactly.
   async function price(items, address, referenceId) {
     if (config.acceptingOrders === false) throw new CheckoutError("checkout_paused", 503);
@@ -122,7 +127,7 @@ export function createCheckoutService({ repository, square, config, catalog, eli
       session = await repository.attention({ checkoutId, code: "payment_outcome_unknown" }) ?? session;
     }
     const publicState = session.state === "unknown" && session.payment_submission_started_at ? (paymentOutcomeTimedOut(session, now()) ? "attention" : "pending") : session.state;
-    return { state: publicState, checkoutId: session.checkout_id, orderId: session.square_order_id ?? undefined, paymentId: session.square_payment_id ?? undefined, receiptUrl: safeReceiptUrl(session.square_receipt_url), error: session.last_error_code ?? undefined };
+    return { ...confirmation(session), state: publicState, checkoutId: session.checkout_id, orderId: session.square_order_id ?? undefined, paymentId: session.square_payment_id ?? undefined, receiptUrl: safeReceiptUrl(session.square_receipt_url), error: session.last_error_code ?? undefined };
   }
   async function pay({ checkoutId, checkoutToken, sourceId, idempotencyKey, marketing: rawMarketing }) {
     if (typeof checkoutId !== "string" || checkoutId.length > 80 || typeof checkoutToken !== "string" || typeof sourceId !== "string" || sourceId.length < 8 || sourceId.length > 512 || !expectedIdempotency(idempotencyKey)) throw new CheckoutError("invalid_request", 400);
@@ -136,14 +141,14 @@ export function createCheckoutService({ repository, square, config, catalog, eli
     const trackingSuppressed = !restricted;
     const trackingResult = trackingSuppressed ? { trackingSuppressed: true } : {};
     if (restricted) existing = restricted;
-    if (existing.state === "completed") return { state: "completed", checkoutId, orderId: existing.square_order_id, paymentId: existing.square_payment_id, receiptUrl: safeReceiptUrl(existing.square_receipt_url), ...trackingResult };
+    if (existing.state === "completed") return { ...confirmation(existing), state: "completed", checkoutId, orderId: existing.square_order_id, paymentId: existing.square_payment_id, receiptUrl: safeReceiptUrl(existing.square_receipt_url), ...trackingResult };
     if (existing.state === "unknown" || existing.state === "processing") return { state: "pending", checkoutId };
     if (config.acceptingOrders === false) throw new CheckoutError("checkout_paused", 503);
     if (new Date(existing.expires_at).getTime() <= now()) throw new CheckoutError("quote_expired", 409);
     const session = await repository.claim({ checkoutId, tokenHash: sha256(checkoutToken), clientIdempotencyKey: idempotencyKey });
     if (!session) {
       const current = authorize(await repository.get(checkoutId), checkoutToken);
-      if (current.state === "completed") return { state: "completed", checkoutId, orderId: current.square_order_id, paymentId: current.square_payment_id, receiptUrl: safeReceiptUrl(current.square_receipt_url), ...trackingResult };
+      if (current.state === "completed") return { ...confirmation(current), state: "completed", checkoutId, orderId: current.square_order_id, paymentId: current.square_payment_id, receiptUrl: safeReceiptUrl(current.square_receipt_url), ...trackingResult };
       if (current.state === "processing" || current.state === "unknown") return { state: "pending", checkoutId };
       throw new CheckoutError(current.last_error_code === "payment_failed" ? "payment_failed" : "quote_stale", current.last_error_code === "payment_failed" ? 402 : 409);
     }
@@ -162,7 +167,7 @@ export function createCheckoutService({ repository, square, config, catalog, eli
       if (payment?.status !== "COMPLETED" || payment.order_id !== orderId || payment.location_id !== config.locationId || payment.amount_money?.amount !== session.total_cents || payment.amount_money?.currency !== CURRENCY) throw new Error("square_payment_mismatch");
       const receiptUrl = safeReceiptUrl(payment.receipt_url);
       await repository.complete({ checkoutId, orderId, paymentId: payment.id, receiptUrl: receiptUrl ?? null });
-      return { state: "completed", checkoutId, orderId, paymentId: payment.id, receiptUrl, ...trackingResult };
+      return { ...confirmation({ ...existing, state: "completed", square_order_id: orderId }), state: "completed", checkoutId, orderId, paymentId: payment.id, receiptUrl, ...trackingResult };
     } catch (error) {
       if (!orderId) { await repository.releaseClaim({ checkoutId, code: "order_unavailable" }); throw new CheckoutError("checkout_unavailable", 503); }
       const failure = paymentFailure(error);

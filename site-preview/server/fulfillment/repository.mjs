@@ -114,8 +114,29 @@ export function createNetlifyRepository(db) {
       `;
       return rows[0]?.can_ignore === true;
     },
+    async getFinancialState(squareOrderId) { return (await db.sql`SELECT * FROM aha_order_financials WHERE square_order_id=${squareOrderId}`)[0]; },
+    async getPurchasedItems(squareOrderId) {
+      const [checkout] = await db.sql`SELECT cart_json FROM aha_checkout_sessions WHERE square_order_id = ${squareOrderId} AND state = 'completed' LIMIT 1`;
+      const cart = asJson(checkout?.cart_json, []);
+      // New quotes carry immutable approved SKUs; legacy orders use their already
+      // validated submission snapshot. Never invent a mapping for an old quote.
+      if (cart.length && cart.every((item) => item.sku && item.title)) return cart;
+      const record = await this.getOrder(squareOrderId);
+      return record?.submitted_items?.length ? record.submitted_items : undefined;
+    },
+    async deferRevalidation(squareOrderId) {
+      await db.sql`UPDATE aha_fulfillment_orders SET revalidation_attempts = revalidation_attempts + 1,
+        next_attempt_at = now() + make_interval(mins => LEAST(60, power(2, LEAST(revalidation_attempts + 1, 6))::int)),
+        last_error_code = 'square_revalidation_retry', updated_at = now()
+        WHERE square_order_id = ${squareOrderId} AND state = 'queued'`;
+    },
+    async saveProviderObservation(squareOrderId, expectedAt, requirements) {
+      await db.sql`UPDATE aha_fulfillment_orders SET provider_expected_at = COALESCE(${expectedAt}, provider_expected_at),
+        provider_checked_at = now(), provider_requirements = ${JSON.stringify(requirements)}
+        WHERE square_order_id = ${squareOrderId}`;
+    },
     async listQueued() {
-      return (await db.sql`SELECT * FROM aha_fulfillment_orders WHERE state = 'queued' ORDER BY created_at ASC LIMIT 8`).map(normalizeRow);
+      return (await db.sql`SELECT * FROM aha_fulfillment_orders WHERE state = 'queued' AND next_attempt_at <= now() ORDER BY next_attempt_at ASC, created_at ASC LIMIT 20`).map(normalizeRow);
     },
     async listUncertain() {
       return (await db.sql`
@@ -196,7 +217,8 @@ export function createNetlifyRepository(db) {
       return one(db.sql`
         UPDATE aha_fulfillment_orders
         SET shipped_line_quantities = ${JSON.stringify(quantities)},
-            tracking = tracking || ${JSON.stringify([tracking])}::jsonb,
+            tracking = (SELECT COALESCE(jsonb_agg(entry), '[]'::jsonb) FROM jsonb_array_elements(tracking) entry
+              WHERE COALESCE(entry->>'trackingNumber', entry->>'number', '') <> ${tracking.trackingNumber}) || ${JSON.stringify([tracking])}::jsonb,
             state = ${complete ? "ready_to_ship" : "shipped_partial"}, updated_at = now()
         WHERE square_order_id = ${squareOrderId} RETURNING *
       `);

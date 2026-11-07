@@ -53,7 +53,7 @@ test("checkout: server quote then card payment never sends client money", async 
   });
   await page.route("**/api/checkout/pay", async (route) => {
     paymentBodies.push(route.request().postDataJSON() as Record<string, unknown>);
-    await route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "completed", orderId: "AHA-1001", paymentId: "payment_test" }) });
+    await route.fulfill({ contentType: "application/json", body: JSON.stringify({ state: "completed", orderId: "AHA-1001", paymentId: "payment_test",orderNumber:"AHA-1001",receiptEmail:"avery@example.com",statusUrl:"/order/?o=AHA-1001&k=local-fixture" }) });
   });
   await page.goto("/checkout/?products=R5UCZCGSJMR3Z4HJDVOD3ZIK%3A1");
   // Production activation installs its own gtag queue during navigation. Replace it
@@ -76,6 +76,8 @@ test("checkout: server quote then card payment never sends client money", async 
   await page.getByRole("button", { name: "Pay securely" }).click();
   await expect(page.locator("[data-checkout-message]")).toContainText("Payment confirmed · order AHA-1001");
   await expect(page.getByRole("heading", { name: "ORDER CONFIRMED." })).toBeVisible();
+  await expect(page.locator("[data-checkout-message]")).toContainText("Your receipt is addressed to avery@example.com");
+  await expect(page.getByRole("link",{name:"View your order and tracking."})).toHaveAttribute("href","/order/?o=AHA-1001&k=local-fixture");
   await expect(page.locator(".checkout-heading .lede")).toHaveText("Thank you. Your payment is complete.");
   await expect(page.locator("[data-cart-empty]")).toBeHidden();
   await expect(page.locator("[data-cart-subtotal]")).toBeHidden();

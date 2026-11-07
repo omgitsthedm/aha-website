@@ -23,7 +23,7 @@ export default async function notificationDispatch(_request, context) {
     }
     await runtime.service.dispatch(20);
     if (recoveryFailed) throw new Error("order_confirmation_recovery_failed");
-  });
+  }, Netlify.env);
 }
 // Webhooks send new order emails immediately (dispatch-after.mjs). This quarter-hourly
 // run retries deferred rows and sends the bag reminders and review requests

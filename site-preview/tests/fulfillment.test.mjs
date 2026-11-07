@@ -418,16 +418,18 @@ test("an incomplete payment event stays pending so scheduler can recover a misse
 test("a partial provider shipment stays partial and does not update Square", async () => {
   const repo = memoryRepository();
   const { payment, order } = paidOrder();
+  order.line_items[0].quantity="2";
+  order.total_money.amount=payment.amount_money.amount=10400;
   const validated = validatePaidSquareOrder({ payment, order, locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z" });
   const row = await repo.insertValidated({ ...validated, state: "submitted_processed", submittedItems: validated.items, apliiqPayload: validated.apliiqPayload });
   row.state = "submitted_processed";
   let updates = 0;
   const service = createFulfillmentService({
     repository: repo,
-    square: { getOrder: async () => order, updateShipment: async () => { updates += 1; } },
+    square: { getPayment: async () => payment, getOrder: async () => order, updateShipment: async () => { updates += 1; } },
     apliiq: {
-      listOrders: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped", SN: [{ TrackingNumber: "1Z", Carrier: "UPS", Items: [{ SKU: "APQ-6208401S7A1", Quantity: 0 }] }] }],
-      getOrder: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped", SN: [{ TrackingNumber: "1Z", Carrier: "UPS", Items: [{ SKU: "APQ-6208401S7A1", Quantity: 0 }] }] }],
+      listOrders: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped", SN: [{ TrackingNumber: "1Z", Carrier: "UPS", Items: [{ SKU: "APQ-6208401S7A1", Quantity: 1 }] }] }],
+      getOrder: async () => [{ OrderId: "apliiq-1", StoreSystemOrderId: order.id, Status: "Shipped", SN: [{ TrackingNumber: "1Z", Carrier: "UPS", Items: [{ SKU: "APQ-6208401S7A1", Quantity: 1 }] }] }],
     },
     config: { enabled: "true", locationId: LOCATION, startAt: "2026-10-15T00:00:00.000Z" },
   });
@@ -571,4 +573,20 @@ test("production defaults to a 60-minute hold; 0 restores immediate submission",
   const { environmentConfig } = await import("../server/fulfillment/runtime.mjs");
   assert.equal(environmentConfig({ get: () => undefined }).holdMinutes, "60");
   assert.equal(environmentConfig({ get: (key) => (key === "AHA_FULFILLMENT_HOLD_MINUTES" ? "0" : undefined) }).holdMinutes, "0");
+});
+
+test('a transient pre-submission Square error retries without a permanent hold', async () => {
+  const repo=memoryRepository(); const {payment,order}=paidOrder(); let failed=false; let submits=0;
+  const service=createFulfillmentService({repository:repo,square:{getPayment:async()=>{if(!failed){failed=true;throw new Error('temporary outage');}return payment;},getOrder:async()=>order},apliiq:{createOrder:async()=>{submits++;return {status:200,data:{id:'local-supplier'}};},listOrders:async()=>[]}, config:{enabled:'true',locationId:LOCATION,startAt:'2026-10-15T00:00:00Z'}});
+  const validated=validatePaidSquareOrder({payment,order,locationId:LOCATION,startAt:'2026-10-15T00:00:00Z'});
+  await repo.insertValidated({...validated,state:'queued',submittedItems:validated.items,payloadSha256:sha256(JSON.stringify(validated.apliiqPayload))});
+  await service.runScheduled(); assert.equal(repo.rows.get(order.id).state,'queued');
+  await service.runScheduled(); assert.equal(submits,1);
+});
+test('verified purchased snapshot survives later catalog repricing but rejects altered paid lines', () => {
+  const {payment,order}=paidOrder(); const args={payment,order,locationId:LOCATION,startAt:'2026-10-15T00:00:00Z'};
+  const snapshot=validatePaidSquareOrder(args).items;
+  const catalog={...AHA_FULFILLMENT_CATALOG,[CREW_M]:{...AHA_FULFILLMENT_CATALOG[CREW_M],priceCents:5300}};
+  assert.equal(validatePaidSquareOrder({...args,catalog,purchasedItems:snapshot}).items[0].priceCents,5200);
+  assert.throws(()=>validatePaidSquareOrder({...args,catalog,purchasedItems:snapshot,order:{...order,line_items:[{...order.line_items[0],quantity:'2'}]}}),FulfillmentHold);
 });

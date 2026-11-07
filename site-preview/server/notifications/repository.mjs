@@ -11,8 +11,12 @@ export function createNotificationRepository(db) {
   return {
     async enqueue({ dedupeKey, kind, recipient, payload }) {
       return one(db.sql`
+        WITH locked AS MATERIALIZED (SELECT pg_advisory_xact_lock(hashtextextended(${`receipt:${dedupeKey.split(':')[0]}`},0)))
         INSERT INTO aha_order_notifications (dedupe_key, kind, recipient, payload_json)
-        VALUES (${dedupeKey}, ${kind}, ${recipient}, ${JSON.stringify(payload)})
+        SELECT ${dedupeKey}, ${kind}, ${recipient}, ${JSON.stringify(payload)}::jsonb FROM locked
+        WHERE ${kind}<>'order_confirmed' OR ${dedupeKey} NOT LIKE '%:order_confirmed'
+          OR NOT EXISTS (SELECT 1 FROM aha_order_notifications newer WHERE newer.kind='order_confirmed'
+            AND split_part(newer.dedupe_key,':',1)=${dedupeKey.split(':')[0]} AND newer.dedupe_key LIKE '%:receipt_resend:%')
         ON CONFLICT (dedupe_key) DO UPDATE SET updated_at = now()
         RETURNING *
       `);
@@ -34,7 +38,7 @@ export function createNotificationRepository(db) {
           WHERE ((state = 'pending' AND next_attempt_at <= now())
                  OR (state = 'sending' AND lease_expires_at < now() AND attempt_count < 5))
             AND NOT (attempt_count > 0 AND first_attempt_at < now() - interval '23 hours')
-          ORDER BY created_at ASC
+          ORDER BY CASE WHEN kind IN ('order_confirmed', 'order_shipped', 'support_request') THEN 0 ELSE 1 END, created_at ASC
           FOR UPDATE SKIP LOCKED
           LIMIT ${limit}
         )
@@ -47,27 +51,27 @@ export function createNotificationRepository(db) {
         RETURNING notification.*
       `).map(row);
     },
-    async markSent({ id, providerMessageId }) {
+    async markSent({ id, providerMessageId, attemptCount }) {
       return one(db.sql`
         UPDATE aha_order_notifications
         SET state = 'sent', provider_message_id = ${providerMessageId}, lease_expires_at = NULL,
             last_error_code = NULL, sent_at = now(), updated_at = now()
-        WHERE id = ${id} AND state = 'sending'
+        WHERE id = ${id} AND state = 'sending' AND (${attemptCount ?? null}::integer IS NULL OR attempt_count = ${attemptCount ?? null})
         RETURNING *
       `);
     },
     // A customer email that is no longer wanted when its turn comes (unsubscribed,
     // switched off, or already bought or reviewed): done, nothing sent.
-    async markSkipped({ id, code }) {
+    async markSkipped({ id, code, attemptCount }) {
       return one(db.sql`
         UPDATE aha_order_notifications
         SET state = 'sent', provider_message_id = NULL, lease_expires_at = NULL,
             last_error_code = ${code}, sent_at = now(), updated_at = now()
-        WHERE id = ${id} AND state = 'sending'
+        WHERE id = ${id} AND state = 'sending' AND (${attemptCount ?? null}::integer IS NULL OR attempt_count = ${attemptCount ?? null})
         RETURNING *
       `);
     },
-    async retryOrAttention({ id, code }) {
+    async retryOrAttention({ id, code, attemptCount }) {
       return one(db.sql`
         UPDATE aha_order_notifications
         SET state = CASE WHEN attempt_count >= 5
@@ -76,9 +80,9 @@ export function createNotificationRepository(db) {
             lease_expires_at = NULL,
             next_attempt_at = CASE WHEN attempt_count >= 5
                                         OR (attempt_count > 0 AND first_attempt_at < now() - interval '23 hours')
-                                   THEN next_attempt_at ELSE now() + interval '5 minutes' END,
+                                   THEN next_attempt_at ELSE now() + make_interval(mins => LEAST(60, (power(2, attempt_count)::int))) END,
             last_error_code = ${code}, updated_at = now()
-        WHERE id = ${id} AND state = 'sending'
+        WHERE id = ${id} AND state = 'sending' AND (${attemptCount ?? null}::integer IS NULL OR attempt_count = ${attemptCount ?? null})
         RETURNING *
       `);
     },

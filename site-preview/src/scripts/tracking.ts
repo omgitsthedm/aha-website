@@ -59,6 +59,18 @@ function events(){return window.__ahaTrackingEvents??=( {ga:[],meta:[]} );}
 function ga(...args:unknown[]){events().ga.push(args);window.gtag?.(...args);}
 function meta(...args:unknown[]){events().meta.push(args);window.fbq?.(...args);}
 // PostHog gets product ids, sizes, quantities and prices only — never customer details.
+// Error tracking uses an allowlist, never exception messages, input values,
+// rejected promises, raw stacks, query strings or order-link tokens.
+let reportedErrors=0;
+function reportStoreError(event:ErrorEvent|PromiseRejectionEvent){
+ if(!enabled||!consent.analytics||gpc||reportedErrors>=3||!banner?.dataset.posthogKey)return;
+ reportedErrors++;
+ const kind=event instanceof ErrorEvent?'Unhandled error':'Unhandled promise rejection';
+ let filename=location.origin+location.pathname;let line=0;
+ if(event instanceof ErrorEvent){try{const url=new URL(event.filename);if(url.origin===location.origin&&url.pathname.startsWith('/_astro/'))filename=url.origin+url.pathname;}catch{/* No external details. */}line=Number.isInteger(event.lineno)?event.lineno:0;}
+ ph('$exception',{aha_safe_error:true,$exception_list:[{type:'StorefrontError',value:kind,stacktrace:{frames:[{filename,lineno:line}]}}],$exception_fingerprint:[kind,filename,String(line)]});
+}
+window.addEventListener('error',reportStoreError);window.addEventListener('unhandledrejection',reportStoreError);
 function ph(event:string,properties:Record<string,unknown>={}){const log=events();(log.posthog??=[]).push([event,properties]);window.posthog?.capture?.(event,properties);}
 const viewedProductGroups=new Set<string>();
 const viewedVariantIds=new Set<string>();
@@ -160,10 +172,10 @@ function activate(value:Consent){
   posthogStub().init?.(posthogKey,{
    api_host:host,person_profiles:'identified_only',
    capture_pageview:true,capture_pageleave:true,autocapture:true,rageclick:true,enable_heatmaps:true,
-   disable_surveys:true,respect_dnt:true,
+   disable_surveys:true,respect_dnt:true,capture_exceptions:false,
    disable_session_recording:!record,
    session_recording:{maskAllInputs:true,maskTextSelector:'[data-ph-mask], address'},
-   before_send:(event:{properties?:Record<string,unknown>}|null)=>{if(event?.properties&&typeof event.properties.$current_url==='string')event.properties.$current_url=cleanLocation();return event;},
+   before_send:(event:{event?:string;properties?:Record<string,unknown>}|null)=>{if(event?.event==='$exception'&&event.properties?.aha_safe_error!==true)return null;if(event?.properties&&typeof event.properties.$current_url==='string')event.properties.$current_url=cleanLocation();return event;},
   });
   if(item)ph('product_viewed',{product_id:item.item_id,product_name:item.item_name,color:item.item_variant,price:item.price});
   scheduleSdk('posthog',`${host.replace('.i.posthog.com','-assets.i.posthog.com')}/static/array.js`);

@@ -61,7 +61,8 @@ export async function pipelineProblems(db) {
       (n.id IS NOT NULL AND n.state <> 'sent') AS receipt_not_sent
     FROM aha_checkout_sessions c
     LEFT JOIN aha_fulfillment_orders f ON f.square_order_id = c.square_order_id
-    LEFT JOIN aha_order_notifications n ON n.dedupe_key = c.square_order_id || ':order_confirmed'
+    LEFT JOIN LATERAL (SELECT * FROM aha_order_notifications nr WHERE nr.kind='order_confirmed'
+      AND split_part(nr.dedupe_key,':',1)=c.square_order_id ORDER BY nr.created_at DESC,nr.id DESC LIMIT 1) n ON true
     WHERE c.state = 'completed' AND c.square_order_id IS NOT NULL
       AND c.updated_at < now() - interval '30 minutes'
       AND (f.square_order_id IS NULL OR n.id IS NULL OR n.state <> 'sent')
@@ -80,8 +81,8 @@ export async function pipelineProblems(db) {
 /** Orders a person must look at, in plain words. */
 export async function orderProblems(db, now = Date.now()) {
   const rows = await db.sql`
-    SELECT square_order_id, state, provider_status, apliiq_order_id, last_error_code, created_at
-    FROM aha_fulfillment_orders
+    SELECT f.square_order_id, f.state, f.provider_status, f.apliiq_order_id, f.last_error_code, f.created_at, f.payment_created_at, f.provider_expected_at, m.refund_state,m.dispute_state,m.dispute_due_at
+    FROM aha_fulfillment_orders f LEFT JOIN aha_order_financials m USING(square_order_id)
     WHERE state <> 'ignored' AND (state <> 'shipped' OR last_error_code IS NOT NULL)
     ORDER BY created_at DESC
     LIMIT 200`;
@@ -135,9 +136,13 @@ export async function runDailyHealth({ db, square, fetchText, siteUrl, catalog, 
 /** Last seven days, from the checkout and fulfillment tables. */
 export async function weeklyDigest(db, { now = () => new Date() } = {}) {
   const [sales] = await db.sql`
-    SELECT count(*)::int AS orders, COALESCE(sum(total_cents), 0)::bigint AS revenue
-    FROM aha_checkout_sessions
-    WHERE state = 'completed' AND created_at > now() - interval '7 days'`;
+    SELECT count(*)::int AS orders, COALESCE(sum(c.total_cents), 0)::bigint AS revenue,
+      COALESCE(sum(c.subtotal_cents),0)::bigint AS merchandise,COALESCE(sum(c.shipping_cents),0)::bigint AS shipping,
+      COALESCE(sum(c.tax_cents),0)::bigint AS tax,COALESCE(sum(m.refunded_cents),0)::bigint AS refunded,
+      sum(m.processing_fee_cents)::bigint AS fees,count(*) FILTER(WHERE m.processing_fee_cents IS NULL)::int AS unknown_fees,
+      count(*) FILTER(WHERE m.square_order_id IS NULL)::int AS unverified
+    FROM aha_checkout_sessions c LEFT JOIN aha_order_financials m USING(square_order_id)
+    WHERE c.state = 'completed' AND c.created_at > now() - interval '7 days'`;
   const rows = await db.sql`
     SELECT submitted_items FROM aha_fulfillment_orders WHERE created_at > now() - interval '7 days'`;
   const units = new Map();
@@ -157,6 +162,9 @@ export async function weeklyDigest(db, { now = () => new Date() } = {}) {
     to: to.toISOString(),
     orders: Number(sales?.orders ?? 0),
     revenueCents: Number(sales?.revenue ?? 0),
+    accounting: { gross: Number(sales?.revenue ?? 0), merchandise: Number(sales?.merchandise ?? 0), shipping: Number(sales?.shipping ?? 0), tax: Number(sales?.tax ?? 0),
+      refunds: sales?.unverified ? null : Number(sales?.refunded ?? 0), fees: sales?.unknown_fees ? null : Number(sales?.fees ?? 0),
+      net: sales?.unknown_fees || sales?.unverified ? null : Number(sales?.revenue ?? 0)-Number(sales?.refunded ?? 0)-Number(sales?.fees ?? 0) },
     units: [...units.values()].reduce((sum, value) => sum + value, 0),
     topProducts: [...units.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([title, count]) => ({ title, units: count })),
     carts: carts.last7Days,
@@ -186,8 +194,10 @@ export function renderDigestEmail(digest, { siteUrl, posthogUrl }) {
   const conversion = digest.carts.carts ? Math.round((digest.carts.completed / digest.carts.carts) * 100) : 0;
   return email({
     eyebrow: "Weekly digest",
-    heading: `${digest.orders} order${digest.orders === 1 ? "" : "s"}, ${usd(digest.revenueCents)} this week`,
+    heading: `${digest.orders} order${digest.orders === 1 ? "" : "s"}, ${usd(digest.revenueCents)} gross receipts this week`,
     lines: [
+      ...(digest.accounting ? [`Merchandise ${usd(digest.accounting.merchandise)}; shipping collected ${usd(digest.accounting.shipping)}; tax collected ${usd(digest.accounting.tax)}.`,
+        `Refunds ${digest.accounting.refunds === null ? "awaiting reconciliation" : usd(digest.accounting.refunds)}; processing fees ${digest.accounting.fees === null ? "awaiting settlement" : usd(digest.accounting.fees)}; net receipts ${digest.accounting.net === null ? "not yet verified" : usd(digest.accounting.net)} (includes collected tax; excludes supplier costs). Figures cover this week's order cohort, not bank payouts.`] : []),
       `${digest.units} piece${digest.units === 1 ? "" : "s"} sold.${digest.topProducts.length ? ` Best: ${digest.topProducts.map((item) => `${item.title} (${item.units})`).join(", ")}.` : ""}`,
       `Checkouts started: ${digest.carts.carts}. Paid: ${digest.carts.completed} (${conversion}%). Abandoned: ${digest.carts.abandoned}.`,
       ...(digest.signups ? [`Email sign-ups: ${digest.signups.last7Days} new, ${digest.signups.total} on the list.`] : []),

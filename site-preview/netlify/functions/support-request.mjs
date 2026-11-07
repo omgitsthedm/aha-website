@@ -1,20 +1,17 @@
 import { getDatabase } from "@netlify/database";
 import { requireProductionRequest } from "../../server/fulfillment/runtime.mjs";
-import { createResendGateway } from "../../server/notifications/resend.mjs";
+import { createNotificationRuntime } from "../../server/notifications/runtime.mjs";
+import { dispatchAfterResponse } from "../../server/notifications/dispatch-after.mjs";
 import { handleSupport } from "../../server/support/request.mjs";
 
 export default async function supportRequest(request, context) {
   if (!requireProductionRequest(request, context)) return new Response(null, { status: 404 });
-  const apiKey = Netlify.env.get("RESEND_API_KEY");
-  const from = Netlify.env.get("RESEND_FROM_EMAIL");
-  const replyTo = Netlify.env.get("RESEND_REPLY_TO");
-  const gateway = apiKey && from && replyTo ? createResendGateway({ apiKey, from, replyTo }) : null;
-  return handleSupport(request, {
-    db: getDatabase(),
-    gateway,
-    challengeSecret: Netlify.env.get("AHA_SUPPORT_CHALLENGE_SECRET"),
-    clientKey: context?.ip ?? "unknown",
+  const db = getDatabase();
+  const response = await handleSupport(request, {
+    db, challengeSecret: Netlify.env.get("AHA_SUPPORT_CHALLENGE_SECRET"), clientKey: context?.ip ?? "unknown",
   });
+  if (response.ok) await dispatchAfterResponse(createNotificationRuntime({database:db, env:Netlify.env}),context);
+  return response;
 }
 
 export const config = {

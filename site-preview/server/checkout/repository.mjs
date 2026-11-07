@@ -109,7 +109,10 @@ export function createCheckoutRepository(db) {
       return one(db.sql`
         UPDATE aha_checkout_sessions SET state = 'completed', square_order_id = ${orderId}, square_payment_id = ${paymentId}, square_receipt_url = ${receiptUrl},
           processing_lease_expires_at = NULL, last_error_code = NULL, updated_at = now()
-        WHERE checkout_id = ${checkoutId} RETURNING *
+        WHERE checkout_id = ${checkoutId}
+          AND (square_order_id IS NULL OR square_order_id = ${orderId})
+          AND (square_payment_id IS NULL OR square_payment_id = ${paymentId})
+          AND state IN ('quoted', 'processing', 'unknown', 'completed') RETURNING *
       `);
     },
     async fail({ checkoutId, code }) {

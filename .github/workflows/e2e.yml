@@ -67,4 +67,4 @@ jobs:
       - run: google-chrome --version
       - run: npm run build
       - run: npm test
-      - run: npm run test:e2e -- tests/browser/checkout.spec.ts tests/browser/consent.spec.ts
+      - run: npm run test:e2e -- tests/browser/checkout.spec.ts tests/browser/express.spec.ts tests/browser/consent.spec.ts tests/browser/admin-monitor.spec.ts tests/browser/accounts.spec.ts tests/browser/emails.spec.ts

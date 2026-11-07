@@ -110,7 +110,7 @@ test("checkout prices and fulfillment SKUs for a live product come only from the
   const merged = { ...liveAllowList([product], AHA_FULFILLMENT_CATALOG), ...AHA_FULFILLMENT_CATALOG };
   const medium = product.variants[2];
   assert.throws(() => normalizeItems([{ variationId: medium.id, quantity: 1 }]), /invalid_cart/);
-  assert.deepEqual(normalizeItems([{ variationId: medium.id, quantity: 2 }], merged)[0], { variationId: medium.id, quantity: 2, unitAmount: 5500, totalAmount: 11000, size: "M", product: "night_shift_ss3000_maroon" });
+  assert.deepEqual(normalizeItems([{ variationId: medium.id, quantity: 2 }], merged)[0], { variationId: medium.id, quantity: 2, unitAmount: 5500, totalAmount: 11000, size: "M", product: "night_shift_ss3000_maroon", sku: "APQ-6299999S7A1", title: "Night Shift Crewneck — Maroon" });
   const order = {
     id: "order-live-1", location_id: "loc", state: "OPEN", reference_id: "AHA-1", total_money: { amount: 5500, currency: "USD" },
     line_items: [{ uid: "l1", catalog_object_id: medium.id, quantity: "1", base_price_money: { amount: 5500, currency: "USD" } }],

@@ -2,7 +2,7 @@
 // where the order is, with an estimated arrival until it ships.
 import { arrivalWindow, formatDay } from "./delivery";
 
-type View = { orderNumber: string; stage: "paid" | "production" | "shipped" | "review"; paidAt: string | null; items: Array<{ title: string; size: string | null; quantity: number }>; tracking: Array<{ carrier: string | null; number: string | null; url: string | null }> };
+type View = { orderNumber: string; stage: "paid" | "production" | "shipped" | "review" | "partial" | "refunded" | "cancelled"; paidAt: string | null; items: Array<{ title: string; size: string | null; quantity: number }>; tracking: Array<{ carrier: string | null; number: string | null; url: string | null }> };
 const params = new URLSearchParams(location.search);
 const $ = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
 const note = $("[data-order-note]");
@@ -21,10 +21,13 @@ async function load() {
   const paid = view.paidAt ? new Date(view.paidAt) : null;
   $("[data-order-lede]").textContent = paid ? `Placed ${formatDay(paid)}.` : "Payment received.";
   const order = ["paid", "production", "shipped"];
-  const reached = view.stage === "review" ? 0 : order.indexOf(view.stage);
+  const reached = view.stage === "partial" ? 1 : order.indexOf(view.stage);
   document.querySelectorAll<HTMLElement>("[data-step]").forEach((step, index) => { step.classList.toggle("is-done", index <= reached); step.toggleAttribute("aria-current", index === reached); });
   $("[data-order-steps]").hidden = false;
-  if (view.stage === "review") note.textContent = "We're checking a detail on your order before production. We'll email you if we need anything.";
+  if (view.stage === "review") note.textContent = "Your order needs a closer look. Contact us with your order number for an update.";
+  else if (view.stage === "partial") note.textContent = "Part of your order has shipped. The remaining pieces are still being prepared.";
+  else if (view.stage === "refunded") note.textContent = "Your payment has been refunded. Your bank determines when it appears on your statement.";
+  else if (view.stage === "cancelled") note.textContent = "Your order has been cancelled. Contact us if you need help with its payment status.";
   else if (view.stage !== "shipped" && paid) { const { shipsBy, latest } = arrivalWindow(paid); note.textContent = `Estimated to ship by ${formatDay(shipsBy)} and arrive in the U.S. by ${formatDay(latest)}.`; }
   else if (view.stage === "shipped") note.textContent = "Your order has shipped. Carrier scans can take a day to appear.";
   if (view.tracking.length) {

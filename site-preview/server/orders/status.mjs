@@ -7,11 +7,12 @@ import { SITE_ORIGIN } from "../platform/client.mjs";
 
 // AHA_ORDER_LINK_SECRET if set; otherwise a key derived (HKDF, separate purpose)
 // from the Square webhook signature key every production deploy already has.
-function linkKey(env) {
-  const base = env.get("AHA_ORDER_LINK_SECRET") || env.get("AHA_SQUARE_WEBHOOK_SIGNATURE_KEY");
+function deriveKey(base) {
   if (typeof base !== "string" || base.length < 16) return null;
   return Buffer.from(hkdfSync("sha256", base, "aha-order-link", "order-status-v1", 32));
 }
+
+function linkKey(env) { return deriveKey(env.get("AHA_ORDER_LINK_SECRET") || env.get("AHA_SQUARE_WEBHOOK_SIGNATURE_KEY")); }
 
 export const orderToken = (orderId, key) => createHmac("sha256", key).update(String(orderId)).digest("base64url").slice(0, 32);
 
@@ -23,9 +24,11 @@ export function orderStatusUrl(orderId, env, origin = SITE_ORIGIN) {
 export function verifyOrderToken(orderId, token, env) {
   const key = linkKey(env);
   if (!key || typeof orderId !== "string" || !/^[A-Za-z0-9_-]{8,64}$/.test(orderId) || typeof token !== "string") return false;
-  const expected = Buffer.from(orderToken(orderId, key));
+  let previous = [];
+  try { previous = JSON.parse(env.get("AHA_ORDER_LINK_PREVIOUS_SECRETS") || "[]"); } catch { /* invalid rotation settings fail closed */ }
+  const keys = [key, deriveKey(env.get("AHA_SQUARE_WEBHOOK_SIGNATURE_KEY")), ...(Array.isArray(previous) ? previous.slice(0, 3).map(deriveKey).filter(Boolean) : [])].filter(Boolean);
   const given = Buffer.from(token);
-  return given.length === expected.length && timingSafeEqual(given, expected);
+  return keys.some((candidate) => { const expected = Buffer.from(orderToken(orderId, candidate)); return given.length === expected.length && timingSafeEqual(given, expected); });
 }
 
 const json = (value, fallback) => {
@@ -43,10 +46,12 @@ const trackingFor = (row) => json(row?.tracking, []).filter((entry) => entry && 
 /** Where the order is, in the customer's words. */
 export function stageFor(row) {
   if (!row) return "paid";
-  const tracking = trackingFor(row);
-  if (row.state === "shipped" || tracking.some((entry) => entry?.number || entry?.url)) return "shipped";
+  if (row.refund_state === "refunded") return "refunded";
+  if (row.cancellation_state === "cancelled") return "cancelled";
+  if (["held", "attention", "uncertain"].includes(row.state) || row.dispute_state === "open" || ["partial", "pending", "failed"].includes(row.refund_state)) return "review";
+  if (row.state === "shipped") return "shipped";
+  if (["shipped_partial", "ready_to_ship"].includes(row.state)) return "partial";
   if (String(row.state).startsWith("submitted") || row.apliiq_order_id) return "production";
-  if (["held", "attention", "uncertain"].includes(row.state)) return "review";
   return "paid";
 }
 
@@ -72,10 +77,13 @@ export async function handleOrderStatus(request, { db, env }) {
   const orderId = url.searchParams.get("o") ?? "";
   // A wrong link and an unknown order look the same.
   if (!verifyOrderToken(orderId, url.searchParams.get("k"), env)) return reply({ error: "We couldn't find that order. Use the link in your order email." }, 404);
-  let [row] = await db.sql`SELECT state, apliiq_order_id, apliiq_payload, submitted_items, tracking, payment_created_at, created_at FROM aha_fulfillment_orders WHERE square_order_id = ${orderId}`;
+  let [row] = await db.sql`SELECT f.state, f.apliiq_order_id, f.apliiq_payload, f.submitted_items, f.tracking, f.payment_created_at, f.created_at,
+    m.refund_state, m.dispute_state, m.cancellation_state FROM aha_fulfillment_orders f
+    LEFT JOIN aha_order_financials m USING(square_order_id) WHERE f.square_order_id = ${orderId}`;
   if (!row) {
-    const [paid] = await db.sql`SELECT cart_json, updated_at FROM aha_checkout_sessions WHERE square_order_id = ${orderId} AND state = 'completed' LIMIT 1`;
-    if (paid) row = { state: "paid", payment_created_at: paid.updated_at, submitted_items: json(paid.cart_json, []).map((item) => ({ title: item.title ?? AHA_FULFILLMENT_CATALOG[item.variationId]?.title ?? "Your piece", size: item.size, quantity: item.quantity })) };
+    const [paid] = await db.sql`SELECT c.cart_json, c.order_payload_json, c.updated_at,m.refund_state,m.dispute_state,m.cancellation_state FROM aha_checkout_sessions c LEFT JOIN aha_order_financials m USING(square_order_id) WHERE c.square_order_id = ${orderId} AND c.state = 'completed' LIMIT 1`;
+    if (paid) row = { ...paid, state: "paid", apliiq_payload: { order_number: json(paid.order_payload_json, {}).reference_id }, payment_created_at: paid.updated_at, submitted_items: json(paid.cart_json, []).map((item) => ({ title: item.title ?? AHA_FULFILLMENT_CATALOG[item.variationId]?.title ?? "Your piece", size: item.size, quantity: item.quantity })) };
   }
+  if (!row) return reply({ error: "We couldn’t find that order." }, 404);
   return reply(customerView(orderId, row));
 }

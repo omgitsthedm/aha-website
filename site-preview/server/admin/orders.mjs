@@ -1,3 +1,4 @@
+import { productionDeadline } from "../orders/deadlines.mjs";
 // Orders for the admin: Square order, Apliiq status and tracking side by side,
 // with plain-language flags for anything that needs a person. Only a first
 // name and city are shown; no email or street address leaves the database.
@@ -6,7 +7,7 @@ import { AHA_FULFILLMENT_CATALOG } from "../fulfillment/catalog.mjs";
 
 const ATTENTION_STATES = new Set(["held", "attention", "uncertain"]);
 const SHIPPED_STATES = new Set(["shipped"]);
-const STUCK_HOURS = 48;
+
 
 const json = (value) => (typeof value === "string" ? JSON.parse(value) : value ?? null);
 
@@ -14,10 +15,12 @@ export function orderFlags(order, now = Date.now()) {
   if (order.state === "ignored") return [];
   if (order.last_error_code === "fulfillment_missing") return [{ code: "fulfillment_missing", message: "Payment is complete but fulfillment has no order. Check the supplier hold and Square event; do not charge again." }];
   const flags = [];
-  const ageHours = (now - new Date(order.created_at).getTime()) / 3_600_000;
+  const deadline = order.provider_expected_at || productionDeadline(order.payment_created_at || order.created_at);
   if (ATTENTION_STATES.has(order.state)) flags.push({ code: order.state, message: order.state === "uncertain" ? "Apliiq didn't confirm this order. Check the Apliiq dashboard before anything else; never resubmit blindly." : "Held for review. Open the order in Square and Apliiq." });
   if (order.last_error_code && !ATTENTION_STATES.has(order.state)) flags.push({ code: "error", message: `Last problem: ${order.last_error_code}.` });
-  if (!SHIPPED_STATES.has(order.state) && ageHours > STUCK_HOURS) flags.push({ code: "stuck", message: `Not shipped after ${Math.floor(ageHours)} hours.` });
+  if (!SHIPPED_STATES.has(order.state) && deadline && now > new Date(deadline).getTime()) flags.push({ code: "stuck", message: "Past its estimated production date. Check garment availability and artwork with the supplier." });
+  if (order.refund_state && order.refund_state !== "none") flags.push({code:"refund",message:`Refund: ${order.refund_state}. ${order.apliiq_order_id ? "Confirm cancellation or a remedy with the supplier; a refund does not cancel production." : "Keep production held until reviewed."}`});
+  if (order.dispute_state === "open") flags.push({code:"dispute",message:`Payment dispute open${order.dispute_due_at ? `; response due ${new Date(order.dispute_due_at).toISOString().slice(0,10)}` : ""}. Review Square.`});
   if (order.provider_status === "changed") flags.push({ code: "changed", message: "The Square order changed or was refunded before it reached Apliiq; it was held, not sent." });
   return flags;
 }
@@ -29,16 +32,19 @@ export async function listOrders(db, { limit = 100 } = {}) {
            COALESCE(o.submitted_items, s.cart_json) AS submitted_items, o.tracking,
            CASE WHEN o.square_order_id IS NULL THEN 'fulfillment_missing' ELSE o.last_error_code END AS last_error_code,
            COALESCE(o.created_at, s.created_at) AS created_at, COALESCE(o.updated_at, s.updated_at) AS updated_at,
+           COALESCE(o.apliiq_payload->>'order_number',s.order_payload_json->>'reference_id',s.square_order_id) AS order_number,
+           o.provider_expected_at, o.payment_created_at, m.refund_state, m.dispute_state, m.dispute_due_at,
            s.total_cents, s.shipping_address_json->>'firstName' AS first_name, s.shipping_address_json->>'city' AS city,
            s.shipping_address_json->>'region' AS region
     FROM aha_fulfillment_orders o
     FULL JOIN aha_checkout_sessions s ON s.square_order_id = o.square_order_id
+    LEFT JOIN aha_order_financials m ON m.square_order_id=COALESCE(o.square_order_id,s.square_order_id)
     WHERE o.state <> 'ignored' OR (o.square_order_id IS NULL AND s.state = 'completed' AND s.square_order_id IS NOT NULL)
     ORDER BY COALESCE(o.created_at, s.created_at) DESC
     LIMIT ${Math.min(Math.max(Number(limit) || 100, 1), 500)}`;
   const now = Date.now();
   return rows.map((row) => ({
-    squareOrderId: row.square_order_id,
+    squareOrderId: row.square_order_id, orderNumber: row.order_number,
     state: row.state,
     providerStatus: row.provider_status ?? null,
     apliiqOrderId: row.apliiq_order_id ?? null,
@@ -55,8 +61,10 @@ export async function overview(db) {
   const [orders] = await db.sql`
     SELECT count(*) FILTER (WHERE created_at > now() - interval '1 day') AS today,
            count(*) FILTER (WHERE created_at > now() - interval '7 days') AS week,
-           count(*) FILTER (WHERE state IN ('held', 'attention', 'uncertain') OR (state <> 'shipped' AND created_at < now() - interval '48 hours')) AS attention
+           count(*) FILTER (WHERE state IN ('held', 'attention', 'uncertain') OR (state <> 'shipped' AND provider_expected_at < now())) AS attention
     FROM aha_fulfillment_orders WHERE state <> 'ignored'`;
+  const pending = await db.sql`SELECT state,provider_expected_at,payment_created_at,created_at FROM aha_fulfillment_orders WHERE state NOT IN ('ignored','shipped','held','attention','uncertain') AND provider_expected_at IS NULL`;
+  const overdue = pending.filter(row => {const deadline=productionDeadline(row.payment_created_at || row.created_at);return deadline && new Date(deadline).getTime()<Date.now();}).length;
   const [missing] = await db.sql`
     SELECT count(*) FILTER (WHERE c.created_at > now() - interval '1 day') AS today,
            count(*) FILTER (WHERE c.created_at > now() - interval '7 days') AS week, count(*) AS attention
@@ -67,7 +75,7 @@ export async function overview(db) {
   return {
     ordersToday: Number(orders?.today ?? 0) + Number(missing?.today ?? 0),
     ordersThisWeek: Number(orders?.week ?? 0) + Number(missing?.week ?? 0),
-    ordersNeedingAttention: Number(orders?.attention ?? 0) + Number(missing?.attention ?? 0),
+    ordersNeedingAttention: Number(orders?.attention ?? 0) + Number(missing?.attention ?? 0) + overdue,
     draftsWaiting: Number(drafts?.waiting ?? 0),
     draftsApproved: Number(drafts?.approved ?? 0),
   };

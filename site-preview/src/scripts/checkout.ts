@@ -252,14 +252,15 @@ export function initCheckout() {
   const quoteSummary = (): PurchaseSummary | null => {
     return quote ? purchaseSummary(quote, lines) : null;
   };
-  const finishPayment = async (attempt: PendingPayment, orderId?: string, receiptUrl?: string) => {
+  const finishPayment = async (attempt: PendingPayment, orderId?: string, receiptUrl?: string, detail: { orderNumber?: string; statusUrl?: string; receiptEmail?: string } = {}) => {
     const summary = attempt.summary || quoteSummary();
     const scope = attempt.scope ?? "bag";
     if (!(await clearPending(attempt.checkoutId))) return;
     unresolvedPayment = readPending();
     emitVerifiedPurchase(orderId, summary);
     if (scope === "product") {
-      clearQuote(); render(); showMessage(`Your previous payment is confirmed${orderId ? ` · order ${orderId}` : ""}. Your bag is unchanged.`); return;
+      clearQuote(); render(); showMessage(`Your previous payment is confirmed${detail.orderNumber || orderId ? ` · order ${detail.orderNumber || orderId}` : ""}.${detail.receiptEmail ? ` Your receipt is addressed to ${detail.receiptEmail}.` : ""} Your bag is unchanged.`);
+      if (detail.statusUrl) { const link = document.createElement("a"); link.href = detail.statusUrl; link.textContent = " View your order and tracking."; message.append(link); } return;
     }
     lines = []; writeCart([]); render(); clearQuote();
     checkout.hidden = true;
@@ -269,7 +270,8 @@ export function initCheckout() {
     const lede = query<HTMLElement>(page, ".checkout-heading .lede");
     if (heading) heading.textContent = "ORDER CONFIRMED.";
     if (lede) lede.textContent = "Thank you. Your payment is complete.";
-    message.textContent = `Payment confirmed${orderId ? ` · order ${orderId}` : ""}. Keep this order number; tracking is added to the order when it ships.`;
+    message.textContent = `Payment confirmed${detail.orderNumber || orderId ? ` · order ${detail.orderNumber || orderId}` : ""}.${detail.receiptEmail ? ` Your receipt is addressed to ${detail.receiptEmail}. Check Junk if it does not arrive.` : ""}`;
+    if (detail.statusUrl) { const link = document.createElement("a"); link.href = detail.statusUrl; link.textContent = " View your order and tracking."; message.append(link); }
     if (receiptUrl) { const link = document.createElement("a"); link.href = receiptUrl; link.textContent = " View receipt."; message.append(link); }
     message.hidden = false;
     message.tabIndex = -1;
@@ -280,7 +282,7 @@ export function initCheckout() {
     try {
       const { response, data } = await paymentStatus(saved);
       if (!response.ok || !data) throw new Error();
-      if (data.state === "completed") { await finishPayment(saved, data.orderId, data.receiptUrl); return; }
+      if (data.state === "completed") { await finishPayment(saved, data.orderId, data.receiptUrl, data); return; }
       if (data.state === "attention") {
         const reference = typeof data.orderId === "string" && data.orderId ? ` Order reference: ${data.orderId}.` : "";
         showMessage(`We’re confirming this payment with Square. Please do not try again yet.${reference}`);
@@ -313,7 +315,7 @@ export function initCheckout() {
     unresolvedPayment = attempt;
     setCheckoutLocked(true); setPaymentControlsBusy(true); showMessage("Confirming your payment… Please keep this page open.");
     let response: Response;
-    let data: { state?: string; orderId?: string; receiptUrl?: string; errorCode?: string } | null;
+    let data: { state?: string; orderId?: string; receiptUrl?: string; orderNumber?: string; statusUrl?: string; receiptEmail?: string; errorCode?: string } | null;
     try {
       ({ response, data } = await payCheckout(attempt, sourceId, marketing));
     } catch {
@@ -321,7 +323,7 @@ export function initCheckout() {
       void poll(attempt);
       return;
     }
-    if (response.ok && data?.state === "completed") { await finishPayment(attempt, data.orderId, data.receiptUrl); return; }
+    if (response.ok && data?.state === "completed") { await finishPayment(attempt, data.orderId, data.receiptUrl, data); return; }
     if (response.status === 202 && data?.state === "pending") { showMessage("Payment is processing. We’re confirming it safely now."); void poll(attempt); return; }
     if (response.status === 402 || ["payment_service_unavailable", "checkout_paused"].includes(data?.errorCode || "")) {
       const viaGiftCard = paidWithGiftCard;
@@ -508,8 +510,8 @@ export function initCheckout() {
   document.addEventListener("aha:payment-pending", syncPaymentLock);
   window.addEventListener("storage", syncPaymentLock);
   document.addEventListener("aha:express-completed", (event) => {
-    const result = (event as CustomEvent<{ orderId?: string; receiptUrl?: string; attempt: PendingPayment }>).detail;
-    void finishPayment(result.attempt, result.orderId, result.receiptUrl);
+    const result = (event as CustomEvent<{ orderId?: string; receiptUrl?: string; orderNumber?: string; statusUrl?: string; receiptEmail?: string; attempt: PendingPayment }>).detail;
+    void finishPayment(result.attempt, result.orderId, result.receiptUrl, result);
   });
   render();
   if (unresolvedPayment) {

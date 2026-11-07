@@ -1,3 +1,4 @@
+import { reliabilitySchema } from "./helpers/reliability-schema.mjs";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
@@ -23,6 +24,7 @@ async function setup(t) {
   const pg = new PGlite();
   t.after(() => pg.close());
   for (const name of BASE) await pg.exec(await readFile(new URL(`../netlify/database/migrations/${name}/migration.sql`, import.meta.url), "utf8"));
+  await reliabilitySchema(pg);
   const db = { sql: async (strings, ...values) => (await pg.query(strings.reduce((text, part, i) => text + (i ? `$${i}` : "") + part, ""), values)).rows };
   const repo = createNetlifyRepository(db);
   const seed = async (id = ORDER, payment = PAYMENT) => pg.query(`INSERT INTO aha_fulfillment_orders

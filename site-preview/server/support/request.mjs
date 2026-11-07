@@ -1,3 +1,4 @@
+import { saveSupportCase } from "./cases.mjs";
 import { createHash } from "node:crypto";
 import { boundedText } from "../http/body.mjs";
 import { CLIENT, SITE_ORIGIN } from "../platform/client.mjs";
@@ -8,7 +9,6 @@ const TOPICS = { order: "Existing order", product: "Product or fit", returns: "E
 const headers = { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow", "referrer-policy": "no-referrer" };
 const reply = (data, status = 200) => Response.json(data, { status, headers });
 const hash = (value) => createHash("sha256").update(value).digest("hex");
-const escape = (value) => value.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const fallback = `We couldn’t confirm receipt. Your message is still here. Try again or email ${CLIENT.client.email}.`;
 
 // This bot submits independent, randomly cased alphabetic tokens as the
@@ -73,7 +73,7 @@ async function claimSupportAttempts(db, keys) {
   }
 }
 
-export async function handleSupport(request, { db, gateway, clientKey = "unknown", origin = SITE_ORIGIN, challengeSecret, now = Date.now() }) {
+export async function handleSupport(request, { db, gateway: _gateway, clientKey = "unknown", origin = SITE_ORIGIN, challengeSecret, now = Date.now() }) {
   if (request.method !== "POST") return reply({ error: "Not found." }, 404);
   if (request.headers.get("origin") !== origin || request.headers.get("x-aha-support") !== "1") return reply({ error: "Request blocked." }, 403);
   if (!(request.headers.get("content-type") ?? "").startsWith("application/json")) return reply({ error: "Request must be JSON." }, 415);
@@ -91,7 +91,6 @@ export async function handleSupport(request, { db, gateway, clientKey = "unknown
     return reply({ error: `Describe what you need help with in a short sentence. Your details are still here, or email ${CLIENT.client.email}.` }, 422);
   }
   if (typeof input.requestId !== "string" || !/^[a-f0-9-]{36}$/i.test(input.requestId)) return reply({ error: "Refresh this page before sending." }, 422);
-  if (!gateway) return reply({ error: fallback }, 503);
   const topic = Object.hasOwn(TOPICS, input.topic) ? TOPICS[input.topic] : TOPICS.general;
   const text = `${topic}\n\n${message}\n\nName: ${name}\nReply to: ${email}\nOrder number: ${reference || "Not provided"}\n`;
   try {
@@ -102,17 +101,8 @@ export async function handleSupport(request, { db, gateway, clientKey = "unknown
     const claimed = await claimSupportAttempts(db, [`support:ip:${clientKey}`, `support:email:${email}`].map(hash));
     if (!claimed) return reply({ error: `Please wait before trying again, or email ${CLIENT.client.email}.` }, 429);
     await db.sql`DELETE FROM aha_signup_attempts WHERE attempted_at < now() - interval '1 day'`;
-    const sent = await gateway.send({
-      idempotencyKey: `support-${hash(`${input.requestId}\n${text}`)}`,
-      recipient: CLIENT.client.email,
-      // `email` is normalized and validated above; transactional messages keep
-      // the configured brand reply address by omitting this override.
-      replyTo: email,
-      subject: `Website support: ${topic}`,
-      text, html: `<pre style="white-space:pre-wrap;font-family:system-ui">${escape(text)}</pre>`,
-    });
-    if (!sent?.id) throw new Error("support_not_acknowledged");
-    return reply({ ok: true });
+    const caseId = await saveSupportCase(db, { id: input.requestId, topic, email, text, reference });
+    return reply({ ok: true, caseId });
   } catch (error) {
     console.error(JSON.stringify({ event: "support_delivery_error", error: errorSummary(error) }));
     return reply({ error: fallback }, 503);

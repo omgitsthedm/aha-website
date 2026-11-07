@@ -1,3 +1,4 @@
+import { reliabilitySchema } from "./helpers/reliability-schema.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -65,7 +66,7 @@ test("order links are signed per order and never accept another order's token", 
   const token = url.searchParams.get("k");
   assert.equal(verifyOrderToken("ORDER123456", token, env()), true);
   assert.equal(verifyOrderToken("ORDER654321", token, env()), false);
-  assert.equal(verifyOrderToken("ORDER123456", token, env({ AHA_ORDER_LINK_SECRET: "x".repeat(32) })), false, "a dedicated secret replaces the derived key");
+  assert.equal(verifyOrderToken("ORDER123456", token, env({ AHA_ORDER_LINK_SECRET: "x".repeat(32) })), true, "introducing a dedicated secret preserves existing customer links");
   assert.equal(orderStatusUrl("ORDER123456", { get: () => undefined }), null, "no key, no link");
 });
 
@@ -74,6 +75,7 @@ test("the order view shows progress, items and tracking, never customer details"
   t.after(() => pg.close());
   await pg.exec(await readFile(new URL("../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql", import.meta.url), "utf8"));
   await pg.exec(await readFile(new URL("../netlify/database/migrations/20261015160000_custom_checkout/migration.sql", import.meta.url), "utf8"));
+  await reliabilitySchema(pg);
   const db = { sql: async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows };
   await pg.query(`INSERT INTO aha_fulfillment_orders (square_order_id, square_payment_id, state, submitted_items, tracking, payment_created_at, apliiq_order_id) VALUES ('ORDER123456', 'PAY1', 'shipped', $1::jsonb, $2::jsonb, '2026-10-16T18:00:00Z', 'APQ-1')`, [JSON.stringify([{ title: "The City Hoodie", size: "M", quantity: 1, sku: "APQ-1" }]), JSON.stringify([{ carrier: "USPS", number: "9400", url: "https://tools.usps.com/go/TrackConfirmAction?tLabels=9400" }])]);
   const url = new URL(orderStatusUrl("ORDER123456", env()));
@@ -85,7 +87,7 @@ test("the order view shows progress, items and tracking, never customer details"
   url.searchParams.set("k", "wrong");
   assert.equal((await handleOrderStatus(new Request(url), { db, env: env() })).status, 404);
   const unknown = new URL(orderStatusUrl("ORDER999999", env()));
-  assert.equal((await (await handleOrderStatus(new Request(unknown), { db, env: env() })).json()).stage, "paid", "a valid link before the order is recorded shows Paid");
+  assert.equal((await handleOrderStatus(new Request(unknown), { db, env: env() })).status, 404, "a signature alone is not payment evidence");
   await pg.query(`INSERT INTO aha_checkout_sessions (checkout_id,token_sha256,state,currency,cart_json,shipping_address_json,order_payload_json,subtotal_cents,shipping_cents,tax_cents,total_cents,order_idempotency_key,expires_at,square_order_id,square_payment_id)
     VALUES ('paid-only','hash','completed','USD','[{"variationId":"464AETWT7Q2JEAPKDDJ6KLJQ","size":"XL","quantity":1}]','{"email":"private@example.com"}','{}',5800,0,470,6270,'unique',now(),'ORDER999999','PAY-PAID')`);
   const awaiting = await (await handleOrderStatus(new Request(unknown), { db, env: env() })).json();
@@ -104,6 +106,7 @@ test("tracking written by fulfillment is visible through the customer's signed o
   const pg = new PGlite();
   t.after(() => pg.close());
   await pg.exec(await readFile(new URL("../netlify/database/migrations/20261015045000_yikes_fulfillment/migration.sql", import.meta.url), "utf8"));
+  await reliabilitySchema(pg);
   const db = { sql: async (strings, ...parameters) => (await pg.query(strings.reduce((text, part, index) => text + (index ? `$${index}` : "") + part, ""), parameters)).rows };
   await pg.query("INSERT INTO aha_fulfillment_orders (square_order_id, state, apliiq_order_id) VALUES ('SHIPMENT123', 'submitted_reconciled', 'APQ-123')");
   const repository = createNetlifyRepository(db);
@@ -111,7 +114,7 @@ test("tracking written by fulfillment is visible through the customer's signed o
     tracking: { carrier: "USPS", trackingNumber: "9400", trackingUrl: "https://tools.usps.com/go/TrackConfirmAction?tLabels=9400", shippedAt: "2026-11-06T20:00:00Z" } });
   const response = await handleOrderStatus(new Request(orderStatusUrl("SHIPMENT123", env())), { db, env: env() });
   const view = await response.json();
-  assert.equal(view.stage, "shipped");
+  assert.equal(view.stage, "partial");
   assert.deepEqual(view.tracking, [{ carrier: "USPS", number: "9400", url: "https://tools.usps.com/go/TrackConfirmAction?tLabels=9400" }]);
   assert.equal("shippedAt" in view.tracking[0], false);
 });

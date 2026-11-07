@@ -10,11 +10,11 @@ function clean(value, fallback) { return typeof value === "string" && value.trim
 export function createNotificationService({ repository, gateway, config, orderLink = () => null, unsubscribeLinks = () => null, suppressed = async () => false, customerEmailsEnabled = () => true, stillDue = async () => true, now = () => Date.now() }) {
   const enabled = () => config.enabled === true && Boolean(config.apiKey && config.from && config.replyTo);
   async function enqueueConfirmation({ recipient, orderId, orderNumber, totalAmount, currency, items }) {
-    if (!enabled() || !validEmail(recipient)) return null;
+    if (!validEmail(recipient)) return null;
     return repository.enqueue({ dedupeKey: `${orderId}:order_confirmed`, kind: "order_confirmed", recipient, payload: { orderNumber: clean(orderNumber, orderId), totalAmount, currency, items, statusUrl: orderLink(orderId) } });
   }
   async function enqueueShipment({ recipient, orderId, orderNumber, carrier, trackingNumber, trackingUrl }) {
-    if (!enabled() || !validEmail(recipient) || !trackingNumber) return null;
+    if (!validEmail(recipient) || !trackingNumber) return null;
     return repository.enqueue({ dedupeKey: `${orderId}:order_shipped:${trackingNumber}`, kind: "order_shipped", recipient, payload: { orderNumber: clean(orderNumber, orderId), carrier, trackingNumber, trackingUrl, statusUrl: orderLink(orderId) } });
   }
   async function enqueueCartReminder({ recipient, checkoutId, firstName, items, bagUrl }) {
@@ -29,6 +29,12 @@ export function createNotificationService({ repository, gateway, config, orderLi
     return repository.enqueue({ dedupeKey: `${orderId}:review_request`, kind: "review_request", recipient, payload: { orderNumber: clean(orderNumber, orderId), reviewUrl: `${statusUrl}#leave-a-review` } });
   }
   function render(row, links) {
+    if (row.kind === "support_request") {
+      const data = row.payload_json;
+      const text = `Support case ${data.caseId}\n\n${data.text}`;
+      const escaped = text.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+      return { subject: `Website support: ${data.topic}`, text, html: `<pre style="white-space:pre-wrap">${escaped}</pre>`, replyTo: data.replyTo };
+    }
     if (row.kind === "order_confirmed") return renderOrderConfirmation(row.payload_json);
     if (row.kind === "order_shipped") return renderShipment(row.payload_json);
     if (row.kind === "cart_reminder") return renderCartReminder(row.payload_json, { unsubscribe: links?.page });
@@ -56,7 +62,7 @@ export function createNotificationService({ repository, gateway, config, orderLi
           : !customerEmailsEnabled() ? "customer_emails_disabled"
             : await suppressed(row.recipient) ? "suppressed"
               : !(await stillDue(row)) ? "no_longer_due" : null;
-        if (skip) { await repository.markSkipped({ id: row.id, code: skip }); continue; }
+        if (skip) { await repository.markSkipped({ id: row.id, attemptCount: row.attempt_count, code: skip }); continue; }
         const links = customer ? unsubscribeLinks(row.id) : null;
         // A customer email without a working unsubscribe link is never sent.
         if (customer && !links) throw new Error("unsubscribe_unavailable");
@@ -64,13 +70,13 @@ export function createNotificationService({ repository, gateway, config, orderLi
         const extra = customer ? { stream: "marketing", headers: { "List-Unsubscribe": `<${links.oneClick}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" } } : {};
         const result = await gateway.send({ idempotencyKey: row.dedupe_key, recipient: row.recipient, ...message, ...extra });
         if (!result?.id) throw new Error("resend_response_invalid");
-        await repository.markSent({ id: row.id, providerMessageId: String(result.id) });
+        await repository.markSent({ id: row.id, attemptCount: row.attempt_count, providerMessageId: String(result.id) });
         sent += 1;
       } catch (error) {
         // Every retry keeps the same provider idempotency key. A transport
         // ambiguity is therefore safely collapsed by Resend during the bounded
         // retry window; five unsuccessful attempts require operator attention.
-        await repository.retryOrAttention({ id: row.id, code: Number.isInteger(error?.status) ? `resend_http_${error.status}` : "resend_delivery_unknown" });
+        await repository.retryOrAttention({ id: row.id, attemptCount: row.attempt_count, code: Number.isInteger(error?.status) ? `resend_http_${error.status}` : "resend_delivery_unknown" });
         deferred += 1;
       }
     }

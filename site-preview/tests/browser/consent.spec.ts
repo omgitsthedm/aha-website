@@ -269,3 +269,20 @@ test('a page prerendered on hover sends nothing until the visitor opens it', asy
   await page.getByRole('radio',{name:'M',exact:true}).check();
   await expect.poll(() => page.evaluate(() => window.__ahaTrackingEvents?.ga.some((entry) => entry[0] === 'event' && entry[1] === 'view_item') ?? false)).toBe(true);
 });
+
+
+test('error telemetry omits customer details and stops after consent withdrawal',async ({page})=>{
+ test.skip(!production,'Production integration is tested with vendor network blocked.');
+ await page.goto('/checkout/?o=private-order&k=secret-link');
+ // Enable the sanitized capture path with an inert key; vendor networking is blocked.
+ await page.locator('.cookie-banner').evaluate(node=>node.setAttribute('data-posthog-key','phc_local_fixture'));
+ await page.evaluate(()=>window.dispatchEvent(new ErrorEvent('error',{message:'private@email.example secret-payment-token',filename:location.origin+'/_astro/checkout.fixture.js?k=secret',lineno:17,error:new Error('private address')})));
+ const errors=await page.evaluate(()=>window.__ahaTrackingEvents?.posthog?.filter(x=>x[0]==='$exception'));
+ expect(errors).toHaveLength(1);expect(JSON.stringify(errors)).not.toMatch(/private@email|secret-payment|secret-link|private address|\?k=/);
+ expect(JSON.stringify(errors)).toContain('checkout.fixture.js');
+ await page.getByRole('button',{name:'Privacy choices',exact:true}).click();
+ await Promise.all([page.waitForNavigation(),page.getByRole('button',{name:'Essential only',exact:true}).click()]);
+ await page.locator('.cookie-banner').evaluate(node=>node.setAttribute('data-posthog-key','phc_local_fixture'));
+ await page.evaluate(()=>window.dispatchEvent(new ErrorEvent('error',{message:'second private message'})));
+ expect(await page.evaluate(()=>window.__ahaTrackingEvents?.posthog?.filter(x=>x[0]==='$exception').length ?? 0)).toBe(0);
+});

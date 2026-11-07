@@ -19,7 +19,8 @@ export async function commerceHealth({ db, env, now = () => new Date(), checkMon
       count(*) FILTER (WHERE f.state IN ('attention', 'held', 'uncertain'))::int AS fulfillment_attention
     FROM aha_checkout_sessions c
     LEFT JOIN aha_fulfillment_orders f ON f.square_order_id = c.square_order_id
-    LEFT JOIN aha_order_notifications n ON n.dedupe_key = c.square_order_id || ':order_confirmed'
+    LEFT JOIN LATERAL (SELECT * FROM aha_order_notifications nr WHERE nr.kind='order_confirmed'
+      AND split_part(nr.dedupe_key,':',1)=c.square_order_id ORDER BY nr.created_at DESC,nr.id DESC LIMIT 1) n ON true
     WHERE c.state = 'completed' AND c.square_order_id IS NOT NULL`;
   for (const [code, count] of Object.entries(counts ?? {})) if (Number(count)) problems.push(problem(code, count));
   // Shipping mail can fail before Resend returns a message ID. A worker that
@@ -48,6 +49,12 @@ export async function commerceHealth({ db, env, now = () => new Date(), checkMon
     WHERE processed_at IS NULL AND received_at < now() - interval '2 hours'`;
   if (events?.count) problems.push(problem("square_events_overdue", events.count));
 
+  const [financialBacklog] = await db.sql`SELECT count(*)::int AS count FROM aha_commerce_events WHERE processed_at IS NULL AND received_at<now()-interval '45 minutes'`;
+  if(financialBacklog?.count) problems.push(problem("financial_reconciliation_overdue",financialBacklog.count));
+  const [cases] = await db.sql`SELECT count(*)::int AS count FROM aha_support_cases WHERE state='open' AND created_at<now()-interval '2 days'`;
+  if(cases?.count) problems.push(problem("support_cases_overdue",cases.count));
+  const [supportMail] = await db.sql`SELECT count(*)::int AS count FROM aha_order_notifications WHERE kind='support_request' AND state<>'sent' AND created_at<now()-interval '15 minutes'`;
+  if(supportMail?.count) problems.push(problem("support_notification_overdue",supportMail.count));
   // Callback metadata may arrive before the outbox's send response. Join only
   // on the returned provider ID, never an email address or unverified payload.
   const mail = await db.sql`
@@ -59,6 +66,9 @@ export async function commerceHealth({ db, env, now = () => new Date(), checkMon
           WHEN 'delivered' THEN 3 WHEN 'delivery_delayed' THEN 2 ELSE 1 END DESC LIMIT 1
     ) d ON true
     WHERE n.kind IN ('order_confirmed', 'order_shipped') AND n.state = 'sent'
+      AND (n.kind<>'order_confirmed' OR NOT EXISTS (SELECT 1 FROM aha_order_notifications newer
+        WHERE newer.kind='order_confirmed' AND split_part(newer.dedupe_key,':',1)=split_part(n.dedupe_key,':',1)
+          AND (newer.created_at,newer.id)>(n.created_at,n.id)))
       AND n.provider_message_id IS NOT NULL AND n.sent_at >= ${new Date(start.created_at).toISOString()}`;
   const failures = mail.filter((row) => ["bounced", "failed", "suppressed", "complained"].includes(row.event_type));
   const missing = mail.filter((row) => !["delivered", "bounced", "failed", "suppressed", "complained"].includes(row.event_type)
@@ -67,9 +77,9 @@ export async function commerceHealth({ db, env, now = () => new Date(), checkMon
   if (missing.length) problems.push(problem("receipt_delivery_unconfirmed", missing.length));
 
   const workers = await db.sql`SELECT job, created_at, last_started_at, last_succeeded_at, last_failed_at FROM aha_commerce_workers`;
-  for (const job of ["fulfillment", "notifications"]) {
+  for (const job of ["fulfillment", "notifications", "square-recovery"]) {
     const row = workers.find((entry) => entry.job === job);
-    const limit = job === "fulfillment" ? 105 : 45;
+    const limit = 45;
     if (!row || now().getTime() - new Date(row.last_succeeded_at ?? row.created_at).getTime() > limit * MINUTE)
       problems.push(problem(`${job}_worker_stale`));
     else if (row.last_failed_at && (!row.last_succeeded_at || new Date(row.last_failed_at) > new Date(row.last_succeeded_at)))
