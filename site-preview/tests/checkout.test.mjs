@@ -1,3 +1,4 @@
+import { appliesArizonaTax } from "../server/checkout/catalog.mjs";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createCheckoutService, publicCheckoutResult } from "../server/checkout/service.mjs";
@@ -300,4 +301,12 @@ test("unfamiliar 4xx cannot authorize a second charge", async () => {
   const q = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address() });
   assert.equal((await ctx.service.pay({ ...q, sourceId: "test-opaque-token", idempotencyKey: "unique-safe-test-key" })).state, "pending");
   assert.equal((await ctx.service.status(q)).state, "pending");
+});
+
+
+test("only the selected Arizona shipping state receives Arizona tax", () => {
+  assert.equal(appliesArizonaTax(address()),true);
+  for(const region of ['AL','AK','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'])
+    assert.equal(appliesArizonaTax(address({region})),false,region);
+  assert.equal(appliesArizonaTax(address({country:'CA',region:'AZ'})),false);
 });

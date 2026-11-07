@@ -137,4 +137,6 @@ Delivery requires a matching production-mode tracker, credible timestamps, a del
 
 Apliiq's documented inventory view is a delayed supplier snapshot, not guaranteed reservation or a public stock API. Its on-demand satin label remains independent of the prepaid inventory count. Maintain supplier stock checks and treat awaiting-garment/artwork/supplies flags as operational evidence, without silently changing the garment or artwork.
 
-Real iPhone Apple Pay, Android Google Pay, an Outlook destination, the applicable tax registration/sourcing and delivered garment quality require their actual device/account/business/physical evidence. Chrome viewport and mocked-wallet checks do not certify them. The dated shop audit holds the current results and exact remaining actions.
+Real iPhone Apple Pay, Android Google Pay, an Outlook destination, delivered garment quality require their actual device/account/physical evidence. Chrome viewport and mocked-wallet checks do not certify them. The dated shop audit holds the current results and exact remaining actions.
+
+Owner reaffirmed the checkout tax policy on November 7: charge 8.1% only for Arizona shipping addresses, with no tax on other states or countries. The storefront passes that tax rule into Square calculation; it does not infer Arizona from an inconsistent ZIP code. This records the owner-approved commerce rule, not a claim about tax registration.

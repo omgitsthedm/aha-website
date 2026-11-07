@@ -63,7 +63,7 @@ export function normalizeDestination(raw) {
 }
 
 export function appliesArizonaTax(address) {
-  return address.country === "US" && (address.region.toUpperCase() === "AZ" || /^(85|86)/.test(address.postalCode));
+  return address.country === "US" && address.region.toUpperCase() === "AZ";
 }
 
 export function buildSquareOrder({ items, address, locationId, referenceId }) {
