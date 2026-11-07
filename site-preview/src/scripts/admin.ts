@@ -84,7 +84,8 @@ function card(value: number | string, label: string, href?: string, alert = fals
 
 async function renderOverview() {
   type Report = { ok: boolean; createdAt: string; summary: { problems?: string[] } };
-  const [me, data] = await Promise.all([api<{ email: string }>("me"), api<{ ordersToday: number; ordersThisWeek: number; ordersNeedingAttention: number; draftsWaiting: number; draftsApproved: number; reviewsWaiting?: number; signups?: { total: number; last7Days: number }; reports?: { daily_health?: Report; weekly_digest?: Report } }>("overview")]);
+  type CommerceReport = { ok: boolean; createdAt: string; summary: { problems?: Array<{ code: string; count: number }> } };
+  const [me, data] = await Promise.all([api<{ email: string }>("me"), api<{ ordersToday: number; ordersThisWeek: number; ordersNeedingAttention: number; draftsWaiting: number; draftsApproved: number; reviewsWaiting?: number; signups?: { total: number; last7Days: number }; reports?: { daily_health?: Report; weekly_digest?: Report; commerce_health?: CommerceReport } }>("overview")]);
   const target = document.querySelector("[data-admin-overview]")!;
   target.replaceChildren(
     card(data.ordersToday, "Orders today", "/admin/orders/"),
@@ -102,6 +103,13 @@ async function renderOverview() {
     el("h2", { textContent: "Daily check" }),
     el("p", { className: "admin-meta", textContent: health ? `${health.ok ? "Everything matches" : `${problems.length} thing${problems.length === 1 ? "" : "s"} need a look`} · checked ${checked}` : "The first daily check runs at 9:00 New York time." }),
     ...(problems.length ? [el("ul", { className: "admin-list" }, ...problems.slice(0, 20).map((problem) => el("li", { textContent: problem })))] : []),
+  );
+  const commerce = data.reports?.commerce_health;
+  const stale = !commerce || Date.now() - new Date(commerce.createdAt).getTime() > 45 * 60_000;
+  document.querySelector("[data-admin-health]")!.prepend(
+    el("h2", { textContent: "Order pipeline" }),
+    el("p", { className: stale || !commerce?.ok ? "admin-flag" : "admin-meta", textContent: stale ? "The pipeline check is overdue. Check the Commerce pipeline monitor in GitHub." : `${commerce.ok ? "No stalled steps found" : "Needs attention"} · checked ${when.format(new Date(commerce.createdAt))}` }),
+    ...(commerce?.summary?.problems?.length ? [el("ul", { className: "admin-list" }, ...commerce.summary.problems.map((issue) => el("li", { textContent: `${issue.code.replaceAll("_", " ")}: ${issue.count}` })))] : []),
   );
   document.querySelector("[data-admin-whoami]")!.textContent = `Signed in as ${me.email}`;
 }

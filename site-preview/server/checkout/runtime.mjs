@@ -3,6 +3,7 @@ import { createCheckoutService } from "./service.mjs";
 import { createSquareCheckoutGateway } from "./square.mjs";
 import { AHA_HOST, AHA_SITE_ID, requireProductionRequest } from "../fulfillment/runtime.mjs";
 import { eligibleProviders } from "../analytics/marketing.mjs";
+import { commerceConfiguration } from "../operations/commerce-config.mjs";
 
 export { AHA_HOST, AHA_SITE_ID, requireProductionRequest };
 
@@ -12,9 +13,7 @@ export function checkoutConfig(env) {
     enabled: enabled(env.get("AHA_CHECKOUT_ENABLED")),
     // A paused or unconfigured supplier must not silently accumulate paid orders.
     // Recovery/status still uses checkoutReady, independently of this new-sale gate.
-    acceptingOrders: enabled(env.get("AHA_FULFILLMENT_ENABLED"))
-      && Boolean(env.get("AHA_APLIIQ_API_KEY") && env.get("AHA_APLIIQ_SHARED_SECRET"))
-      && Number.isFinite(Date.parse(env.get("AHA_FULFILLMENT_START_AT") ?? "")),
+    acceptingOrders: commerceConfiguration(env).acceptingOrders,
     accessToken: env.get("AHA_SQUARE_ACCESS_TOKEN"),
     applicationId: env.get("AHA_SQUARE_APPLICATION_ID"),
     locationId: env.get("AHA_SQUARE_LOCATION_ID"),

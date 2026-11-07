@@ -4,7 +4,8 @@
 //   and publish requests. It emails the owner only when something is wrong.
 // - Weekly digest: orders, revenue, units, abandoned carts, email sign-ups and open problems,
 //   emailed every Monday whether or not anything is wrong.
-// A check that cannot run is itself a problem, so silence always means healthy.
+// A check that cannot run is itself a problem. The separate commerce monitor
+// checks worker freshness; absence of an email alone never proves health.
 import { abandonedCartStats } from "../analytics/abandoned-carts.mjs";
 import { signupCounts, signupProblems } from "../updates/signups.mjs";
 import { orderFlags } from "../admin/orders.mjs";

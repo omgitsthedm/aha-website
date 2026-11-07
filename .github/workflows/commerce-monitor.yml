@@ -1,0 +1,27 @@
+name: Commerce pipeline monitor
+on:
+  schedule:
+    - cron: '11,26,41,56 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: commerce-monitor
+  cancel-in-progress: false
+jobs:
+  check-production:
+    if: github.repository == 'omgitsthedm/aha-website'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with: { node-version: '24.21.0' }
+      - name: Read live commerce health
+        run: node site-preview/scripts/check-commerce-live.mjs
+        env:
+          AHA_COMMERCE_MONITOR_TOKEN: ${{ secrets.AHA_COMMERCE_MONITOR_TOKEN }}
+      - name: Explain the required response
+        if: failure()
+        run: |
+          echo 'Commerce health failed. Open the failing check, then the AHA admin and Resend delivery log. Reconcile existing payments before retrying any charge or supplier submission. This check creates no orders or emails.' >> "$GITHUB_STEP_SUMMARY"
