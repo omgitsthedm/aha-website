@@ -10,8 +10,10 @@ import Site from "../layouts/Site.astro";
   <section class="shell order-status" data-order aria-live="polite">
     <ol class="order-steps" data-order-steps hidden>
       <li data-step="paid"><strong>Paid</strong><span>Your payment is confirmed.</span></li>
-      <li data-step="production"><strong>With the maker</strong><span>Your order is with our production partner. Tracking appears here when it ships.</span></li>
+      <li data-step="production"><strong>With the maker</strong><span>Your order is with our production partner.</span></li>
+      <li data-step="creating"><strong>Being made</strong><span>Production has been confirmed.</span></li>
       <li data-step="shipped"><strong>Shipped</strong><span>On its way to you.</span></li>
+      <li data-step="delivered"><strong>Delivered</strong><span>The carrier reports delivery.</span></li>
     </ol>
     <p class="order-note" data-order-note></p>
     <div class="order-tracking" data-order-tracking hidden></div>
@@ -20,6 +22,21 @@ import Site from "../layouts/Site.astro";
       <button type="button" class="button button-secondary" data-order-keep-button>Add to my account</button>
       <p data-order-keep-status role="status"></p>
     </div>
+    <form class="review-form" data-order-request hidden>
+      <h2>Help with this order</h2>
+      <label>What do you need?
+        <select name="type" required>
+          <option value="help">Order question</option><option value="address">Correct shipping address</option>
+          <option value="cancel">Request cancellation</option><option value="exchange">Request exchange</option>
+          <option value="refund">Request refund</option><option value="missing">Missing or damaged parcel</option>
+          <option value="email">Correct receipt email</option>
+        </select>
+      </label>
+      <label>Your message <textarea name="message" rows="4" minlength="10" maxlength="1800" required></textarea></label>
+      <p>Changes depend on how far your order has progressed. Exchanges and refunds are reviewed personally within our 30-day request window. Please do not send garments back unless we ask.</p>
+      <button class="button" type="submit">Send request</button>
+      <p data-order-request-status role="status"></p>
+    </form>
     <p class="order-help">Questions about this order? Write to <a href="mailto:info@afterhoursagenda.com">info@afterhoursagenda.com</a> with your order number.</p>
   </section>
   <section class="shell section order-reviews" id="leave-a-review" aria-labelledby="review-title" data-order-reviews hidden>

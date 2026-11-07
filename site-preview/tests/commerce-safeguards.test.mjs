@@ -179,3 +179,12 @@ test("new endpoints and scheduler are restricted to the exact production site an
   assert.equal(monitorSchedule.schedule, "7,22,37,52 * * * *");
   assert.equal(mailSchedule.schedule, "0,15,30,45 * * * *");
 });
+
+test('inactive optional carrier tracking does not create false outage alerts',async t=>{
+  const {db,pg}=await database(t);
+  await pg.query("INSERT INTO aha_fulfillment_orders(square_order_id,state) VALUES('TRACKING-OFF','shipped')");
+  await pg.query("INSERT INTO aha_shipment_tracking(square_order_id,tracking_number,carrier,items,next_attempt_at) VALUES('TRACKING-OFF','T','UPS','[]',now()-interval '1 day')");
+  assert.ok(!codes(await commerceHealth({db,env})).includes('carrier_tracking_needs_attention'));
+  const active={get:key=>key==='AHA_TRACKING_ENABLED'?'true':env.get(key)};
+  assert.ok(codes(await commerceHealth({db,env:active})).includes('carrier_tracking_needs_attention'));
+});

@@ -218,7 +218,7 @@ function acceptedReason(response) {
   return "apliiq_accepted";
 }
 
-export function createFulfillmentService({ repository, square, apliiq, confirmPayment = async () => {}, notifications = { enqueueConfirmation: async () => null, enqueueShipment: async () => null }, config, catalog = AHA_FULFILLMENT_CATALOG, now = () => new Date() }) {
+export function createFulfillmentService({ repository, square, apliiq, confirmPayment = async () => {}, observeProvider = async () => {}, notifications = { enqueueConfirmation: async () => null, enqueueShipment: async () => null }, config, catalog = AHA_FULFILLMENT_CATALOG, now = () => new Date() }) {
   const deadlineRemaining = (deadline) => Math.max(0, Math.min(8_000, deadline - Date.now()));
   // Cancellation window: a paid order is recorded and confirmed at once, but it
   // reaches Apliiq only after this many minutes, when the scheduled run re-reads
@@ -459,6 +459,7 @@ export function createFulfillmentService({ repository, square, apliiq, confirmPa
   async function applyProviderOrder(record, providerOrder, callbackStatus, deadline) {
     const squareOrderId = record.square_order_id;
     const providerState = String(providerOrder.Status ?? "").trim().toLowerCase();
+    await observeProvider(record, providerOrder);
     if (TERMINAL_PROVIDER_STATES.has(providerState)) {
       await repository.setProviderState({ squareOrderId, providerStatus: providerState, state: "attention" });
       return { outcome: "attention" };
@@ -504,9 +505,14 @@ export function createFulfillmentService({ repository, square, apliiq, confirmPa
       ? `${latest.Carrier}${encodeURIComponent(trackingNumber)}` : null;
     const priorTracking = Array.isArray(record.tracking) ? record.tracking.find((entry) => entry?.trackingNumber === trackingNumber && entry?.shippedAt) : null;
     const shippedAt = priorTracking?.shippedAt ?? now().toISOString();
-    finalTracking = { carrier, trackingNumber, trackingUrl, shippedAt };
+    const parcelItems = items.flatMap(item => {
+      const quantity = Math.min(item.quantity, (latest.Items ?? []).filter(line => (line.SKU ?? line.sku) === item.sku).reduce((sum,line) => sum + Math.max(0,Number(line.Quantity ?? line.quantity) || 0),0));
+      return quantity > 0 ? [{sku:item.sku,title:item.title,size:item.size,quantity}] : [];
+    });
+    const remainingItems = items.flatMap(item => { const quantity=Math.max(0,item.quantity-(quantities[item.sku] ?? 0)); return quantity ? [{...item,quantity}] : []; });
+    finalTracking = { carrier, trackingNumber, trackingUrl, shippedAt, items: parcelItems };
     await repository.recordShipment({ squareOrderId, quantities, tracking: finalTracking, complete });
-    await notifications.enqueueShipment({ recipient: record.customer_email, orderId: squareOrderId, orderNumber: record.apliiq_payload?.order_number || squareOrderId, carrier, trackingNumber, trackingUrl });
+    await notifications.enqueueShipment({ recipient: record.customer_email, orderId: squareOrderId, orderNumber: record.apliiq_payload?.order_number || squareOrderId, carrier, trackingNumber, trackingUrl, items: parcelItems, remainingItems });
     }
     const {carrier,trackingNumber,trackingUrl,shippedAt} = finalTracking;
     if (!complete || !trackingNumber) return { outcome: "partial" };

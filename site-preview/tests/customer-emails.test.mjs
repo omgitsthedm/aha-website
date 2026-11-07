@@ -33,7 +33,7 @@ async function checkout(db, { email = "a@example.com", hoursAgo = 4, state = "qu
   return id;
 }
 async function shipped(db, { order = "ORDERSHIP001", email = "buyer@example.com", daysAgo = 11 } = {}) {
-  await db.sql`INSERT INTO aha_fulfillment_orders (square_order_id, state, customer_email, apliiq_payload, created_at) VALUES (${order}, 'shipped', ${email}, ${JSON.stringify({ order_number: `N-${order}` })}, now() - make_interval(days => ${daysAgo + 5}))`;
+  await db.sql`INSERT INTO aha_fulfillment_orders (square_order_id, state, customer_email, apliiq_payload, created_at, delivered_at) VALUES (${order}, 'shipped', ${email}, ${JSON.stringify({ order_number: `N-${order}` })}, now() - make_interval(days => ${daysAgo + 5}), now() - make_interval(days => ${daysAgo}))`;
   await db.sql`INSERT INTO aha_order_notifications (dedupe_key, kind, recipient, payload_json, state, provider_message_id, sent_at) VALUES (${`${order}:order_shipped:9400`}, 'order_shipped', ${email}, '{}', 'sent', 'local-shipping-message', now() - make_interval(days => ${daysAgo}))`;
 }
 

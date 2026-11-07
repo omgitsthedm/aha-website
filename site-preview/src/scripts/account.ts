@@ -67,7 +67,7 @@ async function showSaved(list: string[]) {
   $("[data-saved-empty]").hidden = shown.length > 0;
 }
 
-const STAGES: Record<string, string> = { paid: "Paid", production: "With the maker", shipped: "Shipped", review: "Being checked" };
+const STAGES: Record<string, string> = { paid: "Paid", production: "With the maker", creating: "Being made", ready: "Preparing to ship", delivered: "Delivered", partial: "Partially shipped", refunded: "Refunded", cancelled: "Cancelled", shipped: "Shipped", review: "Being checked" };
 function showOrders(orders: Order[]) {
   $("[data-account-orders]").hidden = false;
   $("[data-orders-empty]").hidden = orders.length > 0;

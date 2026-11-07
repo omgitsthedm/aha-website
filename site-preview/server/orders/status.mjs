@@ -49,8 +49,11 @@ export function stageFor(row) {
   if (row.refund_state === "refunded") return "refunded";
   if (row.cancellation_state === "cancelled") return "cancelled";
   if (["held", "attention", "uncertain"].includes(row.state) || row.dispute_state === "open" || ["partial", "pending", "failed"].includes(row.refund_state)) return "review";
+  if (row.delivered_at && row.state === "shipped") return "delivered";
   if (row.state === "shipped") return "shipped";
   if (["shipped_partial", "ready_to_ship"].includes(row.state)) return "partial";
+  if (String(row.provider_status).toLowerCase() === "in production") return "creating";
+  if (String(row.provider_status).toLowerCase() === "ready to ship") return "ready";
   if (String(row.state).startsWith("submitted") || row.apliiq_order_id) return "production";
   return "paid";
 }
@@ -77,7 +80,7 @@ export async function handleOrderStatus(request, { db, env }) {
   const orderId = url.searchParams.get("o") ?? "";
   // A wrong link and an unknown order look the same.
   if (!verifyOrderToken(orderId, url.searchParams.get("k"), env)) return reply({ error: "We couldn't find that order. Use the link in your order email." }, 404);
-  let [row] = await db.sql`SELECT f.state, f.apliiq_order_id, f.apliiq_payload, f.submitted_items, f.tracking, f.payment_created_at, f.created_at,
+  let [row] = await db.sql`SELECT f.state, f.provider_status, f.delivered_at, f.apliiq_order_id, f.apliiq_payload, f.submitted_items, f.tracking, f.payment_created_at, f.created_at,
     m.refund_state, m.dispute_state, m.cancellation_state FROM aha_fulfillment_orders f
     LEFT JOIN aha_order_financials m USING(square_order_id) WHERE f.square_order_id = ${orderId}`;
   if (!row) {

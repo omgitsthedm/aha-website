@@ -38,7 +38,7 @@ export function createNotificationRepository(db) {
           WHERE ((state = 'pending' AND next_attempt_at <= now())
                  OR (state = 'sending' AND lease_expires_at < now() AND attempt_count < 5))
             AND NOT (attempt_count > 0 AND first_attempt_at < now() - interval '23 hours')
-          ORDER BY CASE WHEN kind IN ('order_confirmed', 'order_shipped', 'support_request') THEN 0 ELSE 1 END, created_at ASC
+          ORDER BY CASE WHEN kind IN ('order_confirmed', 'order_shipped', 'order_progress', 'support_request') THEN 0 ELSE 1 END, created_at ASC
           FOR UPDATE SKIP LOCKED
           LIMIT ${limit}
         )

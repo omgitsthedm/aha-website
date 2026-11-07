@@ -121,3 +121,22 @@ No test proves a card issuer will approve every future purchase or that every em
 - Little Fight NYC owns the technical policy. Review it at least annually and whenever the business adopts a search, advertising, AI, or SEO vendor whose crawler requires an exception.
 
 Crawler directives are cooperative controls, not access control. Sensitive routes must remain protected by application authentication, authorization, and response behavior.
+
+
+## Customer lifecycle and private requests
+
+Supplier observations enqueue transactional updates only from explicit Apliiq statuses: received/preparing, in production, ready to ship, or delayed/held. A row-locked monotonic rank prevents backwards updates; each milestone and its outbox message commit together and dedupe per order. Refunds, cancellation and open disputes suppress these updates. Shipment emails name the purchased quantities in each parcel and any remaining pieces.
+
+The signed private order page accepts address, cancellation, exchange, refund, missing-parcel, receipt-email and general requests. Requests are durable support cases, notify the owner and remain requests until reviewed. A cancellation/address request holds a queued order; the submission claim also checks unresolved requests. An already submitted supplier order cannot be withdrawn automatically. Resolve the case and verify the provider outcome before releasing a hold. Never issue automatic refunds or replacements.
+
+Carrier automation requires `AHA_TRACKING_ENABLED=true` and a production Functions secret `AHA_EASYPOST_API_KEY`. EasyPost standalone tracking is paid; do not enable it without an authorized account and spending scope. `AHA_TRACKING_MONTHLY_LIMIT` defaults to 100 registrations and uses an atomic monthly ceiling. The scheduled tracker runs every 15 minutes, processes four due parcels per invocation and polls registered parcels hourly. API outages retain retryable work and surface in commerce health. No historical parcel lacking item quantities is silently assumed delivered.
+
+Delivery requires a matching production-mode tracker, credible timestamps, a delivered scan and coverage of every purchased SKU quantity across parcels. When delivery tracking is active and the order has parcel-item evidence, review invitations wait ten days after confirmed delivery. While tracking is disabled, or for historical orders without parcel-item evidence, preserve the approved ten-day-after-shipping-email schedule. That fallback is a review schedule, never proof of delivery. Carrier acceptance, label creation, shipping emails and elapsed time are never delivery proof. Existing voluntary reviews remain available from shipped private orders; moderation remains required.
+
+### Remaining external verification
+
+Apliiq's documented inventory view is a delayed supplier snapshot, not guaranteed reservation or a public stock API. Its on-demand satin label remains independent of the prepaid inventory count. Maintain supplier stock checks and treat awaiting-garment/artwork/supplies flags as operational evidence, without silently changing the garment or artwork.
+
+Real iPhone Apple Pay, Android Google Pay, an Outlook destination, delivered garment quality require their actual device/account/physical evidence. Chrome viewport and mocked-wallet checks do not certify them. The dated shop audit holds the current results and exact remaining actions.
+
+Owner reaffirmed the checkout tax policy on November 7: charge 8.1% only for Arizona shipping addresses, with no tax on other states or countries. The storefront passes that tax rule into Square calculation; it does not infer Arizona from an inconsistent ZIP code. This records the owner-approved commerce rule, not a claim about tax registration.

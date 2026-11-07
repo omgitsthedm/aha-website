@@ -1,3 +1,4 @@
+import { progressStillDue } from "../orders/lifecycle.mjs";
 import { orderStatusUrl } from "../orders/status.mjs";
 import { createNotificationRepository } from "./repository.mjs";
 import { createResendGateway } from "./resend.mjs";
@@ -14,6 +15,6 @@ export function createNotificationRuntime({ database, env }) {
   const repository = createNotificationRepository(database);
   const unavailable = async () => { throw new Error("resend unavailable"); };
   const gateway = config.apiKey && config.from && config.replyTo ? createResendGateway({ apiKey: config.apiKey, from: config.from, replyTo: config.replyTo }) : { send: unavailable, listDomains: unavailable };
-  const service = createNotificationService({ repository, gateway, config, orderLink: (orderId) => orderStatusUrl(orderId, env), unsubscribeLinks: (id) => unsubscribeLinks(id, env), suppressed: (email) => isSuppressed(database, email), customerEmailsEnabled: () => customerEmailsEnabled(env), stillDue: (row) => stillDue(database, row) });
+  const service = createNotificationService({ repository, gateway, config, orderLink: (orderId) => orderStatusUrl(orderId, env), unsubscribeLinks: (id) => unsubscribeLinks(id, env), suppressed: (email) => isSuppressed(database, email), customerEmailsEnabled: () => customerEmailsEnabled(env), stillDue: (row) => stillDue(database, row, env.get("AHA_TRACKING_ENABLED") === "true" && Boolean(env.get("AHA_EASYPOST_API_KEY"))), progressDue: (row) => progressStillDue(database, row) });
   return { config, repository, service, confirmations: createCheckoutConfirmations({ database, service, env }) };
 }

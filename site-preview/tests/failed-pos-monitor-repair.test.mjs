@@ -101,7 +101,7 @@ test("changed target evidence fails closed without editing or auditing the row",
   };
   for (const [name, change] of Object.entries(cases)) {
     await t.test(name, async () => {
-      await pg.exec("TRUNCATE aha_fulfillment_orders, aha_admin_audit, aha_checkout_sessions, aha_fulfillment_events, aha_fulfillment_square_events");
+      await pg.exec("TRUNCATE aha_order_milestones, aha_shipment_tracking, aha_fulfillment_orders, aha_admin_audit, aha_checkout_sessions, aha_fulfillment_events, aha_fulfillment_square_events");
       await seed();
       await pg.exec(change);
       const before = await repo.getOrder(ORDER);
