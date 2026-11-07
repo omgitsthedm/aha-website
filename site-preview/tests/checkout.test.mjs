@@ -69,10 +69,10 @@ test("pausing fulfillment prevents new quotes and charges but preserves payment 
 
 test("production checkout requires configured active fulfillment for new sales", async () => {
   const { checkoutConfig, checkoutReady } = await import("../server/checkout/runtime.mjs");
-  const values = { AHA_CHECKOUT_ENABLED: "true", AHA_SQUARE_ACCESS_TOKEN: "test-only", AHA_SQUARE_APPLICATION_ID: "app", AHA_SQUARE_LOCATION_ID: "location", AHA_FULFILLMENT_ENABLED: "true", AHA_FULFILLMENT_START_AT: "2026-10-15T00:00:00Z", AHA_APLIIQ_API_KEY: "test-only", AHA_APLIIQ_SHARED_SECRET: "test-only" };
+  const values = { AHA_CHECKOUT_ENABLED: "true", AHA_SQUARE_ACCESS_TOKEN: "test-only", AHA_SQUARE_APPLICATION_ID: "app", AHA_SQUARE_LOCATION_ID: "location", AHA_SQUARE_MERCHANT_ID: "merchant", AHA_SQUARE_WEBHOOK_SIGNATURE_KEY: "test-only", AHA_FULFILLMENT_ENABLED: "true", AHA_FULFILLMENT_START_AT: "2026-10-15T00:00:00Z", AHA_APLIIQ_API_KEY: "test-only", AHA_APLIIQ_SHARED_SECRET: "test-only", AHA_ORDER_EMAIL_ENABLED: "true", RESEND_API_KEY: "test-only", RESEND_FROM_EMAIL: "orders@example.com", RESEND_REPLY_TO: "info@example.com" };
   const env = { get: (key) => values[key] };
   assert.equal(checkoutConfig(env).acceptingOrders, true);
-  for (const key of ["AHA_FULFILLMENT_ENABLED", "AHA_FULFILLMENT_START_AT", "AHA_APLIIQ_API_KEY", "AHA_APLIIQ_SHARED_SECRET"]) {
+  for (const key of ["AHA_FULFILLMENT_ENABLED", "AHA_FULFILLMENT_START_AT", "AHA_APLIIQ_API_KEY", "AHA_APLIIQ_SHARED_SECRET", "AHA_ORDER_EMAIL_ENABLED", "RESEND_API_KEY", "RESEND_FROM_EMAIL", "RESEND_REPLY_TO", "AHA_SQUARE_MERCHANT_ID", "AHA_SQUARE_WEBHOOK_SIGNATURE_KEY"]) {
     const old = values[key]; delete values[key];
     assert.equal(checkoutConfig(env).acceptingOrders, false, key);
     assert.equal(checkoutReady(checkoutConfig(env)), true, "existing payment status remains available");

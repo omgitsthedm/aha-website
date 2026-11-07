@@ -27,10 +27,10 @@ test("a failed email dispatch never fails the webhook", async () => {
   assert.equal(syncThrow, null);
 });
 
-test("background jobs run hourly so the database can sleep between orders", () => {
-  for (const name of ["fulfillment-reconcile", "notification-dispatch"]) {
+test("fulfillment keeps its hourly cadence while receipt recovery runs every fifteen minutes", () => {
+  for (const [name, schedule] of [["fulfillment-reconcile", 'schedule: "0 * * * *"'], ["notification-dispatch", 'schedule: "0,15,30,45 * * * *"']]) {
     const source = readFileSync(new URL(`../netlify/functions/${name}.mjs`, import.meta.url), "utf8");
-    assert.match(source, /schedule: "0 \* \* \* \*"/, `${name} must run hourly`);
+    assert.ok(source.includes(schedule), `${name} must keep its agreed recovery cadence`);
   }
   for (const name of ["square-webhook", "apliiq-fulfillment-webhook"]) {
     const source = readFileSync(new URL(`../netlify/functions/${name}.mjs`, import.meta.url), "utf8");

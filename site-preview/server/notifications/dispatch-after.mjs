@@ -1,6 +1,6 @@
 /**
  * Send queued order emails as soon as a webhook changes order state, so the
- * hourly scheduled dispatcher is only a safety net and the database can sleep
+ * quarter-hourly scheduled dispatcher is only a safety net and the database can sleep
  * between orders. Runs after the response when the platform supports
  * waitUntil; never throws into the webhook.
  */

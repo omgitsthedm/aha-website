@@ -27,6 +27,7 @@
     "@simplewebauthn/browser": "14.0.0",
     "@simplewebauthn/server": "14.0.3",
     "astro": "7.3.8",
+    "svix": "2.9.1",
     "web-vitals": "6.2.3"
   },
   "overrides": {
