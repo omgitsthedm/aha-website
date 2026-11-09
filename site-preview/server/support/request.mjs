@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { boundedText } from "../http/body.mjs";
 import { CLIENT, SITE_ORIGIN } from "../platform/client.mjs";
 import { normalizeEmail, errorSummary } from "../updates/signups.mjs";
+import { consumeSupportChallenge } from "./challenge.mjs";
 
 const TOPICS = { order: "Existing order", product: "Product or fit", returns: "Exchange or refund", accessibility: "Accessibility", general: "General question" };
 const headers = { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow", "referrer-policy": "no-referrer" };
@@ -21,7 +22,7 @@ async function readInput(request) {
   return JSON.parse(text);
 }
 
-export async function handleSupport(request, { db, gateway, clientKey = "unknown", origin = SITE_ORIGIN }) {
+export async function handleSupport(request, { db, gateway, clientKey = "unknown", origin = SITE_ORIGIN, challengeSecret, now = Date.now() }) {
   if (request.method !== "POST") return reply({ error: "Not found." }, 404);
   if (request.headers.get("origin") !== origin || request.headers.get("x-aha-support") !== "1") return reply({ error: "Request blocked." }, 403);
   if (!(request.headers.get("content-type") ?? "").startsWith("application/json")) return reply({ error: "Request must be JSON." }, 415);
@@ -45,6 +46,12 @@ export async function handleSupport(request, { db, gateway, clientKey = "unknown
       const key = hash(value);
       const [row] = await db.sql`SELECT count(*) AS attempts FROM aha_signup_attempts WHERE client_key = ${key} AND attempted_at > now() - interval '1 hour'`;
       if (Number(row?.attempts ?? 0) >= 5) return reply({ error: `Please wait before trying again, or email ${CLIENT.client.email}.` }, 429);
+    }
+    if (!await consumeSupportChallenge({ db, secret: challengeSecret, token: input.challenge, clientKey, now })) {
+      return reply({ error: "Refresh this page before sending, or email us directly." }, 403);
+    }
+    for (const value of [`support:ip:${clientKey}`, `support:email:${email}`]) {
+      const key = hash(value);
       await db.sql`INSERT INTO aha_signup_attempts (client_key) VALUES (${key})`;
     }
     await db.sql`DELETE FROM aha_signup_attempts WHERE attempted_at < now() - interval '1 day'`;

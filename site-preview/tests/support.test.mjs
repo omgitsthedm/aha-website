@@ -1,34 +1,57 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { handleSupport } from "../server/support/request.mjs";
+import { issueSupportChallenge } from "../server/support/challenge.mjs";
 import { CLIENT, SITE_ORIGIN } from "../server/platform/client.mjs";
 
 const input = { requestId: "10000000-0000-4000-8000-000000000001", name: "Test Buyer", email: "buyer@example.com", topic: "returns", reference: "ORDER1", message: "I would like help with an exchange." };
 const request = (values = input, headers = {}) => new Request(`${SITE_ORIGIN}/api/support`, { method: "POST", headers: { origin: SITE_ORIGIN, "content-type": "application/json", "x-aha-support": "1", ...headers }, body: JSON.stringify(values) });
 function fixture(attempts = 0) {
-  const sent = [], queried = [];
-  return { sent, queried, db: { sql: async (parts, ...params) => { const sql = parts.join("?"); queried.push({ sql, params }); return /SELECT count/.test(sql) ? [{ attempts }] : []; } }, gateway: { send: async (message) => { sent.push(message); return { id: "local-provider-receipt" }; } }, clientKey: "local-fixture" };
+  const sent = [], queried = [], challenges = new Set();
+  const db = { sql: async (parts, ...params) => {
+    const sql = parts.join("?");
+    queried.push({ sql, params });
+    if (/SELECT count/.test(sql)) return [{ attempts }];
+    if (/INSERT INTO aha_signup_attempts/.test(sql)) challenges.add(params[0]);
+    if (/RETURNING client_key/.test(sql)) return challenges.delete(params[0]) ? [{ client_key: params[0] }] : [];
+    return [];
+  } };
+  return { sent, queried, db, gateway: { send: async (message) => { sent.push(message); return { id: "local-provider-receipt" }; } }, clientKey: "local-fixture", challengeSecret: "test-support-challenge-secret", now: 5_000 };
+}
+async function securedInput(deps, values = input) {
+  const challenge = await issueSupportChallenge({ db: deps.db, secret: deps.challengeSecret, clientKey: deps.clientKey, now: 1_000 });
+  return { ...values, challenge: challenge.token };
 }
 
-test("support receives to the fixed owner inbox, escapes input and deduplicates identical retries", async () => {
+test("support receives a signed form submission to the fixed owner inbox and escapes input", async () => {
   const deps = fixture();
-  const values = { ...input, message: "<script>unsafe</script> Please help with my size.", recipient: "other@example.com" };
-  assert.equal((await handleSupport(request(values), deps)).status, 200);
+  const values = await securedInput(deps, { ...input, message: "<script>unsafe</script> Please help with my size.", recipient: "other@example.com" });
   assert.equal((await handleSupport(request(values), deps)).status, 200);
   assert.equal(deps.sent[0].recipient, CLIENT.client.email);
   assert.equal(deps.sent[0].replyTo, input.email);
   assert.ok(!deps.sent[0].html.includes("<script>"));
   assert.ok(deps.sent[0].text.includes("<script>"));
-  assert.equal(deps.sent[0].idempotencyKey, deps.sent[1].idempotencyKey);
   assert.ok(!JSON.stringify(deps.queried).includes(input.email));
 });
 
+test("support rejects forged, malformed and replayed form challenges without sending", async () => {
+  const deps = fixture();
+  const values = await securedInput(deps);
+  for (const challenge of ["forged", "x".repeat(601), 7]) {
+    assert.equal((await handleSupport(request({ ...values, challenge }), deps)).status, 403);
+  }
+  assert.equal((await handleSupport(request(values), deps)).status, 200);
+  assert.equal((await handleSupport(request(values), deps)).status, 403);
+  assert.equal(deps.sent.length, 1);
+});
+
 test("support rejects origin, oversized body, invalid fields and excess attempts without sending", async () => {
+  const limited = fixture(5);
   for (const [req, deps, status] of [
     [request(input, { origin: "https://other.example" }), fixture(), 403],
     [request({ ...input, message: "x".repeat(9000) }), fixture(), 413],
     [request({ ...input, email: "bad" }), fixture(), 422],
-    [request(input), fixture(5), 429],
+    [request(await securedInput(limited)), limited, 429],
   ]) {
     assert.equal((await handleSupport(req, deps)).status, status);
     assert.equal(deps.sent.length, 0);
@@ -48,9 +71,10 @@ test("support rejects a chunked oversized body before a provider send", async ()
 
 test("support never confirms delivery if sender is unavailable or lacks an acknowledgement", async () => {
   const deps = fixture();
-  const unavailable = await handleSupport(request(), { ...deps, gateway: null });
+  const values = await securedInput(deps);
+  const unavailable = await handleSupport(request(values), { ...deps, gateway: null });
   assert.equal(unavailable.status, 503);
   assert.match((await unavailable.json()).error, /confirm receipt/);
-  const silent = await handleSupport(request(), { ...deps, gateway: { send: async () => ({}) } });
+  const silent = await handleSupport(request(await securedInput(deps)), { ...deps, gateway: { send: async () => ({}) } });
   assert.equal(silent.status, 503);
 });
