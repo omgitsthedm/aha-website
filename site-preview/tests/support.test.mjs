@@ -114,6 +114,7 @@ test("valid challenges cannot deliver the repeated random-text spam pattern", as
     { name: "qAzWsXeDcRfVtGbY", message: "pOlIkUjYhTgRfEdWsQaZ", reference: "mNbVcXzAsDfGhJkL" },
     { name: "qAzWsXeDcRfVtGbY", message: "pOlIkUjYhTgRfEdWsQaZ", reference: "" },
     { name: "Test Buyer", message: "pOlIkUjYhTgRfEdWsQaZ", reference: "mNbVcXzAsDfGhJkL" },
+    { name: "aBcdeFGhijKLMNOpqrS", message: "aBCdeFGHIjKLMNOPQ", reference: "mNbVcXzAsDfGhJkL" },
   ]) {
     const deps = fixture();
     const values = await securedInput(deps, { ...input, topic: "order", ...fields });
@@ -138,6 +139,8 @@ test("support preserves legitimate short, international and order-reference-only
     { name: "Test Buyer", message: "SCREEN READER DOES NOT ANNOUNCE THE SIZE.", reference: "" },
     { name: "qAzWsXeDcRfVtGbY", message: "Please help me find my order confirmation.", reference: "" },
     { name: "Test Buyer", message: "pOlIkUjYhTgRfEdWsQaZ", reference: "" },
+    { name: "Test Buyer", message: "aBCdeFGHIjKLMNOPQ", reference: "mNbVcXzAsDfGhJkL" },
+    { name: "aBcdeFGhijKLMNOpqrS", message: "aBCdeFGHIjKLMNOPQ", reference: "" },
   ]) {
     const deps = fixture();
     const values = await securedInput(deps, { ...input, ...fields });
