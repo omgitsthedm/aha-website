@@ -2,7 +2,7 @@ import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 
 type Json = Record<string, unknown>;
 type Draft = { id: string; status: string; design_slug: string | null; approved_by: string | null; error: string | null; updated_at: string; payload_json: { name?: string; title?: string; color?: string; priceCents?: number; description?: string | null; storeDescription?: string; imageUrls?: string[]; sizes?: string[]; apliiqDesignId?: number; variants?: Array<{ size: string; sku: string; supplierPriceCents: number }> } };
-type Order = { orderNumber?: string; squareOrderId: string; state: string; apliiqOrderId: string | null; customer: string | null; totalCents: number | null; items: Array<{ title: string; size: string | null; quantity: number }>; tracking: Array<{ carrier: string | null; number: string | null; url: string | null }>; createdAt: string; flags: Array<{ code: string; message: string }> };
+type Order = { failedPaymentReviewed?: boolean; failedPaymentReviewEligible?: boolean; orderNumber?: string; squareOrderId: string; state: string; apliiqOrderId: string | null; customer: string | null; totalCents: number | null; items: Array<{ title: string; size: string | null; quantity: number }>; tracking: Array<{ carrier: string | null; number: string | null; url: string | null }>; createdAt: string; flags: Array<{ code: string; message: string }> };
 
 const page = document.body.dataset.adminPage;
 const status = document.querySelector<HTMLElement>("[data-admin-status]");
@@ -141,8 +141,11 @@ async function renderOrders() {
     const meta = el("p", { className: "admin-meta" }, el("span", { textContent: when.format(new Date(order.createdAt)) }), el("span", { textContent: order.customer ?? "" }), el("span", { textContent: order.totalCents === null ? "" : money.format(order.totalCents / 100) }), el("span", { textContent: `Order ${order.orderNumber || order.squareOrderId}` }), el("span", { textContent: order.apliiqOrderId ? `Apliiq ${order.apliiqOrderId}` : "Not yet in Apliiq" }));
     const tracking = order.tracking.map((entry) => entry.url ? el("a", { href: entry.url, target: "_blank", rel: "noopener noreferrer", textContent: `${entry.carrier ?? "Tracking"} ${entry.number ?? ""}` }) : el("span", { textContent: `${entry.carrier ?? ""} ${entry.number ?? ""}` }));
     const flags = order.flags.map((flag) => el("p", { className: "admin-flag", textContent: flag.message }));
+    if (order.failedPaymentReviewed) flags.push(el("p", {className:"admin-meta",textContent:"Failed payment reviewed. The fulfillment hold remains in place."}));
     const controls = el("div", { className: "admin-actions" });
-    for (const [action, label] of [["reconcile", "Refresh provider status"], ["receipt", "Resend receipt"], ["release", "Review hold for release"]]) {
+    const actions = [["reconcile", "Refresh provider status"], ["receipt", "Resend receipt"], ["release", "Review hold for release"]];
+    if (order.failedPaymentReviewEligible) actions.push(["review-failed", "Review failed payment alert"]);
+    for (const [action, label] of actions) {
       const button = el("button", { type: "button", className: "admin-secondary", textContent: label });
       button.addEventListener("click", async () => {
         const reason = prompt(`Record why you are requesting: ${label}`); if (!reason) return;

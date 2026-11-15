@@ -1,3 +1,4 @@
+import { reviewedFailedPaymentIds } from "./failed-payment-alert.mjs";
 import { productionDeadline } from "../orders/deadlines.mjs";
 // Orders for the admin: Square order, Apliiq status and tracking side by side,
 // with plain-language flags for anything that needs a person. Only a first
@@ -34,7 +35,7 @@ export async function listOrders(db, { limit = 100 } = {}) {
            COALESCE(o.created_at, s.created_at) AS created_at, COALESCE(o.updated_at, s.updated_at) AS updated_at,
            COALESCE(o.apliiq_payload->>'order_number',s.order_payload_json->>'reference_id',s.square_order_id) AS order_number,
            o.provider_expected_at, o.payment_created_at, m.refund_state, m.dispute_state, m.dispute_due_at,
-           s.total_cents, s.shipping_address_json->>'firstName' AS first_name, s.shipping_address_json->>'city' AS city,
+           s.total_cents, s.state AS checkout_state, s.shipping_address_json->>'firstName' AS first_name, s.shipping_address_json->>'city' AS city,
            s.shipping_address_json->>'region' AS region
     FROM aha_fulfillment_orders o
     FULL JOIN aha_checkout_sessions s ON s.square_order_id = o.square_order_id
@@ -43,6 +44,7 @@ export async function listOrders(db, { limit = 100 } = {}) {
     ORDER BY COALESCE(o.created_at, s.created_at) DESC
     LIMIT ${Math.min(Math.max(Number(limit) || 100, 1), 500)}`;
   const now = Date.now();
+  const reviewed = await reviewedFailedPaymentIds(db);
   return rows.map((row) => ({
     squareOrderId: row.square_order_id, orderNumber: row.order_number,
     state: row.state,
@@ -53,11 +55,14 @@ export async function listOrders(db, { limit = 100 } = {}) {
     items: (json(row.submitted_items) ?? []).map((item) => ({ title: item.title ?? AHA_FULFILLMENT_CATALOG[item.variationId]?.title ?? item.product ?? item.sku, size: item.size ?? null, quantity: Number(item.quantity ?? 1) })),
     tracking: (json(row.tracking) ?? []).map((entry) => ({ carrier: entry.carrier ?? null, number: entry.trackingNumber ?? entry.number ?? null, url: entry.trackingUrl ?? entry.url ?? null })),
     createdAt: new Date(row.created_at).toISOString(),
-    flags: orderFlags(row, now),
+    failedPaymentReviewed: reviewed.has(row.square_order_id),
+    failedPaymentReviewEligible: row.state === 'held' && row.last_error_code === 'payment_terminal' && row.checkout_state === 'failed' && !reviewed.has(row.square_order_id),
+    flags: reviewed.has(row.square_order_id) ? [] : orderFlags(row, now),
   }));
 }
 
 export async function overview(db) {
+  const reviewed = await reviewedFailedPaymentIds(db);
   const [orders] = await db.sql`
     SELECT count(*) FILTER (WHERE created_at > now() - interval '1 day') AS today,
            count(*) FILTER (WHERE created_at > now() - interval '7 days') AS week,
@@ -75,7 +80,7 @@ export async function overview(db) {
   return {
     ordersToday: Number(orders?.today ?? 0) + Number(missing?.today ?? 0),
     ordersThisWeek: Number(orders?.week ?? 0) + Number(missing?.week ?? 0),
-    ordersNeedingAttention: Number(orders?.attention ?? 0) + Number(missing?.attention ?? 0) + overdue,
+    ordersNeedingAttention: Math.max(0, Number(orders?.attention ?? 0) - reviewed.size) + Number(missing?.attention ?? 0) + overdue,
     draftsWaiting: Number(drafts?.waiting ?? 0),
     draftsApproved: Number(drafts?.approved ?? 0),
   };

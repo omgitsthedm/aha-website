@@ -10,10 +10,52 @@ import { orderStatusUrl } from '../orders/status.mjs';
 import { normalizeEmail } from '../updates/signups.mjs';
 const json=value=>typeof value==='string'?JSON.parse(value):value;
 const hash=value=>createHash('sha256').update(value).digest('hex');
-export async function orderAction({db,env,user,orderId,action,input}) {
+export async function orderAction({db,env,user,orderId,action,input,squareOverride}) {
   if(!/^[A-Za-z0-9_-]{8,64}$/.test(orderId) || !/^[a-f0-9-]{36}$/i.test(input.requestId ?? '')) throw new AdminAuthError('Invalid order action.',422);
   const reason=typeof input.reason==='string'?input.reason.trim():'';
   if(reason.length<5 || reason.length>500) throw new AdminAuthError('Record a short reason for this action.',422);
+  if(action==='review-failed') {
+    const [candidate]=await db.sql`SELECT f.square_payment_id, f.updated_at::text AS fulfillment_updated, s.updated_at::text AS checkout_updated, s.total_cents, s.currency
+      FROM aha_fulfillment_orders f JOIN aha_checkout_sessions s USING(square_order_id)
+      WHERE f.square_order_id=${orderId} AND f.state='held' AND f.last_error_code='payment_terminal'
+        AND s.state='failed' AND f.square_payment_id IS NOT NULL`;
+    if(!candidate) throw new AdminAuthError('This is not an eligible failed payment. Review the order instead.',409);
+    const square=squareOverride ?? createSquareGateway({accessToken:env.get('AHA_SQUARE_ACCESS_TOKEN')});
+    const payment=await square.getPayment(candidate.square_payment_id);
+    const order=await square.getOrder(orderId);
+    const tenders=order?.tenders; const location=env.get('AHA_SQUARE_LOCATION_ID');
+    if(payment?.id!==candidate.square_payment_id || payment?.order_id!==orderId || payment.status!=='FAILED' ||
+       order?.id!==orderId || !location || payment.location_id!==location || order.location_id!==location ||
+       payment.amount_money?.amount!==Number(candidate.total_cents) || order.total_money?.amount!==Number(candidate.total_cents) ||
+       payment.amount_money?.currency!==candidate.currency || order.total_money?.currency!==candidate.currency ||
+       !Array.isArray(tenders) || tenders.length!==1 ||
+       tenders[0].payment_id!==payment.id || tenders[0].card_details?.status!=='FAILED')
+      throw new AdminAuthError('Square did not confirm one failed payment and no other tender. The alert remains active.',409);
+    const [saved]=await db.sql`INSERT INTO aha_admin_audit(user_id,action,target,detail_json)
+      SELECT ${user.id},'order.failed_payment_reviewed',f.square_order_id,${JSON.stringify({reason,requestId:input.requestId,paymentId:candidate.square_payment_id,fulfillmentUpdated:candidate.fulfillment_updated,checkoutUpdated:candidate.checkout_updated})}::jsonb
+      FROM aha_fulfillment_orders f JOIN aha_checkout_sessions s USING(square_order_id)
+      WHERE f.square_order_id=${orderId} AND f.square_payment_id=${candidate.square_payment_id}
+        AND f.updated_at=${candidate.fulfillment_updated} AND s.updated_at=${candidate.checkout_updated}
+        AND f.state='held' AND f.last_error_code='payment_terminal' AND f.apliiq_order_id IS NULL AND f.provider_status IS NULL
+        AND f.customer_change_hold=false
+        AND f.attempt_count=0 AND f.claimed_at IS NULL AND f.square_fulfillment_uid IS NULL
+        AND f.payment_created_at IS NULL AND f.payload_sha256 IS NULL
+        AND f.submitted_items='[]'::jsonb AND f.apliiq_payload='{}'::jsonb
+        AND f.tracking='[]'::jsonb AND f.shipped_line_quantities='{}'::jsonb
+        AND s.state='failed' AND (s.square_payment_id IS NULL OR s.square_payment_id=f.square_payment_id)
+        AND NOT EXISTS (SELECT 1 FROM aha_fulfillment_events e WHERE e.square_order_id=f.square_order_id)
+        AND NOT EXISTS (SELECT 1 FROM aha_support_cases c WHERE c.state<>'resolved' AND c.order_reference IN
+                        (f.square_order_id, s.order_payload_json->>'reference_id', f.apliiq_payload->>'order_number'))
+        AND NOT EXISTS (SELECT 1 FROM aha_fulfillment_square_events e WHERE e.square_payment_id=f.square_payment_id AND e.processed_at IS NULL)
+        AND NOT EXISTS (SELECT 1 FROM aha_fulfillment_square_events e WHERE e.processed_at IS NULL)
+        AND NOT EXISTS (SELECT 1 FROM aha_commerce_events e WHERE e.processed_at IS NULL)
+        AND NOT EXISTS (SELECT 1 FROM aha_order_financials m WHERE m.square_order_id=f.square_order_id AND
+                        (m.payment_state<>'FAILED' OR m.dispute_state='open' OR m.cancellation_state<>'none' OR m.refund_failed
+                         OR COALESCE(m.refund_pending_cents,0)>0 OR COALESCE(m.refunded_cents,0)>0 OR COALESCE(m.refund_state,'none')<>'none'))
+      RETURNING id`;
+    if(!saved) throw new AdminAuthError('The order changed or has supplier activity. The alert remains active.',409);
+    return {message:'Failed payment reviewed. The hold remains in place; changed records will alert again.'};
+  }
   const [session]=await db.sql`SELECT * FROM aha_checkout_sessions WHERE square_order_id=${orderId} AND state='completed' LIMIT 1`;
   const repo=createNetlifyRepository(db); const fulfillment=await repo.getOrder(orderId);
   const paymentId=session?.square_payment_id || fulfillment?.square_payment_id;

@@ -44,3 +44,22 @@ test('owner can review a support case and request a verified receipt on a phone'
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.screenshot({path:'test-results/admin-orders-phone.png',fullPage:true});
 });
+
+test('owner can review a declined-payment alert without releasing its hold',async({page,baseURL})=>{
+ await page.setViewportSize({width:390,height:844});let reviewed=false;let calls=0;
+ await page.route('**/*',route=>{
+  const url=new URL(route.request().url());if(url.origin!==new URL(baseURL!).origin)return route.abort();
+  if(url.pathname==='/api/admin/me')return route.fulfill({json:{email:'owner@example.com'}});
+  if(url.pathname==='/api/admin/support')return route.fulfill({json:{cases:[]}});
+  if(url.pathname==='/api/admin/orders')return route.fulfill({json:{orders:[{squareOrderId:'local-order-123',orderNumber:'AHA-local',state:'held',failedPaymentReviewed:reviewed,failedPaymentReviewEligible:!reviewed,apliiqOrderId:null,customer:'Fixture customer',totalCents:5200,createdAt:new Date().toISOString(),items:[],tracking:[],flags:reviewed?[]:[{code:'held',message:'Held for review.'}]}]}});
+  if(url.pathname==='/api/admin/orders/local-order-123/review-failed'){calls++;reviewed=true;return route.fulfill({json:{message:'Failed payment reviewed. The hold remains in place; changed records will alert again.'}});}
+  return route.continue();
+ });
+ page.on('dialog',dialog=>dialog.accept('Verified declined payment'));
+ await page.goto('/admin/orders/');
+ await expect(page.getByRole('button',{name:'Review failed payment alert'})).toBeVisible();
+ await page.getByRole('button',{name:'Review failed payment alert'}).click();
+ await expect(page.getByText('Failed payment reviewed. The fulfillment hold remains in place.')).toBeVisible();
+ expect(calls).toBe(1);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await page.screenshot({path:'test-results/admin-failed-payment-reviewed.png',fullPage:true});
+});

@@ -1,3 +1,4 @@
+import { reviewedFailedPaymentIds } from "../admin/failed-payment-alert.mjs";
 // Owner reports with no AI in the loop.
 // - Daily health check: Square vs the fulfillment allow list, the live Google
 //   and Meta feeds vs the allow list, orders that need a person, stuck emails
@@ -80,6 +81,7 @@ export async function pipelineProblems(db) {
 
 /** Orders a person must look at, in plain words. */
 export async function orderProblems(db, now = Date.now()) {
+  const reviewed = await reviewedFailedPaymentIds(db);
   const rows = await db.sql`
     SELECT f.square_order_id, f.state, f.provider_status, f.apliiq_order_id, f.last_error_code, f.created_at, f.payment_created_at, f.provider_expected_at, m.refund_state,m.dispute_state,m.dispute_due_at
     FROM aha_fulfillment_orders f LEFT JOIN aha_order_financials m USING(square_order_id)
@@ -88,6 +90,7 @@ export async function orderProblems(db, now = Date.now()) {
     LIMIT 200`;
   const problems = [];
   for (const row of rows) {
+    if (reviewed.has(row.square_order_id)) continue;
     if (row.apliiq_order_id && CANCEL_CODES.has(row.last_error_code)) {
       problems.push(`Order ${row.square_order_id}: refunded or cancelled in Square after it reached Apliiq (${row.apliiq_order_id}). Cancel it in the Apliiq dashboard today; Apliiq has no cancel API.`);
       continue;

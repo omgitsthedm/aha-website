@@ -139,7 +139,7 @@ export async function handleAdmin(request, { db, env, context, live = createLive
     if (route === "auth/logout" && method === "POST") { await auth.endSession(request); return reply({ ok: true }, 200, { "set-cookie": clearedCookie() }); }
     if (route === "me" && method === "GET") return reply({ email: user.email });
     if (route === "overview" && method === "GET") return reply({ ...await overview(db), signups: await signupCounts(db), reviewsWaiting: await pendingReviewCount(db), reports: await latestReports(db) });
-    const commerceAction = /^orders\/([A-Za-z0-9_-]{8,64})\/(receipt|reconcile|release)$/.exec(route);
+    const commerceAction = /^orders\/([A-Za-z0-9_-]{8,64})\/(receipt|reconcile|release|review-failed)$/.exec(route);
     if (commerceAction && method === "POST") {
       const result = await orderAction({ db, env, user, orderId: commerceAction[1], action: commerceAction[2], input: await body(request) });
       if (commerceAction[2] === "receipt") await dispatchAfterResponse({ service: { dispatch: () => dispatchOrderMail(db, env) } }, context);
