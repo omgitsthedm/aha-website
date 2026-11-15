@@ -1,8 +1,8 @@
 // A reviewed failed payment remains held. The acknowledgment applies only
 // while every local record is unchanged and no later Square event arrived.
-export async function reviewedFailedPaymentIds(db) {
+export async function reviewedFailedPayments(db) {
   const rows = await db.sql`
-    SELECT f.square_order_id
+    WITH reviewed AS (SELECT DISTINCT f.square_order_id
     FROM aha_fulfillment_orders f
     JOIN aha_checkout_sessions s ON s.square_order_id=f.square_order_id
     JOIN aha_admin_audit a ON a.target=f.square_order_id AND a.action='order.failed_payment_reviewed'
@@ -26,6 +26,15 @@ export async function reviewedFailedPaymentIds(db) {
       AND NOT EXISTS (SELECT 1 FROM aha_order_financials m WHERE m.square_order_id=f.square_order_id
                       AND (m.payment_state<>'FAILED' OR m.dispute_state='open' OR m.cancellation_state<>'none' OR m.refund_failed
                            OR COALESCE(m.refund_pending_cents,0)>0 OR COALESCE(m.refunded_cents,0)>0 OR COALESCE(m.refund_state,'none')<>'none'))
+    )
+    SELECT reviewed.square_order_id, counts.today, counts.week, counts.attention
+    FROM (SELECT count(*) FILTER (WHERE created_at > now() - interval '1 day') AS today,
+                 count(*) FILTER (WHERE created_at > now() - interval '7 days') AS week,
+                 count(*) FILTER (WHERE state IN ('held','attention','uncertain') OR
+                    (state <> 'shipped' AND provider_expected_at < now())) AS attention
+          FROM aha_fulfillment_orders WHERE state <> 'ignored') counts
+    LEFT JOIN reviewed ON true
   `;
-  return new Set(rows.map(row => row.square_order_id));
+  return { ids: new Set(rows.map(row => row.square_order_id).filter(Boolean)), counts: rows[0] ?? {} };
 }
+export async function reviewedFailedPaymentIds(db) { return (await reviewedFailedPayments(db)).ids; }

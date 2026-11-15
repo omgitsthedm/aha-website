@@ -1,4 +1,4 @@
-import { reviewedFailedPaymentIds } from "./failed-payment-alert.mjs";
+import { reviewedFailedPaymentIds, reviewedFailedPayments } from "./failed-payment-alert.mjs";
 import { productionDeadline } from "../orders/deadlines.mjs";
 // Orders for the admin: Square order, Apliiq status and tracking side by side,
 // with plain-language flags for anything that needs a person. Only a first
@@ -62,12 +62,7 @@ export async function listOrders(db, { limit = 100 } = {}) {
 }
 
 export async function overview(db) {
-  const reviewed = await reviewedFailedPaymentIds(db);
-  const [orders] = await db.sql`
-    SELECT count(*) FILTER (WHERE created_at > now() - interval '1 day') AS today,
-           count(*) FILTER (WHERE created_at > now() - interval '7 days') AS week,
-           count(*) FILTER (WHERE state IN ('held', 'attention', 'uncertain') OR (state <> 'shipped' AND provider_expected_at < now())) AS attention
-    FROM aha_fulfillment_orders WHERE state <> 'ignored'`;
+  const { ids: reviewed, counts: orders } = await reviewedFailedPayments(db);
   const pending = await db.sql`SELECT state,provider_expected_at,payment_created_at,created_at FROM aha_fulfillment_orders WHERE state NOT IN ('ignored','shipped','held','attention','uncertain') AND provider_expected_at IS NULL`;
   const overdue = pending.filter(row => {const deadline=productionDeadline(row.payment_created_at || row.created_at);return deadline && new Date(deadline).getTime()<Date.now();}).length;
   const [missing] = await db.sql`

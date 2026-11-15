@@ -172,6 +172,10 @@ test('reviewed failed payment suppresses only its alert and never releases or su
  assert.deepEqual((await listOrders(db))[0].flags,[]);
  assert.equal((await overview(db)).ordersNeedingAttention,0);
  assert.equal((await orderProblems(db)).some(x=>x.includes('local-order-123')),false);
+ await fulfillment.upsertHold({squareOrderId:'local-other-order',squarePaymentId:'local-other-payment',state:'held',lastErrorCode:'payment_terminal'});
+ assert.equal((await overview(db)).ordersNeedingAttention,1, 'a separate hold must remain visible');
+ assert.ok((await orderProblems(db)).some(x=>x.includes('local-other-order')));
+ await db.sql`DELETE FROM aha_fulfillment_orders WHERE square_order_id='local-other-order'`;
  const held=await fulfillment.getOrder('local-order-123'); assert.equal(held.state,'held'); assert.equal(held.attempt_count,0); assert.equal(await fulfillment.claimForSubmission('local-order-123'),null);
  await db.sql`INSERT INTO aha_fulfillment_square_events(square_event_id,square_payment_id,received_at) VALUES('local-late-event','local-payment-123',now()+interval '1 second')`;
  assert.equal((await reviewedFailedPaymentIds(db)).size,0, 'a later or unprocessed payment event must restore attention');
