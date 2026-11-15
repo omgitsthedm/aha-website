@@ -14,15 +14,15 @@ const fallback = `We couldn’t confirm receipt. Your message is still here. Try
 // This bot submits independent, randomly cased alphabetic tokens as the
 // message, name and order reference. Require multiple matching fields: a name,
 // an order ID, an email address or a non-Latin message alone is never a signal.
-function randomCaseToken(value) {
+function randomCaseToken(value, relaxed = false) {
   if (!/^[a-z]{14,80}$/i.test(value)) return false;
   const capitals = [...value].filter((letter) => letter >= "A" && letter <= "Z").length;
-  if (capitals / value.length < 0.25 || capitals / value.length > 0.75) return false;
+  if (capitals / value.length < 0.25 || capitals / value.length > (relaxed ? 0.8 : 0.75)) return false;
   let changes = 0;
   for (let i = 1; i < value.length; i++) {
     if (/[A-Z]/.test(value[i]) !== /[A-Z]/.test(value[i - 1])) changes++;
   }
-  return changes >= 6 && changes / (value.length - 1) >= 0.4;
+  return relaxed ? changes >= 5 && changes / (value.length - 1) >= 0.3 : changes >= 6 && changes / (value.length - 1) >= 0.4;
 }
 
 // Bounded JSON reader: never buffer an arbitrary public request or log its contents.
@@ -87,7 +87,8 @@ export async function handleSupport(request, { db, gateway: _gateway, clientKey 
   const message = typeof input.message === "string" ? input.message.trim() : "";
   const reference = typeof input.reference === "string" ? input.reference.trim() : "";
   if (name.length < 2 || name.length > 80 || !email || email.length > 160 || message.length < 10 || message.length > 1800 || reference.length > 120) return reply({ error: "Check your name, email and message. Your details are still here." }, 422);
-  if (randomCaseToken(message) && (randomCaseToken(name) || randomCaseToken(reference))) {
+  if ((randomCaseToken(message) && (randomCaseToken(name) || randomCaseToken(reference))) ||
+      (randomCaseToken(message, true) && randomCaseToken(name, true) && randomCaseToken(reference))) {
     return reply({ error: `Describe what you need help with in a short sentence. Your details are still here, or email ${CLIENT.client.email}.` }, 422);
   }
   if (typeof input.requestId !== "string" || !/^[a-f0-9-]{36}$/i.test(input.requestId)) return reply({ error: "Refresh this page before sending." }, 422);
