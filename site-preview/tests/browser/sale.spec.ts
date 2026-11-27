@@ -135,7 +135,7 @@ test("sale: the wallet in checkout receives the confirmed code-adjusted total", 
 });
 test("sale: on a phone the header shows the sale on one line and the page is no wider or taller for it", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 720 });
-  const measure = async () => page.evaluate(() => ({ bar: document.querySelector(".benefit-bar")!.getBoundingClientRect().height, header: document.querySelector("[data-header-bar]")!.getBoundingClientRect().height, overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth, shown: [...document.querySelectorAll<HTMLElement>(".benefit-bar > *")].filter((node) => node.getClientRects().length).map((node) => node.textContent) }));
+  const measure = async () => page.evaluate(() => ({ bar: document.querySelector(".benefit-bar")!.getBoundingClientRect().height, header: document.querySelector("[data-header-bar]")!.getBoundingClientRect().height, overflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth), shown: [...document.querySelectorAll<HTMLElement>(".benefit-bar > *")].filter((node) => node.getClientRects().length).map((node) => node.textContent) }));
   await page.clock.setFixedTime(AFTER);
   await page.goto("/shop/");
   const regular = await measure();

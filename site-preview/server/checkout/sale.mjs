@@ -2,8 +2,8 @@ import schedule from "../../src/data/sale.json" with { type: "json" };
 
 // The storewide sale (src/data/sale.json): one percentage off every piece for a set
 // window. The checkout server and the storefront script (src/scripts/sale.ts) read
-// the same file, so the bag never shows a price the quote won't charge. `endsAt` is
-// midnight in Hawaii, so "through Nov. 30" holds in every U.S. time zone.
+// the same file, to agree on the code and its window. `endsAt` is
+// midnight in Hawaii, so the published end date holds in every U.S. time zone.
 
 /** The sale in force at `nowMs`, or null. A malformed schedule means no sale. */
 export function saleAt(nowMs, plan = schedule) {
