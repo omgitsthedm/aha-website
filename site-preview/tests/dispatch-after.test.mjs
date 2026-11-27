@@ -27,10 +27,10 @@ test("a failed email dispatch never fails the webhook", async () => {
   assert.equal(syncThrow, null);
 });
 
-test("fulfillment and receipt recovery use bounded staggered quarter-hour drains", () => {
-  for (const [name, schedule] of [["fulfillment-reconcile", 'schedule: "4,19,34,49 * * * *"'], ["notification-dispatch", 'schedule: "0,15,30,45 * * * *"']]) {
+test("fulfillment and receipt recovery share a bounded quarter-hour drain window", () => {
+  for (const name of ["fulfillment-reconcile", "notification-dispatch"]) {
     const source = readFileSync(new URL(`../netlify/functions/${name}.mjs`, import.meta.url), "utf8");
-    assert.ok(source.includes(schedule), `${name} must keep its agreed recovery cadence`);
+    assert.ok(source.includes('schedule: "7,22,37,52 * * * *"'), `${name} must keep its agreed recovery cadence`);
   }
   for (const name of ["square-webhook", "apliiq-fulfillment-webhook"]) {
     const source = readFileSync(new URL(`../netlify/functions/${name}.mjs`, import.meta.url), "utf8");

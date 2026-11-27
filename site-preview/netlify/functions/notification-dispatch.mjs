@@ -27,5 +27,5 @@ export default async function notificationDispatch(_request, context) {
 }
 // Webhooks send new order emails immediately (dispatch-after.mjs). This quarter-hourly
 // run retries deferred rows and sends the bag reminders and review requests
-// that have come due, so Netlify Database can sleep between orders.
-export const config = { schedule: "0,15,30,45 * * * *" };
+// that have come due. Keep it in the shared commerce database window.
+export const config = { schedule: "7,22,37,52 * * * *" };

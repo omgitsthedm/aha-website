@@ -176,8 +176,8 @@ test("new endpoints and scheduler are restricted to the exact production site an
     assert.equal((await webhook(new Request("https://other.example/api/webhooks/resend"), context)).status, 404);
     assert.equal(await monitor(null, { ...context, deploy: { context: "deploy-preview" } }), undefined);
   } finally { delete globalThis.Netlify; }
-  assert.equal(monitorSchedule.schedule, "7,22,37,52 * * * *");
-  assert.equal(mailSchedule.schedule, "0,15,30,45 * * * *");
+  assert.equal(monitorSchedule.schedule, "8,23,38,53 * * * *");
+  assert.equal(mailSchedule.schedule, "7,22,37,52 * * * *");
 });
 
 test('inactive optional carrier tracking does not create false outage alerts',async t=>{

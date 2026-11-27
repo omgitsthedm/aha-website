@@ -17,5 +17,6 @@ export default async function monitor(_request, context) {
     throw error;
   }
 }
-// Every quarter hour in UTC, offset from the notification recovery worker.
-export const config = { schedule: "7,22,37,52 * * * *" };
+// The quarter-hour workers have a 30-second execution limit. Check after
+// their minute so routine recovery can finish before we assess the queues.
+export const config = { schedule: "8,23,38,53 * * * *" };

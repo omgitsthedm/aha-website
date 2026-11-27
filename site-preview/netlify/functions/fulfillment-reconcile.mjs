@@ -14,5 +14,5 @@ export default async function fulfillmentReconcile(_request, context) {
   }, Netlify.env);
 }
 
-// A short, bounded drain covers missed callbacks, holds and supplier updates.
-export const config = { schedule: "4,19,34,49 * * * *" };
+// Share the quarter-hour database window with Square recovery and commerce health.
+export const config = { schedule: "7,22,37,52 * * * *" };

@@ -9,4 +9,4 @@ export default async function marketingDispatch(_request, context) {
   const runtime = createMarketingRuntime({ database: getDatabase(), env: Netlify.env });
   await runtime.service.dispatch(20);
 }
-export const config = { schedule: "0 * * * *" };
+export const config = { schedule: "7 * * * *" };
