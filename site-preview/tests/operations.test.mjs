@@ -133,8 +133,8 @@ test("weekly digest always sends: orders, revenue, best sellers and drop-off", a
 });
 
 test("owner reports run only on the exact production site, on their schedules", async () => {
-  assert.equal(healthSchedule.schedule, "0 13 * * *");
-  assert.equal(digestSchedule.schedule, "30 13 * * 1");
+  assert.equal(healthSchedule.schedule, "7 13 * * *");
+  assert.equal(digestSchedule.schedule, "37 13 * * 1");
   globalThis.Netlify = { env: { get: () => { throw new Error("must not read env off-site"); } } };
   try {
     assert.equal(await operationsHealth(new Request("https://example.com"), { site: { id: "other" }, deploy: { context: "production" } }), undefined);
