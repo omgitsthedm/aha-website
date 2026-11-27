@@ -2,7 +2,14 @@ import { test as base, expect } from "@playwright/test";
 
 // Tests may mock vendor SDKs, but may never deliver synthetic visits or orders
 // to live analytics, payment, email, or fulfillment services.
-export const test = base.extend<{ networkBoundary: void }>({
+export const test = base.extend<{ networkBoundary: void; regularPrices: void }>({
+  // Every test starts on a date with no storewide sale (src/data/sale.json), so the
+  // regular prices they check hold whenever the suite runs. Timers keep running.
+  // A test about a sale sets its own date with page.clock.setFixedTime().
+  regularPrices: [async ({ context }, use) => {
+    await context.clock.setFixedTime(new Date("2026-10-15T18:00:00Z"));
+    await use();
+  }, { auto: true }],
   networkBoundary: [async ({ context, baseURL }, use) => {
     const origin = new URL(baseURL || "http://127.0.0.1:48379").origin;
     await context.route("**/*", (route) => {

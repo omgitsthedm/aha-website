@@ -1,6 +1,7 @@
 import { randomBytes, createHash, randomUUID } from "node:crypto";
 import { buildSquareOrder, CURRENCY, normalizeAddress, normalizeDestination, normalizeItems } from "./catalog.mjs";
 import { CheckoutError, paymentFailure } from "./errors.mjs";
+import { saleCents } from "./sale.mjs";
 import { normalizeAnalyticsIds } from "../analytics/posthog.mjs";
 import { narrowMarketingContext, normalizeMarketingContext, restrictMarketingContext } from "../analytics/marketing.mjs";
 
@@ -20,7 +21,7 @@ function paymentOutcomeTimedOut(session, now) {
   return Number.isFinite(started) && started > 0 && started + PAYMENT_OUTCOME_GRACE_MS <= now;
 }
 
-export function createCheckoutService({ repository, square, config, catalog, orderLink = () => null, eligibleProviders = [], now = () => Date.now(), createId = randomUUID }) {
+export function createCheckoutService({ repository, square, config, catalog, orderLink = () => null, eligibleProviders = [], now = () => Date.now(), createId = randomUUID, sale = () => null }) {
   if (!config.locationId) throw new Error("checkout location is not configured");
   const confirmation = (session) => session?.state !== "completed" ? {} : ({
     orderNumber: session?.order_payload_json?.reference_id || session?.square_order_id,
@@ -28,9 +29,12 @@ export function createCheckoutService({ repository, square, config, catalog, ord
     receiptEmail: session?.notification_email || session?.shipping_address_json?.email,
   });
   // Square prices the order; the quote and the wallet estimate share this exactly.
-  async function price(items, address, referenceId) {
+  async function price(items, address, referenceId, discountCode) {
     if (config.acceptingOrders === false) throw new CheckoutError("checkout_paused", 503);
-    const orderPayload = buildSquareOrder({ items, address, locationId: config.locationId, referenceId });
+    const hasCode = discountCode != null && (typeof discountCode !== "string" || Boolean(discountCode.trim()));
+    const offer = hasCode ? sale(now(), discountCode) : null;
+    if (hasCode && !offer) throw new CheckoutError("invalid_discount_code", 422);
+    const orderPayload = buildSquareOrder({ items, address, locationId: config.locationId, referenceId, sale: offer });
     let priced;
     try { priced = await square.calculateOrder(orderPayload); } catch { throw new CheckoutError("checkout_unavailable", 503); }
     const totalCents = total(priced);
@@ -38,17 +42,24 @@ export function createCheckoutService({ repository, square, config, catalog, ord
     const subtotalCents = items.reduce((sum, item) => sum + item.totalAmount, 0);
     const shippingCents = address.country === "US" ? 0 : 2500;
     const taxCents = Number(priced.total_tax_money?.amount ?? 0);
-    if (!Number.isSafeInteger(taxCents) || totalCents !== subtotalCents + shippingCents + taxCents) throw new CheckoutError("checkout_unavailable", 503);
-    return { orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel: taxCents ? "Arizona TPT (Peoria 8.1%)" : null, shippingLabel: shippingCents ? "International shipping" : "Free U.S. shipping" };
+    // Square works out the sale. Its figure must be the sale that was asked for (a
+    // cent a line of rounding at most), and no discount at all outside a sale.
+    const discountCents = Number(priced.total_discount_money?.amount ?? 0);
+    if (!Number.isSafeInteger(discountCents) || discountCents < 0 || Math.abs(discountCents - saleCents(items, offer)) > (offer ? items.length : 0)) throw new CheckoutError("checkout_unavailable", 503);
+    if (!Number.isSafeInteger(taxCents) || totalCents !== subtotalCents - discountCents + shippingCents + taxCents) throw new CheckoutError("checkout_unavailable", 503);
+    return { orderPayload, subtotalCents, discountCents, discountLabel: discountCents ? offer.label : null, shippingCents, taxCents, totalCents, taxLabel: taxCents ? "Arizona TPT (Peoria 8.1%)" : null, shippingLabel: shippingCents ? "International shipping" : "Free U.S. shipping" };
   }
+  // Shown only while a sale applies, so every other response keeps its shape.
+  const discountFields = ({ discountCents, discountLabel }) => discountCents ? { discountAmount: discountCents, discountLabel } : {};
   // The total a wallet sheet shows while the shopper picks an address. Nothing is
   // stored: the quote made from the approved payment's full address is what's charged.
-  async function estimate({ items: rawItems, destination }) {
+  async function estimate({ items: rawItems, destination, discountCode }) {
     const items = normalizeItems(rawItems, catalog);
-    const { subtotalCents, shippingCents, taxCents, totalCents, taxLabel, shippingLabel } = await price(items, normalizeDestination(destination), "AHA-estimate");
-    return { currency: CURRENCY, subtotalAmount: subtotalCents, shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel };
+    const priced = await price(items, normalizeDestination(destination), "AHA-estimate", discountCode);
+    const { subtotalCents, shippingCents, taxCents, totalCents, taxLabel, shippingLabel } = priced;
+    return { currency: CURRENCY, subtotalAmount: subtotalCents, ...discountFields(priced), shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel };
   }
-  async function quote({ items: rawItems, shippingAddress, analytics: rawAnalytics, marketing: rawMarketing }) {
+  async function quote({ items: rawItems, shippingAddress, discountCode, analytics: rawAnalytics, marketing: rawMarketing }) {
     const items = normalizeItems(rawItems, catalog);
     const address = normalizeAddress(shippingAddress);
     const analytics = normalizeAnalyticsIds(rawAnalytics ?? {
@@ -57,9 +68,12 @@ export function createCheckoutService({ repository, square, config, catalog, ord
     });
     const checkoutId = createId();
     const checkoutToken = token();
-    const { orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel, shippingLabel } = await price(items, address, `AHA-${checkoutId}`);
+    const priced = await price(items, address, `AHA-${checkoutId}`, discountCode);
+    const { orderPayload, subtotalCents, discountCents, shippingCents, taxCents, totalCents, taxLabel, shippingLabel } = priced;
     const expiresAt = new Date(now() + QUOTE_TTL_MS).toISOString();
-    await repository.create({ checkoutId, tokenHash: sha256(checkoutToken), currency: CURRENCY, cart: items, address, orderPayload, subtotalCents, shippingCents, taxCents, totalCents, taxLabel, orderIdempotencyKey: `aha-order-${checkoutId}`, expiresAt, analytics });
+    // subtotal_cents records what the goods sold for (after a sale), so it still
+    // adds up with shipping and tax to the total that was charged.
+    await repository.create({ checkoutId, tokenHash: sha256(checkoutToken), currency: CURRENCY, cart: items, address, orderPayload, subtotalCents: subtotalCents - discountCents, shippingCents, taxCents, totalCents, taxLabel, orderIdempotencyKey: `aha-order-${checkoutId}`, expiresAt, analytics });
     // Never reject a quote if the optional attribution migration has not been
     // applied yet. The explicit context is normalized before it is persisted.
     await repository.saveMarketing?.({ checkoutId, context: {
@@ -67,7 +81,7 @@ export function createCheckoutService({ repository, square, config, catalog, ord
       eligibleProviders: ["google", "meta"].filter((provider) => Array.isArray(eligibleProviders) && eligibleProviders.includes(provider)),
       paymentConsentConfirmed: false,
     } });
-    return { checkoutId, checkoutToken, expiresAt, currency: CURRENCY, shippingRegion: address.region, lineItems: lineResponse(items), subtotalAmount: subtotalCents, shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel };
+    return { checkoutId, checkoutToken, expiresAt, currency: CURRENCY, shippingRegion: address.region, lineItems: lineResponse(items), subtotalAmount: subtotalCents, ...discountFields(priced), shippingAmount: shippingCents, taxAmount: taxCents, totalAmount: totalCents, taxLabel, shippingLabel };
   }
   async function persistNarrowedMarketing(session, derive, { required = false } = {}) {
     let current = session;

@@ -1,8 +1,10 @@
 import { appliesArizonaTax } from "../server/checkout/catalog.mjs";
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 import test from "node:test";
 import { createCheckoutService, publicCheckoutResult } from "../server/checkout/service.mjs";
 import { CheckoutError } from "../server/checkout/errors.mjs";
+import { saleAt, saleCents, discountForCode } from "../server/checkout/sale.mjs";
 
 const crewM = "R5UCZCGSJMR3Z4HJDVOD3ZIK";
 const hoodieL = "4HDYVGQA3ZOGIPYFUCTPKPIV";
@@ -32,10 +34,14 @@ function fakeRepo() {
   };
 }
 function calculated(order) {
-  const subtotal = order.line_items.reduce((sum, line) => sum + ({ [crewM]: 5200, [hoodieL]: 5500 }[line.catalog_object_id] * Number(line.quantity)), 0);
+  const lineTotals = order.line_items.map((line) => ({ [crewM]: 5200, [hoodieL]: 5500 }[line.catalog_object_id] * Number(line.quantity)));
+  const subtotal = lineTotals.reduce((sum, value) => sum + value, 0);
+  // Like Square: an order-level percentage comes off every line, before tax and never off shipping.
+  const percent = Number(order.discounts?.[0]?.percentage ?? 0);
+  const discount = lineTotals.reduce((sum, value) => sum + Math.round((value * percent) / 100), 0);
   const shipping = order.service_charges?.[0]?.amount_money.amount ?? 0;
-  const tax = order.taxes?.length ? Math.round(subtotal * 0.081) : 0;
-  return { ...order, total_tax_money: { amount: tax, currency: "USD" }, total_money: { amount: subtotal + shipping + tax, currency: "USD" } };
+  const tax = order.taxes?.length ? Math.round((subtotal - discount) * 0.081) : 0;
+  return { ...order, total_tax_money: { amount: tax, currency: "USD" }, total_discount_money: { amount: discount, currency: "USD" }, total_money: { amount: subtotal - discount + shipping + tax, currency: "USD" } };
 }
 function fakeSquare() {
   const calls = { calculate: [], createOrder: [], createPayment: [] };
@@ -309,4 +315,118 @@ test("only the selected Arizona shipping state receives Arizona tax", () => {
   for(const region of ['AL','AK','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'])
     assert.equal(appliesArizonaTax(address({region})),false,region);
   assert.equal(appliesArizonaTax(address({country:'CA',region:'AZ'})),false);
+});
+
+// The storewide sale. Tests pass their own schedule and clock, so they hold on any date.
+const code = "SHOPSMALL25";
+const salePlan = { code, percent: 25, label: "25% off all clothing", startsAt: "2026-11-27T07:00:00Z", endsAt: "2026-12-02T10:00:00Z" };
+const saleDiscount = [{ uid: "aha-sale", name: "25% off all clothing", type: "FIXED_PERCENTAGE", percentage: "25", scope: "ORDER" }];
+function saleService(clock = { now: Date.parse("2026-11-28T18:00:00Z") }) {
+  const repository = fakeRepo(); const square = fakeSquare(); let number = 0;
+  return { clock, repository, square, service: createCheckoutService({ repository, square, config, now: () => clock.now, sale: (nowMs, supplied) => discountForCode(nowMs, supplied, salePlan), createId: () => `sale-checkout-${++number}` }) };
+}
+
+test("the sale schedule covers November 27 through December 1 in every U.S. time zone and nothing else", async () => {
+  const committed = JSON.parse(await (await import("node:fs/promises")).readFile(new URL("../src/data/sale.json", import.meta.url), "utf8"));
+  assert.deepEqual([committed.percent, committed.label, committed.until], [25, "25% off all clothing", "Dec. 1"]);
+  assert.equal(saleAt(Date.parse("2026-11-27T06:59:59Z")), null, "not before Black Friday begins in Phoenix");
+  assert.deepEqual(saleAt(Date.parse("2026-11-27T07:00:00Z")), { percent: 25, label: "25% off all clothing" });
+  assert.deepEqual(saleAt(Date.parse("2026-12-01T23:59:59-05:00")), { percent: 25, label: "25% off all clothing" }, "Tuesday night in New York");
+  assert.deepEqual(saleAt(Date.parse("2026-12-01T23:59:59-10:00")), { percent: 25, label: "25% off all clothing" }, "Tuesday night in Honolulu");
+  assert.equal(saleAt(Date.parse("2026-12-02T00:00:00-10:00")), null, "over once Tuesday has ended everywhere in the U.S.");
+  for (const broken of [null, {}, { ...salePlan, percent: 0 }, { ...salePlan, percent: 25.5 }, { ...salePlan, percent: 95 }, { ...salePlan, label: " " }, { ...salePlan, startsAt: "soon" }, { ...salePlan, endsAt: undefined }])
+    assert.equal(saleAt(Date.parse("2026-11-28T18:00:00Z"), broken), null, "a malformed schedule is no sale");
+  assert.equal(saleCents([{ totalAmount: 5200 }, { totalAmount: 11_000 }], { percent: 25 }), 4050);
+  assert.equal(saleCents([{ totalAmount: 5200 }], null), 0);
+});
+
+test("a storewide sale comes off the order before Arizona tax and is what Square charges", async () => {
+  const ctx = saleService();
+  const quote = await ctx.service.quote({ discountCode: code, items: [{ variationId: crewM, quantity: 1 }, { variationId: hoodieL, quantity: 2 }], shippingAddress: address() });
+  // $52 + 2 × $55 = $162.00; 25% off = $40.50; 8.1% of $121.50 = $9.84.
+  assert.deepEqual([quote.subtotalAmount, quote.discountAmount, quote.discountLabel, quote.shippingAmount, quote.taxAmount, quote.totalAmount], [16_200, 4050, "25% off all clothing", 0, 984, 13_134]);
+  assert.equal(quote.shippingLabel, "Free U.S. shipping");
+  assert.deepEqual(quote.lineItems.map((line) => [line.unitAmount, line.totalAmount]), [[5200, 5200], [5500, 11_000]], "line prices stay the catalog's");
+  assert.deepEqual(ctx.square.calls.calculate[0].discounts, saleDiscount);
+  assert.deepEqual(ctx.square.calls.calculate[0].line_items, [{ catalog_object_id: crewM, quantity: "1" }, { catalog_object_id: hoodieL, quantity: "2" }]);
+  const row = ctx.repository.rows.get(quote.checkoutId);
+  assert.deepEqual([row.subtotal_cents, row.shipping_cents, row.tax_cents, row.total_cents], [12_150, 0, 984, 13_134], "the stored amounts add up to the charge");
+  const paid = await ctx.service.pay({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: "cnon:card-nonce-ok", idempotencyKey: randomUUID() });
+  assert.equal(paid.state, "completed");
+  assert.deepEqual(ctx.square.calls.createOrder[0].order.discounts, saleDiscount);
+  assert.equal(ctx.square.calls.createPayment[0].amount_money.amount, 13_134);
+});
+
+test("the wallet estimate and the quote agree on the sale, and shipping abroad is never discounted", async () => {
+  const ctx = saleService();
+  const items = [{ variationId: crewM, quantity: 1 }];
+  const estimate = await ctx.service.estimate({ discountCode: code, items, destination: { region: "NY", postalCode: "10001", country: "US" } });
+  assert.deepEqual(estimate, { currency: "USD", subtotalAmount: 5200, discountAmount: 1300, discountLabel: "25% off all clothing", shippingAmount: 0, taxAmount: 0, totalAmount: 3900, taxLabel: null, shippingLabel: "Free U.S. shipping" });
+  assert.equal(ctx.repository.rows.size, 0);
+  const quote = await ctx.service.quote({ discountCode: code, items, shippingAddress: address({ region: "NY", postalCode: "10001" }) });
+  assert.equal(quote.totalAmount, estimate.totalAmount);
+  const abroad = await ctx.service.estimate({ discountCode: code, items, destination: { country: "GB", postalCode: "SW1A" } });
+  assert.deepEqual([abroad.subtotalAmount, abroad.discountAmount, abroad.shippingAmount, abroad.taxAmount, abroad.totalAmount], [5200, 1300, 2500, 0, 6400]);
+});
+
+test("outside the sale window nothing is discounted and responses keep their usual shape", async () => {
+  for (const instant of ["2026-11-27T06:59:59Z", "2026-12-02T10:00:00Z"]) {
+    const ctx = saleService({ now: Date.parse(instant) });
+    const quote = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }) });
+    assert.equal(quote.totalAmount, 5200, instant);
+    assert.equal("discountAmount" in quote || "discountLabel" in quote, false, instant);
+    assert.equal(ctx.square.calls.calculate[0].discounts, undefined, instant);
+    assert.equal(ctx.repository.rows.get(quote.checkoutId).subtotal_cents, 5200, instant);
+  }
+});
+
+test("a total confirmed during the sale is honored when it is paid just after the sale ends", async () => {
+  const ctx = saleService({ now: Date.parse("2026-12-02T09:55:00Z") });
+  const quote = await ctx.service.quote({ discountCode: code, items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }) });
+  assert.equal(quote.totalAmount, 3900);
+  ctx.clock.now = Date.parse("2026-12-02T10:05:00Z");
+  const paid = await ctx.service.pay({ checkoutId: quote.checkoutId, checkoutToken: quote.checkoutToken, sourceId: "cnon:card-nonce-ok", idempotencyKey: randomUUID() });
+  assert.equal(paid.state, "completed");
+  assert.equal(ctx.square.calls.createPayment[0].amount_money.amount, 3900);
+  const next = await ctx.service.quote({ items: [{ variationId: crewM, quantity: 1 }], shippingAddress: address({ region: "NY", postalCode: "10001" }) });
+  assert.equal(next.totalAmount, 5200, "a new total after the sale is the regular price");
+});
+
+test("checkout refuses to quote when Square's discount is not the sale that was asked for", async () => {
+  const items = [{ variationId: crewM, quantity: 1 }];
+  const shippingAddress = address({ region: "NY", postalCode: "10001" });
+  // Square ignores the sale: the shopper would be charged full price.
+  const ignored = saleService();
+  ignored.square.calculateOrder = async (order) => ({ ...order, total_tax_money: { amount: 0, currency: "USD" }, total_money: { amount: 5200, currency: "USD" } });
+  await assert.rejects(ignored.service.quote({ discountCode: code, items, shippingAddress }), (error) => error instanceof CheckoutError && error.code === "checkout_unavailable" && error.status === 503);
+  await assert.rejects(ignored.service.estimate({ discountCode: code, items, destination: { region: "NY", postalCode: "10001", country: "US" } }), { code: "checkout_unavailable" });
+  // Square takes too much off.
+  const excessive = saleService();
+  excessive.square.calculateOrder = async (order) => ({ ...order, total_tax_money: { amount: 0, currency: "USD" }, total_discount_money: { amount: 2600, currency: "USD" }, total_money: { amount: 2600, currency: "USD" } });
+  await assert.rejects(excessive.service.quote({ discountCode: code, items, shippingAddress }), { code: "checkout_unavailable" });
+  // A discount with no sale running (for example one added in Square's dashboard) is refused too.
+  const unexpected = service();
+  unexpected.square.calculateOrder = async (order) => ({ ...order, total_tax_money: { amount: 0, currency: "USD" }, total_discount_money: { amount: 1300, currency: "USD" }, total_money: { amount: 3900, currency: "USD" } });
+  await assert.rejects(unexpected.service.quote({ items, shippingAddress }), { code: "checkout_unavailable" });
+  for (const ctx of [ignored, excessive, unexpected]) { assert.equal(ctx.repository.rows.size, 0); assert.equal(ctx.square.calls.createOrder.length, 0); assert.equal(ctx.square.calls.createPayment.length, 0); }
+});
+
+
+test("checkout validates the promo code before calling Square or saving a quote", async () => {
+  const ctx = saleService();
+  const items = [{ variationId: crewM, quantity: 1 }];
+  const destination = { region: "NY", postalCode: "10001", country: "US" };
+  for (const code of ["wrong", { percent: 25 }, 123]) {
+    await assert.rejects(ctx.service.estimate({ items, destination, discountCode: code }), { code: "invalid_discount_code" });
+    await assert.rejects(ctx.service.quote({ items, shippingAddress: address(destination), discountCode: code }), { code: "invalid_discount_code" });
+  }
+  assert.equal(ctx.square.calls.calculate.length, 0);
+  assert.equal(ctx.repository.rows.size, 0);
+  const regular = await ctx.service.estimate({ items, destination });
+  assert.equal(regular.totalAmount, 5200);
+  assert.equal(regular.discountAmount, undefined);
+  const discounted = await ctx.service.estimate({ items, destination, discountCode: " shopsmall25 " });
+  assert.equal(discounted.totalAmount, 3900);
+  ctx.clock.now = Date.parse("2026-12-02T10:00:00Z");
+  await assert.rejects(ctx.service.estimate({ items, destination, discountCode: code }), { code: "invalid_discount_code" });
 });

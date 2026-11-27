@@ -160,9 +160,14 @@ export function purchasePayload(session, eventTimeMs = Date.now()) {
   // consent write permits server delivery; a missing migration fails closed.
   if (session?.marketing_json?.paymentConsentConfirmed !== true) return null;
   const context = normalizeMarketingContext(session.marketing_json);
-  const merchandiseCents = items.reduce((sum, item) => sum + (item.unitAmount * item.quantity), 0);
+  const listCents = items.reduce((sum, item) => sum + (item.unitAmount * item.quantity), 0);
   const shippingCents = Number.isSafeInteger(session.shipping_cents) && session.shipping_cents >= 0 ? session.shipping_cents : 0;
   const taxCents = Number.isSafeInteger(session.tax_cents) && session.tax_cents >= 0 ? session.tax_cents : 0;
+  // A storewide sale comes off the order, so the goods are worth what was paid for
+  // them: the purchase value and each item's price are reported after the sale.
+  const paidCents = session.total_cents - shippingCents - taxCents;
+  const reduced = paidCents >= 0 && paidCents < listCents;
+  const merchandiseCents = reduced ? paidCents : listCents;
   return {
     orderId: session.square_order_id,
     currency: "USD",
@@ -171,7 +176,7 @@ export function purchasePayload(session, eventTimeMs = Date.now()) {
     shipping: shippingCents / 100,
     tax: taxCents / 100,
     eligibleProviders: storedProviders(session.marketing_json),
-    items,
+    items: reduced ? items.map((item) => ({ ...item, price: Math.round((item.unitAmount * paidCents) / listCents) / 100 })) : items,
     context,
     eventTimeMs,
   };
