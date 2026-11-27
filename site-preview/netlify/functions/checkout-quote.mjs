@@ -28,7 +28,7 @@ export default async function checkoutQuote(request, context) {
     const marketing = body?.marketing && typeof body.marketing === "object"
       ? { ...body.marketing, marketing: { ...(body.marketing.marketing ?? {}), userAgent: request.headers.get("user-agent"), clientIp: context?.ip ?? request.headers.get("x-nf-client-connection-ip") } }
       : body?.marketing;
-    const quote = await runtime.service.quote({ items: body?.items, shippingAddress: body?.shippingAddress, analytics: body?.analytics, marketing });
+    const quote = await runtime.service.quote({ items: body?.items, shippingAddress: body?.shippingAddress, discountCode: body?.discountCode, analytics: body?.analytics, marketing });
     // Analytics never delays or fails a quote.
     await afterResponse(context, createPostHogCapture(posthogConfig(Netlify.env))("checkout_quoted", posthogIds(body), checkoutProperties({ totalCents: quote.totalAmount, items: quote.lineItems })));
     return noStore(quote);

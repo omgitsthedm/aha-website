@@ -116,6 +116,21 @@ test("an existing supplier record can never be dismissed as a custom receipt", a
   assert.equal((await service.processSquarePayment(payment.id)).outcome, "attention");
 });
 
+test("a paid sale order still validates for fulfillment at its catalog line price", () => {
+  // Square keeps each line's base price and records the storewide sale on the order.
+  const { payment, order } = paidOrder({
+    order: { total_money: { amount: 3900, currency: "USD" }, total_discount_money: { amount: 1300, currency: "USD" },
+      discounts: [{ uid: "aha-sale", name: "25% off all clothing", type: "FIXED_PERCENTAGE", percentage: "25", scope: "ORDER", applied_money: { amount: 1300, currency: "USD" } }] },
+    payment: { amount_money: { amount: 3900, currency: "USD" } },
+  });
+  const validated = validatePaidSquareOrder({ payment, order, locationId: LOCATION, startAt: "2026-10-15T00:00:00Z" });
+  assert.equal(validated.totalAmount, 3900);
+  assert.deepEqual(validated.items.map((item) => [item.variationId, item.quantity, item.priceCents]), [[CREW_M, 1, 5200]]);
+  assert.equal(validated.apliiqPayload.line_items[0].price, "52.00");
+  // A payment that does not cover the discounted order is still held.
+  assert.throws(() => validatePaidSquareOrder({ payment: { ...payment, amount_money: { amount: 3800, currency: "USD" } }, order, locationId: LOCATION, startAt: "2026-10-15T00:00:00Z" }), (error) => error instanceof FulfillmentHold && error.code === "payment_not_full");
+});
+
 test("reconciliation uses the unique authenticated list association and keeps artwork pending without provider writes", async () => {
   const repo = memoryRepository();
   const { payment, order } = paidOrder();

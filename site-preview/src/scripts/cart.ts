@@ -36,6 +36,8 @@ export type Quote = {
   currency: string;
   lineItems: Array<{ variationId: string; quantity: number; unitAmount: number; totalAmount: number }>;
   subtotalAmount: number;
+  discountAmount?: number;
+  discountLabel?: string;
   shippingAmount: number;
   taxAmount: number;
   totalAmount: number;
@@ -105,7 +107,7 @@ export function displayAmount(cents: number) { return MONEY.format(cents / 100);
 export function freshKey() { return crypto.randomUUID(); }
 export type PurchaseSummary = { currency: string; subtotalAmount: number; shippingAmount: number; taxAmount: number; totalAmount: number; items: Array<{ id: string; name: string; unitAmount: number; quantity: number }> };
 export type PendingPayment = { checkoutId: string; checkoutToken: string; idempotencyKey: string; createdAt: number; summary?: PurchaseSummary; scope?: "bag" | "product" };
-export type CashAppResume = { quote: Quote; address: ReturnType<typeof shippingAddress>; paymentKey: string; fingerprint: string; createdAt: number; revision?: string };
+export type CashAppResume = { quote: Quote; address: ReturnType<typeof shippingAddress>; paymentKey: string; fingerprint: string; createdAt: number; revision?: string; discountCode?: string };
 // All payment controls share one durable attempt. Keep legacy records recoverable;
 // an unresolved charge must never expire locally into permission to pay again.
 let volatilePending: PendingPayment | null = null;
@@ -301,16 +303,20 @@ export function squareContact(address: ReturnType<typeof shippingAddress>) {
   };
 }
 export function cartFingerprint(lines: CartLine[], form: HTMLFormElement) {
-  return JSON.stringify({ lines: lines.map(({ variationId, quantity }) => [variationId, quantity]), address: shippingAddress(form) });
+  const discountCode = fieldValue(form, "discountCode").toUpperCase();
+  return JSON.stringify({ lines: lines.map(({ variationId, quantity }) => [variationId, quantity]), address: shippingAddress(form), ...(discountCode ? { discountCode } : {}) });
 }
 type PayResult = { orderNumber?: string; statusUrl?: string; receiptEmail?: string; state?: string; orderId?: string; receiptUrl?: string; errorCode?: string; error?: string };
 export const checkoutItems = (lines: CartLine[]) => lines.map(({ variationId, quantity }) => ({ variationId, quantity }));
 export const purchaseSummary = (quote: Quote, lines: CartLine[]): PurchaseSummary => {
   const titles = new Map(lines.map((line) => [line.variationId, line.title]));
-  return { currency: quote.currency, subtotalAmount: quote.subtotalAmount, shippingAmount: quote.shippingAmount, taxAmount: quote.taxAmount, totalAmount: quote.totalAmount, items: quote.lineItems.map((item) => ({ id: item.variationId, name: titles.get(item.variationId) || "Item", unitAmount: item.unitAmount, quantity: item.quantity })) };
+  // After a sale, the goods are worth what was paid for them (as the server reports it).
+  const paid = quote.subtotalAmount - (quote.discountAmount ?? 0);
+  const net = (cents: number) => quote.discountAmount ? Math.round((cents * paid) / quote.subtotalAmount) : cents;
+  return { currency: quote.currency, subtotalAmount: paid, shippingAmount: quote.shippingAmount, taxAmount: quote.taxAmount, totalAmount: quote.totalAmount, items: quote.lineItems.map((item) => ({ id: item.variationId, name: titles.get(item.variationId) || "Item", unitAmount: net(item.unitAmount), quantity: item.quantity })) };
 };
-export const quoteCheckout = async (lines: CartLine[], address: ReturnType<typeof shippingAddress>) => {
-  const result = await requestJson<Quote & { errorCode?: string }>("/api/checkout/quote", { ...JSON_POST, body: JSON.stringify({ items: checkoutItems(lines), shippingAddress: address, marketing: await checkoutMarketingEnvelope({ requireReceipt: true }) }) });
+export const quoteCheckout = async (lines: CartLine[], address: ReturnType<typeof shippingAddress>, discountCode?: string) => {
+  const result = await requestJson<Quote & { errorCode?: string }>("/api/checkout/quote", { ...JSON_POST, body: JSON.stringify({ items: checkoutItems(lines), shippingAddress: address, ...(discountCode ? { discountCode } : {}), marketing: await checkoutMarketingEnvelope({ requireReceipt: true }) }) });
   if (result.response.ok && result.data && !retainCheckoutReceipt(result.data.checkoutId, result.data.checkoutToken)) void withdrawCheckoutPrivacy({ analytics: false, marketing: false });
   return result;
 };

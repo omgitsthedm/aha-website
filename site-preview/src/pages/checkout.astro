@@ -53,10 +53,16 @@ import products from '../data/products.json';
             </div>
             <label>Country<select name="country" autocomplete="country" required><option value="US">United States</option><option value="AU">Australia</option><option value="AT">Austria</option><option value="BE">Belgium</option><option value="CA">Canada</option><option value="CZ">Czechia</option><option value="DK">Denmark</option><option value="FI">Finland</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="JP">Japan</option><option value="NL">Netherlands</option><option value="NO">Norway</option><option value="PL">Poland</option><option value="PT">Portugal</option><option value="ES">Spain</option><option value="SE">Sweden</option><option value="CH">Switzerland</option><option value="TR">Türkiye</option><option value="GB">United Kingdom</option></select></label>
           </fieldset>
+          <fieldset>
+            <legend>Discount</legend>
+            <label>Discount code <span class="field-optional">optional</span><input name="discountCode" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="32" aria-describedby="checkout-discount-help checkout-errors" /></label>
+            <p class="checkout-note" id="checkout-discount-help">Enter your code, then confirm the total to see the discount.</p>
+          </fieldset>
           <button class="button quote-button" type="submit" data-quote>Confirm total </button>
         </form>
         <div class="quote-summary" data-checkout-summary hidden aria-live="polite">
           <div><span>Items</span><strong data-quote-subtotal></strong></div>
+          <div data-quote-discount-row hidden><span></span><strong></strong></div>
           <div><span data-quote-shipping-label>Shipping</span><strong data-quote-shipping></strong></div>
           <div><span data-quote-tax-label>Tax</span><strong data-quote-tax></strong></div>
           <div class="quote-total"><span>Total</span><strong data-quote-total></strong></div>
@@ -92,4 +98,5 @@ import products from '../data/products.json';
 <style>
   .checkout-errors { margin-top: 1rem; padding: .8rem 1rem; border-left: 3px solid var(--rose); background: var(--surface); font-size: .86rem; line-height: 1.5; }
   .checkout-panel :global([aria-invalid="true"]) { border-color: var(--rose); }
+  .quote-summary > [hidden] { display: none; }
 </style>

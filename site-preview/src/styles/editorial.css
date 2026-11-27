@@ -18,6 +18,7 @@ picture{display:block}
 .benefit-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:4px clamp(20px,4.4vw,72px);min-height:30px;font:400 12px/1.6 var(--mono);color:var(--ink)}
 .benefit-bar a{text-decoration:none;min-height:24px;display:inline-flex;align-items:center}
 .benefit-bar :focus-visible{outline-color:var(--ink)}
+.benefit-bar .benefit-sale{font-weight:700}
 .site-header-bar .site-header{position:relative;min-height:76px;gap:24px;padding-block:14px;background:var(--paper);border-bottom:1px solid var(--line)}
 .site-header .identity{font-size:14px}
 .site-header .identity img{width:42px;height:auto}
@@ -278,6 +279,7 @@ picture{display:block}
  .header-tools>a,.menu-button{font-size:12px}
  .benefit-bar{justify-content:center;font-size:12px;min-height:30px}
  .benefit-bar>span,.benefit-bar>a:last-child{display:none}
+ .benefit-bar:has(.benefit-sale)>a:first-child{display:none}
  .hero-composition{grid-template-columns:1fr 1fr;min-height:0;gap:8px;padding:8px}
  .hero-photo{grid-row:1;height:clamp(220px,31svh,320px)}
  .hero-words{grid-column:1/-1;grid-row:2;padding:24px 22px;display:block}

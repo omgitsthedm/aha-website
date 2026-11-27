@@ -66,7 +66,7 @@ export function appliesArizonaTax(address) {
   return address.country === "US" && address.region.toUpperCase() === "AZ";
 }
 
-export function buildSquareOrder({ items, address, locationId, referenceId }) {
+export function buildSquareOrder({ items, address, locationId, referenceId, sale = null }) {
   const tax = appliesArizonaTax(address) ? [{ uid: "aha-tax-az", name: "Arizona TPT (Peoria 8.1%)", type: "ADDITIVE", percentage: "8.1", scope: "ORDER" }] : [];
   const shippingCents = address.country === "US" ? DOMESTIC_SHIPPING_CENTS : INTERNATIONAL_SHIPPING_CENTS;
   const order = {
@@ -88,6 +88,9 @@ export function buildSquareOrder({ items, address, locationId, referenceId }) {
     } } }],
   };
   if (tax.length) order.taxes = tax;
+  // A storewide sale (./sale.mjs) is one order-level discount. Each line keeps its
+  // catalog price, which is what the fulfillment check compares before Apliiq.
+  if (sale) order.discounts = [{ uid: "aha-sale", name: sale.label, type: "FIXED_PERCENTAGE", percentage: String(sale.percent), scope: "ORDER" }];
   if (shippingCents) order.service_charges = [{ uid: "aha-shipping-international", name: "International shipping", amount_money: { amount: shippingCents, currency: CURRENCY }, calculation_phase: "TOTAL_PHASE", taxable: false, type: "CUSTOM" }];
   return order;
 }

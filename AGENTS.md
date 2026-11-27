@@ -122,6 +122,16 @@ Built on October 19, 2026 at the owner's request ("Do this task here: One-tap Ap
 - Existing automated confirmation and shipment notifications may continue for verified real orders. No paid test purchase, sample, ad spend, manual customer message, newsletter send, or new subscription is authorized by this contract. Development verification must not send transactional email. Use Square Sandbox only for non-billable verification when credentials and task scope permit.
 - Tracking is default-on with no automatic cookie banner. Footer Privacy choices provide opt-outs; Global Privacy Control disables Meta marketing. Exclude direct customer details and emit purchases only after verified payment, never from a return URL or checkout click.
 
+## Storewide sale: November 27–December 1, 2026
+
+Owner instruction, November 27, 2026: “After Hours Agenda should be 25%”, then, after a margin check that showed some sizes selling below cost at that discount, “nope we're doing it”. Code SHOPSMALL25 takes 25% off clothing at checkout through Tuesday, December 1. Free U.S. shipping, tax rules and listed prices are unchanged.
+
+- **Schedule:** `site-preview/src/data/sale.json` (`percent`, `label`, `until`, and `startsAt`/`endsAt` in UTC). The checkout server (`server/checkout/sale.mjs`) and the storefront script (`src/scripts/sale.ts`) read the same file. `endsAt` is midnight in Hawaii, so “through Dec. 1” holds in every U.S. time zone. A new sale is a new schedule and a deploy; an ended one needs no cleanup. No other sale, code or price change is authorized by this record.
+- **Charge:** validate the shopper-entered code on the server, then add one order-level percentage discount on the Square order (`buildSquareOrder`). Each line keeps its catalog price, which the fulfillment check compares before Apliiq. Checkout quotes only when Square's `total_discount_money` is the sale that was asked for, and refuses any discount when no sale is running, so a discount created in Square's dashboard is never applied by the storefront. A total confirmed during the sale is honored until that quote expires.
+- **Records:** `aha_checkout_sessions.subtotal_cents` holds what the goods sold for (after the sale), so subtotal, shipping and tax still add up to the total. Purchase events report that value and each item's price after the sale.
+- **Shown:** the header names the code. Shoppers enter it in the checkout form. The confirmed total and checkout wallet show the discount after the server accepts the code. Express checkout before the form and the regular product prices do not apply the code automatically.
+- **Tests:** unit tests pass their own schedule and clock. Browser tests start on a fixed date with no sale (`tests/browser/fixtures.ts`), and the sale's own tests set theirs (`tests/browser/sale.spec.ts`), so the suite passes before, during and after a sale.
+
 ## Security and validation
 
 - Keep credentials in approved private settings only. Never print, commit, publish, or place secrets in fixtures; preserve existing provider accounts, payment history, fulfillment contracts, database data, and customer data.

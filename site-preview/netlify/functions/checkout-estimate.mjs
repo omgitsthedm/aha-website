@@ -18,7 +18,7 @@ export default async function checkoutEstimate(request, context) {
     const runtime = createCheckoutRuntime({ database: getDatabase(), env: Netlify.env, catalog });
     if (!checkoutReady(runtime.config)) return errorResponse(new CheckoutError("checkout_unavailable", 503));
     if (Array.isArray(body?.items) && body.items.some((item) => locked.has(item?.variationId))) return errorResponse(new CheckoutError("early_access_only", 403));
-    return noStore(await runtime.service.estimate({ items: body?.items, destination: body?.destination }));
+    return noStore(await runtime.service.estimate({ items: body?.items, destination: body?.destination, discountCode: body?.discountCode }));
   } catch (error) { return errorResponse(error); }
 }
 export const config = { path: "/api/checkout/estimate", method: ["POST"], rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ["ip", "domain"] } };

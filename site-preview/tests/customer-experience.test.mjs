@@ -144,3 +144,16 @@ test("gift cards are on unless turned off, and the footer links Square's own eGi
   const { brand } = await import("../src/data/site.ts");
   assert.match(brand.giftCards, /^https:\/\/app\.squareup\.com\/gift\/[A-Z0-9]+\/order$/);
 });
+
+test("the storefront advertises the code for exactly as long as checkout accepts it", async () => {
+  const { currentSale } = await import("../src/scripts/sale.ts");
+  const { discountForCode } = await import("../server/checkout/sale.mjs");
+  for (const instant of ["2026-11-27T06:59:59Z", "2026-11-27T07:00:00Z", "2026-11-28T18:00:00Z", "2026-12-02T09:59:59Z", "2026-12-02T10:00:00Z"]) {
+    const at = Date.parse(instant);
+    const shown = currentSale(at);
+    const charged = discountForCode(at, "SHOPSMALL25");
+    assert.equal(Boolean(shown), Boolean(charged), instant);
+    if (shown) assert.deepEqual([shown.percent, shown.label, shown.code], [charged.percent, charged.label, "SHOPSMALL25"], instant);
+    assert.equal(discountForCode(at, ""), null);
+  }
+});

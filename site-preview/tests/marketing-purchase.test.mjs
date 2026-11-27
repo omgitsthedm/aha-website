@@ -204,3 +204,18 @@ test("a later opt-out removes the stored address from the Meta purchase event", 
   const withoutIp = metaPurchaseRequest(purchasePayload(session({ marketing_json: { ...quote, marketing: { ...quote.marketing, clientIp: null } } })));
   assert.equal("client_ip_address" in withoutIp.data[0].user_data, false);
 });
+
+test("a sale order reports what was paid for the goods, not their list price", () => {
+  // Two $55 pieces at 25% off are $82.50, plus $5.00 shipping and $5.00 tax.
+  const payload = purchasePayload(session({ total_cents: 9250 }), 1_700_000_000_000);
+  assert.deepEqual([payload.value, payload.merchandiseValue, payload.shipping, payload.tax], [92.5, 82.5, 5, 5]);
+  assert.deepEqual(payload.items.map((item) => [item.quantity, item.unitAmount, item.price]), [[2, 5500, 41.25]]);
+  const google = googlePurchaseRequest(payload).events[0].params;
+  assert.equal(google.value, 82.5);
+  assert.deepEqual(google.items, [{ item_id: "VAR-1", price: 41.25, quantity: 2 }]);
+  assert.equal(google.items.reduce((sum, item) => sum + item.price * item.quantity, 0), google.value);
+  assert.equal(metaPurchaseRequest(payload).data[0].custom_data.value, 82.5);
+  // A full-price order is reported exactly as before.
+  const regular = purchasePayload(session(), 1_700_000_000_000);
+  assert.deepEqual([regular.value, regular.merchandiseValue, regular.items[0].price], [120, 110, 55]);
+});

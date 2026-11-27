@@ -1,6 +1,9 @@
 import { query, queryAll } from "./dom";
 import { catalogState } from './catalog-state';
 import { matchesSearch, searchEventDispatcher } from "./search";
+import { showSaleBar } from "./sale";
+
+showSaleBar();
 
 const dialog = query<HTMLDialogElement>(document, '#site-menu')!;
 const triggers = [...queryAll<HTMLButtonElement>(document, '[data-open-menu]')];

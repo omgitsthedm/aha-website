@@ -19,6 +19,7 @@ export function initCheckout() {
   const checkPaymentStatus = query<HTMLButtonElement>(page, "[data-check-payment-status]");
   const errors = query<HTMLElement>(page, "[data-checkout-errors]");
   if (!form || !cartLines || !empty || !checkout || !message || !summary) return;
+  const discountInput = query<HTMLInputElement>(form, "[name=discountCode]");
   const reportFriction = (reason: "validation" | "quote_failed" | "payment_unavailable") => {
     document.dispatchEvent(new CustomEvent("aha:checkout-friction", { detail: { reason } }));
   };
@@ -126,6 +127,9 @@ export function initCheckout() {
   const renderQuote = () => {
     if (!quote) return;
     setText(summary, "[data-quote-subtotal]", displayAmount(quote.subtotalAmount)); setText(summary, "[data-quote-shipping]", displayAmount(quote.shippingAmount));
+    // The sale row appears only when the server took something off this total.
+    const discount = query<HTMLElement>(summary, "[data-quote-discount-row]");
+    if (discount) { discount.hidden = !quote.discountAmount; setText(discount, "span", quote.discountLabel || ""); setText(discount, "strong", `−${displayAmount(quote.discountAmount || 0)}`); }
     setText(summary, "[data-quote-tax-label]", quote.taxLabel || "Tax"); setText(summary, "[data-quote-tax]", displayAmount(quote.taxAmount)); setText(summary, "[data-quote-total]", displayAmount(quote.totalAmount));
     summary.hidden = false;
   };
@@ -169,7 +173,8 @@ export function initCheckout() {
       cartLines.append(article);
       if (focusVariationId === line.variationId) focusTarget = select;
     });
-    setText(page, "[data-cart-subtotal]", displayAmount(lines.reduce((total, line) => total + line.priceCents * line.quantity, 0)));
+    const subtotal = lines.reduce((total, line) => total + line.priceCents * line.quantity, 0);
+    setText(page, "[data-cart-subtotal]", displayAmount(subtotal));
     focusTarget?.focus({ preventScroll: true });
   };
   const showMessage = (value: string) => { message.textContent = value; message.hidden = false; };
@@ -374,7 +379,7 @@ export function initCheckout() {
     }
     if (config.methods.cashAppPay && payments.cashAppPay) {
       try {
-        writeCashAppResume({ quote: activeQuote, address: shippingAddress(form), paymentKey, fingerprint: quotedFingerprint, revision: quotedRevision, createdAt: Date.now() });
+        writeCashAppResume({ quote: activeQuote, address: shippingAddress(form), discountCode: fieldValue(form, "discountCode"), paymentKey, fingerprint: quotedFingerprint, revision: quotedRevision, createdAt: Date.now() });
         const method = await payments.cashAppPay.bind(payments)(request, { redirectURL: location.href, referenceId: paymentKey });
         method.addEventListener?.("ontokenization", (event) => { const result = event.detail?.tokenResult; if (result?.status === "OK" && result.token) void submitToken(result.token); });
         await method.attach?.("#aha-cash-app", { width: "full" }); walletMethods.push(method); any = true;
@@ -404,6 +409,7 @@ export function initCheckout() {
       const field = form.elements.namedItem(name);
       if (field instanceof HTMLInputElement || field instanceof HTMLSelectElement) field.value = value || "";
     }
+    if (discountInput) discountInput.value = saved.discountCode ?? "";
     if (!validAddress(shippingAddress(form)) || saved.fingerprint !== cartFingerprint(lines, form)) { clearCashAppResume(); return; }
     quote = saved.quote;
     quotedFingerprint = saved.fingerprint;
@@ -436,7 +442,7 @@ export function initCheckout() {
     const requestedFingerprint = cartFingerprint(lines, form);
     const requestedRevision = paymentRevision();
     try {
-      const { response, data } = await quoteCheckout(lines, address);
+      const { response, data } = await quoteCheckout(lines, address, fieldValue(form, "discountCode"));
       if (!response.ok || !data) {
         reportFriction("quote_failed");
         const code = (data as { errorCode?: string } | null)?.errorCode;
@@ -445,8 +451,13 @@ export function initCheckout() {
           checkout_paused: paymentFailureMessage("checkout_paused"),
           invalid_cart: "A piece or size in your bag is no longer available. Review your bag before continuing.",
           unsupported_destination: "We can’t ship to that country yet. Choose a supported delivery country.",
+          invalid_discount_code: "That discount code is invalid or has expired. Check the code or leave it blank to continue.",
           invalid_address: "We couldn’t confirm this address. Review it and try again.",
         };
+        if (code === "invalid_discount_code" && discountInput) {
+          discountInput.setAttribute("aria-invalid", "true");
+          discountInput.focus();
+        }
         showFormError(reasons[code || ""] || "We couldn’t calculate your total right now. Your bag is saved; please try again shortly.");
         return;
       }
