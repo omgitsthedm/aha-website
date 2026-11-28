@@ -7,7 +7,7 @@
 import { imageUrl, imageSrcset } from "./image-urls.mjs";
 import { familyKey, garmentGroup, hoverView, measurementGuide, otherColors, swatchFor } from "./garments.mjs";
 import { recommendationsFor } from "./recommendations.mjs";
-import { productDescription } from "./metadata.mjs";
+import { documentTitle, productDescription } from "./metadata.mjs";
 import { dropFor, dropNote, dropStage } from "./drops.mjs";
 import { isOffSale } from "./off-sale.mjs";
 import { RETURN_POLICY, SHIPPING_DETAILS } from "./offer-terms.mjs";
@@ -116,7 +116,7 @@ export function renderLivePage(shellHtml, product, products) {
   const avifCover = avifSources[cover.src];
   let head = shell.html.slice(0, shell.mainStart);
   const tail = shell.html.slice(shell.mainEnd);
-  head = replaceOnce(head, /<title>[^<]*<\/title>/, `<title>${text(title)} | After Hours Agenda</title>`, "title");
+  head = replaceOnce(head, /<title>[^<]*<\/title>/, `<title>${text(documentTitle(title))}</title>`, "title");
   head = replaceOnce(head, /<meta name="description" content="[^"]*">/, `<meta name="description" content="${attr(description)}">`, "description");
   head = replaceOnce(head, /<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${attr(canonical)}">`, "canonical");
   head = replaceOnce(head, /<link rel="preload" as="image"[^>]*>/, `<link rel="preload" as="image" href="${attr(imageUrl(avifCover ? cover.src.replace(/\.webp$/, ".avif") : cover.src))}"${avifCover ? ' type="image/avif"' : ""} imagesrcset="${attr(imageSrcset(avifCover || cover.srcset))}" imagesizes="(max-width: 760px) calc(88vw - 36px), 46vw" fetchpriority="high">`, "primary image preload");
