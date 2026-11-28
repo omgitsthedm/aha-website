@@ -115,8 +115,11 @@ const schema = {
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#FF6B6B" />
     <meta name="color-scheme" content="light" />
-    {['poppins-latin-400', 'poppins-latin-700', 'poppins-latin-900', 'jetbrains-mono-400'].map(font => <link rel="preload" href={`/fonts/${font}.woff2`} as="font" type="font/woff2" crossorigin="anonymous" />)}
     {preloadImage && <link rel="preload" as="image" href={imageUrl((avif as Record<string, string>)[preloadImage.src] ? preloadImage.src.replace(/\.webp$/, ".avif") : preloadImage.src)} type={(avif as Record<string, string>)[preloadImage.src] ? "image/avif" : undefined} imagesrcset={imageSrcset((avif as Record<string, string>)[preloadImage.src] ?? preloadImage.srcset)} imagesizes={preloadImage.sizes} fetchpriority="high" />}
+    {/* The hero image is the page's largest paint on mobile, so it is requested before the fonts.
+        Pages with a hero leave the mono label font to load on demand (font-display: swap) so it
+        doesn't share the slow-network bandwidth the hero needs. */}
+    {(preloadImage ? ['poppins-latin-400', 'poppins-latin-700', 'poppins-latin-900'] : ['poppins-latin-400', 'poppins-latin-700', 'poppins-latin-900', 'jetbrains-mono-400']).map(font => <link rel="preload" href={`/fonts/${font}.woff2`} as="font" type="font/woff2" crossorigin="anonymous" />)}
     <meta name="facebook-domain-verification" content="83wsdo81kg6b428satufegpkljq0w6" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={brand.name} />
